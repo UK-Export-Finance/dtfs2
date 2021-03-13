@@ -55,14 +55,6 @@ env:
 # Below this line should be the same for all environments 
 
 jobs:
-  defineEnvironment:
-    name: Define environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.define.outputs.environment }}
-    steps:
-    - id: define
-      run: echo "::set-output name=environment::dev"
 
   # START Virtual Network setup 
   vnet:
@@ -70,11 +62,11 @@ jobs:
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    needs: defineEnvironment
-    runs-on: ubuntu-latest
-    environment: ${{ needs.defineEnvironment.outputs.environment }}
+    environment: ${{ steps.defineEnvironment.env.environment }}
     steps:
-
+    - id: defineEnvironment
+      env:
+        environment: dev
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
