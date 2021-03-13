@@ -67,6 +67,9 @@ jobs:
     - id: defineEnvironment
       env:
         environment: dev
+      run: |
+        echo "Defining environment ${{ environemnt }}.
+        
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
