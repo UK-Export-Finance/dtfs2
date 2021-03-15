@@ -8,21 +8,21 @@
 {% block sub_content %}
 
   <p>Task</p>
-  <h2 class="header-label">{{ task.title }}</h2>
+  <h2 class="header-label" data-cy="task-heading">{{ task.title }}</h2>
   
   <div class="govuk-grid-row" data-cy="deal-tasks">
 
-    <h4>Deal</h4>
-    <p><a href="/case/{{ dealId }}/deal">{{ deal.details.ukefDealId }}</a>&nbsp; {{ deal.submissionDetails.supplierName }} &#62; {{ deal.submissionDetails.buyerName }}</p>
+    <h4 data-cy="deal-heading">Deal</h4>
+    <p data-cy="deal-subheading"><a href="/case/{{ dealId }}/deal" data-cy="deal-subheading-link">{{ deal.details.ukefDealId }}</a>&nbsp;{{ deal.submissionDetails.supplierName }} &#62; {{ deal.submissionDetails.buyerName }}</p>
 
-    <h4>Type of work</h4>
-    <p>{{ deal.details.submissionType }} </p>
+    <h4 data-cy="type-of-work-heading">Type of work</h4>
+    <p data-cy="type-of-work-subheading">{{ deal.details.submissionType }} </p>
 
-    <h4>Team</h4>
-    <p>{{ task.team.name }}</p>
+    <h4 data-cy="team-heading">Team</h4>
+    <p data-cy="team-subheading">{{ task.team.name }}</p>
 
     <form>
-      {% set bla = (user.firstName + ' ' + user.lastName + ' ' + '(Assign to me)') %}
+      {% set currentUser = (user.firstName + ' ' + user.lastName + ' ' + '(Assign to me)') %}
    
       {{ govukSelect({
         id: "sort",
@@ -37,9 +37,12 @@
           },
           {
             value: user._id,
-            text: bla
+            text: currentUser
           }
-        ]
+        ],
+        attributes: {
+          'data-cy': 'assigned-to-select-input'
+        }
       }) }}
 
       {{govukRadios({
@@ -53,15 +56,24 @@
           items: [
             {
               value: "To do",
-              text: "To do"
+              text: "To do",
+              attributes: {
+                'data-cy': 'task-status-to-do'
+              }
             },
             {
               value: "In progress",
-              text: "In progress"
+              text: "In progress",
+              attributes: {
+                'data-cy': 'task-status-in-progress'
+              }
             },
             {
               value: "Done",
-              text: "Done"
+              text: "Done",
+              attributes: {
+                'data-cy': 'task-status-done'
+              }
             }
           ]
         })
@@ -74,7 +86,7 @@
         }
       }) }}
 
-      <a class="govuk-link govuk-!-margin-left-6 close-without-saving-link" href="#" data-cy="close-link">Close without saving</a>
+      <a class="govuk-link govuk-!-margin-left-6 close-without-saving-link" href="/case/{{ dealId }}/tasks" data-cy="close-link">Close without saving</a>
      
     </form>
 
