@@ -1,0 +1,107 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      idPrefix: "correspondence",
+      name: "correspondence",
+      fieldset: {
+        legend: {
+          text: "Is there a separate correspondence address for the exporter?",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      errorMessage: errors and {
+        text: errors.fieldErrors.confirm.text,
+        attributes: {
+          'data-cy': 'correspondence-error'
+        }
+      },
+      items: [
+        {
+          text: "Yes",
+          attributes: {
+            'data-cy': 'correspondence-yes',
+            onClick: "correspondenceAddress.toggle(false)"
+          }
+        },
+        {
+          value: false,
+          text: "No",
+          attributes: {
+            'data-cy': 'correspondence-no',
+            onClick: "correspondenceAddress.toggle(true)"
+          }
+        }
+      ] }) 
+    }}
+
+    <div id="conditional-correspondence">
+      {{ govukInput({
+        label: {
+          text: "Correspondence address",
+          classes: "govuk-label--s"
+        },
+        id: "postcode",
+        name: "postcode",
+        hint: {
+          text: "Postcode"
+        }
+      }) }}
+
+      {{ govukButton({
+        text: "Find address",
+        classes: "govuk-button--secondary"
+      }) }}
+    </div>
+
+    <form
+      method="post"
+      data-cy="form">
+      {% if correspondenceAddress %}
+        {{ govukInput({
+          id: "contact-by-email",
+          name: "contact-by-email",
+          type: "email",
+          classes: "govuk-!-width-one-third",
+          label: {
+            text: "Email address"
+          }
+        }) }}
+        {% endif %}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+
+        <a
+          class="govuk-link"
+          href="/gef/application-details/{{applicationId}}"
+          data-cy="cancel-button">Save and return to application</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function CorrespondenceAddress() {
+    const conditionalCorrespondence = document.getElementById('conditional-correspondence');
+
+    // On load hide correspondence section
+    conditionalCorrespondence.className = 'govuk-visually-hidden';
+
+    const toggle = function (bool) {
+      if (bool) {
+        conditionalCorrespondence.className = 'govuk-visually-hidden';
+      } else {
+        conditionalCorrespondence.className = '';
+      }
+    }
+
+    return { toggle };
+  }
+
+  const correspondenceAddress = new CorrespondenceAddress();
+
+  correspondenceAddress;
+</script>
