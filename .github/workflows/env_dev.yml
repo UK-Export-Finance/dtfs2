@@ -10,6 +10,10 @@ env:
   # Environment
   front_door_access: Allow
   environment: dev
+  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
+  # Environment
+  front_door_access: Allow
+  environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
 #  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
@@ -62,7 +66,8 @@ jobs:
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    environment: dev
+    environment:
+      name: ${{ env.environment }}
     runs-on: ubuntu-latest
 
     steps:        
