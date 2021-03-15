@@ -133,7 +133,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ ${{ secrets.RESOURCE_GROUP }} }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: Create slot ${{ github.sha }}
       uses: Azure/cli@v1.0.0
