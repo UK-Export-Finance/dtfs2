@@ -39,18 +39,18 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-const mockResponse = new MockResponse();
-const mockRequest = new MockRequest();
-const mockApplicationResponse = new MockApplicationResponse();
-const mockExporterResponse = new MockExporterResponse();
-const mockFacilityResponse = new MockFacilityResponse();
-
 afterEach(() => {
   jest.clearAllMocks();
 });
 
 describe('GET Application Details', () => {
   it('renders the `Application Details` template', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
+
     mockFacilityResponse.items = [{ details: { type: 'CASH' }, validation: { required: [] } }];
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
@@ -70,6 +70,9 @@ describe('GET Application Details', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
     api.getApplication = () => Promise.reject();
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');

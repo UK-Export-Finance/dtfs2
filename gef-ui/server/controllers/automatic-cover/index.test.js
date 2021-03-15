@@ -22,16 +22,16 @@ const MockCoverResponse = () => {
   return res;
 };
 
-const mockRequest = new MockRequest();
-const mockResponse = new MockResponse();
-const mockCoverResponse = new MockCoverResponse();
-
 afterEach(() => {
   jest.clearAllMocks();
 });
 
 describe('GET Automatic Cover', () => {
   it('renders the `automatic-cover` template', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockCoverResponse = new MockCoverResponse();
+
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await automaticCover(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/automatic-cover.njk', {
@@ -41,7 +41,10 @@ describe('GET Automatic Cover', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+
     api.getEligibilityCriteria = () => Promise.reject(mockedRejection);
     await automaticCover(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
@@ -50,6 +53,10 @@ describe('GET Automatic Cover', () => {
 
 describe('Validate Automatic Cover', () => {
   it('renders the correct data if validation fails', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockCoverResponse = new MockCoverResponse();
+
     mockCoverResponse.terms.push({
       id: 'coverStart',
       htmlText: 'Some text',
@@ -66,6 +73,10 @@ describe('Validate Automatic Cover', () => {
   });
 
   it('redirects user to `ineligible-automatic-cover` page if user selects at least 1 false`', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockCoverResponse = new MockCoverResponse();
+
     mockRequest.body = { coverStart: 'false' };
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await validateAutomaticCover(mockRequest, mockResponse);
@@ -78,6 +89,10 @@ describe('Validate Automatic Cover', () => {
   });
 
   it('redirects user to `application details` page if user selects all true values`', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockCoverResponse = new MockCoverResponse();
+
     mockRequest.body = { coverStart: 'true', value: 'true' };
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await validateAutomaticCover(mockRequest, mockResponse);
@@ -85,7 +100,11 @@ describe('Validate Automatic Cover', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+
     api.getEligibilityCriteria = () => Promise.reject(mockedRejection);
     await validateAutomaticCover(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');

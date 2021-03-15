@@ -36,18 +36,18 @@ const MockCHResponse = () => {
   return res;
 };
 
-const mockRequest = new MockRequest();
-const mockResponse = new MockResponse();
-const mockApplicationResponse = new MockApplicationResponse();
-const mockExporterResponse = new MockExporterResponse();
-const mockCHResponse = new MockCHResponse();
-
 afterEach(() => {
   jest.clearAllMocks();
 });
 
 describe('GET Comapnies House', () => {
   it('renders the `companies-house` template with empty field', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockCHResponse = new MockCHResponse();
+
     mockExporterResponse.details.companiesHouseRegistrationNumber = '';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
@@ -59,6 +59,12 @@ describe('GET Comapnies House', () => {
     });
   });
   it('renders the `companies-house` template with pre-populated field', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockCHResponse = new MockCHResponse();
+
     mockExporterResponse.details.companiesHouseRegistrationNumber = 'xyz';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
@@ -71,7 +77,9 @@ describe('GET Comapnies House', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
+    const mockResponse = new MockResponse();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+
     api.getApplication = () => Promise.reject(mockedRejection);
     await companiesHouse({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
@@ -80,6 +88,11 @@ describe('GET Comapnies House', () => {
 
 describe('Validate Companies House', () => {
   it('returns error object if companies house registration number is empty', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+
     mockRequest.body.regNumber = '';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
@@ -93,6 +106,12 @@ describe('Validate Companies House', () => {
   });
 
   it('redirects user to `exporters address` page if response from api is successful', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockCHResponse = new MockCHResponse();
+
     mockRequest.body.regNumber = '123';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
@@ -102,7 +121,9 @@ describe('Validate Companies House', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
+    const mockResponse = new MockResponse();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+
     api.getApplication = () => Promise.reject(mockedRejection);
     await validateCompaniesHouse({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');

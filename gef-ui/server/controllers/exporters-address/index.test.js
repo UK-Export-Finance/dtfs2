@@ -29,8 +29,6 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const mockResponse = new MockResponse();
-
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -40,6 +38,7 @@ describe('GET Exporters Address', () => {
     const mockRequest = new MockRequest();
     const mockExporterResponse = new MockExporterResponse();
     const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
 
     mockExporterResponse.details.companyName = 'Test company';
     mockExporterResponse.details.registeredAddress = { line1: 'Line 1', line2: 'Line 2' };
@@ -57,6 +56,7 @@ describe('GET Exporters Address', () => {
     const mockRequest = new MockRequest();
     const mockExporterResponse = new MockExporterResponse();
     const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
 
     mockExporterResponse.details.companyName = 'Test company';
     mockExporterResponse.details.registeredAddress = null;
@@ -72,6 +72,7 @@ describe('GET Exporters Address', () => {
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
     const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
 
     api.getApplication = () => Promise.reject(mockedRejection);
@@ -85,6 +86,7 @@ describe('Validate Exporters Address', () => {
     const mockRequest = new MockRequest();
     const mockExporterResponse = new MockExporterResponse();
     const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
 
     mockRequest.body.correspondence = '';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
@@ -105,6 +107,7 @@ describe('Validate Exporters Address', () => {
     const mockRequest = new MockRequest();
     const mockExporterResponse = new MockExporterResponse();
     const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
 
     mockRequest.body.correspondence = 'false';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
@@ -117,6 +120,7 @@ describe('Validate Exporters Address', () => {
     const mockRequest = new MockRequest();
     const mockExporterResponse = new MockExporterResponse();
     const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
 
     mockRequest.body.correspondence = 'true';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
@@ -132,7 +136,9 @@ describe('Validate Exporters Address', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
+    const mockResponse = new MockResponse();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+
     api.getApplication = () => Promise.reject(mockedRejection);
     await validateExportersAddress({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
