@@ -25,6 +25,7 @@ jobs:
     - name: Initialise Environment
       run: |
         echo Setting environment to ${{ env.environment }}
+        
   build:
     name: Build and push ACBS Azure Function
     runs-on: ubuntu-latest
