@@ -62,8 +62,12 @@ jobs:
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
+    strategy:
+      matrix:
+        include:
+          - environment: dev
     environment:
-      name: ${{ env.environment }}
+      name: ${{ matrix.environment }}
     runs-on: ubuntu-latest
 
     steps:        
