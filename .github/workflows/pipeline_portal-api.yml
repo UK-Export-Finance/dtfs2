@@ -16,12 +16,6 @@ env:
   environment: dev
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.RESOURCE_GROUP }}
-  # These values are used when running tests in Docker Compose
-  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-  GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-  DTFS_PORTAL_SCHEDULER: false
-  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "*/1 * * * * *"
 
 jobs:
   set-environment:
@@ -178,7 +172,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{ secrets.resource_group }}
 
     - name: Create slot ${{ github.sha }}
       uses: Azure/cli@v1.0.0
