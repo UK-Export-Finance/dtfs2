@@ -32,9 +32,10 @@ const validateCompaniesHouse = async (req, res) => {
         errRef: 'regNumber',
         errMsg: 'Enter a Companies House registration number',
       };
+
       return res.render('partials/companies-house.njk', {
         errors: validationErrorHandler(regNumberError),
-        regNumber: regNumber || companiesHouseRegistrationNumber,
+        regNumber,
       });
     }
 
