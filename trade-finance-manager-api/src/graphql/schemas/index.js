@@ -193,6 +193,7 @@ type TFMTask {
   title: String
   status: String
   team: TFMTeam
+  assignedTo: String
 }
 
 type TFMDealData {
@@ -272,6 +273,12 @@ input TFMFacilityInput {
   bondBeneficiaryPartyUrn: String
 }
 
+input TFMTaskInput {
+  taskId: String
+  assignedTo: String
+  status: String
+}
+
 type Query {
   deal(_id: ID!): Deal
   deals(params: DealsInput): DealsQuery
@@ -281,6 +288,7 @@ type Query {
 type Mutation {
   updateParties(_id: ID!, partyUpdate: TFMPartiesInput): TFMDealData
   updateFacility(_id: ID!, facilityUpdate: TFMFacilityInput): TFMFacilityData
+  updateTask(dealId: ID!, taskUpdate: TFMTaskInput): TFMTask
 }
 `;
 

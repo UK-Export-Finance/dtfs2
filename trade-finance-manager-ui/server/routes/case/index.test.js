@@ -40,7 +40,9 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(6);
+    expect(post).toHaveBeenCalledTimes(7);
+
+    expect(post).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.putCaseTask);
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', caseController.postExporterPartyDetails);
 

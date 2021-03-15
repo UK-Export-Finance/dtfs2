@@ -105,7 +105,7 @@ describe('controllers - case', () => {
         });
       });
     });
-    
+
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
@@ -168,7 +168,7 @@ describe('controllers - case', () => {
         });
       });
     });
-    
+
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();

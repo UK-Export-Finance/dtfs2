@@ -21,12 +21,12 @@
     <h4 data-cy="team-heading">Team</h4>
     <p data-cy="team-subheading">{{ task.team.name }}</p>
 
-    <form>
-      {% set currentUser = (user.firstName + ' ' + user.lastName + ' ' + '(Assign to me)') %}
+    <form method="POST" autocomplete="off">
+      {% set currentUserAssignToMe = (user.firstName + ' ' + user.lastName + ' ' + '(Assign to me)') %}
    
       {{ govukSelect({
-        id: "sort",
-        name: "sort",
+        id: "assignedTo",
+        name: "assignedTo",
         label: {
           text: "Assigned to"
         },
@@ -37,7 +37,7 @@
           },
           {
             value: user._id,
-            text: currentUser
+            text: currentUserAssignToMe
           }
         ],
         attributes: {
