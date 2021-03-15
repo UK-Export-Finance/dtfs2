@@ -2,14 +2,6 @@ import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
 import commaNumber from 'comma-number';
 
-// Converts strings into Booleans
-const parseBool = (params) => !(
-  params === 'false'
-    || params === '0'
-    || params === ''
-    || params === undefined
-);
-
 // Fetches the user token from session
 const userToken = (req) => {
   const token = req.session.userToken;
@@ -150,7 +142,6 @@ const facilityType = ({
 });
 
 export {
-  parseBool,
   userToken,
   isObject,
   apiErrorHandler,

@@ -21,7 +21,10 @@
 
   {{ govukBackLink({
     text: "Back",
-    href: '/gef/application-details/' + applicationId + '/companies-house'
+    href: '/gef/application-details/' + applicationId + '/companies-house',
+    attributes: {
+      'data-cy': 'back-button'
+    }
   }) }}
 
   <header data-cy="application-details-page">
@@ -29,16 +32,20 @@
       About the exporter
     </span>
     <h1 class="govuk-heading-xl" data-cy="main-heading">
-      Exporter’s address
+      Exporter's address
     </h1>
   </header>
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-one-half">
-      <p class="govuk-body"><strong>Company Name</strong></p>
-      <p class="govuk-body">{{ companyName }}</p>
+      <p class="govuk-body" data-cy="company-name-title"><strong>Company Name</strong></p>
+      {% if companyName %}
+        <p class="govuk-body" data-cy="company-name">{{ companyName }}</p>
+      {% else %}
+        <p class="govuk-body">—</p>
+      {% endif %}
 
-      <p class="govuk-body"><strong>Registered company address</strong></p>
+      <p class="govuk-body" data-cy="registered-company-address-title"><strong>Registered company address</strong></p>
       {{ registeredAddress | safe }}
     </div>
   </div>
@@ -47,7 +54,10 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukDetails({
         summaryText: "How do I change the registered company address?",
-        text: "You cannot change the registered company address in this service. This information is sent to us from Companies House. Check with the exporter if you have a query about their registered address."
+        text: "You cannot change the registered company address in this service. This information is sent to us from Companies House. Check with the exporter if you have a query about their registered address.",
+        attributes: {
+          'data-cy': 'change-details'
+        }
       }) }}
     </div>
   </div>

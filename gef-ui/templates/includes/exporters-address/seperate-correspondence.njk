@@ -1,62 +1,72 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    {{ govukRadios({
-      classes: "govuk-radios--inline",
-      idPrefix: "correspondence",
-      name: "correspondence",
-      fieldset: {
-        legend: {
-          text: "Is there a separate correspondence address for the exporter?",
-          classes: "govuk-fieldset__legend--s"
-        }
-      },
-      errorMessage: errors and {
-        text: errors.fieldErrors.confirm.text,
-        attributes: {
-          'data-cy': 'correspondence-error'
-        }
-      },
-      items: [
-        {
-          text: "Yes",
-          attributes: {
-            'data-cy': 'correspondence-yes',
-            onClick: "correspondenceAddress.toggle(false)"
-          }
-        },
-        {
-          value: false,
-          text: "No",
-          attributes: {
-            'data-cy': 'correspondence-no',
-            onClick: "correspondenceAddress.toggle(true)"
-          }
-        }
-      ] }) 
-    }}
-
-    <div id="conditional-correspondence">
-      {{ govukInput({
-        label: {
-          text: "Correspondence address",
-          classes: "govuk-label--s"
-        },
-        id: "postcode",
-        name: "postcode",
-        hint: {
-          text: "Postcode"
-        }
-      }) }}
-
-      {{ govukButton({
-        text: "Find address",
-        classes: "govuk-button--secondary"
-      }) }}
-    </div>
-
     <form
       method="post"
       data-cy="form">
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "correspondence",
+        name: "correspondence",
+        fieldset: {
+          legend: {
+            text: "Is there a separate correspondence address for the exporter?",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        errorMessage: errors and errors.fieldErrors.correspondence and {
+          text: errors.fieldErrors.correspondence.text,
+          attributes: {
+            'data-cy': 'correspondence-error'
+          }
+        },
+        items: [
+          {
+            value: true,
+            text: "Yes",
+            checked: correspondence === "true",
+            attributes: {
+              'data-cy': 'correspondence-yes',
+              onClick: "correspondenceAddress.toggle(false)"
+            }
+          },
+          {
+            value: false,
+            text: "No",
+            checked: correspondence === "false",
+            attributes: {
+              'data-cy': 'correspondence-no',
+              onClick: "correspondenceAddress.toggle(true)"
+            }
+          }
+        ] }) 
+      }}
+
+      <div id="conditional-correspondence">
+        {{ govukInput({
+          label: {
+            text: "Correspondence address",
+            classes: "govuk-label--s"
+          },
+          id: "postcode",
+          name: "postcode",
+          hint: {
+            text: "Postcode"
+          },
+          errorMessage: errors and errors.fieldErrors.postcode and {
+            text: errors.fieldErrors.postcode.text,
+            attributes: {
+              'data-cy': 'postcode-error'
+            }
+          }
+        }) }}
+
+        {{ govukButton({
+          text: "Find address",
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+
+    
       {% if correspondenceAddress %}
         {{ govukInput({
           id: "contact-by-email",
@@ -85,10 +95,8 @@
 
 <script type="text/javascript">
   function CorrespondenceAddress() {
+    const yesCorrespondenceRadio = document.getElementById('correspondence');
     const conditionalCorrespondence = document.getElementById('conditional-correspondence');
-
-    // On load hide correspondence section
-    conditionalCorrespondence.className = 'govuk-visually-hidden';
 
     const toggle = function (bool) {
       if (bool) {
@@ -96,6 +104,12 @@
       } else {
         conditionalCorrespondence.className = '';
       }
+    }
+
+    if (yesCorrespondenceRadio.checked) {
+      toggle(false)
+    } else {
+      toggle(true)
     }
 
     return { toggle };
