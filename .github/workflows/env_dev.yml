@@ -65,7 +65,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - environment: dev
+          - environment: ${{ env.environment }}
     environment:
       name: ${{ matrix.environment }}
     runs-on: ubuntu-latest
