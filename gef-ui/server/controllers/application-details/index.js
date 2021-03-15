@@ -1,6 +1,6 @@
 import * as api from '../../services/api';
 import {
-  mapSummaryList, status, facilityType, parseBool,
+  mapSummaryList, status, facilityType,
 } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
 
@@ -20,7 +20,7 @@ const applicationDetails = async (req, res) => {
     const canSubmit = exporterStatus.code === COMPLETED && facilitiesStatus.code === COMPLETED; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
-      isManual: parseBool(manual),
+      isManual: manual,
       exporter: {
         status: exporterStatus,
         rows: mapSummaryList(exporter, exporterItems(exporterUrl)),

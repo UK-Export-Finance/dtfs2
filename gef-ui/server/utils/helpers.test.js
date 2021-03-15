@@ -1,6 +1,5 @@
 import {
   userToken,
-  parseBool,
   isObject,
   validationErrorHandler,
   mapSummaryList,
@@ -16,16 +15,6 @@ describe('userToken()', () => {
     };
 
     expect(userToken(MOCK_REQ)).toEqual('1234');
-  });
-});
-
-describe('parseBool()', () => {
-  it('returns a boolean', () => {
-    expect(parseBool('true')).toBe(true);
-    expect(parseBool('false')).toBe(false);
-    expect(parseBool('')).toBe(false);
-    expect(parseBool(undefined)).toBe(false);
-    expect(parseBool('0')).toBe(false);
   });
 });
 
