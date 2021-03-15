@@ -5,21 +5,20 @@
 
 {% block sub_content %}
   {% set facilityDetailsHtml %}
-      {% set detailsComponentData = {
-      facility: facility,
-      user: user,
-      facilityTfm: facilityTfm
-    } %}
-    {{ details.render(detailsComponentData) }}
+  {% set detailsComponentData = {
+    facility: facility,
+    user: user,
+    facilityTfm: facilityTfm
+  } %}
+  {{ details.render(detailsComponentData) }}
   {% endset %}
   {% set premiumScheduleHtml %}
-  <h1>Premium schedule HTML</h1>
+  <h1>Premium schedule</h1>
   {% endset -%}
   <div>
-  <h3 class="ukef-label-grey" style="padding-top:90px">Facility {{ facility.ukefFacilityID }}</h3>
-  <h3 class="govuk-heading-l">{{ facility.facilityType }}</h3>
-</div>
-
+    <h3 class="ukef-label-grey" style="padding-top:90px">Facility {{ facility.ukefFacilityID }}</h3>
+    <h3 class="govuk-heading-l">{{ facility.facilityType }}</h3>
+  </div>
 
   {{ govukTabs({
   items: [
