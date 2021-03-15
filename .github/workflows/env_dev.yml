@@ -57,13 +57,13 @@ env:
 jobs:
 
   set-environment:
-    name: setEnvironment
+    name: Set Environment
     runs-on: ubuntu-latest
     outputs:
-      environment: dev
+      environment: ${{ env.environment }}
     steps:
     - name: Initialise Environment
-      run: echo "Setting environment"
+      run: echo "Setting environment: ${{ env.envioronment }}"
 
       # START Virtual Network setup 
   vnet:
