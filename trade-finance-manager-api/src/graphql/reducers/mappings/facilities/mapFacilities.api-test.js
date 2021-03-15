@@ -41,10 +41,10 @@ describe('mapFacilities', () => {
         facilityStage: 'Unissued',
         ukefExposure: '1,234.00',
         riskMarginFee: '10',
+        ukefGuaranteeInMonths: '10',
 
         // fields we do not consume
         bondIssuer: 'Issuer',
-        ukefGuaranteeInMonths: '10',
         bondBeneficiary: 'test',
         guaranteeFeePayableByBank: '9.0000',
         currencySameAsSupplyContractCurrency: 'true',
@@ -70,10 +70,10 @@ describe('mapFacilities', () => {
         issuedDate: 1610369832226.0,
         ukefExposure: '1,234.00',
         interestMarginFee: '30',
+        ukefGuaranteeInMonths: '12',
 
         // fields we do not consume
         createdDate: 1610369832226.0,
-        ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '5678',
         guaranteeFeePayableByBank: '27.0000',
         lastEdited: 1610369832226.0,

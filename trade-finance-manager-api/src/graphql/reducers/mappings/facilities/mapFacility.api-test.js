@@ -7,6 +7,7 @@ const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapBanksInterestMargin = require('./mapBanksInterestMargin');
+const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmountInExportCurrency');
 const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
@@ -52,9 +53,9 @@ describe('mapFacility', () => {
     bondBeneficiary: 'test',
     ukefExposure: '1,234.00',
     riskMarginFee: '10',
+    ukefGuaranteeInMonths: '10',
 
     // fields we do not consume
-    ukefGuaranteeInMonths: '10',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
     minimumRiskMarginFee: '30',
@@ -85,10 +86,19 @@ describe('mapFacility', () => {
       facilityProduct: expectedFacilityProduct,
     });
 
-    const expectedDates = mapDates({
+    const facilityLatest = {
       ...mockFacility,
       facilityStage,
-    }, mockDealDetails);
+      facilityProduct: expectedFacilityProduct,
+    };
+
+    const expectedFirstDrawdownAmountInExportCurrency = mapFirstDrawdownAmountInExportCurrency(facilityLatest);
+
+    const expectedDates = mapDates(
+      facilityLatest,
+      mockTfmFacility,
+      mockDealDetails,
+    );
 
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
@@ -105,9 +115,10 @@ describe('mapFacility', () => {
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       banksInterestMargin: expectedBanksInterestMargin,
+      firstDrawdownAmountInExportCurrency: expectedFirstDrawdownAmountInExportCurrency,
+      dates: expectedDates,
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
-      dates: expectedDates,
     };
 
     expect(result).toEqual(expected);

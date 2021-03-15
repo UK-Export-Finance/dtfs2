@@ -16,12 +16,23 @@ env:
   environment: dev
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
 
 jobs:
+  set-environment:
+    name: Set Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
 
   build:
     name: Build and push TFM UI
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -30,9 +41,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        registry: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
         repository: trade-finance-manager-ui
         path: trade-finance-manager-ui
         tags: latest
@@ -42,49 +53,52 @@ jobs:
   test:
     name: "Run end-to-end tests in Compose"
     needs: build
+    environment:
+      name: E2ETEST
     runs-on: ubuntu-latest
     env:
-      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
-      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
-      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_WORKFLOW_FILESHARE_NAME }}
-      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
-      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
+      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}
+      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}
+      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}
 
-      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
-      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_PORTAL_FILESHARE_NAME }}
-      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
 
-      GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
 
-      MULESOFT_API_KEY: ${{ secrets.E2ETEST_MULESOFT_API_KEY }}
-      MULESOFT_API_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_SECRET }}
-      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.E2ETEST_MULESOFT_API_NUMBER_GENERATOR_URL }}
-      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_DEAL_URL }}
-      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_FACILITY_URL }}
-      MULESOFT_API_PARTY_DB_KEY: ${{ secrets.E2ETEST_MULESOFT_API_PARTY_DB_KEY }}
-      MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_PARTY_DB_SECRET }}
-      MULESOFT_API_PARTY_DB_URL: ${{ secrets.E2ETEST_MULESOFT_API_PARTY_DB_URL }}
-      MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.E2ETEST_MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
-      MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.E2ETEST_MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
-      MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
+      MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
+      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
+      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
+      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+      MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
+      MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
+      MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
+      MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
     
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
     - name: Pull trade-finance-manager-api
       run: |
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+        docker pull ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-api
+        docker tag ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-api dtfs/trade-finance-manager-api
     - name: Pull portal
       run: |
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui dtfs/trade-finance-manager-ui
+        docker pull ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui
+        docker tag ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui dtfs/trade-finance-manager-ui
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -123,26 +137,30 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    needs: test
+    needs: [set-environment, test]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
     - name: Tag images
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui:$from ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui:$to
-        docker push ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui:$to
+        docker pull ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:$from
+        docker tag ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:$from ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:$to
+        docker push ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:$to
 
   deploy:
     name: Deploy container images to Dev
-    needs: promote
+    needs: [set-environment, promote]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -154,7 +172,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{ secrets.resource_group }}
 
     - name: Create slot ${{ github.sha }}
       uses: Azure/cli@v1.0.0

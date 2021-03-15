@@ -15,12 +15,23 @@ env:
   environment: dev
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
 
 jobs:
+  set-environment:
+    name: Set Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
 
   build:
     name: Build and push Reference Data Proxy
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -29,9 +40,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        registry: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
         repository: reference-data-proxy
         path: reference-data-proxy
         tags: latest
@@ -41,6 +52,8 @@ jobs:
   test:
     name: "Run API tests in Compose"
     needs: build
+    environment:
+      name: APITEST
     runs-on: ubuntu-latest
     env:
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
@@ -54,19 +67,20 @@ jobs:
       MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
       MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
       MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+      MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
 
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
     - name: Pull reference-data-proxy
       run: |
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy dtfs/reference-data-proxy
+        docker pull ${{ secrets.ACR_REGISTRY }}/reference-data-proxy
+        docker tag ${{ secrets.ACR_REGISTRY }}/reference-data-proxy dtfs/reference-data-proxy
     - name: Start Docker Compose
       working-directory: ./reference-data-proxy
       run: |
@@ -86,26 +100,30 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    needs: test
+    needs: [set-environment, test]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
     - name: Tag images
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy:$from ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy:$to
-        docker push ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy:$to
+        docker pull ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:$from
+        docker tag ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:$from ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:$to
+        docker push ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:$to
 
   deploy:
     name: Deploy container images to Dev
-    needs: promote
+    needs: [set-environment, promote]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -117,7 +135,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{ secrets.resource_group }}
 
     - name: Create slot ${{ github.sha }}
       uses: Azure/cli@v1.0.0

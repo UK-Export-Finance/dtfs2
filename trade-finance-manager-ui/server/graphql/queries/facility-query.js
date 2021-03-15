@@ -27,6 +27,7 @@ const facilityQuery = gql`
         bankFacilityReference,
         ukefExposure,
         banksInterestMargin,
+        firstDrawdownAmountInExportCurrency,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
