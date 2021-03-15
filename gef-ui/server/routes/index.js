@@ -5,7 +5,6 @@ import applicationDetailsRoutes from './application-details';
 import ineligibleGefRoutes from './ineligible-gef';
 import ineligibleAutomaticCoverRoutes from './ineligible-automatic-cover';
 import automaticCoverRoutes from './automatic-cover';
-import companiesHouseRoutes from './companies-house';
 import exportersAddressRoutes from './exporters-address';
 
 const router = express.Router();
@@ -16,7 +15,6 @@ router.use(ineligibleGefRoutes);
 router.use(ineligibleAutomaticCoverRoutes);
 router.use(applicationDetailsRoutes);
 router.use(automaticCoverRoutes);
-router.use(companiesHouseRoutes);
 router.use(exportersAddressRoutes);
 
 export default router;
