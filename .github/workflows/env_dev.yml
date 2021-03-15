@@ -56,18 +56,23 @@ env:
 
 jobs:
 
-  # START Virtual Network setup 
+  setEnvironment:
+    name: setEnvironment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: dev
+    steps:
+      run: echo "Setting environment"
+
+      # START Virtual Network setup 
   vnet:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    strategy:
-      matrix:
-        include:
-          - environment: [ ${{ env.environment }} ]
+    needs: setEnvironment
     environment:
-      name: ${{ matrix.environment }}
+      name: ${{ needs.setEnvironment.outputs.environment }}
     runs-on: ubuntu-latest
 
     steps:        
