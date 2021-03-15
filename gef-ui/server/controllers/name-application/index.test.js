@@ -19,15 +19,14 @@ const MockRequest = () => {
   return req;
 };
 
-const mockResponse = new MockResponse();
-const mockRequest = new MockRequest();
-
 afterEach(() => {
   jest.clearAllMocks();
 });
 
 describe('GET Name Application', () => {
   it('renders the `name-application` template', async () => {
+    const mockResponse = new MockResponse();
+
     await nameApplication({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk');
   });
@@ -35,19 +34,19 @@ describe('GET Name Application', () => {
 
 describe('Create Application', () => {
   it('returns error object if `bankInternalRefName` property is empty', async () => {
-    const updatedMockedRequest = {
-      ...mockRequest,
-      body: {
-        bankInternalRefName: '',
-      },
-    };
-    await createApplication(updatedMockedRequest, mockResponse);
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    mockRequest.body.bankInternalRefName = '';
+    await createApplication(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
       errors: expect.any(Object),
     }));
   });
 
   it('renders the `application details` page with validation errors if valdiation fails on server', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
     const mockValidationRejection = {
       status: 422,
       data: [],
@@ -58,6 +57,8 @@ describe('Create Application', () => {
   });
 
   it('redirects user to `application details` page if successful', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
     const mockApplication = {
       _id: '123456',
       bankInternalRefName: 'Ref Name',
@@ -69,7 +70,10 @@ describe('Create Application', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+
     api.createApplication = () => Promise.reject(mockedRejection);
     await createApplication(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
