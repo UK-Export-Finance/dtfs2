@@ -11,25 +11,26 @@ on:
     # "At 12:00 on Tuesday." - https://crontab.guru/
     - cron: '0 12 * * 2'
 
-# CONFIGURATION
-# For help, go to https://github.com/Azure/Actions
-#
-# 1. Set up the following secrets in your repository:
-#   AZURE_FUNCTIONAPP_PUBLISH_PROFILE
-#
-# 2. Change these variables for your configuration:
 env:
   environment: dev
-  AZURE_FUNCTIONAPP_NAME: tfs-dev-function-acbs    # set this to your application's name
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure-functions/acbs-function'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
 
 jobs:
+  set-environment:
+    name: Set Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
   build:
     name: Build and push ACBS Azure Function
     runs-on: ubuntu-latest
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -37,9 +38,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        registry: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
         repository: azure-function-acbs
         path: azure-functions/acbs-function
         tags: latest
@@ -48,43 +49,49 @@ jobs:
 
   test:
     name: Test ACBS Azure Functions
-    needs: build
+    needs: [set-environment, build]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
     - name: Pull ACBS Function
       run: |
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs dtfs/pazure-function-acbs
+        docker pull ${{ secrets.ACR_REGISTRY }}/azure-function-acbs
+        docker tag ${{ secrets.ACR_REGISTRY }}/azure-function-acbs dtfs/pazure-function-acbs
         
   promote:
     name: Promote container images to Dev
     runs-on: ubuntu-latest
-    needs: test
+    needs: [set-environment, test]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
     - name: Tag images
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$from ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$to
-        docker push ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$to
+        docker pull ${{ secrets.ACR_REGISTRY }}/azure-function-acbs:$from
+        docker tag ${{ secrets.ACR_REGISTRY }}/azure-function-acbs:$from ${{ secrets.ACR_REGISTRY }}/azure-function-acbs:$to
+        docker push ${{ secrets.ACR_REGISTRY }}/azure-function-acbs:$to
 
   deploy:
     name: Deploy container images to Dev
-    needs: promote
+    needs: [set-environment, promote]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -96,7 +103,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{ secrets.resource_group }}
 
     - name: Create slot ${{ github.sha }}
       uses: Azure/cli@v1.0.0
