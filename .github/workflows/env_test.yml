@@ -66,7 +66,7 @@ jobs:
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
 
     steps:        
@@ -159,7 +159,7 @@ jobs:
           
   private-dns:
     name: Private DNS zones
-    environment: dev
+    environment: test
     needs: vnet
     runs-on: ubuntu-latest
     steps:
@@ -210,7 +210,7 @@ jobs:
  
   public-ip:
     name: Public IP
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
 
@@ -246,7 +246,7 @@ jobs:
   network-security-group:
     name: Network Security Group Create
     needs: vnet
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -360,7 +360,7 @@ jobs:
   cosmos-db-create:
     name: Cosmos DB (Mongo) Create
     needs: vnet
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -424,7 +424,7 @@ jobs:
   cosmos-db-init:
     name: Cosmos DB (Mongo) Initialise Collections
     needs: cosmos-db-create
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -483,7 +483,7 @@ jobs:
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [cosmos-db-init, private-dns]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -573,7 +573,7 @@ jobs:
   file-storage:
     name: File storage
     needs: [vnet, private-dns]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -666,7 +666,7 @@ jobs:
   redis:
     name: Redis session store
     needs: [vnet, private-dns]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -747,7 +747,7 @@ jobs:
   functions:
     name: ACBS Function Setup
     needs: [vnet, private-dns, file-storage]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -784,7 +784,7 @@ jobs:
   reference-data-proxy:
     name: Reference data API
     needs: [vnet, private-dns]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -933,7 +933,7 @@ jobs:
   dtfs-central-api:
     name: DTFS Central API
     needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1088,7 +1088,7 @@ jobs:
   portal-api:
     name: Portal API
     needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1242,7 +1242,7 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
-              AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}" \
+              AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}" \
               AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
               AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
               AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
@@ -1268,7 +1268,7 @@ jobs:
   trade-finance-manager-api:
     name: Trade Finance Manager API
     needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1426,7 +1426,7 @@ jobs:
   portal-ui:
     name: Portal UI
     needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1584,7 +1584,7 @@ jobs:
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
     needs: [vnet, private-dns, trade-finance-manager-api, redis]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1740,7 +1740,7 @@ jobs:
   gef-ui:
     name: GEF UI
     needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1901,7 +1901,7 @@ jobs:
   application-gateway-portal:
     name: Application Gateway Portal
     needs: [vnet, public-ip, portal-ui, gef-ui]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2104,7 +2104,7 @@ jobs:
   application-gateway-tfm:
     name: Application Gateway TFM
     needs: [vnet, public-ip, trade-finance-manager-ui]
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2198,7 +2198,7 @@ jobs:
     # So you won't get a successful request for the first few minutes.
     name: Portal Front Door WAF/DDoS
     needs: application-gateway-portal
-    environment: dev
+    environment: test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
