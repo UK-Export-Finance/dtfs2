@@ -62,7 +62,7 @@ jobs:
     outputs:
       environment: dev
     steps:
-      name: Initialise Environment
+    - name: Initialise Environment
       run: echo "Setting environment"
 
       # START Virtual Network setup 
