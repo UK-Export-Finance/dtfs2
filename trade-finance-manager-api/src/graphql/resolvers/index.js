@@ -4,6 +4,7 @@ const queryFacility = require('./query-facility');
 
 const updateParties = require('./mutation-update-parties');
 const updateFacility = require('./mutation-update-facility');
+const updateTask = require('./mutation-update-task');
 
 
 const resolvers = {
@@ -15,6 +16,7 @@ const resolvers = {
   Mutation: {
     updateParties: (root, args) => updateParties(args),
     updateFacility: (root, args) => updateFacility(args),
+    updateTask: (root, args) => updateTask(args),
   },
 };
 

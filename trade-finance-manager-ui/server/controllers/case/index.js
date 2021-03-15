@@ -58,6 +58,33 @@ const getCaseTask = async (req, res) => {
   });
 };
 
+const putCaseTask = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
+  const { taskId } = req.params;
+
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const {
+    assignedTo,
+    status,
+  } = req.body;
+
+  const update = {
+    taskId,
+    assignedTo,
+    status,
+  };
+
+  await api.updateTask(dealId, update);
+
+  return res.redirect(`/case/${dealId}/parties`);
+};
+
 const getCaseFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
@@ -205,6 +232,7 @@ export default {
   getCaseDeal,
   getCaseTasks,
   getCaseTask,
+  putCaseTask,
   getCaseFacility,
   getCaseParties,
   getExporterPartyDetails,
