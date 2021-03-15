@@ -17,43 +17,9 @@ env:
   database_name: dtfs-submissions
   application_gateway_cidr: 10.0.0.0/28
   private_endpoints_cidr: 10.0.1.0/28
-  # Container registry
-  registry: ${{ secrets.PROD_ACR_REGISTRY }}
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
-  # App service secrets
-  SESSION_SECRET: "${{ secrets.PROD_SESSION_SECRET }}"
-  COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
-  AZURE_PORTAL_FILESHARE_NAME: "${{ secrets.PROD_AZURE_PORTAL_FILESHARE_NAME }}"
-  AZURE_PORTAL_EXPORT_FOLDER: "${{ secrets.PROD_AZURE_PORTAL_EXPORT_FOLDER }}"
-  AZURE_WORKFLOW_STORAGE_ACCOUNT: "${{ secrets.PROD_AZURE_WORKFLOW_STORAGE_ACCOUNT }}"
-  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: "${{ secrets.PROD_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}"
-  AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.PROD_AZURE_WORKFLOW_FILESHARE_NAME }}"
-  AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.PROD_AZURE_WORKFLOW_EXPORT_FOLDER }}"
-  AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.PROD_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-  MONGODB_ROOT_USER: "${{ secrets.PROD_MONGODB_ROOT_USER }}"
-  MONGODB_ROOT_SALT: "${{ secrets.PROD_MONGODB_ROOT_SALT }}"
-  MONGODB_ROOT_HASH: "${{ secrets.PROD_MONGODB_ROOT_HASH}}"
-  JWT_SIGNING_KEY: "${{ secrets.PROD_JWT_SIGNING_KEY }}"
-  JWT_VALIDATING_KEY: "${{ secrets.PROD_JWT_VALIDATING_KEY }}"
-  GOV_NOTIFY_API_KEY: "${{ secrets.PROD_GOV_NOTIFY_API_KEY }}"
-  GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
-  MULESOFT_API_NUMBER_GENERATOR_URL: "${{ secrets.PROD_MULESOFT_API_NUMBER_GENERATOR_URL }}"
-  MULESOFT_API_ACBS_DEAL_URL: "${{ secrets.PROD_MULESOFT_API_ACBS_DEAL_URL }}"
-  MULESOFT_API_ACBS_FACILITY_URL: "${{ secrets.PROD_MULESOFT_API_ACBS_FACILITY_URL }}"
-  MULESOFT_API_KEY: "${{ secrets.PROD_MULESOFT_API_KEY }}"
-  MULESOFT_API_SECRET: "${{ secrets.PROD_MULESOFT_API_SECRET }}"
-  MULESOFT_API_PARTY_DB_KEY: "${{ secrets.PROD_MULESOFT_API_PARTY_DB_KEY }}"
-  MULESOFT_API_PARTY_DB_SECRET: "${{ secrets.PROD_MULESOFT_API_PARTY_DB_SECRET }}"
-  MULESOFT_API_PARTY_DB_URL: "${{ secrets.PROD_MULESOFT_API_PARTY_DB_URL }}"
-  MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: "${{ secrets.PROD_MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}"
-  MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: "${{ secrets.PROD_MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}"
-  MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: "${{ secrets.PROD_MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}"
-  MULESOFT_API_EXPOSURE_PERIOD_URL: "${{ secrets.PROD_MULESOFT_API_EXPOSURE_PERIOD_URL }}"
-
-  MIGRATION_SSL_CERTIFICATE: "${{ secrets.PROD_MIGRATION_SSL_CERTIFICATE }}"
-  MIGRATION_SSL_CERTIFICATE_PASSWORD: "${{ secrets.PROD_MIGRATION_SSL_CERTIFICATE_PASSWORD }}"
-
+  ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
   # Scheduler switched off until LIVE
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
@@ -61,15 +27,29 @@ env:
 # Below this line should be the same for all environments
 
 jobs:
-  # START Virtual Network setup 
+
+  set-environment:
+    name: Set Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
+
+      # START Virtual Network setup 
   vnet:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
-    steps:
 
+    steps:        
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
@@ -79,7 +59,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: Vnet
       uses: Azure/cli@v1.0.0
@@ -120,7 +100,8 @@ jobs:
         inlineScript: |
           az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
     - name: NAT gateway
       uses: Azure/cli@v1.0.0
@@ -151,14 +132,16 @@ jobs:
         # Subnet for a temporary maintenance virtual machine.
         inlineScript: |
           az network vnet subnet create \
-            --name ${{ env.resource_group }}-vm \
+            --name ${{secrets.RESOURCE_GROUP }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.210.0/28 \
             --service-endpoints Microsoft.AzureCosmosDB
           
   private-dns:
     name: Private DNS zones
-    needs: vnet
+    needs: [set-environment, vnet]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
 
@@ -171,7 +154,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Zones
       uses: Azure/cli@v1.0.0
@@ -208,6 +191,9 @@ jobs:
  
   public-ip:
     name: Public IP
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
 
@@ -220,7 +206,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: IP address
       uses: Azure/cli@v1.0.0
@@ -229,18 +215,22 @@ jobs:
         inlineScript: |
           az network public-ip create --name tfs-${{ env.environment }}-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
           az network public-ip create --name tfs-${{ env.environment }}-tfm-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
   # END Virtual Network setup
 
   # START Network Security Group
   network-security-group:
     name: Network Security Group Create
-    needs: vnet
+    needs: [set-environment, vnet]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -252,7 +242,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Network Security Group
       uses: Azure/cli@v1.0.0
@@ -309,6 +299,7 @@ jobs:
             --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
+          
           # David
           az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 1000 --direction Inbound --protocol "*" --access Allow \
@@ -339,6 +330,7 @@ jobs:
           --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
           --destination-address-prefixes "*" --destination-port-ranges "*"
 
+          
     - name: Associate NSG to gateway subnet
       uses: Azure/cli@v1.0.0
       with:
@@ -351,7 +343,9 @@ jobs:
   # START CosmosDB setup
   cosmos-db-create:
     name: Cosmos DB (Mongo) Create
-    needs: vnet
+    needs: [set-environment, vnet]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -363,7 +357,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
       
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
@@ -397,7 +391,7 @@ jobs:
             --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet
           
-          vmEndpoint=$(az network vnet subnet show --name ${{ env.resource_group }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
+          vmEndpoint=$(az network vnet subnet show --name ${{secrets.RESOURCE_GROUP }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
           az cosmosdb network-rule add \
             --subnet "$vmEndpoint" \
             --name tfs-${{ env.environment }}-mongo \
@@ -414,7 +408,9 @@ jobs:
 
   cosmos-db-init:
     name: Cosmos DB (Mongo) Initialise Collections
-    needs: cosmos-db-create
+    needs: [set-environment, cosmos-db-create]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -426,7 +422,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Collections
       uses: Azure/cli@v1.0.0
@@ -465,67 +461,16 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}]'
-  
-  # cosmos-db-populate:
-  #   name: Cosmos DB (Mongo) Initialise root user
-  #   needs: cosmos-db-init
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: azure/login@v1
-  #     with:
-  #       creds: ${{ env.credentials }}
 
-  #   - name: Defaults
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az configure --defaults location=uksouth
-  #         az configure --defaults group=${{ env.resource_group }}  
-    
-  #   - name: Populate Collections
-  #     run: |
-
-  #       mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
-
-  #       cat <<EOF > db-init.js
-  #       db = db.getSiblingDB("${{ env.database_name }}")
-  #       try {
-  #         db.users.insertOne(
-  #           {
-  #             "_id" : ObjectId('000000000000000000000001'),
-  #             "user-status": "active",
-  #             "timezone": "Europe/London",
-  #             "username": "${{ env.MONGODB_ROOT_USER }}",
-  #             "firstname": "ROOT",
-  #             "surname": "USER",
-  #             "email": "",
-  #             "roles": [
-  #               "maker",
-  #               "editor",
-  #               "admin"
-  #             ],
-  #             "bank": {
-  #               "id": "*"
-  #             },
-  #             salt: "${{ env.MONGODB_ROOT_SALT }}",
-  #             hash: "${{ env.MONGODB_ROOT_HASH }}"
-  #           },    
-  #         )
-  #       } catch (err) {
-  #         print("User: ${{ env.MONGODB_ROOT_USER }} already exists.")
-  #         print(err)
-  #       }
-  #       EOF
-  #       echo "Initialising Root user"
-  #       echo "Mongo connection string: $mongo_connection_string"
-  #       echo "Mongo version:"
-  #       mongo --version
-  #       mongo "$mongo_connection_string" db-init.js
-  #       echo end.
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria --shard "_id" \
+            --idx '[{"key": {"keys": ["version"]}}]'
       
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
-    needs: [cosmos-db-init, private-dns]
+    needs: [set-environment, cosmos-db-init, private-dns]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -537,7 +482,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}         
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}         
           
     - name: Private link
       uses: Azure/cli@v1.0.0
@@ -614,7 +559,9 @@ jobs:
   # START File Storage setup
   file-storage:
     name: File storage
-    needs: [vnet, private-dns]
+    needs: [set-environment, vnet, private-dns]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -626,7 +573,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -641,7 +588,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage --name ${{ env.AZURE_PORTAL_FILESHARE_NAME }}
+          az storage share create --account-name tfs${{ env.environment }}storage --name ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
 
     - name: File share (workflow)
       uses: Azure/cli@v1.0.0
@@ -706,7 +653,9 @@ jobs:
   # START Redis setup           
   redis:
     name: Redis session store
-    needs: [vnet, private-dns]
+    needs: [set-environment, vnet, private-dns]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -718,7 +667,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -783,10 +732,12 @@ jobs:
     #       fi
   # END Redis setup
 
-  # START API setup
-  reference-data-proxy:
-    name: Reference data API
-    needs: [vnet, private-dns]
+  # START Function setup
+  functions:
+    name: ACBS Function Setup
+    needs: [set-environment, vnet, private-dns, file-storage]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -798,7 +749,45 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp create --name tfs-${{ env.environment }}-function-acbs \
+            --plan ${{ env.app_service_plan }} \
+            --functions-version 3 \
+            --storage-account tfs${{ env.environment }}storage \
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/azure-function-acbs:${{ env.environment }}
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment container config --name tfs-${{ env.environment }}-function-acbs \
+            --enable-cd true
+
+  # END Function setup
+
+  # START API setup
+  reference-data-proxy:
+    name: Reference data API
+    needs: [set-environment, vnet, private-dns]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -806,7 +795,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-reference-data-proxy \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/reference-data-proxy:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -917,22 +906,28 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              MULESOFT_API_NUMBER_GENERATOR_URL="${{ env.MULESOFT_API_NUMBER_GENERATOR_URL }}" \
-              MULESOFT_API_ACBS_DEAL_URL="${{ env.MULESOFT_API_ACBS_DEAL_URL }}" \
-              MULESOFT_API_ACBS_FACILITY_URL="${{ env.MULESOFT_API_ACBS_FACILITY_URL }}" \
-              MULESOFT_API_KEY="${{ env.MULESOFT_API_KEY }}" \
-              MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}" \
-              MULESOFT_API_PARTY_DB_KEY="${{ env.MULESOFT_API_PARTY_DB_KEY}}" \
-              MULESOFT_API_PARTY_DB_SECRET="${{ env.MULESOFT_API_PARTY_DB_SECRET}}" \
-              MULESOFT_API_PARTY_DB_URL="${{ env.MULESOFT_API_PARTY_DB_URL}}" \
-              MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}" \
-              MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}" \
-              MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
-              MULESOFT_API_EXPOSURE_PERIOD_URL="${{ env.MULESOFT_API_EXPOSURE_PERIOD_URL }}"
+              MULESOFT_API_NUMBER_GENERATOR_URL="${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}" \
+              MULESOFT_API_ACBS_DEAL_URL="${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}" \
+              MULESOFT_API_ACBS_FACILITY_URL="${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}" \
+              MULESOFT_API_KEY="${{ secrets.MULESOFT_API_KEY }}" \
+              MULESOFT_API_SECRET="${{ secrets.MULESOFT_API_SECRET }}" \
+              MULESOFT_API_PARTY_DB_KEY="${{ secrets.MULESOFT_API_PARTY_DB_KEY}}" \
+              MULESOFT_API_PARTY_DB_SECRET="${{ secrets.MULESOFT_API_PARTY_DB_SECRET}}" \
+              MULESOFT_API_PARTY_DB_URL="${{ secrets.MULESOFT_API_PARTY_DB_URL}}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
+              MULESOFT_API_EXPOSURE_PERIOD_URL="${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}" \
+              ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
+              ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" 
 
   dtfs-central-api:
     name: DTFS Central API
-    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -944,7 +939,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -952,7 +947,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-dtfs-central-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/dtfs-central-api:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1086,7 +1081,9 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1098,7 +1095,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1106,7 +1103,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-portal-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/portal-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1240,30 +1237,34 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
-              AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
-              AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
+              AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}" \
+              AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
               AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
               AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
-              AZURE_WORKFLOW_EXPORT_FOLDER="${{ env.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
-              AZURE_WORKFLOW_FILESHARE_NAME="${{ env.AZURE_WORKFLOW_FILESHARE_NAME }}" \
-              AZURE_WORKFLOW_IMPORT_FOLDER="${{ env.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
-              AZURE_WORKFLOW_STORAGE_ACCOUNT="${{ env.AZURE_WORKFLOW_STORAGE_ACCOUNT }}" \
-              AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
+              AZURE_WORKFLOW_EXPORT_FOLDER="${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
+              AZURE_WORKFLOW_FILESHARE_NAME="${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}" \
+              AZURE_WORKFLOW_IMPORT_FOLDER="${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
+              AZURE_WORKFLOW_STORAGE_ACCOUNT="${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}" \
+              AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
-              JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
-              GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
-              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
+              GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
-              TFM_API="http://$tfm_api_url"
+              TFM_API="http://$tfm_api_url" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1275,7 +1276,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1283,7 +1284,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-api:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1420,7 +1421,9 @@ jobs:
   # START UI setup
   portal-ui:
     name: Portal UI
-    needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
+    needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1432,7 +1435,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1440,7 +1443,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-portal-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/portal-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1572,12 +1575,14 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
             --connection-string-type custom \
             --settings \
-              SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
  
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
-    needs: [vnet, private-dns, trade-finance-manager-api, redis]
+    needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1589,7 +1594,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1597,7 +1602,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1728,11 +1733,13 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
             --connection-string-type custom \
             --settings \
-              SESSION_SECRET="${{ env.SESSION_SECRET }}"
+              SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
 
   gef-ui:
     name: GEF UI
-    needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
+    needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1744,7 +1751,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1752,7 +1759,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-gef-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/gef-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/gef-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1884,15 +1891,17 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-gef-ui \
             --connection-string-type custom \
             --settings \
-              SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
  
   # END UI setup
 
   # START Application gateways
   application-gateway-portal:
     name: Application Gateway Portal
-    needs: [vnet, public-ip, portal-ui, gef-ui]
+    needs: [set-environment, vnet, public-ip, portal-ui, gef-ui]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1904,7 +1913,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
  
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1922,7 +1931,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
+          cert="${{ secrets.MIGRATION_SSL_CERTIFICATE }}"
           if [ ! -z "$cert" ]
           then
             # Create the certificate file from the secret value:
@@ -1931,7 +1940,7 @@ jobs:
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-cert \
-              --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
+              --cert-password ${{ secrets.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
             echo "Creating frontend port"
@@ -2013,6 +2022,51 @@ jobs:
             --rule-type PathBasedRouting \
             --url-path-map gef-url-path-map
 
+    - name: Configure Portal API access
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          api_port="${{ env.api_portal_access_port }}"
+          if [ ! -z "$api_port" ]
+          then
+            echo "Updating NSG"
+            az network nsg rule create --name api-port \
+              --nsg-name tfs-${{ env.environment }}-gw-nsg \
+              --priority 300 \
+              --direction Inbound \
+              --protocol "*" \
+              --access Allow \
+              --source-address-prefixes "Internet" \
+              --source-port-ranges "*" \
+              --destination-address-prefixes "*" \
+              --destination-port-ranges "${{ env.api_portal_access_port }}"
+
+            echo "Creating Portal API Backend Pool..."
+            az network application-gateway address-pool create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name apiGatewayBackendPool \
+              --servers tfs-${{ env.environment }}-portal-api.azurewebsites.net
+
+            echo "Creating Frontend Port..."
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-port-api \
+              --port ${{ env.api_portal_access_port }}
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name apiGatewayHttpListener \
+              --frontend-port tfs-${{ env.environment }}-port-api
+
+            echo "Creating API routing rule..."
+            az network application-gateway rule create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name api-rule \
+              --address-pool apiGatewayBackendPool \
+              --http-listener apiGatewayHttpListener \
+              --http-settings appGatewayBackendHttpSettings
+          fi
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
       with:
@@ -2049,7 +2103,9 @@ jobs:
 
   application-gateway-tfm:
     name: Application Gateway TFM
-    needs: [vnet, public-ip, trade-finance-manager-ui]
+    needs: [set-environment, vnet, public-ip, trade-finance-manager-ui]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2061,7 +2117,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
  
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -2080,7 +2136,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
+          cert="${{ secrets.MIGRATION_SSL_CERTIFICATE }}"
           if [ ! -z "$cert" ]
           then
             # Create the certificate file from the secret value:
@@ -2089,7 +2145,7 @@ jobs:
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-tfm-gw \
               --name ${{ env.environment }}-cert \
-              --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
+              --cert-password ${{ secrets.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
             echo "Creating frontend port"
@@ -2142,7 +2198,9 @@ jobs:
     # NB Front Door takes a little while to be available
     # So you won't get a successful request for the first few minutes.
     name: Portal Front Door WAF/DDoS
-    needs: application-gateway-portal
+    needs: [set-environment, application-gateway-portal]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2154,7 +2212,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
           # Front door requires an extension to the az cli:
           az extension add --name front-door
@@ -2219,7 +2277,9 @@ jobs:
     # NB Front Door takes a little while to be available
     # So you won't get a successful request for the first few minutes.
     name: TFM Front Door WAF/DDoS
-    needs: application-gateway-tfm
+    needs: [set-environment, application-gateway-tfm]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2231,7 +2291,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
           # Front door requires an extension to the az cli:
           az extension add --name front-door
