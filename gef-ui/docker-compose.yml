@@ -112,6 +112,7 @@ services:
       - MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL
       - MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY
       - MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET
+      - MULESOFT_API_EXPOSURE_PERIOD_URL
     entrypoint: npx nodemon src/index.js
 
   redis:
@@ -157,3 +158,5 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
 
     entrypoint: npx nodemon src/index.js
+
+    

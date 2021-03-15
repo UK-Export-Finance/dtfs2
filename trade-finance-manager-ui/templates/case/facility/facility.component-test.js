@@ -24,6 +24,7 @@ describe(page, () => {
       bankFacilityReference: '123456',
       guaranteeFeePayableToUkef: '10%',
       banksInterestMargin: '10%',
+      firstDrawdownAmountInExportCurrency: 'GBP 1,234',
       dates: {
         inclusionNoticeReceived: '1606900616651',
         bankIssueNoticeReceived: '1606900616652',
@@ -59,6 +60,10 @@ describe(page, () => {
 
     it('should render facilityStage', () => {
       wrapper.expectText('[data-cy="facility-stage"]').toRead(params.facility.facilityStage);
+    });
+
+    it('should render firstDrawdownAmountInExportCurrency', () => {
+      wrapper.expectText('[data-cy="first-drawdown-amount-in-export-currency"]').toRead(params.facility.firstDrawdownAmountInExportCurrency);
     });
 
     it('should render bankFacilityReference', () => {

@@ -147,6 +147,7 @@ type FacilitySnapshot {
   bondIssuer: String
   bondBeneficiary: String
   ukefExposure: String
+  firstDrawdownAmountInExportCurrency: String
   dates: FacilityDates
 }
 
@@ -186,6 +187,7 @@ type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
   facilityValueInGBP: String
+  exposurePeriodInMonths: Int
   ukefExposure: FacilityUkefExposure
 }
 

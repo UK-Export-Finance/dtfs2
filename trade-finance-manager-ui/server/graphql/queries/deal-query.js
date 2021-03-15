@@ -63,6 +63,7 @@ const dealQuery = gql`
             bankFacilityReference,
             ukefExposure,
             banksInterestMargin,
+            firstDrawdownAmountInExportCurrency,
             dates {
               inclusionNoticeReceived,
               bankIssueNoticeReceived,
@@ -75,6 +76,7 @@ const dealQuery = gql`
             bondIssuerPartyUrn,
             bondBeneficiaryPartyUrn,
             facilityValueInGBP,
+            exposurePeriodInMonths,
             ukefExposure {
               exposure,
               timestamp

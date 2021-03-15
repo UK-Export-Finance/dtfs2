@@ -175,6 +175,21 @@ const getCurrencyExchangeRate = async (source, target) => {
   }
 };
 
+const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${refDataUrl}/exposure-period/${startDate}/${endDate}/${facilityType}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -186,4 +201,5 @@ module.exports = {
   getPartyDbInfo,
   findUser,
   getCurrencyExchangeRate,
+  getFacilityExposurePeriod,
 };
