@@ -81,11 +81,7 @@ jobs:
     - name: Pull portal-api
       run: |
         docker pull ${{ secrets.ACR_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_REGISTRY }}/portal-api dtfs/portal-api
-    - name: Pull portal-ui
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.ACR_REGISTRY }}/portal-ui dtfs/portal        
+        docker tag ${{ secrets.ACR_REGISTRY }}/portal-api dtfs/portal-api  
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d
