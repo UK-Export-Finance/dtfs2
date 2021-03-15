@@ -7,13 +7,14 @@ const automaticCover = {
   registeredCompanyAddressTitle: () => cy.get('[data-cy="registered-company-address-title"]'),
   changeDetails: () => cy.get('[data-cy="change-details"]'),
   // form: () => cy.get('[data-cy="form"]'),
-  // continueButton: () => cy.get('[data-cy="continue-button"]'),
+  continueButton: () => cy.get('[data-cy="continue-button"]'),
   // saveGoBackLink: () => cy.get('[data-cy="save-go-back-link"]'),
-  // errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  // fieldError: () => cy.get('[data-cy="automatic-cover-error"]'),
+  errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  postcodeError: () => cy.get('[data-cy="postcode-error"]'),
+  fieldError: () => cy.get('[data-cy="correspondence-error"]'),
   yesRadioButton: () => cy.get('[data-cy="correspondence-yes"]'),
   noRadioButton: () => cy.get('[data-cy="correspondence-no"]'),
-  // automaticCoverTerm: () => cy.get('[data-cy="automatic-cover-term"]'),
+  correspondenceAddress: () => cy.get('[data-cy="correspondence-address"]'),
 };
 
 export default automaticCover;

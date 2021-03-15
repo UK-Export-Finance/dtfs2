@@ -52,6 +52,9 @@
           hint: {
             text: "Postcode"
           },
+          attributes: {
+            'data-cy': 'correspondence-address'
+          },
           errorMessage: errors and errors.fieldErrors.postcode and {
             text: errors.fieldErrors.postcode.text,
             attributes: {
@@ -81,7 +84,10 @@
 
       <div class="govuk-button-group">
         {{ govukButton({
-          text: "Continue"
+          text: "Continue",
+          attributes: {
+            'data-cy': 'continue-button'
+          }
         }) }}
 
         <a

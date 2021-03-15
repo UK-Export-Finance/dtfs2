@@ -39,46 +39,33 @@ context('Exporters Address Page', () => {
       exportersAddress.yesRadioButton();
       exportersAddress.noRadioButton();
     });
+
+    it('redirects user to companies house page when clicking on Back Link', () => {
+      exportersAddress.backButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/companies-house`));
+    });
   });
 
-  // describe('Clicking on Continue button', () => {
-  //   it('shows errors if no radio button has been selected', () => {
-  //     automaticCover.continueButton().click();
-  //     automaticCover.errorSummary();
-  //     automaticCover.fieldError();
-  //     automaticCover.automaticCoverTerm().its('length').should('be.gt', 0); // greater than
-  //   });
+  describe('Clicking on Continue button', () => {
+    it('shows error message if no radio button has been selected', () => {
+      exportersAddress.continueButton().click();
+      exportersAddress.errorSummary();
+      exportersAddress.fieldError();
+    });
 
-  //   it('removes error message from field if a radio button has been selected', () => {
-  //     automaticCover.trueRadioButton().first().click();
-  //     automaticCover.continueButton().click();
-  //     automaticCover.automaticCoverTerm().eq(0).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
-  //     automaticCover.automaticCoverTerm().eq(1).siblings('[data-cy="automatic-cover-error"]'); // second term
-  //   });
+    it('redirects user to About exporter page if they select the No radio button', () => {
+      exportersAddress.noRadioButton().click();
+      exportersAddress.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/about-exporter`));
+    });
 
-  //   it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
-  //     automaticCover.automaticCoverTerm().each(($el, index) => {
-  //       if (index === 0) {
-  //         $el.find('[data-cy="automatic-cover-false"]').click();
-  //       } else {
-  //         $el.find('[data-cy="automatic-cover-true"]').click();
-  //       }
-  //     });
-  //     automaticCover.continueButton().click();
-  //     cy.url().should('eq', relative(`/gef/application-details/${applicationId}/ineligible-automatic-cover`));
-  //   });
-
-  //   it('takes user to `automatic application details` page if all true fields have been selected', () => {
-  //     automaticCover.automaticCoverTerm().each(($el) => {
-  //       $el.find('[data-cy="automatic-cover-true"]').click();
-  //     });
-  //     automaticCover.continueButton().click();
-  //     cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
-  //   });
-
-  //   it('takes user to `automatic application details` page if they click on the go back link', () => {
-  //     automaticCover.saveGoBackLink().click();
-  //     cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
-  //   });
-  // });
+    it('shows error message if user doesn`t fill in postcode', () => {
+      exportersAddress.yesRadioButton().click();
+      exportersAddress.correspondenceAddress().should('be.visible');
+      exportersAddress.continueButton().click();
+      exportersAddress.errorSummary();
+      exportersAddress.postcodeError();
+      exportersAddress.yesRadioButton().should('be.checked');
+    });
+  });
 });
