@@ -11,44 +11,15 @@ env:
   front_door_access: Allow
   environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-#  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
   redis_sku: Basic
   database_name: dtfs-submissions
   application_gateway_cidr: 10.0.0.0/28
   private_endpoints_cidr: 10.0.1.0/28
   api_portal_access_port: 44232
-  # Container registry
-#  registry: ${{ secrets.DEV_ACR_REGISTRY }}
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
-  # App service secrets
-#  SESSION_SECRET: "${{ secrets.DEV_SESSION_SECRET }}"
-  COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
-#  AZURE_PORTAL_FILESHARE_NAME: "${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }}"
-#  AZURE_PORTAL_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}"
-#  AZURE_WORKFLOW_STORAGE_ACCOUNT: "${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCOUNT }}"
-#  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: "${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}"
-#  AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }}"
-#  AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }}"
-#  AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-# JWT_SIGNING_KEY: "${{ secrets.DEV_JWT_SIGNING_KEY }}"
-  # JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
-  # GOV_NOTIFY_API_KEY: "${{ secrets.DEV_GOV_NOTIFY_API_KEY }}"
-  GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
-  # MULESOFT_API_NUMBER_GENERATOR_URL: "${{ secrets.DEV_MULESOFT_API_NUMBER_GENERATOR_URL }}"
-  # MULESOFT_API_ACBS_DEAL_URL: "${{ secrets.DEV_MULESOFT_API_ACBS_DEAL_URL }}"
-  # MULESOFT_API_ACBS_FACILITY_URL: "${{ secrets.DEV_MULESOFT_API_ACBS_DEAL_URL }}"
-  # MULESOFT_API_KEY: "${{ secrets.DEV_MULESOFT_API_KEY }}"
-  # MULESOFT_API_SECRET: "${{ secrets.DEV_MULESOFT_API_SECRET }}"
-  # MULESOFT_API_PARTY_DB_KEY: "${{ secrets.DEV_MULESOFT_API_PARTY_DB_KEY }}"
-  # MULESOFT_API_PARTY_DB_SECRET: "${{ secrets.DEV_MULESOFT_API_PARTY_DB_SECRET }}"
-  # MULESOFT_API_PARTY_DB_URL: "${{ secrets.DEV_MULESOFT_API_PARTY_DB_URL }}"
-  # MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: "${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}"
-  # MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: "${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}"
-  # MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: "${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}"
-  # MULESOFT_API_EXPOSURE_PERIOD_URL: "${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}"
-
+  ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
@@ -947,9 +918,9 @@ jobs:
               MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
               MULESOFT_API_EXPOSURE_PERIOD_URL="${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
-              ORDNANCE_SURVEY_API_KEY="${{ env.ORDNANCE_SURVEY_API_KEY }}" 
+              ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" 
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1279,14 +1250,14 @@ jobs:
               JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
               JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
-              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               TFM_API="http://$tfm_api_url" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -1604,7 +1575,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
  
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
@@ -1920,7 +1891,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
  
   # END UI setup
 
