@@ -7,6 +7,8 @@ import constants from '../../../constants';
 
 const applicationDetails = async (req, res) => {
   try {
+    const NOT_STARTED = 'NOT_STARTED';
+    const COMPLETED = 'COMPLETED';
     const { params, query } = req;
     const { applicationId } = params;
     const { manual } = query;
