@@ -46,7 +46,11 @@
       {% endif %}
 
       <p class="govuk-body" data-cy="registered-company-address-title"><strong>Registered company address</strong></p>
-      {{ registeredAddress | safe }}
+
+      {% for key, address in registeredAddress %}
+        <p class="govuk-body">{{ address }}</p>
+      {% endfor %}
+
     </div>
   </div>
 
