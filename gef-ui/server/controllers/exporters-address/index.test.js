@@ -48,7 +48,7 @@ describe('GET Exporters Address', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
       applicationId: '123',
       companyName: 'Test company',
-      registeredAddress: '<p class="govuk-body">Line 1</p><p class="govuk-body">Line 2</p>',
+      registeredAddress: expect.any(Object),
     });
   });
 
@@ -66,7 +66,7 @@ describe('GET Exporters Address', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
       applicationId: '123',
       companyName: 'Test company',
-      registeredAddress: '',
+      registeredAddress: null,
     });
   });
 
@@ -99,7 +99,7 @@ describe('Validate Exporters Address', () => {
       companyName: undefined,
       errors: expect.any(Object),
       correspondence: '',
-      registeredAddress: '',
+      registeredAddress: undefined,
     }));
   });
 
@@ -131,7 +131,7 @@ describe('Validate Exporters Address', () => {
       companyName: undefined,
       errors: expect.any(Object),
       correspondence: 'true',
-      registeredAddress: '',
+      registeredAddress: undefined,
     }));
   });
 
