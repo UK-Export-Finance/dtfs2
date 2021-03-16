@@ -2,18 +2,6 @@ import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
-function registeredAddressHandler(registeredAddress) {
-  const items = [];
-
-  if (registeredAddress) {
-    Object.values(registeredAddress).forEach((address) => {
-      items.push(`<p class="govuk-body">${address}</p>`);
-    });
-  }
-
-  return items.join('');
-}
-
 const exportersAddress = async (req, res) => {
   try {
     const { params } = req;
@@ -22,9 +10,11 @@ const exportersAddress = async (req, res) => {
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
 
+    console.log('registered address', registeredAddress);
+
     return res.render('partials/exporters-address.njk', {
       companyName: details.companyName,
-      registeredAddress: registeredAddressHandler(registeredAddress),
+      registeredAddress,
       applicationId,
     });
   } catch (err) {
@@ -64,7 +54,7 @@ const validateExportersAddress = async (req, res) => {
     return res.render('partials/exporters-address.njk', {
       errors: validationErrorHandler(correspondenceError),
       companyName: details.companyName,
-      registeredAddress: registeredAddressHandler(registeredAddress),
+      registeredAddress,
       applicationId,
       correspondence,
     });
