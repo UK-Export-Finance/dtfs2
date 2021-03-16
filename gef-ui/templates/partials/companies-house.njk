@@ -20,7 +20,10 @@
 
   {{ govukBackLink({
     text: "Back",
-    href: "#"
+    href: "/gef/application-details/" + applicationId,
+    attributes: {
+      'data-cy': 'back-link'
+    }
   }) }}
 
   <header data-cy="application-details-page">
@@ -42,10 +45,13 @@
           id: "regNumber",
           name: "regNumber",
           value: regNumber,
+          attributes: {
+            'data-cy': 'reg-number-field'
+          },
           errorMessage: errors and {
             text: errors.fieldErrors.regNumber.text,
             attributes: {
-              'data-cy': 'registration-number-input'
+              'data-cy': 'reg-number-field-error'
             }
           }
         }) }}
@@ -71,7 +77,10 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukDetails({
         summaryText: "I do not have a Companies House registration number for the exporter",
-        text: "You must ask the exporter to provide a Companies House registration number to continue."
+        text: "You must ask the exporter to provide a Companies House registration number to continue.",
+        attributes: {
+          'data-cy': 'summary-details'
+        }
       }) }}
     </div>
   </div>

@@ -127,15 +127,15 @@ describe('getAutomaticCover()', () => {
   });
 });
 
-describe('companiesHouse()', () => {
+describe('getCompaniesHouseDetails()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.companiesHouse();
+    const response = await api.getCompaniesHouseDetails();
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.companiesHouse()).rejects.toThrowError();
+    await expect(api.getCompaniesHouseDetails()).rejects.toThrowError();
   });
 });

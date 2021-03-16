@@ -12,6 +12,7 @@ const companiesHouse = async (req, res) => {
 
     return res.render('partials/companies-house.njk', {
       regNumber: companiesHouseRegistrationNumber,
+      applicationId,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -27,6 +28,8 @@ const validateCompaniesHouse = async (req, res) => {
     const { details } = await api.getExporter(exporterId);
     const { companiesHouseRegistrationNumber } = details;
 
+    console.log(companiesHouseRegistrationNumber);
+
     if (_isEmpty(regNumber)) {
       const regNumberError = {
         errRef: 'regNumber',
@@ -36,10 +39,15 @@ const validateCompaniesHouse = async (req, res) => {
       return res.render('partials/companies-house.njk', {
         errors: validationErrorHandler(regNumberError),
         regNumber,
+        applicationId,
       });
     }
+    console.log('regNumber', regNumber);
+    console.log('exporterId', exporterId);
 
-    await api.getCompaniesHouseDetails(regNumber);
+    const test = await api.getCompaniesHouseDetails(regNumber, exporterId);
+
+    console.log('test', test);
 
     return res.redirect('exporters-address');
   } catch (err) {
