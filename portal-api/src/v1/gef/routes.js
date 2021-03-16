@@ -6,6 +6,7 @@ const exporter = require('./controllers/exporter.controller');
 const facilities = require('./controllers/facilities.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
+const externalApi = require('./controllers/externalApi.controller');
 
 const router = express.Router();
 
@@ -60,5 +61,12 @@ router.route('/mandatory-criteria-versioned/:id')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), mandatoryCriteriaVersioned.findOne)
   .put(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.update)
   .delete(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.delete);
+
+// 3rd Party
+router.route('/company/:number') // companies house
+  .get(validate({ role: ['maker', 'data-admin'] }), externalApi.getByRegistrationNumber);
+
+router.route('/address/:postcode') // ordnancesurvey
+  .get(validate({ role: ['maker', 'data-admin'] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;
