@@ -1,6 +1,13 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
+import helpers from './helpers';
+
+const {
+  getTask,
+  isTaskIsAssignedToUser,
+  userFullName,
+} = helpers;
 
 const res = mockRes();
 
@@ -155,7 +162,7 @@ describe('controllers - case', () => {
           session,
         };
 
-        const expectedTask = mockDeal.tfm.tasks.find((t) => t.id === '456');
+        const expectedTask = getTask(req.params.taskId, mockDeal.tfm.tasks);
 
         await caseController.getCaseTask(req, res);
         expect(res.render).toHaveBeenCalledWith('case/tasks/task.njk', {
@@ -165,6 +172,9 @@ describe('controllers - case', () => {
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
           task: expectedTask,
+          // eslint-disable-next-line no-underscore-dangle
+          taskIsAssignedToUser: isTaskIsAssignedToUser(expectedTask.assignedTo, session.user._id),
+          userFullName: userFullName(session.user),
         });
       });
     });
@@ -187,6 +197,68 @@ describe('controllers - case', () => {
       });
     });
   });
+
+  describe('POST case task', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [
+            { id: '123' },
+            { id: '456' },
+          ],
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to /tasks', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            taskId: '456',
+          },
+          session,
+          body: {
+            assignedTo: '123456789',
+            status: 'In progress',
+          },
+        };
+
+        await caseController.putCaseTask(req, res);
+
+        // eslint-disable-next-line no-underscore-dangle
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+            taskId: '456',
+          },
+          session,
+        };
+
+        await caseController.putCaseTask(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
 
   describe('GET case facility', () => {
     describe('when facility exists', () => {

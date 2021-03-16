@@ -9,7 +9,7 @@
 
   <p>Task</p>
   <h2 class="header-label" data-cy="task-heading">{{ task.title }}</h2>
-  
+
   <div class="govuk-grid-row" data-cy="deal-tasks">
 
     <h4 data-cy="deal-heading">Deal</h4>
@@ -22,8 +22,13 @@
     <p data-cy="team-subheading">{{ task.team.name }}</p>
 
     <form method="POST" autocomplete="off">
-      {% set currentUserAssignToMe = (user.firstName + ' ' + user.lastName + ' ' + '(Assign to me)') %}
-   
+
+      {% set assignToMeCopy = (userFullName + ' ' + '(Assign to me)') %}
+
+      {% if taskIsAssignedToUser %}
+        {% set assignToMeCopy = userFullName %}
+      {% endif %}
+
       {{ govukSelect({
         id: "assignedTo",
         name: "assignedTo",
@@ -33,11 +38,13 @@
         items: [
           {
             value: "Unassigned",
-            text: "Unassigned"
+            text: "Unassigned",
+            selected: task.assignedTo === 'Unassigned'
           },
           {
             value: user._id,
-            text: currentUserAssignToMe
+            text: assignToMeCopy,
+            selected: taskIsAssignedToUser
           }
         ],
         attributes: {
@@ -57,6 +64,7 @@
             {
               value: "To do",
               text: "To do",
+              checked: task.status === 'To do',
               attributes: {
                 'data-cy': 'task-status-to-do'
               }
@@ -64,6 +72,7 @@
             {
               value: "In progress",
               text: "In progress",
+              checked: task.status === 'In progress',
               attributes: {
                 'data-cy': 'task-status-in-progress'
               }
@@ -71,6 +80,7 @@
             {
               value: "Done",
               text: "Done",
+              checked: task.status === 'Done',
               attributes: {
                 'data-cy': 'task-status-done'
               }
