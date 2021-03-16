@@ -57,7 +57,7 @@ const validateExportersAddress = async (req, res) => {
     if (correspondence === 'true' && _isEmpty(postcode)) {
       correspondenceError = {
         errRef: 'postcode',
-        errMsg: 'Please enter a postcode',
+        errMsg: 'Enter a postcode',
       };
     }
 
