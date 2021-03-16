@@ -16,7 +16,8 @@ const applicationDetails = async (req, res) => {
     const exporterUrl = `/gef/application-details/${applicationId}`;
     const exporterStatus = status[exporter.status || constants.NOT_STARTED]; // if null, set status to Not started
     const facilitiesStatus = status[facilities.status || constants.NOT_STARTED]; // if null, set status to Not started
-    const canSubmit = exporterStatus.code === constants.COMPLETED && facilitiesStatus.code === constants.COMPLETED; // Both statuses are set to complete
+    const canSubmit = exporterStatus.code === constants.COMPLETED
+    && facilitiesStatus.code === constants.COMPLETED; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
       isManual: manual,
