@@ -1,7 +1,7 @@
 import _isEmpty from 'lodash/isEmpty';
 import { decode } from 'html-entities';
 import * as api from '../../services/api';
-import { parseBool, validationErrorHandler } from '../../utils/helpers';
+import { validationErrorHandler } from '../../utils/helpers';
 
 const getMandatoryCriteria = async (req, res) => {
   try {
@@ -40,7 +40,7 @@ const validateMandatoryCriteria = async (req, res) => {
       });
     }
 
-    if (parseBool(mandatoryCriteria)) {
+    if (mandatoryCriteria === 'true') {
       return res.redirect('name-application');
     }
 
