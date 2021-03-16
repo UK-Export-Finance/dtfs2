@@ -10,8 +10,6 @@ const exportersAddress = async (req, res) => {
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
 
-    console.log('registered address', registeredAddress);
-
     return res.render('partials/exporters-address.njk', {
       companyName: details.companyName,
       registeredAddress,
