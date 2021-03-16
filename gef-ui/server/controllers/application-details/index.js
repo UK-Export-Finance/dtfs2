@@ -3,11 +3,12 @@ import {
   mapSummaryList, status, facilityType,
 } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
+import constants from '../../../constants';
+
+console.log('constants', constants);
 
 const applicationDetails = async (req, res) => {
   try {
-    const NOT_STARTED = 'NOT_STARTED';
-    const COMPLETED = 'COMPLETED';
     const { params, query } = req;
     const { applicationId } = params;
     const { manual } = query;
@@ -15,9 +16,9 @@ const applicationDetails = async (req, res) => {
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
-    const exporterStatus = status[exporter.status || NOT_STARTED]; // if null, set status to Not started
-    const facilitiesStatus = status[facilities.status || NOT_STARTED]; // if null, set status to Not started
-    const canSubmit = exporterStatus.code === COMPLETED && facilitiesStatus.code === COMPLETED; // Both statuses are set to complete
+    const exporterStatus = status[exporter.status || constants.NOT_STARTED]; // if null, set status to Not started
+    const facilitiesStatus = status[facilities.status || constants.NOT_STARTED]; // if null, set status to Not started
+    const canSubmit = exporterStatus.code === constants.COMPLETED && facilitiesStatus.code === constants.COMPLETED; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
       isManual: manual,
