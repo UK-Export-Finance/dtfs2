@@ -5,8 +5,6 @@ import {
 import { exporterItems, facilityItems } from '../../utils/displayItems';
 import constants from '../../../constants';
 
-console.log('constants', constants);
-
 const applicationDetails = async (req, res) => {
   try {
     const { params, query } = req;
