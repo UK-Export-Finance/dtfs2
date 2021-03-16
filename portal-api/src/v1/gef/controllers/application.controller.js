@@ -89,8 +89,10 @@ exports.delete = async (req, res) => {
   const applicationResponse = await applicationCollection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
   if (applicationResponse.value) {
     // remove exporter information related to the application
-    const exporterCollection = await db.getCollection(exporterCollectionName);
-    await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+    if (applicationResponse.value.exporterId) {
+      const exporterCollection = await db.getCollection(exporterCollectionName);
+      await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+    }
     // remove facility information related to the application
     const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
     await facilitiesCollection.deleteMany({ applicationId: ObjectId(String(req.params.id)) });
