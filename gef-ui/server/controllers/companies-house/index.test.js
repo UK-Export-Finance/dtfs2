@@ -56,6 +56,7 @@ describe('GET Comapnies House', () => {
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
       regNumber: '',
+      applicationId: '123',
     });
   });
   it('renders the `companies-house` template with pre-populated field', async () => {
@@ -67,6 +68,7 @@ describe('GET Comapnies House', () => {
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
       regNumber: 'xyz',
+      applicationId: '123',
     });
   });
 

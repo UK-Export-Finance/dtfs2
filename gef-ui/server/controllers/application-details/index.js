@@ -7,8 +7,6 @@ import constants from '../../../constants';
 
 const applicationDetails = async (req, res) => {
   try {
-    const NOT_STARTED = 'NOT_STARTED';
-    const COMPLETED = 'COMPLETED';
     const { params, query } = req;
     const { applicationId } = params;
     const { manual } = query;
@@ -35,6 +33,7 @@ const applicationDetails = async (req, res) => {
         })),
       },
       submit: canSubmit,
+      applicationId,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
