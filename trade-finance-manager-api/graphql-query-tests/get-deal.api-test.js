@@ -37,6 +37,7 @@ const GET_DEAL = gql`
           id,
           title,
           status,
+          assignedTo,
           team {
             id,
             name

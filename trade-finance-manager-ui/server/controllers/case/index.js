@@ -1,4 +1,11 @@
 import api from '../../api';
+import helpers from './helpers';
+
+const {
+  getTask,
+  isTaskIsAssignedToUser,
+  userFullName,
+} = helpers;
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -34,9 +41,6 @@ const getCaseTasks = async (req, res) => {
   });
 };
 
-const getTask = (taskId, tasks) =>
-  tasks.find((t) => t.id === taskId);
-
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const { taskId } = req.params;
@@ -48,6 +52,9 @@ const getCaseTask = async (req, res) => {
 
   const task = getTask(taskId, deal.tfm.tasks);
 
+  // eslint-disable-next-line no-underscore-dangle
+  const taskIsAssignedToUser = isTaskIsAssignedToUser(task.assignedTo, req.session.user._id);
+
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -55,6 +62,8 @@ const getCaseTask = async (req, res) => {
     dealId,
     user: req.session.user,
     task,
+    taskIsAssignedToUser,
+    userFullName: userFullName(req.session.user),
   });
 };
 
@@ -82,7 +91,7 @@ const putCaseTask = async (req, res) => {
 
   await api.updateTask(dealId, update);
 
-  return res.redirect(`/case/${dealId}/parties`);
+  return res.redirect(`/case/${dealId}/tasks`);
 };
 
 const getCaseFacility = async (req, res) => {
