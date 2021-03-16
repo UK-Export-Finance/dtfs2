@@ -25,7 +25,7 @@ const MockApplicationResponse = () => {
 const MockExporterResponse = () => {
   const res = {};
   res.details = {};
-  res.status = 1;
+  res.status = 'IN_PROGRESS';
   res.validation = {};
   res.details.companiesHouseRegistrationNumber = 'tedsi';
   res.validation.required = [];
@@ -34,16 +34,10 @@ const MockExporterResponse = () => {
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 1;
+  res.status = 'IN_PROGRESS';
   res.data = [];
   return res;
 };
-
-const mockResponse = new MockResponse();
-const mockRequest = new MockRequest();
-const mockApplicationResponse = new MockApplicationResponse();
-const mockExporterResponse = new MockExporterResponse();
-const mockFacilityResponse = new MockFacilityResponse();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -51,7 +45,13 @@ afterEach(() => {
 
 describe('GET Application Details', () => {
   it('renders the `Application Details` template', async () => {
-    mockFacilityResponse.items = [{ details: { type: 1 }, validation: { required: [] } }];
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
+
+    mockFacilityResponse.items = [{ details: { type: 'CASH' }, validation: { required: [] } }];
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     api.getFacilities = () => Promise.resolve(mockFacilityResponse);
@@ -70,6 +70,9 @@ describe('GET Application Details', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
     api.getApplication = () => Promise.reject();
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');

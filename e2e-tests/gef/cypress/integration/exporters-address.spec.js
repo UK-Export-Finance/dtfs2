@@ -1,0 +1,71 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-undef */
+import relative from './relativeURL';
+import exportersAddress from './pages/exporters-address';
+import CREDENTIALS from '../fixtures/credentials.json';
+
+let applicationId;
+
+context('Exporters Address Page', () => {
+  before(() => {
+    cy.reinsertMocks();
+    cy.apiLogin(CREDENTIALS.MAKER)
+      .then((token) => token)
+      .then((token) => {
+        cy.apiFetchAllApplications(token);
+      })
+      .then(({ body }) => {
+        applicationId = body.items[2]._id; // 3rd application contains an exporter with address
+      });
+    cy.login(CREDENTIALS.MAKER);
+
+
+    cy.on('uncaught:exception', () => false);
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.visit(relative(`/gef/application-details/${applicationId}/exporters-address`));
+  });
+
+  describe('Visiting page', () => {
+    it('displays the correct elements', () => {
+      exportersAddress.backButton();
+      exportersAddress.headingCaption();
+      exportersAddress.mainHeading();
+      exportersAddress.companyNameTitle();
+      exportersAddress.registeredCompanyAddressTitle();
+      exportersAddress.changeDetails();
+      exportersAddress.yesRadioButton();
+      exportersAddress.noRadioButton();
+    });
+
+    it('redirects user to companies house page when clicking on Back Link', () => {
+      exportersAddress.backButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/companies-house`));
+    });
+  });
+
+  describe('Clicking on Continue button', () => {
+    it('shows error message if no radio button has been selected', () => {
+      exportersAddress.continueButton().click();
+      exportersAddress.errorSummary();
+      exportersAddress.fieldError();
+    });
+
+    it('redirects user to About exporter page if they select the No radio button', () => {
+      exportersAddress.noRadioButton().click();
+      exportersAddress.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/about-exporter`));
+    });
+
+    it('shows error message if user doesn`t fill in postcode', () => {
+      exportersAddress.yesRadioButton().click();
+      exportersAddress.correspondenceAddress().should('be.visible');
+      exportersAddress.continueButton().click();
+      exportersAddress.errorSummary();
+      exportersAddress.postcodeError();
+      exportersAddress.yesRadioButton().should('be.checked');
+    });
+  });
+});
