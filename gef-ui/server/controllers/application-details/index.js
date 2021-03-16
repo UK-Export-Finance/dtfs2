@@ -1,8 +1,9 @@
 import * as api from '../../services/api';
 import {
-  mapSummaryList, status, facilityType, parseBool,
+  mapSummaryList, status, facilityType,
 } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
+import constants from '../../../constants';
 
 const applicationDetails = async (req, res) => {
   try {
@@ -13,12 +14,12 @@ const applicationDetails = async (req, res) => {
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
-    const exporterStatus = status[exporter.status || 0]; // if null, set status to Not started
-    const facilitiesStatus = status[facilities.status || 0]; // if null, set status to Not started
-    const canSubmit = exporterStatus.code + facilitiesStatus.code === 4; // Both statuses are set to complete
+    const exporterStatus = status[exporter.status || constants.NOT_STARTED]; // if null, set status to Not started
+    const facilitiesStatus = status[facilities.status || constants.NOT_STARTED]; // if null, set status to Not started
+    const canSubmit = exporterStatus.code === constants.COMPLETED && facilitiesStatus.code === constants.COMPLETED; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
-      isManual: parseBool(manual),
+      isManual: manual,
       exporter: {
         status: exporterStatus,
         rows: mapSummaryList(exporter, exporterItems(exporterUrl)),
