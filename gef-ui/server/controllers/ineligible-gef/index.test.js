@@ -7,14 +7,13 @@ const MockResponse = () => {
   return res;
 };
 
-const mockResponse = new MockResponse();
-
 afterEach(() => {
   jest.clearAllMocks();
 });
 
 describe('GET Mandatory Criteria', () => {
   it('renders the `ineligible for GEF` template', async () => {
+    const mockResponse = new MockResponse();
     await ineligibleGef({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-gef.njk');
   });

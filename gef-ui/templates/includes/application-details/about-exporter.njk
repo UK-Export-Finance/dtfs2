@@ -19,7 +19,7 @@
   </div>
 </div>
 
-{% if exporter.status.code === 0 %}
+{% if exporter.status.code === 'NOT_STARTED' %}
   <a class="govuk-link" href="#" data-cy="exporter-details-link">Enter details</a>
 {% else %}
   {{ govukSummaryList({
