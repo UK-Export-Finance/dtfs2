@@ -1,0 +1,10 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{{ govukSelect({
+  id: "addresses",
+  name: "addresses",
+  label: {
+    text: "Select address"
+  },
+  items: addresses
+}) }}
