@@ -17,7 +17,7 @@ const apiErrorHandler = ({ code, response }) => {
     throw httpError(501, 'Request timed out.');
   }
   // Is validation error
-  if (response.status === 422 || response.status === 404) {
+  if (response.status === 422) {
     throw response;
   }
 
