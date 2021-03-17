@@ -74,7 +74,6 @@ const getCompaniesHouseDetails = async (companyRegNumber, exporterId) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, { params: { exporterId } });
     return data;
   } catch (err) {
-    console.log(err);
     return apiErrorHandler(err);
   }
 };

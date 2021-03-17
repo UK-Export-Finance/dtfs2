@@ -3,9 +3,10 @@ import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
 const companiesHouse = async (req, res) => {
+  const { params } = req;
+  const { applicationId } = params;
+
   try {
-    const { params } = req;
-    const { applicationId } = params;
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { companiesHouseRegistrationNumber } = details;
@@ -20,15 +21,12 @@ const companiesHouse = async (req, res) => {
 };
 
 const validateCompaniesHouse = async (req, res) => {
-  try {
-    const { params, body } = req;
-    const { regNumber } = body;
-    const { applicationId } = params;
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const { companiesHouseRegistrationNumber } = details;
+  const { params, body } = req;
+  const { regNumber } = body;
+  const { applicationId } = params;
 
-    console.log(companiesHouseRegistrationNumber);
+  try {
+    const { exporterId } = await api.getApplication(applicationId);
 
     if (_isEmpty(regNumber)) {
       const regNumberError = {
@@ -42,19 +40,18 @@ const validateCompaniesHouse = async (req, res) => {
         applicationId,
       });
     }
-    console.log('regNumber', regNumber);
-    console.log('exporterId', exporterId);
 
-    const test = await api.getCompaniesHouseDetails(regNumber, exporterId);
-
-    console.log('test', test);
+    await api.getCompaniesHouseDetails(regNumber, exporterId);
 
     return res.redirect('exporters-address');
   } catch (err) {
+    console.log('MONKEY', err);
     // Validation errors
-    if (err.status === 422) {
+    if (err.status === 404) {
       return res.render('partials/companies-house.njk', {
         errors: validationErrorHandler(err.data),
+        regNumber,
+        applicationId,
       });
     }
 

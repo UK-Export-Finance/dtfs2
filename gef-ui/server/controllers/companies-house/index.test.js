@@ -91,6 +91,23 @@ describe('Validate Companies House', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
       errors: expect.any(Object),
       regNumber: '',
+      applicationId: '123',
+    }));
+  });
+
+  it('returns error object if companies house registration number is invalid', async () => {
+    mockRequest.body.regNumber = 'invalidregnumber';
+    const mockedRejection = { response: { status: 404, data: 'Whoops' } };
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCompaniesHouseDetails = () => Promise.reject(mockedRejection);
+
+    await validateCompaniesHouse(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
+      errors: expect.any(Object),
+      regNumber: 'invalidregnumber',
+      applicationId: '123',
     }));
   });
 
