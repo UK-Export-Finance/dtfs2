@@ -34,7 +34,11 @@ exports.getByRegistrationNumber = async (req, res) => {
     res.status(200).send(response.data);
   } catch (err) {
     const response = companiesHouseError(err);
-    res.status(err.response.status).send(response);
+    let { status } = err.response;
+    if (response.errCode === 'company-profile-not-found') {
+      status = 422;
+    }
+    res.status(status).send(response);
   }
 };
 
@@ -61,6 +65,10 @@ exports.getAddressesByPostcode = async (req, res) => {
       errRef: 'postcode',
       errMsg: err.response.data.error.message,
     };
-    res.status(err.response.status).send(response);
+    let { status } = err.response;
+    if (response.errMsg) {
+      status = 422;
+    }
+    res.status(status).send(response);
   }
 };
