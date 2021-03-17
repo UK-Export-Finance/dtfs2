@@ -75,7 +75,7 @@ describe('GET Comapnies House', () => {
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.getApplication = () => Promise.reject(mockedRejection);
-    await companiesHouse({}, mockResponse);
+    await companiesHouse(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
@@ -97,9 +97,8 @@ describe('Validate Companies House', () => {
 
   it('returns error object if companies house registration number is invalid', async () => {
     mockRequest.body.regNumber = 'invalidregnumber';
-    const mockedRejection = { response: { status: 404, data: 'Whoops' } };
+    const mockedRejection = { status: 422, data: { errMsg: 'Message', errRef: 'Reference' } };
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
     api.getCompaniesHouseDetails = () => Promise.reject(mockedRejection);
 
     await validateCompaniesHouse(mockRequest, mockResponse);
@@ -123,7 +122,7 @@ describe('Validate Companies House', () => {
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.getApplication = () => Promise.reject(mockedRejection);
-    await validateCompaniesHouse({}, mockResponse);
+    await validateCompaniesHouse(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
