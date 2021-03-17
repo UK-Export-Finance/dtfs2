@@ -42,11 +42,13 @@
       }}
 
       <div id="conditional-correspondence">
+
         {{ govukInput({
           label: {
             text: "Correspondence address",
             classes: "govuk-label--s"
           },
+          value: postcode,
           id: "postcode",
           name: "postcode",
           hint: {
@@ -65,22 +67,12 @@
 
         {{ govukButton({
           text: "Find address",
-          classes: "govuk-button--secondary"
-        }) }}
-      </div>
-
-    
-      {% if correspondenceAddress %}
-        {{ govukInput({
-          id: "contact-by-email",
-          name: "contact-by-email",
-          type: "email",
-          classes: "govuk-!-width-one-third",
-          label: {
-            text: "Email address"
+          classes: "govuk-button--secondary",
+          attributes: {
+            formaction: "exporters-address/postcode"
           }
         }) }}
-        {% endif %}
+      </div>
 
       <div class="govuk-button-group">
         {{ govukButton({

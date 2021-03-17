@@ -78,6 +78,15 @@ const getCompaniesHouseDetails = async (companyRegNumber, exporterId) => {
   }
 };
 
+const getAddressesByPostcode = async (postcode) => {
+  try {
+    const { data } = await Axios.get(`/gef/address/${postcode}`);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 export {
   validateToken,
   getMandatoryCriteria,
@@ -87,4 +96,5 @@ export {
   getExporter,
   getFacilities,
   getCompaniesHouseDetails,
+  getAddressesByPostcode,
 };
