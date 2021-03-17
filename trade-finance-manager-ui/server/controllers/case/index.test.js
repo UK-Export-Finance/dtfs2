@@ -13,6 +13,7 @@ const res = mockRes();
 
 const session = {
   user: {
+    _id: '12345678', // eslint-disable-line no-underscore-dangle
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',

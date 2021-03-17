@@ -3,7 +3,15 @@ const api = require('../api');
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
 
-  const { taskId } = tfmTaskUpdate;
+  const {
+    id: taskId,
+    userId,
+  } = tfmTaskUpdate;
+
+  const cleanTfmTask = {
+    ...tfmTaskUpdate,
+  };
+  delete cleanTfmTask.userId;
 
   const originalTasks = deal.tfm.tasks;
 
@@ -12,7 +20,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     if (task.id === taskId) {
       task = {
         ...task,
-        ...tfmTaskUpdate,
+        ...cleanTfmTask,
       };
     }
 
@@ -25,10 +33,13 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     },
   };
 
-  // // eslint-disable-next-line no-underscore-dangle
-  const updatedDeal = await api.updateDeal(dealId, tasksUpdate);
+  // eslint-disable-next-line no-underscore-dangle
+  await api.updateDeal(dealId, tasksUpdate);
 
-  // TODO: add task to user.
-  return updatedDeal;
+  const userAssignedTasks = modifiedTasks.filter((t) => t.assignedTo === userId);
+
+  await api.updateUserTasks(userId, userAssignedTasks);
+
+  return cleanTfmTask;
 };
 exports.updateTfmTask = updateTfmTask;

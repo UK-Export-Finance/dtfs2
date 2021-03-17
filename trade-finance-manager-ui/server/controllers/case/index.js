@@ -83,10 +83,13 @@ const putCaseTask = async (req, res) => {
     status,
   } = req.body;
 
+  const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+
   const update = {
     taskId,
     assignedTo,
     status,
+    userId,
   };
 
   await api.updateTask(dealId, update);

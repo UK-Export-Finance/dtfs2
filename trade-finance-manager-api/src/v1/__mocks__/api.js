@@ -6,6 +6,7 @@ const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
+const MOCK_TASKS = require('./mock-tasks');
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
@@ -26,7 +27,9 @@ module.exports = {
     const deal = {
       _id: dealId,
       dealSnapshot,
-      tfm: {},
+      tfm: {
+        tasks: MOCK_TASKS,
+      },
     };
 
     return dealSnapshot ? Promise.resolve(deal) : Promise.reject();
@@ -88,6 +91,16 @@ module.exports = {
   findUser: (username) => (
     username === 'invalidUser' ? false : { username }
   ),
+  updateUserTasks: (userId, updatedTasks) => ({
+    _id: '6051d94564494924d38ce67c',
+    username: 'T1_USER_1',
+    email: 'test@testing.com',
+    teams: ['TEAM1'],
+    timezone: 'Europe/London',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
+    assignedTasks: updatedTasks,
+  }),
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),

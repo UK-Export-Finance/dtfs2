@@ -249,7 +249,6 @@ type DealsQuery {
   deals: [Deal]
 }
 
-
 input TFMPartyInput {
   partyUrn: String
   partyUrnRequired: Boolean
@@ -274,9 +273,10 @@ input TFMFacilityInput {
 }
 
 input TFMTaskInput {
-  taskId: String
+  id: String
   assignedTo: String
   status: String
+  userId: String
 }
 
 type Query {
