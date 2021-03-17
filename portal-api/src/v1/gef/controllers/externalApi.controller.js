@@ -26,6 +26,7 @@ exports.getByRegistrationNumber = async (req, res) => {
             companiesHouseRegistrationNumber: response.data.company_number,
             companyName: response.data.company_name,
             registeredAddress: response.data.registered_office_address,
+            updatedAt: Date.now(),
           },
         }, { returnOriginal: false },
       );
