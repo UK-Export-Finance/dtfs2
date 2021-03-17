@@ -69,6 +69,10 @@ jobs:
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
 
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
 
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
@@ -84,6 +88,7 @@ jobs:
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
     steps:
     - uses: actions/checkout@v2
