@@ -17,6 +17,7 @@ beforeAll(() => {
   axios.defaults.adapter = corsAdapter;
 });
 
-afterAll(async () => {
-  await db.close();
+afterAll(async (done) => {
+  db.close();
+  done();
 });
