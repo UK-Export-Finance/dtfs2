@@ -69,9 +69,9 @@ const getEligibilityCriteria = async () => {
   }
 };
 
-const companiesHouse = async (regNumber) => {
+const getCompaniesHouseDetails = async (companyRegNumber, exporterId) => {
   try {
-    const { data } = await Axios.get(`/gef/companies-house/${regNumber}`);
+    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, { params: { exporterId } });
     return data;
   } catch (err) {
     return apiErrorHandler(err);
@@ -86,5 +86,5 @@ export {
   getApplication,
   getExporter,
   getFacilities,
-  companiesHouse,
+  getCompaniesHouseDetails,
 };

@@ -1,22 +1,31 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
 import relative from './relativeURL';
-import mandatoryCriteria from './pages/mandatory-criteria';
-import nameApplication from './pages/name-application';
 import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
+
+let applicationId;
 
 context('Application Details Page', () => {
   before(() => {
     cy.reinsertMocks();
+    cy.apiLogin(CREDENTIALS.MAKER)
+      .then((token) => token)
+      .then((token) => {
+        cy.apiFetchAllApplications(token);
+      })
+      .then(({ body }) => {
+        applicationId = body.items[0]._id;
+      });
     cy.login(CREDENTIALS.MAKER);
 
+
     cy.on('uncaught:exception', () => false);
+  });
+
+  beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative('/gef/mandatory-criteria'));
-    mandatoryCriteria.trueRadio().click();
-    mandatoryCriteria.form().submit();
-    nameApplication.internalRef().type('NEW_REF_NAME');
-    nameApplication.form().submit();
+    cy.visit(relative(`/gef/application-details/${applicationId}`));
   });
 
   describe('Visiting page for the first time', () => {
@@ -45,6 +54,11 @@ context('Application Details Page', () => {
       applicationDetails.submitHeading();
       applicationDetails.submitButton().should('not.exist');
       applicationDetails.submitValidationText();
+    });
+
+    it('takes you to companies house page when clicking on `Enter details`', () => {
+      applicationDetails.exporterDetailsLink().click();
+      cy.visit(relative(`/gef/application-details/${applicationId}/companies-house`));
     });
   });
 });
