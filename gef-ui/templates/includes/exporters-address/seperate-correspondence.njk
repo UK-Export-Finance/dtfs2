@@ -72,6 +72,11 @@
             formaction: "exporters-address/postcode"
           }
         }) }}
+
+        {% if addresses %}
+          {% include "includes/exporters-address/addresses-form.njk" %}
+        {% endif %}
+
       </div>
 
       <div class="govuk-button-group">

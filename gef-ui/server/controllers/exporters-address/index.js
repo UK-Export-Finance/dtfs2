@@ -1,6 +1,6 @@
 import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+import { validationErrorHandler, selectDropdownAddresses } from '../../utils/helpers';
 
 const exportersAddress = async (req, res) => {
   try {
@@ -19,9 +19,9 @@ const exportersAddress = async (req, res) => {
       errors: validationErrorHandler(postcodeError),
       companyName: details.companyName,
       correspondence: (postcodeError || addresses) ? 'true' : null,
+      addresses: selectDropdownAddresses(addresses),
       registeredAddress,
       applicationId,
-      addresses,
       postcode,
     });
   } catch (err) {
@@ -83,7 +83,6 @@ const postcodeSearch = async (req, res) => {
   const { params, body } = req;
   const { postcode } = body;
   const { applicationId } = params;
-  console.log('POSTCODE', postcode);
 
   if (_isEmpty(postcode)) {
     req.session.postcodeError = {
