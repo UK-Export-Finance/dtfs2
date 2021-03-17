@@ -33,6 +33,7 @@ const applicationDetails = async (req, res) => {
         })),
       },
       submit: canSubmit,
+      applicationId,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
