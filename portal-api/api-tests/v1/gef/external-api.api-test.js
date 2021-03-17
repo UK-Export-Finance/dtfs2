@@ -49,7 +49,7 @@ describe(baseUrl, () => {
 
     it('Returns a not found company profile', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/not-found`);
-      expect(status).toEqual(404);
+      expect(status).toEqual(422);
       expect(body).toEqual({
         errCode: 'company-profile-not-found',
         errRef: 'regNumber',
@@ -73,7 +73,7 @@ describe(baseUrl, () => {
 
     it('Returns a not found address if the postcode was invalid', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/xyz`);
-      expect(status).toEqual(400);
+      expect(status).toEqual(422);
       expect(body).toEqual({
         errCode: 'ERROR',
         errRef: 'postcode',
