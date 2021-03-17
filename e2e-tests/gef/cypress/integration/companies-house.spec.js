@@ -59,5 +59,18 @@ context('Companies House Page', () => {
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.regNumberFieldError().should('be.visible');
     });
+
+    it('shows error message if registration number doesnt exist', () => {
+      companiesHouse.regNumberField().type('abcc');
+      companiesHouse.continueButton().click();
+      companiesHouse.errorSummary().should('be.visible');
+      companiesHouse.regNumberFieldError().should('be.visible');
+    });
+
+    it('takes user to `exporters address` page if company registration number exists', () => {
+      companiesHouse.regNumberField().type('06388542'); // HSBC company number
+      companiesHouse.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/exporters-address`));
+    });
   });
 });
