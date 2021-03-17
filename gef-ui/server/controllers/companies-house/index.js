@@ -45,9 +45,8 @@ const validateCompaniesHouse = async (req, res) => {
 
     return res.redirect('exporters-address');
   } catch (err) {
-    console.log('MONKEY', err);
     // Validation errors
-    if (err.status === 404) {
+    if (err.status === 422) {
       return res.render('partials/companies-house.njk', {
         errors: validationErrorHandler(err.data),
         regNumber,
