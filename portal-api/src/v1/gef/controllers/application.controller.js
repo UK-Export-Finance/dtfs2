@@ -93,7 +93,7 @@ exports.delete = async (req, res) => {
     await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
     // remove facility information related to the application
     const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
-    await facilitiesCollection.deleteMany({ applicationId: ObjectId(String(req.params.id)) });
+    await facilitiesCollection.deleteMany({ applicationId: req.params.id });
   }
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
