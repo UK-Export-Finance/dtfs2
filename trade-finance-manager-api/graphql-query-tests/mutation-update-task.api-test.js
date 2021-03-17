@@ -10,17 +10,18 @@ const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
-const facilityReducer = require('../src/graphql/reducers/facility');
 
-const UPDATE_FACILITY = gql`
-mutation UpdateFacility($id: ID!, $facilityUpdate: TFMFacilityInput) {
-  updateFacility(_id: $id, facilityUpdate: $facilityUpdate) {
-    bondIssuerPartyUrn
+const UPDATE_TASK = gql`
+  mutation UpdateTask($dealId: ID!, $taskUpdate: TFMTaskInput) {
+    updateTask(dealId: $dealId, taskUpdate: $taskUpdate) {
+      id,
+      assignedTo,
+      status
+    }
   }
-}
 `;
 
-describe('graphql mutation - update party', () => {
+describe('graphql mutation - update task', () => {
   let query;
 
   beforeAll(() => {
@@ -38,19 +39,28 @@ describe('graphql mutation - update party', () => {
     query = doQuery;
   });
 
-  it('should return updated party details', async () => {
-    const facilityUpdate = {
-      bondIssuerPartyUrn: '111',
+  it('should return updated task', async () => {
+    const taskUpdate = {
+      id: '1',
+      userId: '100200',
+      status: 'In progress',
+      assignedTo: '1234',
     };
 
     const { data } = await query({
-      query: UPDATE_FACILITY,
+      query: UPDATE_TASK,
       variables: {
-        id: '12345678',
-        facilityUpdate,
+        dealId: MOCK_DEAL._id,
+        taskUpdate,
       },
     });
 
-    expect(data.updateFacility).toEqual(facilityUpdate);
+    const expected = {
+      id: taskUpdate.id,
+      status: taskUpdate.status,
+      assignedTo: taskUpdate.assignedTo,
+    };
+
+    expect(data.updateTask).toEqual(expected);
   });
 });

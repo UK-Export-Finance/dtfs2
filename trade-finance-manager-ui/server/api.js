@@ -53,6 +53,7 @@ const updateTask = async (dealId, taskUpdate) => {
   };
 
   const response = await apollo('PUT', updateTaskMutation, updateVariables);
+
   return response;
 };
 

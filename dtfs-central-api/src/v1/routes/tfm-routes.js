@@ -84,4 +84,9 @@ tfmRouter.route('/users/:username')
     tfmUsersController.deleteUserDELETE,
   );
 
+tfmRouter.route('/users/:id/tasks')
+  .put(
+    tfmUsersController.updateUserTasksPUT,
+  );
+
 module.exports = tfmRouter;
