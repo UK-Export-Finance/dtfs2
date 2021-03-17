@@ -1,4 +1,5 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{# {% from "govuk/components/input/macro.njk" import govukInput %} #}
 
 {{ govukSelect({
   id: "addresses",
@@ -8,3 +9,35 @@
   },
   items: addresses
 }) }}
+
+{# {{ govukInput({
+  label: {
+    text: "Address line 1"
+  },
+  id: "addressLine1",
+  name: "addressLine1"
+}) }}
+
+{{ govukInput({
+  label: {
+    text: "Address line 2 (optional)"
+  },
+  id: "addressLine2",
+  name: "addressLine2"
+}) }}
+
+{{ govukInput({
+  label: {
+    text: "Address line 3 (optional)"
+  },
+  id: "addressLine3",
+  name: "addressLine3"
+}) }}
+
+{{ govukInput({
+  label: {
+    text: "City or town (optional)"
+  },
+  id: "locality",
+  name: "locality"
+}) }} #}
