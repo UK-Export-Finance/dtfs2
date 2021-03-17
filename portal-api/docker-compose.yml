@@ -13,4 +13,3 @@ services:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
     ports:
       - "27017-27019:27017-27019"
-
