@@ -60,7 +60,7 @@ context('Companies House Page', () => {
       companiesHouse.regNumberFieldError().should('be.visible');
     });
 
-    it('shows error message if registration number already exists', () => {
+    it('shows error message if registration number is invalid', () => {
       companiesHouse.regNumberField().type('abcc');
       companiesHouse.continueButton().click();
       companiesHouse.regNumberField().type('abcc');
@@ -68,7 +68,7 @@ context('Companies House Page', () => {
       companiesHouse.regNumberFieldError().should('be.visible');
     });
 
-    it('takes user to `exporters address` page if company registration number exists', () => {
+    it('takes user to `exporters address` page if company registration number is valid', () => {
       companiesHouse.regNumberField().type('06388542'); // HSBC company number
       companiesHouse.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/exporters-address`));
