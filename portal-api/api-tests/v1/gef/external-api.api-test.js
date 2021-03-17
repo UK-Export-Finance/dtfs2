@@ -13,7 +13,7 @@ const baseUrl = '/v1/gef';
 
 // const allItems = require('../../fixtures/gef/application');
 
-describe(baseUrl, () => {
+xdescribe(baseUrl, () => {
   // let noRoles;
   let aMaker;
   // let aChecker;
@@ -32,7 +32,6 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/company (Companies House)`, () => {
-
     it('Returns a company profile', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/00000006`);
       expect(status).toEqual(200);
