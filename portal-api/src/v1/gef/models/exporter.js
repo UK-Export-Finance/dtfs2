@@ -1,3 +1,5 @@
+const { Address } = require('./address');
+
 class Exporter {
   constructor(req) {
     if (!req) {
@@ -15,11 +17,11 @@ class Exporter {
       this.updatedAt = null;
     } else {
       // update application
-      const chrn = req.companiesHouseRegistrationNumber ? Number(req.companiesHouseRegistrationNumber) : null;
+      const chrn = req.companiesHouseRegistrationNumber ? String(req.companiesHouseRegistrationNumber) : null;
       this.companiesHouseRegistrationNumber = chrn;
       this.companyName = req.companyName ? String(req.companyName) : null;
-      this.registeredAddress = req.registeredAddress ? req.registeredAddress : null;
-      this.correspondenceAddress = req.correspondenceAddress ? req.correspondenceAddress : null;
+      this.registeredAddress = req.registeredAddress ? new Address(req.registeredAddress) : null;
+      this.correspondenceAddress = req.correspondenceAddress ? new Address(req.correspondenceAddress) : null;
       this.industrySectorId = req.industrySectorId != null ? Number(req.industrySectorId) : null;
       this.industryClassId = req.industryClassId != null ? Number(req.industryClassId) : null;
       this.smeTypeId = req.smeTypeId != null ? Number(req.smeTypeId) : null;
