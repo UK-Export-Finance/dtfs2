@@ -9,6 +9,8 @@ const partyDb = require('./controllers/party-db.controller');
 const acbs = require('./controllers/acbs.controller');
 const currencyExchangeRate = require('./controllers/currency-exchange-rate.controller');
 const exposurePeriod = require('./controllers/exposure-period.controller');
+const companiesHouse = require('./controllers/companies-house.controller');
+const ordnanceSurvey = require('./controllers/ordnance-survey.controller');
 
 openRouter.route('/countries')
   .get(
@@ -63,6 +65,16 @@ openRouter.route('/currency-exchange-rate/:source/:target')
 openRouter.route('/exposure-period/:startDate/:endDate/:facilityType')
   .get(
     exposurePeriod.getExposurePeriod,
+  );
+
+openRouter.route('/companies-house/:companyRegNo')
+  .get(
+    companiesHouse.lookup,
+  );
+
+openRouter.route('/ordnance-survey/:postcode')
+  .get(
+    ordnanceSurvey.lookup,
   );
 
 module.exports = { openRouter };

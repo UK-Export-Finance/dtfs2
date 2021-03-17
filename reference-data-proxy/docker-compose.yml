@@ -15,6 +15,10 @@ services:
       - CORS_ORIGIN=http://localhost:5002
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - ORDNANCE_SURVEY_API_URL=https://api.ordnancesurvey.co.uk
+      - ORDNANCE_SURVEY_API_KEY
       - MULESOFT_API_NUMBER_GENERATOR_KEY
       - MULESOFT_API_NUMBER_GENERATOR_SECRET
       - MULESOFT_API_NUMBER_GENERATOR_URL

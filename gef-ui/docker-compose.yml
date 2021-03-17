@@ -86,6 +86,8 @@ services:
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
@@ -101,6 +103,10 @@ services:
       - ../reference-data-proxy/src:/app/src:ro
     environment:
       - PORT=5002
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - ORDNANCE_SURVEY_API_URL=https://api.ordnancesurvey.co.uk
+      - ORDNANCE_SURVEY_API_KEY
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
       - MULESOFT_API_NUMBER_GENERATOR_URL
