@@ -94,6 +94,7 @@ const validateExportersAddress = async (req, res) => {
       addressesForSelection: addressesForSelectionWithSelection,
       addresses: JSON.parse(addresses),
       addressForm: JSON.parse(addresses)[selectedAddressIndex],
+      showForm: selectedAddressIndex >= 0,
       registeredAddress,
       applicationId,
       correspondence,
@@ -143,39 +144,8 @@ const postcodeSearch = async (req, res) => {
   }
 };
 
-const useSelectedAddress = async (req, res) => {
-  const { params, body } = req;
-  const { postcode } = body;
-  const { applicationId } = params;
-
-  if (_isEmpty(postcode)) {
-    req.session.postcodeError = {
-      errRef: 'postcode',
-      errMsg: 'Enter a postcode',
-    };
-    return res.redirect(`/gef/application-details/${applicationId}/exporters-address`);
-  }
-
-  try {
-    const addresses = await api.getAddressesByPostcode(postcode);
-
-    req.session.addresses = addresses;
-    req.session.postcode = postcode;
-
-    return res.redirect(`/gef/application-details/${applicationId}/exporters-address`);
-  } catch (err) {
-    if (err.status === 422) {
-      req.session.postcodeError = err.data;
-      req.session.postcode = postcode;
-      return res.redirect(`/gef/application-details/${applicationId}/exporters-address`);
-    }
-    return res.render('partials/problem-with-service.njk');
-  }
-};
-
 export {
   exportersAddress,
   validateExportersAddress,
   postcodeSearch,
-  useSelectedAddress,
 };
