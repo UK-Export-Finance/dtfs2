@@ -4,23 +4,23 @@ import { validationErrorHandler, selectDropdownAddresses } from '../../utils/hel
 
 const exportersAddress = async (req, res) => {
   try {
-    const { params, session } = req;
+    const { params } = req;
     const { applicationId } = params;
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
-    const { postcode, postcodeError, addresses } = session;
+    // const { postcode, postcodeError, addresses } = session;
 
-    req.session.postcode = null;
-    req.session.postcodeError = null;
-    req.session.addresses = null;
+    // req.session.postcode = null;
+    // req.session.postcodeError = null;
+    // req.session.addresses = null;
 
     return res.render('partials/exporters-address.njk', {
       errors: validationErrorHandler(postcodeError),
       companyName: details.companyName,
-      correspondence: (postcodeError || addresses) ? 'true' : null,
-      addressesForSelection: selectDropdownAddresses(addresses),
-      addresses,
+      // correspondence: (postcodeError || addresses) ? 'true' : null,
+      // addressesForSelection: selectDropdownAddresses(addresses),
+      // addresses,
       registeredAddress,
       applicationId,
       postcode,
@@ -34,7 +34,7 @@ const validateExportersAddress = async (req, res) => {
   try {
     const { params, body } = req;
     const {
-      correspondence, postcode, selectedAddress, addresses, addressesForSelection, addressLine1,
+      correspondence, postcode, selectedAddress, addressLine1,
     } = body;
     const { applicationId } = params;
     const { exporterId } = await api.getApplication(applicationId);
@@ -70,6 +70,8 @@ const validateExportersAddress = async (req, res) => {
       };
     }
 
+    const addresses = await api.getAddressesByPostcode(postcode);
+
     if (_isEmpty(addressLine1)) {
       addressLine1Error = {
         errRef: 'addressLine1',
@@ -78,7 +80,7 @@ const validateExportersAddress = async (req, res) => {
     }
 
     const selectedAddressIndex = parseFloat(selectedAddress);
-    const addressesForSelectionWithSelection = JSON.parse(addressesForSelection).map((address) => {
+    const addressesForSelectionWithSelection = selectDropdownAddresses(addresses).map((address) => {
       if (address.value === selectedAddressIndex) {
         return {
           ...address,

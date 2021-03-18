@@ -1,7 +1,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{{ govukInput({
+{# {{ govukInput({
   id: "addressesForSelection",
   name: "addressesForSelection",
   value: addressesForSelection | dump,
@@ -19,7 +19,7 @@
   attributes: {
     'hidden': true
   }
-}) }}
+}) }} #}
 
 {{ govukSelect({
   id: "selectedAddresses",

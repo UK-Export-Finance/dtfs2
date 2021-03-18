@@ -64,14 +64,6 @@
           }
         }) }}
 
-        {{ govukButton({
-          text: "Find address",
-          classes: "govuk-button--secondary",
-          attributes: {
-            formaction: "exporters-address/postcode"
-          }
-        }) }}
-
         {% if addresses %}
           {% include "includes/exporters-address/addresses-form.njk" %}
         {% endif %}
