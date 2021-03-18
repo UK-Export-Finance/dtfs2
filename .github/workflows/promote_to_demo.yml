@@ -32,6 +32,8 @@ jobs:
     environment:
       name: ${{ needs.set-environment.outputs.from-environment }}
     runs-on: ubuntu-latest
+    env:
+      registry_from: yyy
     outputs:
       test: ${{ steps.initialise-registry.outputs.test }}
       registry_from: ${{ steps.initialise-registry.outputs.registry_from }}
@@ -43,7 +45,7 @@ jobs:
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
         echo "::set-output name=registry_from::${{ secrets.ACR_REGISTRY }}"
-        echo "::set-output name=registry_from_username::xxx"
+        echo "::set-output name=registry_from_username::${{ env.registry_from }}"
         echo "::set-output name=registry_from_password::${{ secrets.ACR_PASSWORD }}"
         echo "::set-output name=test::3Test"
 
