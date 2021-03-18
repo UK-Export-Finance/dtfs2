@@ -33,7 +33,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.from-environment }}
     runs-on: ubuntu-latest
     env:
-      registry_from: yyy
+      registry_from: ${{ secrets.ACR_REGISTRY_FROM }}
     outputs:
       test: ${{ steps.initialise-registry.outputs.test }}
       registry_from: ${{ steps.initialise-registry.outputs.registry_from }}
