@@ -19,7 +19,8 @@ const exportersAddress = async (req, res) => {
       errors: validationErrorHandler(postcodeError),
       companyName: details.companyName,
       correspondence: (postcodeError || addresses) ? 'true' : null,
-      addresses: selectDropdownAddresses(addresses),
+      selectedAddress: selectDropdownAddresses(addresses),
+      addresses,
       registeredAddress,
       applicationId,
       postcode,
@@ -68,12 +69,14 @@ const validateExportersAddress = async (req, res) => {
       };
     }
 
-    console.log('selected address', selectedAddress);
+    console.log('selected', parseFloat(selectedAddress));
+    console.log('address', JSON.parse(mappedAddresses).filter(((address) => address.value === parseFloat(selectedAddress))));
 
     return res.render('partials/exporters-address.njk', {
       errors: validationErrorHandler(correspondenceError || selectedAddressError),
       companyName: details.companyName,
       addresses: JSON.parse(mappedAddresses),
+      populateAddressForm: '', // JSON.parse(mappedAddresses[parseFloat(selectedAddress)]),
       registeredAddress,
       applicationId,
       correspondence,

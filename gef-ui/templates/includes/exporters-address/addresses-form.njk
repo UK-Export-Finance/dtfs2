@@ -1,6 +1,8 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
+{{ populateAddressForm }}
+
 {{ govukInput({
   id: "mappedAddresses",
   name: "mappedAddresses",
@@ -24,6 +26,11 @@
     }
   }
 }) }}
+
+{{ govukButton({
+    text: "Use this address",
+    classes: "govuk-button--secondary"
+  }) }}
 
 {{ govukInput({
   label: {
