@@ -16,20 +16,37 @@ env:
 
 jobs:
   set-environment:
-    name: Set Environment
+    name: Set From Environment
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
+      to-environment: ${{ env.tag_to }}
     steps:
     - name: Initialise Environment
       run: |
         echo Setting environment to ${{ env.environment }}
+  
+  set-registry-to-credentials:
+    name: Set tag_to credentials
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.to-environment }}
+    runs-on: ubuntu-latest
+    outputs:
+      registry_to: ${{ secrets.ACR_REGISTRY }}
+      registry_to_username: ${{ secrets.ACR_USERNAME }}
+      registry_to_password: ${{ secrets.ACR_PASSWORD }}
 
   portal-ui:
     name: Promote Portal UI
-    needs: set-environment
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
+      
     runs-on: ubuntu-latest
     steps:
 
@@ -47,22 +64,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/portal-ui:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/portal-ui:${{ env.tag_from }} ${{ secrets.registry_to }}/portal-ui:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/portal-ui:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/portal-ui:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/portal-ui:${{ env.tag_from }} ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -86,9 +103,13 @@ jobs:
         
   portal-api:
     name: Promote Portal API
-    needs: set-environment
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
     runs-on: ubuntu-latest
     steps:
 
@@ -106,22 +127,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/portal-api:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/portal-api:${{ env.tag_from }} ${{ secrets.registry_to }}/portal-api:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/portal-api:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/portal-api:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/portal-api:${{ env.tag_from }} ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -145,9 +166,13 @@ jobs:
   
   reference-data-proxy:
     name: Promote Reference Data Proxy
-    needs: set-environment
+   needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
     runs-on: ubuntu-latest
     steps:
 
@@ -165,22 +190,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/reference-data-proxy:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/reference-data-proxy:${{ env.tag_from }} ${{ secrets.registry_to }}/reference-data-proxy:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/reference-data-proxy:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:${{ env.tag_from }} ${{ env.registry_to }}/reference-data-proxy:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/reference-data-proxy:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -204,9 +229,13 @@ jobs:
 
   trade-finance-manager-ui:
     name: Promote TFM UI
-    needs: set-environment
+   needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
     runs-on: ubuntu-latest
     steps:
 
@@ -224,22 +253,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/trade-finance-manager-ui:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/trade-finance-manager-ui:${{ env.tag_from }} ${{ secrets.registry_to }}/trade-finance-manager-ui:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/trade-finance-manager-ui:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:${{ env.tag_from }} ${{ env.registry_to }}/trade-finance-manager-ui:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/trade-finance-manager-ui:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -263,9 +292,13 @@ jobs:
         
   trade-finance-manager-api:
     name: Promote TFM API
-    needs: set-environment
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
     runs-on: ubuntu-latest
     steps:
 
@@ -283,22 +316,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/trade-finance-manager-api:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/trade-finance-manager-api:${{ env.tag_from }} ${{ secrets.registry_to }}/trade-finance-manager-api:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/trade-finance-manager-api:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-api:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-api:${{ env.tag_from }} ${{ env.registry_to }}/trade-finance-manager-api:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/trade-finance-manager-api:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -322,9 +355,13 @@ jobs:
 
   dtfs-central-api:
     name: Promote DTFS Central API
-    needs: set-environment
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
     runs-on: ubuntu-latest
     steps:
 
@@ -342,22 +379,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/dtfs-central-api:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/dtfs-central-api:${{ env.tag_from }} ${{ secrets.registry_to }}/dtfs-central-api:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/dtfs-central-api:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:${{ env.tag_from }} ${{ env.registry_to }}/dtfs-central-api:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/dtfs-central-api:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -381,9 +418,13 @@ jobs:
 
   gef-ui:
     name: Promote GEF UI
-    needs: set-environment
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    env:
+      registry_to: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+      registry_to_username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+      registry_to_password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
     runs-on: ubuntu-latest
     steps:
 
@@ -401,22 +442,22 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_from }}
-        username: ${{ secrets.registry_from_username }}
-        password: ${{ secrets.registry_from_password }}
+        login-server: ${{ secrets.ACR_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.registry_to }}
-        username: ${{ secrets.registry_to_username }}
-        password: ${{ secrets.registry_to_password }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
     - name: Promote container image
       run: |
-        docker pull ${{ secrets.registry_from }}/gef-ui:${{ env.tag_from }}
-        docker tag ${{ secrets.registry_from }}/gef-ui:${{ env.tag_from }} ${{ secrets.registry_to }}/gef-ui:${{ env.tag_to }}
-        docker push ${{ secrets.registry_to }}/gef-ui:${{ env.tag_to }}
+        docker pull ${{ secrets.ACR_REGISTRY }}/gef-ui:${{ env.tag_from }}
+        docker tag ${{ secrets.ACR_REGISTRY }}/gef-ui:${{ env.tag_from }} ${{ env.registry_to }}/gef-ui:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/gef-ui:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
