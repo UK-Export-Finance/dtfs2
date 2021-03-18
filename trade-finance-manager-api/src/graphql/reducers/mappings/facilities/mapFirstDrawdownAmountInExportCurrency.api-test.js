@@ -8,12 +8,12 @@ describe('mapFirstDrawdownAmountInExportCurrency', () => {
         facilityProduct: {
           code: 'EWCS',
         },
-        disbursementAmount: '12345',
+        disbursementAmount: '1234.00',
       };
 
       const result = mapFirstDrawdownAmountInExportCurrency(mockFacility);
 
-      const formattedDisbursementAmount = formattedNumber(mockFacility.disbursementAmount, 4);
+      const formattedDisbursementAmount = formattedNumber(mockFacility.disbursementAmount, 4, 4);
 
       const expected = `${mockFacility.currency} ${formattedDisbursementAmount}`;
       expect(result).toEqual(expected);
