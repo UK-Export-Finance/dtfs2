@@ -31,7 +31,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
   facility.facilityStage = mapFacilityStage(facilityStage);
 
-  return {
+  const mapped = {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     associatedDealId: facility.associatedDealId,
     ukefFacilityID: facility.ukefFacilityID,
@@ -54,6 +54,8 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     bondIssuer: facility.bondIssuer,
     bondBeneficiary: facility.bondBeneficiary,
   };
+
+  return mapped;
 };
 
 module.exports = mapFacility;
