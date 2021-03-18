@@ -31,7 +31,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.from-environment }}
-    runs-on: ubuntu-latest
+    using: "composite"
     outputs:
       registry_from:
         value: ${steps.initialise-registry.outputs.ACR_REGISTRY}
