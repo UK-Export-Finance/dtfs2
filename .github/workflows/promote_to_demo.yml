@@ -32,7 +32,7 @@ jobs:
     environment:
       name: ${{ needs.set-environment.outputs.from-environment }}
     env:
-      test: myTest
+      test: ${{ steps.initialise-registry.outputs.test }}
       registry_from: ${{secrets.ACR_REGISTRY}}
       registry_from_username: ${{secrets.ACR_USERNAME}}
       registry_from_password: ${{secrets.ACR_PASSWORD}}
