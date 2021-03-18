@@ -31,13 +31,13 @@ const hasRequiredItems = (doc) => {
 const exporterStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return 0; // Not Started
+    return 'NOT_STARTED';
   }
   if (requiredCount > 0) {
-    return 1; // In Progress
+    return 'IN_PROGRESS';
   }
   if (requiredCount === 0) {
-    return 2; // Completed
+    return 'COMPLETED';
   }
 };
 
