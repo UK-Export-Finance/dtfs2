@@ -38,7 +38,7 @@ jobs:
       registry_from_password: ${{secrets.ACR_PASSWORD}}
     runs-on: ubuntu-latest
     outputs:
-      test: ${{env.test}}
+      test: myTest
       registry_from: ${{env.ACR_REGISTRY}}
       registry_from_username: ${{env.ACR_USERNAME}}
       registry_from_password: ${{env.ACR_PASSWORD}}
