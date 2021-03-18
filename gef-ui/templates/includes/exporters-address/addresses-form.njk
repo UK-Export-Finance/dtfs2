@@ -44,44 +44,46 @@
     }
   }) }}
 
-{{ govukInput({
-  label: {
-    text: "Address line 1"
-  },
-  id: "addressLine1",
-  name: "addressLine1",
-  value: addressForm.address_line_1,
-  errorMessage: errors and errors.fieldErrors.addressLine1 and {
-    text: errors.fieldErrors.addressLine1.text,
-    attributes: {
-      'data-cy': 'address-line-1-error'
+{% if showForm %}
+  {{ govukInput({
+    label: {
+      text: "Address line 1"
+    },
+    id: "addressLine1",
+    name: "addressLine1",
+    value: addressForm.address_line_1,
+    errorMessage: errors and errors.fieldErrors.addressLine1 and {
+      text: errors.fieldErrors.addressLine1.text,
+      attributes: {
+        'data-cy': 'address-line-1-error'
+      }
     }
-  }
-}) }}
+  }) }}
 
-{{ govukInput({
-  label: {
-    text: "Address line 2 (optional)"
-  },
-  id: "addressLine2",
-  name: "addressLine2",
-  value: addressForm.address_line_2
-}) }}
+  {{ govukInput({
+    label: {
+      text: "Address line 2 (optional)"
+    },
+    id: "addressLine2",
+    name: "addressLine2",
+    value: addressForm.address_line_2
+  }) }}
 
-{{ govukInput({
-  label: {
-    text: "Address line 3 (optional)"
-  },
-  id: "addressLine3",
-  name: "addressLine3",
-  value: addressForm.address_line_3
-}) }}
+  {{ govukInput({
+    label: {
+      text: "Address line 3 (optional)"
+    },
+    id: "addressLine3",
+    name: "addressLine3",
+    value: addressForm.address_line_3
+  }) }}
 
-{{ govukInput({
-  label: {
-    text: "City or town (optional)"
-  },
-  id: "locality",
-  name: "locality",
-  value: addressForm.locality
-}) }}
+  {{ govukInput({
+    label: {
+      text: "City or town (optional)"
+    },
+    id: "locality",
+    name: "locality",
+    value: addressForm.locality
+  }) }}
+{% endif %}
