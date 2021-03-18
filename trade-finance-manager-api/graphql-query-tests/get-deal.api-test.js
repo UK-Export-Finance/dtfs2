@@ -18,14 +18,26 @@ const GET_DEAL = gql`
     deal(_id: $id) {
       _id
       tfm {
-        submissionDetails {
-          supplierPartyUrn
+        parties {
+          exporter {
+            partyUrn
+          }
+          buyer {
+            partyUrn
+          }
+          indemnifier {
+            partyUrn
+          }
+          agent {
+            partyUrn
+            commissionRate
+          }
         }
       }
       dealSnapshot {
         _id,
-        ukefDealId,
         details {
+          ukefDealId,
           status,
           submissionDate,
           submissionType,
@@ -36,6 +48,7 @@ const GET_DEAL = gql`
           maker {
             firstname,
             surname,
+            email,
           },
           bankSupplyContractID,
           bankSupplyContractName,
@@ -46,7 +59,6 @@ const GET_DEAL = gql`
         }
         facilities {
           _id,
-          tfm,
           facilitySnapshot {
             _id,
             ukefFacilityID,
@@ -58,12 +70,10 @@ const GET_DEAL = gql`
             facilityStage,
             facilityValueExportCurrency,
             facilityValue,
-            ukefExposure,
             coveredPercentage,
-            bankFacilityReference,
-            guaranteeFeePayableToUkef,
             bondIssuer,
             bondBeneficiary,
+            bankFacilityReference,
             ukefExposure,
             banksInterestMargin,
             firstDrawdownAmountInExportCurrency,
@@ -72,9 +82,9 @@ const GET_DEAL = gql`
               bankIssueNoticeReceived,
               coverStartDate,
               coverEndDate,
-              tenor,
+              tenor
             }
-          }
+          },
           tfm {
             bondIssuerPartyUrn,
             bondBeneficiaryPartyUrn,
@@ -87,13 +97,17 @@ const GET_DEAL = gql`
           }
         }
         eligibility {
-          agentAddressCountry,
+          agentAddressCountry {
+            code
+            name
+          },
           agentAddressLine1,
           agentAddressLine2,
           agentAddressLine3,
           agentAddressPostcode,
           agentAddressTown,
-          agentName
+          agentName,
+          agentAlias
         }
         eligibilityCriteria {
           id,
