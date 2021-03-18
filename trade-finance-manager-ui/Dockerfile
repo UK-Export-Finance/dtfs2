@@ -32,4 +32,3 @@ COPY --from=build /build/templates templates/
 
 #USER 1000
 CMD node dist/server.js
-
