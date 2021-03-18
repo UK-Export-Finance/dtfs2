@@ -37,7 +37,7 @@ jobs:
         value: ${steps.initialise-registry.outputs.ACR_REGISTRY}
       registry_from_username:
         value: ${steps.initialise-registry.outputs.ACR_USERNAME}
-      registry_from_password: '':
+      registry_from_password:
         value: ${steps.initialise-registry.outputs.ACR_PASSWORD}
     steps:
     - id: initialise-registry
