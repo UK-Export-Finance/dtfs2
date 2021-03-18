@@ -1,4 +1,5 @@
 const mapFacility = require('./mapFacility');
+const mapFacilityTfm = require('./mapFacilityTfm');
 
 const mapFacilities = (facilities, dealDetails) => {
   const mappedFacilities = [];
@@ -7,7 +8,7 @@ const mapFacilities = (facilities, dealDetails) => {
     mappedFacilities.push({
       _id: f._id, // eslint-disable-line no-underscore-dangle
       facilitySnapshot: mapFacility(f.facilitySnapshot, f.tfm, dealDetails),
-      tfm: f.tfm,
+      tfm: mapFacilityTfm(f.tfm),
     });
   });
 

@@ -1,5 +1,6 @@
 const mapFacilities = require('./mapFacilities');
 const mapFacility = require('./mapFacility');
+const mapFacilityTfm = require('./mapFacilityTfm');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
@@ -103,12 +104,12 @@ describe('mapFacilities', () => {
       {
         _id: MOCK_FACILITIES[0]._id, // eslint-disable-line no-underscore-dangle
         facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mockTfmFacility,
+        tfm: mapFacilityTfm(mockTfmFacility),
       },
       {
         _id: MOCK_FACILITIES[1]._id, // eslint-disable-line no-underscore-dangle
         facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mockTfmFacility,
+        tfm: mapFacilityTfm(mockTfmFacility),
       },
     ];
 
