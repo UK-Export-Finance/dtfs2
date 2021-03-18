@@ -1,16 +1,31 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{# {% from "govuk/components/input/macro.njk" import govukInput %} #}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{{ govukInput({
+  id: "mappedAddresses",
+  name: "mappedAddresses",
+  value: addresses | dump,
+   attributes: {
+      'hidden': true
+    }
+}) }}
 
 {{ govukSelect({
   id: "addresses",
-  name: "addresses",
+  name: "selectedAddress",
   label: {
     text: "Select address"
   },
-  items: addresses
+  items: addresses,
+  errorMessage: errors and errors.fieldErrors.selectedAddress and {
+    text: errors.fieldErrors.selectedAddress.text,
+    attributes: {
+      'data-cy': 'addresses-error'
+    }
+  }
 }) }}
 
-{# {{ govukInput({
+{{ govukInput({
   label: {
     text: "Address line 1"
   },
@@ -40,4 +55,4 @@
   },
   id: "locality",
   name: "locality"
-}) }} #}
+}) }}
