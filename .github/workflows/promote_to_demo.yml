@@ -34,15 +34,18 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       test: ${{ steps.initialise-registry.outputs.test }}
-      registry_from: ${{env.ACR_REGISTRY}}
-      registry_from_username: ${{env.ACR_USERNAME}}
-      registry_from_password: ${{env.ACR_PASSWORD}}
+      registry_from: ${{ steps.initialise-registry.outputs.registry_from }}
+      registry_from_username: ${{ steps.initialise-registry.outputs.registry_from_username }}
+      registry_from_password: ${{ steps.initialise-registry.outputs.registry_from_password }}
     steps:
     - id: initialise-registry
       name: Initialise From Registry
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
-        echo "::set-output name=test::2Test"
+        echo "::set-output name=registry_from::$secrets.ACR_REGISTRY"
+        echo "::set-output name=registry_from_username::$secrets.ACR_USERNAME"
+        echo "::set-output name=registry_from_password::$secrets.ACR_PASSWORD"
+        echo "::set-output name=test::3Test"
 
   portal-ui:
     name: Promote Portal UI
