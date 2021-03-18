@@ -75,6 +75,16 @@ const GET_DEAL = gql`
               tenor,
             }
           }
+          tfm {
+            bondIssuerPartyUrn,
+            bondBeneficiaryPartyUrn,
+            facilityValueInGBP,
+            exposurePeriodInMonths,
+            ukefExposure {
+              exposure,
+              timestamp
+            }
+          }
         }
         eligibility {
           agentAddressCountry,
