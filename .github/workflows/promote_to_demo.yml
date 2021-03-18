@@ -40,10 +40,9 @@ jobs:
     - name: Initialise From Registry Environment
       run: |
         echo Setting From Registry environment to ${{ env.tag_from }}
-        echo ACR_REGISTRY = ${{ secrets.ACR_REGISTRY }}
-        echo '::set-output name=registry_from::${{ secrets.ACR_REGISTRY }}'
-        echo '::set-output name=registry_from_username::${{ secrets.ACR_USERNAME }}'
-        echo '::set-output name=registry_from_password::${{ secrets.ACR_PASSWORD }}'
+        echo '::set-output name=registry_from::$(echo secrets.ACR_REGISTRY)'
+        echo '::set-output name=registry_from_username::$(echo secrets.ACR_USERNAME)'
+        echo '::set-output name=registry_from_password::$(echo secrets.ACR_PASSWORD)'
         
   portal-ui:
     name: Promote Portal UI
