@@ -1,21 +1,17 @@
+const CONSTANTS = require('../../constants');
+
 const MOCK_TASKS = [
   {
     id: '1',
-    title: 'Match or create the parties in this deal',
-    team: {
-      id: 'UNDERWRITING_SUPPORT',
-      name: 'Underwriting support',
-    },
-    status: 'To do',
+    title: CONSTANTS.TASKS.AIN.MATCH_OR_CREATE_PARTIES,
+    team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+    status: CONSTANTS.TASKS.STATUS.TO_DO,
   },
   {
     id: '2',
-    title: 'Create or link this opportunity in Salesforce',
-    team: {
-      id: 'UNDERWRITING_SUPPORT',
-      name: 'Underwriting support',
-    },
-    status: 'To do',
+    title: CONSTANTS.TASKS.AIN.CREATE_OR_LINK_SALESFORCE,
+    team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+    status: CONSTANTS.TASKS.STATUS.TO_DO,
   },
 ];
 
