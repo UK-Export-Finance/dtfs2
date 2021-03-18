@@ -166,7 +166,7 @@ jobs:
   
   reference-data-proxy:
     name: Promote Reference Data Proxy
-   needs: [set-environment, set-registry-to-credentials]
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     env:
@@ -229,7 +229,7 @@ jobs:
 
   trade-finance-manager-ui:
     name: Promote TFM UI
-   needs: [set-environment, set-registry-to-credentials]
+    needs: [set-environment, set-registry-to-credentials]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     env:
