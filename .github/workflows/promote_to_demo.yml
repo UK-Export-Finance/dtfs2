@@ -30,7 +30,7 @@ jobs:
     name: Set tag_from credentials
     needs: set-environment
     environment:
-      name: ${{ needs.set-environment.outputs.from-environment }}
+      name: dev
     runs-on: ubuntu-latest
     outputs:
       registry_from: ${secrets.ACR_REGISTRY}
