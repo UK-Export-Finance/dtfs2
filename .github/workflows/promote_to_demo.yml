@@ -42,9 +42,9 @@ jobs:
       name: Initialise From Registry
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
-        echo "::set-output name=registry_from::$secrets.ACR_REGISTRY"
-        echo "::set-output name=registry_from_username::$secrets.ACR_USERNAME"
-        echo "::set-output name=registry_from_password::$secrets.ACR_PASSWORD"
+        echo "::set-output name=registry_from::${{ secrets.ACR_REGISTRY }}"
+        echo "::set-output name=registry_from_username::${{ secrets.ACR_USERNAME }}"
+        echo "::set-output name=registry_from_password::${{ secrets.ACR_PASSWORD }}"
         echo "::set-output name=test::3Test"
 
   portal-ui:
