@@ -42,9 +42,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: gef-ui
         path: gef-ui
         tags: latest
@@ -94,21 +94,21 @@ jobs:
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Pull portal-api
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_REGISTRY }}/portal-api dtfs/portal-api
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api dtfs/portal-api
     - name: Pull portal
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.ACR_REGISTRY }}/portal-ui dtfs/portal
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui dtfs/portal
     - name: Pull GEF
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY }}/gef-ui
-        docker tag ${{ secrets.ACR_REGISTRY }}/gef-ui dtfs/gef-ui
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui dtfs/gef-ui
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -155,16 +155,16 @@ jobs:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Tag images
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_REGISTRY }}/gef-ui:$from
-        docker tag ${{ secrets.ACR_REGISTRY }}/gef-ui:$from ${{ secrets.ACR_REGISTRY }}/gef-ui:$to
-        docker push ${{ secrets.ACR_REGISTRY }}/gef-ui:$to
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:$from
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:$from ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:$to
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:$to
 
   deploy:
     name: Deploy container images to Dev
