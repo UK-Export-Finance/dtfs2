@@ -100,8 +100,8 @@ describe('/v1/tfm/users', () => {
             id: '1',
             title: 'Match or create the parties in this deal',
             team: {
-              id: 'UNDERWRITING_SUPPORT',
-              name: 'Underwriting support'
+              id: 'BUSINESS_SUPPORT',
+              name: ' Business support group',
             },
             status: 'To do',
             assignedTo: userId,
@@ -110,8 +110,8 @@ describe('/v1/tfm/users', () => {
             id: '2',
             title: 'Create or link this opportunity in Salesforce',
             team: {
-              id: 'UNDERWRITING_SUPPORT',
-              name: 'Underwriting support'
+              id: 'BUSINESS_SUPPORT',
+              name: ' Business support group',
             },
             status: 'In progress',
             assignedTo: userId,

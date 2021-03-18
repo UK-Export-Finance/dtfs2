@@ -19,7 +19,7 @@ describe(page, () => {
     task: {
       title: 'Task title',
       team: {
-        name: 'Underwriting support'
+        name: 'Business support group'
       }
     },
     user: {
