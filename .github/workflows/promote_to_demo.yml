@@ -33,14 +33,17 @@ jobs:
       name: ${{ needs.set-environment.outputs.from-environment }}
     runs-on: ubuntu-latest
     outputs:
-      registry_from: ${{ secrets.ACR_REGISTRY }}
-      registry_from_username: ${{ secrets.ACR_USERNAME }}
-      registry_from_password: ${{ secrets.ACR_PASSWORD }}
+      registry_from: ''
+      registry_from_username: ''
+      registry_from_password: ''
     steps:
     - name: Initialise From Registry Environment
       run: |
         echo Setting From Registry environment to ${{ env.tag_from }}
-  
+        echo '::set-output name=registry_from::${{ secrets.ACR_REGISTRY }}'
+        echo '::set-output name=registry_from_username::${{ secrets.ACR_USERNAME }}'
+        echo '::set-output name=registry_from_password::${{ secrets.ACR_PASSWORD }}'
+        
   portal-ui:
     name: Promote Portal UI
     needs: [set-environment, set-registry-from-credentials]
