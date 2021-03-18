@@ -68,9 +68,9 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ needs.set-registry-to-credentials.outputs.registry_to }}
+        username: ${{ needs.set-registry-to-credentials.outputs.registry_to_username }}
+        password: ${{ needs.set-registry-to-credentials.outputs.registry_to_password }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
