@@ -41,9 +41,9 @@ jobs:
       name: Initialise From Registry
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
-        echo '::set-output name=ACR_REGISTRY::$(echo secrets.ACR_REGISTRY)'
-        echo '::set-output name=ACR_USERNAME::$(echo secrets.ACR_USERNAME)'
-        echo '::set-output name=ACR_PASSWORD::$(echo secrets.ACR_PASSWORD)'
+        echo '::set-output name=ACR_REGISTRY::$(echo $secrets.ACR_REGISTRY)'
+        echo '::set-output name=ACR_USERNAME::$(echo $secrets.ACR_USERNAME)'
+        echo '::set-output name=ACR_PASSWORD::$(echo $secrets.ACR_PASSWORD)'
         
   portal-ui:
     name: Promote Portal UI
