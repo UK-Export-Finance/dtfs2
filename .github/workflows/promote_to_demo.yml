@@ -38,7 +38,6 @@ jobs:
       registry_from_password: ${steps.initialise-registry.outputs.ACR_PASSWORD}
     steps:
     - id: initialise-registry
-      using: "composite"
       name: Initialise From Registry
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
