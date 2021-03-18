@@ -31,7 +31,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.from-environment }}
-    using: "composite"
+    runs-on: ubuntu-latest
     outputs:
       registry_from:
         value: ${steps.initialise-registry.outputs.ACR_REGISTRY}
@@ -41,6 +41,7 @@ jobs:
         value: ${steps.initialise-registry.outputs.ACR_PASSWORD}
     steps:
     - id: initialise-registry
+      using: "composite"
       name: Initialise From Registry
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
