@@ -32,12 +32,15 @@ const exportersAddress = async (req, res) => {
 const validateExportersAddress = async (req, res) => {
   try {
     const { params, body } = req;
-    const { correspondence, postcode } = body;
+    const {
+      correspondence, postcode, selectedAddress, mappedAddresses,
+    } = body;
     const { applicationId } = params;
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
     let correspondenceError;
+    let selectedAddressError;
 
     if (_isEmpty(correspondence)) {
       correspondenceError = {
@@ -58,12 +61,23 @@ const validateExportersAddress = async (req, res) => {
       };
     }
 
+    if (_isEmpty(selectedAddress)) {
+      selectedAddressError = {
+        errRef: 'selectedAddress',
+        errMsg: 'Select an address',
+      };
+    }
+
+    console.log('selected address', selectedAddress);
+
     return res.render('partials/exporters-address.njk', {
-      errors: validationErrorHandler(correspondenceError),
+      errors: validationErrorHandler(correspondenceError || selectedAddressError),
       companyName: details.companyName,
+      addresses: JSON.parse(mappedAddresses),
       registeredAddress,
       applicationId,
       correspondence,
+      postcode,
     });
 
     // return res.redirect('exporters-address');
