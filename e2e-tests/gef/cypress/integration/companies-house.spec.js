@@ -63,7 +63,6 @@ context('Companies House Page', () => {
     it('shows error message if registration number is invalid', () => {
       companiesHouse.regNumberField().type('abcc');
       companiesHouse.continueButton().click();
-      companiesHouse.regNumberField().type('abcc');
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.regNumberFieldError().should('be.visible');
     });
