@@ -36,7 +36,11 @@ jobs:
       registry_to: ${{ secrets.ACR_REGISTRY }}
       registry_to_username: ${{ secrets.ACR_USERNAME }}
       registry_to_password: ${{ secrets.ACR_PASSWORD }}
-
+    steps:
+    - name: Initialise Registry-to Environment
+      run: |
+        echo Setting Registry-to environment to ${{ env.tag_to }}
+  
   portal-ui:
     name: Promote Portal UI
     needs: [set-environment, set-registry-to-credentials]
