@@ -22,9 +22,11 @@ class Exporter {
       this.companyName = req.companyName ? String(req.companyName) : null;
       this.registeredAddress = req.registeredAddress ? new Address(req.registeredAddress) : null;
       this.correspondenceAddress = req.correspondenceAddress ? new Address(req.correspondenceAddress) : null;
+      this.industrySector = req.industrySectorId != null ? String(req.industrySectorId) : null;
       this.industrySectorId = req.industrySectorId != null ? Number(req.industrySectorId) : null;
+      this.industryClass = req.industryClassId != null ? String(req.industryClassId) : null;
       this.industryClassId = req.industryClassId != null ? Number(req.industryClassId) : null;
-      this.smeTypeId = req.smeTypeId != null ? Number(req.smeTypeId) : null;
+      this.smeType = req.smeType != null ? String(req.smeTypeId) : null;
       this.probabilityOfDefault = req.probabilityOfDefault != null ? Number(req.probabilityOfDefault) : null;
       this.isFinanceIncreasing = req.isFinanceIncreasing != null ? Boolean(req.isFinanceIncreasing) : null;
       this.updatedAt = Date.now();
