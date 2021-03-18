@@ -5,12 +5,10 @@ class Application {
       this.userId = req.userId ? String(req.userId) : null;
       this.exporterId = exporterId;
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
-      this.facilityIds = null;
       this.createdAt = Date.now();
       this.updatedAt = null;
     } else {
       // Update
-      this.facilityIds = req.facilityIds ? String(req.facilityIds) : null;
       this.updatedAt = Date.now();
     }
     this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;

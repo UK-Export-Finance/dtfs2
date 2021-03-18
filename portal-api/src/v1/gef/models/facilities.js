@@ -3,7 +3,7 @@ class Facility {
     if (req.applicationId) {
       // new application
       this.applicationId = req.applicationId ? req.applicationId : null;
-      this.type = req.type !== null ? Number(req.type) : null; // 0 Cash | 1 Contingent
+      this.type = req.type !== null ? String(req.type) : null; // CASH OR CONTINGENT
       this.hasBeenIssued = null;
       this.name = null;
       this.startOnDayOfNotice = null;
@@ -33,8 +33,7 @@ class Facility {
       this.value = req.value != null ? Number(req.value) : null;
       this.coverPercentage = req.coverPercentage != null ? Number(req.coverPercentage) : null;
       this.interestPercentage = req.interestPercentage != null ? Number(req.interestPercentage) : null;
-      // 0 - In advance (quarterly) | 1 - In Arrears (quarterly)
-      this.paymentType = req.paymentType != null ? Number(req.paymentType) : null;
+      this.paymentType = req.paymentType != null ? String(req.paymentType) : null; // IN_ARREARS_QUARTLY OR IN_ADVANCE_QUARTERLY
       this.updatedAt = Date.now();
     }
   }
