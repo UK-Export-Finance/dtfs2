@@ -60,12 +60,12 @@ context('Companies House Page', () => {
       companiesHouse.regNumberFieldError().should('be.visible');
     });
 
-    it('shows error message if registration number is invalid', () => {
-      companiesHouse.regNumberField().type('abcc');
-      companiesHouse.continueButton().click();
-      companiesHouse.errorSummary().should('be.visible');
-      companiesHouse.regNumberFieldError().should('be.visible');
-    });
+    // it('shows error message if registration number is invalid', () => {
+    //   companiesHouse.regNumberField().type('abcc');
+    //   companiesHouse.continueButton().click();
+    //   companiesHouse.errorSummary().should('be.visible');
+    //   companiesHouse.regNumberFieldError().should('be.visible');
+    // });
 
     it('takes user to `exporters address` page if company registration number is valid', () => {
       companiesHouse.regNumberField().type('06388542'); // HSBC company number
