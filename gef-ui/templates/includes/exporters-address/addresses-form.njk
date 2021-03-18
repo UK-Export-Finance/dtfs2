@@ -1,35 +1,47 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{{ populateAddressForm }}
+{{ govukInput({
+  id: "addressesForSelection",
+  name: "addressesForSelection",
+  value: addressesForSelection | dump,
+  classes: "govuk-visually-hidden",
+  attributes: {
+    'hidden': true
+  }
+}) }}
 
 {{ govukInput({
-  id: "mappedAddresses",
-  name: "mappedAddresses",
+  id: "addresses",
+  name: "addresses",
   value: addresses | dump,
-   attributes: {
-      'hidden': true
-    }
+  classes: "govuk-visually-hidden",
+  attributes: {
+    'hidden': true
+  }
 }) }}
 
 {{ govukSelect({
-  id: "addresses",
+  id: "selectedAddresses",
   name: "selectedAddress",
   label: {
     text: "Select address"
   },
-  items: addresses,
+  items: addressesForSelection,
   errorMessage: errors and errors.fieldErrors.selectedAddress and {
     text: errors.fieldErrors.selectedAddress.text,
     attributes: {
-      'data-cy': 'addresses-error'
+      'data-cy': 'selected-address-error'
     }
   }
 }) }}
 
 {{ govukButton({
     text: "Use this address",
-    classes: "govuk-button--secondary"
+    classes: "govuk-button--secondary",
+    attributes: {
+      "formaction": "exporters-address/use-address"
+    }
   }) }}
 
 {{ govukInput({
@@ -37,7 +49,14 @@
     text: "Address line 1"
   },
   id: "addressLine1",
-  name: "addressLine1"
+  name: "addressLine1",
+  value: addressForm.address_line_1,
+  errorMessage: errors and errors.fieldErrors.addressLine1 and {
+    text: errors.fieldErrors.addressLine1.text,
+    attributes: {
+      'data-cy': 'address-line-1-error'
+    }
+  }
 }) }}
 
 {{ govukInput({
@@ -45,7 +64,8 @@
     text: "Address line 2 (optional)"
   },
   id: "addressLine2",
-  name: "addressLine2"
+  name: "addressLine2",
+  value: addressForm.address_line_2
 }) }}
 
 {{ govukInput({
@@ -53,7 +73,8 @@
     text: "Address line 3 (optional)"
   },
   id: "addressLine3",
-  name: "addressLine3"
+  name: "addressLine3",
+  value: addressForm.address_line_3
 }) }}
 
 {{ govukInput({
@@ -61,5 +82,6 @@
     text: "City or town (optional)"
   },
   id: "locality",
-  name: "locality"
+  name: "locality",
+  value: addressForm.locality
 }) }}
