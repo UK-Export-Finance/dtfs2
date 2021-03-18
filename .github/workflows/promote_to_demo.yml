@@ -30,12 +30,18 @@ jobs:
     name: Set tag_from credentials
     needs: set-environment
     environment:
-      name: dev
+      name: ${{ needs.set-environment.outputs.from-environment }}
+    env:
+      test: myTest
+      registry_from: ${{secrets.ACR_REGISTRY}}
+      registry_from_username: ${{secrets.ACR_USERNAME}}
+      registry_from_password: ${{secrets.ACR_PASSWORD}}
     runs-on: ubuntu-latest
     outputs:
-      registry_from: ${secrets.ACR_REGISTRY}
-      registry_from_username: ${secrets.ACR_USERNAME}
-      registry_from_password: ${secrets.ACR_PASSWORD}
+      test: ${{env.test}}
+      registry_from: ${{env.ACR_REGISTRY}}
+      registry_from_username: ${{env.ACR_USERNAME}}
+      registry_from_password: ${{env.ACR_PASSWORD}}
     steps:
     - id: initialise-registry
       name: Initialise From Registry
