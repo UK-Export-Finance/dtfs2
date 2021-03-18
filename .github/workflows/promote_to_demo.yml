@@ -47,7 +47,8 @@ jobs:
       name: Initialise From Registry
       run: |
         echo Setting From Environment to ${{ needs.set-environment.outputs.from-environment }}
-        
+        echo "::set-output name=test::2Test"
+
   portal-ui:
     name: Promote Portal UI
     needs: [set-environment, set-registry-from-credentials]
