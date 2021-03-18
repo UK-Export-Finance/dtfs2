@@ -52,7 +52,7 @@ jobs:
       registry_from_password: ${{ needs.set-registry-from-credentials.outputs.registry_from_password }}
       registry_to: ${{ secrets.ACR_REGISTRY }}
       registry_to_username: ${{ secrets.ACR_USERNAME }}
-      registry_to_password: ${{ secrets.ACR_USERNAME }}
+      registry_to_password: ${{ secrets.ACR_PASSWORD }}
       
     runs-on: ubuntu-latest
     steps:
@@ -71,9 +71,9 @@ jobs:
     - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ env.registry_from }}
-        username: ${{ env.registry_from_username }}
-        password: ${{ env.registry_from_password }}
+        login-server: ${{ needs.set-registry-from-credentials.outputs.registry_from }}
+        username: ${{ needs.set-registry-from-credentials.outputs.registry_from_username }}
+        password: ${{ needs.set-registry-from-credentials.outputs.registry_from_password }}
 
     - name: Log in to destination container registry
       uses: azure/docker-login@v1
