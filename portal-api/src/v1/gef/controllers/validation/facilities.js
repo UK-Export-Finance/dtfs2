@@ -49,18 +49,18 @@ const hasRequiredItems = (doc) => {
 const facilitiesStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return 0; // Not Started
+    return 'NOT_STARTED';
   }
   if (requiredCount > 0) {
-    return 1; // In Progress
+    return 'IN_PROGRESS';
   }
   if (requiredCount === 0) {
-    return 2; // Completed
+    return 'COMPLETED';
   }
 };
 
 const facilitiesOverallStatus = (facilities) => {
-  let result = 0;
+  let result = 'NOT_STARTED';
   const allStatus = [];
   facilities.forEach((item) => {
     allStatus.push(item.status);
@@ -68,10 +68,10 @@ const facilitiesOverallStatus = (facilities) => {
   const uniqueStatus = [...new Set(allStatus)];
   // console.log(uniqueStatus, uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === 2);
   if (uniqueStatus.length > 1) {
-    result = 1;
+    result = 'IN_PROGRESS';
   }
   if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === 2) {
-    result = 2;
+    result = 'COMPLETED';
   }
   return result;
 };
