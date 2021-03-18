@@ -65,7 +65,6 @@ describe(baseUrl, () => {
         terms: expect.any(Array),
       }));
     });
-
   });
 
   describe(`GET ${baseUrl}/:id`, () => {

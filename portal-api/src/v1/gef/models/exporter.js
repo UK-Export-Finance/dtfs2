@@ -8,9 +8,11 @@ class Exporter {
       this.companyName = null;
       this.registeredAddress = null;
       this.correspondenceAddress = null;
+      this.industrySector = null;
       this.industrySectorId = null;
+      this.industryClass = null;
       this.industryClassId = null;
-      this.smeTypeId = null;
+      this.smeType = null;
       this.probabilityOfDefault = null;
       this.isFinanceIncreasing = null;
       this.createdAt = Date.now();
