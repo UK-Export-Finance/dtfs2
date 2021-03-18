@@ -51,7 +51,7 @@ describe(baseUrl, () => {
       const item = await as(aMaker).post(applicationAllItems[1]).to(applicationBaseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body.exporterId}`);
       const expected = {
-        status: 0,
+        status: 'NOT_STARTED',
         details: expectMongoId({
           companiesHouseRegistrationNumber: null,
           companyName: null,
