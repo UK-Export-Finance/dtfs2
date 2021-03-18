@@ -54,7 +54,7 @@ jobs:
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     env:
-      test: ${{ needs.set-registry-from-credentials.outputs.test }}
+      test: ${{ needs.set-registry-from-credentials.env.test }}
       registry_from: ${{ needs.set-registry-from-credentials.outputs.registry_from }}
       registry_from_username: ${{ needs.set-registry-from-credentials.outputs.registry_from_username }}
       registry_from_password: ${{ needs.set-registry-from-credentials.outputs.registry_from_password }}
