@@ -33,12 +33,9 @@ jobs:
       name: ${{ needs.set-environment.outputs.from-environment }}
     runs-on: ubuntu-latest
     outputs:
-      registry_from:
-        value: ${steps.initialise-registry.outputs.ACR_REGISTRY}
-      registry_from_username:
-        value: ${steps.initialise-registry.outputs.ACR_USERNAME}
-      registry_from_password:
-        value: ${steps.initialise-registry.outputs.ACR_PASSWORD}
+      registry_from: ${steps.initialise-registry.outputs.ACR_REGISTRY}
+      registry_from_username: ${steps.initialise-registry.outputs.ACR_USERNAME}
+      registry_from_password: ${steps.initialise-registry.outputs.ACR_PASSWORD}
     steps:
     - id: initialise-registry
       using: "composite"
