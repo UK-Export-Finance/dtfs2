@@ -1,4 +1,15 @@
-const formattedNumber = (numb, minimumFractionDigits = 2) => Number(numb).toLocaleString('en', { minimumFractionDigits });
+const formattedNumber = (
+  numb,
+  minimumFractionDigits = 2,
+  maximumFractionDigits = 2,
+) => {
+  const formatted = Number(numb).toLocaleString('en', {
+    minimumFractionDigits,
+    maximumFractionDigits,
+  });
+
+  return formatted;
+};
 
 module.exports = {
   formattedNumber,

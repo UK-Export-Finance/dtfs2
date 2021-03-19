@@ -5,7 +5,7 @@ const mapFirstDrawdownAmountInExportCurrency = (facility) => {
   const { facilityProduct } = facility;
 
   if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN) {
-    const formattedDisbursementAmount = formattedNumber(facility.disbursementAmount, 4);
+    const formattedDisbursementAmount = formattedNumber(facility.disbursementAmount, 4, 4);
 
     return `${facility.currency} ${formattedDisbursementAmount}`;
   }

@@ -6,7 +6,7 @@ describe('mapGuaranteeFeePayableToUkef', () => {
     const mock = '10.1234';
     const result = mapGuaranteeFeePayableToUkef(mock);
 
-    const expected = `${formattedNumber(mock, 4)}%`;
+    const expected = `${formattedNumber(mock, 4, 4)}%`;
     expect(result).toEqual(expected);
   });
 });

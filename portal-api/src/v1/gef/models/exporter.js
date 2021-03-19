@@ -1,5 +1,20 @@
 const { Address } = require('./address');
 
+function checkSmeType(smeType) {
+  if (smeType) {
+    switch (smeType.toUpperCase()) {
+      case 'MICRO':
+      case 'SMALL':
+      case 'MEDIUM':
+      case 'NOT_SME':
+        return smeType.toUpperCase();
+      default:
+        return null;
+    }
+  } else {
+    return null;
+  }
+}
 class Exporter {
   constructor(req) {
     if (!req) {
@@ -8,25 +23,51 @@ class Exporter {
       this.companyName = null;
       this.registeredAddress = null;
       this.correspondenceAddress = null;
-      this.industrySectorId = null;
-      this.industryClassId = null;
-      this.smeTypeId = null;
+      this.industrySector = null;
+      this.industryClass = null;
+      this.smeType = null;
       this.probabilityOfDefault = null;
       this.isFinanceIncreasing = null;
       this.createdAt = Date.now();
       this.updatedAt = null;
     } else {
       // update application
-      const chrn = req.companiesHouseRegistrationNumber ? String(req.companiesHouseRegistrationNumber) : null;
-      this.companiesHouseRegistrationNumber = chrn;
-      this.companyName = req.companyName ? String(req.companyName) : null;
-      this.registeredAddress = req.registeredAddress ? new Address(req.registeredAddress) : null;
-      this.correspondenceAddress = req.correspondenceAddress ? new Address(req.correspondenceAddress) : null;
-      this.industrySectorId = req.industrySectorId != null ? Number(req.industrySectorId) : null;
-      this.industryClassId = req.industryClassId != null ? Number(req.industryClassId) : null;
-      this.smeTypeId = req.smeTypeId != null ? Number(req.smeTypeId) : null;
-      this.probabilityOfDefault = req.probabilityOfDefault != null ? Number(req.probabilityOfDefault) : null;
-      this.isFinanceIncreasing = req.isFinanceIncreasing != null ? Boolean(req.isFinanceIncreasing) : null;
+      if (req.companiesHouseRegistrationNumber) {
+        const chrn = String(req.companiesHouseRegistrationNumber);
+        this.companiesHouseRegistrationNumber = chrn;
+      }
+      if (req.companyName) {
+        this.companyName = String(req.companyName);
+      }
+
+      if (req.registeredAddress) {
+        this.registeredAddress = new Address(req.registeredAddress);
+      }
+
+      if (req.correspondenceAddress) {
+        this.correspondenceAddress = new Address(req.correspondenceAddress);
+      }
+
+      if (req.industrySector) {
+        this.industrySector = String(req.industrySector);
+      }
+
+      if (req.industryClass) {
+        this.industryClass = String(req.industryClass);
+      }
+
+      if (req.smeType) {
+        this.smeType = checkSmeType(req.smeType);
+      }
+
+      if (req.probabilityOfDefault) {
+        this.probabilityOfDefault = Number(req.probabilityOfDefault);
+      }
+
+      if (req.isFinanceIncreasing) {
+        this.isFinanceIncreasing = Boolean(req.isFinanceIncreasing);
+      }
+
       this.updatedAt = Date.now();
     }
   }

@@ -27,6 +27,11 @@ describe(component, () => {
             coverEndDate: '02 Nov 2021',
           },
         },
+        tfm: {
+          ukefExposure: {
+            exposure: 'GBP 123,456.78',
+          },
+        },
       },
       {
         _id: '456',
@@ -43,6 +48,11 @@ describe(component, () => {
           facilityStage: 'Issued',
           dates: {
             coverEndDate: '04 Dec 2021',
+          },
+        },
+        tfm: {
+          ukefExposure: {
+            exposure: 'GBP 123,456.78',
           },
         },
       },
@@ -63,6 +73,11 @@ describe(component, () => {
             coverEndDate: '04 Dec 2021',
           },
         },
+        tfm: {
+          ukefExposure: {
+            exposure: 'GBP 123,456.78',
+          },
+        },
       },
       {
         _id: '112',
@@ -79,6 +94,11 @@ describe(component, () => {
           facilityStage: 'Issued',
           dates: {
             coverEndDate: '04 Dec 2021',
+          },
+        },
+        tfm: {
+          ukefExposure: {
+            exposure: 'GBP 123,456.78',
           },
         },
       },
@@ -219,9 +239,9 @@ describe(component, () => {
 
 
     it('should render ukefExposure', () => {
-      params.facilities.forEach(({ facilitySnapshot: facility }) => {
+      params.facilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-ukef-exposure"]`;
-        wrapper.expectText(cellSelector).toRead(`${facility.ukefExposure}`);
+        wrapper.expectText(cellSelector).toRead(`${facility.tfm.ukefExposure.exposure}`);
       });
     });
 
