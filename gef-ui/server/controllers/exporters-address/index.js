@@ -1,6 +1,6 @@
 import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
-import { validationErrorHandler, selectDropdownAddresses } from '../../utils/helpers';
+import { validationErrorHandler } from '../../utils/helpers';
 
 const exportersAddress = async (req, res) => {
   try {
@@ -9,21 +9,11 @@ const exportersAddress = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
-    // const { postcode, postcodeError, addresses } = session;
-
-    // req.session.postcode = null;
-    // req.session.postcodeError = null;
-    // req.session.addresses = null;
 
     return res.render('partials/exporters-address.njk', {
-      errors: validationErrorHandler(postcodeError),
       companyName: details.companyName,
-      // correspondence: (postcodeError || addresses) ? 'true' : null,
-      // addressesForSelection: selectDropdownAddresses(addresses),
-      // addresses,
       registeredAddress,
       applicationId,
-      postcode,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -33,16 +23,13 @@ const exportersAddress = async (req, res) => {
 const validateExportersAddress = async (req, res) => {
   try {
     const { params, body } = req;
-    const {
-      correspondence, postcode, selectedAddress, addressLine1,
-    } = body;
+    const { correspondence, postcode } = body;
     const { applicationId } = params;
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
     let correspondenceError;
-    let selectedAddressError;
-    let addressLine1Error;
+    let addresses;
 
     if (_isEmpty(correspondence)) {
       correspondenceError = {
@@ -63,85 +50,32 @@ const validateExportersAddress = async (req, res) => {
       };
     }
 
-    if (_isEmpty(selectedAddress)) {
-      selectedAddressError = {
-        errRef: 'selectedAddress',
-        errMsg: 'Select an address',
-      };
+    // Only fetch addresses if there are no validation errors
+    if (!correspondenceError) {
+      addresses = await api.getAddressesByPostcode(postcode);
     }
 
-    const addresses = await api.getAddressesByPostcode(postcode);
-
-    if (_isEmpty(addressLine1)) {
-      addressLine1Error = {
-        errRef: 'addressLine1',
-        errMsg: 'Enter the first line of the correspondence address',
-      };
+    if (addresses && addresses.status === 422) {
+      correspondenceError = addresses.data;
     }
 
-    const selectedAddressIndex = parseFloat(selectedAddress);
-    const addressesForSelectionWithSelection = selectDropdownAddresses(addresses).map((address) => {
-      if (address.value === selectedAddressIndex) {
-        return {
-          ...address,
-          selected: true,
-        };
-      }
-      return address;
-    });
-
-    return res.render('partials/exporters-address.njk', {
-      errors: validationErrorHandler(correspondenceError || selectedAddressError || addressLine1Error),
-      companyName: details.companyName,
-      addressesForSelection: addressesForSelectionWithSelection,
-      addresses: JSON.parse(addresses),
-      addressForm: JSON.parse(addresses)[selectedAddressIndex],
-      showForm: selectedAddressIndex >= 0,
-      registeredAddress,
-      applicationId,
-      correspondence,
-      postcode,
-    });
-
-    // return res.redirect('exporters-address');
-  } catch (err) {
-    // Validation errors
-    if (err.status === 422) {
-      return res.render('partials/companies-house.njk', {
-        errors: validationErrorHandler(err.data),
+    if (correspondenceError) {
+      return res.render('partials/exporters-address.njk', {
+        errors: validationErrorHandler(correspondenceError),
+        companyName: details.companyName,
+        postcode: postcode.toUpperCase(),
+        registeredAddress,
+        correspondence,
       });
     }
 
-    return res.render('partials/problem-with-service.njk');
-  }
-};
+    // Store addresses to session memory
+    // Stringifying for better compression
+    req.session.postcode = postcode.toUpperCase();
+    req.session.addresses = JSON.stringify(addresses);
 
-const postcodeSearch = async (req, res) => {
-  const { params, body } = req;
-  const { postcode } = body;
-  const { applicationId } = params;
-
-  if (_isEmpty(postcode)) {
-    req.session.postcodeError = {
-      errRef: 'postcode',
-      errMsg: 'Enter a postcode',
-    };
-    return res.redirect(`/gef/application-details/${applicationId}/exporters-address`);
-  }
-
-  try {
-    const addresses = await api.getAddressesByPostcode(postcode);
-
-    req.session.addresses = addresses;
-    req.session.postcode = postcode;
-
-    return res.redirect(`/gef/application-details/${applicationId}/exporters-address`);
+    return res.redirect('select-exporters-correspondence-address');
   } catch (err) {
-    if (err.status === 422) {
-      req.session.postcodeError = err.data;
-      req.session.postcode = postcode;
-      return res.redirect(`/gef/application-details/${applicationId}/exporters-address`);
-    }
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -149,5 +83,4 @@ const postcodeSearch = async (req, res) => {
 export {
   exportersAddress,
   validateExportersAddress,
-  postcodeSearch,
 };
