@@ -93,9 +93,9 @@ module.exports = {
   ),
   updateUserTasks: (userId, updatedTasks) => ({
     _id: '6051d94564494924d38ce67c',
-    username: 'T1_USER_1',
+    username: 'BUSINESS_SUPPORT_USER_1',
     email: 'test@testing.com',
-    teams: ['TEAM1'],
+    teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',

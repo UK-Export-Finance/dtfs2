@@ -6,20 +6,20 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const { expectMongoIds, expectMongoId } = require('../../../expectMongoIds');
 
-const mockUsers = [{
-  // _id: new ObjectID('6040e8eff8ca8a00153b6d01,'),
-  username: 'T1_USER_1',
-  email: '',
-  teams: ['TEAM1'],
-  timezone: 'Europe/London',
-},
-{
-  // _id: new ObjectID('6040e8eff8ca8a00153b6d02'),
-  username: 'T1_USER_2',
-  email: '',
-  teams: ['TEAM1'],
-  timezone: 'Europe/London',
-}];
+const mockUsers = [
+  {
+    username: 'T1_USER_1',
+    email: '',
+    teams: ['TEAM1'],
+    timezone: 'Europe/London',
+  },
+  {
+    username: 'T1_USER_2',
+    email: '',
+    teams: ['TEAM1'],
+    timezone: 'Europe/London',
+  },
+];
 
 const orderUsers = (users) => users.sort((u1, u2) => (u1.username.localeCompare(u2.username)));
 
