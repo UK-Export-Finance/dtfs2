@@ -9,6 +9,7 @@ const taskPage = {
   taskStatusRadioInputDone: () => cy.get('[data-cy="task-status-radio-done"]'),
 
   submitButton: () => cy.get('[data-cy="submit-button"]'),
+  closeLink: () => cy.get('[data-cy="close-link"]'),
 };
 
 module.exports = taskPage;
