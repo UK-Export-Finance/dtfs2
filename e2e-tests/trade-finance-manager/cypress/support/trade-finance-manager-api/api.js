@@ -14,3 +14,14 @@ module.exports.submitDeal = (dealId) => cy.request({
   expect(resp.status).to.equal(200);
   return resp.body;
 });
+
+module.exports.getUser = (username) => cy.request({
+  url: `${api()}/v1/users/${username}`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body.user.user;
+});
