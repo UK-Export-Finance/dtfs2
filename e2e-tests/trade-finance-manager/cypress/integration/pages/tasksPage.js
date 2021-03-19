@@ -1,11 +1,11 @@
 const tasksPage = {
-  tasksListItems: () => cy.get('[data-cy="tasks-list"] li'),
+  tasksListRows: () => cy.get('[data-cy="tasks-list"] tbody tr'),
   tasks: {
-    listItem: (taskId) => {
-      const listItem = cy.get(`[data-cy="task-${taskId}-list-item"]`);
+    row: (taskId) => {
+      const row = cy.get(`[data-cy="task-${taskId}-row"]`);
       return {
-        listItem,
-        link: () => listItem.get(`[data-cy="task-${taskId}-list-item-link"]`),
+        row,
+        link: () => row.get(`[data-cy="task-${taskId}-link"]`),
       };
     },
   },

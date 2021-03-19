@@ -1,21 +1,67 @@
 {% extends "case/case.njk" %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block sub_content %}
-
-  <h2 class="header-label">Tasks for this deal</h2>
   
   <div class="govuk-grid-row" data-cy="deal-tasks">
 
-  <br />
-  <br />
+    <div class="govuk-grid-column-three-quarters">
 
-  <ul class="govuk-list" data-cy="tasks-list">
-    {% for task in tfm.tasks %}
-      <li data-cy="task-{{ task.id }}-list-item">
-        <a href="/case/{{ dealId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-list-item-link">{{ task.title}}</a>
-      </li>
-    {% endfor %}
-  </ul>
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6">Tasks for this deal</h2>
+
+      <h3 class="govuk-heading-s ukef-heading-background">{{ deal.details.submissionType }}</h3>
+
+      {# <ul class="govuk-list" data-cy="tasks-list">
+        {% for task in tfm.tasks %}
+          <li data-cy="task-{{ task.id }}-list-item">
+            <a href="/case/{{ dealId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-list-item-link">{{ task.title}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      #}
+
+      <table class="govuk-table" data-cy="tasks-list">
+        <thead class="govuk-table__head">
+          <tr>
+            <th class="govuk-table__header"></th>
+            <th class="govuk-table__header">Assigned to</th>
+            <th class="govuk-table__header">Team</th>
+            <th class="govuk-table__header"></th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+          {% for task in tfm.tasks %}
+            <tr class="govuk-table__row" data-cy="task-{{ task.id }}-row">
+
+              <td class="govuk-table__cell">
+                <a href="/case/{{ dealId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-link">{{ task.title}}</a>
+              </td>
+
+              <td class="govuk-table__cell">
+                {{ task.assignedTo }}
+              </td>
+
+              <td class="govuk-table__cell">
+                {{ task.team.name }}
+              </td>
+
+              <td class="govuk-table__cell" aria-labelledby="Task status">
+                {{govukTag({
+                  text: task.status,
+                  attributes: {
+                    'data-cy': 'status-tag'
+                  }
+                })}}
+
+              </td>
+
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
 
   </div>
 
