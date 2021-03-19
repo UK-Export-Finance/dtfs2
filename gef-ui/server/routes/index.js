@@ -9,6 +9,7 @@ import companiesHouseRoutes from './companies-house';
 import exportersAddressRoutes from './exporters-address';
 import selectExportersCorrespondenceAddressRoutes from './select-exporters-correspondence-address';
 import enterExportersCorrespondenceAddressRoutes from './enter-exporters-correspondence-address';
+import aboutExporterRoutes from './about-exporter';
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use(companiesHouseRoutes);
 router.use(exportersAddressRoutes);
 router.use(selectExportersCorrespondenceAddressRoutes);
 router.use(enterExportersCorrespondenceAddressRoutes);
+router.use(aboutExporterRoutes);
 
 export default router;

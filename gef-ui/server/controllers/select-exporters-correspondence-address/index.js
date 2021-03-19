@@ -1,18 +1,25 @@
 
 import _isEmpty from 'lodash/isEmpty';
+import * as api from '../../services/api';
 import { selectDropdownAddresses, validationErrorHandler } from '../../utils/helpers';
 
-const selectExportersCorrespondenceAddress = (req, res) => {
+const selectExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
   const { applicationId } = params;
   const { postcode, addresses } = session;
-  const parseAddresses = JSON.parse(addresses);
 
-  return res.render('partials/select-exporters-correspondence-address.njk', {
-    addressesForSelection: selectDropdownAddresses(parseAddresses),
-    postcode,
-    applicationId,
-  });
+  req.session.address = null;
+
+  try {
+    await api.getApplication(applicationId); // We fetch application to make sure it exists
+    return res.render('partials/select-exporters-correspondence-address.njk', {
+      addressesForSelection: selectDropdownAddresses(JSON.parse(addresses)),
+      postcode,
+      applicationId,
+    });
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
+  }
 };
 
 const validateSelectExportersCorrespondenceAddress = (req, res) => {
