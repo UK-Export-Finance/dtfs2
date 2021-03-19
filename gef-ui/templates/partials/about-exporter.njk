@@ -1,0 +1,42 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block pageTitle %}About the exporter{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: "/gef/application-details/" + applicationId + "/enter-exporters-correspondence-address",
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      About the exporter
+    </h1>
+  </header>
+
+  <div class="govuk-button-group">
+    <a
+      class="govuk-link"
+      href="/gef/application-details/{{applicationId}}"
+      data-cy="cancel-button">Return to application</a>
+  </div>
+
+{% endblock %}

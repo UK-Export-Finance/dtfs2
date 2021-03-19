@@ -24,36 +24,37 @@ const validateCompaniesHouse = async (req, res) => {
   const { params, body } = req;
   const { regNumber } = body;
   const { applicationId } = params;
+  const companiesHouseErrors = [];
+  let companiesHouseDetails;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
 
     if (_isEmpty(regNumber)) {
-      const regNumberError = {
+      companiesHouseErrors.push({
         errRef: 'regNumber',
         errMsg: 'Enter a Companies House registration number',
-      };
+      });
+    }
 
+    if (companiesHouseErrors.length < 1) {
+      companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber, exporterId);
+    }
+
+    if (companiesHouseDetails && companiesHouseDetails.status === 422) {
+      companiesHouseErrors.push(companiesHouseDetails.data);
+    }
+
+    if (companiesHouseErrors.length > 0) {
       return res.render('partials/companies-house.njk', {
-        errors: validationErrorHandler(regNumberError),
+        errors: validationErrorHandler(companiesHouseErrors),
         regNumber,
         applicationId,
       });
     }
-
-    await api.getCompaniesHouseDetails(regNumber, exporterId);
 
     return res.redirect('exporters-address');
   } catch (err) {
-    // Validation errors
-    if (err.status === 422) {
-      return res.render('partials/companies-house.njk', {
-        errors: validationErrorHandler(err.data),
-        regNumber,
-        applicationId,
-      });
-    }
-
     return res.render('partials/problem-with-service.njk');
   }
 };

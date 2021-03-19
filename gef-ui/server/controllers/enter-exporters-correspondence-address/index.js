@@ -8,17 +8,21 @@ const enterExportersCorrespondenceAddress = (req, res) => {
   const { applicationId } = params;
   const { address } = session;
   const parseAddress = JSON.parse(address);
-  const mappedAddress = {
-    organisationName: parseAddress.organisation_name,
-    addressLine1: parseAddress.address_line_1,
-    addressLine2: parseAddress.address_line_2,
-    addressLine3: parseAddress.address_line_3,
-    locality: parseAddress.locality,
-    postalCode: parseAddress.postal_code,
-  };
+  let mappedAddress;
+
+  if (parseAddress) {
+    mappedAddress = {
+      organisationName: parseAddress.organisation_name,
+      addressLine1: parseAddress.address_line_1,
+      addressLine2: parseAddress.address_line_2,
+      addressLine3: parseAddress.address_line_3,
+      locality: parseAddress.locality,
+      postalCode: parseAddress.postal_code,
+    };
+  }
 
   return res.render('partials/enter-exporters-correspondence-address.njk', {
-    addressForm: parseAddress ? mappedAddress : null,
+    addressForm: mappedAddress, // parseAddress ? mappedAddress : null,
     applicationId,
   });
 };
@@ -52,8 +56,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
-    const test = await api.updateExporter(exporterId, { correspondenceAddress: body });
-    console.log('test', test);
+    await api.updateExporter(exporterId, { correspondenceAddress: body });
     return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
