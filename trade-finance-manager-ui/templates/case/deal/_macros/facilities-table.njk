@@ -21,6 +21,7 @@
     <tbody class="govuk-table__body">
       {% for facility in facilities %}
         <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
+
           <td class="govuk-table__cell govuk-body-s">
             <a
               class="govuk-link"
@@ -50,9 +51,8 @@
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-export-currency">{{ facility.facilitySnapshot.facilityValueExportCurrency | dashIfEmpty }}</td>
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">{{ facility.facilitySnapshot.facilityValue | dashIfEmpty}}</td>
-
           <td class="govuk-table__cell govuk-body-s">
-            <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.facilitySnapshot.ukefExposure}}</span>
+            <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.tfm.ukefExposure.exposure}}</span>
             <span data-cy="facility-{{ facility._id }}-covered-percentage" class="govuk-!-padding-right-4" style="float:right;">
             ({{ facility.facilitySnapshot.coveredPercentage }})
             </span>

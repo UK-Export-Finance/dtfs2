@@ -1,9 +1,37 @@
+function checkType(type) {
+  if (type) {
+    switch (type.toUpperCase()) {
+      case 'CASH':
+      case 'CONTINGENT':
+        return type.toUpperCase();
+      default:
+        return null;
+    }
+  } else {
+    return null;
+  }
+}
+
+function checkPaymentType(paymentType) {
+  if (paymentType) {
+    switch (paymentType.toUpperCase()) {
+      case 'IN_ARREARS_QUARTLY':
+      case 'IN_ADVANCE_QUARTERLY':
+        return paymentType.toUpperCase();
+      default:
+        return null;
+    }
+  } else {
+    return null;
+  }
+}
+
 class Facility {
   constructor(req) {
     if (req.applicationId) {
       // new application
       this.applicationId = req.applicationId ? req.applicationId : null;
-      this.type = req.type !== null ? Number(req.type) : null; // 0 Cash | 1 Contingent
+      this.type = checkType(req.type);
       this.hasBeenIssued = null;
       this.name = null;
       this.startOnDayOfNotice = null;
@@ -21,20 +49,58 @@ class Facility {
       this.updatedAt = null;
     } else {
       // update application
-      this.hasBeenIssued = req.hasBeenIssued != null ? Boolean(req.hasBeenIssued) : null;
-      this.name = req.name ? String(req.name) : null;
-      this.startOnDayOfNotice = req.startOnDayOfNotice != null ? Boolean(req.startOnDayOfNotice) : null;
-      this.coverStartDate = req.coverStartDate ? new Date(req.coverStartDate) : null;
-      this.coverEndDate = req.coverEndDate ? new Date(req.coverEndDate) : null;
-      this.monthsOfCover = req.monthsOfCover ? Number(req.monthsOfCover) : null;
-      this.details = req.details ? req.details : null;
-      this.detailsOther = req.detailsOther ? String(req.detailsOther) : null;
-      this.currency = req.currency ? String(req.currency) : null;
-      this.value = req.value != null ? Number(req.value) : null;
-      this.coverPercentage = req.coverPercentage != null ? Number(req.coverPercentage) : null;
-      this.interestPercentage = req.interestPercentage != null ? Number(req.interestPercentage) : null;
-      // 0 - In advance (quarterly) | 1 - In Arrears (quarterly)
-      this.paymentType = req.paymentType != null ? Number(req.paymentType) : null;
+      if (req.hasBeenIssued) {
+        this.hasBeenIssued = Boolean(req.hasBeenIssued);
+      }
+
+      if (req.name) {
+        this.name = String(req.name);
+      }
+
+      if (req.startOnDayOfNotice) {
+        this.startOnDayOfNotice = Boolean(req.startOnDayOfNotice);
+      }
+
+      if (req.coverStartDate) {
+        this.coverStartDate = new Date(req.coverStartDate);
+      }
+
+      if (req.coverEndDate) {
+        this.coverEndDate = new Date(req.coverEndDate);
+      }
+
+      if (req.monthsOfCover) {
+        this.monthsOfCover = Number(req.monthsOfCover);
+      }
+
+      if (req.details) {
+        this.details = req.details;
+      }
+
+      if (req.detailsOther) {
+        this.detailsOther = String(req.detailsOther);
+      }
+
+      if (req.currency) {
+        this.currency = String(req.currency);
+      }
+
+      if (req.value) {
+        this.value = Number(req.value);
+      }
+
+      if (req.coverPercentage) {
+        this.coverPercentage = Number(req.coverPercentage);
+      }
+
+      if (req.interestPercentage) {
+        this.interestPercentage = Number(req.interestPercentage);
+      }
+
+      if (req.paymentType) {
+        this.paymentType = checkPaymentType(req.paymentType);
+      }
+
       this.updatedAt = Date.now();
     }
   }

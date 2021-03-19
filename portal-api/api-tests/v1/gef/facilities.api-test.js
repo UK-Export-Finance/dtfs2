@@ -33,11 +33,11 @@ describe(baseUrl, () => {
     // anEditor = testUsers().withRole('editor').one();
     applicationItem = await as(aMaker).post(applicationAllItems[0]).to(applicationBaseUrl);
     newFacility = {
-      status: 0,
+      status: 'NOT_STARTED',
       details: {
         _id: expect.any(String),
         applicationId: applicationItem.body._id,
-        type: expect.any(Number),
+        type: expect.any(String),
         hasBeenIssued: null,
         name: null,
         startOnDayOfNotice: null,
@@ -72,7 +72,7 @@ describe(baseUrl, () => {
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
-      paymentType: 0,
+      paymentType: 'CASH',
     };
   });
 
@@ -90,46 +90,46 @@ describe(baseUrl, () => {
     it('returns list of all items', async () => {
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
-        type: 0,
+        type: 'CASH',
       }).to(baseUrl);
 
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
-        type: 1,
+        type: 'CONTINGENT',
       }).to(baseUrl);
 
       const { body, status } = await as(aChecker).get(baseUrl);
 
-      expect(body).toEqual({ status: 0, items: [newFacility, newFacility] });
+      expect(body).toEqual({ status: 'NOT_STARTED', items: [newFacility, newFacility] });
       expect(status).toEqual(200);
     });
 
     it('returns list of item from the given application ID', async () => {
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
-        type: 0,
+        type: 'CASH',
       }).to(baseUrl);
 
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
-        type: 1,
+        type: 'CONTINGENT',
       }).to(baseUrl);
 
       await as(aMaker).post({
         applicationId: 'shouldNotBeInTheList',
-        type: 1,
+        type: 'CONTINGENT',
       }).to(baseUrl);
 
       const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${applicationItem.body._id}`);
 
-      expect(body).toEqual({ status: 0, items: [newFacility, newFacility] });
+      expect(body).toEqual({ status: 'NOT_STARTED', items: [newFacility, newFacility] });
       expect(status).toEqual(200);
     });
 
     it('returns a empty object if there are no records', async () => {
       const { body } = await as(aMaker).get(`${baseUrl}?applicationId=doesnotexist`);
       expect(body).toEqual({
-        status: 0,
+        status: 'NOT_STARTED',
         items: [],
       });
     });
@@ -142,13 +142,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     it('returns an individual item', async () => {
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       expect(body).toEqual(newFacility);
     });
@@ -171,13 +171,12 @@ describe(baseUrl, () => {
     });
 
     it('returns me a new application upon creation', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       expect(body).toEqual(newFacility.details);
     });
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
-
     beforeEach(async () => {
       await wipeDB.wipe([collectionName]);
       await wipeDB.wipe([applicationCollectionName]);
@@ -195,17 +194,17 @@ describe(baseUrl, () => {
         name: 'Matt',
         currency: 'GBP',
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
       const expected = {
-        status: 1,
+        status: 'IN_PROGRESS',
         details: {
           ...details,
           ...update,
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['startOnDayOfNotice', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details','value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['startOnDayOfNotice', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
         },
       };
 
@@ -218,10 +217,10 @@ describe(baseUrl, () => {
       const update = {
         details: ['other'],
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
       const expected = {
-        status: 1,
+        status: 'IN_PROGRESS',
         details: {
           ...details,
           ...update,
@@ -238,10 +237,10 @@ describe(baseUrl, () => {
 
     it('completely update a facility ', async () => {
       const { details } = newFacility;
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body._id}`);
       const expected = {
-        status: 2,
+        status: 'COMPLETED',
         details: {
           ...details,
           ...completeUpdate,
@@ -271,14 +270,14 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it('removes all items by application ID', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}?applicationId=${applicationItem.body._id}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
@@ -292,36 +291,36 @@ describe(baseUrl, () => {
 
   describe(`Overall Status: ${baseUrl}`, () => {
     it('overall status shows as "NOT STARTED" if all status is marked as "NOT STARTED"', async () => {
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
+      await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
+      await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       const { body, status } = await as(aMaker).get(baseUrl);
       expect(status).toEqual(200);
-      expect(body.status).toEqual(0);
+      expect(body.status).toEqual('NOT_STARTED');
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it('overall status shows as "IN PROGRES" if some status is marked as "IN PROGRES"', async () => {
-      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
-      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
-      await as(aMaker).put({name: 'test'}).to(`${baseUrl}/${item1.body._id}`);
+      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
+      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
+      await as(aMaker).put({ name: 'test' }).to(`${baseUrl}/${item1.body._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body._id}`);
       const { body, status } = await as(aMaker).get(baseUrl);
       expect(status).toEqual(200);
-      expect(body.status).toEqual(1);
+      expect(body.status).toEqual('IN_PROGRESS');
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it('overall status shows as "COMPLETED" if all status is marked as "COMPLETED"', async () => {
-      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
-      const item2 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
-      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 0 }).to(baseUrl);
+      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
+      const item2 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
+      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH' }).to(baseUrl);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item1.body._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item2.body._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body._id}`);
       const { body, status } = await as(aMaker).get(baseUrl);
       expect(status).toEqual(200);
-      expect(body.status).toEqual(2);
+      expect(body.status).toEqual('COMPLETED');
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
   });

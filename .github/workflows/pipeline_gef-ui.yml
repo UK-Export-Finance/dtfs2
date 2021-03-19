@@ -86,6 +86,9 @@ jobs:
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
 
+      COMPANIES_HOUSE_API_URL: ${{ secrets.COMPANIES_HOUSE_API_URL }}
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them

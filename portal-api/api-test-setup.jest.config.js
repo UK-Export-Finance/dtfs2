@@ -7,6 +7,7 @@ const mockFiles = [
   './src/v1/controllers/log-controller',
   './src/scheduler',
   './src/reference-data/api',
+  './src/v1/email',
 ];
 
 mockFiles.forEach((mockFile) => {
@@ -18,6 +19,6 @@ beforeAll(() => {
 });
 
 afterAll(async (done) => {
-  db.close();
+  await db.close();
   done();
 });
