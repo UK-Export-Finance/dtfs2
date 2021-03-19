@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { exporterValidation, exporterStatus } = require('./validation/exporter');
+const { exporterValidation, exporterStatus, exporterCheckEnums } = require('./validation/exporter');
 const { Exporter } = require('../models/exporter');
 
 const collectionName = 'gef-exporter';
@@ -22,6 +22,10 @@ exports.getById = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const enumValidationErr = exporterCheckEnums(req.body);
+  if (enumValidationErr) {
+    res.status(422).send({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', enumField: enumValidationErr });
+  }
   const collection = await db.getCollection(collectionName);
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnOriginal: false },

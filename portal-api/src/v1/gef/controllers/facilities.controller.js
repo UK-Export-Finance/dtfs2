@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus } = require('./validation/facilities');
+const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 
 const collectionName = 'gef-facilities';
@@ -49,6 +49,10 @@ exports.getById = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const enumValidationErr = facilitiesCheckEnums(req.body);
+  if (enumValidationErr) {
+    res.status(422).send({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', enumField: enumValidationErr });
+  }
   const collection = await db.getCollection(collectionName);
   const update = new Facility(req.body);
   const result = await collection.findOneAndUpdate(
