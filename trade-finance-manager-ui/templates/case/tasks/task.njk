@@ -35,21 +35,27 @@
         label: {
           text: "Assigned to"
         },
+        attributes: {
+          'data-cy': 'assigned-to-select-input'
+        },
         items: [
           {
             value: "Unassigned",
             text: "Unassigned",
-            selected: task.assignedTo === 'Unassigned'
+            selected: task.assignedTo === 'Unassigned',
+            attributes: {
+              'data-cy': 'assigned-to-select-input-option'
+            }
           },
           {
             value: user._id,
             text: assignToMeCopy,
-            selected: taskIsAssignedToUser
+            selected: taskIsAssignedToUser,
+            attributes: {
+              'data-cy': 'assigned-to-select-input-option'
+            }
           }
-        ],
-        attributes: {
-          'data-cy': 'assigned-to-select-input'
-        }
+        ]
       }) }}
 
       {{govukRadios({
@@ -58,6 +64,9 @@
               text: "Status",
               classes: "govuk-fieldset__legend--m"
             }
+          },
+          attributes: {
+            'data-cy': 'task-status-radios'
           },
           name: "status",
           items: [
@@ -92,7 +101,7 @@
       {{ govukButton({
         text: "Save and close",
         attributes: {
-          'data-cy': 'save-button'
+          'data-cy': 'submit-button'
         }
       }) }}
 

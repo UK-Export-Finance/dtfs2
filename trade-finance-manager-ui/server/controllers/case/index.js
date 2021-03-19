@@ -74,6 +74,7 @@ const putCaseTask = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
 
+
   if (!deal) {
     return res.redirect('/not-found');
   }
@@ -86,7 +87,7 @@ const putCaseTask = async (req, res) => {
   const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
 
   const update = {
-    taskId,
+    id: taskId,
     assignedTo,
     status,
     userId,

@@ -5,7 +5,10 @@
         items: [{
           text: 'Tasks',
           href: '/case/' + dealId + '/tasks',
-          active: (active_sheet=='tasks')
+          active: (active_sheet=='tasks'),
+          attributes: {
+            "data-cy": "tasks-link"
+          }
         }, {
           text: 'Deal',
           href: '/case/' + dealId + '/deal',

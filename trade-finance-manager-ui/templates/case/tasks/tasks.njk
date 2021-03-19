@@ -9,9 +9,11 @@
   <br />
   <br />
 
-  <ul class="govuk-list">
+  <ul class="govuk-list" data-cy="tasks-list">
     {% for task in tfm.tasks %}
-      <li><a href="/case/{{ dealId }}/tasks/{{ task.id }}">{{ task.title}}</a></li>
+      <li data-cy="task-{{ task.id }}-list-item">
+        <a href="/case/{{ dealId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-list-item-link">{{ task.title}}</a>
+      </li>
     {% endfor %}
   </ul>
 
