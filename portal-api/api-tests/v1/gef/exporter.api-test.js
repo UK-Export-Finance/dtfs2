@@ -57,9 +57,9 @@ describe(baseUrl, () => {
           companyName: null,
           registeredAddress: null,
           correspondenceAddress: null,
-          industrySectorId: null,
-          industryClassId: null,
-          smeTypeId: null,
+          industrySector: null,
+          industryClass: null,
+          smeType: null,
           probabilityOfDefault: null,
           isFinanceIncreasing: null,
           createdAt: expect.any(Number),
@@ -70,9 +70,9 @@ describe(baseUrl, () => {
             'companiesHouseRegistrationNumber',
             'companyName',
             'registeredAddress',
-            'industrySectorId',
-            'industryClassId',
-            'smeTypeId',
+            'industrySector',
+            'industryClass',
+            'smeType',
             'probabilityOfDefault',
             'isFinanceIncreasing',
           ],
@@ -108,5 +108,6 @@ describe(baseUrl, () => {
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(204);
     });
+
   });
 });

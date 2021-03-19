@@ -1,7 +1,7 @@
 const FACILITIES = [
   [{
     applicationId: 'IGNORE_POST-POPULATED',
-    type: 0,
+    type: 'CASH',
     hasBeenIssued: null,
     name: null,
     startOnDayOfNotice: null,
@@ -17,7 +17,7 @@ const FACILITIES = [
     paymentType: null,
   }, {
     applicationId: 'IGNORE_POST-POPULATED',
-    type: 0,
+    type: 'CASH',
     hasBeenIssued: null,
     name: null,
     startOnDayOfNotice: null,
@@ -33,7 +33,7 @@ const FACILITIES = [
     paymentType: null,
   }, {
     applicationId: 'IGNORE_POST-POPULATED',
-    type: 1,
+    type: 'CONTINGENT',
     hasBeenIssued: null,
     name: null,
     startOnDayOfNotice: null,
