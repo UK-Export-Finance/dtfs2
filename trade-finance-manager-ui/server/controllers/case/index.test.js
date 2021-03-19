@@ -51,7 +51,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          active_sheet: 'deal',
+          activeSubNavigation: 'deal',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
         });
@@ -107,7 +107,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          active_sheet: 'tasks',
+          activeSubNavigation: 'tasks',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
         });
@@ -169,7 +169,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/tasks/task.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          active_sheet: 'tasks',
+          activeSubNavigation: 'tasks',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
           task: expectedTask,
@@ -303,7 +303,7 @@ describe('controllers - case', () => {
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           facility: mockFacility.facilitySnapshot,
           facilityTfm: mockFacility.tfm,
-          active_sheet: 'facility',
+          activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
           user: session.user,
         });
@@ -355,7 +355,7 @@ describe('controllers - case', () => {
         await caseController.getCaseParties(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/parties.njk', {
           deal: mockDeal.dealSnapshot,
-          active_sheet: 'parties',
+          activeSubNavigation: 'parties',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
         });

@@ -21,7 +21,7 @@ const getDeals = async (req, res) => {
 
   return res.render('deals/deals.njk', {
     deals,
-    active_sheet: 'deal',
+    activeSubNavigation: 'deal',
     user: req.session.user,
   });
 };
