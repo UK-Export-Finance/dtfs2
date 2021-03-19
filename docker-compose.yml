@@ -157,7 +157,7 @@ services:
       - MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET
       - MULESOFT_API_EXPOSURE_PERIOD_URL
       - MULESOFT_API_UKEF_MDM_EA_URL
-      - AZURE_ACBS_FUNCTION_URL
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
     entrypoint: npx nodemon src/index.js
 
   gef-ui:
