@@ -18,7 +18,7 @@ const apiErrorHandler = ({ code, response }) => {
   }
   // Is validation error
   if (response.status === 422) {
-    throw response;
+    return response;
   }
 
   throw httpError(response.status, response.statusText);
