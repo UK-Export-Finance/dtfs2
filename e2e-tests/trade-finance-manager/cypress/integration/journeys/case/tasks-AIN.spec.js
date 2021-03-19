@@ -145,4 +145,31 @@ context('Case tasks - AIN deal', () => {
     pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
   });
+
+  it('when user changes task form and clicks `close without saving`, form should be unchanged', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    const firstTask = pages.tasksPage.tasks.listItem('1');
+    firstTask.link().click();
+
+    // check default values
+    pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
+    pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
+
+    // change `assigned to` and status
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputInProgress().click();
+
+
+    pages.taskPage.closeLink().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    // check form values are the default values
+
+    firstTask.link().click();
+    pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
+    pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
+  });
 });
