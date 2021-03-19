@@ -167,7 +167,6 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     // check form values are the default values
-
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
