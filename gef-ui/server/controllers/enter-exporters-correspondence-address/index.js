@@ -1,48 +1,66 @@
 
-// import _isEmpty from 'lodash/isEmpty';
-// import { selectDropdownAddresses, validationErrorHandler } from '../../utils/helpers';
+import _isEmpty from 'lodash/isEmpty';
+import * as api from '../../services/api';
+import { validationErrorHandler } from '../../utils/helpers';
 
 const enterExportersCorrespondenceAddress = (req, res) => {
   const { params, session } = req;
   const { applicationId } = params;
   const { address } = session;
   const parseAddress = JSON.parse(address);
+  const mappedAddress = {
+    organisationName: parseAddress.organisation_name,
+    addressLine1: parseAddress.address_line_1,
+    addressLine2: parseAddress.address_line_2,
+    addressLine3: parseAddress.address_line_3,
+    locality: parseAddress.locality,
+    postalCode: parseAddress.postal_code,
+  };
 
   return res.render('partials/enter-exporters-correspondence-address.njk', {
-    addressForm: parseAddress,
+    addressForm: parseAddress ? mappedAddress : null,
     applicationId,
   });
 };
 
-// const validateEnterExportersCorrespondenceAddress = (req, res) => {
-//   const { params, body, session } = req;
-//   const { postcode, addresses } = session;
-//   const { selectedAddress } = body;
-//   const { applicationId } = params;
-//   const parseAddresses = JSON.parse(addresses);
-//   let selectedAddressError;
+const validateEnterExportersCorrespondenceAddress = async (req, res) => {
+  const { params, body } = req;
+  const { applicationId } = params;
+  const addressErrors = [];
 
-//   if (_isEmpty(selectedAddress)) {
-//     selectedAddressError = {
-//       errRef: 'selectedAddress',
-//       errMsg: 'Select an address',
-//     };
+  if (_isEmpty(body.addressLine1)) {
+    addressErrors.push({
+      errRef: 'addressLine1',
+      errMsg: 'Enter address',
+    });
+  }
 
-//     return res.render('partials/select-exporters-correspondence-address.njk', {
-//       errors: validationErrorHandler(selectedAddressError),
-//       addressesForSelection: selectDropdownAddresses(parseAddresses),
-//       postcode,
-//       applicationId,
-//     });
-//   }
+  if (_isEmpty(body.postalCode)) {
+    addressErrors.push({
+      errRef: 'postalCode',
+      errMsg: 'Enter postcode',
+    });
+  }
 
-//   req.session.address = parseAddresses[parseFloat(selectedAddress)];
-//   req.session.confirm = true;
+  if (addressErrors.length > 0) {
+    return res.render('partials/enter-exporters-correspondence-address.njk', {
+      errors: validationErrorHandler(addressErrors),
+      addressForm: body,
+      applicationId,
+    });
+  }
 
-//   return res.redirect(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`);
-// };
+  try {
+    const { exporterId } = await api.getApplication(applicationId);
+    const test = await api.updateExporter(exporterId, { correspondenceAddress: body });
+    console.log('test', test);
+    return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
+  }
+};
 
 export {
   enterExportersCorrespondenceAddress,
-  // validateEnterExportersCorrespondenceAddress,
+  validateEnterExportersCorrespondenceAddress,
 };

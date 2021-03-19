@@ -45,7 +45,7 @@
           },
           id: "addressLine1",
           name: "addressLine1",
-          value: addressForm.address_line_1,
+          value: addressForm.addressLine1,
           errorMessage: errors and errors.fieldErrors.addressLine1 and {
             text: errors.fieldErrors.addressLine1.text,
             attributes: {
@@ -60,7 +60,7 @@
           },
           id: "addressLine2",
           name: "addressLine2",
-          value: addressForm.address_line_2
+          value: addressForm.addressLine2
         }) }}
 
         {{ govukInput({
@@ -69,7 +69,7 @@
           },
           id: "addressLine3",
           name: "addressLine3",
-          value: addressForm.address_line_3
+          value: addressForm.addressLine3
         }) }}
 
         {{ govukInput({
@@ -79,6 +79,21 @@
           id: "locality",
           name: "locality",
           value: addressForm.locality
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Postcode"
+          },
+          id: "postalCode",
+          name: "postalCode",
+          value: addressForm.postalCode,
+           errorMessage: errors and errors.fieldErrors.postalCode and {
+            text: errors.fieldErrors.postalCode.text,
+            attributes: {
+              'data-cy': 'postal-code-error'
+            }
+          }
         }) }}
 
         <div class="govuk-button-group">
