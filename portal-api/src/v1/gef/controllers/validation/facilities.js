@@ -76,12 +76,38 @@ const facilitiesOverallStatus = (facilities) => {
   return result;
 };
 
+const facilitiesCheckEnums = (doc) => {
+  const enumErrors = [];
+  switch (doc.type) {
+    case 'CASH':
+    case 'CONTINGENT':
+    case null:
+    case undefined:
+      break;
+    default:
+      enumErrors.push('type');
+      break;
+  }
+  switch (doc.paymentType) {
+    case 'IN_ARREARS_QUARTLY':
+    case 'IN_ADVANCE_QUARTERLY':
+    case null:
+    case undefined:
+      break;
+    default:
+      enumErrors.push('paymentType');
+      break;
+  }
+  return enumErrors.length === 0 ? null : enumErrors;
+};
+
 const facilitiesValidation = (doc) => ({
   required: hasRequiredItems(doc),
 });
 
 module.exports = {
   facilitiesValidation,
+  facilitiesCheckEnums,
   facilitiesOverallStatus,
   facilitiesStatus,
 };

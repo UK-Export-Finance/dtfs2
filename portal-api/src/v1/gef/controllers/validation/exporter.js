@@ -10,14 +10,14 @@ const hasRequiredItems = (doc) => {
   if (doc.registeredAddress === null) {
     required.push('registeredAddress');
   }
-  if (doc.industrySectorId === null) {
-    required.push('industrySectorId');
+  if (doc.industrySector === null) {
+    required.push('industrySector');
   }
-  if (doc.industryClassId === null) {
-    required.push('industryClassId');
+  if (doc.industryClass === null) {
+    required.push('industryClass');
   }
-  if (doc.smeTypeId === null) {
-    required.push('smeTypeId');
+  if (doc.smeType === null) {
+    required.push('smeType');
   }
   if (doc.probabilityOfDefault === null) {
     required.push('probabilityOfDefault');
@@ -41,11 +41,29 @@ const exporterStatus = (doc) => {
   }
 };
 
+const exporterCheckEnums = (doc) => {
+  const enumErrors = [];
+  switch (doc.smeType) {
+    case 'MICRO':
+    case 'SMALL':
+    case 'MEDIUM':
+    case 'NOT_SME':
+    case null:
+    case undefined:
+      break;
+    default:
+      enumErrors.push('smeType');
+      break;
+  }
+  return enumErrors.length === 0 ? null : enumErrors;
+};
+
 const exporterValidation = (doc) => ({
-  required: hasRequiredItems(doc),
+  required: hasRequiredItems(doc)
 });
 
 module.exports = {
   exporterValidation,
+  exporterCheckEnums,
   exporterStatus,
 };

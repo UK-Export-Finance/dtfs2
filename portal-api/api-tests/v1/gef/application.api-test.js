@@ -69,8 +69,7 @@ describe(baseUrl, () => {
         items: allItems.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
-          createdAt: expect.any(Number),
-          facilityIds: null,
+          createdAt: expect.any(Number)
         })),
       };
 
@@ -97,8 +96,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
-        createdAt: expect.any(Number),
-        facilityIds: null,
+        createdAt: expect.any(Number)
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -125,8 +123,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
-        createdAt: expect.any(Number),
-        facilityIds: null,
+        createdAt: expect.any(Number)
       };
       expect(body).toEqual(expectMongoId(expected));
     });
