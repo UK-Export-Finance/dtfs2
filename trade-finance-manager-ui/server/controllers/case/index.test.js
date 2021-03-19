@@ -51,6 +51,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'deal',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
@@ -107,6 +108,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
@@ -169,6 +171,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/tasks/task.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
@@ -303,6 +306,7 @@ describe('controllers - case', () => {
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           facility: mockFacility.facilitySnapshot,
           facilityTfm: mockFacility.tfm,
+          activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
           user: session.user,
@@ -355,6 +359,7 @@ describe('controllers - case', () => {
         await caseController.getCaseParties(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/parties.njk', {
           deal: mockDeal.dealSnapshot,
+          activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'parties',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
@@ -415,6 +420,8 @@ describe('controllers - case', () => {
 
         await caseController.getExporterPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
@@ -477,6 +484,8 @@ describe('controllers - case', () => {
         await caseController.getBondIssuerPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-issuer-edit.njk',
           {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
             user: session.user,
           });
@@ -537,6 +546,8 @@ describe('controllers - case', () => {
         await caseController.getBondBeneficiaryPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-beneficiary-edit.njk',
           {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
             user: session.user,
           });

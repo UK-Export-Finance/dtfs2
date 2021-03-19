@@ -18,6 +18,7 @@ const getCaseDeal = async (req, res) => {
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
@@ -35,6 +36,7 @@ const getCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
@@ -58,6 +60,7 @@ const getCaseTask = async (req, res) => {
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
@@ -113,6 +116,7 @@ const getCaseFacility = async (req, res) => {
     deal: deal.dealSnapshot,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     facility: facility.facilitySnapshot,
+    activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'facility',
     facilityId,
     facilityTfm: facility.tfm,
@@ -131,6 +135,7 @@ const getCaseParties = async (req, res) => {
   return res.render('case/parties/parties.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'parties',
     dealId,
     user: req.session.user,
@@ -147,6 +152,8 @@ const getPartyDetails = (partyType) => (
     }
 
     return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
       dealId,
@@ -169,6 +176,8 @@ const getBondIssuerPartyDetails = async (req, res) => {
   }
 
   return res.render('case/parties/edit/bonds-issuer-edit.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'parties',
     deal: deal.dealSnapshot,
     user: req.session.user,
   });
@@ -184,6 +193,8 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
   }
 
   return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'parties',
     deal: deal.dealSnapshot,
     user: req.session.user,
   });
