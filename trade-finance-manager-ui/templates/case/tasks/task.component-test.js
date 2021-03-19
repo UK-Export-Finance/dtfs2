@@ -78,9 +78,9 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="task-status-done"]').toExist();
     });
 
-    it('should render save button', () => {
-      wrapper.expectElement('[data-cy="save-button"]').toExist();
-      wrapper.expectText('[data-cy="save-button"]').toRead('Save and close');
+    it('should render submit button', () => {
+      wrapper.expectElement('[data-cy="submit-button"]').toExist();
+      wrapper.expectText('[data-cy="submit-button"]').toRead('Save and close');
     });
 
     it('should render close link', () => {
