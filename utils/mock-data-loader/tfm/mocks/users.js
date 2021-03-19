@@ -47,4 +47,20 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
+  {
+    username: 'BUSINESS_SUPPORT_USER_1',
+    email: '',
+    teams: ['BUSINESS_SUPPORT'],
+    timezone: 'Europe/London',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
+  },
+  {
+    username: 'BUSINESS_SUPPORT_USER_1',
+    email: '',
+    teams: ['UNDERWRITING_SUPPORT'],
+    timezone: 'Europe/London',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
+  },
 ];
