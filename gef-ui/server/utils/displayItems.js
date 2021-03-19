@@ -9,7 +9,7 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Companies House registration number',
     id: 'companiesHouseRegistrationNumber',
-    href: `${exporterUrl}/`,
+    href: `${exporterUrl}/companies-house`,
   },
   {
     label: 'Company name',
@@ -22,19 +22,19 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
-    href: `${exporterUrl}/`,
+    href: `${exporterUrl}/enter-exporters-correspondence-address`,
   },
   {
     label: 'Industry sector',
-    id: 'industrySectorId',
+    id: 'industrySector',
   },
   {
     label: 'Industry class',
-    id: 'industryClassId',
+    id: 'industryClass',
   },
   {
     label: 'SME type',
-    id: 'smeTypeId',
+    id: 'smeType',
     href: `${exporterUrl}/`,
   },
   {
