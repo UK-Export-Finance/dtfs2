@@ -78,7 +78,7 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    pages.tasksPage.tasksListItems().should('have.length', 2);
+    pages.tasksPage.tasksListRows().should('have.length', 2);
   });
 
 
@@ -89,7 +89,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // user assigns task to themself
     //---------------------------------------------------------------
-    const firstTask = pages.tasksPage.tasks.listItem('1');
+    const firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks/1`));
@@ -150,7 +150,7 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    const firstTask = pages.tasksPage.tasks.listItem('1');
+    const firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
 
     // check default values
