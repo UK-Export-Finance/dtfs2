@@ -18,7 +18,7 @@ const getCaseDeal = async (req, res) => {
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'deal',
+    activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
   });
@@ -35,7 +35,7 @@ const getCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'tasks',
+    activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
   });
@@ -58,7 +58,7 @@ const getCaseTask = async (req, res) => {
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'tasks',
+    activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
     task,
@@ -113,7 +113,7 @@ const getCaseFacility = async (req, res) => {
     deal: deal.dealSnapshot,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     facility: facility.facilitySnapshot,
-    active_sheet: 'facility',
+    activeSubNavigation: 'facility',
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
@@ -131,7 +131,7 @@ const getCaseParties = async (req, res) => {
   return res.render('case/parties/parties.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'parties',
+    activeSubNavigation: 'parties',
     dealId,
     user: req.session.user,
   });
