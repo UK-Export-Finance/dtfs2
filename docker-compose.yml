@@ -67,6 +67,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
     entrypoint: npx nodemon src/index.js
   
   portal:
