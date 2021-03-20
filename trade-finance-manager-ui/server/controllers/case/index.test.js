@@ -145,8 +145,23 @@ describe('controllers - case', () => {
         tfm: {
           parties: [],
           tasks: [
-            { id: '123' },
-            { id: '456' },
+            {
+              groupTitle: 'Testing',
+              groupTasks: [
+                {
+                  id: '123',
+                  assignedTo: {
+                    userId: session.user._id, // eslint-disable-line no-underscore-dangle
+                  },
+                },
+                {
+                  id: '456',
+                  assignedTo: {
+                    userId: session.user._id, // eslint-disable-line no-underscore-dangle
+                  },
+                },
+              ],
+            },
           ],
         },
         mock: true,
@@ -165,9 +180,20 @@ describe('controllers - case', () => {
           session,
         };
 
-        const expectedTask = getTask(req.params.taskId, mockDeal.tfm.tasks);
+        let allTasksWithoutGroups = [];
+
+        mockDeal.tfm.tasks.forEach((group) => {
+          const { groupTasks } = group;
+          allTasksWithoutGroups = [
+            ...allTasksWithoutGroups,
+            ...groupTasks,
+          ];
+        });
+
+        const expectedTask = getTask(req.params.taskId, allTasksWithoutGroups);
 
         await caseController.getCaseTask(req, res);
+
         expect(res.render).toHaveBeenCalledWith('case/tasks/task.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
@@ -232,7 +258,7 @@ describe('controllers - case', () => {
           },
           session,
           body: {
-            assignedTo: session.user._id,
+            assignedTo: session.user._id, // eslint-disable-line no-underscore-dangle
             status: 'In progress',
           },
         };

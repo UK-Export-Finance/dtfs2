@@ -52,7 +52,17 @@ const getCaseTask = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const task = getTask(taskId, deal.tfm.tasks);
+  let allTasksWithoutGroups = [];
+
+  deal.tfm.tasks.forEach((group) => {
+    const { groupTasks } = group;
+    allTasksWithoutGroups = [
+      ...allTasksWithoutGroups,
+      ...groupTasks,
+    ];
+  });
+
+  const task = getTask(taskId, allTasksWithoutGroups);
 
   // eslint-disable-next-line no-underscore-dangle
   const taskIsAssignedToUser = isTaskIsAssignedToUser(task.assignedTo, req.session.user._id);

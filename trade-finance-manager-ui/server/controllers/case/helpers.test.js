@@ -21,12 +21,14 @@ describe('case - helpers', () => {
 
   describe('isTaskIsAssignedToUser', () => {
     it('should return true when taskAssignedTo matches userId', () => {
-      const result = isTaskIsAssignedToUser(1, 1);
+      const mockTaskAssignedTo = { userId: 1 };
+      const result = isTaskIsAssignedToUser(mockTaskAssignedTo, 1);
       expect(result).toEqual(true);
     });
 
     it('should return false when taskAssignedTo does NOT match userId', () => {
-      const result = isTaskIsAssignedToUser(1, 2);
+      const mockTaskAssignedTo = { userId: 1 };
+      const result = isTaskIsAssignedToUser(mockTaskAssignedTo, 2);
       expect(result).toEqual(false);
     });
   });

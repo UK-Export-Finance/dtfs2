@@ -2,7 +2,7 @@ const getTask = (taskId, tasks) =>
   tasks.find((t) => t.id === taskId);
 
 const isTaskIsAssignedToUser = (taskAssignedTo, userId) =>
-  taskAssignedTo === userId;
+  taskAssignedTo.userId === userId;
 
 const userFullName = (user) => {
   const { firstName, lastName } = user;

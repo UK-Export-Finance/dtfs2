@@ -4,42 +4,55 @@
   {% set caseId = params.caseId %}
   {% set tasks = params.tasks %}
 
-  <table class="govuk-table" data-cy="tasks-table">
-    <thead class="govuk-table__head">
-      <tr>
-        <th class="govuk-table__header"></th>
-        <th class="govuk-table__header" data-cy="tasks-table-header-assigned-to">Assigned to</th>
-        <th class="govuk-table__header" data-cy="tasks-table-header-team">Team</th>
-        <th class="govuk-table__header"></th>
-      </tr>
-    </thead>
+  <div data-cy="tasks-table">
+    {% for taskGroup in tasks %}
 
-    <tbody class="govuk-table__body">
-      {% for task in tasks %}
-        <tr class="govuk-table__row" data-cy="task-{{ task.id }}-row">
+      <div class="govuk-!-padding-left-7">
 
-          <td class="govuk-table__cell">
-            <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-link">{{ task.title}}</a>
-          </td>
+        <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-heading-l govuk-!-margin-bottom-0" data-cy="task-group-title">{{ taskGroup.groupTitle }}</caption>
 
-          <td class="govuk-table__cell" data-cy="task-table-row-{{ task.id }}-user-full-name">
-            {{ task.assignedTo.userFullName }}
-          </td>
+          <thead class="govuk-table__head">
+            <tr>
+              <th class="govuk-table__header"></th>
+              <th class="govuk-table__header" data-cy="tasks-table-header-assigned-to">Assigned to</th>
+              <th class="govuk-table__header" data-cy="tasks-table-header-team">Team</th>
+              <th class="govuk-table__header"></th>
+            </tr>
+          </thead>
 
-          <td class="govuk-table__cell" data-cy="task-table-row-{{ task.id }}-team-name">
-            {{ task.team.name }}
-          </td>
+          <tbody class="govuk-table__body">
+            {% for task in taskGroup.groupTasks %}
+              <tr class="govuk-table__row" data-cy="task-{{ task.id }}-row">
 
-          <td class="govuk-table__cell" aria-labelledby="Task status">
-            {% set componentData = {
-              status: task.status
-            } %}
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0">
+                  <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-link">{{ task.title }}</a>
+                </td>
 
-            {{taskStatusTag.render(componentData)}}
-          </td>
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0" data-cy="task-table-row-{{ task.id }}-user-full-name">
+                  {{ task.assignedTo.userFullName }}
+                </td>
 
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0" data-cy="task-table-row-{{ task.id }}-team-name">
+                  {{ task.team.name }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right" aria-labelledby="Task status">
+                  {% set componentData = {
+                    status: task.status
+                  } %}
+
+                  {{taskStatusTag.render(componentData)}}
+                </td>
+
+              </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    {% endfor %}
+  </div>
+
 {% endmacro %}

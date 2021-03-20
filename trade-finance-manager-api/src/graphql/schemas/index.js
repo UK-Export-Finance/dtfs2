@@ -201,10 +201,15 @@ type TFMTask {
   assignedTo: TFMTaskAssignedTo
 }
 
+type TFMTaskGroup {
+  groupTitle: String
+  groupTasks: [TFMTask]
+}
+
 type TFMDealData {
   parties: TFMParties
   product: String
-  tasks: [TFMTask]
+  tasks: [TFMTaskGroup]
 }
 
 type TFMFacilityData {
