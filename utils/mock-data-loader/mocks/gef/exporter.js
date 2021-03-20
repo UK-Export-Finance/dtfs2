@@ -9,8 +9,7 @@ const EXPORTER = [{
   companyName: faker.company.companyName(),
   registeredAddress: null,
   correspondenceAddress: null,
-  industrySector: null,
-  industryClass: null,
+  industries: null,
   smeType: 'MEDIUM',
   probabilityOfDefault: 67,
   isFinanceIncreasing: false,
@@ -25,8 +24,32 @@ const EXPORTER = [{
     postcode: 'AB1 1AB',
   },
   correspondenceAddress: null,
-  industrySector: [{ code: '55100', name: 'Hotels and similar accommodation' }],
-  industryClass: [{ code: '1008', name: 'Accommodation and food service activities' }],
+  industries: [
+    {
+      code: '1003',
+      name: 'Manufacturing',
+      class: {
+        code: '25300',
+        name: 'Manufacture of steam generators, except central heating hot water boilers',
+      },
+    },
+    {
+      code: '1003',
+      name: 'Manufacturing',
+      class: {
+        code: '25620',
+        name: 'Machining',
+      },
+    },
+    {
+      code: '1003',
+      name: 'Manufacturing',
+      class: {
+        code: '28110',
+        name: 'Manufacture of engines and turbines, except aircraft, vehicle and cycle engines',
+      },
+    },
+  ],
   smeType: 'TINY',
   probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,

@@ -1,9 +1,11 @@
+const { ERROR } = require('../../enums');
+
 const requiredValidation = async (bankInternalRefName) => {
   if (bankInternalRefName && bankInternalRefName.length > 0) {
     return null;
   }
   return {
-    errCode: 'MANDATORY_FIELD',
+    errCode: ERROR.MANDATORY_FIELD,
     errRef: 'bankInternalRefName',
     errMsg: 'Application Reference Name is Mandatory',
   };
@@ -13,7 +15,7 @@ const doesApplicationAlreadyExist = async (collection, bankInternalRefName) => {
   const doc = await collection.findOne({ bankInternalRefName });
   if (doc) {
     return {
-      errCode: 'ALREADY_EXISTS',
+      errCode: ERROR.ALREADY_EXISTS,
       errRef: 'bankInternalRefName',
       errMsg: 'The bank reference you have entered already exists.',
     };
