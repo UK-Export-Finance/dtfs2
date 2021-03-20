@@ -5,15 +5,41 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  const params = {
-    status: 'To do',
-  };
 
-  beforeEach(() => {
-    wrapper = render(params);
+
+  describe('when status is `To do`', () => {
+    it('should render govukTag', () => {
+      const params = {
+        status: 'To do',
+      };
+      const wrapper = render(params);
+
+      wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
+    });
   });
 
-  it('should render govukTag with status text', () => {
-    wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
+
+  describe('when status is `In progress`', () => {
+    it('should render govukTag with yellow class', () => {
+      const params = {
+        status: 'In progress',
+      };
+      const wrapper = render(params);
+     
+      wrapper.expectElement('[data-cy="status-tag"]').hasClass('govuk-tag--yellow');
+      wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
+    });
+  });
+
+  describe('when status is `Done`', () => {
+    it('should render govukTag with green class', () => {
+      const params = {
+        status: 'Done',
+      };
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="status-tag"]').hasClass('govuk-tag--green');
+      wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
+    });
   });
 });
