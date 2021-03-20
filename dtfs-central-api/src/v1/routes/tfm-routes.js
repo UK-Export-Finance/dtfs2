@@ -84,6 +84,11 @@ tfmRouter.route('/users/:username')
     tfmUsersController.deleteUserDELETE,
   );
 
+tfmRouter.route('/users/id/:userId')
+  .get(
+    tfmUsersController.findOneUserByIdGET,
+  );
+
 tfmRouter.route('/users/:id/tasks')
   .put(
     tfmUsersController.updateUserTasksPUT,

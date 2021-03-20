@@ -7,6 +7,7 @@ const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_TASKS = require('./mock-tasks');
+const MOCK_USERS = require('./mock-users');
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
@@ -88,19 +89,23 @@ module.exports = {
         partyUrn: 'testPartyUrn',
       }]
   ),
-  findUser: (username) => (
-    username === 'invalidUser' ? false : { username }
-  ),
-  updateUserTasks: (userId, updatedTasks) => ({
-    _id: '6051d94564494924d38ce67c',
-    username: 'BUSINESS_SUPPORT_USER_1',
-    email: 'test@testing.com',
-    teams: ['BUSINESS_SUPPORT'],
-    timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
-    assignedTasks: updatedTasks,
-  }),
+  findUser: (username) => {
+    if (username === 'invalidUser') {
+      return false;
+    }
+
+    return MOCK_USERS.find((user) => user.username === username);
+  },
+  findUserById: (userId) =>
+    MOCK_USERS.find((user) => user._id === userId),
+  updateUserTasks: (userId, updatedTasks) => {
+    const user = MOCK_USERS.find((user) => user._id === userId);
+
+    return {
+      ...user,
+      assignedTasks: updatedTasks,
+    };
+  },
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),

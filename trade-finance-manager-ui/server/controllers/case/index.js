@@ -77,24 +77,34 @@ const putCaseTask = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
 
-
   if (!deal) {
     return res.redirect('/not-found');
   }
 
   const {
-    assignedTo,
+    assignedTo: assignedToValue, // will be user._id or `Unassigned`
     status,
   } = req.body;
 
-  const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+  // TODO need to account for req.body.assignedTo NOT being the current user.
+
+  // const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+
+  // let assignedToValue;
+  // if (assignedTo !== 'Unassigned') {
+  //   assignedToValue = assignedTo;
+  // }
 
   const update = {
     id: taskId,
-    assignedTo,
     status,
-    userId,
+    assignedTo: {
+      userId: assignedToValue,
+      // userFullName,
+    },
   };
+
+  console.log('yooo update \n', update);
 
   await api.updateTask(dealId, update);
 

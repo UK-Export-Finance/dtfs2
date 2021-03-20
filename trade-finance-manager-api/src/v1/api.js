@@ -160,6 +160,21 @@ const findUser = async (username) => {
   }
 };
 
+const findUserById = async (userId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 const updateUserTasks = async (userId, updatedTasks) => {
   try {
     const response = await axios({
@@ -237,6 +252,7 @@ module.exports = {
   queryDeals,
   getPartyDbInfo,
   findUser,
+  findUserById,
   updateUserTasks,
   getCurrencyExchangeRate,
   getFacilityExposurePeriod,

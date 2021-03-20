@@ -56,6 +56,17 @@ const findOneUserById = async (userId) => {
   const user = await collection.findOne({ _id: new ObjectID(userId) });
   return user;
 };
+exports.findOneUserById = findOneUserById;
+
+exports.findOneUserByIdGET = async (req, res) => {
+  const user = await findOneUserById(req.params.userId);
+
+  if (user) {
+    return res.status(200).send(user);
+  }
+
+  return res.status(404).send();
+};
 
 const updateUser = async (userId, update) => {
   const collection = await db.getCollection(usersCollection);

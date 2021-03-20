@@ -11,15 +11,6 @@
 
       <h3 class="govuk-heading-s ukef-heading-background">{{ deal.details.submissionType }}</h3>
 
-      {# <ul class="govuk-list" data-cy="tasks-list">
-        {% for task in tfm.tasks %}
-          <li data-cy="task-{{ task.id }}-list-item">
-            <a href="/case/{{ dealId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-list-item-link">{{ task.title}}</a>
-          </li>
-        {% endfor %}
-      </ul>
-      #}
-
       <table class="govuk-table" data-cy="tasks-list">
         <thead class="govuk-table__head">
           <tr>
@@ -39,7 +30,7 @@
               </td>
 
               <td class="govuk-table__cell">
-                {{ task.assignedTo }}
+                {{ task.assignedTo.userFullName }}
               </td>
 
               <td class="govuk-table__cell">
