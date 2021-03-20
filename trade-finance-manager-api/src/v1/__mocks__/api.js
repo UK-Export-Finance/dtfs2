@@ -97,9 +97,9 @@ module.exports = {
     return MOCK_USERS.find((user) => user.username === username);
   },
   findUserById: (userId) =>
-    MOCK_USERS.find((user) => user._id === userId),
+    MOCK_USERS.find((user) => user._id === userId), // eslint-disable-line no-underscore-dangle
   updateUserTasks: (userId, updatedTasks) => {
-    const user = MOCK_USERS.find((user) => user._id === userId);
+    const user = MOCK_USERS.find((u) => u._id === userId); // eslint-disable-line no-underscore-dangle
 
     return {
       ...user,

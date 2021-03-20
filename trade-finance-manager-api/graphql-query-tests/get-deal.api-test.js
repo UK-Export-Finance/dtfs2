@@ -34,16 +34,19 @@ const GET_DEAL = gql`
           }
         }
         tasks {
-          id,
-          title,
-          status,
-          assignedTo {
-            userId
-            userFullName
-          }
-          team {
+          groupTitle
+          groupTasks {
             id,
-            name
+            title,
+            status,
+            assignedTo {
+              userId
+              userFullName
+            }
+            team {
+              id,
+              name
+            }
           }
         }
       }

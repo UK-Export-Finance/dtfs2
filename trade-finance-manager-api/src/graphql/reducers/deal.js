@@ -26,6 +26,7 @@ const dealReducer = (deal) => {
     },
     tfm,
   };
+  console.log('YOOOo result.tfm.tasks ', result.tfm.tasks);
 
   return result;
 };

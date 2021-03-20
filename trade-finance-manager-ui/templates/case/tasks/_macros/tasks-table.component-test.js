@@ -9,30 +9,35 @@ describe(component, () => {
     caseId: '100200',
     tasks: [
       {
-        id: '1',
-        title: 'Title A',
-        assignedTo: {
-          userId: '1234',
-          userFullName: 'Joe Bloggs',
-        },
-        team: {
-          id: 'BUSINESS_SUPPORT',
-          name: 'Business support group',
-        },
-        status: 'To do',
-      },
-      {
-        id: '2',
-        title: 'Title B',
-        assignedTo: {
-          userId: '5678',
-          userFullName: 'Joe Bloggs',
-        },
-        team: {
-          id: 'BUSINESS_SUPPORT',
-          name: 'Business support group',
-        },
-        status: 'In progress',
+        groupTitle: 'Test title',
+        groupTasks: [
+          {
+            id: '1',
+            title: 'Title A',
+            assignedTo: {
+              userId: '1234',
+              userFullName: 'Joe Bloggs',
+            },
+            team: {
+              id: 'BUSINESS_SUPPORT',
+              name: 'Business support group',
+            },
+            status: 'To do',
+          },
+          {
+            id: '2',
+            title: 'Title B',
+            assignedTo: {
+              userId: '5678',
+              userFullName: 'Joe Bloggs',
+            },
+            team: {
+              id: 'BUSINESS_SUPPORT',
+              name: 'Business support group',
+            },
+            status: 'In progress',
+          },
+        ],
       },
     ],
   };
@@ -51,38 +56,49 @@ describe(component, () => {
     });
   });
 
+  it('should render tasks group title', () => {
+    const selector = '[data-cy="task-group-title"]';
+    wrapper.expectText(selector).toRead(params.tasks[0].groupTitle);
+  });
 
-    describe('for each facility', () => {
-      it('should render link', () => {
-        params.tasks.forEach((task) => {
+  describe('for each task in a tasks group', () => {
+    it('should render link', () => {
+      params.tasks.forEach((group) => {
+        group.groupTasks.forEach((task) => {
           const selector = `[data-cy="task-${task.id}-link"]`;
-
           wrapper.expectLink(selector).toLinkTo(
             `/case/${params.caseId}/tasks/${task.id}`,
             task.title,
           );
         });
       });
+    });
 
-      it('should render assignee\'s full name', () => {
-        params.tasks.forEach((task) => {
+    it('should render assignee\'s full name', () => {
+      params.tasks.forEach((group) => {
+        group.groupTasks.forEach((task) => {
           const selector = `[data-cy="task-table-row-${task.id}-user-full-name"]`;
           wrapper.expectText(selector).toRead(task.assignedTo.userFullName);
         });
       });
+    });
 
-      it('should render team name', () => {
-        params.tasks.forEach((task) => {
+    it('should render team name', () => {
+      params.tasks.forEach((group) => {
+        group.groupTasks.forEach((task) => {
           const selector = `[data-cy="task-table-row-${task.id}-team-name"]`;
           wrapper.expectText(selector).toRead(task.team.name);
         });
       });
+    });
 
-      it('should render status tag', () => {
-        params.tasks.forEach((task) => {
+    it('should render status tag', () => {
+      params.tasks.forEach((group) => {
+        group.groupTasks.forEach((task) => {
           const selector = '[data-cy="status-tag"]';
           wrapper.expectElement(selector).toExist();
         });
       });
     });
+  });
   });

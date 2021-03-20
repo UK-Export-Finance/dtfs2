@@ -10,7 +10,14 @@ describe(page, () => {
         submissionType: 'Automatic Inclusion Notice',
       },
     },
-    tasks: [],
+    tfm: {
+      tasks: [
+        {
+          groupTitle: 'Testing',
+          groupTasks: [],
+        }
+      ],
+    },
   };
 
   beforeEach(() => {
