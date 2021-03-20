@@ -1,9 +1,11 @@
 {% extends "case/case.njk" %}
 {% import './_macros/facility_details.njk' as details %}
+{% import './_macros/premium_schedule.njk' as schedule %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% block sub_content %}
+
   {% set facilityDetailsHtml %}
   {% set detailsComponentData = {
     facility: facility,
@@ -13,9 +15,15 @@
   {{ details.render(detailsComponentData) }}
   {% endset %}
   {% set premiumScheduleHtml %}
-  <h1>Premium schedule</h1>
+
+    {% set scheduleComponentData = {
+    facility: facility,
+    schedule: schedule
+  } %}
+  {{ schedule.render(scheduleComponentData) }}
   {% endset -%}
   <div>
+
     <h3 class="ukef-label-grey" style="padding-top:90px">Facility {{ facility.ukefFacilityID }}</h3>
     <h3 class="govuk-heading-l">{{ facility.facilityType }}</h3>
   </div>
