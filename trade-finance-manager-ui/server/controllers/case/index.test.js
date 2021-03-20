@@ -221,6 +221,7 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.updateTask = () => Promise.resolve({});
       });
 
       it('should redirect to /tasks', async () => {
@@ -231,7 +232,7 @@ describe('controllers - case', () => {
           },
           session,
           body: {
-            assignedTo: '123456789',
+            assignedTo: session.user._id,
             status: 'In progress',
           },
         };
