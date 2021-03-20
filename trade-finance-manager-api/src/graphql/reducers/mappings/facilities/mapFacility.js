@@ -9,6 +9,8 @@ const mapBanksInterestMargin = require('./mapBanksInterestMargin');
 const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmountInExportCurrency');
 const mapDates = require('./mapDates');
 
+// const facilityReducer = require('../../facility');
+
 const mapFacility = (f, facilityTfm, dealDetails) => {
   // Deep clone
   const facility = JSON.parse(JSON.stringify(f, null, 4));
@@ -20,7 +22,6 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     guaranteeFeePayableByBank,
     currency,
   } = facility;
-
   const ukefFacilityType = facilityType;
 
   facility.facilityProduct = mapFacilityProduct(facility);
@@ -47,7 +48,9 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
     banksInterestMargin: mapBanksInterestMargin(facility),
     firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(facility),
-
+    feeType: facility.facilityProduct.name === 'Bond Support Scheme' ? facility.feeType : facility.premiumType,
+    feeFrequency: facility.facilityProduct.code === 'Bond Support Scheme' ? facility.feeFrequency : facility.premiumFrequency,
+    dayCountBasis: facility.dayCountBasis,
     dates: mapDates(facility, facilityTfm, dealDetails),
 
     // bond specifics
