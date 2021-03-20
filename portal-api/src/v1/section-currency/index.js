@@ -2,11 +2,12 @@ const { findOneCurrency } = require('../controllers/currencies.controller');
 
 const getCurrencyObject = async (currencyCode) => {
   const currencyObj = await findOneCurrency(currencyCode);
-  const { text, id } = currencyObj;
+  const { text, id, currencyId } = currencyObj;
 
   return {
     text,
     id,
+    currencyId,
   };
 };
 

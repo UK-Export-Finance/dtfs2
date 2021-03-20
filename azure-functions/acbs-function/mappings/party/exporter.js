@@ -1,5 +1,5 @@
-const acbsMaps = require('../acbs-maps');
 const { now } = require('../../helpers/date');
+const { getSmeType } = require('./helpers');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -13,25 +13,17 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   officerRiskDate           date    yyyy-MM-dd i.e. 2019-10-21, Date of creation (we use current date)
 */
 
-const exporter = (deal) => {
+const exporter = ({ deal, acbsReference }) => {
   const { submissionDetails } = deal.dealSnapshot;
-
-  const industryClassification = submissionDetails['industry-sector']
-    ? submissionDetails['industry-sector'].code
-    : '0001';
-
-  const smeType = submissionDetails['sme-type']
-    ? acbsMaps.SME_TYPE[submissionDetails['sme-type']]
-    : '70';
 
   const countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
   const citizenshipClass = countryCode === 'GBR' ? '1' : '2';
 
   return {
     alternateIdentifier: deal.tfm.parties.exporter.partyUrn,
-    industryClassification,
+    industryClassification: acbsReference.supplierAcbsIndustryCode,
     name1: submissionDetails['supplier-name'],
-    smeType,
+    smeType: getSmeType(submissionDetails['sme-type']),
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,

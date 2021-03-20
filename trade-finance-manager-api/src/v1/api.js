@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
+const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const findOnePortalDeal = async (dealId) => {
   try {
@@ -258,8 +259,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
   }
 };
 
-const createACBS = async (deal) => {
-  console.log(`${refDataUrl}/acbs`);
+const createACBS = async (deal, bank) => {
   try {
     const response = await axios({
       method: 'post',
@@ -269,11 +269,31 @@ const createACBS = async (deal) => {
       },
       data: {
         deal,
+        bank,
       },
     });
     return response.data;
   } catch (err) {
     return err;
+  }
+};
+
+const getFunctionsAPI = async (url = '') => {
+  // Need to refer to docker internal to work on localhost
+  const modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, azureAcbsFunctionUrl);
+
+  try {
+    const response = await axios({
+      method: 'get',
+      url: modifiedUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
   }
 };
 
@@ -294,4 +314,5 @@ module.exports = {
   getCurrencyExchangeRate,
   getFacilityExposurePeriod,
   createACBS,
+  getFunctionsAPI,
 };
