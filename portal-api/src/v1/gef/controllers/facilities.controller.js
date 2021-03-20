@@ -1,7 +1,9 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
+const {
+  facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums,
+} = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 
 const collectionName = 'gef-facilities';

@@ -28,7 +28,7 @@ const findSicCodes = async (companySicCodes) => {
     return industries;
   }
   return null;
-}
+};
 
 
 exports.getByRegistrationNumber = async (req, res) => {
