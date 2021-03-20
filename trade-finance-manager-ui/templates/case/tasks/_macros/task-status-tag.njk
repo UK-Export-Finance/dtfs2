@@ -1,0 +1,14 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(params) %}
+  {% set status = params.status %}
+
+  {{govukTag({
+    text: status,
+    attributes: {
+      'data-cy': 'status-tag'
+    }
+  })}}
+
+
+{% endmacro %}
