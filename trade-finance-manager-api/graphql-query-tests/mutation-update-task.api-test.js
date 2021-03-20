@@ -10,12 +10,16 @@ const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
+const MOCK_USER = MOCK_USERS[0];
 
 const UPDATE_TASK = gql`
   mutation UpdateTask($dealId: ID!, $taskUpdate: TFMTaskInput) {
     updateTask(dealId: $dealId, taskUpdate: $taskUpdate) {
-      id,
-      assignedTo,
+      id
+      assignedTo {
+        userId
+      }
       status
     }
   }
@@ -42,9 +46,10 @@ describe('graphql mutation - update task', () => {
   it('should return updated task', async () => {
     const taskUpdate = {
       id: '1',
-      userId: '100200',
       status: 'In progress',
-      assignedTo: '1234',
+      assignedTo: {
+        userId: MOCK_USER._id,
+      },
     };
 
     const { data } = await query({
@@ -58,7 +63,9 @@ describe('graphql mutation - update task', () => {
     const expected = {
       id: taskUpdate.id,
       status: taskUpdate.status,
-      assignedTo: taskUpdate.assignedTo,
+      assignedTo: {
+        userId: taskUpdate.assignedTo.userId,
+      },
     };
 
     expect(data.updateTask).toEqual(expected);

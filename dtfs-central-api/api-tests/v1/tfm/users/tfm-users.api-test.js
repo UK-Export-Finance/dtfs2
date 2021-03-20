@@ -48,9 +48,9 @@ describe('/v1/tfm/users', () => {
     });
   });
 
-  describe('GET /v1/tfm/users/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/tfm/users/12345678910');
+  describe('GET /v1/tfm/users/:username', () => {
+    it('404s requests for unknown usernames', async () => {
+      const { status } = await api.get('/v1/tfm/users/unit-test');
       expect(status).toEqual(404);
     });
 
@@ -60,6 +60,23 @@ describe('/v1/tfm/users', () => {
 
       expect(status).toEqual(200);
       expect(body.user).toMatchObject(mockUsers[0]);
+    });
+  });
+
+  describe('GET /v1/tfm/users/id/:userId', () => {
+    it('404s requests for unknown ids', async () => {
+      const { status } = await api.get('/v1/tfm/users/id/6040e8eff8ca8a0015355555');
+      expect(status).toEqual(404);
+    });
+
+    it('returns the requested resource', async () => {
+      const createdUserResponse = await api.post({ user: mockUsers[0] }).to('/v1/tfm/users');
+      const createdUser = createdUserResponse.body;
+
+      const { status, body } = await api.get(`/v1/tfm/users/id/${createdUser._id}`);
+
+      expect(status).toEqual(200);
+      expect(body).toMatchObject(createdUser);
     });
   });
 

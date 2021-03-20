@@ -5,13 +5,28 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
   const {
     id: taskId,
-    userId,
+    assignedTo,
   } = tfmTaskUpdate;
+
+  const { userId: assignedUserId } = assignedTo;
+
+  let userFullName;
+
+  if (assignedUserId === 'Unassigned') {
+    userFullName = 'Unassigned';
+  } else {
+    const user = await api.findUserById(assignedUserId);
+    const { firstName, lastName } = user;
+    userFullName = `${firstName} ${lastName}`;
+  }
 
   const cleanTfmTask = {
     ...tfmTaskUpdate,
+    assignedTo: {
+      userFullName,
+      userId: assignedUserId,
+    },
   };
-  delete cleanTfmTask.userId;
 
   const originalTasks = deal.tfm.tasks;
 
@@ -36,9 +51,12 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   await api.updateDeal(dealId, tasksUpdate);
 
-  const userAssignedTasks = modifiedTasks.filter((t) => t.assignedTo === userId);
+  // TODO: if going from assigned unassigned, remove from previous users's profile.
 
-  await api.updateUserTasks(userId, userAssignedTasks);
+  const userAssignedTasks = modifiedTasks.filter((t) =>
+    t.assignedTo && t.assignedTo.userId === assignedUserId);
+
+  await api.updateUserTasks(assignedUserId, userAssignedTasks);
 
   return cleanTfmTask;
 };

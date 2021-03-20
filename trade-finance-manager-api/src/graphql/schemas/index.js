@@ -188,12 +188,17 @@ type TFMTeam {
   name: String
 }
 
+type TFMTaskAssignedTo {
+  userId: String
+  userFullName: String
+}
+
 type TFMTask {
   id: String
   title: String
   status: String
   team: TFMTeam
-  assignedTo: String
+  assignedTo: TFMTaskAssignedTo
 }
 
 type TFMDealData {
@@ -272,11 +277,14 @@ input TFMFacilityInput {
   bondBeneficiaryPartyUrn: String
 }
 
+input TFMTaskAssignedToInput {
+  userId: String
+}
+
 input TFMTaskInput {
   id: String
-  assignedTo: String
+  assignedTo: TFMTaskAssignedToInput
   status: String
-  userId: String
 }
 
 type Query {

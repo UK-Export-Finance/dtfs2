@@ -24,7 +24,10 @@ const dealQuery = gql`
           id,
           title,
           status,
-          assignedTo,
+          assignedTo {
+            userId
+            userFullName
+          }
           team {
             id,
             name
