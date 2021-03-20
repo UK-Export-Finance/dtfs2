@@ -69,12 +69,12 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
-    # - name: Start Docker Compose
-    #   run: |
-    #     docker-compose up -d
-    # - name: Run API tests
-    #   run: |
-    #     docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
+    - name: Start Docker Compose
+      run: |
+        docker-compose up -d
+    - name: Run API tests
+      run: |
+        docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
     # - name: Load mock data
     #   run: |
     #     cd utils/mock-data-loader
