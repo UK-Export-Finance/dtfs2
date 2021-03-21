@@ -98,9 +98,7 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    needs: [set-environment, test]
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
@@ -113,9 +111,9 @@ jobs:
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:$from
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:$from ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:$to
-        docker push ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:$to
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${from}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${from} ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${to}
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${to}
 
   deploy:
     name: Deploy container images to Dev
