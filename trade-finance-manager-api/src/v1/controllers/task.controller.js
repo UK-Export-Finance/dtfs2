@@ -4,7 +4,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
 
   const {
-    id: taskId,
+    id: taskIdToUpdate,
     assignedTo,
   } = tfmTaskUpdate;
 
@@ -30,16 +30,23 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
   const originalTasks = deal.tfm.tasks;
 
-  const modifiedTasks = originalTasks.map((t) => {
-    let task = t;
-    if (task.id === taskId) {
-      task = {
-        ...task,
-        ...cleanTfmTask,
-      };
-    }
+  const modifiedTasks = originalTasks.map((tGroup) => {
+    let taskGroup = tGroup;
+    taskGroup = {
+      ...taskGroup,
+      groupTasks: taskGroup.groupTasks.map((t) => {
+        let task = t;
+        if (task.id === taskIdToUpdate) {
+          task = {
+            ...task,
+            ...cleanTfmTask,
+          };
+        }
+        return task;
+      }),
+    };
 
-    return task;
+    return taskGroup;
   });
 
   const tasksUpdate = {
@@ -51,8 +58,9 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   await api.updateDeal(dealId, tasksUpdate);
 
-  // TODO: if going from assigned unassigned, remove from previous users's profile.
+  // TODO: if going from assigned to unassigned, remove from previous users's profile.
 
+  // TODO update for groups
   const userAssignedTasks = modifiedTasks.filter((t) =>
     t.assignedTo && t.assignedTo.userId === assignedUserId);
 
