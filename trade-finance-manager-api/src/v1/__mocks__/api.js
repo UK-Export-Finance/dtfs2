@@ -106,6 +106,8 @@ module.exports = {
       assignedTasks: updatedTasks,
     };
   },
+  findTeamMembers: (teamId) =>
+    MOCK_USERS.filter((user) => user.teams.includes(teamId)),
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),

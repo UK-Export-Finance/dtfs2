@@ -292,10 +292,17 @@ input TFMTaskInput {
   status: String
 }
 
+type TeamMember {
+  _id: String
+  firstName: String
+  lastName: String
+}
+
 type Query {
   deal(_id: ID!): Deal
   deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
+  teamMembers(teamId: String!): [TeamMember]
 }
 
 type Mutation {

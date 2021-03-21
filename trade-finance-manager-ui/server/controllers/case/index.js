@@ -3,8 +3,10 @@ import helpers from './helpers';
 
 const {
   getTask,
-  isTaskIsAssignedToUser,
-  userFullName,
+  // isTaskIsAssignedToUser,
+  // mapTeamMembersSelectOptions,
+  // userFullName,
+  mapAssignToSelectOptions,
 } = helpers;
 
 const getCaseDeal = async (req, res) => {
@@ -52,6 +54,8 @@ const getCaseTask = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { user } = req.session;
+
   let allTasksWithoutGroups = [];
 
   deal.tfm.tasks.forEach((group) => {
@@ -64,8 +68,48 @@ const getCaseTask = async (req, res) => {
 
   const task = getTask(taskId, allTasksWithoutGroups);
 
+
   // eslint-disable-next-line no-underscore-dangle
-  const taskIsAssignedToUser = isTaskIsAssignedToUser(task.assignedTo, req.session.user._id);
+  // const taskIsAssignedToUser = isTaskIsAssignedToUser(task.assignedTo.userId, user._id);
+
+  // const allTeamMembersWithoutLoggedInUser = allTeamMembers.filter((teamMember) =>
+  //   teamMember._id !== user._id); // eslint-disable-line no-underscore-dangle
+
+  // const assignToMeCopy = `${userFullName(user)} (Assign to me)`;
+
+  // const mapTeamMembersSelectOptions = (members, taskAssignedTo) =>
+  //   members.map((member) => {
+  //     // eslint-disable-next-line no-underscore-dangle
+  //     const { _id: memberId } = member;
+
+  //     return {
+  //       value: memberId,
+  //       text: userFullName(member),
+  //       selected: taskAssignedTo === memberId,
+  //     };
+  //   });
+
+  const allTeamMembers = await api.getTeamMembers(task.team.id);
+
+  // const mappedTeamMembersSelectOptions = mapTeamMembersSelectOptions(
+  //   allTeamMembers,
+  //   taskAssignedTo,
+  //   user._id, // eslint-disable-line no-underscore-dangle
+  // );
+
+  // const assignToSelectOptions = [
+  //   {
+  //     value: 'Unassigned',
+  //     text: 'Unassigned',
+  //     selected: task.assignedTo.userId === 'Unassigned',
+  //   },
+  //   {
+  //     value: user._id, // eslint-disable-line no-underscore-dangle
+  //     text: assignToMeCopy,
+  //     selected: taskIsAssignedToUser,
+  //   },
+  //   ...mappedTeamMembersSelectOptions,
+  // ];
 
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
@@ -73,10 +117,9 @@ const getCaseTask = async (req, res) => {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
-    user: req.session.user,
+    user,
     task,
-    taskIsAssignedToUser,
-    userFullName: userFullName(req.session.user),
+    assignToSelectOptions: mapAssignToSelectOptions(task, user, allTeamMembers),
   });
 };
 

@@ -40,24 +40,7 @@
             'data-cy': 'assigned-to-select-input'
           },
           classes: "govuk-!-margin-top-2",
-          items: [
-            {
-              value: "Unassigned",
-              text: "Unassigned",
-              selected: task.assignedTo.userId === 'Unassigned',
-              attributes: {
-                'data-cy': 'assigned-to-select-input-option'
-              }
-            },
-            {
-              value: user._id,
-              text: assignToMeCopy,
-              selected: taskIsAssignedToUser,
-              attributes: {
-                'data-cy': 'assigned-to-select-input-option'
-              }
-            }
-          ]
+          items: assignToSelectOptions
         }) }}
 
         {{govukRadios({

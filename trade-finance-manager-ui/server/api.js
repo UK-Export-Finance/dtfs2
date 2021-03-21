@@ -3,6 +3,7 @@ import apollo from './graphql/apollo';
 import dealQuery from './graphql/queries/deal-query';
 import dealsQuery from './graphql/queries/deals-query';
 import facilityQuery from './graphql/queries/facility-query';
+import teamMembersQuery from './graphql/queries/team-members-query';
 import updatePartiesMutation from './graphql/mutations/update-parties';
 import updateFacilityMutation from './graphql/mutations/update-facilities';
 import updateTaskMutation from './graphql/mutations/update-task';
@@ -25,6 +26,12 @@ const getFacility = async (id) => {
   const response = await apollo('GET', facilityQuery, { id });
 
   return response.data.facility;
+};
+
+const getTeamMembers = async (teamId) => {
+  const response = await apollo('GET', teamMembersQuery, { teamId });
+
+  return response.data.teamMembers;
 };
 
 const updateParty = async (id, partyUpdate) => {
@@ -78,6 +85,7 @@ export default {
   getDeal,
   getDeals,
   getFacility,
+  getTeamMembers,
   updateParty,
   updateFacility,
   updateTask,
