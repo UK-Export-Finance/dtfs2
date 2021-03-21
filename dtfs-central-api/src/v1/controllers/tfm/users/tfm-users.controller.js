@@ -68,6 +68,23 @@ exports.findOneUserByIdGET = async (req, res) => {
   return res.status(404).send();
 };
 
+const findTeamUsers = async (teamId) => {
+  const collection = await db.getCollection(usersCollection);
+
+  const teamUsers = await collection.find({
+    teams: { $in: [teamId] },
+  }).toArray();
+
+  return teamUsers.reverse();
+};
+
+exports.findTeamUsersGET = async (req, res) => {
+  const { teamId } = req.params;
+  const teamUsers = await findTeamUsers(teamId);
+
+  return res.status(200).send(teamUsers);
+};
+
 const updateUser = async (userId, update) => {
   const collection = await db.getCollection(usersCollection);
 
