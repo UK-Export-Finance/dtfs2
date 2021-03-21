@@ -12,7 +12,10 @@ const STATUS = {
   COMPLETED: 'Done',
 };
 
+const UNASSIGNED = 'Unassigned';
+
 module.exports = {
   AIN,
   STATUS,
+  UNASSIGNED,
 };

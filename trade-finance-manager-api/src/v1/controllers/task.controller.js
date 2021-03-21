@@ -1,4 +1,5 @@
 const api = require('../api');
+const CONSTANTS = require('../../constants');
 
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
@@ -12,8 +13,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
   let userFullName;
 
-  if (assignedUserId === 'Unassigned') {
-    userFullName = 'Unassigned';
+  if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
+    userFullName = CONSTANTS.TASKS.UNASSIGNED;
   } else {
     const user = await api.findUserById(assignedUserId);
     const { firstName, lastName } = user;
