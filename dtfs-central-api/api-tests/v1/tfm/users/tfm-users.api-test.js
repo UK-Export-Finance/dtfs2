@@ -19,6 +19,12 @@ const mockUsers = [
     teams: ['TEAM1'],
     timezone: 'Europe/London',
   },
+  {
+    username: 'T1_USER_3',
+    email: '',
+    teams: ['TEAM2'],
+    timezone: 'Europe/London',
+  },
 ];
 
 const orderUsers = (users) => users.sort((u1, u2) => (u1.username.localeCompare(u2.username)));
@@ -93,6 +99,27 @@ describe('/v1/tfm/users', () => {
 
       const listUsersRes = await api.get('/v1/tfm/users');
       expect(listUsersRes.body.users).toEqual(expectMongoIds([mockUsers[1]]));
+    });
+  });
+
+  describe('GET /v1/tfm/users/team/:teamId', () => {
+    it('returns all users in given team', async () => {
+      await Promise.all(
+        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
+      );
+
+      const team1Users = mockUsers.filter((u) => u.teams.includes('TEAM1'));
+
+      const { status, body } = await api.get(`/v1/tfm/users/team/${mockUsers[0].teams[0]}`);
+
+      expect(status).toEqual(200);
+      expect(body.length).toEqual(team1Users.length);
+
+      const firstUserUsername = team1Users[0].username;
+      const secondUserUsername = team1Users[1].username;
+
+      expect(body.find((u) => u.username === firstUserUsername)).toBeDefined();
+      expect(body.find((u) => u.username === secondUserUsername)).toBeDefined();
     });
   });
   

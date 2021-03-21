@@ -41,7 +41,6 @@ exports.findOneTeamGET = async (req, res) => {
   return res.status(404).send();
 };
 
-
 const deleteTeam = async (id) => {
   const collection = await db.getCollection(teamsCollection);
   return collection.deleteOne({ id });
