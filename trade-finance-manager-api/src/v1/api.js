@@ -193,6 +193,22 @@ const updateUserTasks = async (userId, updatedTasks) => {
   }
 };
 
+const findTeamMembers = async (teamId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 const getCurrencyExchangeRate = async (source, target) => {
   try {
     const response = await axios({
@@ -254,6 +270,7 @@ module.exports = {
   findUser,
   findUserById,
   updateUserTasks,
+  findTeamMembers,
   getCurrencyExchangeRate,
   getFacilityExposurePeriod,
   createACBS,

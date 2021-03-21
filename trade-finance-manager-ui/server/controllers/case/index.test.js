@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -5,15 +7,14 @@ import helpers from './helpers';
 
 const {
   getTask,
-  isTaskIsAssignedToUser,
-  userFullName,
+  mapAssignToSelectOptions,
 } = helpers;
 
 const res = mockRes();
 
 const session = {
   user: {
-    _id: '12345678', // eslint-disable-line no-underscore-dangle
+    _id: '12345678',
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
@@ -42,7 +43,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -53,7 +54,7 @@ describe('controllers - case', () => {
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'deal',
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -99,7 +100,7 @@ describe('controllers - case', () => {
       it('should render tasks template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -110,7 +111,7 @@ describe('controllers - case', () => {
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -151,13 +152,19 @@ describe('controllers - case', () => {
                 {
                   id: '123',
                   assignedTo: {
-                    userId: session.user._id, // eslint-disable-line no-underscore-dangle
+                    userId: session.user._id,
+                  },
+                  team: {
+                    id: 'TEAM_1',
                   },
                 },
                 {
                   id: '456',
                   assignedTo: {
-                    userId: session.user._id, // eslint-disable-line no-underscore-dangle
+                    userId: session.user._id,
+                  },
+                  team: {
+                    id: 'TEAM_1',
                   },
                 },
               ],
@@ -167,14 +174,36 @@ describe('controllers - case', () => {
         mock: true,
       };
 
+      const mockTeamMembers = [
+        {
+          _id: '1',
+          firstName: 'a',
+          lastName: 'b',
+          teams: ['TEAM_1'],
+        },
+        {
+          _id: '2',
+          firstName: 'a',
+          lastName: 'b',
+          teams: ['TEAM_1'],
+        },
+        {
+          _id: session.user._id,
+          firstName: 'a',
+          lastName: 'b',
+          teams: ['TEAM_1'],
+        },
+      ];
+
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getTeamMembers = () => Promise.resolve(mockTeamMembers);
       });
 
       it('should render tasks template with data and task from deal', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
             taskId: '456',
           },
           session,
@@ -199,12 +228,14 @@ describe('controllers - case', () => {
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          dealId: req.params._id,
           user: session.user,
           task: expectedTask,
-          // eslint-disable-next-line no-underscore-dangle
-          taskIsAssignedToUser: isTaskIsAssignedToUser(expectedTask.assignedTo, session.user._id),
-          userFullName: userFullName(session.user),
+          assignToSelectOptions: mapAssignToSelectOptions(
+            expectedTask,
+            session.user,
+            mockTeamMembers,
+          ),
         });
       });
     });
@@ -253,12 +284,12 @@ describe('controllers - case', () => {
       it('should redirect to /tasks', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
             taskId: '456',
           },
           session,
           body: {
-            assignedTo: session.user._id, // eslint-disable-line no-underscore-dangle
+            assignedTo: session.user._id,
             status: 'In progress',
           },
         };
@@ -322,7 +353,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            facilityId: mockFacility._id, // eslint-disable-line no-underscore-dangle
+            facilityId: mockFacility._id,
           },
           session,
         };
@@ -330,7 +361,7 @@ describe('controllers - case', () => {
         await caseController.getCaseFacility(req, res);
         expect(res.render).toHaveBeenCalledWith('case/facility/facility.njk', {
           deal: mockDeal.dealSnapshot,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           facility: mockFacility.facilitySnapshot,
           facilityTfm: mockFacility.tfm,
           activePrimaryNavigation: 'manage work',
@@ -378,7 +409,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -388,7 +419,7 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'parties',
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -440,7 +471,7 @@ describe('controllers - case', () => {
       it('should render edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -451,7 +482,7 @@ describe('controllers - case', () => {
           activeSubNavigation: 'parties',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -503,7 +534,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -565,7 +596,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -614,7 +645,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           body: {
             exporter: {
@@ -663,7 +694,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           body: {
             facilityId: [1, 2],
@@ -698,3 +729,5 @@ describe('controllers - case', () => {
     });
   });
 });
+
+/* eslint-enable no-underscore-dangle */

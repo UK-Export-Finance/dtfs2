@@ -27,6 +27,18 @@ describe(page, () => {
       firstName: 'Joe',
       lastName: 'Bloggs',
     },
+    assignToSelectOptions: [
+      {
+        value: 'Unassigned',
+        text: 'Unassigned',
+        selected: false,
+      },
+      {
+        value: '12345678',
+        text: 'Sarah Jones',
+        selected: false,
+      },
+    ]
   };
 
   beforeEach(() => {
