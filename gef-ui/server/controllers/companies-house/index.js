@@ -27,17 +27,17 @@ const validateCompaniesHouse = async (req, res) => {
   const companiesHouseErrors = [];
   let companiesHouseDetails;
 
+  if (!regNumber) {
+    companiesHouseErrors.push({
+      errRef: 'regNumber',
+      errMsg: 'Enter a Companies House registration number',
+    });
+  }
+
   try {
     const { exporterId } = await api.getApplication(applicationId);
 
-    if (_isEmpty(regNumber)) {
-      companiesHouseErrors.push({
-        errRef: 'regNumber',
-        errMsg: 'Enter a Companies House registration number',
-      });
-    }
-
-    if (companiesHouseErrors.length < 1) {
+    if (companiesHouseErrors.length === 0) {
       companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber, exporterId);
     }
 
