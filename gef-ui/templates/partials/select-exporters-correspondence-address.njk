@@ -39,11 +39,11 @@
     <div class="govuk-grid-column-one-half">
       <p class="govuk-body" data-cy="postcode-title"><strong>Postcode</strong></p>
       {% if postcode %}
-        <p class="govuk-body" data-cy="change">
+        <p class="govuk-body" data-cy="postcode">
           {{ postcode }}
           <a class="govuk-link govuk-!-margin-left-6"
             href="/gef/application-details/{{applicationId}}/exporters-address"
-            data-cy="cant-find-address">
+            data-cy="change">
             Change
           </a>
         </p>
@@ -64,8 +64,11 @@
           errorMessage: errors and errors.fieldErrors.selectedAddress and {
             text: errors.fieldErrors.selectedAddress.text,
             attributes: {
-              'data-cy': 'selected-address-error'
+              'data-cy': 'select-address-error'
             }
+          },
+          attributes: {
+            'data-cy': 'select-address'
           }
         }) }}
 
