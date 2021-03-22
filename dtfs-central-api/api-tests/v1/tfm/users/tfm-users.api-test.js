@@ -103,10 +103,9 @@ describe('/v1/tfm/users', () => {
 
       const listUsersRes = await api.get('/v1/tfm/users');
 
-      const userSort = (u1, u2) => u2.username < u1.username;
-      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).sort(userSort);
-      const sortedRes = listUsersRes.body.users.sort(userSort);
-      expect(sortedRes).toEqual(expectMongoIds(allNonDeletedUsers));
+      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).map((u) => u.username);
+      const usernameList = listUsersRes.body.users.map((u) => u.username);
+      expect(usernameList.sort()).toEqual(allNonDeletedUsers.sort());
     });
   });
 
