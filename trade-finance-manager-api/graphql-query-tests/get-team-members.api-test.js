@@ -8,9 +8,9 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
+const teamMembersReducer = require('../src/graphql/reducers/teamMembers');
 
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
-
 
 const GET_TEAM_MEMBERS = gql`
   query TeamMembers($teamId: String!) {
@@ -40,7 +40,7 @@ describe('graphql query - get team members', () => {
     query = doQuery;
   });
 
-  it('should return team members', async () => {
+  it('should return team members via teamMembersReducer', async () => {
     const TEAM_ID = 'BUSINESS_SUPPORT';
 
     const { data } = await query({
@@ -50,19 +50,7 @@ describe('graphql query - get team members', () => {
 
     const expectedTeamMembers = MOCK_USERS.filter((u) => u.teams.includes(TEAM_ID));
 
-    const expectedTeamMembersStripped = expectedTeamMembers.map((user) => {
-      const {
-        _id,
-        firstName,
-        lastName,
-      } = user;
-
-      return {
-        _id,
-        firstName,
-        lastName,
-      };
-    });
+    const expectedTeamMembersStripped = teamMembersReducer(expectedTeamMembers);
 
     expect(data.teamMembers).toEqual(expectedTeamMembersStripped);
   });
