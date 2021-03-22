@@ -8,6 +8,29 @@ const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
 const collectionName = 'gef-exporter';
 
+const findSicCodes = async (companySicCodes) => {
+  const response = await axios({
+    method: 'get',
+    url: `${referenceProxyUrl}/industry-sectors`,
+  });
+
+  if (companySicCodes && response && response.data) {
+    const industries = [];
+    companySicCodes.forEach((companySicCode) => {
+      response.data.industrySectors.forEach((industrySector) => {
+        industrySector.classes.forEach((industryClass) => {
+          if (industryClass.code === companySicCode) {
+            industries.push({ code: industrySector.code, name: industrySector.name, class: industryClass });
+          }
+        });
+      });
+    });
+    return industries;
+  }
+  return null;
+};
+
+
 exports.getByRegistrationNumber = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   try {
@@ -19,14 +42,26 @@ exports.getByRegistrationNumber = async (req, res) => {
       method: 'get',
       url: `${referenceProxyUrl}/companies-house/${companyNumber}`,
     });
+
     if (req.query.exporterId) {
+      const industries = await findSicCodes(response.data.sic_codes);
+      const address = response.data.registered_office_address;
       await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(req.query.exporterId)) } }, {
           $set: {
             companiesHouseRegistrationNumber: response.data.company_number,
             companyName: response.data.company_name,
-            registeredAddress: response.data.registered_office_address,
+            registeredAddress: {
+              organisationName: address.organisation_name,
+              addressLine1: address.address_line_1,
+              addressLine2: address.address_line_2,
+              addressLine3: address.address_line_3,
+              locality: address.locality,
+              postalCode: address.postal_code,
+              country: address.country,
+            },
             updatedAt: Date.now(),
+            industries,
           },
         }, { returnOriginal: false },
       );
@@ -51,11 +86,13 @@ exports.getAddressesByPostcode = async (req, res) => {
     const addresses = [];
     response.data.results.forEach((item) => {
       addresses.push({
-        organisation_name: item.DPA.ORGANISATION_NAME || null,
-        address_line_1: (`${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`).trim(),
-        address_line_2: item.DPA.DEPENDENT_LOCALITY || null,
+        organisationName: item.DPA.ORGANISATION_NAME || null,
+        addressLine1: (`${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`).trim(),
+        addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
+        addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
         locality: item.DPA.POST_TOWN || null,
-        postal_code: item.DPA.POSTCODE || null,
+        postalCode: item.DPA.POSTCODE || null,
+        country: null, // keys to match registered Address as requested, but not available in OS Places
       });
     });
     res.status(200).send(addresses);

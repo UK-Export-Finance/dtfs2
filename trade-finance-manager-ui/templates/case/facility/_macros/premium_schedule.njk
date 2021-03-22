@@ -1,0 +1,23 @@
+{% macro render(params) %}
+  {% set facility = params.facility %}
+  {% set schedule = params.schedule %}
+  <h1 class="ukef-heading-l">Premium schedule</h1>
+  <div class="govuk-grid-row" data-cy="facility-premiumschedule">
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-grid-row" data-cy="facility-overview">
+        <div class="govuk-grid-column-one-half label">How bank will pay</div>
+        <div class="govuk-grid-column-one-half" data-cy="facility-premium-type">
+        {% if facility.facilityProduct.name =='Bond Support Scheme' %}{{facility.feeType}}{% else %}{{facility.premiumType}}{% endif %}
+        </div>
+      </div>
+      <div class="govuk-grid-row" data-cy="facility-overview">
+        <div class="govuk-grid-column-one-half label">How often</div>
+        <div class="govuk-grid-column-one-half" data-cy="facility-premium-frequency">{% if facility.facilityProduct.name =='Bond Support Scheme'%}{{facility.feeFrequency}}{% else %}{{facility.premiumFrequency}}{% endif %}</div>
+      </div>
+      <div class="govuk-grid-row" data-cy="facility-overview">
+        <div class="govuk-grid-column-one-half label">Day count basis</div>
+        <div class="govuk-grid-column-one-half" data-cy="facility-premium-daycountbasis">{{ facility.dayCountBasis }}</div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}

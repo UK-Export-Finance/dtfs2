@@ -25,18 +25,19 @@ exports.update = async (req, res) => {
   const enumValidationErr = exporterCheckEnums(req.body);
   if (enumValidationErr) {
     res.status(422).send({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', enumField: enumValidationErr });
+  } else {
+    const collection = await db.getCollection(collectionName);
+    const result = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnOriginal: false },
+    );
+    let response;
+    if (result.value) {
+      response = {
+        status: exporterStatus(result.value),
+        details: result.value,
+        validation: exporterValidation(result.value),
+      };
+    }
+    res.status(utils.mongoStatus(result)).send(response);
   }
-  const collection = await db.getCollection(collectionName);
-  const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnOriginal: false },
-  );
-  let response;
-  if (result.value) {
-    response = {
-      status: exporterStatus(result.value),
-      details: result.value,
-      validation: exporterValidation(result.value),
-    };
-  }
-  res.status(utils.mongoStatus(result)).send(response);
 };
