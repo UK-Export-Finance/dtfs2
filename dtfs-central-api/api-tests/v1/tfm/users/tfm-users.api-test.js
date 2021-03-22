@@ -102,8 +102,11 @@ describe('/v1/tfm/users', () => {
       expect(body.deletedCount).toEqual(1);
 
       const listUsersRes = await api.get('/v1/tfm/users');
-      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).reverse();
-      expect(listUsersRes.body.users).toEqual(expectMongoIds(allNonDeletedUsers));
+
+      const userSort = (u1, u2) => u2.username < u1.username;
+      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).sort(userSort);
+      const sortedRes = listUsersRes.body.users.sort(userSort);
+      expect(sortedRes).toEqual(expectMongoIds(allNonDeletedUsers));
     });
   });
 
@@ -127,7 +130,7 @@ describe('/v1/tfm/users', () => {
       expect(body.find((u) => u.username === secondUserUsername)).toBeDefined();
     });
   });
-  
+
   describe('PUT /v1/tfm/users/:id/tasks', () => {
     it('updates user\'s assignedTasks', async () => {
       const createdUsersResponse = await Promise.all(
@@ -137,7 +140,7 @@ describe('/v1/tfm/users', () => {
       const createdUser = createdUsersResponse[0].body;
 
       const userId = createdUser._id;
-      const username = createdUser.username;
+      const { username } = createdUser;
 
       // check user tasks are initially empty
       const getUserResponse = await api.get(`/v1/tfm/users/${username}`);
@@ -164,8 +167,8 @@ describe('/v1/tfm/users', () => {
             },
             status: 'In progress',
             assignedTo: userId,
-          }
-        ]
+          },
+        ],
       };
 
       const { status, body } = await api.put(mockBody).to(`/v1/tfm/users/${userId}/tasks`);
