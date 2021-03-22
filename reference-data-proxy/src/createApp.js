@@ -20,6 +20,7 @@ configurePassport(passport);
 initScheduler();
 */
 const app = express();
+app.use(express.json());
 
 app.use(healthcheck);
 app.use('', openRouter);
@@ -27,7 +28,6 @@ app.use('', openRouter);
 /*
 app.use(uploadTest);
 app.use(passport.initialize());
-app.use(bodyParser.json({ type: 'application/json' }));
 
 app.use(cors({
   origin: CORS_ORIGIN,

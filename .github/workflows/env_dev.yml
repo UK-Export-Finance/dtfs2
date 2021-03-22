@@ -901,6 +901,8 @@ jobs:
         # NOTE: MULESOFT envs were producing an error when used in connection_string so have been moved to appsettings
         # ref: https://docs.microsoft.com/en-us/azure/app-service/configure-common 
         inlineScript: |
+          acbs_function_url=$(az functionapp show --resource-group Digital-Dev --name tfs-dev-function-acbs --query "defaultHostName" -o tsv)
+
           az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
             --settings \
               PORT=5000 \
@@ -920,8 +922,9 @@ jobs:
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
-              ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" 
-
+              ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
+              AZURE_ACBS_FUNCTION_URL="$acbs_function_url"
+ 
   dtfs-central-api:
     name: DTFS Central API
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy]
@@ -1076,7 +1079,7 @@ jobs:
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"   
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
 
   portal-api:
     name: Portal API

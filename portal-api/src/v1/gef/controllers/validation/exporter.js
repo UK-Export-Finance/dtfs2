@@ -1,4 +1,7 @@
 /* eslint-disable consistent-return */
+
+const { SME_TYPE, STATUS } = require('../../enums');
+
 const hasRequiredItems = (doc) => {
   const required = [];
   if (doc.companiesHouseRegistrationNumber === null) {
@@ -10,11 +13,8 @@ const hasRequiredItems = (doc) => {
   if (doc.registeredAddress === null) {
     required.push('registeredAddress');
   }
-  if (doc.industrySector === null) {
-    required.push('industrySector');
-  }
-  if (doc.industryClass === null) {
-    required.push('industryClass');
+  if (doc.industries === null) {
+    required.push('industries');
   }
   if (doc.smeType === null) {
     required.push('smeType');
@@ -31,23 +31,23 @@ const hasRequiredItems = (doc) => {
 const exporterStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return 'NOT_STARTED';
+    return STATUS.NOT_STARTED;
   }
   if (requiredCount > 0) {
-    return 'IN_PROGRESS';
+    return STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
-    return 'COMPLETED';
+    return STATUS.COMPLETED;
   }
 };
 
 const exporterCheckEnums = (doc) => {
   const enumErrors = [];
   switch (doc.smeType) {
-    case 'MICRO':
-    case 'SMALL':
-    case 'MEDIUM':
-    case 'NOT_SME':
+    case SME_TYPE.MICRO:
+    case SME_TYPE.SMALL:
+    case SME_TYPE.MEDIUM:
+    case SME_TYPE.NOT_SME:
     case null:
     case undefined:
       break;
@@ -59,7 +59,7 @@ const exporterCheckEnums = (doc) => {
 };
 
 const exporterValidation = (doc) => ({
-  required: hasRequiredItems(doc)
+  required: hasRequiredItems(doc),
 });
 
 module.exports = {

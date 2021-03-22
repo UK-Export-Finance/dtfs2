@@ -10,3 +10,6 @@ services:
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=tfsandrew;AccountKey=8L84g4mYvH9KobbyiPDM/xDETBv57SZAvTxTfupwpRozhZG2jqNQMPowSxncw9iqz4CiLoqspK7wA5QytWNAOQ==;EndpointSuffix=core.windows.net
       - WEBSITE_HOSTNAME=localhost:7071
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+      - MULESOFT_API_UKEF_TF_EA_URL

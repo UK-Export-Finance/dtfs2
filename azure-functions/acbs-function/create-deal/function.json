@@ -1,7 +1,7 @@
 {
   "bindings": [
     {
-      "name": "name",
+      "name": "context",
       "type": "activityTrigger",
       "direction": "in"
     }

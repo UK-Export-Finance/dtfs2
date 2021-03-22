@@ -1,0 +1,13 @@
+const CONSTANTS = require('./constants');
+
+const SME_TYPE = {
+  [CONSTANTS.DEAL.SME_TYPE.MICRO]: '1',
+  [CONSTANTS.DEAL.SME_TYPE.SMALL]: '2',
+  [CONSTANTS.DEAL.SME_TYPE.MEDIUM]: '3',
+  [CONSTANTS.DEAL.SME_TYPE.NOT_KNOWN]: '4',
+  [CONSTANTS.DEAL.SME_TYPE.NON_SME]: '5',
+};
+
+module.exports = {
+  SME_TYPE,
+};
