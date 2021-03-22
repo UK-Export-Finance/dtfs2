@@ -95,10 +95,10 @@ describe('Validate Exporters Address', () => {
     await validateExportersAddress(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-      applicationId: '123',
       companyName: undefined,
-      errors: expect.any(Object),
       correspondence: '',
+      errors: expect.any(Object),
+      postcode: '',
       registeredAddress: undefined,
     }));
   });
@@ -127,7 +127,6 @@ describe('Validate Exporters Address', () => {
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     await validateExportersAddress(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-      applicationId: '123',
       companyName: undefined,
       errors: expect.any(Object),
       correspondence: 'true',
