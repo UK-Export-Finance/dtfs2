@@ -5,37 +5,18 @@ const nameApplication = async (req, res) => res.render('partials/name-applicatio
 
 const createApplication = async (req, res) => {
   const { body, session } = req;
-  const { bankInternalRefName } = body;
   const { _id: userId } = session.user;
-  const mandatoryError = [];
-  let application;
-
-  if (!bankInternalRefName) {
-    mandatoryError.push({
-      errRef: 'bankInternalRefName',
-      errMsg: 'You must enter a bank reference or name',
-    });
-  }
 
   try {
-    if (mandatoryError.length < 1) {
-      application = await api.createApplication({
-        ...body,
-        userId,
-      });
-    }
+    const application = await api.createApplication({
+      ...body,
+      userId,
+    });
 
-    if (application && application.status === 422) {
-      application.data.forEach((error) => {
-        mandatoryError.push(error);
-      });
-    }
-
-    console.log('errors', validationErrorHandler(mandatoryError));
-
-    if (mandatoryError.length > 0) {
+    // Validation errors
+    if (application.status === 422) {
       return res.render('partials/name-application.njk', {
-        errors: validationErrorHandler(mandatoryError),
+        errors: validationErrorHandler(application.data),
       });
     }
 

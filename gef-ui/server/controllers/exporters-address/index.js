@@ -28,14 +28,14 @@ const validateExportersAddress = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
-    let correspondenceError;
+    const correspondenceError = [];
     let addresses;
 
-    if (_isEmpty(correspondence)) {
-      correspondenceError = {
+    if (!correspondence) {
+      correspondenceError.push({
         errRef: 'correspondence',
         errMsg: 'Select whether there’s a separate correspondence address for the exporter',
-      };
+      });
     }
 
     // User has selected No so take them to about exporters page
@@ -44,22 +44,23 @@ const validateExportersAddress = async (req, res) => {
     }
 
     if (correspondence === 'true' && _isEmpty(postcode)) {
-      correspondenceError = {
+      correspondenceError.push({
         errRef: 'postcode',
         errMsg: 'Enter a postcode',
-      };
+      });
     }
 
     // Only fetch addresses if there are no validation errors
-    if (!correspondenceError) {
+    if (correspondenceError.length === 0) {
       addresses = await api.getAddressesByPostcode(postcode);
     }
 
+    // Check for validation errors
     if (addresses && addresses.status === 422) {
-      correspondenceError = addresses.data;
+      correspondenceError.push(addresses.data);
     }
 
-    if (correspondenceError) {
+    if (correspondenceError.length > 0) {
       return res.render('partials/exporters-address.njk', {
         errors: validationErrorHandler(correspondenceError),
         companyName: details.companyName,
