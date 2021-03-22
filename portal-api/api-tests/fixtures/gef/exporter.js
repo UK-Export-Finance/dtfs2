@@ -3,9 +3,8 @@ const EXPORTER = [{
   companyName: 'Foundry 4',
   registeredAddress: null,
   correspondenceAddress: null,
-  industrySectorId: null,
-  industryClassId: null,
-  smeTypeId: null,
+  industries: null,
+  smeType: null,
   probabilityOfDefault: null,
   isFinanceIncreasing: null,
 }];
