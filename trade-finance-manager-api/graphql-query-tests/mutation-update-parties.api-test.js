@@ -18,6 +18,11 @@ const UPDATE_PARTIES = gql`
       parties {
         exporter {
           partyUrn
+          partyUrnRequired
+        }
+        indemnifier {
+          partyUrn
+          partyUrnRequired
         }
       }
     }
@@ -42,21 +47,28 @@ describe('graphql query - update party', () => {
     query = doQuery;
   });
 
-  it('should return updated party details', async () => {
-    const partyUpdate = {
-      exporter: {
-        partyUrn: '111',
-      },
-    };
+  describe('before all party URNs complete', () => {
+    it('should return updated party details', async () => {
+      const partyUpdate = {
+        exporter: {
+          partyUrn: '111',
+          partyUrnRequired: true,
+        },
+        indemnifier: {
+          partyUrn: '',
+          partyUrnRequired: true,
+        },
+      };
 
-    const { data } = await query({
-      query: UPDATE_PARTIES,
-      variables: {
-        id: '12345678',
-        partyUpdate,
-      },
+      const { data } = await query({
+        query: UPDATE_PARTIES,
+        variables: {
+          id: '12345678',
+          partyUpdate,
+        },
+      });
+
+      expect(data.updateParties).toEqual({ parties: partyUpdate });
     });
-
-    expect(data.updateParties).toEqual({ parties: partyUpdate });
   });
 });

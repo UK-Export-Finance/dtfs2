@@ -1,12 +1,13 @@
 const { Address } = require('./address');
+const { SME_TYPE } = require('../enums');
 
 function checkSmeType(smeType) {
   if (smeType) {
     switch (smeType.toUpperCase()) {
-      case 'MICRO':
-      case 'SMALL':
-      case 'MEDIUM':
-      case 'NOT_SME':
+      case SME_TYPE.MICRO:
+      case SME_TYPE.SMALL:
+      case SME_TYPE.MEDIUM:
+      case SME_TYPE.NOT_SME:
         return smeType.toUpperCase();
       default:
         return null;
@@ -23,8 +24,7 @@ class Exporter {
       this.companyName = null;
       this.registeredAddress = null;
       this.correspondenceAddress = null;
-      this.industrySector = null;
-      this.industryClass = null;
+      this.industries = null;
       this.smeType = null;
       this.probabilityOfDefault = null;
       this.isFinanceIncreasing = null;
@@ -32,39 +32,35 @@ class Exporter {
       this.updatedAt = null;
     } else {
       // update application
-      if (req.companiesHouseRegistrationNumber) {
+      if (req.companiesHouseRegistrationNumber != null) {
         const chrn = String(req.companiesHouseRegistrationNumber);
         this.companiesHouseRegistrationNumber = chrn;
       }
-      if (req.companyName) {
+      if (req.companyName != null) {
         this.companyName = String(req.companyName);
       }
 
-      if (req.registeredAddress) {
+      if (req.registeredAddress != null) {
         this.registeredAddress = new Address(req.registeredAddress);
       }
 
-      if (req.correspondenceAddress) {
+      if (req.correspondenceAddress != null) {
         this.correspondenceAddress = new Address(req.correspondenceAddress);
       }
 
-      if (req.industrySector) {
-        this.industrySector = String(req.industrySector);
+      if (req.industries != null) {
+        this.industries = req.industries;
       }
 
-      if (req.industryClass) {
-        this.industryClass = String(req.industryClass);
-      }
-
-      if (req.smeType) {
+      if (req.smeType != null) {
         this.smeType = checkSmeType(req.smeType);
       }
 
-      if (req.probabilityOfDefault) {
+      if (req.probabilityOfDefault != null) {
         this.probabilityOfDefault = Number(req.probabilityOfDefault);
       }
 
-      if (req.isFinanceIncreasing) {
+      if (req.isFinanceIncreasing != null) {
         this.isFinanceIncreasing = Boolean(req.isFinanceIncreasing);
       }
 

@@ -6,6 +6,9 @@
 
 const axios = require('axios');
 const CONSTANTS = require('../../constants');
+const api = require('../api');
+
+const acbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const checkDealId = async (dealId) => {
   console.log(`Checking deal id ${dealId} with ACBS`);
@@ -73,4 +76,34 @@ exports.findOne = async (req, res) => {
   }
 
   return res.status(500).send();
+};
+
+const createAcbsRecord = async (deal) => {
+  // Need to get mapped industryClassication first
+  const industryCode = deal.dealSnapshot.submissionDetails['industry-class']
+                        && deal.dealSnapshot.submissionDetails['industry-class'].code;
+
+  const { data } = await api.findACBSIndustrySector(industryCode);
+  const supplierAcbsIndustryId = data[0].acbsIndustryId;
+
+  const response = await axios({
+    method: 'post',
+    url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+    data: {
+      deal,
+      extraInfo: {
+        supplierAcbsIndustryId,
+      },
+    },
+  }).catch((err) => err);
+
+  return response;
+};
+
+exports.createAcbsRecordPOST = async (req, res) => {
+  const { deal } = req.body;
+
+  const { status, data } = await createAcbsRecord(deal);
+
+  return res.status(status).send(data);
 };
