@@ -44,11 +44,12 @@ describe('/v1/industry-sectors', () => {
       const { status, body } = await as(noRoles).get('/v1/industry-sectors');
 
       expect(status).toEqual(200);
-      expect(body.industries.length).toBeGreaterThan(1);
-      body.industries.forEach((industry) => {
+
+      expect(body.industrySectors.length).toBeGreaterThan(1);
+      body.industrySectors.forEach((industry) => {
         expect(industry.code).toBeDefined();
         expect(industry.name).toBeDefined();
-        expect(industry.class).toBeDefined();
+        expect(industry.classes).toBeDefined();
       });
     });
   });
