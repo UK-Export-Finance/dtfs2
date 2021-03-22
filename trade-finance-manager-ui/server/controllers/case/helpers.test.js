@@ -132,7 +132,7 @@ describe('case - helpers', () => {
         {
           value: mockCurrentUser._id,
           text: `${userFullName(mockCurrentUser)} (Assign to me)`,
-          selected: isTaskIsAssignedToUser(mockTask.assignedTo.userId, mockCurrentUser),
+          selected: isTaskIsAssignedToUser(mockTask.assignedTo.userId, mockCurrentUser._id),
         },
         ...mapTeamMembersSelectOptions(
           mockTeamMembers,
