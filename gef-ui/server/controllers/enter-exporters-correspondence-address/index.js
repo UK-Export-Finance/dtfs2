@@ -5,7 +5,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
   const { applicationId } = params;
   const { address } = session;
-  const parseAddress = JSON.parse(address);
+  const parseAddress = address ? JSON.parse(address) : null;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
