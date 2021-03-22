@@ -65,7 +65,7 @@ describe(component, () => {
     it('should render link', () => {
       params.tasks.forEach((group) => {
         group.groupTasks.forEach((task) => {
-          const selector = `[data-cy="task-${task.id}-link"]`;
+          const selector = `[data-cy="task-table-row-${task.id}-link"]`;
           wrapper.expectLink(selector).toLinkTo(
             `/case/${params.caseId}/tasks/${task.id}`,
             task.title,
