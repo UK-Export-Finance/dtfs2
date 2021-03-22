@@ -1,5 +1,21 @@
 const { Address } = require('./address');
+const { SME_TYPE } = require('../enums');
 
+function checkSmeType(smeType) {
+  if (smeType) {
+    switch (smeType.toUpperCase()) {
+      case SME_TYPE.MICRO:
+      case SME_TYPE.SMALL:
+      case SME_TYPE.MEDIUM:
+      case SME_TYPE.NOT_SME:
+        return smeType.toUpperCase();
+      default:
+        return null;
+    }
+  } else {
+    return null;
+  }
+}
 class Exporter {
   constructor(req) {
     if (!req) {
@@ -8,25 +24,46 @@ class Exporter {
       this.companyName = null;
       this.registeredAddress = null;
       this.correspondenceAddress = null;
-      this.industrySectorId = null;
-      this.industryClassId = null;
-      this.smeTypeId = null;
+      this.industries = null;
+      this.smeType = null;
       this.probabilityOfDefault = null;
       this.isFinanceIncreasing = null;
       this.createdAt = Date.now();
       this.updatedAt = null;
     } else {
       // update application
-      const chrn = req.companiesHouseRegistrationNumber ? String(req.companiesHouseRegistrationNumber) : null;
-      this.companiesHouseRegistrationNumber = chrn;
-      this.companyName = req.companyName ? String(req.companyName) : null;
-      this.registeredAddress = req.registeredAddress ? new Address(req.registeredAddress) : null;
-      this.correspondenceAddress = req.correspondenceAddress ? new Address(req.correspondenceAddress) : null;
-      this.industrySectorId = req.industrySectorId != null ? Number(req.industrySectorId) : null;
-      this.industryClassId = req.industryClassId != null ? Number(req.industryClassId) : null;
-      this.smeTypeId = req.smeTypeId != null ? Number(req.smeTypeId) : null;
-      this.probabilityOfDefault = req.probabilityOfDefault != null ? Number(req.probabilityOfDefault) : null;
-      this.isFinanceIncreasing = req.isFinanceIncreasing != null ? Boolean(req.isFinanceIncreasing) : null;
+      if (req.companiesHouseRegistrationNumber != null) {
+        const chrn = String(req.companiesHouseRegistrationNumber);
+        this.companiesHouseRegistrationNumber = chrn;
+      }
+      if (req.companyName != null) {
+        this.companyName = String(req.companyName);
+      }
+
+      if (req.registeredAddress != null) {
+        this.registeredAddress = new Address(req.registeredAddress);
+      }
+
+      if (req.correspondenceAddress != null) {
+        this.correspondenceAddress = new Address(req.correspondenceAddress);
+      }
+
+      if (req.industries != null) {
+        this.industries = req.industries;
+      }
+
+      if (req.smeType != null) {
+        this.smeType = checkSmeType(req.smeType);
+      }
+
+      if (req.probabilityOfDefault != null) {
+        this.probabilityOfDefault = Number(req.probabilityOfDefault);
+      }
+
+      if (req.isFinanceIncreasing != null) {
+        this.isFinanceIncreasing = Boolean(req.isFinanceIncreasing);
+      }
+
       this.updatedAt = Date.now();
     }
   }

@@ -1,3 +1,5 @@
+const { STATUS, PAYMENT_TYPE, FACILITY_TYPE } = require('../../enums');
+
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
   const required = [];
@@ -49,31 +51,55 @@ const hasRequiredItems = (doc) => {
 const facilitiesStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return 0; // Not Started
+    return STATUS.NOT_STARTED;
   }
   if (requiredCount > 0) {
-    return 1; // In Progress
+    return STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
-    return 2; // Completed
+    return STATUS.COMPLETED;
   }
 };
 
 const facilitiesOverallStatus = (facilities) => {
-  let result = 0;
+  let result = STATUS.NOT_STARTED;
   const allStatus = [];
   facilities.forEach((item) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
-  // console.log(uniqueStatus, uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === 2);
   if (uniqueStatus.length > 1) {
-    result = 1;
+    result = STATUS.IN_PROGRESS;
   }
-  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === 2) {
-    result = 2;
+  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === STATUS.COMPLETED) {
+    result = STATUS.COMPLETED;
   }
   return result;
+};
+
+const facilitiesCheckEnums = (doc) => {
+  const enumErrors = [];
+  switch (doc.type) {
+    case FACILITY_TYPE.CASH:
+    case FACILITY_TYPE.CONTINGENT:
+    case null:
+    case undefined:
+      break;
+    default:
+      enumErrors.push('type');
+      break;
+  }
+  switch (doc.paymentType) {
+    case PAYMENT_TYPE.IN_ARREARS_QUARTLY:
+    case PAYMENT_TYPE.IN_ADVANCE_QUARTERLY:
+    case null:
+    case undefined:
+      break;
+    default:
+      enumErrors.push('paymentType');
+      break;
+  }
+  return enumErrors.length === 0 ? null : enumErrors;
 };
 
 const facilitiesValidation = (doc) => ({
@@ -82,6 +108,7 @@ const facilitiesValidation = (doc) => ({
 
 module.exports = {
   facilitiesValidation,
+  facilitiesCheckEnums,
   facilitiesOverallStatus,
   facilitiesStatus,
 };
