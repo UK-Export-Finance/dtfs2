@@ -51,19 +51,61 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
     currentUserId,
   );
 
-  return [
+  const taskIsUnassigned = task.assignedTo.userId === 'Unassigned';
+
+  // 3 possible states:
+  // task is assigned to someone that is not the current logged in user.
+  // task is unassigned
+  // task is assigned ot me
+
+  // default mapping is that task is assigned to someone that is not the current logged in user.
+  let mapped = [
+    {
+      value: currentUserId,
+      text: assignToMeCopy,
+      selected: false,
+    },
     {
       value: 'Unassigned',
       text: 'Unassigned',
-      selected: task.assignedTo.userId === 'Unassigned',
-    },
-    {
-      value: currentUserId,
-      text: taskIsAssignedToUser ? assignToMeCopy : currentUserFullName,
-      selected: taskIsAssignedToUser,
+      selected: false,
     },
     ...mappedTeamMembersSelectOptions,
   ];
+
+  if (taskIsUnassigned) {
+    mapped = [
+      {
+        value: 'Unassigned',
+        text: 'Unassigned',
+        selected: true,
+      },
+      {
+        value: currentUserId,
+        text: assignToMeCopy,
+        selected: false,
+      },
+      ...mappedTeamMembersSelectOptions,
+    ];
+  }
+
+  if (taskIsAssignedToUser) {
+    mapped = [
+      {
+        value: 'Unassigned',
+        text: 'Unassigned',
+        selected: false,
+      },
+      {
+        value: currentUserId,
+        text: currentUserFullName,
+        selected: true,
+      },
+      ...mappedTeamMembersSelectOptions,
+    ];
+  }
+
+  return mapped;
 };
 
 
