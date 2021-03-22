@@ -25,12 +25,8 @@ const exporterItems = (exporterUrl) => [
     href: `${exporterUrl}/enter-exporters-correspondence-address`,
   },
   {
-    label: 'Industry sector',
-    id: 'industrySector',
-  },
-  {
-    label: 'Industry class',
-    id: 'industryClass',
+    label: 'Industries',
+    id: 'industries',
   },
   {
     label: 'SME type',

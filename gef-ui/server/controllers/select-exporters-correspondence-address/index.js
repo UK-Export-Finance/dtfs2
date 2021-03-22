@@ -8,7 +8,7 @@ const selectExportersCorrespondenceAddress = async (req, res) => {
   const { applicationId } = params;
   const { postcode, addresses } = session;
 
-  req.session.address = null;
+  req.session.addresses = null;
 
   try {
     await api.getApplication(applicationId); // We fetch application to make sure it exists
