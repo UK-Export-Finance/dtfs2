@@ -17,6 +17,7 @@ env:
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.RESOURCE_GROUP }}
+  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
 
 jobs:
   set-environment:
@@ -86,7 +87,7 @@ jobs:
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
 
-      COMPANIES_HOUSE_API_URL: ${{ secrets.COMPANIES_HOUSE_API_URL }}
+      COMPANIES_HOUSE_API_URL: ${{ env.COMPANIES_HOUSE_API_URL }}
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
     steps:
