@@ -40,9 +40,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: dtfs-central-api
         path: dtfs-central-api
         tags: latest
@@ -74,13 +74,13 @@ jobs:
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Pull dtfs-central-api
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY }}/dtfs-central-api
-        docker tag ${{ secrets.ACR_REGISTRY }}/dtfs-central-api dtfs/dtfs-central-api
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
         docker-compose up -d
@@ -106,16 +106,16 @@ jobs:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Tag images
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:$from
-        docker tag ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:$from ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:$to
-        docker push ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:$to
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:$from
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:$from ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:$to
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:$to
 
   deploy:
     name: Deploy container images to Dev

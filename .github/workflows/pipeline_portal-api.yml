@@ -41,9 +41,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: portal-api
         path: portal-api
         tags: latest
@@ -79,13 +79,13 @@ jobs:
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Pull portal-api
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_REGISTRY }}/portal-api dtfs/portal-api  
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api dtfs/portal-api  
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d
@@ -145,16 +145,16 @@ jobs:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Tag images
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.ACR_REGISTRY }}/portal-api:$from ${{ secrets.ACR_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.ACR_REGISTRY }}/portal-api:$to
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$from
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$to
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$to
 
   deploy:
     name: Deploy container images to Dev

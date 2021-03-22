@@ -49,55 +49,55 @@ class Facility {
       this.updatedAt = null;
     } else {
       // update application
-      if (req.hasBeenIssued) {
+      if (req.hasBeenIssued != null) {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
 
-      if (req.name) {
+      if (req.name != null) {
         this.name = String(req.name);
       }
 
-      if (req.startOnDayOfNotice) {
+      if (req.startOnDayOfNotice != null) {
         this.startOnDayOfNotice = Boolean(req.startOnDayOfNotice);
       }
 
-      if (req.coverStartDate) {
+      if (req.coverStartDate != null) {
         this.coverStartDate = new Date(req.coverStartDate);
       }
 
-      if (req.coverEndDate) {
+      if (req.coverEndDate != null) {
         this.coverEndDate = new Date(req.coverEndDate);
       }
 
-      if (req.monthsOfCover) {
+      if (req.monthsOfCover != null) {
         this.monthsOfCover = Number(req.monthsOfCover);
       }
 
-      if (req.details) {
+      if (req.details != null) {
         this.details = req.details;
       }
 
-      if (req.detailsOther) {
+      if (req.detailsOther != null) {
         this.detailsOther = String(req.detailsOther);
       }
 
-      if (req.currency) {
-        this.currency = String(req.currency);
+      if (req.currency !== null) {
+        this.currency = req.currency;
       }
 
-      if (req.value) {
+      if (req.value != null) {
         this.value = Number(req.value);
       }
 
-      if (req.coverPercentage) {
+      if (req.coverPercentage != null) {
         this.coverPercentage = Number(req.coverPercentage);
       }
 
-      if (req.interestPercentage) {
+      if (req.interestPercentage != null) {
         this.interestPercentage = Number(req.interestPercentage);
       }
 
-      if (req.paymentType) {
+      if (req.paymentType != null) {
         this.paymentType = checkPaymentType(req.paymentType);
       }
 

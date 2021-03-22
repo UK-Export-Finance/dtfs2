@@ -1,3 +1,5 @@
+const { STATUS, PAYMENT_TYPE, FACILITY_TYPE } = require('../../enums');
+
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
   const required = [];
@@ -49,29 +51,28 @@ const hasRequiredItems = (doc) => {
 const facilitiesStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return 'NOT_STARTED';
+    return STATUS.NOT_STARTED;
   }
   if (requiredCount > 0) {
-    return 'IN_PROGRESS';
+    return STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
-    return 'COMPLETED';
+    return STATUS.COMPLETED;
   }
 };
 
 const facilitiesOverallStatus = (facilities) => {
-  let result = 'NOT_STARTED';
+  let result = STATUS.NOT_STARTED;
   const allStatus = [];
   facilities.forEach((item) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
-  // console.log(uniqueStatus, uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === 2);
   if (uniqueStatus.length > 1) {
-    result = 'IN_PROGRESS';
+    result = STATUS.IN_PROGRESS;
   }
-  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === 2) {
-    result = 'COMPLETED';
+  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === STATUS.COMPLETED) {
+    result = STATUS.COMPLETED;
   }
   return result;
 };
@@ -79,8 +80,8 @@ const facilitiesOverallStatus = (facilities) => {
 const facilitiesCheckEnums = (doc) => {
   const enumErrors = [];
   switch (doc.type) {
-    case 'CASH':
-    case 'CONTINGENT':
+    case FACILITY_TYPE.CASH:
+    case FACILITY_TYPE.CONTINGENT:
     case null:
     case undefined:
       break;
@@ -89,8 +90,8 @@ const facilitiesCheckEnums = (doc) => {
       break;
   }
   switch (doc.paymentType) {
-    case 'IN_ARREARS_QUARTLY':
-    case 'IN_ADVANCE_QUARTERLY':
+    case PAYMENT_TYPE.IN_ARREARS_QUARTLY:
+    case PAYMENT_TYPE.IN_ADVANCE_QUARTERLY:
     case null:
     case undefined:
       break;

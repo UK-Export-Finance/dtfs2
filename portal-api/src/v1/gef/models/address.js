@@ -9,7 +9,6 @@ class Address {
     this.country = address.country || null;
   }
 }
-
 module.exports = {
   Address,
 };
