@@ -8,6 +8,8 @@ const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapBanksInterestMargin = require('./mapBanksInterestMargin');
 const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmountInExportCurrency');
+const mapFeeType = require('./mapFeeType');
+const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
@@ -116,6 +118,9 @@ describe('mapFacility', () => {
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       banksInterestMargin: expectedBanksInterestMargin,
       firstDrawdownAmountInExportCurrency: expectedFirstDrawdownAmountInExportCurrency,
+      feeType: mapFeeType(facilityLatest),
+      feeFrequency: mapFeeFrequency(facilityLatest),
+      dayCountBasis: mockFacility.dayCountBasis,
       dates: expectedDates,
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,

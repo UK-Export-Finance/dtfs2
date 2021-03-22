@@ -17,6 +17,7 @@ const MOCK_FACILIIES = [
     minimumRiskMarginFee: '30',
     ukefExposure: '2,469.00',
     feeType: 'At maturity',
+    feeFrequency: '12',
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
@@ -65,6 +66,8 @@ const MOCK_FACILIIES = [
       text: 'GBP - UK Sterling',
       id: 'GBP',
     },
+    feeType: 'At maturity',
+    feeFrequency: '12',
   },
 ];
 
