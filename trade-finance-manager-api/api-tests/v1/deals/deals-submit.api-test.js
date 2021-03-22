@@ -5,7 +5,7 @@ const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
-const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-min');
+const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
 const DEFAULTS = require('../../../src/v1/defaults');
 
@@ -148,7 +148,7 @@ describe('/v1/deals', () => {
     });
 
     describe('when deal is AIN', () => {
-      it('adds default AIN tasks to the deal', async() => {
+      it('adds default AIN tasks to the deal', async () => {
         const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
