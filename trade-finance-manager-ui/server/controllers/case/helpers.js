@@ -6,7 +6,6 @@ const userFullName = (user) => {
 const getTask = (taskId, tasks) =>
   tasks.find((t) => t.id === taskId);
 
-// TODO simplify this condition when we have default assignedTo
 const isTaskIsAssignedToUser = (assignedToUserId, userId) => {
   if (assignedToUserId === userId) {
     return true;
