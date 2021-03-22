@@ -758,7 +758,7 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --functions-version 3 \
             --storage-account tfs${{ env.environment }}storage \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ env.environment }}
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -794,7 +794,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-reference-data-proxy \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -949,7 +949,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-dtfs-central-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/dtfs-central-api:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1105,7 +1105,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-portal-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1286,7 +1286,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1445,7 +1445,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-portal-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1604,7 +1604,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1761,7 +1761,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-gef-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
