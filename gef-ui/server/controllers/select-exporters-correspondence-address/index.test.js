@@ -1,4 +1,4 @@
-import { enterExportersCorrespondenceAddress, validateEnterExportersCorrespondenceAddress } from './index';
+import { selectExportersCorrespondenceAddress, validateSelectExportersCorrespondenceAddress } from './index';
 import * as api from '../../services/api';
 
 const MockRequest = () => {
@@ -19,15 +19,6 @@ const MockResponse = () => {
 
 const MockApplicationResponse = () => {
   const res = {};
-  res.params = {};
-  res.params.exporterId = 'abc';
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.details.correspondenceAddress = '';
   return res;
 };
 
@@ -35,63 +26,43 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('GET Comapnies House', () => {
-  it('renders the `enter-exporters-correspondence-address` template with empty field', async () => {
+describe('GET Select Exporters Correspondence Address', () => {
+  it('renders the `select-exporters-correspondence-address` template', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
-      addressForm: '',
+    mockRequest.session.postcode = 'W1 7PD';
+    mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    await selectExportersCorrespondenceAddress(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/select-exporters-correspondence-address.njk', {
+      postcode: 'W1 7PD',
       applicationId: '123',
+      addressesForSelection: [
+        {
+          text: '1 Address Found',
+        },
+        {
+          text: 'line1',
+          value: 0,
+        },
+      ],
     });
   });
 
-  it('renders the `enter-exporters-correspondence-address` template with data from address session', async () => {
+  it('resets session addresses to Null', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    mockRequest.session.address = JSON.stringify({ address_line_1: 'line1', address_line_2: 'line2' });
+
+    mockRequest.session.postcode = 'W1 7PD';
+    mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
+    await selectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
-      addressForm: {
-        addressLine1: 'line1',
-        addressLine2: 'line2',
-        addressLine3: undefined,
-        locality: undefined,
-        organisationName: undefined,
-        postalCode: undefined,
-      },
-      applicationId: '123',
-    });
-  });
-
-  it('renders the `enter-exporters-correspondence-address` template with data from exporter api', async () => {
-    const mockRequest = new MockRequest();
-    const mockResponse = new MockResponse();
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-
-    mockExporterResponse.details.correspondenceAddress = { addressLine1: 'LINE1', addressLine2: 'LINE2' };
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
-      addressForm: {
-        addressLine1: 'LINE1',
-        addressLine2: 'LINE2',
-      },
-      applicationId: '123',
-    });
+    expect(mockRequest.session.addresses).toEqual(null);
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
@@ -99,64 +70,47 @@ describe('GET Comapnies House', () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     api.getApplication = () => Promise.reject(mockedRejection);
-    await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
+    await selectExportersCorrespondenceAddress(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
-describe('Validate Enter Exporters Correspondence Address', () => {
-  it('returns error object if address line 1 field is empty', async () => {
+describe('Validate Select Exporters Correspondence Address', () => {
+  it('returns error object if address from select dropdown has not been selected', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
-    mockRequest.body.addressLine1 = '';
-    mockRequest.body.postalCode = '';
+    mockRequest.session.postcode = 'W1 7PD';
+    mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    mockRequest.body.selectedAddress = '';
 
-    await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
+    await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/select-exporters-correspondence-address.njk', expect.objectContaining({
       errors: expect.any(Object),
       applicationId: '123',
-      addressForm: { addressLine1: '', postalCode: '' },
     }));
   });
 
-  it('returns error object if postcode field is empty', async () => {
+  it('sets address object into session string', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
-    mockRequest.body.addressLine1 = 'Line1';
-    mockRequest.body.postalCode = '';
+    mockRequest.session.postcode = 'W1 7PD';
+    mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    mockRequest.body.selectedAddress = '0';
 
-    await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
+    await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
-      errors: expect.any(Object),
-      applicationId: '123',
-      addressForm: { addressLine1: 'Line1', postalCode: '' },
-    }));
+    expect(mockRequest.session.address).toEqual(JSON.stringify({ addressLine1: 'line1' }));
   });
 
-  it('redirects user to `about exporter` page if response from api is successful', async () => {
+  it('redirects user to `enter-exporters-correspondence-address` page if  successful', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    const mockApplicationResponse = new MockApplicationResponse();
 
-    mockRequest.body.addressLine1 = 'Line1';
-    mockRequest.body.postalCode = 'sa1 7fr';
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.updateExporter = () => Promise.resolve(mockExporterResponse);
-    await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/about-exporter');
-  });
-
-  it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
-    const mockRequest = new MockRequest();
-    const mockResponse = new MockResponse();
-    const mockedRejection = { response: { status: 400, message: 'Whoops' } };
-    mockRequest.body.addressLine1 = 'Line1';
-    mockRequest.body.postalCode = 'sa1 7fr';
-    api.getApplication = () => Promise.reject(mockedRejection);
-    await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    mockRequest.session.postcode = 'W1 7PD';
+    mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    mockRequest.body.selectedAddress = '0';
+    await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/enter-exporters-correspondence-address');
   });
 });

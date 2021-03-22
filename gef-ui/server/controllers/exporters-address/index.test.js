@@ -5,6 +5,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.params.applicationId = '123';
+  req.session = {};
   req.body = {};
   return req;
 };
@@ -125,6 +126,60 @@ describe('Validate Exporters Address', () => {
     mockRequest.body.correspondence = 'true';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
+    await validateExportersAddress(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
+      companyName: undefined,
+      errors: expect.any(Object),
+      correspondence: 'true',
+      registeredAddress: undefined,
+    }));
+  });
+
+  it('fetchs addresses if there are currently no validation errors and stores them as a string in session storage', async () => {
+    const mockRequest = new MockRequest();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
+
+    mockRequest.body.correspondence = 'true';
+    mockRequest.body.postcode = 'w1';
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getAddressesByPostcode = () => Promise.resolve([{ addressLine1: 'line 1', addressLine2: 'line 2' }]);
+    await validateExportersAddress(mockRequest, mockResponse);
+    expect(mockRequest.session.addresses).toEqual(JSON.stringify([{ addressLine1: 'line 1', addressLine2: 'line 2' }]));
+  });
+
+  it('saves postcode to session storage in uppercase format', async () => {
+    const mockRequest = new MockRequest();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
+
+    mockRequest.body.correspondence = 'true';
+    mockRequest.body.postcode = 'sa2 tyw';
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getAddressesByPostcode = () => Promise.resolve([{ addressLine1: 'line 1', addressLine2: 'line 2' }]);
+    await validateExportersAddress(mockRequest, mockResponse);
+    expect(mockRequest.session.postcode).toEqual('SA2 TYW');
+  });
+
+  it('returns validation errors from getAddressesByPostcode API', async () => {
+    const mockRequest = new MockRequest();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockResponse = new MockResponse();
+    const mockRejection = { status: 422, data: { errMsg: 'Message', errRef: 'Reference' } };
+
+    mockRequest.body.correspondence = 'true';
+    mockRequest.body.postcode = 'FFFFF';
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getAddressesByPostcode = () => Promise.resolve(mockRejection);
     await validateExportersAddress(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
       companyName: undefined,

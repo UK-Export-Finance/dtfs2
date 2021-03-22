@@ -16,11 +16,11 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
     if (parseAddress) {
       mappedAddress = {
         organisationName: parseAddress.organisation_name,
-        addressLine1: parseAddress.address_line_1,
-        addressLine2: parseAddress.address_line_2,
-        addressLine3: parseAddress.address_line_3,
+        addressLine1: parseAddress.addressLine1,
+        addressLine2: parseAddress.addressLine2,
+        addressLine3: parseAddress.addressLine3,
         locality: parseAddress.locality,
-        postalCode: parseAddress.postal_code,
+        postalCode: parseAddress.postalCode,
       };
     }
 

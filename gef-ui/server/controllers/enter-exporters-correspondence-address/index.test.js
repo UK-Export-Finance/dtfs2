@@ -35,7 +35,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('GET Comapnies House', () => {
+describe('GET Enter Exporters Correspondence Address', () => {
   it('renders the `enter-exporters-correspondence-address` template with empty field', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
@@ -56,7 +56,7 @@ describe('GET Comapnies House', () => {
     const mockResponse = new MockResponse();
     const mockApplicationResponse = new MockApplicationResponse();
     const mockExporterResponse = new MockExporterResponse();
-    mockRequest.session.address = JSON.stringify({ address_line_1: 'line1', address_line_2: 'line2' });
+    mockRequest.session.address = JSON.stringify({ addressLine1: 'line1', addressLine2: 'line2' });
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
