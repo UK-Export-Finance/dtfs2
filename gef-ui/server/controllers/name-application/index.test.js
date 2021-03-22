@@ -33,25 +33,14 @@ describe('GET Name Application', () => {
 });
 
 describe('Create Application', () => {
-  it('returns error object if `bankInternalRefName` property is empty', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    mockRequest.body.bankInternalRefName = '';
-    await createApplication(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
-      errors: expect.any(Object),
-    }));
-  });
-
-  it('renders the `application details` page with validation errors if valdiation fails on server', async () => {
+  it('renders the `application details` page with validation errors if validation fails on server', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockValidationRejection = {
       status: 422,
       data: [],
     };
-    api.createApplication = () => Promise.reject(mockValidationRejection);
+    api.createApplication = () => Promise.resolve(mockValidationRejection);
     await createApplication(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { errors: { errorSummary: [], fieldErrors: {} } });
   });
