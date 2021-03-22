@@ -1,5 +1,3 @@
-
-import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
@@ -27,7 +25,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
     }
 
     return res.render('partials/enter-exporters-correspondence-address.njk', {
-      addressForm: !_isEmpty(correspondenceAddress) ? correspondenceAddress : mappedAddress,
+      addressForm: mappedAddress || correspondenceAddress,
       applicationId,
     });
   } catch (err) {

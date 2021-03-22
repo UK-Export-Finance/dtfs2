@@ -15,3 +15,17 @@
   padding-left: 15px;
   width: 30%;
 }
+
+.govuk-button-group {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+
+  .govuk-button {
+    margin-right: 15px;
+  }
+
+  .govuk-link {
+    line-height: 38px;
+  }
+}
