@@ -37,9 +37,11 @@ const mapTeamMembersSelectOptions = (members, taskAssignedTo, currentUserId) => 
 
 const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   const taskAssignedTo = task.assignedTo.userId;
-  const taskIsAssignedToUser = isTaskIsAssignedToUser(taskAssignedTo, currentUser);
+  // eslint-disable-next-line no-underscore-dangle
+  const taskIsAssignedToUser = isTaskIsAssignedToUser(taskAssignedTo, currentUser._id);
 
-  const assignToMeCopy = `${userFullName(currentUser)} (Assign to me)`;
+  const currentUserFullName = userFullName(currentUser);
+  const assignToMeCopy = `${currentUserFullName} (Assign to me)`;
 
   const currentUserId = currentUser._id; // eslint-disable-line no-underscore-dangle
 
@@ -57,7 +59,7 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
     },
     {
       value: currentUserId,
-      text: assignToMeCopy,
+      text: taskIsAssignedToUser ? assignToMeCopy : currentUserFullName,
       selected: taskIsAssignedToUser,
     },
     ...mappedTeamMembersSelectOptions,
