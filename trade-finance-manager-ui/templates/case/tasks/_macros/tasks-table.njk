@@ -26,7 +26,7 @@
               <tr class="govuk-table__row" data-cy="task-{{ task.id }}-row">
 
                 <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-                  <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.id }}" data-cy="task-{{ task.id }}-link">{{ task.title }}</a>
+                  <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.id }}" data-cy="task-table-row-{{ task.id }}-link">{{ task.title }}</a>
                 </td>
 
                 <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0" data-cy="task-table-row-{{ task.id }}-user-full-name">
@@ -37,7 +37,7 @@
                   {{ task.team.name }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right" aria-labelledby="Task status">
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right" data-cy="task-table-row-{{ task.id }}-status" aria-labelledby="Task status">
                   {% set componentData = {
                     status: task.status
                   } %}

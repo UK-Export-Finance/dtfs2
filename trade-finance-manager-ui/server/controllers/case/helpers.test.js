@@ -128,7 +128,7 @@ describe('case - helpers', () => {
           {
             value: mockCurrentUser._id,
             text: `${userFullName(mockCurrentUser)} (Assign to me)`,
-            selected: false
+            selected: false,
           },
           {
             value: 'Unassigned',
@@ -164,7 +164,7 @@ describe('case - helpers', () => {
           {
             value: mockCurrentUser._id,
             text: `${userFullName(mockCurrentUser)} (Assign to me)`,
-            selected: false
+            selected: false,
           },
           ...mapTeamMembersSelectOptions(
             mockTeamMembers,
