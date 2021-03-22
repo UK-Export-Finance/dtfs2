@@ -38,8 +38,11 @@ context('Case tasks - AIN deal', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
-  const userFullName = `${MOCK_USERS[0].firstName} ${MOCK_USERS[0].lastName}`;
+  const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
+  const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
   let userId;
+  let loggedInUserTeamName;
+  let usersInTeam;
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
@@ -58,13 +61,16 @@ context('Case tasks - AIN deal', () => {
         cy.submitDeal(dealId);
       });
 
-    cy.getUser(MOCK_USERS[0].username).then((userObj) => {
+    cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
+
+    loggedInUserTeamName = businessSupportUser.teams[0]; // eslint-disable-line
+    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(businessSupportUser);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 
@@ -78,11 +84,11 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    pages.tasksPage.tasksListRows().should('have.length', 2);
+    pages.tasksPage.tasksTableRows().should('have.length', 2);
   });
 
 
-  it('user can assign tasks to themself, change status and unassign', () => {
+  it('user can assign a task to themself, change status and unassign', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
@@ -94,8 +100,11 @@ context('Case tasks - AIN deal', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks/1`));
 
-    // `assign to` should only have 2 options
-    pages.taskPage.assignedToSelectInputOption().should('have.length', 2);
+    // `assign to` should have total amount of users in the team and unassigned users
+    const TOTAL_USERS_IN_TEAM = usersInTeam.length;
+    const expected = TOTAL_USERS_IN_TEAM + 1;
+
+    pages.taskPage.assignedToSelectInputOption().should('have.length', expected);
 
     // task should be unassigned by default
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
@@ -140,10 +149,59 @@ context('Case tasks - AIN deal', () => {
     // should now be back on the tasks page
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    // go back into the same task
+    // go back into the same task, check values
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
+  });
+
+  it('user can assign a task to someone else', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    let firstTask = pages.tasksPage.tasks.row('1');
+    firstTask.link().click();
+
+    const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
+    let differentUserInSameTeamObj;
+
+    // select option values are userIds.
+    // we need to use userId to select the option value in e2e test
+    // selecting 1st/2nd/3rd option can be flaky.
+    cy.getUser(differentUserInSameTeam.username).then((userObj) => {
+      differentUserInSameTeamObj = userObj;
+      const { firstName, lastName } = differentUserInSameTeamObj;
+
+      // choose a user in `assigned to` select input, that is not the currently logged in
+      // eslint-disable-next-line no-underscore-dangle
+      pages.taskPage.assignedToSelectInput().select(differentUserInSameTeamObj._id);
+      pages.taskPage.taskStatusRadioInputInProgress().click();
+
+      // submit form
+      pages.taskPage.submitButton().click();
+
+      // should now be back on the tasks page
+      cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+      // go back into the same task, check values
+      firstTask = pages.tasksPage.tasks.row('1');
+      firstTask.link().click();
+
+      const differentUserInSameTeamFullName = `${firstName} ${lastName}`;
+      pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', differentUserInSameTeamFullName);
+      pages.taskPage.taskStatusRadioInputInProgress().should('be.checked');
+
+      // check that the updated task displays correct assignee and status in home page
+      pages.taskPage.closeLink().click();
+
+      firstTask.assignedTo().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(differentUserInSameTeamFullName);
+      });
+
+      firstTask.status().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('In progress');
+      });
+    });
   });
 
   it('when user changes task form and clicks `close without saving`, form should be unchanged', () => {
@@ -153,6 +211,13 @@ context('Case tasks - AIN deal', () => {
     const firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
 
+    // make sure the task is unassigned to start with
+    pages.taskPage.assignedToSelectInput().select('Unassigned');
+    pages.taskPage.taskStatusRadioInputTodo().click();
+    pages.taskPage.submitButton().click();
+
+    firstTask.link().click();
+
     // check default values
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
@@ -160,7 +225,6 @@ context('Case tasks - AIN deal', () => {
     // change `assigned to` and status
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
-
 
     pages.taskPage.closeLink().click();
 
