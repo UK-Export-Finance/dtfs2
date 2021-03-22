@@ -901,7 +901,7 @@ jobs:
         # NOTE: MULESOFT envs were producing an error when used in connection_string so have been moved to appsettings
         # ref: https://docs.microsoft.com/en-us/azure/app-service/configure-common 
         inlineScript: |
-          acbs_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-dev-function-acbs --query "defaultHostName" -o tsv)
+          acbs_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-acbs --query "defaultHostName" -o tsv)
 
           az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
             --settings \
