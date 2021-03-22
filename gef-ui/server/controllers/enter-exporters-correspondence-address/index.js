@@ -3,28 +3,36 @@ import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
-const enterExportersCorrespondenceAddress = (req, res) => {
+const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
   const { applicationId } = params;
   const { address } = session;
   const parseAddress = JSON.parse(address);
-  let mappedAddress;
 
-  if (parseAddress) {
-    mappedAddress = {
-      organisationName: parseAddress.organisation_name,
-      addressLine1: parseAddress.address_line_1,
-      addressLine2: parseAddress.address_line_2,
-      addressLine3: parseAddress.address_line_3,
-      locality: parseAddress.locality,
-      postalCode: parseAddress.postal_code,
-    };
+  try {
+    const { exporterId } = await api.getApplication(applicationId);
+    const { details } = await api.getExporter(exporterId);
+    const { correspondenceAddress } = details;
+    let mappedAddress;
+
+    if (parseAddress) {
+      mappedAddress = {
+        organisationName: parseAddress.organisation_name,
+        addressLine1: parseAddress.address_line_1,
+        addressLine2: parseAddress.address_line_2,
+        addressLine3: parseAddress.address_line_3,
+        locality: parseAddress.locality,
+        postalCode: parseAddress.postal_code,
+      };
+    }
+
+    return res.render('partials/enter-exporters-correspondence-address.njk', {
+      addressForm: !_isEmpty(correspondenceAddress) ? correspondenceAddress : mappedAddress,
+      applicationId,
+    });
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
   }
-
-  return res.render('partials/enter-exporters-correspondence-address.njk', {
-    addressForm: mappedAddress, // parseAddress ? mappedAddress : null,
-    applicationId,
-  });
 };
 
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
@@ -32,14 +40,14 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   const { applicationId } = params;
   const addressErrors = [];
 
-  if (_isEmpty(body.addressLine1)) {
+  if (!body.addressLine1) {
     addressErrors.push({
       errRef: 'addressLine1',
       errMsg: 'Enter address',
     });
   }
 
-  if (_isEmpty(body.postalCode)) {
+  if (!body.postalCode) {
     addressErrors.push({
       errRef: 'postalCode',
       errMsg: 'Enter postcode',
