@@ -102,7 +102,8 @@ describe('/v1/tfm/users', () => {
       expect(body.deletedCount).toEqual(1);
 
       const listUsersRes = await api.get('/v1/tfm/users');
-      expect(listUsersRes.body.users).toEqual(expectMongoIds([mockUsers[1]]));
+      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).reverse();
+      expect(listUsersRes.body.users).toEqual(expectMongoIds(allNonDeletedUsers));
     });
   });
 
