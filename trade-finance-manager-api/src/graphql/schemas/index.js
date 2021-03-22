@@ -148,10 +148,10 @@ type FacilitySnapshot {
   bondBeneficiary: String
   ukefExposure: String
   firstDrawdownAmountInExportCurrency: String
-  dates: FacilityDates,
   feeType: String,
   feeFrequency: String,
-  dayCountBasis: Int
+  dayCountBasis: String,
+  dates: FacilityDates,
 }
 
 type Facility {
