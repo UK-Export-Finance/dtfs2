@@ -20,6 +20,7 @@ env:
   api_portal_access_port: 44232
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
@@ -920,7 +921,7 @@ jobs:
               MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
               MULESOFT_API_EXPOSURE_PERIOD_URL="${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}" \
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
               ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
               AZURE_ACBS_FUNCTION_URL="$acbs_function_url"
@@ -1260,7 +1261,7 @@ jobs:
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               TFM_API="http://$tfm_api_url" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -1578,7 +1579,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
  
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
@@ -1894,7 +1895,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
  
   # END UI setup
 
