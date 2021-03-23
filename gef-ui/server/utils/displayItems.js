@@ -41,10 +41,7 @@ const exporterItems = (exporterUrl) => [
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
     href: `${exporterUrl}/about-exporter`,
-    method: (callback) => {
-      console.log('callback', callback);
-      return callback === 'true' ? BOOLEAN.YES : BOOLEAN.NO;
-    },
+    method: (callback) => (callback === 'true' ? BOOLEAN.YES : BOOLEAN.NO),
   },
 ];
 
