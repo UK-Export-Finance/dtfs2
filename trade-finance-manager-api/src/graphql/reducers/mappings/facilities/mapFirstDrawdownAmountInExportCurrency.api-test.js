@@ -1,5 +1,6 @@
 const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmountInExportCurrency');
 const { formattedNumber } = require('../../../../utils/number');
+const { stripCommas } = require('../../../../utils/string');
 
 describe('mapFirstDrawdownAmountInExportCurrency', () => {
   describe('when facility is loan', () => {
@@ -8,14 +9,20 @@ describe('mapFirstDrawdownAmountInExportCurrency', () => {
         facilityProduct: {
           code: 'EWCS',
         },
-        disbursementAmount: '1234.00',
+        disbursementAmount: '12,1234.00',
+        currency: {
+          text: 'CAD - Canadian Dollars',
+          id: 'CAD',
+        },
       };
 
       const result = mapFirstDrawdownAmountInExportCurrency(mockFacility);
 
-      const formattedDisbursementAmount = formattedNumber(mockFacility.disbursementAmount, 4, 4);
+      const strippedDisbursementAmount = stripCommas(mockFacility.disbursementAmount);
 
-      const expected = `${mockFacility.currency} ${formattedDisbursementAmount}`;
+      const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 4, 4);
+
+      const expected = `${mockFacility.currency.id} ${formattedDisbursementAmount}`;
       expect(result).toEqual(expected);
     });
   });
