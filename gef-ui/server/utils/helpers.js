@@ -104,7 +104,7 @@ const mapSummaryList = (data, itemsToShow) => {
       label, href, prefix, suffix, method, isCurrency, isIndustry,
     } = item;
     // If value is a number, convert to String as 0 can also become falsey
-    const value = typeof details[item.id] === 'number' ? details[item.id].toString() : details[item.id];
+    const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency } = details;
     const isRequired = required.includes(item.id);
 

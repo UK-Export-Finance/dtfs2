@@ -21,7 +21,7 @@ const exporterItems = (exporterUrl) => [
     href: `${exporterUrl}/enter-exporters-correspondence-address`,
   },
   {
-    label: 'Industries',
+    label: 'Industry',
     id: 'industries',
     isIndustry: true,
   },
@@ -41,7 +41,10 @@ const exporterItems = (exporterUrl) => [
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
     href: `${exporterUrl}/about-exporter`,
-    method: (callback) => (callback ? BOOLEAN.YES : BOOLEAN.NO),
+    method: (callback) => {
+      console.log('callback', callback);
+      return callback === 'true' ? BOOLEAN.YES : BOOLEAN.NO;
+    },
   },
 ];
 
