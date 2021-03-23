@@ -2,7 +2,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% block pageTitle %}Select exporter’s correspondence address{% endblock %}
@@ -19,7 +18,7 @@
   {% endif %}
 
   {{ govukBackLink({
-    text: "Back",
+    text: "Back to previous page",
     href: '/gef/application-details/' + applicationId + '/exporters-address',
     attributes: {
       'data-cy': 'back-button'
@@ -87,25 +86,8 @@
               'data-cy': 'continue-button'
             }
           }) }}
-
-          <a
-            class="govuk-link"
-            href="/gef/application-details/{{applicationId}}"
-            data-cy="cancel-button">Return to application</a>
         </div>
       </form>
-    </div>
-  </div>
-
-  <div class="govuk-grid-row govuk-!-margin-bottom-4">
-    <div class="govuk-grid-column-two-thirds">
-      {{ govukDetails({
-        summaryText: "How do I change the registered company address?",
-        text: "You cannot change the registered company address in this service. This information is sent to us from Companies House. Check with the exporter if you have a query about their registered address.",
-        attributes: {
-          'data-cy': 'change-details'
-        }
-      }) }}
     </div>
   </div>
 {% endblock %}

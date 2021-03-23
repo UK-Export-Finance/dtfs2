@@ -3,7 +3,7 @@ import {
   mapSummaryList, status, facilityType,
 } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
-import constants from '../../../constants';
+import { PROGRESS } from '../../../constants';
 
 const applicationDetails = async (req, res) => {
   const { params, query } = req;
@@ -15,10 +15,10 @@ const applicationDetails = async (req, res) => {
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
-    const exporterStatus = status[exporter.status || constants.NOT_STARTED]; // if null, set status to Not started
-    const facilitiesStatus = status[facilities.status || constants.NOT_STARTED]; // if null, set status to Not started
-    const canSubmit = exporterStatus.code === constants.COMPLETED
-    && facilitiesStatus.code === constants.COMPLETED; // Both statuses are set to complete
+    const exporterStatus = status[exporter.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
+    const facilitiesStatus = status[facilities.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
+    const canSubmit = exporterStatus.code === PROGRESS.COMPLETED
+    && facilitiesStatus.code === PROGRESS.COMPLETED; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
       isManual: manual,

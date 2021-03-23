@@ -1,9 +1,5 @@
 import moment from 'moment';
-
-const YES = 'Yes';
-const NO = 'No';
-const ISSUED = 'Issued';
-const UNISSUED = 'Unissued';
+import { SME_TYPE, BOOLEAN, STAGE } from '../../constants';
 
 const exporterItems = (exporterUrl) => [
   {
@@ -27,23 +23,25 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Industries',
     id: 'industries',
+    isIndustry: true,
   },
   {
     label: 'SME type',
     id: 'smeType',
-    href: `${exporterUrl}/`,
+    href: `${exporterUrl}/about-exporter`,
+    method: (callback) => SME_TYPE[callback],
   },
   {
     label: 'Probability of default',
     id: 'probabilityOfDefault',
-    href: `${exporterUrl}/`,
+    href: `${exporterUrl}/about-exporter`,
     suffix: '%',
   },
   {
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
-    href: `${exporterUrl}/`,
-    method: (callback) => (callback ? YES : NO),
+    href: `${exporterUrl}/about-exporter`,
+    method: (callback) => (callback ? BOOLEAN.YES : BOOLEAN.NO),
   },
 ];
 
@@ -57,7 +55,7 @@ const facilityItems = (exporterUrl, type) => [
     label: 'Stage',
     id: 'hasBeenIssued',
     href: `${exporterUrl}/`,
-    method: (callback) => (callback ? ISSUED : UNISSUED),
+    method: (callback) => (callback ? STAGE.ISSUED : STAGE.UNISSUED),
   },
   {
     label: 'Cover start date',
