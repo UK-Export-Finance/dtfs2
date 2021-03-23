@@ -66,7 +66,6 @@ tfmRouter.route('/teams/:id')
     tfmTeamsController.deleteTeamDELETE,
   );
 
-
 // User routes for mock teams & users
 tfmRouter.route('/users')
   .get(
@@ -82,6 +81,21 @@ tfmRouter.route('/users/:username')
   )
   .delete(
     tfmUsersController.deleteUserDELETE,
+  );
+
+tfmRouter.route('/users/id/:userId')
+  .get(
+    tfmUsersController.findOneUserByIdGET,
+  );
+
+tfmRouter.route('/users/team/:teamId')
+  .get(
+    tfmUsersController.findTeamUsersGET,
+  );
+
+tfmRouter.route('/users/:id/tasks')
+  .put(
+    tfmUsersController.updateUserTasksPUT,
   );
 
 module.exports = tfmRouter;

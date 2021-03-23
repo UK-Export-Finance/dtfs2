@@ -4,12 +4,14 @@
   label: "Primary navigation",
   items: [
   {
-    text: "Your work",
-    href: "/"
-  },
+    text: "Manage work",
+    href: "/",
+    active: (activePrimaryNavigation === 'manage work')
+},
   {
     text: "All deals",
-    href: "/deals"
+    href: "/deals",
+    active: (activePrimaryNavigation === 'all deals')
   }
   ]
 }) }} 

@@ -10,8 +10,8 @@ env:
   # Environment
   front_door_access: Deny
   environment: staging
+  registry: ${{ secrets.ACR_REGISTRY_TEST }}
   credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
-  resource_group: ${{ secrets.STAGING_RESOURCE_GROUP }}
   app_service_plan: test
   redis_sku: Basic
   database_name: dtfs-submissions
@@ -26,7 +26,6 @@ env:
 # Below this line should be the same for all environments
 
 jobs:
-
   set-environment:
     name: Set Environment
     runs-on: ubuntu-latest
@@ -758,7 +757,7 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --functions-version 3 \
             --storage-account tfs${{ env.environment }}storage \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/azure-function-acbs:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/azure-function-acbs:${{ env.environment }}
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -794,7 +793,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-reference-data-proxy \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/reference-data-proxy:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/reference-data-proxy:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -901,6 +900,8 @@ jobs:
         # NOTE: MULESOFT envs were producing an error when used in connection_string so have been moved to appsettings
         # ref: https://docs.microsoft.com/en-us/azure/app-service/configure-common 
         inlineScript: |
+          acbs_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-acbs --query "defaultHostName" -o tsv)
+
           az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
             --settings \
               PORT=5000 \
@@ -920,8 +921,9 @@ jobs:
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
-              ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" 
-
+              ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
+              AZURE_ACBS_FUNCTION_URL="$acbs_function_url"
+ 
   dtfs-central-api:
     name: DTFS Central API
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy]
@@ -946,7 +948,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-dtfs-central-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/dtfs-central-api:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/dtfs-central-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1076,7 +1078,7 @@ jobs:
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"   
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
 
   portal-api:
     name: Portal API
@@ -1102,7 +1104,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-portal-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/portal-api:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1283,7 +1285,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-api:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1416,7 +1418,7 @@ jobs:
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url"  
   # END API setup
-
+ 
   # START UI setup
   portal-ui:
     name: Portal UI
@@ -1442,7 +1444,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-portal-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/portal-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1601,7 +1603,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/trade-finance-manager-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -1758,7 +1760,7 @@ jobs:
         inlineScript: |
           az webapp create --name tfs-${{ env.environment }}-gef-ui \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ secrets.ACR_REGISTRY }}/gef-ui:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/gef-ui:${{ env.environment }}
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0

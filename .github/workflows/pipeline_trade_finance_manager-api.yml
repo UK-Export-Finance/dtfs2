@@ -75,11 +75,11 @@ jobs:
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
-    - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm install
-        node ./re-insert-mocks.js
+    # - name: Load mock data
+    #   run: |
+    #     cd utils/mock-data-loader
+    #     npm install
+    #     node ./re-insert-mocks.js
     # - name: Run Submit to Trade Finance Manager e2e tests
     #   env:
     #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

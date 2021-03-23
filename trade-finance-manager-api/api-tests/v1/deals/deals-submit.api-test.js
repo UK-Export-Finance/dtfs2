@@ -5,7 +5,9 @@ const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
+const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
+const DEFAULTS = require('../../../src/v1/defaults');
 
 const { findOneFacility } = require('../../../src/v1/controllers/facility.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
@@ -29,6 +31,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
+          tasks: DEFAULTS.TASKS.AIN,
         },
       };
 
@@ -47,6 +50,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
+          tasks: DEFAULTS.TASKS.AIN,
         },
       };
 
@@ -65,6 +69,7 @@ describe('/v1/deals', () => {
               partyUrn: 'testPartyUrn',
             },
           },
+          tasks: DEFAULTS.TASKS.AIN,
         },
       };
 
@@ -139,6 +144,24 @@ describe('/v1/deals', () => {
 
         expect(loan.tfm.ukefExposure).toEqual(Number(loan.ukefExposure));
         expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+      });
+    });
+
+    describe('when deal is AIN', () => {
+      it('adds default AIN tasks to the deal', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+        expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
+      });
+    });
+
+    describe('when deal is NOT AIN', () => {
+      it('adds NOT add default AIN tasks to the deal', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+        expect(body.tfm.tasks).toBeUndefined();
       });
     });
   });

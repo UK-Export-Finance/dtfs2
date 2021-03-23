@@ -29,7 +29,7 @@ const UPDATE_PARTIES = gql`
   }
 `;
 
-describe('graphql query - update party', () => {
+describe('graphql mutation - update party', () => {
   let query;
 
   beforeAll(() => {

@@ -8,6 +8,8 @@ import indemnifierPage from './indemnifierPage';
 import bondIssuerPage from './bondIssuerPage';
 import bondBeneficiaryPage from './bondBeneficiaryPage';
 import facilityPage from './facilityPage';
+import tasksPage from './tasksPage';
+import taskPage from './taskPage';
 
 export default {
   landingPage,
@@ -20,4 +22,6 @@ export default {
   bondIssuerPage,
   bondBeneficiaryPage,
   facilityPage,
+  tasksPage,
+  taskPage,
 };

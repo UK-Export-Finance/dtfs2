@@ -1,0 +1,58 @@
+{% import './task-status-tag.njk' as taskStatusTag %}
+
+{% macro render(params) %}
+  {% set caseId = params.caseId %}
+  {% set tasks = params.tasks %}
+
+  <div data-cy="tasks-table">
+    {% for taskGroup in tasks %}
+
+      <div class="govuk-!-padding-left-7">
+
+        <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-heading-l govuk-!-margin-bottom-0" data-cy="task-group-title">{{ taskGroup.groupTitle }}</caption>
+
+          <thead class="govuk-table__head">
+            <tr>
+              <th class="govuk-table__header"></th>
+              <th class="govuk-table__header" data-cy="tasks-table-header-assigned-to">Assigned to</th>
+              <th class="govuk-table__header" data-cy="tasks-table-header-team">Team</th>
+              <th class="govuk-table__header"></th>
+            </tr>
+          </thead>
+
+          <tbody class="govuk-table__body">
+            {% for task in taskGroup.groupTasks %}
+              <tr class="govuk-table__row" data-cy="task-{{ task.id }}-row">
+
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0">
+                  <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.id }}" data-cy="task-table-row-{{ task.id }}-link">{{ task.title }}</a>
+                </td>
+
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0" data-cy="task-table-row-{{ task.id }}-user-full-name">
+                  {{ task.assignedTo.userFullName }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0" data-cy="task-table-row-{{ task.id }}-team-name">
+                  {{ task.team.name }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right" data-cy="task-table-row-{{ task.id }}-status" aria-labelledby="Task status">
+                  {% set componentData = {
+                    status: task.status
+                  } %}
+
+                  {{taskStatusTag.render(componentData)}}
+                </td>
+
+              </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    {% endfor %}
+  </div>
+
+{% endmacro %}

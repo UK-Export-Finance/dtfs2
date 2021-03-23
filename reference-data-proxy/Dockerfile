@@ -29,6 +29,9 @@ COPY --from=image /app /app
 ADD ./api-tests ./api-tests
 ADD ./__mocks__ ./__mocks__
 ADD ./api-test.jest.config.js ./api-test.jest.config.js
+ADD ./api-test-file.jest.config.js ./api-test-file.jest.config.js
+ADD ./api-test-common.jest.config.js ./api-test-common.jest.config.js
+ADD ./api-test-setup.jest.config.js ./api-test-setup.jest.config.js
 
 ADD ./bin ./bin
 

@@ -20,7 +20,7 @@ mutation UpdateFacility($id: ID!, $facilityUpdate: TFMFacilityInput) {
 }
 `;
 
-describe('graphql query - update party', () => {
+describe('graphql mutation - update party', () => {
   let query;
 
   beforeAll(() => {

@@ -4,13 +4,17 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
 const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
+const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
+const MOCK_TASKS = require('./mock-tasks');
+const MOCK_USERS = require('./mock-users');
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
   MOCK_DEAL_FACILITIES_USD_CURRENCY,
+  MOCK_DEAL_MIN,
 ];
 
 const ALL_MOCK_FACILITIES = [
@@ -24,7 +28,9 @@ module.exports = {
     const deal = {
       _id: dealId,
       dealSnapshot,
-      tfm: {},
+      tfm: {
+        tasks: MOCK_TASKS,
+      },
     };
 
     return dealSnapshot ? Promise.resolve(deal) : Promise.reject();
@@ -57,7 +63,6 @@ module.exports = {
         ...facility,
         _id: facilityId,
       },
-      // tfm: {},
       tfm: {
         ukefExposure: '1,234.00',
         ukefExposureCalculationTimestamp: '1606900616651',
@@ -84,9 +89,25 @@ module.exports = {
         partyUrn: 'testPartyUrn',
       }]
   ),
-  findUser: (username) => (
-    username === 'invalidUser' ? false : { username }
-  ),
+  findUser: (username) => {
+    if (username === 'invalidUser') {
+      return false;
+    }
+
+    return MOCK_USERS.find((user) => user.username === username);
+  },
+  findUserById: (userId) =>
+    MOCK_USERS.find((user) => user._id === userId), // eslint-disable-line no-underscore-dangle
+  updateUserTasks: (userId, updatedTasks) => {
+    const user = MOCK_USERS.find((u) => u._id === userId); // eslint-disable-line no-underscore-dangle
+
+    return {
+      ...user,
+      assignedTasks: updatedTasks,
+    };
+  },
+  findTeamMembers: (teamId) =>
+    MOCK_USERS.filter((user) => user.teams.includes(teamId)),
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),

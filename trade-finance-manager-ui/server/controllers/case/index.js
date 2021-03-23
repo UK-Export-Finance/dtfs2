@@ -1,9 +1,10 @@
 import api from '../../api';
+import helpers from './helpers';
 
-// NOTE
-// the relationship between deal & case is currently unknown,
-// and therefore how this will be managed/stored/referenced.
-// This approach is purely for initial development.
+const {
+  getTask,
+  mapAssignToSelectOptions,
+} = helpers;
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -16,10 +17,95 @@ const getCaseDeal = async (req, res) => {
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'deal',
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
   });
+};
+
+const getCaseTasks = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/tasks/tasks.njk', {
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'tasks',
+    dealId,
+    user: req.session.user,
+  });
+};
+
+const getCaseTask = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const { taskId } = req.params;
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const { user } = req.session;
+
+  let allTasksWithoutGroups = [];
+
+  deal.tfm.tasks.forEach((group) => {
+    const { groupTasks } = group;
+    allTasksWithoutGroups = [
+      ...allTasksWithoutGroups,
+      ...groupTasks,
+    ];
+  });
+
+  const task = getTask(taskId, allTasksWithoutGroups);
+
+  const allTeamMembers = await api.getTeamMembers(task.team.id);
+
+  return res.render('case/tasks/task.njk', {
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'tasks',
+    dealId,
+    user,
+    task,
+    assignToSelectOptions: mapAssignToSelectOptions(task, user, allTeamMembers),
+  });
+};
+
+const putCaseTask = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
+  const { taskId } = req.params;
+
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const {
+    assignedTo: assignedToValue, // will be user._id or `Unassigned`
+    status,
+  } = req.body;
+
+  const update = {
+    id: taskId,
+    status,
+    assignedTo: {
+      userId: assignedToValue,
+    },
+  };
+
+  await api.updateTask(dealId, update);
+
+  return res.redirect(`/case/${dealId}/tasks`);
 };
 
 const getCaseFacility = async (req, res) => {
@@ -37,7 +123,8 @@ const getCaseFacility = async (req, res) => {
     deal: deal.dealSnapshot,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     facility: facility.facilitySnapshot,
-    active_sheet: 'facility',
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'facility',
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
@@ -55,7 +142,8 @@ const getCaseParties = async (req, res) => {
   return res.render('case/parties/parties.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'parties',
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'parties',
     dealId,
     user: req.session.user,
   });
@@ -71,6 +159,8 @@ const getPartyDetails = (partyType) => (
     }
 
     return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
       dealId,
@@ -93,6 +183,8 @@ const getBondIssuerPartyDetails = async (req, res) => {
   }
 
   return res.render('case/parties/edit/bonds-issuer-edit.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'parties',
     deal: deal.dealSnapshot,
     user: req.session.user,
   });
@@ -108,6 +200,8 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
   }
 
   return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'parties',
     deal: deal.dealSnapshot,
     user: req.session.user,
   });
@@ -167,6 +261,9 @@ const postTfmFacility = async (req, res) => {
 
 export default {
   getCaseDeal,
+  getCaseTasks,
+  getCaseTask,
+  putCaseTask,
   getCaseFacility,
   getCaseParties,
   getExporterPartyDetails,
