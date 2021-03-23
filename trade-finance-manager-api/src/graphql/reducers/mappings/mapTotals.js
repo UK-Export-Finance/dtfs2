@@ -11,7 +11,6 @@ const mapTotals = (tfmFacilities) => {
   const gbpFacilities = facilities.filter((f) => f.currency.id === 'GBP');
 
   if (facilities.length === gbpFacilities.length) {
-
     const facilitiesValue = gbpFacilities.map(({ facilityValue }) => Number(facilityValue));
 
     const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
