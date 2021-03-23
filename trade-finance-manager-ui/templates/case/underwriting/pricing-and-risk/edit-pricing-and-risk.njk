@@ -1,0 +1,69 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+  
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-three-quarters">
+
+      <form method="POST" autocomplete="off">
+
+      {% set legendText = 'Add a credit rating for ' + deal.submissionDetails.supplierName %}
+
+        {{govukRadios({
+            fieldset: {
+              legend: {
+                text: legendText,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            name: "status",
+            items: [
+              {
+                value: "Good (BB-)",
+                text: "Good (BB-)",
+                checked: creditRating === 'Good (BB-)',
+                attributes: {
+                  'data-cy': 'credit-rating-good'
+                }
+              },
+              {
+                value: "Acceptable (B+)",
+                text: "Acceptable (B+)",
+                checked: creditRating === 'Acceptable (B+)',
+                attributes: {
+                  'data-cy': 'credit-rating-acceptable'
+                }
+              },
+              {
+                value: "Other",
+                text: "Other",
+                checked: creditRating === 'Other',
+                attributes: {
+                  'data-cy': 'credit-rating-other'
+                }
+              }
+            ]
+          })
+        }}
+
+        {{ govukButton({
+          text: "Save",
+          attributes: {
+            'data-cy': 'submit-button'
+          }
+        }) }}
+
+        <a class="govuk-body govuk-link govuk-!-margin-left-6 cancel-link" href="/case/{{ dealId }}/underwriting/pricing-and-risk" data-cy="close-link">Cancel</a>
+
+      </form>
+
+    </div>
+
+  </div>
+
+{% endblock %}

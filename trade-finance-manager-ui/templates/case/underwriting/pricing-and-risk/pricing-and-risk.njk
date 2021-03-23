@@ -1,0 +1,34 @@
+{% extends "case/case.njk" %}
+{% import './_macros/side-navigation.njk' as sideNavigation %}
+
+{% block sub_content %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-6" data-cy="underwriting-heading">Underwriting</h2>
+    </div>
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-one-quarter">
+          <div class="govuk-grid-column-two-thirds">
+            {{sideNavigation.render()}}
+          </div>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+
+        <h3 class="govuk-heading-l ukef-heading-grey" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
+
+        <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6" data-cy="exporter-heading">Exporter</h4>
+
+        <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ deal.submissionDetails.supplierName }}</a></p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

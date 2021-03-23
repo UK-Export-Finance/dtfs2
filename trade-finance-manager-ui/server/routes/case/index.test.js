@@ -15,7 +15,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(11);
+    expect(get).toHaveBeenCalledTimes(13);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -39,8 +39,12 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk', caseController.getUnderWritingPricingAndRisk);
+
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRisk);
+
     // POST routes
-    expect(post).toHaveBeenCalledTimes(7);
+    expect(post).toHaveBeenCalledTimes(8);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.putCaseTask);
 
@@ -55,5 +59,7 @@ describe('routes - case', () => {
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
+
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk', caseController.postUnderWritingPricingAndRisk);
   });
 });

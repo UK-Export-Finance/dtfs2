@@ -1,5 +1,6 @@
 const pageRenderer = require('../../../component-tests/pageRenderer');
 const page = '../templates/case/tasks/task.njk';
+
 const render = pageRenderer(page);
 
 describe(page, () => {
