@@ -1,0 +1,22 @@
+{% from "moj/components/side-navigation/macro.njk" import mojSideNavigation %}
+
+{% macro render(params) %}
+  <div data-cy="side-navigation">
+
+    {{ mojSideNavigation({
+      label: 'Side navigation',
+      items: [{
+        text: 'Bank security',
+        href: '#',
+        active: true
+      }, {
+        text: 'Pricing and risk',
+        href: '#'
+      }, {
+        text: 'Underwriter manager’s decision',
+        href: '#'
+      }]
+    }) }}
+
+  </div>
+{% endmacro %}

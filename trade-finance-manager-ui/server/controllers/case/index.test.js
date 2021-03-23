@@ -630,6 +630,103 @@ describe('controllers - case', () => {
       });
     });
   });
+  // getBondBeneficiaryPartyDetails
+  // underwriting/pricing-and-risk
+
+  describe('GET underwriting - pricing and risk', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+          submissionDetails: {
+            supplierName: 'test supplier',
+          },
+        },
+        tfm: {},
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should render pricing and risk template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+        };
+
+        await caseController.getUnderWritingPricingAndRisk(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
+          {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'underwriting',
+            deal: mockDeal.dealSnapshot,
+            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            user: session.user,
+          });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getUnderWritingPricingAndRisk(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('POST underwriting - pricing and risk', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+          submissionDetails: {
+            supplierName: 'test supplier',
+          },
+        },
+        tfm: {},
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should render pricing and risk template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+        };
+
+        await caseController.postUnderWritingPricingAndRisk(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+          {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'underwriting',
+            deal: mockDeal.dealSnapshot,
+            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            user: session.user,
+          });
+      });
+    });
+  });
 
   describe('POST party edit', () => {
     describe('when deal exists', () => {

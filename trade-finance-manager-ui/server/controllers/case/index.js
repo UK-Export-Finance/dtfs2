@@ -207,6 +207,41 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
   });
 };
 
+const getUnderWritingPricingAndRisk = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'underwriting',
+    deal: deal.dealSnapshot,
+    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    user: req.session.user,
+  });
+};
+
+const postUnderWritingPricingAndRisk = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'underwriting',
+    deal: deal.dealSnapshot,
+    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    user: req.session.user,
+  });
+};
+
+
 const postPartyDetails = (partyType) => (
   async (req, res) => {
     const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -272,6 +307,8 @@ export default {
   getIndemnifierPartyDetails,
   getBondIssuerPartyDetails,
   getBondBeneficiaryPartyDetails,
+  getUnderWritingPricingAndRisk,
+  postUnderWritingPricingAndRisk,
   postExporterPartyDetails,
   postBuyerPartyDetails,
   postAgentPartyDetails,
