@@ -52,19 +52,6 @@ describe('GET Select Exporters Correspondence Address', () => {
     });
   });
 
-  it('resets session addresses to Null', async () => {
-    const mockRequest = new MockRequest();
-    const mockResponse = new MockResponse();
-    const mockApplicationResponse = new MockApplicationResponse();
-
-    mockRequest.session.postcode = 'W1 7PD';
-    mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    await selectExportersCorrespondenceAddress(mockRequest, mockResponse);
-
-    expect(mockRequest.session.addresses).toEqual(null);
-  });
-
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     const mockRequest = new MockRequest();

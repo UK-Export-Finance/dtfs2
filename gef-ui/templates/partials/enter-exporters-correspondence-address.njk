@@ -51,6 +51,9 @@
             attributes: {
               'data-cy': 'address-line-1-error'
             }
+          },
+          attributes: {
+            'data-cy': 'address-line-1'
           }
         }) }}
 
@@ -60,7 +63,10 @@
           },
           id: "addressLine2",
           name: "addressLine2",
-          value: addressForm.addressLine2
+          value: addressForm.addressLine2,
+          attributes: {
+            'data-cy': 'address-line-2'
+          }
         }) }}
 
         {{ govukInput({
@@ -69,7 +75,10 @@
           },
           id: "addressLine3",
           name: "addressLine3",
-          value: addressForm.addressLine3
+          value: addressForm.addressLine3,
+          attributes: {
+            'data-cy': 'address-line-3'
+          }
         }) }}
 
         {{ govukInput({
@@ -78,7 +87,10 @@
           },
           id: "locality",
           name: "locality",
-          value: addressForm.locality
+          value: addressForm.locality,
+          attributes: {
+            'data-cy': 'locality'
+          }
         }) }}
 
         {{ govukInput({
@@ -91,8 +103,11 @@
            errorMessage: errors and errors.fieldErrors.postalCode and {
             text: errors.fieldErrors.postalCode.text,
             attributes: {
-              'data-cy': 'postal-code-error'
+              'data-cy': 'postcode-error'
             }
+          },
+          attributes: {
+            'data-cy': 'postcode'
           }
         }) }}
 
