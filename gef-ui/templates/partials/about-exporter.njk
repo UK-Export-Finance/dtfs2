@@ -37,16 +37,11 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-one-half">
-      <p class="govuk-body" data-cy="industry-sector-title"><strong>Industry sector</strong></p>
-      {% if industrySector %}
-        <p class="govuk-body govuk-!-margin-bottom-7" data-cy="company-name">{{ industrySector }}</p>
-      {% else %}
-        <p class="govuk-body govuk-!-margin-bottom-7">—</p>
-      {% endif %}
-    
-      <p class="govuk-body" data-cy="industry-sector-title"><strong>Industry class</strong></p>
-      {% if industryClass %}
-        <p class="govuk-body govuk-!-margin-bottom-7" data-cy="company-name">{{ industryClass }}</p>
+      <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
+      {% if industries %}
+        {% for industry in industries %}
+          <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ industry.name }} - {{ industry.class.name }}</p>
+        {% endfor %}
       {% else %}
         <p class="govuk-body govuk-!-margin-bottom-7">—</p>
       {% endif %}
@@ -157,10 +152,10 @@
           }) }}
 
           {{ govukButton({
-            text: "Return to application",
+            text: "Save and return",
             classes: "govuk-button--secondary",
             attributes: {
-              formaction: "about-exporter?returnToApplication=true",
+              formaction: "about-exporter?saveAndReturn=true",
               'data-cy': 'return-to-application'
             }
           }) }}

@@ -35,11 +35,11 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
 
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   const { params, body, query } = req;
-  const { returnToApplication } = query;
+  const { saveAndReturn } = query;
   const { applicationId } = params;
   const addressErrors = [];
 
-  if (returnToApplication !== 'true') {
+  if (saveAndReturn !== 'true') {
     if (!body.addressLine1) {
       addressErrors.push({
         errRef: 'addressLine1',
@@ -67,7 +67,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     await api.updateExporter(exporterId, { correspondenceAddress: body });
     req.session.address = null;
-    if (returnToApplication === 'true') {
+    if (saveAndReturn === 'true') {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
     return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
