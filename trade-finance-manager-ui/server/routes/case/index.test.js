@@ -15,9 +15,13 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(9);
+    expect(get).toHaveBeenCalledTimes(11);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
+
+    expect(get).toHaveBeenCalledWith('/:_id/tasks', caseController.getCaseTasks);
+
+    expect(get).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.getCaseTask);
 
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId', caseController.getCaseFacility);
 
@@ -36,7 +40,9 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(6);
+    expect(post).toHaveBeenCalledTimes(7);
+
+    expect(post).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.putCaseTask);
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', caseController.postExporterPartyDetails);
 

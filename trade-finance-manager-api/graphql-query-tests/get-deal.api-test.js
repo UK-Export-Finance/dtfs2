@@ -33,6 +33,22 @@ const GET_DEAL = gql`
             commissionRate
           }
         }
+        tasks {
+          groupTitle
+          groupTasks {
+            id,
+            title,
+            status,
+            assignedTo {
+              userId
+              userFullName
+            }
+            team {
+              id,
+              name
+            }
+          }
+        }
       }
       dealSnapshot {
         _id,

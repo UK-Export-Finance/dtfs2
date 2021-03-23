@@ -25,7 +25,8 @@ describe.skip('controllers - deals', () => {
         await caseController.getCaseDeal(req, res);
         expect(res.render).toHaveBeenCalledWith('deals.njk', {
           deals,
-          active_sheet: 'deal',
+          activePrimaryNavigation: 'all deals',
+          activeSubNavigation: 'deal',
         });
       });
     });

@@ -148,10 +148,10 @@ type FacilitySnapshot {
   bondBeneficiary: String
   ukefExposure: String
   firstDrawdownAmountInExportCurrency: String
-  dates: FacilityDates,
   feeType: String,
   feeFrequency: String,
-  dayCountBasis: Int
+  dayCountBasis: String,
+  dates: FacilityDates,
 }
 
 type Facility {
@@ -183,9 +183,33 @@ type TFMParties {
   agent: TFMAgent
 }
 
+type TFMTeam {
+  id: String
+  name: String
+}
+
+type TFMTaskAssignedTo {
+  userId: String
+  userFullName: String
+}
+
+type TFMTask {
+  id: String
+  title: String
+  status: String
+  team: TFMTeam
+  assignedTo: TFMTaskAssignedTo
+}
+
+type TFMTaskGroup {
+  groupTitle: String
+  groupTasks: [TFMTask]
+}
+
 type TFMDealData {
   parties: TFMParties
   product: String
+  tasks: [TFMTaskGroup]
 }
 
 type TFMFacilityData {
@@ -235,7 +259,6 @@ type DealsQuery {
   deals: [Deal]
 }
 
-
 input TFMPartyInput {
   partyUrn: String
   partyUrnRequired: Boolean
@@ -259,15 +282,33 @@ input TFMFacilityInput {
   bondBeneficiaryPartyUrn: String
 }
 
+input TFMTaskAssignedToInput {
+  userId: String
+}
+
+input TFMTaskInput {
+  id: String
+  assignedTo: TFMTaskAssignedToInput
+  status: String
+}
+
+type TeamMember {
+  _id: String
+  firstName: String
+  lastName: String
+}
+
 type Query {
   deal(_id: ID!): Deal
   deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
+  teamMembers(teamId: String!): [TeamMember]
 }
 
 type Mutation {
   updateParties(_id: ID!, partyUpdate: TFMPartiesInput): TFMDealData
   updateFacility(_id: ID!, facilityUpdate: TFMFacilityInput): TFMFacilityData
+  updateTask(dealId: ID!, taskUpdate: TFMTaskInput): TFMTask
 }
 `;
 

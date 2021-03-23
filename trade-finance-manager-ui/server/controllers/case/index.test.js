@@ -1,12 +1,23 @@
+/* eslint-disable no-underscore-dangle */
+
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
+import helpers from './helpers';
+
+const {
+  getTask,
+  mapAssignToSelectOptions,
+} = helpers;
 
 const res = mockRes();
 
 const session = {
   user: {
+    _id: '12345678',
     username: 'testUser',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
   },
 };
 
@@ -18,6 +29,10 @@ describe('controllers - case', () => {
         dealSnapshot: {
           _id: '1000023',
         },
+        tfm: {
+          parties: [],
+          tasks: [],
+        },
         mock: true,
       };
 
@@ -28,7 +43,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -36,8 +51,10 @@ describe('controllers - case', () => {
         await caseController.getCaseDeal(req, res);
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
           deal: mockDeal.dealSnapshot,
-          active_sheet: 'deal',
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'deal',
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -62,7 +79,250 @@ describe('controllers - case', () => {
     });
   });
 
-  describe.skip('GET case facility', () => {
+  describe('GET case tasks', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [],
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should render tasks template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+        };
+
+        await caseController.getCaseTasks(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'tasks',
+          dealId: req.params._id,
+          user: session.user,
+        });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseTasks(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('GET case task', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [
+            {
+              groupTitle: 'Testing',
+              groupTasks: [
+                {
+                  id: '123',
+                  assignedTo: {
+                    userId: session.user._id,
+                  },
+                  team: {
+                    id: 'TEAM_1',
+                  },
+                },
+                {
+                  id: '456',
+                  assignedTo: {
+                    userId: session.user._id,
+                  },
+                  team: {
+                    id: 'TEAM_1',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        mock: true,
+      };
+
+      const mockTeamMembers = [
+        {
+          _id: '1',
+          firstName: 'a',
+          lastName: 'b',
+          teams: ['TEAM_1'],
+        },
+        {
+          _id: '2',
+          firstName: 'a',
+          lastName: 'b',
+          teams: ['TEAM_1'],
+        },
+        {
+          _id: session.user._id,
+          firstName: 'a',
+          lastName: 'b',
+          teams: ['TEAM_1'],
+        },
+      ];
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+        api.getTeamMembers = () => Promise.resolve(mockTeamMembers);
+      });
+
+      it('should render tasks template with data and task from deal', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            taskId: '456',
+          },
+          session,
+        };
+
+        let allTasksWithoutGroups = [];
+
+        mockDeal.tfm.tasks.forEach((group) => {
+          const { groupTasks } = group;
+          allTasksWithoutGroups = [
+            ...allTasksWithoutGroups,
+            ...groupTasks,
+          ];
+        });
+
+        const expectedTask = getTask(req.params.taskId, allTasksWithoutGroups);
+
+        await caseController.getCaseTask(req, res);
+
+        expect(res.render).toHaveBeenCalledWith('case/tasks/task.njk', {
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'tasks',
+          dealId: req.params._id,
+          user: session.user,
+          task: expectedTask,
+          assignToSelectOptions: mapAssignToSelectOptions(
+            expectedTask,
+            session.user,
+            mockTeamMembers,
+          ),
+        });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseTask(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('POST case task', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [
+            { id: '123' },
+            { id: '456' },
+          ],
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+        api.updateTask = () => Promise.resolve({});
+      });
+
+      it('should redirect to /tasks', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            taskId: '456',
+          },
+          session,
+          body: {
+            assignedTo: session.user._id,
+            status: 'In progress',
+          },
+        };
+
+        await caseController.putCaseTask(req, res);
+
+        // eslint-disable-next-line no-underscore-dangle
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+            taskId: '456',
+          },
+          session,
+        };
+
+        await caseController.putCaseTask(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+
+  describe('GET case facility', () => {
     describe('when facility exists', () => {
       const mockFacility = {
         _id: '1000023',
@@ -93,7 +353,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            facilityId: mockFacility._id, // eslint-disable-line no-underscore-dangle
+            facilityId: mockFacility._id,
           },
           session,
         };
@@ -101,10 +361,11 @@ describe('controllers - case', () => {
         await caseController.getCaseFacility(req, res);
         expect(res.render).toHaveBeenCalledWith('case/facility/facility.njk', {
           deal: mockDeal.dealSnapshot,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           facility: mockFacility.facilitySnapshot,
           facilityTfm: mockFacility.tfm,
-          active_sheet: 'facility',
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
           user: session.user,
         });
@@ -148,7 +409,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -156,8 +417,9 @@ describe('controllers - case', () => {
         await caseController.getCaseParties(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/parties.njk', {
           deal: mockDeal.dealSnapshot,
-          active_sheet: 'parties',
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -209,16 +471,18 @@ describe('controllers - case', () => {
       it('should render edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
 
         await caseController.getExporterPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          dealId: req.params._id,
           user: session.user,
         });
       });
@@ -270,7 +534,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -278,6 +542,8 @@ describe('controllers - case', () => {
         await caseController.getBondIssuerPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-issuer-edit.njk',
           {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
             user: session.user,
           });
@@ -330,7 +596,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           session,
         };
@@ -338,6 +604,8 @@ describe('controllers - case', () => {
         await caseController.getBondBeneficiaryPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-beneficiary-edit.njk',
           {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
             user: session.user,
           });
@@ -377,7 +645,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           body: {
             exporter: {
@@ -426,7 +694,7 @@ describe('controllers - case', () => {
       it('should render bond edit template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            _id: mockDeal._id,
           },
           body: {
             facilityId: [1, 2],
@@ -461,3 +729,5 @@ describe('controllers - case', () => {
     });
   });
 });
+
+/* eslint-enable no-underscore-dangle */
