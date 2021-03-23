@@ -18,7 +18,7 @@
   {% endif %}
 
   {{ govukBackLink({
-    text: "Back",
+    text: "Back to previous page",
     href: '/gef/application-details/' + applicationId + '/select-exporters-correspondence-address',
     attributes: {
       'data-cy': 'back-button'
@@ -119,10 +119,14 @@
             }
           }) }}
 
-          <a
-            class="govuk-link"
-            href="/gef/application-details/{{applicationId}}"
-            data-cy="cancel-button">Save and return to application</a>
+          {{ govukButton({
+            text: "Return to application",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "enter-exporters-correspondence-address?returnToApplication=true",
+              'data-cy': 'return-to-application'
+            }
+          }) }}
         </div>
       </form>
     </div>

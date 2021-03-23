@@ -3,6 +3,7 @@ import * as api from '../../services/api';
 
 const MockRequest = () => {
   const req = {};
+  req.query = {};
   req.params = {};
   req.params.applicationId = '123';
   req.session = {};

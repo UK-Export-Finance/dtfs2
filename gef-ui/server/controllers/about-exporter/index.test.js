@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 describe('GET About Exporter', () => {
-  it('renders the `Application Details` template', async () => {
+  it('renders the `About Exporter` template', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockAboutExporterResponse = new MockAboutExporterResponse();
