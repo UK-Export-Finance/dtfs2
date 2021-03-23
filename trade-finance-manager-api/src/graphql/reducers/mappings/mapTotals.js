@@ -11,15 +11,22 @@ const mapTotals = (tfmFacilities) => {
   const gbpFacilities = facilities.filter((f) => f.currency.id === 'GBP');
 
   if (facilities.length === gbpFacilities.length) {
+
     const facilitiesValue = gbpFacilities.map(({ facilityValue }) => Number(facilityValue));
 
     const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
 
     totals.facilitiesValueInGBP = `GBP ${formattedFacilitiesValue}`;
 
-    const facilitiesUkefExposure = facilities.map(({ ukefExposure }) => Number(stripCommas(ukefExposure)));
+    const facilitiesUkefExposure = facilities.map((facility) => {
+      if (facility.ukefExposure) {
+        return Number(stripCommas(facility.ukefExposure));
+      }
+      return null;
+    });
 
     const formattedUkefExposure = formattedNumber(facilitiesUkefExposure.reduce((a, b) => a + b));
+
     totals.facilitiesUkefExposure = `GBP ${formattedUkefExposure}`;
   }
 
