@@ -20,10 +20,12 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTasks);
 
-  await api.updatePortalDealStatus(
-    dealId,
-    CONSTANTS.DEALS.DEAL_STATUS.SUBMISSION_ACKNOWLEDGED,
-  );
+  if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    await api.updatePortalDealStatus(
+      dealId,
+      CONSTANTS.DEALS.DEAL_STATUS.SUBMISSION_ACKNOWLEDGED,
+    );
+  }
 
   return api.updateDeal(dealId, updatedDealWithUpdatedFacilities);
 };
