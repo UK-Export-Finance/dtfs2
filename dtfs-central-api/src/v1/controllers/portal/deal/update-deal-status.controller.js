@@ -12,12 +12,15 @@ const withoutId = (obj) => {
 const updateDeal = async (dealId, status, existingDeal) => {
   const collection = await db.getCollection('deals');
 
+  console.log(`Updating Portal deal status to ${status}`);
+  const previousStatus = existingDeal.details.status;
+
   const modifiedDeal = {
     ...existingDeal,
     details: {
       ...existingDeal.details,
       status,
-      previousStatus: existingDeal.details.status,
+      previousStatus,
       dateOfLastAction: now(),
     },
   };
@@ -27,6 +30,8 @@ const updateDeal = async (dealId, status, existingDeal) => {
     $.flatten(withoutId(modifiedDeal)),
     { returnOriginal: false },
   );
+
+  console.log(`Updated Portal deal status from ${previousStatus} to ${status}`);
 
   return findAndUpdateResponse.value;
 };
