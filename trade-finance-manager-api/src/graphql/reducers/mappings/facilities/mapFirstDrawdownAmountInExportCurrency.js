@@ -7,7 +7,6 @@ const mapFirstDrawdownAmountInExportCurrency = (facility) => {
 
   if ((facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN)
     && facility.disbursementAmount) {
-
     const strippedDisbursementAmount = stripCommas(facility.disbursementAmount);
 
     const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 4, 4);
