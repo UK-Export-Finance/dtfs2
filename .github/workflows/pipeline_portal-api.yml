@@ -74,6 +74,9 @@ jobs:
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
 
+      COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+      
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
