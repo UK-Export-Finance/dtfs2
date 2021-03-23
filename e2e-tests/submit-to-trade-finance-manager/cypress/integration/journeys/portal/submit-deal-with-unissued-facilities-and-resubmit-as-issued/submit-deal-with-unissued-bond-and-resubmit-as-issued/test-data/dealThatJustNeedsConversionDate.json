@@ -114,7 +114,7 @@
         "ukefGuaranteeInMonths": "24",
         "uniqueIdentificationNumber": "1234",
         "bondBeneficiary": "test",
-        "facilityValue": "123",
+        "facilityValue": "100000.00",
         "currencySameAsSupplyContractCurrency": "true",
         "currency": {
           "id": "GBP",
@@ -124,8 +124,8 @@
         "conversionRateDate-day": "03",
         "conversionRateDate-month": "03",
         "conversionRateDate-year": "2021",
-        "riskMarginFee": "1",
-        "coveredPercentage": "2",
+        "riskMarginFee": "12",
+        "coveredPercentage": "24",
         "feeType": "test",
         "feeFrequency": "test",
         "dayCountBasis": "test"
