@@ -8,8 +8,6 @@ const selectExportersCorrespondenceAddress = async (req, res) => {
   const { applicationId } = params;
   const { postcode, addresses } = session;
 
-  req.session.addresses = null;
-
   try {
     await api.getApplication(applicationId); // We fetch application to make sure it exists
     return res.render('partials/select-exporters-correspondence-address.njk', {
