@@ -24,8 +24,6 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       };
     }
 
-    req.session.address = null;
-
     return res.render('partials/enter-exporters-correspondence-address.njk', {
       addressForm: mappedAddress || correspondenceAddress,
       applicationId,
@@ -65,6 +63,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   try {
     const { exporterId } = await api.getApplication(applicationId);
     await api.updateExporter(exporterId, { correspondenceAddress: body });
+    req.session.address = null;
     return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
