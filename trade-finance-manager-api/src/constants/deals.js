@@ -10,7 +10,12 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
+const DEAL_STATUS = {
+  SUBMISSION_ACKNOWLEDGED: 'Acknowledged by UKEF',
+};
+
 module.exports = {
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
+  DEAL_STATUS,
 };

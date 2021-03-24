@@ -1,7 +1,5 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
-import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
-import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
@@ -37,7 +35,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
+  it('Portal deal is submitted to UKEF, TFM acknowledges the submission and updates the portal deal status from `Submitted` to `Acknowledged by UKEF`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -55,6 +53,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     cy.login(CHECKER_LOGIN);
     portalPages.contract.visit(deal);
+
+    portalPages.contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Ready for Checker\'s approval');
+    });
+
     portalPages.contract.proceedToSubmit().click();
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
@@ -65,23 +68,17 @@ context('Portal to TFM deal submission', () => {
 
 
     //---------------------------------------------------------------
-    // user login to TFM
+    // portal deal status should be updated
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.wait(1000); // wait for TFM to do it's thing
+    portalPages.contract.visit(deal);
 
-    cy.forceVisit(tfmRootUrl);
+    portalPages.contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
+    });
 
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
-
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
-    cy.forceVisit(tfmCaseDealPage);
-    // cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
-
-    tfmPartials.caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/tasks`);
-
-    tfmPages.tasksPage.tasksTableRows().should('have.length', 2);
+    portalPages.contract.previousStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Submitted');
+    });
   });
 });

@@ -17,9 +17,15 @@ const mapTotals = (tfmFacilities) => {
 
     totals.facilitiesValueInGBP = `GBP ${formattedFacilitiesValue}`;
 
-    const facilitiesUkefExposure = facilities.map(({ ukefExposure }) => Number(stripCommas(ukefExposure)));
+    const facilitiesUkefExposure = facilities.map((facility) => {
+      if (facility.ukefExposure) {
+        return Number(stripCommas(facility.ukefExposure));
+      }
+      return null;
+    });
 
     const formattedUkefExposure = formattedNumber(facilitiesUkefExposure.reduce((a, b) => a + b));
+
     totals.facilitiesUkefExposure = `GBP ${formattedUkefExposure}`;
   }
 
