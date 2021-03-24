@@ -14,7 +14,14 @@
 
       <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-column-two-thirds">
-            {{sideNavigation.render()}}
+
+            {% set componentData = {
+              caseId: dealId,
+              activeSideNavigation: activeSideNavigation
+            } %}
+
+            {{sideNavigation.render(componentData)}}
+
           </div>
       </div>
 
@@ -23,7 +30,6 @@
         <h3 class="govuk-heading-l ukef-heading-grey" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
 
         <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6" data-cy="exporter-heading">Exporter</h4>
-
 
         {% if tfm.exporterCreditRating %}          
 
