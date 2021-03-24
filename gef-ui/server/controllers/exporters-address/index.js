@@ -28,13 +28,14 @@ const validateExportersAddress = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const { registeredAddress } = details;
-    let correspondenceError;
+    const correspondenceError = [];
+    let addresses;
 
-    if (_isEmpty(correspondence)) {
-      correspondenceError = {
+    if (!correspondence) {
+      correspondenceError.push({
         errRef: 'correspondence',
         errMsg: 'Select whether there’s a separate correspondence address for the exporter',
-      };
+      });
     }
 
     // User has selected No so take them to about exporters page
@@ -43,29 +44,39 @@ const validateExportersAddress = async (req, res) => {
     }
 
     if (correspondence === 'true' && _isEmpty(postcode)) {
-      correspondenceError = {
+      correspondenceError.push({
         errRef: 'postcode',
         errMsg: 'Enter a postcode',
-      };
-    }
-
-    return res.render('partials/exporters-address.njk', {
-      errors: validationErrorHandler(correspondenceError),
-      companyName: details.companyName,
-      registeredAddress,
-      applicationId,
-      correspondence,
-    });
-
-    // return res.redirect('exporters-address');
-  } catch (err) {
-    // Validation errors
-    if (err.status === 422) {
-      return res.render('partials/companies-house.njk', {
-        errors: validationErrorHandler(err.data),
       });
     }
 
+    // Only fetch addresses if there are no validation errors
+    if (correspondenceError.length === 0) {
+      addresses = await api.getAddressesByPostcode(postcode);
+    }
+
+    // Check for validation errors
+    if (addresses && addresses.status === 422) {
+      correspondenceError.push(addresses.data);
+    }
+
+    if (correspondenceError.length > 0) {
+      return res.render('partials/exporters-address.njk', {
+        errors: validationErrorHandler(correspondenceError),
+        companyName: details.companyName,
+        postcode: postcode ? postcode.toUpperCase() : '',
+        registeredAddress,
+        correspondence,
+      });
+    }
+
+    // Store addresses to session memory
+    // Stringifying for better compression
+    req.session.postcode = postcode.toUpperCase();
+    req.session.addresses = JSON.stringify(addresses);
+
+    return res.redirect('select-exporters-correspondence-address');
+  } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
 };

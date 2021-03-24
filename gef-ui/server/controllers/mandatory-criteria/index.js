@@ -31,6 +31,7 @@ const validateMandatoryCriteria = async (req, res) => {
         errRef: 'confirm',
         errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
       };
+
       return res.render('partials/mandatory-criteria.njk', {
         errors: validationErrorHandler(mandatoryError),
         criteria: {

@@ -99,7 +99,7 @@ describe('Validate Companies House', () => {
     mockRequest.body.regNumber = 'invalidregnumber';
     const mockedRejection = { status: 422, data: { errMsg: 'Message', errRef: 'Reference' } };
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getCompaniesHouseDetails = () => Promise.reject(mockedRejection);
+    api.getCompaniesHouseDetails = () => Promise.resolve(mockedRejection);
 
     await validateCompaniesHouse(mockRequest, mockResponse);
 

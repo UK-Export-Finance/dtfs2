@@ -47,6 +47,7 @@
             text: "Correspondence address",
             classes: "govuk-label--s"
           },
+          value: postcode,
           id: "postcode",
           name: "postcode",
           hint: {
@@ -62,25 +63,7 @@
             }
           }
         }) }}
-
-        {{ govukButton({
-          text: "Find address",
-          classes: "govuk-button--secondary"
-        }) }}
       </div>
-
-    
-      {% if correspondenceAddress %}
-        {{ govukInput({
-          id: "contact-by-email",
-          name: "contact-by-email",
-          type: "email",
-          classes: "govuk-!-width-one-third",
-          label: {
-            text: "Email address"
-          }
-        }) }}
-        {% endif %}
 
       <div class="govuk-button-group">
         {{ govukButton({
@@ -93,7 +76,7 @@
         <a
           class="govuk-link"
           href="/gef/application-details/{{applicationId}}"
-          data-cy="cancel-button">Save and return to application</a>
+          data-cy="cancel-button">Return to application</a>
       </div>
     </form>
   </div>

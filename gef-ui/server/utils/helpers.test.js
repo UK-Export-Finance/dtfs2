@@ -41,7 +41,7 @@ describe('apiErrorHandler', () => {
         data: [],
       },
     };
-    expect(() => apiErrorHandler(mockResponse)).toThrow(new Error(mockResponse.response));
+    expect(apiErrorHandler(mockResponse)).toEqual(mockResponse.response);
   });
 
   it('returns a standard error', () => {
