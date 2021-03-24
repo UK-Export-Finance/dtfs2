@@ -898,7 +898,7 @@ describe('controllers - case', () => {
           // eslint-disable-next-line no-underscore-dangle
           expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
         });
-      });  
+      });
     });
 
     describe('when deal does NOT exist', () => {
