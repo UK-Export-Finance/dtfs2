@@ -2,14 +2,15 @@ import * as api from '../../services/api';
 import {
   mapSummaryList, status, facilityType,
 } from '../../utils/helpers';
-import { exporterItems, facilityItems } from '../../utils/displayItems';
+import { exporterItems, facilityItems } from '../../utils/display-items';
 import constants from '../../../constants';
 
 const applicationDetails = async (req, res) => {
+  const { params, query } = req;
+  const { applicationId } = params;
+  const { manual } = query;
+
   try {
-    const { params, query } = req;
-    const { applicationId } = params;
-    const { manual } = query;
     const { exporterId } = await api.getApplication(applicationId);
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);

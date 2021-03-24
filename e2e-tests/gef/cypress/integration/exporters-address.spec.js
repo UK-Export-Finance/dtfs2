@@ -67,5 +67,12 @@ context('Exporters Address Page', () => {
       exportersAddress.postcodeError();
       exportersAddress.yesRadioButton().should('be.checked');
     });
+
+    it('redirects use to Select exporters correspondence address page if form filled in correctly', () => {
+      exportersAddress.yesRadioButton().click();
+      exportersAddress.correspondenceAddress().type('E1 6JE');
+      exportersAddress.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/select-exporters-correspondence-address`));
+    });
   });
 });

@@ -6,6 +6,9 @@ import automaticCoverRoutes from '../automatic-cover';
 import applicationDetailsRoutes from '../application-details';
 import companiesHouseRoutes from '../companies-house';
 import exportersAddressRoutes from '../exporters-address';
+import enterExportersCorrespondenceAddressRoutes from '../enter-exporters-correspondence-address';
+import selectExportersCorrespondenceAddressRoutes from '../select-exporters-correspondence-address';
+import aboutExporter from '../about-exporter';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -35,5 +38,8 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(applicationDetailsRoutes);
     expect(useSpy).toHaveBeenCalledWith(companiesHouseRoutes);
     expect(useSpy).toHaveBeenCalledWith(exportersAddressRoutes);
+    expect(useSpy).toHaveBeenCalledWith(enterExportersCorrespondenceAddressRoutes);
+    expect(useSpy).toHaveBeenCalledWith(selectExportersCorrespondenceAddressRoutes);
+    expect(useSpy).toHaveBeenCalledWith(aboutExporter);
   });
 });

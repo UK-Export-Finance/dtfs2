@@ -18,7 +18,7 @@ const apiErrorHandler = ({ code, response }) => {
   }
   // Is validation error
   if (response.status === 422) {
-    throw response;
+    return response;
   }
 
   throw httpError(response.status, response.statusText);
@@ -118,6 +118,19 @@ const mapSummaryList = (data, itemsToShow) => {
   });
 };
 
+const selectDropdownAddresses = (addresses) => {
+  if (!addresses) { return null; }
+
+  const ADDRESS = addresses.length <= 1 ? 'Address' : 'Addresses';
+  const placeholder = [{ text: `${addresses.length} ${ADDRESS} Found` }];
+  const mappedAddresses = addresses.map((address, index) => ({
+    value: index,
+    text: Object.values(address).filter((el) => el).join(', '), // filter removes any nulls
+  }));
+
+  return placeholder.concat(mappedAddresses);
+};
+
 const status = ({
   NOT_STARTED: {
     text: 'Not started',
@@ -147,6 +160,7 @@ export {
   apiErrorHandler,
   validationErrorHandler,
   mapSummaryList,
+  selectDropdownAddresses,
   status,
   facilityType,
 };

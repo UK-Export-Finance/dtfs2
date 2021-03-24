@@ -48,7 +48,10 @@ const validateAutomaticCover = async (req, res) => {
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
         selected: body,
-        terms,
+        terms: terms.map((term) => ({
+          ...term,
+          htmlText: decode(term.htmlText),
+        })),
         applicationId,
       });
     }

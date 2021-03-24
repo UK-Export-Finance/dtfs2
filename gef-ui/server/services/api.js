@@ -47,6 +47,15 @@ const getExporter = async (exporterId) => {
   }
 };
 
+const updateExporter = async (exporterId, payload) => {
+  try {
+    const { data } = await Axios.put(`/gef/exporter/${exporterId}`, payload);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getFacilities = async (applicationId) => {
   if (!applicationId) {
     return [];
@@ -78,6 +87,15 @@ const getCompaniesHouseDetails = async (companyRegNumber, exporterId) => {
   }
 };
 
+const getAddressesByPostcode = async (postcode) => {
+  try {
+    const { data } = await Axios.get(`/gef/address/${postcode}`);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 export {
   validateToken,
   getMandatoryCriteria,
@@ -85,6 +103,8 @@ export {
   getEligibilityCriteria,
   getApplication,
   getExporter,
+  updateExporter,
   getFacilities,
   getCompaniesHouseDetails,
+  getAddressesByPostcode,
 };

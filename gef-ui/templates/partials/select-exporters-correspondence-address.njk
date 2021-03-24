@@ -1,0 +1,111 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% block pageTitle %}Select exporter’s correspondence address{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: '/gef/application-details/' + applicationId + '/exporters-address',
+    attributes: {
+      'data-cy': 'back-button'
+    }
+  }) }}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Select exporter's correspondence address
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body" data-cy="postcode-title"><strong>Postcode</strong></p>
+      {% if postcode %}
+        <p class="govuk-body" data-cy="postcode">
+          {{ postcode }}
+          <a class="govuk-link govuk-!-margin-left-6"
+            href="/gef/application-details/{{applicationId}}/exporters-address"
+            data-cy="change">
+            Change
+          </a>
+        </p>
+      {% else %}
+        <p class="govuk-body">—</p>
+      {% endif %}
+
+      <form
+        method="post"
+        data-cy="form">
+        {{ govukSelect({
+          id: "selectedAddresses",
+          name: "selectedAddress",
+          label: {
+            text: "Select address"
+          },
+          items: addressesForSelection,
+          errorMessage: errors and errors.fieldErrors.selectedAddress and {
+            text: errors.fieldErrors.selectedAddress.text,
+            attributes: {
+              'data-cy': 'select-address-error'
+            }
+          },
+          attributes: {
+            'data-cy': 'select-address'
+          }
+        }) }}
+
+        <div class="govuk-!-margin-bottom-6">
+        <a class="govuk-link"
+          href="/gef/application-details/{{applicationId}}/enter-exporters-correspondence-address"
+          data-cy="cant-find-address">
+          I can't find the address in the list
+        </a>
+        </div>
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          <a
+            class="govuk-link"
+            href="/gef/application-details/{{applicationId}}"
+            data-cy="cancel-button">Return to application</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukDetails({
+        summaryText: "How do I change the registered company address?",
+        text: "You cannot change the registered company address in this service. This information is sent to us from Companies House. Check with the exporter if you have a query about their registered address.",
+        attributes: {
+          'data-cy': 'change-details'
+        }
+      }) }}
+    </div>
+  </div>
+{% endblock %}
