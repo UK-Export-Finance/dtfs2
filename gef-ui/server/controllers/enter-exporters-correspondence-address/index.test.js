@@ -147,7 +147,23 @@ describe('Validate Enter Exporters Correspondence Address', () => {
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.updateExporter = () => Promise.resolve(mockExporterResponse);
     await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
+    expect(mockRequest.session.address).toEqual(null);
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/about-exporter');
+  });
+
+  it('redirects user to `application details` page if response from api is successful and saveToReturn query is set to true', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+
+    mockRequest.body.addressLine1 = 'Line1';
+    mockRequest.body.postalCode = 'sa1 7fr';
+    mockRequest.query.saveAndReturn = 'true';
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.updateExporter = () => Promise.resolve(mockExporterResponse);
+    await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
