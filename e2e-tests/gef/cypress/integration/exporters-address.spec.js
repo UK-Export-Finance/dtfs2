@@ -30,7 +30,7 @@ context('Exporters Address Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      exportersAddress.backButton();
+      exportersAddress.backLink();
       exportersAddress.headingCaption();
       exportersAddress.mainHeading();
       exportersAddress.companyNameTitle();
@@ -41,7 +41,7 @@ context('Exporters Address Page', () => {
     });
 
     it('redirects user to companies house page when clicking on Back Link', () => {
-      exportersAddress.backButton().click();
+      exportersAddress.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/companies-house`));
     });
   });
