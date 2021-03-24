@@ -14,21 +14,20 @@ describe(page, () => {
     },
   };
 
-  // TODO: legend text
+  beforeEach(() => {
+    wrapper = render(params);
+  });
 
   describe('radio buttons', () => {
     it('should render `Good` radio button', () => {
-      const wrapper = render(params);
       wrapper.expectInput('[data-cy="credit-rating-good"]').toHaveValue('Good (BB-)');
     });
 
     it('should render `Acceptable (B+)` radio button', () => {
-      const wrapper = render(params);
       wrapper.expectInput('[data-cy="credit-rating-acceptable"]').toHaveValue('Acceptable (B+)');
     });
 
     it('should render `Other` radio button', () => {
-      const wrapper = render(params);
       wrapper.expectInput('[data-cy="credit-rating-other"]').toHaveValue('Other');
     });
   });

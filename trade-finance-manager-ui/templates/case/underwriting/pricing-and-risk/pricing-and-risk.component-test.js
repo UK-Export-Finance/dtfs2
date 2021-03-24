@@ -5,7 +5,7 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  const params = {
+  let params = {
     dealId: '1234',
     deal: {
       submissionDetails: {
@@ -33,5 +33,31 @@ describe(page, () => {
     const wrapper = render(params);
     wrapper.expectLink('[data-cy="add-credit-rating-link"]')
       .toLinkTo(`/case/${params.dealId}/underwriting/pricing-and-risk/edit`, `Add a credit rating for ${params.deal.submissionDetails.supplierName}`);
+  });
+
+  describe('with params.exporterCreditRating', () => {
+    it('should NOT render link to add credit rating', () => {
+      params = {
+        ...params,
+        tfm: {
+          exporterCreditRating: 'Good (BB-)',
+        },
+      };
+
+      const wrapper = render(params);
+      wrapper.expectElement('[data-cy="add-credit-rating-link"]').notToExist();
+    });
+
+    it('should render credit rating table', () => {
+      params = {
+        ...params,
+        tfm: {
+          exporterCreditRating: 'Good (BB-)',
+        },
+      };
+
+      const wrapper = render(params);
+      wrapper.expectElement('[data-cy="credit-rating-table"]').toExist();
+    });
   });
 });

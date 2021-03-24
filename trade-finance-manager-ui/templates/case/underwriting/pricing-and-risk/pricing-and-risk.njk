@@ -1,5 +1,6 @@
 {% extends "case/case.njk" %}
 {% import './_macros/side-navigation.njk' as sideNavigation %}
+{% import './_macros/credit-rating-table.njk' as creditRatingTable %}
 
 {% block sub_content %}
 
@@ -23,7 +24,21 @@
 
         <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6" data-cy="exporter-heading">Exporter</h4>
 
-        <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ deal.submissionDetails.supplierName }}</a></p>
+
+        {% if tfm.exporterCreditRating %}          
+
+          {% set componentData = {
+            caseId: dealId,
+            exporterCreditRating: tfm.exporterCreditRating
+          } %}
+
+          {{ creditRatingTable.render(componentData) }}
+
+        {% else %}
+
+          <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ deal.submissionDetails.supplierName }}</a></p>
+
+        {% endif %}
 
       </div>
 
