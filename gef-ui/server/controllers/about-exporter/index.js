@@ -15,6 +15,4 @@ const aboutExporter = async (req, res) => {
   }
 };
 
-export {
-  aboutExporter,
-};
+export default aboutExporter;
