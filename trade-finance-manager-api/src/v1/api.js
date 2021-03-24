@@ -21,6 +21,25 @@ const findOnePortalDeal = async (dealId) => {
   }
 };
 
+const updatePortalDealStatus = async (dealId, status) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        status,
+      },
+    });
+
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
@@ -261,6 +280,7 @@ const createACBS = async (deal) => {
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
+  updatePortalDealStatus,
   updateDeal,
   submitDeal,
   findOneFacility,

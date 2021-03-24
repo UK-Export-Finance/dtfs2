@@ -4,6 +4,7 @@ const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
 const getDealController = require('../controllers/portal/deal/get-deal.controller');
 const updateDealController = require('../controllers/portal/deal/update-deal.controller');
+const updateDealStatusController = require('../controllers/portal/deal/update-deal-status.controller');
 const deleteDealController = require('../controllers/portal/deal/delete-deal.controller');
 const addDealController = require('../controllers/portal/deal/add-deal-comment.controller');
 
@@ -35,6 +36,11 @@ portalRouter.route('/deals/:id')
   )
   .delete(
     deleteDealController.deleteDeal,
+  );
+
+portalRouter.route('/deals/:id/status')
+  .put(
+    updateDealStatusController.updateDealStatusPut,
   );
 
 portalRouter.route('/deals/:id/comment')

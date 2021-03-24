@@ -332,6 +332,37 @@ describe('/v1/portal/deals', () => {
     });
   });
 
+  describe('PUT /v1/portal/deals/:id/status', () => {
+    it('404s requests for unknown ids', async () => {
+      const { status } = await api.put({ dealUpdate: newDeal, user: mockUser }).to('/v1/portal/deals/123456789012/status');
+
+      expect(status).toEqual(404);
+    });
+
+    it('returns the updated deal with updated statuses', async () => {
+      const dealWithSubmittedStatus = {
+        ...newDeal,
+        details: {
+          ...newDeal.details,
+          status: 'Submitted',
+          previousStatus: 'Checker\'s approval',
+        },
+      };
+
+      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = 'Acknowledged by UKEF';
+
+      const { status, body } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+
+      expect(status).toEqual(200);
+
+      expect(body.details.status).toEqual('Acknowledged by UKEF');
+      expect(body.details.previousStatus).toEqual('Submitted');
+      expect(typeof body.details.dateOfLastAction).toEqual('string');
+    });
+  });
+
   describe('DELETE /v1/portal/deals/:id', () => {
     it('404s requests for unknown ids', async () => {
       const { status } = await api.remove({}).to('/v1/portal/deals/12345678910');
