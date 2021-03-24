@@ -41,11 +41,9 @@ context('Select Exporters Correspondence Address Page', () => {
       selectExportersCorAddress.postcode();
       selectExportersCorAddress.form();
       selectExportersCorAddress.selectAddress();
-      selectExportersCorAddress.change();
       selectExportersCorAddress.cantFindAddress();
       selectExportersCorAddress.continueButton();
-      selectExportersCorAddress.cancelButton();
-      selectExportersCorAddress.changeDetails();
+      selectExportersCorAddress.changeLink();
     });
 
     it('redirects user to exporters address page when clicking on `Back` Link', () => {
@@ -54,18 +52,13 @@ context('Select Exporters Correspondence Address Page', () => {
     });
 
     it('redirects user to exporters address page when clicking on `Change` link', () => {
-      selectExportersCorAddress.change().click();
+      selectExportersCorAddress.changeLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/exporters-address`));
     });
 
     it('redirects user to enter-exporters-correspondence-address page when clicking on `I cant find the address in the list` link', () => {
       selectExportersCorAddress.cantFindAddress().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
-    });
-
-    it('redirects user to application page when clicking on `Return to application` link', () => {
-      selectExportersCorAddress.cancelButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
     });
   });
 

@@ -4,7 +4,7 @@ import relative from './relativeURL';
 import enterExportersCorAddress from './pages/enter-exporters-corr-address';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationId;
+let applicationIds = [];
 let exporterId;
 let token;
 
@@ -17,8 +17,10 @@ context('Enter Exporters Correspondence Address Page', () => {
       })
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
-        applicationId = body.items[0]._id;
-        exporterId = body.items[0].exporterId;
+        body.items.forEach((item) => {
+          applicationIds.push({ id: item._id, exporterId: item.exporterId });
+        });
+        // exporterId = body.items[0].exporterId;
       });
     cy.login(CREDENTIALS.MAKER);
 
@@ -27,7 +29,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
+    cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
   });
 
   describe('Visiting page', () => {
@@ -47,7 +49,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       enterExportersCorAddress.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/select-exporters-correspondence-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/select-exporters-correspondence-address`));
     });
 
     it('pre-populates form with address when coming from select exporters correspondence address', () => {
@@ -57,11 +59,13 @@ context('Enter Exporters Correspondence Address Page', () => {
         })
         .then(() => cy.apiFetchAllApplications(token))
         .then(({ body }) => {
-          applicationId = body.items[0]._id;
-          exporterId = body.items[0].exporterId;
+          applicationIds = [];
+          body.items.forEach((item) => {
+            applicationIds.push({ id: item._id, exporterId: item.exporterId });
+          });
         })
         .then(() => {
-          cy.apiUpdateExporter(exporterId, token, {
+          cy.apiUpdateExporter(applicationIds[1].exporterId, token, {
             addressLine1: 'Line 1',
             addressLine2: 'Line 2',
             addressLine3: 'Line 3',
@@ -71,7 +75,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       cy.on('uncaught:exception', () => false);
 
 
-      cy.visit(relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
+      cy.visit(relative(`/gef/application-details/${applicationIds[1].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.addressLine1().should('have.value', 'Line 1');
       enterExportersCorAddress.addressLine2().should('have.value', 'Line 2');
       enterExportersCorAddress.addressLine3().should('have.value', 'Line 3');
@@ -80,25 +84,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows error message if no address has been selected from dropdown', () => {
-      cy.apiLogin(CREDENTIALS.MAKER)
-        .then((tok) => {
-          token = tok;
-        })
-        .then(() => cy.apiFetchAllApplications(token))
-        .then(({ body }) => {
-          applicationId = body.items[1]._id;
-          exporterId = body.items[0].exporterId;
-        })
-        .then(() => {
-          cy.apiUpdateExporter(exporterId, token, {
-            addressLine1: '',
-            addressLine2: '',
-            addressLine3: '',
-          });
-        });
-      cy.login(CREDENTIALS.MAKER);
-      cy.on('uncaught:exception', () => false);
-      cy.visit(relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
+      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.continueButton().click();
       enterExportersCorAddress.errorSummary();
       enterExportersCorAddress.addressLine1Error();
@@ -112,15 +98,15 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.locality().type('Locality');
       enterExportersCorAddress.postcode().type('Postcode');
       enterExportersCorAddress.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/about-exporter`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/about-exporter`));
     });
   });
 
   describe('Clicking on Save and return button', () => {
     it('bypasses validation and takes user back to application details page', () => {
-      cy.visit(relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
+      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
   });
 });
