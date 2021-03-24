@@ -78,6 +78,5 @@ const validateAboutExporter = async (req, res) => {
 };
 
 export {
-  aboutExporter,
   validateAboutExporter,
 };
