@@ -1,4 +1,3 @@
-import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
