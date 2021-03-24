@@ -17,8 +17,6 @@ env:
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.RESOURCE_GROUP }}
-  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
-  ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
 
 jobs:
   set-environment:
@@ -88,10 +86,11 @@ jobs:
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
 
-      COMPANIES_HOUSE_API_URL: ${{ env.COMPANIES_HOUSE_API_URL }}
+      COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-      ORDNANCE_SURVEY_API_URL: ${{ env.ORDNANCE_SURVEY_API_URL }}
+      ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
       ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+      
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
