@@ -705,25 +705,46 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.updateCreditRating = () => Promise.resolve({
+          updateCreditRating: {
+            exporterCreditRating: 'Good (BB-)',
+          },
+        });
       });
 
-      it('should render pricing and risk template with data', async () => {
+      it('should redirect to /pricing-and-risk', async () => {
         const req = {
           params: {
             _id: mockDeal._id,
           },
           session,
+          body: {
+            exporterCreditRating: 'Good (BB-)',
+          },
         };
 
         await caseController.postUnderWritingPricingAndRisk(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
-            user: session.user,
-          });
+
+        // eslint-disable-next-line no-underscore-dangle
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.postUnderWritingPricingAndRisk(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
   });

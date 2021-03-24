@@ -210,6 +210,7 @@ type TFMDealData {
   parties: TFMParties
   product: String
   tasks: [TFMTaskGroup]
+  exporterCreditRating: String
 }
 
 type TFMFacilityData {
@@ -292,6 +293,10 @@ input TFMTaskInput {
   status: String
 }
 
+input TFMCreditRatingInput {
+  exporterCreditRating: String
+}
+
 type TeamMember {
   _id: String
   firstName: String
@@ -309,6 +314,7 @@ type Mutation {
   updateParties(_id: ID!, partyUpdate: TFMPartiesInput): TFMDealData
   updateFacility(_id: ID!, facilityUpdate: TFMFacilityInput): TFMFacilityData
   updateTask(dealId: ID!, taskUpdate: TFMTaskInput): TFMTask
+  updateCreditRating(dealId: ID!, creditRatingUpdate: TFMCreditRatingInput): TFMDealData
 }
 `;
 

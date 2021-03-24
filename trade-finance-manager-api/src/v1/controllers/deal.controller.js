@@ -49,3 +49,17 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   return updatedDeal.tfm;
 };
 exports.updateTfmParty = updateTfmParty;
+
+const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
+  const creditRatingUpdate = {
+    tfm: {
+      exporterCreditRating,
+    },
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedDeal = await api.updateDeal(dealId, creditRatingUpdate);
+
+  return updatedDeal.tfm;
+};
+exports.updateTfmCreditRating = updateTfmCreditRating;

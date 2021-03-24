@@ -224,7 +224,7 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
   });
 };
 
-const postUnderWritingPricingAndRisk = async (req, res) => {
+const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
@@ -239,6 +239,21 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user: req.session.user,
   });
+};
+
+const postUnderWritingPricingAndRisk = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const update = req.body;
+
+  await api.updateCreditRating(dealId, update);
+
+  return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
 
 
@@ -308,6 +323,7 @@ export default {
   getBondIssuerPartyDetails,
   getBondBeneficiaryPartyDetails,
   getUnderWritingPricingAndRisk,
+  getUnderWritingPricingAndRiskEdit,
   postUnderWritingPricingAndRisk,
   postExporterPartyDetails,
   postBuyerPartyDetails,

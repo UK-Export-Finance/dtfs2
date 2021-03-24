@@ -34,8 +34,8 @@ router.get('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPa
 router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
 router.get('/:_id/underwriting/pricing-and-risk', caseController.getUnderWritingPricingAndRisk);
-router.get('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRisk);
-router.post('/:_id/underwriting/pricing-and-risk', caseController.postUnderWritingPricingAndRisk);
+router.get('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRiskEdit);
+router.post('/:_id/underwriting/pricing-and-risk/edit', caseController.postUnderWritingPricingAndRisk);
 
 
 export default router;

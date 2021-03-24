@@ -6,6 +6,7 @@ const queryTeamMembers = require('./query-team-members');
 const updateParties = require('./mutation-update-parties');
 const updateFacility = require('./mutation-update-facility');
 const updateTask = require('./mutation-update-task');
+const updateCreditRating = require('./mutation-update-credit-rating');
 
 
 const resolvers = {
@@ -19,6 +20,7 @@ const resolvers = {
     updateParties: (root, args) => updateParties(args),
     updateFacility: (root, args) => updateFacility(args),
     updateTask: (root, args) => updateTask(args),
+    updateCreditRating: (root, args) => updateCreditRating(args),
   },
 };
 
