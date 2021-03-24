@@ -12,7 +12,7 @@ const aboutExporter = async (req, res) => {
     return res.render('partials/about-exporter.njk', {
       industries: details.industries,
       smeType: details.smeType,
-      probabilityOfDefault: typeof details.probabilityOfDefault === 'number' ? details.probabilityOfDefault.toString() : null,
+      probabilityOfDefault: details.probabilityOfDefault,
       isFinanceIncreasing: details.isFinanceIncreasing,
       applicationId,
     });
@@ -28,7 +28,7 @@ const validateAboutExporter = async (req, res) => {
   const { saveAndReturn } = query;
 
   // Don't validate form if user clicks on 'return to application` button
-  if (saveAndReturn !== 'true') {
+  if (!saveAndReturn) {
     if (!body.smeType) {
       aboutExporterErrors.push({
         errRef: 'smeType',
@@ -51,25 +51,26 @@ const validateAboutExporter = async (req, res) => {
     }
   }
 
-
   try {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
-    await api.updateExporter(exporterId, {
-      ...body,
-      isFinanceIncreasing: body.isFinanceIncreasing === 'true',
-    });
 
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
-        industries: details.industries,
-        smeType: body.smeType,
-        probabilityOfDefault: body.probabilityOfDefault,
-        isFinanceIncreasing: body.isFinanceIncreasing,
+        industries: details.industries || null,
+        smeType: body.smeType || null,
+        probabilityOfDefault: body.probabilityOfDefault || null,
+        isFinanceIncreasing: body.isFinanceIncreasing || null,
         applicationId,
       });
     }
+
+    await api.updateExporter(exporterId, {
+      ...body,
+      probabilityOfDefault: body.probabilityOfDefault || null,
+      isFinanceIncreasing: body.isFinanceIncreasing || null,
+    });
 
     return res.redirect(`/gef/application-details/${applicationId}`);
   } catch (err) {
