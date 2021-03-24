@@ -2,7 +2,7 @@ import * as api from '../../services/api';
 import {
   mapSummaryList, status, facilityType,
 } from '../../utils/helpers';
-import { exporterItems, facilityItems } from '../../utils/displayItems';
+import { exporterItems, facilityItems } from '../../utils/display-items';
 import constants from '../../../constants';
 
 const applicationDetails = async (req, res) => {
