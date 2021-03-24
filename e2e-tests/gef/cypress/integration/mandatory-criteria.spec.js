@@ -48,7 +48,7 @@ context('Mandatory Criteria Page', () => {
     it('redirects the user to ineligible page when they select `False`', () => {
       mandatoryCriteria.falseRadio().click();
       mandatoryCriteria.form().submit();
-      cy.url().should('eq', relative('/gef/ineligible'));
+      cy.url().should('eq', relative('/gef/ineligible-gef'));
     });
 
     it('redirects the user to the Name Application page when they select `True`', () => {
