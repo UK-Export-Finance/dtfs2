@@ -786,6 +786,93 @@ describe('controllers - case', () => {
         // eslint-disable-next-line no-underscore-dangle
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
       });
+
+      describe('with no req.body.exporterCreditRating', () => {
+        it('should return template with validation errors', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            session,
+            body: {
+              exporterCreditRating: '',
+            },
+          };
+
+          await caseController.postUnderWritingPricingAndRisk(req, res);
+
+          const expectedValidationErrors = {
+            count: 1,
+            errorList: {
+              exporterCreditRating: {
+                text: 'Enter a credit rating',
+                order: '1',
+              },
+            },
+            summary: [{
+              text: 'Enter a credit rating',
+              href: '#exporterCreditRating',
+            }],
+          };
+
+          // eslint-disable-next-line no-underscore-dangle
+          expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+            {
+              activePrimaryNavigation: 'manage work',
+              activeSubNavigation: 'underwriting',
+              activeSideNavigation: 'pricing and risk',
+              deal: mockDeal.dealSnapshot,
+              tfm: mockDeal.tfm,
+              dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+              user: session.user,
+              validationErrors: expectedValidationErrors,
+            });
+        });
+      });
+
+      describe('with req.body.exporterCreditRating as `Other`, but no req.body.exporterCreditRatingOther', () => {
+        it('should return template with validation errors', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            session,
+            body: {
+              exporterCreditRating: 'Other',
+              exporterCreditRatingOther: '',
+            },
+          };
+
+          await caseController.postUnderWritingPricingAndRisk(req, res);
+
+          const expectedValidationErrors = {
+            count: 1,
+            errorList: {
+              exporterCreditRatingOther: {
+                text: 'Enter a credit rating',
+                order: '1',
+              },
+            },
+            summary: [{
+              text: 'Enter a credit rating',
+              href: '#exporterCreditRatingOther',
+            }],
+          };
+
+          // eslint-disable-next-line no-underscore-dangle
+          expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+            {
+              activePrimaryNavigation: 'manage work',
+              activeSubNavigation: 'underwriting',
+              activeSideNavigation: 'pricing and risk',
+              deal: mockDeal.dealSnapshot,
+              tfm: mockDeal.tfm,
+              dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+              user: session.user,
+              validationErrors: expectedValidationErrors,
+            });
+        });
+      });
     });
 
     describe('when deal does NOT exist', () => {

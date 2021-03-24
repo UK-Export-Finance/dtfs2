@@ -1,0 +1,22 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+
+{% macro render(params) %}
+  {{ govukInput({
+    label: {
+      text: "Credit rating"
+    },
+    classes: "govuk-!-width-one-third",
+    id: "exporterCreditRatingOther",
+    name: "exporterCreditRatingOther",
+    attributes: {
+      'data-cy': 'credit-rating-other-input'
+    },
+    errorMessage: params.validationError and {
+      text: params.validationError.text,
+      attributes: {
+        'data-cy': 'credit-rating-other-input-error'
+      }
+    }
+  })}}
+{% endmacro %}

@@ -1,10 +1,13 @@
 import api from '../../api';
-import helpers from './helpers';
+import stringHelpers from '../../helpers/string';
+import caseHelpers from './helpers';
 
+const { hasValue } = stringHelpers;
 const {
   getTask,
   mapAssignToSelectOptions,
-} = helpers;
+} = caseHelpers;
+
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -253,7 +256,70 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const update = req.body;
+  let validationErrors;
+
+  const hasValidationError = ((req.body.exporterCreditRating === 'Other'
+    && !req.body.exporterCreditRatingOther)
+    || !hasValue(req.body.exporterCreditRating));
+
+  if (hasValidationError) {
+    if (!req.body.exporterCreditRating) {
+      validationErrors = {
+        count: 1,
+        errorList: {
+          exporterCreditRating: {
+            text: 'Enter a credit rating',
+            order: '1',
+          },
+        },
+        summary: [{
+          text: 'Enter a credit rating',
+          href: '#exporterCreditRating',
+        }],
+      };
+    }
+
+    if (req.body.exporterCreditRating === 'Other' && !hasValue(req.body.exporterCreditRatingOther)) {
+      validationErrors = {
+        count: 1,
+        errorList: {
+          exporterCreditRatingOther: {
+            text: 'Enter a credit rating',
+            order: '1',
+          },
+        },
+        summary: [{
+          text: 'Enter a credit rating',
+          href: '#exporterCreditRatingOther',
+        }],
+      };
+    }
+
+
+    return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'underwriting',
+      activeSideNavigation: 'pricing and risk',
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+      user: req.session.user,
+      validationErrors,
+    });
+  }
+
+  let update = req.body;
+  if (req.body.exporterCreditRatingOther) {
+    update = {
+      exporterCreditRating: req.body.exporterCreditRatingOther,
+    };
+  } else {
+    update = {
+      exporterCreditRating: req.body.exporterCreditRating,
+    };
+  }
+
+  console.log('ui server........ postUnderWritingPricingAndRisk - the update...\n', update);
 
   await api.updateCreditRating(dealId, update);
 
