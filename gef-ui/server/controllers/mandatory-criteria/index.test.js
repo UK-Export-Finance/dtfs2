@@ -72,13 +72,13 @@ describe('Validate Mandatory Criteria', () => {
     expect(mockResponse.redirect).toHaveBeenCalledWith('name-application');
   });
 
-  it('redirects user to `ineligible` page if they select `false`', async () => {
+  it('redirects user to `ineligible gef` page if they select `false`', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
 
     mockRequest.body.mandatoryCriteria = 'false';
     await validateMandatoryCriteria(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/ineligible');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/ineligible-gef');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
