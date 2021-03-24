@@ -1,4 +1,4 @@
-import aboutExporter from './index';
+import { aboutExporter } from './index';
 import * as api from '../../services/api';
 
 const MockResponse = () => {
