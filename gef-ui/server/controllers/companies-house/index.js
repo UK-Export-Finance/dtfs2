@@ -2,8 +2,9 @@ import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
 const companiesHouse = async (req, res) => {
-  const { params } = req;
+  const { params, query } = req;
   const { applicationId } = params;
+  const { status } = query;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
@@ -13,6 +14,7 @@ const companiesHouse = async (req, res) => {
     return res.render('partials/companies-house.njk', {
       regNumber: companiesHouseRegistrationNumber,
       applicationId,
+      status,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -20,9 +22,10 @@ const companiesHouse = async (req, res) => {
 };
 
 const validateCompaniesHouse = async (req, res) => {
-  const { params, body } = req;
+  const { params, body, query } = req;
   const { regNumber } = body;
   const { applicationId } = params;
+  const { status } = query;
   const companiesHouseErrors = [];
   let companiesHouseDetails;
 
@@ -50,6 +53,10 @@ const validateCompaniesHouse = async (req, res) => {
         regNumber,
         applicationId,
       });
+    }
+
+    if (status === 'change') {
+      return res.redirect(`/gef/application-details/${applicationId}`);
     }
 
     return res.redirect('exporters-address');

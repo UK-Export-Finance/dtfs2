@@ -5,7 +5,7 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Companies House registration number',
     id: 'companiesHouseRegistrationNumber',
-    href: `${exporterUrl}/companies-house`,
+    href: `${exporterUrl}/companies-house?status=change`,
   },
   {
     label: 'Company name',
@@ -18,7 +18,7 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
-    href: `${exporterUrl}/enter-exporters-correspondence-address`,
+    href: `${exporterUrl}/enter-exporters-correspondence-address?status=change`,
   },
   {
     label: 'Industry',
@@ -28,19 +28,19 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'SME type',
     id: 'smeType',
-    href: `${exporterUrl}/about-exporter`,
+    href: `${exporterUrl}/about-exporter?status=change`,
     method: (callback) => SME_TYPE[callback],
   },
   {
     label: 'Probability of default',
     id: 'probabilityOfDefault',
-    href: `${exporterUrl}/about-exporter`,
+    href: `${exporterUrl}/about-exporter?status=change`,
     suffix: '%',
   },
   {
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
-    href: `${exporterUrl}/about-exporter`,
+    href: `${exporterUrl}/about-exporter?status=change`,
     method: (callback) => (callback === 'true' ? BOOLEAN.YES : BOOLEAN.NO),
   },
 ];

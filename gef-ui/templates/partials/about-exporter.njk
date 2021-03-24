@@ -18,13 +18,15 @@
     }) }}
   {% endif %}
 
-  {{ govukBackLink({
-    text: "Back to previous page",
-    href: "/gef/application-details/" + applicationId + "/enter-exporters-correspondence-address",
-    attributes: {
-      'data-cy': 'back-link'
-    }
-  }) }}
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + applicationId + "/enter-exporters-correspondence-address",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
 
   <header data-cy="application-details-page">
     <span class="govuk-caption-xl" data-cy="heading-caption">
