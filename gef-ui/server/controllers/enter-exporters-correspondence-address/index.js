@@ -2,10 +2,11 @@ import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
-  const { params, session } = req;
+  const { params, session, query } = req;
   const { applicationId } = params;
   const { address } = session;
   const parseAddress = address ? JSON.parse(address) : null;
+  const { status } = query;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
@@ -27,6 +28,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
     return res.render('partials/enter-exporters-correspondence-address.njk', {
       addressForm: mappedAddress || correspondenceAddress,
       applicationId,
+      status,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -35,7 +37,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
 
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   const { params, body, query } = req;
-  const { saveAndReturn } = query;
+  const { saveAndReturn, status } = query;
   const { applicationId } = params;
   const addressErrors = [];
 
@@ -67,7 +69,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     await api.updateExporter(exporterId, { correspondenceAddress: body });
     req.session.address = null;
-    if (saveAndReturn === 'true') {
+    if (saveAndReturn === 'true' || status === 'change') {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
     return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);

@@ -2,8 +2,9 @@ import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
 const aboutExporter = async (req, res) => {
-  const { params } = req;
+  const { params, query } = req;
   const { applicationId } = params;
+  const { status } = query;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
@@ -15,6 +16,7 @@ const aboutExporter = async (req, res) => {
       probabilityOfDefault: details.probabilityOfDefault,
       isFinanceIncreasing: details.isFinanceIncreasing,
       applicationId,
+      status,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
