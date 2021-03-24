@@ -50,7 +50,7 @@ const EXPORTER = [{
       },
     },
   ],
-  smeType: 'TINY',
+  smeType: 'MICRO',
   probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 }];
