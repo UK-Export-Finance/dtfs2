@@ -12,7 +12,10 @@
       {{
         govukErrorSummary({
           titleText: "There is a problem",
-          errorList: validationErrors.summary
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
         })
       }}
     {% endif %}
@@ -29,9 +32,12 @@
 
               {% set legendText = 'Add a credit rating for ' + deal.submissionDetails.supplierName %}
 
+              {% set exporterCreditRatingOtherChecked = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' %}
+              {% set exporterCreditRatingOtherTextInputValue = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' and tfm.exporterCreditRating %}
+
               {% set exporterCreditRatingOtherComponentData = {
                 validationError: validationErrors.errorList.exporterCreditRatingOther,
-                value: tfm.exporterCreditRating
+                value: exporterCreditRatingOtherTextInputValue
               } %}
 
               {{govukRadios({
@@ -63,7 +69,7 @@
                     {
                       value: "Other",
                       text: "Other",
-                      checked: tfm.exporterCreditRating === 'Other',
+                      checked: exporterCreditRatingOtherChecked,
                       attributes: {
                         'data-cy': 'credit-rating-other'
                       },

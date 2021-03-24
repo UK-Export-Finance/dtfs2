@@ -822,7 +822,10 @@ describe('controllers - case', () => {
               activeSubNavigation: 'underwriting',
               activeSideNavigation: 'pricing and risk',
               deal: mockDeal.dealSnapshot,
-              tfm: mockDeal.tfm,
+              tfm: {
+                ...mockDeal.tfm,
+                ...req.body,
+              },
               dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
               user: session.user,
               validationErrors: expectedValidationErrors,
@@ -866,13 +869,36 @@ describe('controllers - case', () => {
               activeSubNavigation: 'underwriting',
               activeSideNavigation: 'pricing and risk',
               deal: mockDeal.dealSnapshot,
-              tfm: mockDeal.tfm,
+              tfm: {
+                ...mockDeal.tfm,
+                exporterCreditRating: req.body.exporterCreditRating,
+              },
               dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
               user: session.user,
               validationErrors: expectedValidationErrors,
             });
         });
       });
+
+      describe('with req.body.exporterCreditRating as `Other` and req.body.exporterCreditRatingOther, and exporterCreditRatingOther does not match existing deal value', () => {
+        it('should redirect to /pricing-and-risk', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            session,
+            body: {
+              exporterCreditRating: 'Other',
+              exporterCreditRatingOther: 'The other value',
+            },
+          };
+
+          await caseController.postUnderWritingPricingAndRisk(req, res);
+
+          // eslint-disable-next-line no-underscore-dangle
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+        });
+      });  
     });
 
     describe('when deal does NOT exist', () => {

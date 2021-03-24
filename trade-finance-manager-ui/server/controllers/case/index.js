@@ -256,6 +256,16 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const existingValue = deal.tfm.exporterCreditRating;
+  let submittedValue;
+
+  if (hasValue(req.body.exporterCreditRatingOther)
+    && req.body.exporterCreditRatingOther !== existingValue) {
+    submittedValue = req.body.exporterCreditRatingOther;
+  } else {
+    submittedValue = req.body.exporterCreditRating;
+  }
+
   let validationErrors;
 
   const hasValidationError = ((req.body.exporterCreditRating === 'Other'
@@ -263,7 +273,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     || !hasValue(req.body.exporterCreditRating));
 
   if (hasValidationError) {
-    if (!req.body.exporterCreditRating) {
+    if (!hasValue(req.body.exporterCreditRating)) {
       validationErrors = {
         count: 1,
         errorList: {
@@ -295,37 +305,29 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       };
     }
 
-
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
       activeSideNavigation: 'pricing and risk',
       deal: deal.dealSnapshot,
-      tfm: deal.tfm,
+      tfm: {
+        ...deal.tfm,
+        exporterCreditRating: submittedValue,
+      },
       dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
       user: req.session.user,
       validationErrors,
     });
   }
 
-  let update = req.body;
-  if (req.body.exporterCreditRatingOther) {
-    update = {
-      exporterCreditRating: req.body.exporterCreditRatingOther,
-    };
-  } else {
-    update = {
-      exporterCreditRating: req.body.exporterCreditRating,
-    };
-  }
-
-  console.log('ui server........ postUnderWritingPricingAndRisk - the update...\n', update);
+  const update = {
+    exporterCreditRating: submittedValue,
+  };
 
   await api.updateCreditRating(dealId, update);
 
   return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
-
 
 const postPartyDetails = (partyType) => (
   async (req, res) => {

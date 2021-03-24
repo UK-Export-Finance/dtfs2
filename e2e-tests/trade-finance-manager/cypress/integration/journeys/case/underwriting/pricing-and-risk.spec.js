@@ -93,6 +93,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
     pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
     pages.underwritingPricingAndRiskEditPage.submitButton().click();
 
     pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
@@ -120,6 +121,11 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
+    // check value previously submitted
+    pages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Good (BB-)');
+    });
+
     pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
 
     // previously submitted value should be auto selected
@@ -137,16 +143,15 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('submitting `Other` in edit form displays text input and values after submit', () => {
+  it('submitting `Other` in edit form displays text input and auto populated values after submit', () => {
     pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
 
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
 
     const MOCK_TEXT_INPUT_VALUE = 'Testing';
     pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type(MOCK_TEXT_INPUT_VALUE);
     pages.underwritingPricingAndRiskEditPage.submitButton().click();
-
-    // pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
 
     pages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
       expect(text.trim()).to.equal(MOCK_TEXT_INPUT_VALUE);
