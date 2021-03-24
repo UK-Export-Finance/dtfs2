@@ -34,7 +34,7 @@ const ADMIN_LOGIN = {
   },
 };
 
-context('Case tasks - AIN deal', () => {
+context('Case Underwriting - Pricing and risk', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
@@ -61,6 +61,10 @@ context('Case tasks - AIN deal', () => {
   beforeEach(() => {
     cy.login(MOCK_USERS[0]);
     cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to edit page
+    partials.caseSubNavigation.underwritingLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
   });
 
   after(() => {
@@ -70,19 +74,34 @@ context('Case tasks - AIN deal', () => {
   });
 
   it('clicking underwriting nav link should direct to pricing-and-risk page and render `add rating` link. Clicking `add rating` takes user to edit page', () => {
-    partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
-
     pages.underwritingPricingAndRiskPage.addRatingLink().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/edit`));
   });
 
-  it('submitting a rating displays the rating in table on `pricing and risk` page and does not render `add credit rating` link', () => {
-    // go to edit page
-    partials.caseSubNavigation.underwritingLink().click();
+  it('submitting an empty edit form displays validation errors', () => {
     pages.underwritingPricingAndRiskPage.addRatingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/edit`));
+
+    pages.underwritingPricingAndRiskEditPage.submitButton().click();
+
+    pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
+    pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputValidationError().should('be.visible');
+  });
+
+  it('selecting `Other` in edit form displays text input. After submit - displays validation errors if text input incomplete', () => {
+    pages.underwritingPricingAndRiskPage.addRatingLink().click();
+
+    pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+    pages.underwritingPricingAndRiskEditPage.submitButton().click();
+
+    pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
+  });
+
+  it('submitting a rating displays the rating in table on `pricing and risk` page and does not render `add credit rating` link', () => {
+    pages.underwritingPricingAndRiskPage.addRatingLink().click();
 
     // select option, submit
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().click();
@@ -101,10 +120,7 @@ context('Case tasks - AIN deal', () => {
   });
 
   it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
-    // go to edit page
-    partials.caseSubNavigation.underwritingLink().click();
     pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/edit`));
 
     // previously submitted value should be auto selected
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().should('be.checked');
@@ -119,5 +135,27 @@ context('Case tasks - AIN deal', () => {
     pages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acceptable (B+)');
     });
+  });
+
+  it('submitting `Other` in edit form displays text input and values after submit', () => {
+    pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
+
+    pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+
+    const MOCK_TEXT_INPUT_VALUE = 'Testing';
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type(MOCK_TEXT_INPUT_VALUE);
+    pages.underwritingPricingAndRiskEditPage.submitButton().click();
+
+    // pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+
+    pages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(MOCK_TEXT_INPUT_VALUE);
+    });
+
+    pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
+
+    pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().should('be.checked');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', MOCK_TEXT_INPUT_VALUE);
   });
 });
