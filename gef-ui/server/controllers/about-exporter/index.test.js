@@ -18,6 +18,12 @@ const MockRequest = () => {
 
 const MockAboutExporterResponse = () => {
   const res = {};
+  res.details = {
+    industries: null,
+    smeType: null,
+    probabilityOfDefault: null,
+    isFinanceIncreasing: null,
+  };
   return res;
 };
 
@@ -34,6 +40,10 @@ describe('GET About Exporter', () => {
     api.getApplication = () => Promise.resolve(mockAboutExporterResponse);
     await aboutExporter(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      industries: null,
+      smeType: null,
+      probabilityOfDefault: null,
+      isFinanceIncreasing: null,
       applicationId: '123',
     }));
   });
