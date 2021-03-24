@@ -49,6 +49,7 @@ const GET_DEAL = gql`
             }
           }
         }
+        exporterCreditRating
       }
       dealSnapshot {
         _id,

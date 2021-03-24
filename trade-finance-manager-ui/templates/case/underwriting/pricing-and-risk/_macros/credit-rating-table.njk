@@ -1,0 +1,26 @@
+{% macro render(params) %}
+  {% set caseId = params.caseId %}
+  {% set exporterCreditRating = params.exporterCreditRating %}
+
+  <table class="govuk-table" data-cy="credit-rating-table">
+    <tbody class="govuk-table__body">
+
+      <tr class="govuk-table__row">
+
+        <td scope="row" class="govuk-table__cell" data-cy="credit-rating-table-heading">
+          Credit rating
+        </td>
+
+        <td class="govuk-table__cell" data-cy="credit-rating-table-rating-value">
+          {{ exporterCreditRating }}
+        </td>
+        
+        <td class="govuk-table__cell text-align-right">
+          <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="credit-rating-table-change-link">Change</a>
+        </td>
+
+      </tr>
+
+    </tbody>
+  </table>
+{% endmacro %}

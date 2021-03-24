@@ -218,7 +218,9 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
   return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
+    activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
+    tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user: req.session.user,
   });
@@ -235,7 +237,9 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
+    activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
+    tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user: req.session.user,
   });

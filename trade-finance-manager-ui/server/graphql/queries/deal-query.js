@@ -36,6 +36,7 @@ const dealQuery = gql`
             }
           }
         }
+        exporterCreditRating
       }
       dealSnapshot {
         _id,
