@@ -73,22 +73,34 @@
             {
               value: "MICRO",
               text: "Micro",
-              checked: smeType === "MICRO"
+              checked: smeType === "MICRO",
+              attributes: {
+                'data-cy': 'micro-radio-button'
+              }
             },
             {
               value: "SMALL",
               text: "Small",
-              checked: smeType === "SMALL"
+              checked: smeType === "SMALL",
+              attributes: {
+                'data-cy': 'small-radio-button'
+              }
             },
             {
               value: "MEDIUM",
               text: "Medium",
-              checked: smeType === "MEDIUM"
+              checked: smeType === "MEDIUM",
+              attributes: {
+                'data-cy': 'medium-radio-button'
+              }
             },
             {
               value: "NOT_SME",
               text: "They're not an SME",
-              checked: smeType === "NOT_SME"
+              checked: smeType === "NOT_SME",
+              attributes: {
+                'data-cy': 'not-sme-radio-button'
+              }
             }
           ]
         }) }}
@@ -110,6 +122,9 @@
             attributes: {
               'data-cy': 'probability-of-default0-error'
             }
+          },
+          attributes: {
+            'data-cy': 'probability-of-default-input'
           }
         }) }}
 
@@ -133,12 +148,18 @@
             {
               value: true,
               text: "Yes",
-              checked: isFinanceIncreasing === true
+              checked: isFinanceIncreasing === true,
+              attributes: {
+                'data-cy': 'is-financing-increasing-radio-yes'
+              }
             },
             {
               value: false,
               text: "No",
-              checked: isFinanceIncreasing === false
+              checked: isFinanceIncreasing === false,
+              attributes: {
+                'data-cy': 'is-financing-increasing-radio-no'
+              }
             }
           ]
         }) }}
@@ -156,7 +177,7 @@
             classes: "govuk-button--secondary",
             attributes: {
               formaction: "about-exporter?saveAndReturn=true",
-              'data-cy': 'return-to-application'
+              'data-cy': 'save-and-return-button'
             }
           }) }}
         </div>

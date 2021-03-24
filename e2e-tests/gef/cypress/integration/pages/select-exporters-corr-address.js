@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const selectExportersCorAddress = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  backButton: () => cy.get('[data-cy="back-button"]'),
+  backLink: () => cy.get('[data-cy="back-link"]'),
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   postcodeTitle: () => cy.get('[data-cy="postcode-title"]'),

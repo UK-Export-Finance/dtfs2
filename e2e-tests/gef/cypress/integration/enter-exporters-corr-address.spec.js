@@ -8,7 +8,7 @@ let applicationId;
 let exporterId;
 let token;
 
-context('Select Exporters Correspondence Address Page', () => {
+context('Enter Exporters Correspondence Address Page', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER)
@@ -32,7 +32,7 @@ context('Select Exporters Correspondence Address Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      enterExportersCorAddress.backButton();
+      enterExportersCorAddress.backLink();
       enterExportersCorAddress.headingCaption();
       enterExportersCorAddress.mainHeading();
       enterExportersCorAddress.form();
@@ -42,11 +42,11 @@ context('Select Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.locality();
       enterExportersCorAddress.postcode();
       enterExportersCorAddress.continueButton();
-      enterExportersCorAddress.cancelButton();
+      enterExportersCorAddress.saveAndReturnButton();
     });
 
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      enterExportersCorAddress.backButton().click();
+      enterExportersCorAddress.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/select-exporters-correspondence-address`));
     });
 
@@ -113,6 +113,14 @@ context('Select Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.postcode().type('Postcode');
       enterExportersCorAddress.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/about-exporter`));
+    });
+  });
+
+  describe('Clicking on Save and return button', () => {
+    it('bypasses validation and takes user back to application details page', () => {
+      cy.visit(relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
+      enterExportersCorAddress.saveAndReturnButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
     });
   });
 });

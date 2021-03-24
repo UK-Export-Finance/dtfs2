@@ -34,7 +34,7 @@ context('Select Exporters Correspondence Address Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      selectExportersCorAddress.backButton();
+      selectExportersCorAddress.backLink();
       selectExportersCorAddress.headingCaption();
       selectExportersCorAddress.mainHeading();
       selectExportersCorAddress.postcodeTitle();
@@ -49,7 +49,7 @@ context('Select Exporters Correspondence Address Page', () => {
     });
 
     it('redirects user to exporters address page when clicking on `Back` Link', () => {
-      selectExportersCorAddress.backButton().click();
+      selectExportersCorAddress.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/exporters-address`));
     });
 
