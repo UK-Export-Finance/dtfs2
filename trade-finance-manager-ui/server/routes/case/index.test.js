@@ -41,7 +41,7 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk', caseController.getUnderWritingPricingAndRisk);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRisk);
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRiskEdit);
 
     // POST routes
     expect(post).toHaveBeenCalledTimes(8);
@@ -60,6 +60,6 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk', caseController.postUnderWritingPricingAndRisk);
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.postUnderWritingPricingAndRisk);
   });
 });
