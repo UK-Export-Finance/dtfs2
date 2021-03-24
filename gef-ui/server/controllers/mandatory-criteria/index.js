@@ -45,7 +45,7 @@ const validateMandatoryCriteria = async (req, res) => {
       return res.redirect('name-application');
     }
 
-    return res.redirect('/gef/ineligible');
+    return res.redirect('/gef/ineligible-gef');
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
