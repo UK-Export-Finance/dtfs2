@@ -1,6 +1,7 @@
 const {
   isEmptyString,
   hasValue,
+  containsNumber,
 } = require('./string');
 
 describe('utils - string', () => {
@@ -26,6 +27,18 @@ describe('utils - string', () => {
       expect(hasValue(null)).toEqual(false);
       expect(hasValue('')).toEqual(false);
       expect(hasValue(' ')).toEqual(false);
+    });
+  });
+
+  describe('containsNumber', () => {
+    it('should return true when string contains a number', () => {
+      const result = containsNumber('asdf1asdf');
+      expect(result).toEqual(true);
+    });
+
+    it('should return false wen string does NOT contain a number', () => {
+      const result = containsNumber('asdf');
+      expect(result).toEqual(false);
     });
   });
 });

@@ -2,7 +2,10 @@ import api from '../../api';
 import stringHelpers from '../../helpers/string';
 import caseHelpers from './helpers';
 
-const { hasValue } = stringHelpers;
+const {
+  hasValue,
+  containsNumber,
+} = stringHelpers;
 const {
   getTask,
   mapAssignToSelectOptions,
@@ -268,12 +271,18 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   let validationErrors;
 
-  const hasValidationError = ((req.body.exporterCreditRating === 'Other'
-    && !req.body.exporterCreditRatingOther)
-    || !hasValue(req.body.exporterCreditRating));
+  const selectedOther = req.body.exporterCreditRating === 'Other';
+  const otherValue = hasValue(req.body.exporterCreditRatingOther);
+  const otherValueHasNumericValues = containsNumber(req.body.exporterCreditRatingOther);
+
+  const noOptionSelected = !hasValue(req.body.exporterCreditRating);
+
+  const hasValidationError = ((selectedOther && !otherValue)
+    || (selectedOther && otherValueHasNumericValues)
+    || noOptionSelected);
 
   if (hasValidationError) {
-    if (!hasValue(req.body.exporterCreditRating)) {
+    if (noOptionSelected) {
       validationErrors = {
         count: 1,
         errorList: {
@@ -289,20 +298,38 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       };
     }
 
-    if (req.body.exporterCreditRating === 'Other' && !hasValue(req.body.exporterCreditRatingOther)) {
-      validationErrors = {
-        count: 1,
-        errorList: {
-          exporterCreditRatingOther: {
-            text: 'Enter a credit rating',
-            order: '1',
+    if (selectedOther) {
+      if (!otherValue) {
+        validationErrors = {
+          count: 1,
+          errorList: {
+            exporterCreditRatingOther: {
+              text: 'Enter a credit rating',
+              order: '1',
+            },
           },
-        },
-        summary: [{
-          text: 'Enter a credit rating',
-          href: '#exporterCreditRatingOther',
-        }],
-      };
+          summary: [{
+            text: 'Enter a credit rating',
+            href: '#exporterCreditRatingOther',
+          }],
+        };
+      }
+
+      if (otherValueHasNumericValues) {
+        validationErrors = {
+          count: 1,
+          errorList: {
+            exporterCreditRatingOther: {
+              text: 'Credit rating must not include numbers',
+              order: '1',
+            },
+          },
+          summary: [{
+            text: 'Credit rating must not include numbers',
+            href: '#exporterCreditRatingOther',
+          }],
+        };
+      }
     }
 
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {

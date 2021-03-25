@@ -12,7 +12,11 @@ const hasValue = (str) => {
   return false;
 };
 
+const containsNumber = (str) =>
+  /\d/.test(str);
+
 module.exports = {
   isEmptyString,
+  containsNumber,
   hasValue,
 };

@@ -880,6 +880,53 @@ describe('controllers - case', () => {
         });
       });
 
+      describe.only('with req.body.exporterCreditRating as `Other`, but req.body.exporterCreditRatingOther contains numbers', () => {
+        it('should return template with validation errors', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            session,
+            body: {
+              exporterCreditRating: 'Other',
+              exporterCreditRatingOther: 'test100',
+            },
+          };
+
+          await caseController.postUnderWritingPricingAndRisk(req, res);
+
+          const expectedValidationErrors = {
+            count: 1,
+            errorList: {
+              exporterCreditRatingOther: {
+                text: 'Credit rating must not include numbers',
+                order: '1',
+              },
+            },
+            summary: [{
+              text: 'Credit rating must not include numbers',
+              href: '#exporterCreditRatingOther',
+            }],
+          };
+
+          // eslint-disable-next-line no-underscore-dangle
+          expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+            {
+              activePrimaryNavigation: 'manage work',
+              activeSubNavigation: 'underwriting',
+              activeSideNavigation: 'pricing and risk',
+              deal: mockDeal.dealSnapshot,
+              tfm: {
+                ...mockDeal.tfm,
+                exporterCreditRating: req.body.exporterCreditRatingOther,
+              },
+              dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+              user: session.user,
+              validationErrors: expectedValidationErrors,
+            });
+        });
+      });
+
       describe('with req.body.exporterCreditRating as `Other` and req.body.exporterCreditRatingOther, and exporterCreditRatingOther does not match existing deal value', () => {
         it('should redirect to /pricing-and-risk', async () => {
           const req = {
