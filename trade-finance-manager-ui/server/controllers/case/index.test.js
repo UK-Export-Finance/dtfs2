@@ -880,7 +880,7 @@ describe('controllers - case', () => {
         });
       });
 
-      describe.only('with req.body.exporterCreditRating as `Other`, but req.body.exporterCreditRatingOther contains numbers', () => {
+      describe('with req.body.exporterCreditRating as `Other`, but req.body.exporterCreditRatingOther contains numbers', () => {
         it('should return template with validation errors', async () => {
           const req = {
             params: {
