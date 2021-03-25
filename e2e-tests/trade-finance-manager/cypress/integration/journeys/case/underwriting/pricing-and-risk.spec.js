@@ -1,7 +1,7 @@
 import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
-import MOCK_DEAL from '../../../../fixtures/deal';
+import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import MOCK_USERS from '../../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
@@ -40,14 +40,14 @@ context('Case Underwriting - Pricing and risk', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
-    cy.insertOneDeal(MOCK_DEAL, MOCK_MAKER_TFM)
+    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
-        const { mockFacilities } = MOCK_DEAL;
+        const { mockFacilities } = MOCK_DEAL_MIA;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
@@ -88,12 +88,26 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputValidationError().should('be.visible');
   });
 
-  it('selecting `Other` in edit form displays text input. After submit - displays validation errors if text input incomplete', () => {
+  it('selecting `Other` in edit form displays text input. After submit - displays validation errors if text input is empty', () => {
     pages.underwritingPricingAndRiskPage.addRatingLink().click();
 
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
     pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
     pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
+    pages.underwritingPricingAndRiskEditPage.submitButton().click();
+
+    pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
+  });
+
+  it('typing numbers into `Other` text input displays validation errors after submit', () => {
+    pages.underwritingPricingAndRiskPage.addRatingLink().click();
+
+    pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type('abc1');
     pages.underwritingPricingAndRiskEditPage.submitButton().click();
 
     pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
