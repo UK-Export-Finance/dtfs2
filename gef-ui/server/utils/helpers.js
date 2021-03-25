@@ -132,6 +132,14 @@ const mapSummaryList = (data, itemsToShow) => {
   });
 };
 
+const isTrueSet = (val) => {
+  if (val && typeof val === 'string') {
+    return val === 'true';
+  }
+
+  return null;
+};
+
 const selectDropdownAddresses = (addresses) => {
   if (!addresses) { return null; }
 
@@ -177,4 +185,5 @@ export {
   selectDropdownAddresses,
   status,
   facilityType,
+  isTrueSet,
 };

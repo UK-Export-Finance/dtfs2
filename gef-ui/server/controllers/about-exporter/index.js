@@ -1,5 +1,5 @@
 import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
 
 const aboutExporter = async (req, res) => {
   const { params, query } = req;
@@ -14,7 +14,7 @@ const aboutExporter = async (req, res) => {
       industries: details.industries,
       smeType: details.smeType,
       probabilityOfDefault: details.probabilityOfDefault,
-      isFinanceIncreasing: details.isFinanceIncreasing,
+      isFinanceIncreasing: details.isFinanceIncreasing ? details.isFinanceIncreasing.toString() : null,
       applicationId,
       status,
     });
@@ -57,13 +57,15 @@ const validateAboutExporter = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
 
+    console.log('is financing', isTrueSet(body.isFinanceIncreasing));
+
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
         industries: details.industries || null,
         smeType: body.smeType || null,
         probabilityOfDefault: body.probabilityOfDefault || null,
-        isFinanceIncreasing: body.isFinanceIncreasing || null,
+        isFinanceIncreasing: body.isFinanceIncreasing,
         applicationId,
       });
     }
@@ -71,7 +73,7 @@ const validateAboutExporter = async (req, res) => {
     await api.updateExporter(exporterId, {
       ...body,
       probabilityOfDefault: body.probabilityOfDefault || null,
-      isFinanceIncreasing: body.isFinanceIncreasing || null,
+      isFinanceIncreasing: null, // isTrueSet(body.isFinanceIncreasing),
     });
 
     return res.redirect(`/gef/application-details/${applicationId}`);

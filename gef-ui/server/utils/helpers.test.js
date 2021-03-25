@@ -4,6 +4,7 @@ import {
   validationErrorHandler,
   mapSummaryList,
   apiErrorHandler,
+  isTrueSet,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -299,5 +300,24 @@ describe('mapSummaryList()', () => {
     mockedData.details.reverse = 'abcd';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(text).toEqual('dcba');
+  });
+});
+
+describe('isTrueSet()', () => {
+  it('returns null if value is not a string', () => {
+    expect(isTrueSet(null)).toBe(null);
+    expect(isTrueSet(10)).toBe(null);
+    expect(isTrueSet('')).toBe(null);
+    expect(isTrueSet(true)).toBe(null);
+    expect(isTrueSet(false)).toBe(null);
+    expect(isTrueSet(undefined)).toBe(null);
+  });
+
+  it('returns true boolean if string value is equal to `true`', () => {
+    expect(isTrueSet('true')).toBe(true);
+  });
+
+  it('returns false boolean if string value is equal to `false`', () => {
+    expect(isTrueSet('false')).toBe(false);
   });
 });
