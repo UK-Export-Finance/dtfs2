@@ -11,6 +11,10 @@ describe('mapFacilities', () => {
 
   const mockDealDetails = MOCK_DEAL.details;
 
+  const MOCK_DEAL_TFM = {
+    exporterCreditRating: 'Good (BB-)',
+  };
+
   const mockCoverEndDate = {
     'coverEndDate-day': '01',
     'coverEndDate-month': '02',
@@ -98,18 +102,18 @@ describe('mapFacilities', () => {
   ];
 
   it('should map and format correct fields/values', async () => {
-    const result = mapFacilities(mockFacilities, mockDealDetails);
+    const result = mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
 
     const expected = [
       {
         _id: MOCK_FACILITIES[0]._id, // eslint-disable-line no-underscore-dangle
         facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mapFacilityTfm(mockTfmFacility),
+        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
       },
       {
         _id: MOCK_FACILITIES[1]._id, // eslint-disable-line no-underscore-dangle
         facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mapFacilityTfm(mockTfmFacility),
+        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
       },
     ];
 

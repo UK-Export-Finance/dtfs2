@@ -11,6 +11,9 @@ const facilityPage = {
   facilityCoverStartDate: () => cy.get('[data-cy="facility-cover-start-date"]'),
   facilityCoverEndDate: () => cy.get('[data-cy="facility-cover-end-date"]'),
   facilityTenor: () => cy.get('[data-cy="facility-tenor"]'),
+
+  facilityDealCreditRating: () => cy.get('[data-cy="credit-rating-value"]'),
+  facilityDealCreditRatingNotSet: () => cy.get('[data-cy="credit-rating-not-set-tag"]'),
 };
 
 module.exports = facilityPage;

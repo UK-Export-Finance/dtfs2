@@ -12,13 +12,28 @@ const MOCK_FACILITIES = require('../src/v1/__mocks__/mock-facilities');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
 
+const mockFacilityTfm = {
+  ukefExposure: '1,234.00',
+  ukefExposureCalculationTimestamp: '1606900616651',
+  facilityValueInGBP: '123,45.00',
+  bondIssuerPartyUrn: '456-test',
+  bondBeneficiaryPartyUrn: '123-test',
+};
+
 const mockFacility = {
   ...MOCK_FACILITIES[0],
-  tfm: {
-    ukefExposure: '1,234.00',
-    ukefExposureCalculationTimestamp: '1606900616651',
-    exposurePeriodInMonths: 12,
-  },
+  tfm: mockFacilityTfm,
+};
+
+const mockDealDetails = MOCK_DEAL.details;
+
+const mockDealTfm = {
+  exporterCreditRating: 'Good (BB-)',
+};
+
+const initFacilityShape = {
+  facilitySnapshot: mockFacility,
+  tfm: mockFacility.tfm,
 };
 
 const GET_FACILITY = gql`
@@ -66,6 +81,7 @@ const GET_FACILITY = gql`
           exposure,
           timestamp
         },
+        creditRating
       }
     }
   }
@@ -95,15 +111,15 @@ describe('graphql query - get facility', () => {
       variables: { id: '12345678' },
     });
 
-    const mockDealDetails = MOCK_DEAL.details;
+    const reducerResult = facilityReducer(initFacilityShape, mockDealDetails, mockDealTfm);
 
-    const expectedFacility = {
-      facilitySnapshot: mockFacility,
-      tfm: mockFacility.tfm,
-    };
+    expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
+    expect(data.facility.facilitySnapshot).toEqual(reducerResult.facilitySnapshot);
 
-    const expected = facilityReducer(expectedFacility, mockDealDetails);
+    // remove fields that would be in the data/DB, but not defined in the schema.
+    const expectedTfmFacilityShape = reducerResult.tfm;
+    delete expectedTfmFacilityShape.ukefExposureCalculationTimestamp;
 
-    expect(data.facility.facilitySnapshot).toEqual(expected.facilitySnapshot);
+    expect(data.facility.tfm).toEqual(expectedTfmFacilityShape);
   });
 });

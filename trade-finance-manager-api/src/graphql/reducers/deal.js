@@ -6,7 +6,10 @@ const mapSubmissionDetails = require('./mapSubmissionDetails');
 // so that when this is changed, tests fail.
 
 const dealReducer = (deal) => {
-  const { tfm, dealSnapshot } = deal;
+  const {
+    tfm: dealTfm,
+    dealSnapshot,
+  } = deal;
 
   const {
     details,
@@ -20,11 +23,11 @@ const dealReducer = (deal) => {
     dealSnapshot: {
       ...dealSnapshot,
       totals: mapTotals(facilities),
-      facilities: mapFacilities(facilities, details),
+      facilities: mapFacilities(facilities, details, dealTfm),
       submissionDetails: mapSubmissionDetails(submissionDetails),
       eligibilityCriteria: eligibility.criteria,
     },
-    tfm,
+    tfm: dealTfm,
   };
 
   return result;

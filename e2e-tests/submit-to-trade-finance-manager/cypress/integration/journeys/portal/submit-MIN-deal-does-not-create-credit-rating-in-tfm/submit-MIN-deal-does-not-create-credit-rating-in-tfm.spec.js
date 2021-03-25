@@ -1,10 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
-import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, `Good` credit rating is added to the deal in TFM', () => {
+  it('Portal deal is submitted to UKEF, `Not set` credit rating displays in TFM facilities', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -75,19 +75,14 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
-    cy.forceVisit(tfmCaseDealPage);
+    const facilityId = dealFacilities[0]._id;
+    const tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${facilityId}`;
+    cy.forceVisit(tfmFacilityPage);
 
-    tfmPartials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/underwriting/pricing-and-risk`);
+    tfmPages.facilityPage.facilityDealCreditRating().should('not.be.visible');
 
-    // assert elements/value in `pricing and risk` page
-    tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
-
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Good (BB-)');
-    });
-
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().should('be.visible');
+    tfmPages.facilityPage.facilityDealCreditRatingNotSet().should('be.visible');
   });
 });
+
+/* eslint-enable no-underscore-dangle */

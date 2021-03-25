@@ -1,7 +1,7 @@
 const mapFacility = require('./mappings/facilities/mapFacility');
 const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
 
-const facilityReducer = (facility, dealDetails) => {
+const facilityReducer = (facility, dealDetails, dealTfm) => {
   const result = {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     facilitySnapshot: mapFacility(
@@ -9,7 +9,7 @@ const facilityReducer = (facility, dealDetails) => {
       facility.tfm,
       dealDetails,
     ),
-    tfm: mapFacilityTfm(facility.tfm),
+    tfm: mapFacilityTfm(facility.tfm, dealTfm),
   };
 
   return result;

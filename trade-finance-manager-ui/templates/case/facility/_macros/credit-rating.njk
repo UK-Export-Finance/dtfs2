@@ -1,0 +1,25 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(params) %}
+  {% set creditRating = params.creditRating %}
+
+  <div data-cy="credit-rating">
+
+    {% if creditRating %}
+      <p class="govuk-body-s" data-cy="credit-rating-value">{{ creditRating }}</p>
+
+      {% else %}
+
+        {{govukTag({
+          text: 'Not set',
+          classes: "govuk-tag--yellow",
+          attributes: {
+            'data-cy': 'credit-rating-not-set-tag'
+          }
+        })}}
+
+    {% endif %}
+
+  </div>
+
+{% endmacro %}

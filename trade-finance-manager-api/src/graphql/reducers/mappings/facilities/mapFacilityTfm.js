@@ -1,8 +1,9 @@
 const mapUkefExposure = require('./mapUkefExposure');
 
-const mapFacilityTfm = (facilityTfm) => ({
+const mapFacilityTfm = (facilityTfm, dealTfm) => ({
   ...facilityTfm,
   ukefExposure: mapUkefExposure(facilityTfm),
+  creditRating: dealTfm.exporterCreditRating,
 });
 
 module.exports = mapFacilityTfm;

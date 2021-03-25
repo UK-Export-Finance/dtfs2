@@ -1,13 +1,13 @@
-const pageRenderer = require('../../../../component-tests/componentRenderer');
+const componentRenderer = require('../../../../component-tests/componentRenderer');
 
-const page = '../templates/case/facility/_macros/facility_details.njk';
+const component = '../templates/case/facility/_macros/facility_details.njk';
 const filterLocaliseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
-const render = pageRenderer(page);
+const render = componentRenderer(component);
 
 const localiseTimestamp = filterLocaliseTimestamp.default;
 
-describe(page, () => {
+describe(component, () => {
   let wrapper;
   const params = {
     facility: {
@@ -125,6 +125,10 @@ describe(page, () => {
 
     it('should render guaranteeFeePayableToUkef', () => {
       wrapper.expectText('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toRead(params.facility.guaranteeFeePayableToUkef);
+    });
+
+    it('should render credit rating component', () => {
+      wrapper.expectElement('[data-cy="credit-rating"]').toExist();
     });
   });
 });
