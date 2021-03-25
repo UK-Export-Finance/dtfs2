@@ -94,7 +94,7 @@ describe('Validate About Exporter', () => {
       industries: null,
       smeType: null,
       probabilityOfDefault: null,
-      isFinanceIncreasing: null,
+      isFinanceIncreasing: undefined,
       applicationId: '123',
     }));
   });

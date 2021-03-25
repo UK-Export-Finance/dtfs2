@@ -57,8 +57,6 @@ const validateAboutExporter = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
 
-    console.log('is financing', isTrueSet(body.isFinanceIncreasing));
-
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
@@ -73,7 +71,7 @@ const validateAboutExporter = async (req, res) => {
     await api.updateExporter(exporterId, {
       ...body,
       probabilityOfDefault: body.probabilityOfDefault || null,
-      isFinanceIncreasing: null, // isTrueSet(body.isFinanceIncreasing),
+      isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
     });
 
     return res.redirect(`/gef/application-details/${applicationId}`);
