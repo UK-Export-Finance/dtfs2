@@ -4,6 +4,11 @@ export const PROGRESS = {
   COMPLETED: 'COMPLETED',
 };
 
+export const FACILITY_TYPE = {
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
+};
+
 export const SME_TYPE = {
   MICRO: 'Micro',
   SMALL: 'Small',
