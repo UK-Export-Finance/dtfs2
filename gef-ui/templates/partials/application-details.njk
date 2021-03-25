@@ -10,6 +10,11 @@
 {% endblock %}
 
 {% block content %}
+  <div class="application-banner" data-cy="application-banner">
+    <p class="govuk-body">{{ bankInternalRefName }}</p>
+    <a class="govuk-link" href="/gef/application-details/{{applicationId}}" data-cy="abandon-link"><strong>Abondon</strong></a>
+  </div>
+
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",

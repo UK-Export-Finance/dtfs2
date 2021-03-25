@@ -2,6 +2,8 @@
 /* eslint-disable no-undef */
 const applicationDetails = {
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
+  applicationBanner: () => cy.get('[data-cy="application-banner"]'),
+  abandonLink: () => cy.get('[data-cy="abandon-link"]'),
   captionHeading: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   exporterHeading: () => cy.get('[data-cy="exporter-heading"]'),

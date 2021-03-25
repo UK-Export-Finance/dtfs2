@@ -11,7 +11,7 @@ const applicationDetails = async (req, res) => {
   const { manual } = query;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
+    const { bankInternalRefName, exporterId } = await api.getApplication(applicationId);
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
@@ -34,6 +34,7 @@ const applicationDetails = async (req, res) => {
         })),
       },
       submit: canSubmit,
+      bankInternalRefName,
       applicationId,
     });
   } catch (err) {
