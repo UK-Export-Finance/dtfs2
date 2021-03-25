@@ -29,6 +29,11 @@ context('Application Details Page', () => {
   });
 
   describe('Visiting page for the first time', () => {
+    it('displays the application banner', () => {
+      applicationDetails.applicationBanner();
+      applicationDetails.abandonLink();
+    });
+
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
       applicationDetails.captionHeading();
@@ -59,6 +64,11 @@ context('Application Details Page', () => {
     it('takes you to companies house page when clicking on `Enter details`', () => {
       applicationDetails.exporterDetailsLink().click();
       cy.visit(relative(`/gef/application-details/${applicationId}/companies-house`));
+    });
+
+    it('keeps you on the same page for now when clicking on `Abandon` link', () => {
+      applicationDetails.abandonLink().click();
+      cy.visit(relative(`/gef/application-details/${applicationId}`));
     });
   });
 });
