@@ -4,6 +4,7 @@ import * as api from '../../services/api';
 const MockRequest = () => {
   const req = {};
   req.params = {};
+  req.query = {};
   req.params.applicationId = '123';
   req.body = {};
   return req;
@@ -57,6 +58,7 @@ describe('GET Comapnies House', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
       regNumber: '',
       applicationId: '123',
+      status: undefined,
     });
   });
   it('renders the `companies-house` template with pre-populated field', async () => {
@@ -69,6 +71,7 @@ describe('GET Comapnies House', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
       regNumber: 'xyz',
       applicationId: '123',
+      status: undefined,
     });
   });
 
@@ -92,6 +95,7 @@ describe('Validate Companies House', () => {
       errors: expect.any(Object),
       regNumber: '',
       applicationId: '123',
+      status: undefined,
     }));
   });
 
@@ -107,6 +111,7 @@ describe('Validate Companies House', () => {
       errors: expect.any(Object),
       regNumber: 'invalidregnumber',
       applicationId: '123',
+      status: undefined,
     }));
   });
 
@@ -117,6 +122,16 @@ describe('Validate Companies House', () => {
     api.getCompaniesHouseDetails = () => Promise.resolve(mockCHResponse);
     await validateCompaniesHouse(mockRequest, mockResponse);
     expect(mockResponse.redirect).toHaveBeenCalledWith('exporters-address');
+  });
+
+  it('redirects user to `applications details` page if response from api is successful and status query is set to `change`', async () => {
+    mockRequest.query.status = 'change';
+    mockRequest.body.regNumber = '123';
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCompaniesHouseDetails = () => Promise.resolve(mockCHResponse);
+    await validateCompaniesHouse(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

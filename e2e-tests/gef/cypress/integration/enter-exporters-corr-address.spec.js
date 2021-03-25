@@ -109,4 +109,17 @@ context('Enter Exporters Correspondence Address Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
   });
+
+  describe('Status query is set to `change`', () => {
+    it('hides `back button`', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address?status=change`));
+      enterExportersCorAddress.backLink().should('not.be.visible');
+    });
+
+    it('redirects user back to application details page when clicking on `Continue` button', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address?status=change`));
+      enterExportersCorAddress.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
+    });
+  });
 });
