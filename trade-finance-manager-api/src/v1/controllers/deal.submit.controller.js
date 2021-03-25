@@ -2,6 +2,7 @@ const { findOnePortalDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
+const { addDealRiskRating } = require('./deal.risk-rating');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
@@ -18,7 +19,9 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithTasks = await createDealTasks(updatedDealWithPartyUrn);
 
-  const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTasks);
+  const updatedDealWithRiskRating = await addDealRiskRating(updatedDealWithTasks);
+
+  const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithRiskRating);
 
   if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
     await api.updatePortalDealStatus(
