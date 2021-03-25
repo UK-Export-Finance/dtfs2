@@ -52,6 +52,7 @@ const validateCompaniesHouse = async (req, res) => {
         errors: validationErrorHandler(companiesHouseErrors),
         regNumber,
         applicationId,
+        status,
       });
     }
 
