@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import partials from '../../partials';
-import MOCK_DEAL from '../../../fixtures/deal';
+import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_USERS from '../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
@@ -39,14 +39,14 @@ context('Facility page', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
-    cy.insertOneDeal(MOCK_DEAL, MOCK_MAKER_TFM)
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
-        const { mockFacilities } = MOCK_DEAL;
+        const { mockFacilities } = MOCK_DEAL_AIN;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
@@ -74,12 +74,12 @@ context('Facility page', () => {
     // (no need to check all in E2E test)
     partials.caseSummary.ukefDealId().should('be.visible');
     partials.caseSummary.ukefDealId().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL.details.ukefDealId);
+      expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
     });
 
     partials.caseSummary.supplierName().should('be.visible');
     partials.caseSummary.supplierName().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL.submissionDetails['supplier-name']);
+      expect(text.trim()).equal(MOCK_DEAL_AIN.submissionDetails['supplier-name']);
     });
   });
 
