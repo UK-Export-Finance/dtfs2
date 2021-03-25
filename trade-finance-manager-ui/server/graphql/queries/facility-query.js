@@ -46,7 +46,8 @@ const facilityQuery = gql`
         ukefExposure {
           exposure,
           timestamp
-        }
+        },
+        creditRating
       }
     }
   }

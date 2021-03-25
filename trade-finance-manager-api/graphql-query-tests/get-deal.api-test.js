@@ -13,6 +13,10 @@ const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const mapDeal = require('../src/v1/mappings/map-deal');
 const dealReducer = require('../src/graphql/reducers/deal');
 
+const MOCK_DEAL_TFM = {
+  exporterCreditRating: 'Good (BB-)',
+};
+
 const GET_DEAL = gql`
   query Deal($id: ID!) {
     deal(_id: $id) {
@@ -204,7 +208,10 @@ describe('graphql query - get deal', () => {
   it('should return a mapped deal via dealReducer', async () => {
     const mappedDeal = await mapDeal(MOCK_DEAL);
 
-    const expectedDealWithoutFacilities = dealReducer({ dealSnapshot: mappedDeal });
+    const expectedDealWithoutFacilities = dealReducer({
+      dealSnapshot: mappedDeal,
+      tfm: MOCK_DEAL_TFM,
+    });
     delete expectedDealWithoutFacilities.facilities;
     expect(expectedDealWithoutFacilities).toEqual(expectedDealWithoutFacilities);
   });

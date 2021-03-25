@@ -12,8 +12,10 @@ const queryFacility = async ({ _id }) => {
   const deal = await findOneDeal(associatedDealId);
 
   const dealDetails = deal.dealSnapshot.details;
+  const dealTfm = deal.tfm;
 
-  return facilityReducer(facility, dealDetails);
+  // issue is, mock api in api tests is not returning deal.tfm
+  return facilityReducer(facility, dealDetails, dealTfm);
 };
 
 module.exports = queryFacility;

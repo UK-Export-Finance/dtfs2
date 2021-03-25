@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import moment from 'moment';
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/integration/pages';
@@ -74,7 +75,6 @@ context('Portal to TFM deal submission', () => {
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-
 
 
     //---------------------------------------------------------------
@@ -187,3 +187,5 @@ context('Portal to TFM deal submission', () => {
     });
   });
 });
+
+/* eslint-enable no-underscore-dangle */

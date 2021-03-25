@@ -1,5 +1,7 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% import './credit-rating.njk' as creditRating %}
+
 {% macro render(params) %}
-  {% from "govuk/components/tag/macro.njk" import govukTag %}
   {% set facility = params.facility %}
   {% set user = params.user %}
   {% set facilityTfm = params.facilityTfm %}
@@ -36,12 +38,12 @@
         </div>
         <div class="govuk-grid-column-three-quarters">
           {{govukTag({
-              text: facility.facilityStage,
-              classes: "govuk-tag--blue",
-              attributes: {
-                'data-cy': 'facility-stage'
-              }
-            })}}
+            text: facility.facilityStage,
+            classes: "govuk-tag--blue",
+            attributes: {
+              'data-cy': 'facility-stage'
+            }
+          })}}
         </div>
       </div>
 
@@ -205,6 +207,20 @@
 
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s" data-cy="facility-guarantee-fee-payable-to-ukef">{{ facility.guaranteeFeePayableToUkef | dashIfEmpty}}</p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <h4 class="govuk-heading-s">Credit rating</h4>
+        </div>
+
+        <div class="govuk-grid-column-three-quarters">
+          {# <p class="govuk-body-s" data-cy="facility-guarantee-fee-payable-to-ukef">{{ facility.guaranteeFeePayableToUkef | dashIfEmpty}}</p> #}
+
+          {% set componentData = { creditRating: facilityTfm.creditRating } %}
+          {{creditRating.render(componentData)}}
+
         </div>
       </div>
 
