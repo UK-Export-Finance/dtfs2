@@ -30,6 +30,11 @@ const TASKS = {
   ],
 };
 
+const CREDIT_RATING = {
+  AIN: CONSTANTS.DEALS.CREDIT_RATING.GOOD,
+};
+
 module.exports = {
   TASKS,
+  CREDIT_RATING,
 };
