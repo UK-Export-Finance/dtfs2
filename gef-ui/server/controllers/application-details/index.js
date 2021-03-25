@@ -1,9 +1,7 @@
 import * as api from '../../services/api';
-import {
-  mapSummaryList, status, facilityType,
-} from '../../utils/helpers';
+import { mapSummaryList, status } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/display-items';
-import { PROGRESS } from '../../../constants';
+import { PROGRESS, FACILITY_TYPE } from '../../../constants';
 
 const applicationDetails = async (req, res) => {
   const { params, query } = req;
@@ -29,7 +27,7 @@ const applicationDetails = async (req, res) => {
       facilities: {
         status: facilitiesStatus,
         data: facilities.items.map((item) => ({
-          heading: facilityType[item.details.type],
+          heading: FACILITY_TYPE[item.details.type],
           rows: mapSummaryList(item, facilityItems(exporterUrl, item.details.type)),
         })),
       },

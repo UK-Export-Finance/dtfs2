@@ -171,11 +171,6 @@ const status = ({
   },
 });
 
-const facilityType = ({
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-});
-
 export {
   userToken,
   isObject,
@@ -184,6 +179,5 @@ export {
   mapSummaryList,
   selectDropdownAddresses,
   status,
-  facilityType,
   isTrueSet,
 };
