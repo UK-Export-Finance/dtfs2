@@ -148,23 +148,25 @@
           },
           items: [
             {
-              value: true,
+              value: 'true',
               text: "Yes",
-              checked: isFinanceIncreasing === true,
+              checked: isFinanceIncreasing === 'true',
               attributes: {
                 'data-cy': 'is-financing-increasing-radio-yes'
               }
             },
             {
-              value: false,
+              value: 'false',
               text: "No",
-              checked: isFinanceIncreasing === false,
+              checked: isFinanceIncreasing === 'false',
               attributes: {
                 'data-cy': 'is-financing-increasing-radio-no'
               }
             }
           ]
         }) }}
+
+        poo {{ isFinanceIncreasing }}
 
         <div class="govuk-button-group">
           {{ govukButton({
