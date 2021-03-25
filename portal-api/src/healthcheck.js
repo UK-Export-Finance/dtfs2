@@ -53,18 +53,24 @@ async function pingNotify() {
 }
 
 router.get('/healthcheck', (req, res) => {
-  const mongo = pingMongo();
-  const notify = pingNotify();
-
-  const storage = pingStorage(Boolean(req.query.fetchtest));
-  Promise.all([mongo, notify, storage]).then((values) => {
-    res.status(200).json({
-      commit_hash: GITHUB_SHA,
-      mongo: values[0],
-      notify: values[1],
-      storage: values[2],
-    });
+  res.status(200).json({
+    commit_hash: GITHUB_SHA,
   });
 });
+
+// router.get('/healthcheck', (req, res) => {
+//   const mongo = pingMongo();
+//   const notify = pingNotify();
+
+//   const storage = pingStorage(Boolean(req.query.fetchtest));
+//   Promise.all([mongo, notify, storage]).then((values) => {
+//     res.status(200).json({
+//       commit_hash: GITHUB_SHA,
+//       mongo: values[0],
+//       notify: values[1],
+//       storage: values[2],
+//     });
+//   });
+// });
 
 module.exports = router;
