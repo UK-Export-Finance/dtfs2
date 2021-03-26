@@ -74,6 +74,7 @@ describe('Validate About Exporter', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
       industries: null,
       smeType: null,
+      status: undefined,
       probabilityOfDefault: null,
       isFinanceIncreasing: null,
       applicationId: '123',
@@ -92,8 +93,8 @@ describe('Validate About Exporter', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
       errors: expect.any(Object),
       industries: null,
-      smeType: null,
-      probabilityOfDefault: null,
+      smeType: undefined,
+      probabilityOfDefault: undefined,
       isFinanceIncreasing: undefined,
       applicationId: '123',
     }));
