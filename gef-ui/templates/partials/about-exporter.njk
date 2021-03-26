@@ -57,7 +57,7 @@
         {% else %}
           {{ govukRadios({
             idPrefix: "industry",
-            name: "industry",
+            name: "selectedIndustry",
             classes: "govuk-!-margin-bottom-4",
             fieldset: {
               legend: {
@@ -68,10 +68,10 @@
             hint: {
               text: "Select one option"
             },
-            errorMessage: errors and errors.fieldErrors.industry and {
-              text: errors.fieldErrors.industry.text,
+            errorMessage: errors and errors.fieldErrors.selectedIndustry and {
+              text: errors.fieldErrors.selectedIndustry.text,
               attributes: {
-                'data-cy': 'industry-error'
+                'data-cy': 'selected-industry-index-error'
               }
             },
             items: industries

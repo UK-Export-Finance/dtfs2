@@ -68,14 +68,7 @@ const mapSummaryList = (data, itemsToShow) => {
     }
 
     if (options.isIndustry) {
-      const list = [];
-      Object.values(val).forEach((value) => {
-        if (value) {
-          list.push(`<li>${value.name} - ${value.class.name}</li>`);
-        }
-      });
-
-      return { html: `<ul class="is-unstyled">${list.join('')}</ul>` };
+      return { html: `${val.name}<br>${val.class.name}` };
     }
 
     if (isObject(val) || Array.isArray(val)) {

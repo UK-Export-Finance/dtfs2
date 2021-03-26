@@ -1,6 +1,12 @@
 import * as api from '../../services/api';
 import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
 
+const mappedIndustries = (industries, selectedIndustry) => industries.map((industry) => ({
+  value: JSON.stringify(industry),
+  html: `${industry.name}<br />${industry.class.name}`,
+  checked: selectedIndustry ? JSON.stringify(industry) === JSON.stringify(selectedIndustry) : null,
+}));
+
 const aboutExporter = async (req, res) => {
   const { params, query } = req;
   const { applicationId } = params;
@@ -9,13 +15,15 @@ const aboutExporter = async (req, res) => {
   try {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
+    const industries = mappedIndustries(details.industries, details.selectedIndustry);
 
     return res.render('partials/about-exporter.njk', {
-      industries: details.industries,
       smeType: details.smeType,
       probabilityOfDefault: details.probabilityOfDefault,
       isFinanceIncreasing: details.isFinanceIncreasing ? details.isFinanceIncreasing.toString() : null,
+      selectedIndustry: details.selectedIndustry,
       applicationId,
+      industries,
       status,
     });
   } catch (err) {
@@ -28,9 +36,18 @@ const validateAboutExporter = async (req, res) => {
   const { applicationId } = params;
   const aboutExporterErrors = [];
   const { saveAndReturn } = query;
+  const { exporterId } = await api.getApplication(applicationId);
+  const { details } = await api.getExporter(exporterId);
 
   // Don't validate form if user clicks on 'return to application` button
   if (!saveAndReturn) {
+    if (!body.selectedIndustry && details.industries.length > 1) {
+      aboutExporterErrors.push({
+        errRef: 'selectedIndustry',
+        errMsg: 'Select most appropriate industry',
+      });
+    }
+
     if (!body.smeType) {
       aboutExporterErrors.push({
         errRef: 'smeType',
@@ -54,25 +71,23 @@ const validateAboutExporter = async (req, res) => {
   }
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
+    const industries = mappedIndustries(details.industries, details.selectedIndustry);
 
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
-        industries: details.industries.map((industry, index) => ({
-          value: index,
-          text: `${industry.name} - ${industry.class.name}`,
-        })),
         smeType: body.smeType,
         probabilityOfDefault: body.probabilityOfDefault,
         isFinanceIncreasing: body.isFinanceIncreasing,
+        selectedIndustry: details.selectedIndustry,
         applicationId,
+        industries,
       });
     }
 
     await api.updateExporter(exporterId, {
       ...body,
+      selectedIndustry: body.selectedIndustry ? JSON.parse(body.selectedIndustry) : null,
       probabilityOfDefault: body.probabilityOfDefault || null,
       isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
     });
