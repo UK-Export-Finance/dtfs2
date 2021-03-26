@@ -78,9 +78,18 @@ context('Portal to TFM deal submission', () => {
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
-    tfmPartials.caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/tasks`);
 
-    tfmPages.tasksPage.tasksTableRows().should('have.length', 2);
+    tfmPartials.caseSummary.contractValue().invoke('text').then((text) => {
+      const {
+        supplyContractCurrency,
+      } = MOCK_DEAL_READY_TO_SUBMIT().submissionDetails;
+
+      expect(text.trim()).to.contain(supplyContractCurrency.id);
+    });
+
+    // currency is converted dynamically - tricky/flaky to assert/mock this from e2e test
+    tfmPartials.caseSummary.contractValueInGBP().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('GBP');
+    });
   });
 });

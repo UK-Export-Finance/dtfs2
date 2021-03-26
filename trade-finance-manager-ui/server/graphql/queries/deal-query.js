@@ -37,6 +37,7 @@ const dealQuery = gql`
           }
         }
         exporterCreditRating
+        supplyContractValueInGBP
       }
       dealSnapshot {
         _id,

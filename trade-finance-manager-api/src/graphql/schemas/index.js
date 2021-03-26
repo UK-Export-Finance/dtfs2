@@ -211,6 +211,7 @@ type TFMDealData {
   product: String
   tasks: [TFMTaskGroup]
   exporterCreditRating: String
+  supplyContractValueInGBP: String
 }
 
 type TFMFacilityData {
