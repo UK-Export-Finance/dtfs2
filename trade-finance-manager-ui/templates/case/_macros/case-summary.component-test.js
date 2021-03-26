@@ -6,7 +6,12 @@ const render = componentRenderer(component);
 
 const rawdata = fs.readFileSync('templates/case/mock_data/deal.json');
 const params = {
-  deal: JSON.parse(rawdata),
+  deal: {
+    ...JSON.parse(rawdata),
+    totals: {
+      facilitiesValueInGBP: 'GBP 2,740.41',
+    },
+  },
   tfm: {
     supplyContractValueInGBP: 'GBP 123,456.78'
   },
@@ -39,24 +44,26 @@ describe(component, () => {
     wrapper.expectText('[data-cy="export-description"]').toRead(params.deal.submissionDetails.supplyContractDescription);
   });
 
-  it('should render contract value', () => {
-    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
+  it('should render bank name', () => {
+    wrapper.expectText('[data-cy="bank-name"]').toRead(params.deal.details.owningBank.name);
   });
 
   it('should render contract value', () => {
     wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
   });
 
-  it('should render contract valuea in GBP', () => {
-    wrapper.expectElement('[data-cy="contract-value-in-gbp"]').toExist();
-    wrapper.expectText('[data-cy="contract-value-in-gbp"]').toRead(params.tfm.supplyContractValueInGBP);
+  it('should render contract value', () => {
+    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
   });
+
+  it('should render total facilities in GBP', () => {
+    wrapper.expectText('[data-cy="total-facilities-in-gbp"]').toRead(params.deal.totals.facilitiesValueInGBP);
+  });
+
+  // total-facilities-in-gbp
 
   // it('should render submission date', () => {
   //   wrapper.expectText('[data-cy="submission-date"]').toRead(params.details.submissionDate);
   // });
 
-  it('should render  bank name', () => {
-    wrapper.expectText('[data-cy="bank-name"]').toRead(params.deal.details.owningBank.name);
-  });
 });
