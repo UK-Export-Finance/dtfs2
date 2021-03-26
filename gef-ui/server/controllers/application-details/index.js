@@ -23,7 +23,7 @@ const applicationDetails = async (req, res) => {
       exporter: {
         status: exporterStatus,
         rows: mapSummaryList(exporter, exporterItems(exporterUrl, {
-          showIndustryChangeLink: exporter.details.industries.length > 1,
+          showIndustryChangeLink: exporter.details.industries && exporter.details.industries.length > 1,
         })),
       },
       facilities: {
