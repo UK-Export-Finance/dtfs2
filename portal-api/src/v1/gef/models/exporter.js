@@ -24,7 +24,7 @@ class Exporter {
       this.companyName = null;
       this.registeredAddress = null;
       this.correspondenceAddress = null;
-      this.selectedIndustryIndex = null;
+      this.selectedIndustry = null;
       this.industries = null;
       this.smeType = null;
       this.probabilityOfDefault = null;
@@ -49,8 +49,8 @@ class Exporter {
         this.correspondenceAddress = new Address(req.correspondenceAddress);
       }
 
-      if (req.selectedIndustryIndex != null) {
-        this.selectedIndustryIndex = req.selectedIndustryIndex;
+      if (req.selectedIndustry != null) {
+        this.selectedIndustry = req.selectedIndustry;
       }
 
       if (req.industries != null) {

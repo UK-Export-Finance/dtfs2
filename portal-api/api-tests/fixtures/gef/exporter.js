@@ -3,7 +3,7 @@ const EXPORTER = [{
   companyName: 'Foundry 4',
   registeredAddress: null,
   correspondenceAddress: null,
-  selectedIndustryIndex: null,
+  selectedIndustry: null,
   industries: null,
   smeType: null,
   probabilityOfDefault: null,
