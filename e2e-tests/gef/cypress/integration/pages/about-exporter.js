@@ -17,7 +17,7 @@ const aboutExporter = {
   isFinancingIncreasingRadioYes: () => cy.get('[data-cy="is-financing-increasing-radio-yes"]'),
   isFinancingIncreasingRadioNo: () => cy.get('[data-cy="is-financing-increasing-radio-no"]'),
   isFinancingIncreasingError: () => cy.get('[data-cy="is-financing-increasing-error"]'),
-  continueButton: () => cy.get('[data-cy="continue-button"]'),
+  doneButton: () => cy.get('[data-cy="done-button"]'),
   saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };
 

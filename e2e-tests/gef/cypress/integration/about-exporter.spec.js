@@ -45,7 +45,7 @@ context('About Exporter Page', () => {
       aboutExporter.probabilityOfDefaultInput();
       aboutExporter.isFinancingIncreasingRadioYes();
       aboutExporter.isFinancingIncreasingRadioNo();
-      aboutExporter.continueButton();
+      aboutExporter.doneButton();
       aboutExporter.saveAndReturnButton();
     });
 
@@ -60,9 +60,9 @@ context('About Exporter Page', () => {
     });
   });
 
-  describe('Clicking on Continue', () => {
+  describe('Clicking on Done', () => {
     it('validates form', () => {
-      aboutExporter.continueButton().click();
+      aboutExporter.doneButton().click();
       aboutExporter.errorSummary();
       aboutExporter.smeTypeError();
       aboutExporter.probabilityOfDefaultError();
@@ -73,7 +73,7 @@ context('About Exporter Page', () => {
       aboutExporter.microRadioButton().click();
       aboutExporter.probabilityOfDefaultInput().type('20');
       aboutExporter.isFinancingIncreasingRadioYes().click();
-      aboutExporter.continueButton().click();
+      aboutExporter.doneButton().click();
       cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
     });
   });
