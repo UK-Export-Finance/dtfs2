@@ -48,7 +48,7 @@ const validateAboutExporter = async (req, res) => {
     if (!body.isFinanceIncreasing) {
       aboutExporterErrors.push({
         errRef: 'isFinanceIncreasing',
-        errMsg: 'Enter theSelect whether your financing to the exporter is increasing as a result of this new GEF facility ',
+        errMsg: 'Enter the elect whether your financing to the exporter is increasing as a result of this new GEF facility ',
       });
     }
   }
@@ -60,9 +60,9 @@ const validateAboutExporter = async (req, res) => {
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
-        industries: details.industries || null,
-        smeType: body.smeType || null,
-        probabilityOfDefault: body.probabilityOfDefault || null,
+        industries: details.industries,
+        smeType: body.smeType,
+        probabilityOfDefault: body.probabilityOfDefault,
         isFinanceIncreasing: body.isFinanceIncreasing,
         applicationId,
       });
