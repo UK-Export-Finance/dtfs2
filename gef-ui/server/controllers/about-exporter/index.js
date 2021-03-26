@@ -60,7 +60,10 @@ const validateAboutExporter = async (req, res) => {
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
-        industries: details.industries,
+        industries: details.industries.map((industry, index) => ({
+          value: index,
+          text: `${industry.name} - ${industry.class.name}`,
+        })),
         smeType: body.smeType,
         probabilityOfDefault: body.probabilityOfDefault,
         isFinanceIncreasing: body.isFinanceIncreasing,
