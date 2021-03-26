@@ -31,6 +31,7 @@ module.exports = {
       tfm: {
         tasks: MOCK_TASKS,
         exporterCreditRating: 'Good (BB-)',
+        supplyContractValueInGBP: '7287.56740999854',
         parties: {
           exporter: {
             partyUrn: '1111',

@@ -1,6 +1,6 @@
 const mapTotals = require('./mapTotals');
-const { formattedNumber } = require('../../../utils/number');
-const { stripCommas } = require('../../../utils/string');
+const { formattedNumber } = require('../../../../utils/number');
+const { stripCommas } = require('../../../../utils/string');
 
 describe('mapTotals', () => {
   const mockFacilities = [

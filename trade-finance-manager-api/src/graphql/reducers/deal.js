@@ -1,6 +1,7 @@
-const mapTotals = require('./mappings/mapTotals');
+const mapTotals = require('./mappings/deal/mapTotals');
 const mapFacilities = require('./mappings/facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
+const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
 // TODO: add unit test
 // so that when this is changed, tests fail.
@@ -27,7 +28,7 @@ const dealReducer = (deal) => {
       submissionDetails: mapSubmissionDetails(submissionDetails),
       eligibilityCriteria: eligibility.criteria,
     },
-    tfm: dealTfm,
+    tfm: mapDealTfm(dealTfm),
   };
 
   return result;

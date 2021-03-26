@@ -1,5 +1,5 @@
-const { formattedNumber } = require('../../../utils/number');
-const { stripCommas } = require('../../../utils/string');
+const { formattedNumber } = require('../../../../utils/number');
+const { stripCommas } = require('../../../../utils/string');
 
 const mapTotals = (tfmFacilities) => {
   const totals = {};

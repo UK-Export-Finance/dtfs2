@@ -9,7 +9,13 @@
 
   {% block content %}
 
-    {{caseSummary.render(deal)}}
+  {% set componentData = {
+    deal: deal,
+    tfm: tfm
+  } %}
+
+
+    {{caseSummary.render(componentData)}}
 
     {% include "_partials/case_sub_navigation.njk" %}
 

@@ -94,6 +94,7 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.contain(facilityCurrency);
     });
 
+    // currency is converted dynamically - tricky/flaky to assert/mock this from e2e test
     tfmPages.facilityPage.facilityValueGbp().invoke('text').then((text) => {
       expect(text.trim()).to.contain('GBP');
     });

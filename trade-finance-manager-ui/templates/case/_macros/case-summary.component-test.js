@@ -5,7 +5,12 @@ const component = '../templates/case/_macros/case-summary.njk';
 const render = componentRenderer(component);
 
 const rawdata = fs.readFileSync('templates/case/mock_data/deal.json');
-const params = JSON.parse(rawdata);
+const params = {
+  deal: JSON.parse(rawdata),
+  tfm: {
+    supplyContractValueInGBP: 'GBP 123,456.78'
+  },
+};
 
 describe(component, () => {
   let wrapper;
@@ -15,32 +20,36 @@ describe(component, () => {
   });
 
   it('should render UKEF deal id', () => {
-    wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.details.ukefDealId);
+    wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.deal.details.ukefDealId);
   });
 
   it('should render supplier name', () => {
-    wrapper.expectText('[data-cy="supplier-name"]').toRead(params.submissionDetails.supplierName);
+    wrapper.expectText('[data-cy="supplier-name"]').toRead(params.deal.submissionDetails.supplierName);
   });
 
   it('should render buyer name', () => {
-    wrapper.expectText('[data-cy="buyer-name"]').toRead(params.submissionDetails.buyerName);
+    wrapper.expectText('[data-cy="buyer-name"]').toRead(params.deal.submissionDetails.buyerName);
   });
 
   it('should render destination country', () => {
-    wrapper.expectText('[data-cy="destination-country"]').toRead(params.submissionDetails.destinationCountry);
+    wrapper.expectText('[data-cy="destination-country"]').toRead(params.deal.submissionDetails.destinationCountry);
   });
 
   it('should render export description', () => {
-    wrapper.expectText('[data-cy="export-description"]').toRead(params.submissionDetails.supplyContractDescription);
+    wrapper.expectText('[data-cy="export-description"]').toRead(params.deal.submissionDetails.supplyContractDescription);
   });
 
   it('should render contract value', () => {
-    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.submissionDetails.supplyContractCurrency} 8,000,000.00`);
+    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
   });
 
+  it('should render contract value', () => {
+    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
+  });
 
-  it('should render submission type', () => {
-    wrapper.expectText('[data-cy="submission-type"]').toRead(params.details.submissionType);
+  it('should render contract valuea in GBP', () => {
+    wrapper.expectElement('[data-cy="contract-value-in-gbp"]').toExist();
+    wrapper.expectText('[data-cy="contract-value-in-gbp"]').toRead(params.tfm.supplyContractValueInGBP);
   });
 
   // it('should render submission date', () => {
@@ -48,6 +57,6 @@ describe(component, () => {
   // });
 
   it('should render  bank name', () => {
-    wrapper.expectText('[data-cy="bank-name"]').toRead(params.details.owningBank.name);
+    wrapper.expectText('[data-cy="bank-name"]').toRead(params.deal.details.owningBank.name);
   });
 });
