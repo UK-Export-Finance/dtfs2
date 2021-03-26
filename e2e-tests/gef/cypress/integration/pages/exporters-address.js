@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const automaticCover = {
-  backButton: () => cy.get('[data-cy="back-button"]'),
+  backLink: () => cy.get('[data-cy="back-link"]'),
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   companyNameTitle: () => cy.get('[data-cy="company-name-title"]'),

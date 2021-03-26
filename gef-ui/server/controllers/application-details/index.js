@@ -1,9 +1,7 @@
 import * as api from '../../services/api';
-import {
-  mapSummaryList, status, facilityType,
-} from '../../utils/helpers';
+import { mapSummaryList, status } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/display-items';
-import constants from '../../../constants';
+import { PROGRESS, FACILITY_TYPE } from '../../../constants';
 
 const applicationDetails = async (req, res) => {
   const { params, query } = req;
@@ -11,14 +9,14 @@ const applicationDetails = async (req, res) => {
   const { manual } = query;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
+    const { bankInternalRefName, exporterId } = await api.getApplication(applicationId);
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
-    const exporterStatus = status[exporter.status || constants.NOT_STARTED]; // if null, set status to Not started
-    const facilitiesStatus = status[facilities.status || constants.NOT_STARTED]; // if null, set status to Not started
-    const canSubmit = exporterStatus.code === constants.COMPLETED
-    && facilitiesStatus.code === constants.COMPLETED; // Both statuses are set to complete
+    const exporterStatus = status[exporter.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
+    const facilitiesStatus = status[facilities.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
+    const canSubmit = exporterStatus.code === PROGRESS.COMPLETED
+    && facilitiesStatus.code === PROGRESS.COMPLETED; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
       isManual: manual,
@@ -29,11 +27,12 @@ const applicationDetails = async (req, res) => {
       facilities: {
         status: facilitiesStatus,
         data: facilities.items.map((item) => ({
-          heading: facilityType[item.details.type],
+          heading: FACILITY_TYPE[item.details.type],
           rows: mapSummaryList(item, facilityItems(exporterUrl, item.details.type)),
         })),
       },
       submit: canSubmit,
+      bankInternalRefName,
       applicationId,
     });
   } catch (err) {

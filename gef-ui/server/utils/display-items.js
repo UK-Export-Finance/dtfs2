@@ -1,15 +1,11 @@
 import moment from 'moment';
-
-const YES = 'Yes';
-const NO = 'No';
-const ISSUED = 'Issued';
-const UNISSUED = 'Unissued';
+import { SME_TYPE, BOOLEAN, STAGE } from '../../constants';
 
 const exporterItems = (exporterUrl) => [
   {
     label: 'Companies House registration number',
     id: 'companiesHouseRegistrationNumber',
-    href: `${exporterUrl}/companies-house`,
+    href: `${exporterUrl}/companies-house?status=change`,
   },
   {
     label: 'Company name',
@@ -22,28 +18,30 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
-    href: `${exporterUrl}/enter-exporters-correspondence-address`,
+    href: `${exporterUrl}/enter-exporters-correspondence-address?status=change`,
   },
   {
-    label: 'Industries',
+    label: 'Industry',
     id: 'industries',
+    isIndustry: true,
   },
   {
     label: 'SME type',
     id: 'smeType',
-    href: `${exporterUrl}/`,
+    href: `${exporterUrl}/about-exporter?status=change`,
+    method: (callback) => SME_TYPE[callback],
   },
   {
     label: 'Probability of default',
     id: 'probabilityOfDefault',
-    href: `${exporterUrl}/`,
+    href: `${exporterUrl}/about-exporter?status=change`,
     suffix: '%',
   },
   {
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
-    href: `${exporterUrl}/`,
-    method: (callback) => (callback ? YES : NO),
+    href: `${exporterUrl}/about-exporter?status=change`,
+    method: (callback) => (callback === 'true' ? BOOLEAN.YES : BOOLEAN.NO),
   },
 ];
 
@@ -57,7 +55,7 @@ const facilityItems = (exporterUrl, type) => [
     label: 'Stage',
     id: 'hasBeenIssued',
     href: `${exporterUrl}/`,
-    method: (callback) => (callback ? ISSUED : UNISSUED),
+    method: (callback) => (callback ? STAGE.ISSUED : STAGE.UNISSUED),
   },
   {
     label: 'Cover start date',

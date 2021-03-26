@@ -19,6 +19,7 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res.exporterId = '123';
+  res.bankInternalRefName = 'My test';
   return res;
 };
 
@@ -57,6 +58,7 @@ describe('GET Application Details', () => {
     api.getFacilities = () => Promise.resolve(mockFacilityResponse);
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+      bankInternalRefName: 'My test',
       exporter: {
         status: expect.any(Object),
         rows: expect.any(Array),

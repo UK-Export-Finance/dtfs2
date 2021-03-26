@@ -29,3 +29,26 @@
     line-height: 38px;
   }
 }
+
+.application-banner {
+  background-color: $govuk-brand-colour;
+  padding: 10px;
+  color: govuk-colour("white");
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+
+  .govuk-body,
+  .govuk-link {
+    color: govuk-colour("white");
+    margin-bottom: 0;
+  }
+
+  .govuk-link {
+    line-height: 25px;
+
+    &:focus {
+      color: $govuk-focus-text-colour;
+    }
+  }
+}

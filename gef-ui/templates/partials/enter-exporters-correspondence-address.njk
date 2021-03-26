@@ -17,13 +17,15 @@
     }) }}
   {% endif %}
 
-  {{ govukBackLink({
-    text: "Back",
-    href: '/gef/application-details/' + applicationId + '/select-exporters-correspondence-address',
-    attributes: {
-      'data-cy': 'back-button'
-    }
-  }) }}
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: '/gef/application-details/' + applicationId + '/select-exporters-correspondence-address',
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
 
   <header data-cy="application-details-page">
     <span class="govuk-caption-xl" data-cy="heading-caption">
@@ -119,10 +121,14 @@
             }
           }) }}
 
-          <a
-            class="govuk-link"
-            href="/gef/application-details/{{applicationId}}"
-            data-cy="cancel-button">Save and return to application</a>
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "enter-exporters-correspondence-address?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
         </div>
       </form>
     </div>

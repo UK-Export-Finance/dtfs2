@@ -18,13 +18,13 @@ context('Ineligible GEF Page', () => {
     it('displays the correct elements', () => {
       ineligibleGef.mainHeading();
       ineligibleGef.content();
-      ineligibleGef.backButton();
+      ineligibleGef.backLink();
     });
   });
 
   describe('Clicking on Back Button', () => {
     it('redirects user to ** page', () => {
-      ineligibleGef.backButton().click();
+      ineligibleGef.backLink().click();
       cy.url().should('eq', relative('/gef/ineligible-gef'));
     });
   });
