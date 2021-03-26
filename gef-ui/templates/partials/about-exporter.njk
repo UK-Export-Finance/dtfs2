@@ -39,21 +39,13 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-one-half">
-      {# {% if industries.length <= 1 %}
-        {% for industry in industries %}
-          <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ industry.name }} - {{ industry.class.name }}</p>
-        {% endfor %}
-      {% else %}
-        <p class="govuk-body govuk-!-margin-bottom-7">—</p>
-      {% endif %} #}
-
       <form
         method="post"
         data-cy="form">
         
         {% if industries.length <= 1 %}
           <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
-          <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ selectedIndustry.name }} - {{ selectedIndustry.class.name }}</p>
+          <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ selectedIndustry.name }}<br>{{ selectedIndustry.class.name }}</p>
         {% else %}
           {{ govukRadios({
             idPrefix: "industry",
