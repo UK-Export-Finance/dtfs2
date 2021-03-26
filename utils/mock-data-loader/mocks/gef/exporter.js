@@ -9,6 +9,7 @@ const EXPORTER = [{
   companyName: faker.company.companyName(),
   registeredAddress: null,
   correspondenceAddress: null,
+  selectedIndustryIndex: null,
   industries: null,
   smeType: 'MEDIUM',
   probabilityOfDefault: 67,
@@ -24,6 +25,7 @@ const EXPORTER = [{
     postcode: 'AB1 1AB',
   },
   correspondenceAddress: null,
+  selectedIndustryIndex: 2,
   industries: [
     {
       code: '1003',

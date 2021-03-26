@@ -45,6 +45,10 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     if (req.query.exporterId) {
       const industries = await findSicCodes(response.data.sic_codes);
+      let selectedIndustryIndex = null;
+      if (industries.length === 1) {
+        selectedIndustryIndex = 0;
+      }
       const address = response.data.registered_office_address;
       await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(req.query.exporterId)) } }, {
@@ -61,6 +65,7 @@ exports.getByRegistrationNumber = async (req, res) => {
               country: address.country,
             },
             updatedAt: Date.now(),
+            selectedIndustryIndex,
             industries,
           },
         }, { returnOriginal: false },
