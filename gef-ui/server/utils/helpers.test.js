@@ -4,6 +4,7 @@ import {
   validationErrorHandler,
   mapSummaryList,
   apiErrorHandler,
+  isTrueSet,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -193,7 +194,7 @@ describe('mapSummaryList()', () => {
     expect(html).toMatch('required');
   });
 
-  it('returns a long dash if value is emtpy and is NOT required', () => {
+  it('returns a long dash if value is empty and is NOT required', () => {
     const mockedDisplayItems = new MockedDisplayItems();
     const mockedData = new MockedData();
 
@@ -215,6 +216,25 @@ describe('mapSummaryList()', () => {
 
     const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
+  });
+
+  it('returns an unordered list if options is set to `isIndustry`', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    mockedData.details.industries = [{
+      code: '1017',
+      name: 'Arts, entertainment and recreation',
+      class: {
+        code: '90030',
+        name: 'Artistic creation',
+      },
+    }];
+    mockedDisplayItems[0].isIndustry = true;
+    mockedDisplayItems[0].id = 'industries';
+
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(html).toEqual('<ul class="is-unstyled"><li>Arts, entertainment and recreation - Artistic creation</li></ul>');
   });
 
   it('returns `null` if value is undefined', () => {
@@ -280,5 +300,24 @@ describe('mapSummaryList()', () => {
     mockedData.details.reverse = 'abcd';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(text).toEqual('dcba');
+  });
+});
+
+describe('isTrueSet()', () => {
+  it('returns null if value is not a string', () => {
+    expect(isTrueSet(null)).toBe(null);
+    expect(isTrueSet(10)).toBe(null);
+    expect(isTrueSet('')).toBe(null);
+    expect(isTrueSet(true)).toBe(null);
+    expect(isTrueSet(false)).toBe(null);
+    expect(isTrueSet(undefined)).toBe(null);
+  });
+
+  it('returns true boolean if string value is equal to `true`', () => {
+    expect(isTrueSet('true')).toBe(true);
+  });
+
+  it('returns false boolean if string value is equal to `false`', () => {
+    expect(isTrueSet('false')).toBe(false);
   });
 });

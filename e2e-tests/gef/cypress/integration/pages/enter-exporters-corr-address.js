@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const enterExportersCorAddress = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  backButton: () => cy.get('[data-cy="back-button"]'),
+  backLink: () => cy.get('[data-cy="back-link"]'),
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   form: () => cy.get('[data-cy="form"]'),
@@ -13,7 +13,7 @@ const enterExportersCorAddress = {
   locality: () => cy.get('[data-cy="locality"]'),
   postcode: () => cy.get('[data-cy="postcode"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
-  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
+  saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };
 
 export default enterExportersCorAddress;

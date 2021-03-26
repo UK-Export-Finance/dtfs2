@@ -73,4 +73,17 @@ context('Companies House Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/exporters-address`));
     });
   });
+
+  describe('Status query is set to `change`', () => {
+    it('hides `back button`', () => {
+      cy.visit(relative(`/gef/application-details/${applicationId}/companies-house?status=change`));
+      companiesHouse.backLink().should('not.be.visible');
+    });
+
+    it('redirects user back to application details page when clicking on `Continue` button', () => {
+      cy.visit(relative(`/gef/application-details/${applicationId}/companies-house?status=change`));
+      companiesHouse.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+    });
+  });
 });

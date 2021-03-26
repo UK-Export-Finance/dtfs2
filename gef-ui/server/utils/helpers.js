@@ -67,8 +67,20 @@ const mapSummaryList = (data, itemsToShow) => {
       return { text: '—' };
     }
 
+    if (options.isIndustry) {
+      const list = [];
+      Object.values(val).forEach((value) => {
+        if (value) {
+          list.push(`<li>${value.name} - ${value.class.name}</li>`);
+        }
+      });
+
+      return { html: `<ul class="is-unstyled">${list.join('')}</ul>` };
+    }
+
     if (isObject(val) || Array.isArray(val)) {
       const list = [];
+
       Object.values(val).forEach((value) => {
         if (value) {
           list.push(`<li>${value}</li>`);
@@ -89,21 +101,23 @@ const mapSummaryList = (data, itemsToShow) => {
 
   return itemsToShow.map((item) => {
     const {
-      label, href, prefix, suffix, method, isCurrency,
+      label, href, prefix, suffix, method, isCurrency, isIndustry,
     } = item;
-    const value = details[item.id];
+    // If value is a number, convert to String as 0 can also become falsey
+    const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency } = details;
     const isRequired = required.includes(item.id);
 
     // Don't show row if value is undefined
     if (value === undefined) { return null; }
 
+
     return {
       key: {
         text: label,
       },
       value: valueObj(value, isRequired, currency, {
-        prefix, suffix, method, isCurrency,
+        prefix, suffix, method, isCurrency, isIndustry,
       }),
       actions: {
         items: [
@@ -116,6 +130,14 @@ const mapSummaryList = (data, itemsToShow) => {
       },
     };
   });
+};
+
+const isTrueSet = (val) => {
+  if (val && typeof val === 'string') {
+    return val === 'true';
+  }
+
+  return null;
 };
 
 const selectDropdownAddresses = (addresses) => {
@@ -149,11 +171,6 @@ const status = ({
   },
 });
 
-const facilityType = ({
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-});
-
 export {
   userToken,
   isObject,
@@ -162,5 +179,5 @@ export {
   mapSummaryList,
   selectDropdownAddresses,
   status,
-  facilityType,
+  isTrueSet,
 };
