@@ -1,6 +1,7 @@
 import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
 import commaNumber from 'comma-number';
+import cleanDeep from 'clean-deep';
 
 // Fetches the user token from session
 const userToken = (req) => {
@@ -63,7 +64,10 @@ const mapSummaryList = (data, itemsToShow) => {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
 
-    if (val === null) {
+    /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
+    properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+    Object is empty or not. */
+    if (val === null || _isEmpty(cleanDeep(val))) {
       return { text: '—' };
     }
 
@@ -104,7 +108,6 @@ const mapSummaryList = (data, itemsToShow) => {
     // Don't show row if value is undefined
     if (value === undefined) { return null; }
 
-
     return {
       key: {
         text: label,
@@ -116,7 +119,10 @@ const mapSummaryList = (data, itemsToShow) => {
         items: [
           ...(href ? [{
             href,
-            text: `${value ? 'Change' : 'Add'}`,
+            /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
+            properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+            Object is empty or not. */
+            text: `${!_isEmpty(cleanDeep(value)) ? 'Change' : 'Add'}`,
             visuallyHiddenText: item.label,
           }] : []),
         ],
