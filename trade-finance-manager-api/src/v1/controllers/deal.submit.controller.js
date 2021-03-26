@@ -4,6 +4,7 @@ const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
 const { addDealRiskRating } = require('./deal.risk-rating');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
+const { addDealStage } = require('./deal.add-deal-stage');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
@@ -24,12 +25,14 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithRiskRating);
 
-  const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
+  const updatedDealWithTfmDealStage = await addDealStage(updatedDealWithDealCurrencyConversions);
+
+  const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDealStage);
 
   if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
     await api.updatePortalDealStatus(
       dealId,
-      CONSTANTS.DEALS.DEAL_STATUS.SUBMISSION_ACKNOWLEDGED,
+      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
     );
   }
 
