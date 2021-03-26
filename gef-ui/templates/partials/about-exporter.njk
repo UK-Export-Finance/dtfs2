@@ -39,18 +39,46 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-one-half">
-      <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
-      {% if industries %}
+      {# {% if industries.length <= 1 %}
         {% for industry in industries %}
           <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ industry.name }} - {{ industry.class.name }}</p>
         {% endfor %}
       {% else %}
         <p class="govuk-body govuk-!-margin-bottom-7">—</p>
-      {% endif %}
+      {% endif %} #}
 
       <form
         method="post"
         data-cy="form">
+        
+        {% if industries.length <= 1 %}
+          <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
+          <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ selectedIndustry.name }} - {{ selectedIndustry.class.name }}</p>
+        {% else %}
+          {{ govukRadios({
+            idPrefix: "industry",
+            name: "industry",
+            classes: "govuk-!-margin-bottom-4",
+            fieldset: {
+              legend: {
+                text: "Select the most appropriate industry",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            hint: {
+              text: "Select one option"
+            },
+            errorMessage: errors and errors.fieldErrors.industry and {
+              text: errors.fieldErrors.industry.text,
+              attributes: {
+                'data-cy': 'industry-error'
+              }
+            },
+            items: industries
+          }) }}
+
+        {% endif %}
+
         {{ govukRadios({
           idPrefix: "smeType",
           name: "smeType",
