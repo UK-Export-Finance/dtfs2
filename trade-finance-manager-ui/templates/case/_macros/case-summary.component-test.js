@@ -10,6 +10,7 @@ const params = {
     ...JSON.parse(rawdata),
     totals: {
       facilitiesValueInGBP: 'GBP 2,740.41',
+      facilitiesUkefExposure: 'GBP 123,456.12',
     },
   },
   tfm: {
@@ -60,7 +61,9 @@ describe(component, () => {
     wrapper.expectText('[data-cy="total-facilities-in-gbp"]').toRead(params.deal.totals.facilitiesValueInGBP);
   });
 
-  // total-facilities-in-gbp
+  it('should render total facilities in GBP', () => {
+    wrapper.expectText('[data-cy="total-ukef-exposure"]').toRead(params.deal.totals.facilitiesUkefExposure);
+  });
 
   // it('should render submission date', () => {
   //   wrapper.expectText('[data-cy="submission-date"]').toRead(params.details.submissionDate);
