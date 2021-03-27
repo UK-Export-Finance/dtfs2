@@ -229,6 +229,17 @@ input DashboardFilters {
   operator: String
 }
 
+input TasksFilters {
+  filterType: String
+  userId: String
+  teamId: String
+}
+
+input DealInput {
+  _id: String!
+  tasksFilters: TasksFilters
+}
+
 input DealsInput {
   start: Int,
   pagesize: Int,
@@ -306,7 +317,7 @@ type TeamMember {
 }
 
 type Query {
-  deal(_id: ID!): Deal
+  deal(params: DealInput): Deal
   deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
   teamMembers(teamId: String!): [TeamMember]

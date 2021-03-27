@@ -18,8 +18,8 @@ const MOCK_DEAL_TFM = {
 };
 
 const GET_DEAL = gql`
-  query Deal($id: ID!) {
-    deal(_id: $id) {
+  query Deal($_id: String! $tasksFilters: TasksFilters) {
+    deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
       _id
       tfm {
         parties {
