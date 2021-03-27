@@ -1,5 +1,5 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
-const component = '../templates/case/tasks/_macros/tasks-filters.njk';
+const component = '../templates/case/tasks/_macros/task-filters.njk';
 
 const render = componentRenderer(component);
 

@@ -5,7 +5,7 @@
   {% set tasks = params.tasks %}
   {% set selectedTaskFilter = params.selectedTaskFilter %}
 
-  <section data-cy="tasks-filters">
+  <section id="task-filters" data-cy="task-filters">
 
     <form method="post" autocomplete="off">
 
@@ -47,7 +47,8 @@
       })}}
 
       {{ govukButton({
-        text: "Apply filters",
+        text: 'Apply filters',
+        classes: 'js-hidden',
         attributes: {
           'data-cy': 'submit-button'
         }
@@ -56,5 +57,11 @@
     </form>
 
   </section>
+
+  <script>
+    var element = document.getElementById('tasks-filters');
+    element.className = 'js-enabled';
+  </script>
+
 
 {% endmacro %}
