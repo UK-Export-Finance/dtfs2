@@ -30,7 +30,7 @@ describe(page, () => {
   });
 
   it('should render filters', () => {
-    wrapper.expectElement('[data-cy="tasks-filters"]').toExist();
+    wrapper.expectElement('[data-cy="task-filters"]').toExist();
   });
 
   it('should render deal submission type', () => {

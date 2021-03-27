@@ -14,6 +14,10 @@ body {
   font-family: Helvetica;
 }
 
+.js-enabled .js-hidden {
+  display: none;
+}
+
 .tfm-width,
 .moj-header__container {
   max-width: 1440px;
