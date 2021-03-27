@@ -18,6 +18,7 @@ describe(page, () => {
         }
       ],
     },
+    selectedTaskFilter: 'all',    
   };
 
   beforeEach(() => {
@@ -26,6 +27,10 @@ describe(page, () => {
 
   it('should render heading', () => {
     wrapper.expectText('[data-cy="tasks-heading"]').toRead('Tasks for this deal');
+  });
+
+  it('should render filters', () => {
+    wrapper.expectElement('[data-cy="tasks-filters"]').toExist();
   });
 
   it('should render deal submission type', () => {

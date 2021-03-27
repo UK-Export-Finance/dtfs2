@@ -1,0 +1,60 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set tasks = params.tasks %}
+  {% set selectedTaskFilter = params.selectedTaskFilter %}
+
+  <section data-cy="tasks-filters">
+
+    <form method="post" autocomplete="off">
+
+      {{govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "filterType",
+        name: "filterType",
+        fieldset: {
+          legend: {
+            text: "Fieldset todo..."
+          }
+        },
+        items: [
+          {
+            value: "user",
+            text: "Your tasks",
+            checked: selectedTaskFilter === 'user',
+            attributes: {
+              'data-cy': 'task-radio-button-your-tasks'
+            }
+          },
+          {
+            value: "team",
+            text: "Your team’s tasks",
+            checked: selectedTaskFilter === 'team',
+            attributes: {
+              'data-cy': 'task-radio-button-your-team'
+            }
+          },
+          {
+            value: "all",
+            text: "All tasks",
+            checked: selectedTaskFilter === 'all',
+            attributes: {
+              'data-cy': 'task-radio-button-all'
+            }
+          }
+        ]
+      })}}
+
+      {{ govukButton({
+        text: "Apply filters",
+        attributes: {
+          'data-cy': 'submit-button'
+        }
+      }) }}
+
+    </form>
+
+  </section>
+
+{% endmacro %}

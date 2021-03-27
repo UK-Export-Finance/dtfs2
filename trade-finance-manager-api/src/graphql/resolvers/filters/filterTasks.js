@@ -65,13 +65,13 @@ const filterUserTasks = (tasks, FILTER_USER_ID) =>
   mapAndFilter(tasks, filterUserTasksInGroup, FILTER_USER_ID);
 
 const filterTasks = (tasks, filtersObj) => {
-  const {
-    filterType,
-  } = filtersObj;
-
-  if (!filterType || filterType === FILTER_TYPE.ALL) {
+  if (!filtersObj
+    || !filtersObj.filterType
+    || filtersObj.filterType === FILTER_TYPE.ALL) {
     return tasks;
   }
+
+  const { filterType } = filtersObj;
 
   if (filterType === FILTER_TYPE.TEAM) {
     const { teamId } = filtersObj;

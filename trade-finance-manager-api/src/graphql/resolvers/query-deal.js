@@ -16,6 +16,7 @@ const queryDeal = async ({ params }) => {
       tasks: filterTasks(deal.tfm.tasks, tasksFilters),
     },
   };
+
   return dealReducer(filtered);
 };
 

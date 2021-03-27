@@ -13,8 +13,13 @@ require('dotenv').config();
 
 const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
 
-const getDeal = async (id) => {
-  const response = await apollo('GET', dealQuery, { id });
+const getDeal = async (id, tasksFilters) => {
+  const queryParams = {
+    _id: id, // eslint-disable-line no-underscore-dangle
+    tasksFilters,
+  };
+
+  const response = await apollo('GET', dealQuery, queryParams);
   return response.data.deal;
 };
 

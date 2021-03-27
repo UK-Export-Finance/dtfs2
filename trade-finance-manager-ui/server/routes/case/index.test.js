@@ -44,7 +44,9 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRiskEdit);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(8);
+    expect(post).toHaveBeenCalledTimes(9);
+
+    expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.putCaseTask);
 
