@@ -14,6 +14,7 @@ const {
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -45,6 +46,42 @@ const getCaseTasks = async (req, res) => {
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
+    selectedTaskFilter: 'user',
+  });
+};
+
+const filterCaseTasks = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
+  const { filterType } = req.body;
+
+  // currently, data shape allows users to be in multiple teams.
+  // however, user will only ever be in one team.
+  // TODO: update user.teams into single string (double check with business)
+  const userTeamId = req.session.user.teams[0];
+
+  const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+
+  const tasksFilters = {
+    filterType,
+    teamId: userTeamId,
+    userId,
+  };
+
+  const deal = await api.getDeal(dealId, tasksFilters);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/tasks/tasks.njk', {
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'tasks',
+    dealId,
+    user: req.session.user,
+    selectedTaskFilter: filterType,
   });
 };
 
@@ -411,6 +448,7 @@ const postTfmFacility = async (req, res) => {
 export default {
   getCaseDeal,
   getCaseTasks,
+  filterCaseTasks,
   getCaseTask,
   putCaseTask,
   getCaseFacility,

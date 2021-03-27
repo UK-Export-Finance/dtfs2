@@ -1,5 +1,8 @@
-{% extends "case/case.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/tasks-table.njk' as tasksTable %}
+{% import './_macros/tasks-filters.njk' as tasksFilters %}
+
+{% extends "case/case.njk" %}
 
 {% block sub_content %}
   
@@ -9,14 +12,21 @@
 
       <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="tasks-heading">Tasks for this deal</h2>
 
+      {% set filtersComponentData = {
+        tasks: tfm.tasks,
+        selectedTaskFilter: selectedTaskFilter
+      } %}
+
+      {{ tasksFilters.render(filtersComponentData) }}
+
       <h3 class="govuk-heading-s ukef-heading-background" data-cy="tasks-deal-submission-type">{{ deal.details.submissionType }}</h3>
 
-      {% set componentData = {
+      {% set tableComponentData = {
         tasks: tfm.tasks,
         caseId: dealId
       } %}
 
-      {{ tasksTable.render(componentData) }}
+      {{ tasksTable.render(tableComponentData) }}
 
     </div>
 

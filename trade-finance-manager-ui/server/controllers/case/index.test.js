@@ -18,6 +18,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
+    teams: ['TEAM1'],
   },
 };
 
@@ -49,6 +50,7 @@ describe('controllers - case', () => {
         };
 
         await caseController.getCaseDeal(req, res);
+
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
@@ -113,6 +115,82 @@ describe('controllers - case', () => {
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
           user: session.user,
+          selectedTaskFilter: 'user',
+        });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseTasks(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('POST case tasks', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [],
+        },
+        mock: true,
+      };
+
+      const apiGetDealSpy = jest.fn(() => Promise.resolve(mockDeal));
+
+      beforeEach(() => {
+        api.getDeal = apiGetDealSpy;
+      });
+
+      it('should render tasks template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+          body: {
+            filterType: 'team',
+          },
+        };
+
+        await caseController.filterCaseTasks(req, res);
+
+        const expectedTaskFiltersObj = {
+          filterType: req.body.filterType,
+          teamId: req.session.user.teams[0],
+          userId: req.session.user._id,
+        };
+
+        expect(apiGetDealSpy).toHaveBeenCalledWith(
+          mockDeal._id,
+          expectedTaskFiltersObj,
+        );
+
+        expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'tasks',
+          dealId: req.params._id,
+          user: session.user,
+          selectedTaskFilter: req.body.filterType,
         });
       });
     });
