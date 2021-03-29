@@ -1,4 +1,6 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% import './ukef-deal-stage.njk' as ukefDealStage %}
+
 
 {% macro render(params) %}
   {% set deal = params.deal %}
@@ -12,7 +14,7 @@
       </div>
       <div class="govuk-grid-column-eight-tenths">
         <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third">
             <div class="label">Exporter</div>
             <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName }}</div>
           </div>
@@ -28,9 +30,13 @@
       <div class="govuk-grid-column-one-fifth">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full">
-            <div class="ukef-heading-xs">Status</div>
-            <div class="ukef-body-s">{{ deal.details.status }}</div>
-          </div>
+
+            {% set componentData = {
+              stage: tfm.stage
+            }%}
+
+            {{ukefDealStage.render(componentData)}}
+
         </div>
       </div>
 

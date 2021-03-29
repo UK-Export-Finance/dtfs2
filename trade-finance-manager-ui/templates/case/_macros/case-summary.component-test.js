@@ -14,7 +14,8 @@ const params = {
     },
   },
   tfm: {
-    supplyContractValueInGBP: 'GBP 123,456.78'
+    supplyContractValueInGBP: 'GBP 123,456.78',
+    stage: 'Confirmed',
   },
 };
 
@@ -35,6 +36,10 @@ describe(component, () => {
 
   it('should render buyer name', () => {
     wrapper.expectText('[data-cy="buyer-name"]').toRead(params.deal.submissionDetails.buyerName);
+  });
+
+  it('should render ukef deal stage component', () => {
+    wrapper.expectElement('[data-cy="ukef-deal-stage"]').toExist();
   });
 
   it('should render destination country', () => {
