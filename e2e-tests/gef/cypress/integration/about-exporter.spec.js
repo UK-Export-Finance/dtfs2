@@ -27,7 +27,7 @@ context('About Exporter Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
+    cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
   });
 
   describe('Visiting page', () => {
@@ -56,7 +56,7 @@ context('About Exporter Page', () => {
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
       aboutExporter.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}/enter-exporters-correspondence-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[1]}/enter-exporters-correspondence-address`));
     });
   });
 
@@ -74,14 +74,14 @@ context('About Exporter Page', () => {
       aboutExporter.probabilityOfDefaultInput().type('20');
       aboutExporter.isFinancingIncreasingRadioYes().click();
       aboutExporter.doneButton().click();
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
     });
   });
 
   describe('Clicking on Save and return, bypasses validation and takes user back to application details page', () => {
     it('validates form', () => {
       aboutExporter.saveAndReturnButton().click();
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
     });
   });
 });
