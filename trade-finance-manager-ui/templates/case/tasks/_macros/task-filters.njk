@@ -10,12 +10,13 @@
     <form method="post" autocomplete="off">
 
       {{govukRadios({
-        classes: "govuk-radios--inline",
+        classes: "govuk-radios--inline govuk-radios--small task-filters__radios",
         idPrefix: "filterType",
         name: "filterType",
         fieldset: {
           legend: {
-            text: "Fieldset todo..."
+            text: "Filter tasks for this deal",
+            classes: "govuk-visually-hidden"
           }
         },
         items: [
