@@ -4,40 +4,68 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  const params = {
-    deal: {
-      details: {
-        submissionType: 'Automatic Inclusion Notice',
+
+  describe('with tasks', () => {
+    const params = {
+      deal: {
+        details: {
+          submissionType: 'Automatic Inclusion Notice',
+        },
       },
-    },
-    tfm: {
-      tasks: [
-        {
-          groupTitle: 'Testing',
-          groupTasks: [],
-        }
-      ],
-    },
-    selectedTaskFilter: 'all',    
-  };
+      tfm: {
+        tasks: [
+          {
+            groupTitle: 'Testing',
+            groupTasks: [],
+          }
+        ],
+      },
+      selectedTaskFilter: 'all',
+    };
 
-  beforeEach(() => {
-    wrapper = render(params);
+    beforeEach(() => {
+      wrapper = render(params);
+    });
+
+    it('should render heading', () => {
+      wrapper.expectText('[data-cy="tasks-heading"]').toRead('Tasks for this deal');
+    });
+
+    it('should render filters', () => {
+      wrapper.expectElement('[data-cy="task-filters"]').toExist();
+    });
+
+    it('should render deal submission type', () => {
+      wrapper.expectText('[data-cy="tasks-deal-submission-type"]').toRead(params.deal.details.submissionType);
+    });
+
+    it('should render tasks table', () => {
+      wrapper.expectElement('[data-cy="tasks-table"]').toExist();
+    });
+
   });
 
-  it('should render heading', () => {
-    wrapper.expectText('[data-cy="tasks-heading"]').toRead('Tasks for this deal');
-  });
+  describe('when there are no tasks', () => {
 
-  it('should render filters', () => {
-    wrapper.expectElement('[data-cy="task-filters"]').toExist();
-  });
+    const params = {
+      deal: {
+        details: {
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      },
+      tfm: {
+        tasks: [],
+      },
+      selectedTaskFilter: 'all',
+    };
 
-  it('should render deal submission type', () => {
-    wrapper.expectText('[data-cy="tasks-deal-submission-type"]').toRead(params.deal.details.submissionType);
-  });
+    beforeEach(() => {
+      wrapper = render(params);
+    });
 
-  it('should render tasks table', () => {
-    wrapper.expectElement('[data-cy="tasks-table"]').toExist();
+    it('should render `no tasks message` component', () => {
+      wrapper.expectElement('[data-cy="no-tasks-message"]').toExist();
+    });
+    
   });
 });

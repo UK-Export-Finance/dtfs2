@@ -27,4 +27,10 @@ describe(component, () => {
     wrapper.expectElement('[data-cy="task-radio-button-all"]').toExist();
     wrapper.expectInput('[data-cy="task-radio-button-all"]').toHaveValue('all');
   });
+
+  it('should render submit button', () => {
+    wrapper.expectElement('[data-cy="submit-button"]').toExist();
+    wrapper.expectElement('[data-cy="submit-button"]').hasClass('js-hidden');
+    wrapper.expectText('[data-cy="submit-button"]').toRead('Filter results');
+  });
 });
