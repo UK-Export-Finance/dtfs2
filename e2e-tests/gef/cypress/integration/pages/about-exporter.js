@@ -7,6 +7,7 @@ const aboutExporter = {
   form: () => cy.get('[data-cy="form"]'),
   industryTitle: () => cy.get('[data-cy="industry-title"]'),
   industry: () => cy.get('[data-cy="industry"]'),
+  industries: () => cy.get('[data-cy="industries"]'),
   smeTypeError: () => cy.get('[data-cy="sme-type-error"]'),
   microRadioButton: () => cy.get('[data-cy="micro-radio-button"]'),
   smallRadioButton: () => cy.get('[data-cy="small-radio-button"]'),
