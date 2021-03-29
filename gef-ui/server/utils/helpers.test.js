@@ -2,6 +2,7 @@ import {
   userToken,
   isObject,
   validationErrorHandler,
+  isEmpty,
   mapSummaryList,
   apiErrorHandler,
   isTrueSet,
@@ -135,6 +136,28 @@ describe('validationErrorHandler()', () => {
   });
 });
 
+describe('isEmpty()', () => {
+  it('returns True if the Value or Object is empty', () => {
+    expect(isEmpty(null)).toBeTruthy();
+    expect(isEmpty('')).toBeTruthy();
+    expect(isEmpty({ foo: '' })).toBeTruthy();
+    expect(isEmpty({ foo: null })).toBeTruthy();
+    expect(isEmpty({ foo: 'Hello' })).toBeFalsy();
+    expect(isEmpty({
+      foo: {
+        bar: null,
+        foo: null,
+      },
+    })).toBeTruthy();
+    expect(isEmpty({
+      foo: {
+        bar: 'Text',
+        foo: null,
+      },
+    })).toBeFalsy();
+  });
+});
+
 describe('mapSummaryList()', () => {
   const MockedData = () => ({
     details: {
@@ -203,6 +226,20 @@ describe('mapSummaryList()', () => {
     expect(text).toMatch('—');
   });
 
+  it('returns a long dash if Object contains only null values', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    mockedData.details.address = {};
+    mockedData.details.address.line1 = null;
+    mockedData.details.address.line2 = null;
+    mockedDisplayItems.slice(1);
+    mockedDisplayItems[0].label = 'Address';
+    mockedDisplayItems[0].id = 'address';
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(text).toMatch('—');
+  });
+
   it('returns an unordered list if property contains an object', () => {
     const mockedDisplayItems = new MockedDisplayItems();
     const mockedData = new MockedData();
@@ -218,23 +255,23 @@ describe('mapSummaryList()', () => {
     expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
   });
 
-  it('returns an unordered list if options is set to `isIndustry`', () => {
+  it('returns selected industry ', () => {
     const mockedDisplayItems = new MockedDisplayItems();
     const mockedData = new MockedData();
 
-    mockedData.details.industries = [{
+    mockedData.details.selectedIndustry = {
       code: '1017',
       name: 'Arts, entertainment and recreation',
       class: {
         code: '90030',
         name: 'Artistic creation',
       },
-    }];
+    };
     mockedDisplayItems[0].isIndustry = true;
-    mockedDisplayItems[0].id = 'industries';
+    mockedDisplayItems[0].id = 'selectedIndustry';
 
     const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
-    expect(html).toEqual('<ul class="is-unstyled"><li>Arts, entertainment and recreation - Artistic creation</li></ul>');
+    expect(html).toEqual('Arts, entertainment and recreation<br>Artistic creation');
   });
 
   it('returns `null` if value is undefined', () => {

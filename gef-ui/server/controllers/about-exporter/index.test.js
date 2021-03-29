@@ -100,6 +100,35 @@ describe('Validate About Exporter', () => {
     }));
   });
 
+  it('returns Selected Industry validation error', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockAboutExporterResponse = new MockAboutExporterResponse();
+
+    mockRequest.body.selectedIndustry = '';
+    mockAboutExporterResponse.details.industries = [{
+      name: 'name',
+      class: {
+        name: 'class name',
+      },
+    }];
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#selectedIndustry', text: expect.any(String) }]),
+      }),
+      industries: expect.any(Array),
+      smeType: undefined,
+      probabilityOfDefault: undefined,
+      isFinanceIncreasing: undefined,
+      applicationId: '123',
+    }));
+  });
+
   it('redirects user to `application` page if response from api is successful', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
