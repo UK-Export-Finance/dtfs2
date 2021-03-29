@@ -1,6 +1,7 @@
 import api from '../../api';
 import stringHelpers from '../../helpers/string';
 import caseHelpers from './helpers';
+import CONSTANTS from '../../constants';
 
 const {
   hasValue,
@@ -38,7 +39,7 @@ const getCaseTasks = async (req, res) => {
 
   // default filter
   const tasksFilters = {
-    filterType: 'user',
+    filterType: CONSTANTS.TASK_FILTER_TYPES.USER,
     userId,
   };
 
@@ -55,7 +56,7 @@ const getCaseTasks = async (req, res) => {
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
-    selectedTaskFilter: 'user',
+    selectedTaskFilter: CONSTANTS.TASK_FILTER_TYPES.USER,
   });
 };
 
