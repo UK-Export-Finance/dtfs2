@@ -1,6 +1,7 @@
 import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
 import commaNumber from 'comma-number';
+import cleanDeep from 'clean-deep';
 
 // Fetches the user token from session
 const userToken = (req) => {
@@ -53,6 +54,11 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
+/* Clean-Deep removes any properties with Null value from an Object. Therefore if all
+  properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+  Object is empty or not. */
+const isEmpty = (value) => _isEmpty(cleanDeep(value));
+
 const mapSummaryList = (data, itemsToShow) => {
   if (!data || _isEmpty(data)) { return []; }
   const { details, validation } = data;
@@ -63,19 +69,12 @@ const mapSummaryList = (data, itemsToShow) => {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
 
-    if (val === null) {
+    if (val === null || isEmpty(val)) {
       return { text: '—' };
     }
 
     if (options.isIndustry) {
-      const list = [];
-      Object.values(val).forEach((value) => {
-        if (value) {
-          list.push(`<li>${value.name} - ${value.class.name}</li>`);
-        }
-      });
-
-      return { html: `<ul class="is-unstyled">${list.join('')}</ul>` };
+      return { html: `${val.name}<br>${val.class.name}` };
     }
 
     if (isObject(val) || Array.isArray(val)) {
@@ -111,7 +110,6 @@ const mapSummaryList = (data, itemsToShow) => {
     // Don't show row if value is undefined
     if (value === undefined) { return null; }
 
-
     return {
       key: {
         text: label,
@@ -123,7 +121,10 @@ const mapSummaryList = (data, itemsToShow) => {
         items: [
           ...(href ? [{
             href,
-            text: `${value ? 'Change' : 'Add'}`,
+            /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
+            properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+            Object is empty or not. */
+            text: `${!isEmpty(value) ? 'Change' : 'Add'}`,
             visuallyHiddenText: item.label,
           }] : []),
         ],
@@ -176,6 +177,7 @@ export {
   isObject,
   apiErrorHandler,
   validationErrorHandler,
+  isEmpty,
   mapSummaryList,
   selectDropdownAddresses,
   status,

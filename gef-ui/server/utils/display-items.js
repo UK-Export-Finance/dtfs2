@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { SME_TYPE, BOOLEAN, STAGE } from '../../constants';
 
-const exporterItems = (exporterUrl) => [
+const exporterItems = (exporterUrl, options = {}) => [
   {
     label: 'Companies House registration number',
     id: 'companiesHouseRegistrationNumber',
@@ -22,8 +22,9 @@ const exporterItems = (exporterUrl) => [
   },
   {
     label: 'Industry',
-    id: 'industries',
+    id: 'selectedIndustry',
     isIndustry: true,
+    href: options.showIndustryChangeLink ? `${exporterUrl}/about-exporter?status=change` : null,
   },
   {
     label: 'SME type',

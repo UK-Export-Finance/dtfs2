@@ -22,7 +22,9 @@ const applicationDetails = async (req, res) => {
       isManual: manual,
       exporter: {
         status: exporterStatus,
-        rows: mapSummaryList(exporter, exporterItems(exporterUrl)),
+        rows: mapSummaryList(exporter, exporterItems(exporterUrl, {
+          showIndustryChangeLink: exporter.details.industries && exporter.details.industries.length > 1,
+        })),
       },
       facilities: {
         status: facilitiesStatus,

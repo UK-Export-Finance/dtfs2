@@ -13,6 +13,9 @@ const hasRequiredItems = (doc) => {
   if (doc.registeredAddress === null) {
     required.push('registeredAddress');
   }
+  if (doc.selectedIndustry === null) {
+    required.push('selectedIndustry');
+  }
   if (doc.industries === null) {
     required.push('industries');
   }
