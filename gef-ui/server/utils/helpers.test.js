@@ -2,6 +2,7 @@ import {
   userToken,
   isObject,
   validationErrorHandler,
+  isEmpty,
   mapSummaryList,
   apiErrorHandler,
   isTrueSet,
@@ -132,6 +133,28 @@ describe('validationErrorHandler()', () => {
         },
       },
     });
+  });
+});
+
+describe('isEmpty()', () => {
+  it('returns True if the Value or Object is empty', () => {
+    expect(isEmpty(null)).toBeTruthy();
+    expect(isEmpty('')).toBeTruthy();
+    expect(isEmpty({ foo: '' })).toBeTruthy();
+    expect(isEmpty({ foo: null })).toBeTruthy();
+    expect(isEmpty({ foo: 'Hello' })).toBeFalsy();
+    expect(isEmpty({
+      foo: {
+        bar: null,
+        foo: null,
+      },
+    })).toBeTruthy();
+    expect(isEmpty({
+      foo: {
+        bar: 'Text',
+        foo: null,
+      },
+    })).toBeFalsy();
   });
 });
 

@@ -70,7 +70,7 @@ const validateAboutExporter = async (req, res) => {
       if (!body.isFinanceIncreasing) {
         aboutExporterErrors.push({
           errRef: 'isFinanceIncreasing',
-          errMsg: 'Enter the elect whether your financing to the exporter is increasing as a result of this new GEF facility ',
+          errMsg: 'Select whether your financing to the exporter is increasing as a result of this new GEF facility ',
         });
       }
     }
