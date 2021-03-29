@@ -29,7 +29,7 @@ const addDealStage = async (deal) => {
         stage: CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED,
       },
     };
-    
+
     const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
     return updatedDeal;

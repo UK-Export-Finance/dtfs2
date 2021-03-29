@@ -55,6 +55,7 @@ const GET_DEAL = gql`
         }
         exporterCreditRating
         supplyContractValueInGBP
+
       }
       dealSnapshot {
         _id,
