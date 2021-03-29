@@ -34,11 +34,33 @@ const ADMIN_LOGIN = {
   },
 };
 
+const TOTAL_DEFAULT_AIN_TASKS = 2;
+
+const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new Promise((resolve) => {
+  cy.getUser(differentUserInSameTeam.username).then((userObj) => {
+    const differentUserInSameTeamObj = userObj;
+
+    // choose a user in `assigned to` select input, that is not the currently logged in
+    // eslint-disable-next-line no-underscore-dangle
+    pages.taskPage.assignedToSelectInput().select(differentUserInSameTeamObj._id);
+    pages.taskPage.taskStatusRadioInputInProgress().click();
+
+    // submit form
+    pages.taskPage.submitButton().click();
+
+    // should now be back on the tasks page
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    return resolve(differentUserInSameTeamObj);
+  });
+});
+
 context('Case tasks - AIN deal', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
+  const nonBusinessSupportUser = MOCK_USERS.find((u) => !u.teams.includes('BUSINESS_SUPPORT'));
   const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
   let userId;
   let loggedInUserTeamName;
@@ -80,21 +102,23 @@ context('Case tasks - AIN deal', () => {
     });
   });
 
-  it('clicking tasks nav link should direct to tasks page and render 2 tasks', () => {
+  it('clicking tasks nav link should direct to tasks page and tasks assigned to user', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    pages.tasksPage.tasksTableRows().should('have.length', 2);
+    // user has 0 tasks assigned by default
+    pages.tasksPage.tasksTableRows().should('have.length', 0);
   });
 
 
-  it('user can assign a task to themself, change status and unassign', () => {
+  it('user can assign a task to themself, change status and then unassign', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     //---------------------------------------------------------------
     // user assigns task to themself
     //---------------------------------------------------------------
+    pages.tasksPage.filterRadioYourTeam().click();
     const firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
 
@@ -150,6 +174,7 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     // go back into the same task, check values
+    pages.tasksPage.filterRadioYourTeam().click();
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
@@ -159,31 +184,20 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
+    pages.tasksPage.filterRadioYourTeam().click();
     let firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
 
     const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
-    let differentUserInSameTeamObj;
 
-    // select option values are userIds.
-    // we need to use userId to select the option value in e2e test
-    // selecting 1st/2nd/3rd option can be flaky.
-    cy.getUser(differentUserInSameTeam.username).then((userObj) => {
-      differentUserInSameTeamObj = userObj;
-      const { firstName, lastName } = differentUserInSameTeamObj;
+    assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then((userObj) => {
+      const { firstName, lastName } = userObj;
 
-      // choose a user in `assigned to` select input, that is not the currently logged in
-      // eslint-disable-next-line no-underscore-dangle
-      pages.taskPage.assignedToSelectInput().select(differentUserInSameTeamObj._id);
-      pages.taskPage.taskStatusRadioInputInProgress().click();
+      pages.tasksPage.filterRadioYourTeam().click();
 
-      // submit form
-      pages.taskPage.submitButton().click();
-
-      // should now be back on the tasks page
-      cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-      // go back into the same task, check values
+      //---------------------------------------------------------------
+      // updated task displays correct assignee and status in the task page
+      //---------------------------------------------------------------
       firstTask = pages.tasksPage.tasks.row('1');
       firstTask.link().click();
 
@@ -191,8 +205,13 @@ context('Case tasks - AIN deal', () => {
       pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', differentUserInSameTeamFullName);
       pages.taskPage.taskStatusRadioInputInProgress().should('be.checked');
 
-      // check that the updated task displays correct assignee and status in home page
+      //---------------------------------------------------------------
+      // updated task displays correct assignee and status in 'tasks' page
+      //---------------------------------------------------------------
       pages.taskPage.closeLink().click();
+
+      partials.caseSubNavigation.tasksLink().click();
+      pages.tasksPage.filterRadioYourTeam().click();
 
       firstTask.assignedTo().invoke('text').then((text) => {
         expect(text.trim()).to.equal(differentUserInSameTeamFullName);
@@ -204,9 +223,11 @@ context('Case tasks - AIN deal', () => {
     });
   });
 
-  it('when user changes task form and clicks `close without saving`, form should be unchanged', () => {
+  it('when user changes task form and clicks `close without saving`, task should be unchanged', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    pages.tasksPage.filterRadioYourTeam().click();
 
     const firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
@@ -216,13 +237,16 @@ context('Case tasks - AIN deal', () => {
     pages.taskPage.taskStatusRadioInputTodo().click();
     pages.taskPage.submitButton().click();
 
+    pages.tasksPage.filterRadioYourTeam().click();
     firstTask.link().click();
 
     // check default values
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
 
-    // change `assigned to` and status
+    //---------------------------------------------------------------
+    // change task assignee and status, click 'close without saving'
+    //---------------------------------------------------------------
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
 
@@ -230,9 +254,73 @@ context('Case tasks - AIN deal', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    // check form values are the default values
+
+    //---------------------------------------------------------------
+    // task form values should have the default values
+    //---------------------------------------------------------------
+    pages.tasksPage.filterRadioYourTeam().click();
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
+  });
+
+  describe('filters', () => {
+    it('default filter should be tasks `assigned to me`', () => {
+      partials.caseSubNavigation.tasksLink().click();
+      cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+      pages.tasksPage.filterRadioYourTasks().should('be.checked');
+
+      //---------------------------------------------------------------
+      // list of tasks in `assigned to me` shuold be empty
+      // as no tasks are assigned yet (default)
+      //---------------------------------------------------------------
+      pages.tasksPage.tasksTableRows().should('have.length', 0);
+    });
+
+    it('user can filter all tasks `assigned to my team`', () => {
+      partials.caseSubNavigation.tasksLink().click();
+      cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+      pages.tasksPage.filterRadioYourTeam().click();
+
+      // all default AIN tasks are assigned to the users team
+      pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
+
+      //---------------------------------------------------------------
+      // assign a task to someone else on my team
+      //---------------------------------------------------------------
+      const firstTask = pages.tasksPage.tasks.row('1');
+      firstTask.link().click();
+
+      const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
+
+      assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
+        pages.tasksPage.filterRadioYourTeam().click();
+
+        //---------------------------------------------------------------
+        // team tasks length should remain the same
+        //---------------------------------------------------------------
+        pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
+      });
+    });
+
+    it('a user in a team that does not have any assigned tasks should not see any task assigned to their team', () => {
+      cy.login(nonBusinessSupportUser);
+      cy.visit(relative(`/case/${dealId}/deal`));
+
+      partials.caseSubNavigation.tasksLink().click();
+      pages.tasksPage.filterRadioYourTeam().click();
+
+      pages.tasksPage.tasksTableRows().should('have.length', 0);
+    });
+
+    it('user can view all tasks', () => {
+      partials.caseSubNavigation.tasksLink().click();
+      cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+      pages.tasksPage.filterRadioAllTasks().click();
+      pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
+    });
   });
 });

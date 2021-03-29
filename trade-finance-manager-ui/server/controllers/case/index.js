@@ -33,7 +33,16 @@ const getCaseDeal = async (req, res) => {
 
 const getCaseTasks = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
-  const deal = await api.getDeal(dealId);
+
+  const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+
+  // default filter
+  const tasksFilters = {
+    filterType: 'user',
+    userId,
+  };
+
+  const deal = await api.getDeal(dealId, tasksFilters);
 
   if (!deal) {
     return res.redirect('/not-found');

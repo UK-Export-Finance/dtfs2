@@ -95,8 +95,10 @@ describe('controllers - case', () => {
         mock: true,
       };
 
+      const apiGetDealSpy = jest.fn(() => Promise.resolve(mockDeal));
+
       beforeEach(() => {
-        api.getDeal = () => Promise.resolve(mockDeal);
+        api.getDeal = apiGetDealSpy;
       });
 
       it('should render tasks template with data', async () => {
@@ -108,6 +110,17 @@ describe('controllers - case', () => {
         };
 
         await caseController.getCaseTasks(req, res);
+
+        const expectedTaskFiltersObj = {
+          filterType: 'user',
+          userId: req.session.user._id,
+        };
+
+        expect(apiGetDealSpy).toHaveBeenCalledWith(
+          mockDeal._id,
+          expectedTaskFiltersObj,
+        );
+
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,

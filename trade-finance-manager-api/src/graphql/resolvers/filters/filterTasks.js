@@ -4,7 +4,6 @@ const FILTER_TYPE = {
   USER: 'user',
 };
 
-// TODO (test)
 const mapAndFilter = (tasks, argsFunc, FILTER_VALUE) => {
   const filteredTasks = [];
 
