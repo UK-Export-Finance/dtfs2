@@ -102,7 +102,7 @@ context('Case tasks - AIN deal', () => {
     });
   });
 
-  it('clicking tasks nav link should direct to tasks page and tasks assigned to user', () => {
+  it('clicking tasks nav link should direct to tasks page showing tasks assigned to user', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
@@ -192,6 +192,7 @@ context('Case tasks - AIN deal', () => {
 
     assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then((userObj) => {
       const { firstName, lastName } = userObj;
+      cy.wait(100); // for some reason this prevents flaky test
 
       pages.tasksPage.filterRadioYourTeam().click();
 
@@ -296,6 +297,8 @@ context('Case tasks - AIN deal', () => {
       const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
 
       assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
+        cy.wait(100); // for some reason this prevents flaky test
+
         pages.tasksPage.filterRadioYourTeam().click();
 
         //---------------------------------------------------------------
