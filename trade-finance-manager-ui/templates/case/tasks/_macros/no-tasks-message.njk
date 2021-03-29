@@ -1,0 +1,20 @@
+{% macro render(params) %}
+  {% set selectedTaskFilter = params.selectedTaskFilter %}
+
+  <div data-cy="no-tasks-message">
+    {% if selectedTaskFilter === 'user' %}
+
+      <p class="govuk-body" data-cy="no-tasks-user">You have no tasks assigned to you in this deal.</p>
+
+      {% elseif selectedTaskFilter === 'team' %}
+
+        <p class="govuk-body" data-cy="no-tasks-team">Your team has no tasks in this deal.</p>
+
+      {% elseif selectedTaskFilter === 'all' %}
+
+        <p class="govuk-body" data-cy="no-tasks-deal">There are no tasks for this deal.</p>
+
+    {% endif %}
+  </div>
+
+{% endmacro %}
