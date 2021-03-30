@@ -212,6 +212,7 @@ type TFMDealData {
   tasks: [TFMTaskGroup]
   exporterCreditRating: String
   supplyContractValueInGBP: String
+  stage: String
 }
 
 type TFMFacilityData {

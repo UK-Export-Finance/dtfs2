@@ -10,8 +10,13 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
-const DEAL_STATUS = {
+const DEAL_STATUS_PORTAL = {
+  SUBMITTED: 'Submitted',
   SUBMISSION_ACKNOWLEDGED: 'Acknowledged by UKEF',
+};
+
+const DEAL_STAGE_TFM = {
+  CONFIRMED: 'Confirmed',
 };
 
 const CREDIT_RATING = {
@@ -22,6 +27,7 @@ const CREDIT_RATING = {
 module.exports = {
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
-  DEAL_STATUS,
+  DEAL_STATUS_PORTAL,
+  DEAL_STAGE_TFM,
   CREDIT_RATING,
 };

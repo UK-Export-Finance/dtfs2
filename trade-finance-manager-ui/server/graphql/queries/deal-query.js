@@ -38,6 +38,7 @@ const dealQuery = gql`
         }
         exporterCreditRating
         supplyContractValueInGBP
+        stage
       }
       dealSnapshot {
         _id,
