@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block content %}
-{# {{ deals | dump }} #}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <p class="header-label">All deals</p>
     </div>
   </div>
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
@@ -24,6 +24,9 @@
       } %}
 
       {{ dealsTable.render(componentData) }}
+
+    </div>
+  </div>
 {% endblock %}
 
 {% block sub_content %}{% endblock %}
