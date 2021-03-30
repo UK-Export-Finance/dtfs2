@@ -81,6 +81,8 @@ context('Portal to TFM deal submission', () => {
     tfmPartials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/tasks`);
 
+    tfmPages.tasksPage.filterRadioAllTasks().click();
+
     tfmPages.tasksPage.tasksTableRows().should('have.length', 2);
   });
 });
