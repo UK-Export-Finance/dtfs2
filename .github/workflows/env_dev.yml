@@ -772,7 +772,7 @@ jobs:
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
-              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
+              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
