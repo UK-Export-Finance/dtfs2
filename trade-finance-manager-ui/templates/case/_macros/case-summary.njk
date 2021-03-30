@@ -88,7 +88,9 @@
             <div class="ukef-heading-xs">Export contract value</div>
             <div class="ukef-body-s">
               <span data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}</span>
-              <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP }}</span>
+              {% if tfm.supplyContractValueInGBP %}
+                <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP }}</span>
+              {% endif %}
             </div>
           </div>
         </div>
