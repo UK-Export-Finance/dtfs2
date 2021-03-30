@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const mapSubmissionDetails = require('./mapSubmissionDetails');
+const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
 // TODO: add unit test
 // so that when this is changed, tests fail.
@@ -18,8 +19,13 @@ const dealsReducer = (dealsquery, _productDictionary) => {
       deal.Product = _productDictionary[d._id];
     }
 
-    // hard coded for now
-    deal.tfm.product = 'BSS & EWCS';
+    deal.tfm = {
+      ...mapDealTfm(deal.tfm),
+
+      // hard coded for now
+      product: 'BSS & EWCS',
+    };
+
     return deal;
   };
 
