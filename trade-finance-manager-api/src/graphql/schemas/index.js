@@ -222,6 +222,7 @@ type TFMFacilityData {
   exposurePeriodInMonths: Int
   ukefExposure: FacilityUkefExposure
   creditRating: String
+  riskProfile: String
 }
 
 input DashboardFilters {
