@@ -68,7 +68,6 @@ const facilitiesOverallStatus = (facilities) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
-  console.log('uniqueStatus', uniqueStatus);
   if (uniqueStatus.length > 0) {
     result = STATUS.IN_PROGRESS;
   }

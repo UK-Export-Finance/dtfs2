@@ -7,7 +7,10 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-dea
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
+const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
+const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const DEFAULTS = require('../../../src/v1/defaults');
+const CONSTANTS = require('../../../src/constants');
 
 const { findOneFacility } = require('../../../src/v1/controllers/facility.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
@@ -147,22 +150,88 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('when deal is AIN', () => {
-      it('adds default AIN tasks to the deal', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+    describe('deal/case tasks', () => {
+      describe('when deal is AIN', () => {
+        it('adds default AIN tasks to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
 
-        expect(status).toEqual(200);
-        expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
+          expect(status).toEqual(200);
+          expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
+        });
+      });
+
+      describe('when deal is NOT AIN', () => {
+        it('adds NOT add default AIN tasks to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.tasks).toBeUndefined();
+        });
       });
     });
 
-    describe('when deal is NOT AIN', () => {
-      it('adds NOT add default AIN tasks to the deal', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+    it('should convert supplyContractValue to GBP when currency is NOT GBP', async () => {
+      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE._id }).to('/v1/deals/submit');
 
-        expect(status).toEqual(200);
-        expect(body.tfm.tasks).toBeUndefined();
+      expect(status).toEqual(200);
+
+      const { supplyContractValue } = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE.submissionDetails;
+
+      const strippedContractValue = Number(supplyContractValue.replace(/,/g, ''))
+
+      const expected = strippedContractValue * MOCK_CURRENCY_EXCHANGE_RATE;
+
+      expect(body.tfm.supplyContractValueInGBP).toEqual(expected);
+    });
+    
+    describe('exporter credit rating', () => {
+      describe('when deal is AIN', () => {
+        it('should add exporterCreditRating to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.exporterCreditRating).toEqual(DEFAULTS.CREDIT_RATING.AIN);
+        });
       });
+
+      describe('when deal is NOT AIN', () => {
+        it('should add exporterCreditRating to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.exporterCreditRating).toBeUndefined();
+        });
+      });
+    });
+
+    describe('TFM deal stage', () => {
+      describe('when deal is AIN and portal deal status is `Submitted`', () => {
+        it('should add `Confirmed` tfm stage', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
+        });
+      });
+
+      describe('when deal is AIN but status is NOT `Submitted` ', () => {
+        it('should NOT add `Confirmed` tfm stage', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.stage).toBeUndefined();
+        });
+      });
+
+      describe('when deal is NOT AIN', () => {
+        it('should NOT add `Confirmed` tfm stage', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.stage).toBeUndefined();
+        });
+      });
+
     });
   });
 });

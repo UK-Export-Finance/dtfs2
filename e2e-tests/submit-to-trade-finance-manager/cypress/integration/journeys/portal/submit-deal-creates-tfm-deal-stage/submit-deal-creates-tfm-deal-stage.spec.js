@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, `Good` credit rating is added to the deal in TFM', () => {
+  it('Portal deal is submitted to UKEF, `Confirmed` deal stage is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -78,16 +78,10 @@ context('Portal to TFM deal submission', () => {
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
-    tfmPartials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/underwriting/pricing-and-risk`);
 
-    // assert elements/value in `pricing and risk` page
-    tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
-
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acceptable (B+)');
+    tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Confirmed');
     });
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().should('be.visible');
   });
 });

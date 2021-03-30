@@ -9,6 +9,7 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
       _id
       tfm {
         product
+        stage
       }
       dealSnapshot{
         _id
