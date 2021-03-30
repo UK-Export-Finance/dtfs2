@@ -16,7 +16,13 @@ exports.create = async (req, res) => {
     } else {
       const collection = await db.getCollection(collectionName);
       const doc = await collection.insertOne(new Facility(req.body));
-      res.status(201).json(doc.ops[0]);
+      const value = doc.ops[0];
+      const response = {
+        status: facilitiesStatus(value),
+        details: value,
+        validation: facilitiesValidation(value),
+      };
+      res.status(201).json(response);
     }
   } else {
     res.status(422).send({ errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' });
