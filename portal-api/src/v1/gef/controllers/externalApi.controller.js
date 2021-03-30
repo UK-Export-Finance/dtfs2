@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { companiesHouseError } = require('./validation/external');
 require('dotenv').config();
+const { ERROR } = require('../enums');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
@@ -43,10 +44,18 @@ exports.getByRegistrationNumber = async (req, res) => {
       url: `${referenceProxyUrl}/companies-house/${companyNumber}`,
     });
 
+    if (response.data.type === 'oversea-company') {
+      res.status(422).send([{
+        errCode: ERROR.OVERSEAS_COMPANY,
+        errRef: 'regNumber',
+        errMsg: 'UKEF can only process applications from companies based in the UK.',
+      }]);
+    }
+
     if (req.query.exporterId) {
       const industries = await findSicCodes(response.data.sic_codes);
       let selectedIndustry = null;
-      if (industries.length === 1) {
+      if (industries && industries.length === 1) {
         // eslint-disable-next-line prefer-destructuring
         selectedIndustry = industries[0];
       }
