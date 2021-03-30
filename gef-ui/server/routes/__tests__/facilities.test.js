@@ -23,6 +23,8 @@ describe('Routes', () => {
 
   it('Sets up all routes', () => {
     expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId', validateToken, expect.any(Function));
     expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId', validateToken, expect.any(Function));
   });
 });
