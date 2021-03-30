@@ -44,7 +44,9 @@ const validateCompaniesHouse = async (req, res) => {
     }
 
     if (companiesHouseDetails && companiesHouseDetails.status === 422) {
-      companiesHouseErrors.push(companiesHouseDetails.data);
+      companiesHouseDetails.data.forEach((error) => {
+        companiesHouseErrors.push(error);
+      });
     }
 
     if (companiesHouseErrors.length > 0) {
