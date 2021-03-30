@@ -5,8 +5,8 @@ const MOCK_USERS = [
     email: 'test@testing.com',
     teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
+    firstName: 'John',
+    lastName: 'Davies',
   },
   {
     _id: '6051d94564494924d38ce123',
@@ -14,8 +14,8 @@ const MOCK_USERS = [
     email: 'test@testing.com',
     teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
+    firstName: 'Sarah',
+    lastName: 'Walker',
   },
   {
     _id: '6051d94564494924d38ce456',
@@ -23,8 +23,8 @@ const MOCK_USERS = [
     email: 'test@testing.com',
     teams: ['UNDEWRITING_SUPPORT'],
     timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
+    firstName: 'Ben',
+    lastName: 'Wilson',
   },
 ];
 
