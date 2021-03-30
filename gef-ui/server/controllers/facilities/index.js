@@ -5,6 +5,7 @@ import { FACILITY_TYPE } from '../../../constants';
 const facilities = async (req, res) => {
   const { params, query } = req;
   const { applicationId, facilityId } = params;
+  const { status } = query;
   let { facilityType } = query;
 
   facilityType = facilityType || 'CASH';
@@ -13,6 +14,7 @@ const facilities = async (req, res) => {
     return res.render('partials/facilities.njk', {
       facilityType: FACILITY_TYPE[facilityType],
       applicationId,
+      status,
     });
   }
 
@@ -23,6 +25,7 @@ const facilities = async (req, res) => {
       facilityType: FACILITY_TYPE[facilityType],
       hasBeenIssued,
       applicationId,
+      status,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -32,6 +35,7 @@ const facilities = async (req, res) => {
 const createFacility = async (req, res) => {
   const { body, params, query } = req;
   const { applicationId, facilityId } = params;
+  const { status } = query;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
   let facility;
@@ -48,6 +52,7 @@ const createFacility = async (req, res) => {
       return res.render('partials/facilities.njk', {
         errors: validationErrorHandler(hasBeenIssuedErrors),
         applicationId,
+        status,
       });
     }
 
@@ -63,10 +68,12 @@ const createFacility = async (req, res) => {
       });
     }
 
-    console.log('facility', facility);
+    if (status === 'change') {
+      return res.redirect(`/gef/application-details/${applicationId}`);
+    }
 
     // eslint-disable-next-line no-underscore-dangle
-    return res.redirect(`/gef/application-details/${applicationId}/facilities/${facility._id}/about-facility`);
+    return res.redirect(`/gef/application-details/${applicationId}/facilities/${facility.details._id}/about-facility`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

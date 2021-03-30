@@ -7,13 +7,15 @@
 {% block pageTitle %}Facilities{% endblock %}
 
 {% block content %}
- {{ govukBackLink({
-    text: "Back to previous page",
-    href: "/gef/application-details/" + applicationId,
-    attributes: {
-      'data-cy': 'back-link'
-    }
-  }) }}
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+        text: "Back to previous page",
+        href: "/gef/application-details/" + applicationId,
+        attributes: {
+          'data-cy': 'back-link'
+        }
+      }) }}
+    {% endif %}
 
   {% if errors %}
     {{ govukErrorSummary({
