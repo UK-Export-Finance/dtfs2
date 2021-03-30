@@ -33,6 +33,9 @@ class Facility {
       this.applicationId = req.applicationId ? req.applicationId : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
+      if (req.hasBeenIssued != null) {
+        this.hasBeenIssued = Boolean(req.hasBeenIssued);
+      }
       this.name = null;
       this.startOnDayOfNotice = null;
       this.coverStartDate = null;
@@ -46,7 +49,7 @@ class Facility {
       this.interestPercentage = null;
       this.paymentType = null;
       this.createdAt = Date.now();
-      this.updatedAt = null;
+      this.updatedAt = Date.now();
     } else {
       // update application
       if (req.hasBeenIssued != null) {
