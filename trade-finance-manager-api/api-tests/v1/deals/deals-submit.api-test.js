@@ -183,6 +183,26 @@ describe('/v1/deals', () => {
 
       expect(body.tfm.supplyContractValueInGBP).toEqual(expected);
     });
+    
+    describe('exporter credit rating', () => {
+      describe('when deal is AIN', () => {
+        it('should add exporterCreditRating to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.exporterCreditRating).toEqual(DEFAULTS.CREDIT_RATING.AIN);
+        });
+      });
+
+      describe('when deal is NOT AIN', () => {
+        it('should add exporterCreditRating to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.exporterCreditRating).toBeUndefined();
+        });
+      });
+    });
 
     describe('TFM deal stage', () => {
       describe('when deal is AIN and portal deal status is `Submitted`', () => {
