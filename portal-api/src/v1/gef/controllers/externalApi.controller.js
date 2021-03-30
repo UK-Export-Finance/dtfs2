@@ -37,7 +37,7 @@ exports.getByRegistrationNumber = async (req, res) => {
   try {
     const companyNumber = req.params.number;
     if (!companyNumber || companyNumber === '') {
-      res.status(422).send();
+      return res.status(422).send();
     }
     const response = await axios({
       method: 'get',
@@ -45,7 +45,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     });
 
     if (response.data.type === 'oversea-company') {
-      res.status(422).send([{
+      return res.status(422).send([{
         errCode: ERROR.OVERSEAS_COMPANY,
         errRef: 'regNumber',
         errMsg: 'UKEF can only process applications from companies based in the UK.',
