@@ -69,6 +69,33 @@ const getFacilities = async (applicationId) => {
   }
 };
 
+const createFacility = async (payload) => {
+  try {
+    const { data } = await Axios.post('/gef/facilities', payload);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const getFacility = async (facilityId) => {
+  try {
+    const { data } = await Axios.get(`/gef/facilities/${facilityId}`);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const updateFacility = async (facilityId, payload) => {
+  try {
+    const { data } = await Axios.put(`/gef/facilities/${facilityId}`, payload);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getEligibilityCriteria = async () => {
   try {
     const { data } = await Axios.get('/gef/eligibility-criteria/latest');
@@ -105,6 +132,9 @@ export {
   getExporter,
   updateExporter,
   getFacilities,
+  createFacility,
+  getFacility,
+  updateFacility,
   getCompaniesHouseDetails,
   getAddressesByPostcode,
 };

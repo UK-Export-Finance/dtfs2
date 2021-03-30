@@ -1,6 +1,6 @@
 import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
 
 const exportersAddress = async (req, res) => {
   try {
@@ -43,7 +43,7 @@ const validateExportersAddress = async (req, res) => {
       return res.redirect('about-exporter');
     }
 
-    if (correspondence === 'true' && _isEmpty(postcode)) {
+    if (isTrueSet(correspondence) && _isEmpty(postcode)) {
       correspondenceError.push({
         errRef: 'postcode',
         errMsg: 'Enter a postcode',
