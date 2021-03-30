@@ -17,6 +17,9 @@ const params = {
     supplyContractValueInGBP: 'GBP 123,456.78',
     stage: 'Confirmed',
   },
+  user: {
+    timezone: 'Europe/London',
+  },
 };
 
 describe(component, () => {
