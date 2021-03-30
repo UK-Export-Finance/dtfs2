@@ -1,5 +1,5 @@
-const componentRenderer = require('../../../../../component-tests/componentRenderer');
-const component = '../templates/case/underwriting/pricing-and-risk/_macros/credit-rating-table.njk';
+const componentRenderer = require('../../../../../../component-tests/componentRenderer');
+const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/credit-rating-table.njk';
 
 const render = componentRenderer(component);
 
