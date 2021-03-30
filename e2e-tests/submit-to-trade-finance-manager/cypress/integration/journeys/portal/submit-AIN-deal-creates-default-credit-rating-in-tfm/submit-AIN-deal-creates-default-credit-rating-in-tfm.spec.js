@@ -85,7 +85,7 @@ context('Portal to TFM deal submission', () => {
     tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
 
     tfmPages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Good (BB-)');
+      expect(text.trim()).to.equal('Acceptable (B+)');
     });
 
     tfmPages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().should('be.visible');
