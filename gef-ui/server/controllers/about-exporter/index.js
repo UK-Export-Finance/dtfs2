@@ -23,7 +23,7 @@ const aboutExporter = async (req, res) => {
     return res.render('partials/about-exporter.njk', {
       smeType: details.smeType,
       probabilityOfDefault: details.probabilityOfDefault,
-      isFinanceIncreasing: details.isFinanceIncreasing ? details.isFinanceIncreasing.toString() : null,
+      isFinanceIncreasing: JSON.stringify(details.isFinanceIncreasing),
       selectedIndustry: details.selectedIndustry,
       applicationId,
       industries,
