@@ -765,8 +765,13 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-        az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
-          --settings "MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}"
+          az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
+            --settings "MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }}  
+              MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} 
+              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}  
+              MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} 
+              MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} 
+              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}"
       
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
