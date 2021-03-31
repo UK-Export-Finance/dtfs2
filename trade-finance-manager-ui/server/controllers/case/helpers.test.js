@@ -3,8 +3,9 @@ import helpers from './helpers';
 
 const {
   userFullName,
+  userIsInTeam,
   getTask,
-  isTaskIsAssignedToUser,
+  isTaskAssignedToUser,
   getTeamMembersWithoutCurrentUser,
   mapTeamMembersSelectOptions,
   mapAssignToSelectOptions,
@@ -24,6 +25,26 @@ describe('case - helpers', () => {
     });
   });
 
+  describe('userIsInTeam', () => {
+    it('should return true when user is in a team', () => {
+      const mockUser = {
+        teams: ['TEAMA'],
+      };
+
+      const result = userIsInTeam(mockUser, 'TEAMA');
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when user is NOT in a team', () => {
+      const mockUser = {
+        teams: ['TEAMB'],
+      };
+
+      const result = userIsInTeam(mockUser, 'TEAMA');
+      expect(result).toEqual(false);
+    });
+  });
+
   describe('getTask', () => {
     it('should return task by id', () => {
       const mockTasks = [
@@ -36,16 +57,16 @@ describe('case - helpers', () => {
     });
   });
 
-  describe('isTaskIsAssignedToUser', () => {
+  describe('isTaskAssignedToUser', () => {
     it('should return true when taskAssignedTo matches userId', () => {
       const mockTaskAssignedTo = '1';
-      const result = isTaskIsAssignedToUser(mockTaskAssignedTo, '1');
+      const result = isTaskAssignedToUser(mockTaskAssignedTo, '1');
       expect(result).toEqual(true);
     });
 
     it('should return false when taskAssignedTo does NOT match userId', () => {
       const mockTaskAssignedTo = '1';
-      const result = isTaskIsAssignedToUser(mockTaskAssignedTo, '2');
+      const result = isTaskAssignedToUser(mockTaskAssignedTo, '2');
       expect(result).toEqual(false);
     });
   });

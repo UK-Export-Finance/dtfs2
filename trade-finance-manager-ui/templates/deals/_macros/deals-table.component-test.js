@@ -54,6 +54,9 @@ describe(component, () => {
       dealsValueInGBP: 'GBP 123,456.78',
       dealsUkefExposure: 'GBP 10,200.12',
     },
+    user: {
+      timezone: 'Europe/London',
+    },
   };
 
   beforeEach(() => {

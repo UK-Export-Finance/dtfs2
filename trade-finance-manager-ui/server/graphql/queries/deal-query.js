@@ -100,6 +100,7 @@ const dealQuery = gql`
               exposure,
               timestamp
             }
+            riskProfile
           }
         }
         eligibility {

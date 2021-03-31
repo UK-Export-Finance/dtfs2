@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
+  it('Portal deal is submitted to UKEF, facility `risk profile` defaults to `Flat`. User can navigate to facility pages', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -78,11 +78,27 @@ context('Portal to TFM deal submission', () => {
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
-    tfmPartials.caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/tasks`);
+    tfmPartials.caseSubNavigation.underwritingLink().click();
 
-    tfmPages.tasksPage.filterRadioAllTasks().click();
+    // check facility 1 has default risk profile and can click through to facility page
+    const facility1 = tfmPages.underwritingPricingAndRiskPage.facilityTable(dealFacilities[0]._id);
 
-    tfmPages.tasksPage.tasksTableRows().should('have.length', 2);
+    facility1.riskProfile().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Flat');
+    });
+
+    facility1.facilityLink().click();
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${dealFacilities[0]._id}`);
+
+    // check facility 1 has default risk profile and can click through to facility page
+    tfmPartials.caseSubNavigation.underwritingLink().click();
+    const facility2 = tfmPages.underwritingPricingAndRiskPage.facilityTable(dealFacilities[1]._id);
+
+    facility2.riskProfile().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Flat');
+    });
+
+    facility2.facilityLink().click();
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${dealFacilities[1]._id}`);
   });
 });
