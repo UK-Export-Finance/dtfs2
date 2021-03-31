@@ -37,7 +37,11 @@ exports.getByRegistrationNumber = async (req, res) => {
   try {
     const companyNumber = req.params.number;
     if (!companyNumber || companyNumber === '') {
-      return res.status(422).send();
+      return res.status(422).send([{
+        errCode: ERROR.MANDATORY_FIELD,
+        errRef: 'regNumber',
+        errMsg: 'Enter a Companies House registration number.',
+      }]);
     }
     const response = await axios({
       method: 'get',
@@ -112,11 +116,11 @@ exports.getAddressesByPostcode = async (req, res) => {
     });
     res.status(200).send(addresses);
   } catch (err) {
-    const response = {
+    const response = [{
       errCode: 'ERROR',
       errRef: 'postcode',
       errMsg: err.response.data.error.message,
-    };
+    }];
     let { status } = err.response;
     if (response.errMsg) {
       status = 422;
