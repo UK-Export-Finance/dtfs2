@@ -47,7 +47,7 @@ const insertMocks = async () => {
       const facilty = await api.createFacilities(subitem, token);
       // eslint-disable-next-line no-param-reassign
       delete subitem.applicationId;
-      await api.updateFacilities(facilty, subitem, token);
+      await api.updateFacilities(facilty.details, subitem, token);
     });
   });
 };

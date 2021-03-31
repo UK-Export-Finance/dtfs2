@@ -64,7 +64,7 @@ exports.getByRegistrationNumber = async (req, res) => {
         selectedIndustry = industries[0];
       }
       const address = response.data.registered_office_address;
-      return await collection.findOneAndUpdate(
+      await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(req.query.exporterId)) } }, {
           $set: {
             companiesHouseRegistrationNumber: response.data.company_number,
@@ -122,7 +122,7 @@ exports.getAddressesByPostcode = async (req, res) => {
       errMsg: err.response.data.error.message,
     }];
     let { status } = err.response;
-    if (response[0].errMsg) {
+    if (status >= 400 && status < 500) {
       status = 422;
     }
     res.status(status).send(response);

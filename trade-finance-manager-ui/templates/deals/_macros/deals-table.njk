@@ -1,9 +1,8 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% macro render(params) %}
   {% set deals = params.deals %}
-  <style>
-    
-  </style>
+  {% set user = params.user %}
+
   <table class="govuk-table deals-table" data-cy="deals-table">
     <thead class="govuk-table__head">
       <tr>
@@ -41,7 +40,7 @@
               classes: "govuk-tag--blue"
             })}}
           </td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">{{ deal.dealSnapshot.details.submissionDate | localiseTimestamp("D MMM YYYY", 'en-gb') }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">{{ deal.dealSnapshot.details.submissionDate | localiseTimestamp("D MMM YYYY", user.timezone) }}</td>
         </tr>
       {% endfor %}
     </tbody>

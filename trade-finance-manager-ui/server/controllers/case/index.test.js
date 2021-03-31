@@ -3,10 +3,12 @@ import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 import helpers from './helpers';
+import CONSTANTS from '../../constants';
 
 const {
   getTask,
   mapAssignToSelectOptions,
+  userIsInTeam,
 } = helpers;
 
 const res = mockRes();
@@ -749,6 +751,7 @@ describe('controllers - case', () => {
         await caseController.getUnderWritingPricingAndRisk(req, res);
         expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
           {
+            userCanEdit: userIsInTeam(session.user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
             activeSideNavigation: 'pricing and risk',
