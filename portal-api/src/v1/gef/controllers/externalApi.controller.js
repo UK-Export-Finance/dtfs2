@@ -89,7 +89,7 @@ exports.getByRegistrationNumber = async (req, res) => {
   } catch (err) {
     const response = companiesHouseError(err);
     let { status } = err.response;
-    if (response.errCode === 'company-profile-not-found') {
+    if (response[0].errCode === 'company-profile-not-found') {
       status = 422;
     }
     return res.status(status).send(response);
