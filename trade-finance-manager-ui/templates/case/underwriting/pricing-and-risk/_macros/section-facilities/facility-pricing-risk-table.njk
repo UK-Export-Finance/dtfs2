@@ -3,7 +3,7 @@
   {% set caseId = params.caseId %}
 
   <table class="govuk-table" data-cy="facility-{{ facility._id }}-pricing-risk-table">
-    <caption class="govuk-table__caption govuk-heading-m">
+    <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-bottom-6">
       <a
         class="govuk-link govuk-link--no-visited-state"
         href="/case/{{ caseId }}/facility/{{ facility._id }}"
@@ -16,17 +16,17 @@
 
     <tbody class="govuk-table__body">
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header govuk-body-s" style="width: 50%;">Guarantee fee % payable to UKEF</th>
+        <th scope="row" class="govuk-table__header govuk-body-s width-half govuk-table__cell--border-top">Guarantee fee % payable to UKEF</th>
+        <td class="govuk-table__cell govuk-table__cell--border-top">-</td>
+      </tr>
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half">Bank’s interest margin</th>
         <td class="govuk-table__cell">-</td>
       </tr>
 
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header govuk-body-s" style="width: 50%;">Bank’s interest margin</th>
-        <td class="govuk-table__cell">-</td>
-      </tr>
-
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header govuk-body-s" style="width: 50%;" data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</th>
+        <th scope="row" class="govuk-table__header govuk-body-s width-half" data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</th>
         <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile }}</td>
       </tr>
     </tbody>

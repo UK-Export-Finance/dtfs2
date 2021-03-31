@@ -30,17 +30,21 @@
 
       <div class="govuk-grid-column-one-half">
 
+        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
+
         {% set componentData = {
           caseId: dealId,
           supplierName: deal.submissionDetails.supplierName,
-          exporterCreditRating: tfm.exporterCreditRating
+          exporterCreditRating: tfm.exporterCreditRating,
+          userCanEdit: userCanEdit
         } %}
 
         {{sectionExporter.render(componentData)}}
 
         {% set componentData = {
           caseId: dealId,
-          facilities: deal.facilities
+          facilities: deal.facilities,
+          userCanEdit: userCanEdit
         } %}
 
         {{sectionFacilities.render(componentData)}}

@@ -1,4 +1,5 @@
 const pricingAndRiskPage = {
+  creditRatingNotAddedTag: () => cy.get('[data-cy="credit-rating-table-rating-not-set"]'),
   addRatingLink: () => cy.get('[data-cy="add-credit-rating-link"]'),
   creditRatingTableRatingValue: () => cy.get('[data-cy="credit-rating-table-rating-value"]'),
   creditRatingTableChangeLink: () => cy.get('[data-cy="credit-rating-table-change-link"]'),
