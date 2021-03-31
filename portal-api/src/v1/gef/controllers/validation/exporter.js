@@ -55,7 +55,7 @@ const exporterCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push('smeType');
+      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'smeType' });
       break;
   }
   return enumErrors.length === 0 ? null : enumErrors;
