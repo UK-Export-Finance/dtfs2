@@ -1,9 +1,11 @@
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 
+// Added multiple versions of mock deal as submit-deal is mutating the mocks somewhere
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_2 = require('../../../src/v1/__mocks__/mock-deal-2');
 const MOCK_DEAL_3 = require('../../../src/v1/__mocks__/mock-deal-3');
+const MOCK_DEAL_4 = require('../../../src/v1/__mocks__/mock-deal-4');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_NO_COMPANIES_HOUSE_2 = require('../../../src/v1/__mocks__/mock-deal-no-companies-house-2');
@@ -93,22 +95,22 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         const bond = body.dealSnapshot.bondTransactions.items[0];
-        expect(bond.tfm.facilityValueInGBP).toEqual(Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
+        expect(bond.tfm.facilityValueInGBP).toEqual(Number(bond.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
 
         const loan = body.dealSnapshot.loanTransactions.items[0];
-        expect(loan.tfm.facilityValueInGBP).toEqual(Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
+        expect(loan.tfm.facilityValueInGBP).toEqual(Number(loan.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
       });
 
       describe('all bonds that are NOT in GBP', () => {
         it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY_2._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
           const bond = body.dealSnapshot.bondTransactions.items[0];
-          const facilityValueInGBP = Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const facilityValueInGBP = Number(bond.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
 
-          const calculatedUkefExposureObj = calculateUkefExposure(facilityValueInGBP, bond.coveredPercentage);
+          const calculatedUkefExposureObj = calculateUkefExposure(facilityValueInGBP, bond.facilitySnapshot.coveredPercentage);
 
           expect(bond.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
           expect(typeof bond.tfm.ukefExposureCalculationTimestamp).toEqual('string');
@@ -117,14 +119,14 @@ describe('/v1/deals', () => {
 
       describe('all loans that are NOT in GBP', () => {
         it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY_3._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
           const loan = body.dealSnapshot.loanTransactions.items[0];
-          const facilityValueInGBP = Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const facilityValueInGBP = Number(loan.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
 
-          const calculatedUkefExposureObj = calculateUkefExposure(facilityValueInGBP, loan.coveredPercentage);
+          const calculatedUkefExposureObj = calculateUkefExposure(facilityValueInGBP, loan.facilitySnapshot.coveredPercentage);
 
           expect(loan.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
           expect(typeof loan.tfm.ukefExposureCalculationTimestamp).toEqual('string');
@@ -133,32 +135,32 @@ describe('/v1/deals', () => {
 
       describe('all bonds that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_2._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
           const bond = body.dealSnapshot.bondTransactions.items[0];
 
-          expect(bond.tfm.ukefExposure).toEqual(Number(bond.ukefExposure));
-          expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+          expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
+          expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_2.details.submissionDate);
         });
       });
 
       describe('all loans that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_3._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
           const loan = body.dealSnapshot.loanTransactions.items[0];
 
-          expect(loan.tfm.ukefExposure).toEqual(Number(loan.ukefExposure));
-          expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+          expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
+          expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_3.details.submissionDate);
         });
       });
 
       it('defaults all facilities riskProfile to `Flat`', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_4._id }).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -167,7 +169,7 @@ describe('/v1/deals', () => {
 
         expect(loan.tfm.riskProfile).toEqual('Flat');
         expect(bond.tfm.riskProfile).toEqual('Flat');
-      }); 
+      });
     });
 
     describe('deal/case tasks', () => {

@@ -1,6 +1,7 @@
 const MOCK_DEAL = require('./mock-deal');
 const MOCK_DEAL_2 = require('./mock-deal-2');
 const MOCK_DEAL_3 = require('./mock-deal-3');
+const MOCK_DEAL_4 = require('./mock-deal-4');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_NO_COMPANIES_HOUSE_2 = require('./mock-deal-no-companies-house-2');
@@ -21,6 +22,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL,
   MOCK_DEAL_2,
   MOCK_DEAL_3,
+  MOCK_DEAL_4,
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
   MOCK_DEAL_NO_COMPANIES_HOUSE_2,
