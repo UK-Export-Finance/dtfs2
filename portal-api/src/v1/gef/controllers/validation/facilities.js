@@ -78,6 +78,7 @@ const facilitiesOverallStatus = (facilities) => {
 };
 
 const facilitiesCheckEnums = (doc) => {
+  
   const enumErrors = [];
   switch (doc.type) {
     case FACILITY_TYPE.CASH:
@@ -86,7 +87,7 @@ const facilitiesCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push('type');
+      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'type' });
       break;
   }
   switch (doc.paymentType) {
@@ -96,7 +97,7 @@ const facilitiesCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push('paymentType');
+      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'paymentType' });
       break;
   }
   return enumErrors.length === 0 ? null : enumErrors;

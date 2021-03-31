@@ -4,21 +4,21 @@ const requiredValidation = async (bankInternalRefName) => {
   if (bankInternalRefName && bankInternalRefName.length > 0) {
     return null;
   }
-  return {
+  return [{
     errCode: ERROR.MANDATORY_FIELD,
     errRef: 'bankInternalRefName',
     errMsg: 'Application Reference Name is Mandatory',
-  };
+  }];
 };
 
 const doesApplicationAlreadyExist = async (collection, bankInternalRefName) => {
   const doc = await collection.findOne({ bankInternalRefName });
   if (doc) {
-    return {
+    return [{
       errCode: ERROR.ALREADY_EXISTS,
       errRef: 'bankInternalRefName',
       errMsg: 'The bank reference you have entered already exists.',
-    };
+    }];
   }
   return null;
 };
