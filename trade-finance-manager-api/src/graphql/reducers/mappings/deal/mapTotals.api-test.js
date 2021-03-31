@@ -22,8 +22,10 @@ describe('mapTotals', () => {
       },
     },
     {
-      facilityValue: '1234.56',
-      currency: { id: 'GBP' },
+      facilitySnapshot: {
+        facilityValue: '1234.56',
+        currency: { id: 'GBP' },
+      },
       tfm: {
         ukefExposure: 9000.00,
       },
@@ -36,7 +38,7 @@ describe('mapTotals', () => {
     const totalValue = Number(mockFacilities[0].tfm.facilityValueInGBP)
                        + Number(mockFacilities[1].tfm.facilityValueInGBP)
                        + Number(mockFacilities[2].tfm.facilityValueInGBP)
-                       + Number(mockFacilities[3].facilityValue);
+                       + Number(mockFacilities[3].facilitySnapshot.facilityValue);
 
     const expected = `GBP ${formattedNumber(totalValue)}`;
     expect(result.facilitiesValueInGBP).toEqual(expected);
