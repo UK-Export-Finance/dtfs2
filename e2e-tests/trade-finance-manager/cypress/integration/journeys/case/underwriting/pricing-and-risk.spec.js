@@ -19,6 +19,7 @@ const MOCK_MAKER_TFM = {
       'checker@ukexportfinance.gov.uk',
     ],
   },
+  teams: ['UNDERWRITING_SUPPORT'],
 };
 
 const ADMIN_LOGIN = {
@@ -33,6 +34,8 @@ const ADMIN_LOGIN = {
     id: '*',
   },
 };
+
+const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
 
 context('Case Underwriting - Pricing and risk', () => {
   let deal;
@@ -55,14 +58,16 @@ context('Case Underwriting - Pricing and risk', () => {
 
         cy.submitDeal(dealId);
       });
-
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    const underWritingSupportUser = MOCK_USERS.find((user) =>
+      user.teams.includes('UNDERWRITING_SUPPORT'));
+
+    cy.login(underWritingSupportUser);
     cy.visit(relative(`/case/${dealId}/deal`));
 
-    // go to edit page
+    // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
   });
@@ -73,7 +78,15 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('clicking underwriting nav link should direct to pricing-and-risk page and render `add rating` link. Clicking `add rating` takes user to edit page', () => {
+  it('clicking underwriting nav link should direct to pricing-and-risk page and render `Not added` tag and `add rating` link. Clicking `add rating` takes user to edit page', () => {
+    pages.underwritingPricingAndRiskPage.creditRatingNotAddedTag().should('be.visible');
+
+    pages.underwritingPricingAndRiskPage.creditRatingNotAddedTag().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not added');
+    });
+
+    pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().should('not.be.visible');
+
     pages.underwritingPricingAndRiskPage.addRatingLink().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/edit`));
@@ -157,24 +170,46 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('submitting `Other` in edit form displays text input and auto populated values after submit', () => {
+  it('submitting `Other` in edit form displays text input and auto populates values after submit', () => {
     pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
 
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
     pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
 
-    const MOCK_TEXT_INPUT_VALUE = 'Testing';
-    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type(MOCK_TEXT_INPUT_VALUE);
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
     pages.underwritingPricingAndRiskEditPage.submitButton().click();
 
     pages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(MOCK_TEXT_INPUT_VALUE);
+      expect(text.trim()).to.equal(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
     });
 
     pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().click();
 
     pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().should('be.checked');
     pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
-    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', MOCK_TEXT_INPUT_VALUE);
+    pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
   });
+
+  it('a user that is not in the `underwriting support` team cannot add or edit a credit rating', () => {
+    // double check that a credit rating already exists from previous tests
+    pages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+    });
+
+    // non-underwriting support user goes to the `Pricing and risk` page
+    const nonUnderWritingSupportUser = MOCK_USERS.find((user) =>
+      !user.teams.includes('UNDERWRITING_SUPPORT'));
+
+    cy.login(nonUnderWritingSupportUser);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to pricing and risk page
+    partials.caseSubNavigation.underwritingLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+
+    pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
+    pages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().should('not.be.visible');
+  });
+
+  // TODO what if they manually navigate to the page?
 });

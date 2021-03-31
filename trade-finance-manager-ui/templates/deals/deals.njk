@@ -20,7 +20,8 @@
     <div class="govuk-grid-column-full">
 
         {% set componentData = {
-        deals: deals.deals
+        deals: deals.deals,
+        user: user
       } %}
 
       {{ dealsTable.render(componentData) }}

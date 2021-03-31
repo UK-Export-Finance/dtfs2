@@ -1,6 +1,9 @@
-{% extends "case/case.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {% import './_macros/side-navigation.njk' as sideNavigation %}
-{% import './_macros/credit-rating-table.njk' as creditRatingTable %}
+{% import './_macros/section-exporter/section-exporter.njk' as sectionExporter %}
+{% import './_macros/section-facilities/section-facilities.njk' as sectionFacilities %}
+
+{% extends "case/case.njk" %}
 
 {% block sub_content %}
 
@@ -27,24 +30,24 @@
 
       <div class="govuk-grid-column-one-half">
 
-        <h3 class="govuk-heading-l ukef-heading-grey" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
+        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
 
-        <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6" data-cy="exporter-heading">Exporter</h4>
+        {% set componentData = {
+          caseId: dealId,
+          supplierName: deal.submissionDetails.supplierName,
+          exporterCreditRating: tfm.exporterCreditRating,
+          userCanEdit: userCanEdit
+        } %}
 
-        {% if tfm.exporterCreditRating %}          
+        {{sectionExporter.render(componentData)}}
 
-          {% set componentData = {
-            caseId: dealId,
-            exporterCreditRating: tfm.exporterCreditRating
-          } %}
+        {% set componentData = {
+          caseId: dealId,
+          facilities: deal.facilities,
+          userCanEdit: userCanEdit
+        } %}
 
-          {{ creditRatingTable.render(componentData) }}
-
-        {% else %}
-
-          <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ deal.submissionDetails.supplierName }}</a></p>
-
-        {% endif %}
+        {{sectionFacilities.render(componentData)}}
 
       </div>
 

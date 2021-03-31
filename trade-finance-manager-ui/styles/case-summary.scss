@@ -28,3 +28,12 @@
 .case-summary table {
   margin: 20px 0;
 }
+
+.ukef-deal-stage {
+  background: govuk-colour('white');
+  padding: govuk-spacing(2);
+}
+
+.ukef-deal-stage__title {
+  color: govuk-colour('blue');
+}

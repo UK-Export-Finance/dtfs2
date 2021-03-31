@@ -216,7 +216,6 @@
         </div>
 
         <div class="govuk-grid-column-three-quarters">
-          {# <p class="govuk-body-s" data-cy="facility-guarantee-fee-payable-to-ukef">{{ facility.guaranteeFeePayableToUkef | dashIfEmpty}}</p> #}
 
           {% set componentData = { creditRating: facilityTfm.creditRating } %}
           {{creditRating.render(componentData)}}

@@ -1,3 +1,7 @@
 .govuk-table__cell--last {
   border-bottom: 0;
 }
+
+.govuk-table__cell--border-top {
+  border-top: solid 1px govuk-colour('mid-grey');
+}
