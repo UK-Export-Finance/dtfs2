@@ -20,11 +20,16 @@ const MockRequest = () => {
 const MockFacilityResponse = () => {
   const res = {};
   res.details = {
+    _id: 'abc',
     facilityType: 'CASH',
     applicationId: '123',
+    hasBeenIssued: true,
   };
   return res;
 };
+
+const createFacilitySpy = jest.spyOn(api, 'createFacility').mockImplementationOnce(() => Promise.resolve());
+const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -43,106 +48,111 @@ describe('Facilities', () => {
     }));
   });
 
+  it('renders the `Facilities` template when there is a facility ID', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityResponse = new MockFacilityResponse();
+
+    mockRequest.params.facilityId = 'xyz';
+    api.getFacility = () => Promise.resolve(mockFacilityResponse);
+    await facilities(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
+      facilityType: 'Cash',
+      applicationId: '123',
+      hasBeenIssued: true,
+      status: undefined,
+    }));
+  });
+
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
 
-    api.getApplication = () => Promise.reject();
-    await aboutExporter(mockRequest, mockResponse);
+    mockRequest.params.facilityId = 'xyz';
+
+    api.getFacility = () => Promise.reject();
+    await facilities(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
-describe('Validate About Exporter', () => {
-  it('returns no validation errors if `save and return` is set to true', async () => {
+describe('Create Facility', () => {
+  it('returns Has Been Issued validation error', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
-    mockRequest.query.saveAndReturn = 'true';
 
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockFacilityResponse);
-    await aboutExporter(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-      industries: null,
-      smeType: null,
-      status: undefined,
-      probabilityOfDefault: null,
-      isFinanceIncreasing: null,
-      applicationId: '123',
-    }));
-  });
+    await createFacility(mockRequest, mockResponse);
 
-  it('returns validation error object if no `save and return` query is set', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
-
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockFacilityResponse);
-    await validateAboutExporter(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-      errors: expect.any(Object),
-      industries: null,
-      smeType: undefined,
-      probabilityOfDefault: undefined,
-      isFinanceIncreasing: undefined,
-      applicationId: '123',
-    }));
-  });
-
-  it('returns Selected Industry validation error', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
-
-    mockRequest.body.selectedIndustry = '';
-    mockFacilityResponse.details.industries = [{
-      name: 'name',
-      class: {
-        name: 'class name',
-      },
-    }];
-
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockFacilityResponse);
-    await validateAboutExporter(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
       errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#selectedIndustry', text: expect.any(String) }]),
+        errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
       }),
-      industries: expect.any(Array),
-      smeType: undefined,
-      probabilityOfDefault: undefined,
-      isFinanceIncreasing: undefined,
       applicationId: '123',
     }));
   });
 
-  it('redirects user to `application` page if response from api is successful', async () => {
+  it('calls the create facility api if no facility ID has been provided', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
-    mockRequest.body.smeType = 'MICRO';
-    mockRequest.body.probabilityOfDefault = '0';
-    mockRequest.body.isFinanceIncreasing = 'true';
 
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockFacilityResponse);
-    api.updateExporter = () => Promise.resolve();
-    await validateAboutExporter(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    mockRequest.body.hasBeenIssued = 'true';
+    await createFacility(mockRequest, mockResponse);
+
+    expect(updateFacilitySpy).not.toHaveBeenCalled();
+    expect(createFacilitySpy).toHaveBeenCalledWith({
+      applicationId: '123',
+      hasBeenIssued: true,
+      type: 'CASH',
+    });
+  });
+
+  it('calls the update facility api if facility ID has been provided', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    mockRequest.body.hasBeenIssued = 'false';
+    mockRequest.params.facilityId = 'xyz';
+    await createFacility(mockRequest, mockResponse);
+
+    expect(createFacilitySpy).not.toHaveBeenCalled();
+    expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
+      hasBeenIssued: false,
+    });
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
-    api.getApplication = () => Promise.reject(mockedRejection);
-    await validateAboutExporter(mockRequest, mockResponse);
+    mockRequest.body.hasBeenIssued = 'true';
+    api.createFacility = () => Promise.reject(mockedRejection);
+    await createFacility(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
+
+  it('redirects user to `application` page if status query is set to `Change`', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    mockRequest.query.status = 'change';
+    mockRequest.body.hasBeenIssued = 'true';
+
+
+    api.createFacility = () => Promise.resolve();
+    await createFacility(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+  });
+
+  it('redirects user to `about facility` page if response from api is successful', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityResponse = new MockFacilityResponse();
+
+    mockRequest.body.hasBeenIssued = 'true';
+
+    api.createFacility = () => Promise.resolve(mockFacilityResponse);
+    await createFacility(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/abc/about-facility');
   });
 });
