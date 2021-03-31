@@ -122,7 +122,7 @@ exports.getAddressesByPostcode = async (req, res) => {
       errMsg: err.response.data.error.message,
     }];
     let { status } = err.response;
-    if (response.errMsg) {
+    if (response[0].errMsg) {
       status = 422;
     }
     res.status(status).send(response);

@@ -57,7 +57,9 @@ const validateExportersAddress = async (req, res) => {
 
     // Check for validation errors
     if (addresses && addresses.status === 422) {
-      correspondenceError.push(addresses.data);
+      addresses.data.forEach((error) => {
+        correspondenceError.push(error);
+      });
     }
 
     if (correspondenceError.length > 0) {

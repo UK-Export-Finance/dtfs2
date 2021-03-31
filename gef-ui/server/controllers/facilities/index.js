@@ -68,7 +68,7 @@ const createFacility = async (req, res) => {
       });
     }
 
-    if (status === 'change') {
+    if (status && status === 'change') {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
 
