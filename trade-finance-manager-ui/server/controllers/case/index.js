@@ -10,6 +10,7 @@ const {
 const {
   getTask,
   mapAssignToSelectOptions,
+  userIsInTeam,
 } = caseHelpers;
 
 
@@ -268,14 +269,17 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { user } = req.session;
+
   return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
+    userCanEdit: userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
     activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
-    user: req.session.user,
+    user,
   });
 };
 

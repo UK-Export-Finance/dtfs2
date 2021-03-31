@@ -4,26 +4,22 @@
   {% set caseId = params.caseId %}
   {% set supplierName = params.supplierName %}
   {% set exporterCreditRating = params.exporterCreditRating %}
+  {% set userCanEdit = params.userCanEdit %}
 
   <section data-cy="section-exporter">
 
-    <h3 class="govuk-heading-l ukef-heading-grey" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
+    <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-padding-bottom-3 govuk-!-margin-top-0" data-cy="exporter-heading">Exporter</h4>
 
-    <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6" data-cy="exporter-heading">Exporter</h4>
+    {% set componentData = {
+      caseId: caseId,
+      exporterCreditRating: exporterCreditRating,
+      userCanEdit: userCanEdit
+    } %}
 
-    {% if exporterCreditRating %}          
+    {{ creditRatingTable.render(componentData) }}
 
-      {% set componentData = {
-        caseId: caseId,
-        exporterCreditRating: exporterCreditRating
-      } %}
-
-      {{ creditRatingTable.render(componentData) }}
-
-    {% else %}
-
+    {% if not exporterCreditRating and userCanEdit %}
       <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ supplierName }}</a></p>
-
     {% endif %}
 
   </section>

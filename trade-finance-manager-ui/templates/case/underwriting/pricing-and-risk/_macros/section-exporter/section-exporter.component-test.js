@@ -8,6 +8,7 @@ describe(component, () => {
   let params = {
     caseId: '1234',
     supplierName: 'Testing',
+    userCanEdit: false,
   };
 
   it('should render Exporter heading', () => {
@@ -15,10 +16,9 @@ describe(component, () => {
     wrapper.expectText('[data-cy="exporter-heading"]').toRead('Exporter');
   });
 
-  it('should render link to add credit rating', () => {
+  it('should NOT render link to add credit rating', () => {
     const wrapper = render(params);
-    wrapper.expectLink('[data-cy="add-credit-rating-link"]')
-      .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, `Add a credit rating for ${params.supplierName}`);
+    wrapper.expectElement('[data-cy="add-credit-rating-link"]').notToExist();
   });
 
   describe('with params.exporterCreditRating', () => {
@@ -43,5 +43,17 @@ describe(component, () => {
     });
   });
 
+  describe('with no params.exporterCreditRating and params.userCanEdit is true', () => {
+    it('should render link to add credit rating', () => {
+      params = {
+        ...params,
+        exporterCreditRating: null,
+        userCanEdit: true,
+      };
 
+      const wrapper = render(params);
+      wrapper.expectLink('[data-cy="add-credit-rating-link"]')
+        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, `Add a credit rating for ${params.supplierName}`);
+    });
+  });
 });

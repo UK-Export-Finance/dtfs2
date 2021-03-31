@@ -3,10 +3,13 @@ const userFullName = (user) => {
   return `${firstName} ${lastName}`;
 };
 
+const userIsInTeam = (user, teamId) =>
+  user.teams.includes(teamId);
+
 const getTask = (taskId, tasks) =>
   tasks.find((t) => t.id === taskId);
 
-const isTaskIsAssignedToUser = (assignedToUserId, userId) => {
+const isTaskAssignedToUser = (assignedToUserId, userId) => {
   if (assignedToUserId === userId) {
     return true;
   }
@@ -37,7 +40,7 @@ const mapTeamMembersSelectOptions = (members, taskAssignedTo, currentUserId) => 
 const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   const taskAssignedTo = task.assignedTo.userId;
   // eslint-disable-next-line no-underscore-dangle
-  const taskIsAssignedToUser = isTaskIsAssignedToUser(taskAssignedTo, currentUser._id);
+  const taskIsAssignedToUser = isTaskAssignedToUser(taskAssignedTo, currentUser._id);
 
   const currentUserFullName = userFullName(currentUser);
   const assignToMeCopy = `${currentUserFullName} (Assign to me)`;
@@ -107,11 +110,11 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   return mapped;
 };
 
-
 export default {
   userFullName,
+  userIsInTeam,
   getTask,
-  isTaskIsAssignedToUser,
+  isTaskAssignedToUser,
   getTeamMembersWithoutCurrentUser,
   mapTeamMembersSelectOptions,
   mapAssignToSelectOptions,
