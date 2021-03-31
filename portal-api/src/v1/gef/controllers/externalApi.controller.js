@@ -85,14 +85,14 @@ exports.getByRegistrationNumber = async (req, res) => {
         }, { returnOriginal: false },
       );
     }
-    res.status(200).send(response.data);
+    return res.status(200).send(response.data);
   } catch (err) {
     const response = companiesHouseError(err);
     let { status } = err.response;
     if (response.errCode === 'company-profile-not-found') {
       status = 422;
     }
-    res.status(status).send(response);
+    return res.status(status).send(response);
   }
 };
 
@@ -122,7 +122,7 @@ exports.getAddressesByPostcode = async (req, res) => {
       errMsg: err.response.data.error.message,
     }];
     let { status } = err.response;
-    if (response.errMsg) {
+    if (status >= 400 && status < 500) {
       status = 422;
     }
     res.status(status).send(response);
