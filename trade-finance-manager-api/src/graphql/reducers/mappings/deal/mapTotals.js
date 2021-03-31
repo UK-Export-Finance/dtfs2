@@ -5,10 +5,12 @@ const mapTotals = (facilities) => {
 
   // total value of all facilities
   const facilitiesValue = facilities.map((facility) => {
-    if (facility.tfm.facilityValueInGBP) {
-      return Number(facility.tfm.facilityValueInGBP);
+    const { facilitySnapshot, tfm } = facility;
+
+    if (tfm.facilityValueInGBP) {
+      return Number(tfm.facilityValueInGBP);
     }
-    return Number(facility.facilityValue);
+    return Number(facilitySnapshot.facilityValue);
   });
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
