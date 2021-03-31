@@ -78,7 +78,6 @@ const facilitiesOverallStatus = (facilities) => {
 };
 
 const facilitiesCheckEnums = (doc) => {
-  
   const enumErrors = [];
   switch (doc.type) {
     case FACILITY_TYPE.CASH:
