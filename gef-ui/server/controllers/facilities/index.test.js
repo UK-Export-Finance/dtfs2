@@ -1,4 +1,4 @@
-import { aboutExporter, validateAboutExporter } from './index';
+import { facilities, createFacility } from './index';
 import * as api from '../../services/api';
 
 const MockResponse = () => {
@@ -17,14 +17,11 @@ const MockRequest = () => {
   return req;
 };
 
-const MockAboutExporterResponse = () => {
+const MockFacilityResponse = () => {
   const res = {};
   res.details = {
-    industries: null,
-    smeType: null,
-    probabilityOfDefault: null,
-    selectedIndustry: null,
-    isFinanceIncreasing: null,
+    facilityType: 'CASH',
+    applicationId: '123',
   };
   return res;
 };
@@ -33,22 +30,16 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('GET About Exporter', () => {
-  it('renders the `About Exporter` template', async () => {
+describe('Facilities', () => {
+  it('renders the `Facilities` template when there is no facility ID provided', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockAboutExporterResponse = new MockAboutExporterResponse();
 
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
-    await aboutExporter(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-      industries: null,
-      smeType: null,
-      probabilityOfDefault: null,
-      selectedIndustry: null,
-      isFinanceIncreasing: null,
+    await facilities(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
+      facilityType: 'Cash',
       applicationId: '123',
+      status: undefined,
     }));
   });
 
@@ -66,11 +57,11 @@ describe('Validate About Exporter', () => {
   it('returns no validation errors if `save and return` is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
     mockRequest.query.saveAndReturn = 'true';
 
     api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    api.getExporter = () => Promise.resolve(mockFacilityResponse);
     await aboutExporter(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
@@ -86,10 +77,10 @@ describe('Validate About Exporter', () => {
   it('returns validation error object if no `save and return` query is set', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
 
     api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    api.getExporter = () => Promise.resolve(mockFacilityResponse);
     await validateAboutExporter(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
@@ -105,10 +96,10 @@ describe('Validate About Exporter', () => {
   it('returns Selected Industry validation error', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
 
     mockRequest.body.selectedIndustry = '';
-    mockAboutExporterResponse.details.industries = [{
+    mockFacilityResponse.details.industries = [{
       name: 'name',
       class: {
         name: 'class name',
@@ -116,7 +107,7 @@ describe('Validate About Exporter', () => {
     }];
 
     api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    api.getExporter = () => Promise.resolve(mockFacilityResponse);
     await validateAboutExporter(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
@@ -134,13 +125,13 @@ describe('Validate About Exporter', () => {
   it('redirects user to `application` page if response from api is successful', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
     mockRequest.body.smeType = 'MICRO';
     mockRequest.body.probabilityOfDefault = '0';
     mockRequest.body.isFinanceIncreasing = 'true';
 
     api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    api.getExporter = () => Promise.resolve(mockFacilityResponse);
     api.updateExporter = () => Promise.resolve();
     await validateAboutExporter(mockRequest, mockResponse);
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');

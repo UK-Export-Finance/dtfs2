@@ -101,7 +101,7 @@ describe('Validate Companies House', () => {
 
   it('returns error object if companies house registration number is invalid', async () => {
     mockRequest.body.regNumber = 'invalidregnumber';
-    const mockedRejection = { status: 422, data: { errMsg: 'Message', errRef: 'Reference' } };
+    const mockedRejection = { status: 422, data: [{ errMsg: 'Message', errRef: 'Reference' }] };
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getCompaniesHouseDetails = () => Promise.resolve(mockedRejection);
 
