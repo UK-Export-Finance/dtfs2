@@ -24,12 +24,16 @@ const addToACBSLog = async ({ deal, bank, acbsTaskLinks }) => {
 const createACBS = async (deal) => {
   // Add bank's full details so we can reference partyUrn in function
   const bankId = deal.dealSnapshot.details.owningBank.id;
-  const { id, name, partyUrn } = await findOneBank(bankId);
-  const bank = { id, name, partyUrn };
+  const bank = await findOneBank(bankId);
 
-  const acbsTaskLinks = await api.createACBS(deal, bank);
+  if (!bank) {
+    return;
+  }
+
+  const { id, name, partyUrn } = bank;
+
+  const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
   await addToACBSLog({ deal, bank, acbsTaskLinks });
-  return acbsTaskLinks;
 };
 
 

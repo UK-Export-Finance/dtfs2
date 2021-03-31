@@ -31,7 +31,9 @@ exports.findOnePortalDeal = findOnePortalDeal;
 
 const submitIfAllPartiesHaveUrn = async (dealId) => {
   const deal = await findOneDeal(dealId);
-
+  if (!deal) {
+    return;
+  }
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
   // Only want to submit AIN deals to ACBS initially
   if (allRequiredPartiesHaveUrn
@@ -51,6 +53,7 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
 
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
+
   await submitIfAllPartiesHaveUrn(dealId);
 
   return updatedDeal.tfm;

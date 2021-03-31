@@ -10,9 +10,10 @@ const findOneFacility = async (_id) => {
 const updateTfmFacility = async (facilityId, tfmUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
+
   await dealController.submitIfAllPartiesHaveUrn(updatedFacility.facilitySnapshot.associatedDealId);
 
-  return updatedFacility;
+  return updatedFacility.tfm;
 };
 
 

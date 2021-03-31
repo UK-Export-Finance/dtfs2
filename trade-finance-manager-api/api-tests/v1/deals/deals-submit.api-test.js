@@ -2,10 +2,16 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const MOCK_DEAL_2 = require('../../../src/v1/__mocks__/mock-deal-2');
+const MOCK_DEAL_3 = require('../../../src/v1/__mocks__/mock-deal-3');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
+const MOCK_DEAL_NO_COMPANIES_HOUSE_2 = require('../../../src/v1/__mocks__/mock-deal-no-companies-house-2');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
+const MOCK_DEAL_FACILITIES_USD_CURRENCY_2 = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency-2');
+const MOCK_DEAL_FACILITIES_USD_CURRENCY_3 = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency-3');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
+const MOCK_DEAL_MIN_2 = require('../../../src/v1/__mocks__/mock-deal-MIN-2');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
 const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
@@ -184,20 +190,22 @@ describe('/v1/deals', () => {
       });
     });
 
-    it('should convert supplyContractValue to GBP when currency is NOT GBP', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE._id }).to('/v1/deals/submit');
+    describe('currency NOT GBP', () => {
+      it('should convert supplyContractValue to GBP when currency is NOT GBP', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE._id }).to('/v1/deals/submit');
 
-      expect(status).toEqual(200);
+        expect(status).toEqual(200);
 
-      const { supplyContractValue } = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE.submissionDetails;
+        const { supplyContractValue } = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE.submissionDetails;
 
-      const strippedContractValue = Number(supplyContractValue.replace(/,/g, ''))
+        const strippedContractValue = Number(supplyContractValue.replace(/,/g, ''));
 
-      const expected = strippedContractValue * MOCK_CURRENCY_EXCHANGE_RATE;
+        const expected = strippedContractValue * MOCK_CURRENCY_EXCHANGE_RATE;
 
-      expect(body.tfm.supplyContractValueInGBP).toEqual(expected);
+        expect(body.tfm.supplyContractValueInGBP).toEqual(expected);
+      });
     });
-    
+
     describe('exporter credit rating', () => {
       describe('when deal is AIN', () => {
         it('should add exporterCreditRating to the deal', async () => {
@@ -230,7 +238,7 @@ describe('/v1/deals', () => {
 
       describe('when deal is AIN but status is NOT `Submitted` ', () => {
         it('should NOT add `Confirmed` tfm stage', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE_2._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.stage).toBeUndefined();
@@ -239,13 +247,12 @@ describe('/v1/deals', () => {
 
       describe('when deal is NOT AIN', () => {
         it('should NOT add `Confirmed` tfm stage', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_2._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.stage).toBeUndefined();
         });
       });
-
     });
   });
 });
