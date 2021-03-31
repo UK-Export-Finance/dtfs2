@@ -466,6 +466,10 @@ jobs:
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}]'
       
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name acbs-log || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name acbs-log --shard "_id" \
+            --idx '[{"key": {"keys": ["status"]}}]'
+    
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [set-environment, cosmos-db-init, private-dns]
