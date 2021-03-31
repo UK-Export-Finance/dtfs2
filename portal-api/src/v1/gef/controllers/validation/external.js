@@ -9,11 +9,11 @@ const companiesHouseError = (err) => {
       errMsg = 'There was a problem getting the Companies House registration number';
       break;
   }
-  return {
+  return [{
     errCode: err.response.data.errors[0].error,
     errRef: 'regNumber',
     errMsg,
-  };
+  }];
 };
 
 module.exports = {
