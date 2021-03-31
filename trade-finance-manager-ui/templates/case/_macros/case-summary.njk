@@ -5,6 +5,7 @@
 {% macro render(params) %}
   {% set deal = params.deal %}
   {% set tfm = params.tfm %}
+  {% set user = params.user %}
 
   <div data-cy="case-summary" class="case-summary">
     <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
@@ -44,7 +45,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Date received</div>
-            <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", 'en-gb') }}</div>
+            <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", user.timezone) }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">

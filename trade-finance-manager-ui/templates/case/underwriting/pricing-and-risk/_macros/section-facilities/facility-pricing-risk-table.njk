@@ -1,0 +1,35 @@
+{% macro render(params) %}
+  {% set facility = params.facility %}
+  {% set caseId = params.caseId %}
+
+  <table class="govuk-table" data-cy="facility-{{ facility._id }}-pricing-risk-table">
+    <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-bottom-6">
+      <a
+        class="govuk-link govuk-link--no-visited-state"
+        href="/case/{{ caseId }}/facility/{{ facility._id }}"
+        aria-label="View Facility details"
+        data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
+        <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityID }}</span>
+      </a>
+      <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;&nbsp;&nbsp;{{ facility.facilitySnapshot.facilityType }}</span>
+    </caption>
+
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half govuk-table__cell--border-top">Guarantee fee % payable to UKEF</th>
+        <td class="govuk-table__cell govuk-table__cell--border-top">-</td>
+      </tr>
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half">Bank’s interest margin</th>
+        <td class="govuk-table__cell">-</td>
+      </tr>
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half" data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</th>
+        <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endmacro %}

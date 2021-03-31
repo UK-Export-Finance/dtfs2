@@ -7,21 +7,13 @@
 
 @import "./case-summary.scss";
 @import "./deals-table.scss";
+@import "./layout.scss";
 @import "./table.scss";
 @import "./typography.scss";
 @import "./task-filters.scss";
 
 body {
   font-family: Helvetica;
-}
-
-.ukef-deal-stage {
-  background: govuk-colour('white');
-  padding: govuk-spacing(2);
-}
-
-.ukef-deal-stage__title {
-  color: govuk-colour('blue');
 }
 
 .js-enabled .js-hidden {

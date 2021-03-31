@@ -1,6 +1,7 @@
 const api = require('../api');
 const convertFacilityCurrency = require('./convert-facility-currency');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
+const DEFAULTS = require('../defaults');
 
 const updateFacilities = async (deal) => {
   const modifiedDeal = deal;
@@ -32,6 +33,7 @@ const updateFacilities = async (deal) => {
       const facilityUpdate = {
         ...facilityCurrencyConversion,
         ...facilityExposurePeriod,
+        riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
       };
 
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
