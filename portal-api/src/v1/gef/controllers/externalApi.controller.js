@@ -64,7 +64,7 @@ exports.getByRegistrationNumber = async (req, res) => {
         selectedIndustry = industries[0];
       }
       const address = response.data.registered_office_address;
-      await collection.findOneAndUpdate(
+      return await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(req.query.exporterId)) } }, {
           $set: {
             companiesHouseRegistrationNumber: response.data.company_number,
@@ -85,14 +85,14 @@ exports.getByRegistrationNumber = async (req, res) => {
         }, { returnOriginal: false },
       );
     }
-    res.status(200).send(response.data);
+    return res.status(200).send(response.data);
   } catch (err) {
     const response = companiesHouseError(err);
     let { status } = err.response;
     if (response.errCode === 'company-profile-not-found') {
       status = 422;
     }
-    res.status(status).send(response);
+    return res.status(status).send(response);
   }
 };
 
