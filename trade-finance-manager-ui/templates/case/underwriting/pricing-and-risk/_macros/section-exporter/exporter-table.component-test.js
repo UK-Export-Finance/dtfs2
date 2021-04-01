@@ -36,8 +36,8 @@ describe(component, () => {
         wrapper = render(params);
 
         wrapper.expectElement('[data-cy="exporter-table-credit-rating-value"]').notToExist();
-        wrapper.expectElement('[data-cy="exporter-table-credit-rating-not-set"]').toExist();
-        wrapper.expectText('[data-cy="exporter-table-credit-rating-not-set"]').toRead('Not added');
+        wrapper.expectElement('[data-cy="exporter-table-credit-rating-not-added"]').toExist();
+        wrapper.expectText('[data-cy="exporter-table-credit-rating-not-added"]').toRead('Not added');
       });
     });
 

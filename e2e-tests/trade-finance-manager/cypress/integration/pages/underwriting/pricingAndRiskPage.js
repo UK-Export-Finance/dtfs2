@@ -1,6 +1,6 @@
 const pricingAndRiskPage = {
   addRatingLink: () => cy.get('[data-cy="add-credit-rating-link"]'),
-  exporterTableCreditRatingNotAddedTag: () => cy.get('[data-cy="exporter-table-rating-not-set"]'),
+  exporterTableCreditRatingNotAddedTag: () => cy.get('[data-cy="exporter-table-credit-rating-not-added"]'),
   exporterTableRatingValue: () => cy.get('[data-cy="exporter-table-credit-rating-value"]'),
   exporterTableChangeCreditRatingLink: () => cy.get('[data-cy="exporter-table-change-credit-rating-link"]'),
   exporterTableLossGivenDefault: () => cy.get('[data-cy="exporter-table-loss-given-default-value"]'),
