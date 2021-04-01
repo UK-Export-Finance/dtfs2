@@ -28,6 +28,10 @@ const LOSS_GIVEN_DEFAULT = {
   '50_PERCENT': '50%',
 };
 
+const PROBABILITY_OF_DEFAULT = {
+  LESS_THAN_14_PERCENT: 'Less than 14.1%',
+};
+
 module.exports = {
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
@@ -35,4 +39,5 @@ module.exports = {
   DEAL_STAGE_TFM,
   CREDIT_RATING,
   LOSS_GIVEN_DEFAULT,
+  PROBABILITY_OF_DEFAULT,
 };

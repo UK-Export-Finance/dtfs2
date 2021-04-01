@@ -4,6 +4,7 @@
   {% set caseId = params.caseId %}
   {% set exporterCreditRating = params.exporterCreditRating %}
   {% set lossGivenDefault = params.lossGivenDefault %}
+  {% set probabilityOfDefault  = params.probabilityOfDefault  %}
   {% set userCanEdit = params.userCanEdit %}
 
   <table class="govuk-table govuk-!-margin-bottom-8" data-cy="credit-rating-table">
@@ -46,17 +47,21 @@
           Loss given default
         </td>
 
-        <td class="govuk-table__cell" data-cy="credit-rating-table-loss-given-default-value">{{ lossGivenDefault }}</td>
+        <td class="govuk-table__cell" data-cy="credit-rating-table-loss-given-default-value">
+          {{ lossGivenDefault }}
+        </td>
         
       </tr>
 
       <tr class="govuk-table__row">
 
-        <td scope="row" class="govuk-table__cell width-half">
+        <td scope="row" class="govuk-table__cell width-half" data-cy="credit-rating-table-probability-of-default-heading">
           Probability of default
         </td>
 
-        <td class="govuk-table__cell">-</td>
+        <td class="govuk-table__cell" data-cy="credit-rating-table-probability-of-default-value">
+          {{ probabilityOfDefault }}
+        </td>
         
       </tr>
 

@@ -232,12 +232,13 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('lossGivenDefault', () => {
+    describe('lossGivenDefault and probabilityOfDefault', () => {
       it('should be added to AIN deals', async () => {
         const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED_2._id }).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
+        expect(body.tfm.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
       });
 
       it('should be added to MIA deals', async () => {
@@ -245,6 +246,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
+        expect(body.tfm.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
       });
 
       it('should be added to MIN deals', async () => {
@@ -252,6 +254,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
+        expect(body.tfm.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
       });
     });
 

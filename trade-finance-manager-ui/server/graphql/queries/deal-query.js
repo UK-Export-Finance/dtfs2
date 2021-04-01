@@ -40,6 +40,7 @@ const dealQuery = gql`
         supplyContractValueInGBP
         stage
         lossGivenDefault
+        probabilityOfDefault
       }
       dealSnapshot {
         _id,
