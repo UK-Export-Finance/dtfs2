@@ -19,11 +19,13 @@ const addDealPricingAndRisk = async (deal) => {
 
   const { submissionType } = details;
 
-  // TODO: wrap pricing-risk things into object?
-
+  // TODO:
+  // lossGivenDefault and probabilityOfDefault should be integers without text/percentage symbol.
+  // but, don't know what the data could change to post-MVP so just use strings for MVP requirement.
   let dealUpdate = {
     tfm: {
       lossGivenDefault: DEFAULTS.LOSS_GIVEN_DEFAULT,
+      probabilityOfDefault: DEFAULTS.PROBABILITY_OF_DEFAULT,
     },
   };
 

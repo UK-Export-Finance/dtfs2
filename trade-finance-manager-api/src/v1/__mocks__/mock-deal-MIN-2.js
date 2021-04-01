@@ -17,7 +17,7 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Manual Inclusion Application',
+    submissionType: 'Manual Inclusion Notice',
     submissionDate: '1606900616651',
     owningBank: {
       id: '123',

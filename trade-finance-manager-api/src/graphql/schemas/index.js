@@ -214,6 +214,7 @@ type TFMDealData {
   supplyContractValueInGBP: String
   stage: String
   lossGivenDefault: String
+  probabilityOfDefault: String
 }
 
 type TFMFacilityData {

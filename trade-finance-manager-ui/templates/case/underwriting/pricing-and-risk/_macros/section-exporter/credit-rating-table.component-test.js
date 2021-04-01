@@ -5,30 +5,31 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  let params = {
+  let defaultParams = {
     caseId: '1234',
     exporterCreditRating: 'Good (BB-)',
     userCanEdit: false,
     lossGivenDefault: '50%',
+    probabilityOfDefault: 'Less than 14.1%',
   };
 
   describe('credit rating', () => {
     it('should render table cell heading', () => {
-      wrapper = render(params);
+      wrapper = render(defaultParams);
 
       wrapper.expectText('[data-cy="credit-rating-table-heading"]').toRead('Credit rating');
     });
 
-    it('should render credit rating value', () => {
-      wrapper = render(params);
+    it('should render value', () => {
+      wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-rating-value"]').toRead(params.exporterCreditRating);
+      wrapper.expectText('[data-cy="credit-rating-table-rating-value"]').toRead(defaultParams.exporterCreditRating);
     });
 
     describe('when there is no credit rating', () => {
       it('should render `Not added` govukTag', () => {
-        params = {
-          ...params,
+        const params = {
+          ...defaultParams,
           exporterCreditRating: null,
         };
 
@@ -41,15 +42,15 @@ describe(component, () => {
     });
 
     it('should NOT render `Change` link by default', () => {
-      wrapper = render(params);
+      wrapper = render(defaultParams);
 
       wrapper.expectElement('[data-cy="credit-rating-table-change-link"]').notToExist();
     });
 
     describe('with params.exporterCreditRating and params.userCanEdit', () => {
       it('should render `Change` link', () => {
-        params = {
-          ...params,
+        const params = {
+          ...defaultParams,
           userCanEdit: true,
           exporterCreditRating: 'Good (BB-)',
         };
@@ -64,16 +65,29 @@ describe(component, () => {
 
   describe('loss given default', () => {
     it('should render table cell heading', () => {
-      wrapper = render(params);
+      wrapper = render(defaultParams);
 
       wrapper.expectText('[data-cy="credit-rating-table-loss-given-default-heading"]').toRead('Loss given default');
     });
 
-    it('should render credit rating value', () => {
-      wrapper = render(params);
+    it('should render value', () => {
+      wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-loss-given-default-value"]').toRead(params.lossGivenDefault);
+      wrapper.expectText('[data-cy="credit-rating-table-loss-given-default-value"]').toRead(defaultParams.lossGivenDefault);
+    });
+  });
+
+  describe('probability of default', () => {
+    it('should render table cell heading', () => {
+      wrapper = render(defaultParams);
+
+      wrapper.expectText('[data-cy="credit-rating-table-probability-of-default-heading"]').toRead('Probability of default');
     });
 
+    it('should render value', () => {
+      wrapper = render(defaultParams);
+
+      wrapper.expectText('[data-cy="credit-rating-table-probability-of-default-value"]').toRead(defaultParams.probabilityOfDefault);
+    });
   });
 });
