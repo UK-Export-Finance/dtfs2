@@ -32,14 +32,14 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="add-credit-rating-link"]').notToExist();
     });
 
-    it('should render credit rating table', () => {
+    it('should render exporter table', () => {
       params = {
         ...params,
         exporterCreditRating: 'Good (BB-)',
       };
 
       const wrapper = render(params);
-      wrapper.expectElement('[data-cy="credit-rating-table"]').toExist();
+      wrapper.expectElement('[data-cy="exporter-table"]').toExist();
     });
   });
 

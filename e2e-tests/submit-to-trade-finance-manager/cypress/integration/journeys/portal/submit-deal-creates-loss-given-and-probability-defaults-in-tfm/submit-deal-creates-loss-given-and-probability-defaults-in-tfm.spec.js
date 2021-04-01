@@ -77,15 +77,15 @@ context('Portal to TFM deal submission', () => {
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableLossGivenDefault().should('exist');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().should('exist');
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableLossGivenDefault().invoke('text').then((text) => {
+    tfmPages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
       expect(text.trim()).to.eq('50%');
     });
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableProbabilityOfDefault().should('exist');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().should('exist');
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableProbabilityOfDefault().invoke('text').then((text) => {
+    tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
       expect(text.trim()).to.eq('Less than 14.1%');
     });
 

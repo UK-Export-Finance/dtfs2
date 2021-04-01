@@ -1,4 +1,4 @@
-{% import './credit-rating-table.njk' as creditRatingTable %}
+{% import './exporter-table.njk' as exporterTable %}
 
 {% macro render(params) %}
   {% set caseId = params.caseId %}
@@ -20,7 +20,7 @@
       userCanEdit: userCanEdit
     } %}
 
-    {{ creditRatingTable.render(componentData) }}
+    {{ exporterTable.render(componentData) }}
 
     {% if not exporterCreditRating and userCanEdit %}
       <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ supplierName }}</a></p>
