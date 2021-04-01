@@ -7,18 +7,18 @@
   {% set probabilityOfDefault  = params.probabilityOfDefault  %}
   {% set userCanEdit = params.userCanEdit %}
 
-  <table class="govuk-table govuk-!-margin-bottom-8" data-cy="credit-rating-table">
+  <table class="govuk-table govuk-!-margin-bottom-8" data-cy="exporter-table">
     <tbody class="govuk-table__body">
 
       <tr class="govuk-table__row">
 
-        <td scope="row" class="govuk-table__cell width-half govuk-table__cell--border-top" data-cy="credit-rating-table-heading">
+        <td scope="row" class="govuk-table__cell width-half govuk-table__cell--border-top" data-cy="exporter-table-credit-rating-heading">
           Credit rating
         </td>
 
         <td class="govuk-table__cell govuk-table__cell--border-top">
           {% if exporterCreditRating %}
-            <span data-cy="credit-rating-table-rating-value">{{ exporterCreditRating }}</span>
+            <span data-cy="exporter-table-credit-rating-value">{{ exporterCreditRating }}</span>
 
             {% else %}
 
@@ -26,7 +26,7 @@
               text: 'Not added',
               classes: 'govuk-tag--yellow',
               attributes: {
-                'data-cy': 'credit-rating-table-rating-not-set'
+                'data-cy': 'exporter-table-credit-rating-not-set'
               }
             }) }}
 
@@ -35,7 +35,7 @@
         
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
           {% if exporterCreditRating and userCanEdit %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="credit-rating-table-change-link">Change</a>
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change</a>
           {% endif %}
         </td>
 
@@ -43,11 +43,11 @@
 
       <tr class="govuk-table__row">
 
-        <td scope="row" class="govuk-table__cell width-half" data-cy="credit-rating-table-loss-given-default-heading">
+        <td scope="row" class="govuk-table__cell width-half" data-cy="exporter-table-loss-given-default-heading">
           Loss given default
         </td>
 
-        <td class="govuk-table__cell" data-cy="credit-rating-table-loss-given-default-value">
+        <td class="govuk-table__cell" data-cy="exporter-table-loss-given-default-value">
           {{ lossGivenDefault }}
         </td>
         
@@ -55,11 +55,11 @@
 
       <tr class="govuk-table__row">
 
-        <td scope="row" class="govuk-table__cell width-half" data-cy="credit-rating-table-probability-of-default-heading">
+        <td scope="row" class="govuk-table__cell width-half" data-cy="exporter-table-probability-of-default-heading">
           Probability of default
         </td>
 
-        <td class="govuk-table__cell" data-cy="credit-rating-table-probability-of-default-value">
+        <td class="govuk-table__cell" data-cy="exporter-table-probability-of-default-value">
           {{ probabilityOfDefault }}
         </td>
         

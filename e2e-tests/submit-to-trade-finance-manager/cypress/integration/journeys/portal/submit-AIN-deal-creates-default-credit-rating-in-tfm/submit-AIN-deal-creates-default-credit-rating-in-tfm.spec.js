@@ -84,10 +84,10 @@ context('Portal to TFM deal submission', () => {
     // assert elements/value in `pricing and risk` page
     tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableRatingValue().invoke('text').then((text) => {
+    tfmPages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acceptable (B+)');
     });
 
-    tfmPages.underwritingPricingAndRiskPage.creditRatingTableChangeLink().should('be.visible');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('be.visible');
   });
 });

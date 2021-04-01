@@ -1,5 +1,5 @@
 const componentRenderer = require('../../../../../../component-tests/componentRenderer');
-const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/credit-rating-table.njk';
+const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/exporter-table.njk';
 
 const render = componentRenderer(component);
 
@@ -17,13 +17,13 @@ describe(component, () => {
     it('should render table cell heading', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-heading"]').toRead('Credit rating');
+      wrapper.expectText('[data-cy="exporter-table-credit-rating-heading"]').toRead('Credit rating');
     });
 
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-rating-value"]').toRead(defaultParams.exporterCreditRating);
+      wrapper.expectText('[data-cy="exporter-table-credit-rating-value"]').toRead(defaultParams.exporterCreditRating);
     });
 
     describe('when there is no credit rating', () => {
@@ -35,16 +35,16 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        wrapper.expectElement('[data-cy="credit-rating-table-rating-value"]').notToExist();
-        wrapper.expectElement('[data-cy="credit-rating-table-rating-not-set"]').toExist();
-        wrapper.expectText('[data-cy="credit-rating-table-rating-not-set"]').toRead('Not added');
+        wrapper.expectElement('[data-cy="exporter-table-credit-rating-value"]').notToExist();
+        wrapper.expectElement('[data-cy="exporter-table-credit-rating-not-set"]').toExist();
+        wrapper.expectText('[data-cy="exporter-table-credit-rating-not-set"]').toRead('Not added');
       });
     });
 
     it('should NOT render `Change` link by default', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectElement('[data-cy="credit-rating-table-change-link"]').notToExist();
+      wrapper.expectElement('[data-cy="exorter-table-change-credit-rating-link"]').notToExist();
     });
 
     describe('with params.exporterCreditRating and params.userCanEdit', () => {
@@ -57,7 +57,7 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        wrapper.expectLink('[data-cy="credit-rating-table-change-link"]')
+        wrapper.expectLink('[data-cy="exporter-table-change-credit-rating-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change');
       });
     })
@@ -67,13 +67,13 @@ describe(component, () => {
     it('should render table cell heading', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-loss-given-default-heading"]').toRead('Loss given default');
+      wrapper.expectText('[data-cy="exporter-table-loss-given-default-heading"]').toRead('Loss given default');
     });
 
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-loss-given-default-value"]').toRead(defaultParams.lossGivenDefault);
+      wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead(defaultParams.lossGivenDefault);
     });
   });
 
@@ -81,13 +81,13 @@ describe(component, () => {
     it('should render table cell heading', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-probability-of-default-heading"]').toRead('Probability of default');
+      wrapper.expectText('[data-cy="exporter-table-probability-of-default-heading"]').toRead('Probability of default');
     });
 
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="credit-rating-table-probability-of-default-value"]').toRead(defaultParams.probabilityOfDefault);
+      wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead(defaultParams.probabilityOfDefault);
     });
   });
 });
