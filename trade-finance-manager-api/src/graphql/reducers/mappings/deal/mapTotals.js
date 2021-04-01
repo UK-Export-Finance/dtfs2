@@ -1,12 +1,17 @@
 const { formattedNumber } = require('../../../../utils/number');
 
-const mapTotals = (tfmFacilities) => {
+const mapTotals = (facilities) => {
   const totals = {};
 
   // total value of all facilities
-  const facilities = tfmFacilities.map(({ tfm }) => tfm);
+  const facilitiesValue = facilities.map((facility) => {
+    const { facilitySnapshot, tfm } = facility;
 
-  const facilitiesValue = facilities.map(({ facilityValueInGBP }) => Number(facilityValueInGBP));
+    if (tfm.facilityValueInGBP) {
+      return Number(tfm.facilityValueInGBP);
+    }
+    return Number(facilitySnapshot.facilityValue);
+  });
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
 
@@ -15,7 +20,7 @@ const mapTotals = (tfmFacilities) => {
 
   // total of all facilities ukef exposure
   const facilitiesUkefExposure = facilities.map((facility) =>
-    facility.ukefExposure);
+    facility.tfm.ukefExposure);
 
   const formattedUkefExposure = formattedNumber(facilitiesUkefExposure.reduce((a, b) => a + b));
 

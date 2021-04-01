@@ -1,4 +1,5 @@
 const { now } = require('../../helpers/date');
+const { getSmeType } = require('./helpers');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -12,7 +13,7 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   officerRiskDate           date    yyyy-MM-dd i.e. 2019-10-21, Date of creation (we use current date)
 */
 
-const agent = (deal) => {
+const agent = ({ deal }) => {
   const { eligibility } = deal.dealSnapshot;
 
   const countryCode = eligibility.agentAddressCountry && eligibility.agentAddressCountry.code;
@@ -22,7 +23,7 @@ const agent = (deal) => {
     alternateIdentifier: deal.tfm.parties.agent.partyUrn,
     industryClassification: '0001',
     name1: eligibility.agentName,
-    smeType: '70',
+    smeType: getSmeType(''),
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,

@@ -1,8 +1,8 @@
 const mapDeal = require('../mappings/map-deal');
-
 const api = require('../api');
-const allPartiesHaveUrn = require('../helpers/checkIfAllPartiesHaveUrn');
-const { createACBS } = require('./acbs.controller');
+const acbsController = require('./acbs.controller');
+const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
+const CONSTANTS = require('../../constants');
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -29,6 +29,21 @@ const findOnePortalDeal = async (dealId) => {
 };
 exports.findOnePortalDeal = findOnePortalDeal;
 
+const submitIfAllPartiesHaveUrn = async (dealId) => {
+  const deal = await findOneDeal(dealId);
+  if (!deal) {
+    return;
+  }
+  const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
+  // Only want to submit AIN deals to ACBS initially
+  if (allRequiredPartiesHaveUrn
+    && deal.dealSnapshot.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    // Start ACBS process
+    await acbsController.createACBS(deal);
+  }
+};
+exports.submitIfAllPartiesHaveUrn = submitIfAllPartiesHaveUrn;
+
 const updateTfmParty = async (dealId, tfmUpdate) => {
   const partyUpdate = {
     tfm: {
@@ -39,13 +54,8 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
 
-  const allRequiredPartiesHaveUrn = allPartiesHaveUrn(updatedDeal.tfm.parties);
+  await submitIfAllPartiesHaveUrn(dealId);
 
-  if (allRequiredPartiesHaveUrn) {
-    // Start ACBS process
-    const acbsFunctionUris = await createACBS(updatedDeal);
-    console.log({ acbsFunctionUris });
-  }
   return updatedDeal.tfm;
 };
 exports.updateTfmParty = updateTfmParty;
