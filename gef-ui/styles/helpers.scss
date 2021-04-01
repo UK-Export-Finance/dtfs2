@@ -2,6 +2,10 @@
   color: $govuk-error-colour;
 }
 
+.has-text {
+  color: $govuk-text-colour;
+}
+
 ul {
   &.is-unstyled {
     list-style: none;

@@ -5,11 +5,15 @@ const aboutFacility = async (req, res) => {
   const { params } = req;
   const { facilityId } = params;
 
+
   try {
     const { details } = await api.getFacility(facilityId);
-    const { type } = details;
+    const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
+    const hasCoverStartDate = JSON.stringify(details.hasCoverStartDate);
     return res.render('partials/about-facility.njk', {
-      facilityType: FACILITY_TYPE[type],
+      facilityType: facilityTypeString,
+      hasCoverStartDate: hasCoverStartDate !== 'null' ? hasCoverStartDate : null,
+      coverStartDate: details.coverStartDate,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
