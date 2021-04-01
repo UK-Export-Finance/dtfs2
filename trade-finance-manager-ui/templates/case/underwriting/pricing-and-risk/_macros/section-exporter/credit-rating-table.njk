@@ -3,6 +3,7 @@
 {% macro render(params) %}
   {% set caseId = params.caseId %}
   {% set exporterCreditRating = params.exporterCreditRating %}
+  {% set lossGivenDefault = params.lossGivenDefault %}
   {% set userCanEdit = params.userCanEdit %}
 
   <table class="govuk-table govuk-!-margin-bottom-8" data-cy="credit-rating-table">
@@ -41,11 +42,11 @@
 
       <tr class="govuk-table__row">
 
-        <td scope="row" class="govuk-table__cell width-half">
+        <td scope="row" class="govuk-table__cell width-half" data-cy="credit-rating-table-loss-given-default-heading">
           Loss given default
         </td>
 
-        <td class="govuk-table__cell">-</td>
+        <td class="govuk-table__cell" data-cy="credit-rating-table-loss-given-default-value">{{ lossGivenDefault }}</td>
         
       </tr>
 

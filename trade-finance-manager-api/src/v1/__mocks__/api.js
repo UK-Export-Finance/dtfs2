@@ -12,6 +12,7 @@ const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_DEAL_MIN_2 = require('./mock-deal-MIN-2');
+const MOCK_DEAL_MIA = require('./mock-deal-MIA');
 const MOCK_DEAL_AIN_SUBMITTED = require('./mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
@@ -31,6 +32,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_FACILITIES_USD_CURRENCY_3,
   MOCK_DEAL_MIN,
   MOCK_DEAL_MIN_2,
+  MOCK_DEAL_MIA,
   MOCK_DEAL_AIN_SUBMITTED,
   MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
 ];
