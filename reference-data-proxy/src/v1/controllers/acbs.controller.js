@@ -78,9 +78,6 @@ exports.findOne = async (req, res) => {
 };
 
 const createAcbsRecord = async (deal, bank) => {
-  console.log({
-    url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
-  });
   const response = await axios({
     method: 'post',
     url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
@@ -89,7 +86,6 @@ const createAcbsRecord = async (deal, bank) => {
       bank,
     },
   }).catch((err) => err);
-  console.log({ response });
   return response;
 };
 
