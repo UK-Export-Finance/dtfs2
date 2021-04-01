@@ -39,52 +39,22 @@
 
 const helpers = require('./helpers');
 
-const { formatTimestamp } = require('../../helpers/date');
+const CONSTANTS = require('../../constants');
 
-const facilityMaster = (deal, facility, acbsData, acbsReference) => {
-  const { details, submissionDetails } = deal.dealSnapshot;
+const facilityUpdate = (facility, acbsFacility, obligorName) => {
   const { facilitySnapshot } = facility;
 
   const capitalConversionFactorCode = facilitySnapshot.facilityType === 'GEF' ? helpers.getCapitalConversionFactorCode() : '8';
-  const {
-    guaranteeCommencementDate,
-    guaranteeExpiryDate,
-    effectiveDate,
-  } = helpers.getGuaranteeDates(facility, details.submissionDate);
-  const issueDate = helpers.getIssueDate(facility, details.submissionDate);
 
   return {
-    dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
-    facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
-    portfolioIdentifier: 'E1',
-    dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
-    maximumLiability: helpers.getMaximumLiability(facility),
-    productTypeId: helpers.getProductTypeId(facilitySnapshot.facilityType),
+    ...acbsFacility,
     capitalConversionFactorCode,
+    issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
+    facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
+    foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
     productTypeName: facilitySnapshot.facilityType,
-    currency: facilitySnapshot.currency.id,
-    guaranteeCommencementDate,
-    guaranteeExpiryDate,
-    nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
-    delegationType: helpers.getDelegationType(details.submissionType),
-    intrestOrFeeRate: helpers.getInterestOrFeeRate(facility),
-    facilityStageCode: helpers.getFacilityStageCode(facility),
-    exposurePeriod: String(helpers.getExposurePeriod(facility)),
-    creditRatingCode: '14',
-    guaranteePercentage: Number(facilitySnapshot.coveredPercentage),
-    premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility),
-    riskCountryCode: 'GBR',
-    riskStatusCode: '03',
-    effectiveDate: formatTimestamp(effectiveDate),
-    foreCastPercentage: helpers.getForecastPercentage(facility),
-    issueDate,
-    description: helpers.getDescription(facility),
-    agentBankIdentifier: '00000000',
-    obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorName: submissionDetails['supplier-name'],
-    obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
-
+    obligorName,
   };
 };
 
-module.exports = facilityMaster;
+module.exports = facilityUpdate;

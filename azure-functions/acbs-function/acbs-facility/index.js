@@ -20,18 +20,18 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
 
   const {
-    deal, facility, acbsData, acbsReference, bank,
+    deal, facility, dealAcbsData, acbsReference,
   } = context.df.getInput();
 
   const { facilitySnapshot } = facility;
 
   // Facility Master
   const acbsFacilityMasterInput = mappings.facility.facilityMaster(
-    deal, facility, acbsData, acbsReference,
+    deal, facility, dealAcbsData, acbsReference,
   );
 
   const facilityMaster = yield context.df.callActivity(
-    'create-facility-master',
+    'activity-create-facility-master',
     { acbsFacilityMasterInput },
     retryOptions,
   );
@@ -40,7 +40,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
 
   const facilityInvestor = yield context.df.callActivity(
-    'create-facility-investor',
+    'activity-create-facility-investor',
     { acbsFacilityInvestorInput },
     retryOptions,
   );
@@ -50,7 +50,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
   );
   const facilityCovenant = yield context.df.callActivity(
-    'create-facility-covenant',
+    'activity-create-facility-covenant',
     { acbsFacilityCovenantInput },
     retryOptions,
   );
@@ -59,11 +59,11 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
   if (facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
     facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-loan', {
-      deal, facility, acbsData,
+      deal, facility, dealAcbsData,
     });
   } else {
     facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-bond', {
-      deal, facility, acbsData,
+      deal, facility, dealAcbsData,
     });
   }
 
@@ -71,19 +71,19 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction(deal, facility);
 
   const codeValueTransaction = yield context.df.callActivity(
-    'create-code-value-transaction',
+    'activity-create-code-value-transaction',
     { acbsCodeValueTransactionInput },
     retryOptions,
   );
 
   return {
     // eslint-disable-next-line no-underscore-dangle
-    [facility._id]: {
-      facilityMaster,
-      facilityInvestor,
-      facilityCovenant,
-      ...facilityTypeSpecific,
-      codeValueTransaction,
-    },
+    facilityId: facility._id,
+    facilityStage: facility.facilitySnapshot.facilityStage,
+    facilityMaster,
+    facilityInvestor,
+    facilityCovenant,
+    ...facilityTypeSpecific,
+    codeValueTransaction,
   };
 });

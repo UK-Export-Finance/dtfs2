@@ -16,7 +16,7 @@ const mockResponses = {
 };
 
 jest.mock('axios', () => jest.fn((args) => {
-  const { method, url } = args;
+  const { method, url, data } = args;
   if (method === 'get') {
     if (url === `${process.env.MULESOFT_API_ACBS_DEAL_URL}/1234`) {
       return Promise.resolve(mockResponses['200']);
@@ -31,6 +31,15 @@ jest.mock('axios', () => jest.fn((args) => {
 
   if (method === 'post') {
     if (url === `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`) {
+      if (data.deal._id === 'errorId') {
+        return Promise.reject(mockResponses['404']);
+      }
+      return Promise.resolve(mockResponses['200']);
+    }
+    if (url === `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`) {
+      if (data.facilityId === 'errorId') {
+        return Promise.reject(mockResponses['404']);
+      }
       return Promise.resolve(mockResponses['200']);
     }
   }
@@ -49,8 +58,37 @@ describe('/acbs', () => {
         supplierAcbsIndustryId: 1234,
       },
     };
+    it('should catch error on ACBS create record API call', async () => {
+      const errorInput = {
+        ...mockACBSInput,
+        deal: {
+          ...mockACBSInput.deal,
+          _id: 'errorId',
+        },
+      };
+      const { status } = await post(errorInput).to('/acbs');
+      expect(status).toEqual(404);
+    });
+
     it('should return status code from ACBS create record API call', async () => {
       const { status } = await post(mockACBSInput).to('/acbs');
+      expect(status).toEqual(200);
+    });
+  });
+
+  describe('POST /v1/acbs/facility/:id/issue', async () => {
+    const mockACBSInput = {
+      facilityId: '1234',
+      facility: {},
+      supplierName: '',
+    };
+    it('should catch error on ACBS issue facility API call', async () => {
+      const { status } = await post(mockACBSInput).to('/acbs/facility/errorId/issue');
+      expect(status).toEqual(404);
+    });
+
+    it('should return status code from ACBS issue facility API call', async () => {
+      const { status } = await post(mockACBSInput).to(`/acbs/facility/${mockACBSInput.facilityId}/issue`);
       expect(status).toEqual(200);
     });
   });

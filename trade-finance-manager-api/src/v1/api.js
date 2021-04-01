@@ -305,7 +305,6 @@ const getPremiumSchedule = async (facility, facilityExposurePeriod) => {
 };
 
 const createACBS = async (deal, bank) => {
-  console.log(`${refDataUrl}/acbs`);
   try {
     const response = await axios({
       method: 'post',
@@ -316,6 +315,26 @@ const createACBS = async (deal, bank) => {
       data: {
         deal,
         bank,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const updateACBSfacility = async (facility, supplierName) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      // eslint-disable-next-line no-underscore-dangle
+      url: `${refDataUrl}/acbs/facility/${facility.facilitySnapshot.ukefFacilityID}/issue`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        facility,
+        supplierName,
       },
     });
     return response.data;
@@ -357,7 +376,6 @@ const createEstoreFolders = async (eStoreFolderInfo) => {
     });
     return response.data;
   } catch (err) {
-    console.log({ err });
     return err;
   }
 };
@@ -381,6 +399,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
+  updateACBSfacility,
   getFunctionsAPI,
   createEstoreFolders,
 };

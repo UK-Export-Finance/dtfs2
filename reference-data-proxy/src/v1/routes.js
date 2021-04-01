@@ -64,6 +64,11 @@ openRouter.route('/acbs/:entityType/:id')
     acbs.findOne,
   );
 
+openRouter.route('/acbs/facility/:id/issue')
+  .post(
+    acbs.issueAcbsFacilityPOST,
+  );
+
 openRouter.route('/party-db/:companyRegNo')
   .get(
     partyDb.lookup,

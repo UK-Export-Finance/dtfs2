@@ -20,7 +20,7 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
 
   const {
-    deal, facility, dealAcbsData,
+    deal, facility, acbsData,
   } = context.df.getInput();
 
   const { facilitySnapshot } = facility;
@@ -59,15 +59,16 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   }
 
   // Facility Guarantee Bond Issuer
+<<<<<<< HEAD
   const acbsFacilityBondIssuerGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
-    { dealAcbsData, facilityAcbsData: { parties } },
+    { acbsData, facilityAcbsData: { parties } },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER,
   );
 
   const facilityBondIssuerGuarantee = yield context.df.callActivity(
-    'activity-create-facility-guarantee',
+    'create-facility-guarantee',
     { acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput },
     retryOptions,
   );
@@ -75,15 +76,42 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   const acbsFacilityBondBeneficiaryGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
-    { dealAcbsData, facilityAcbsData: { parties } },
+    { acbsData, facilityAcbsData: { parties } },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY,
   );
 
   const facilityBondBeneficiaryGuarantee = yield context.df.callActivity(
-    'activity-create-facility-guarantee',
+    'create-facility-guarantee',
     { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
     retryOptions,
   );
+=======
+  // const acbsFacilityBondIssuerGuaranteeInput = mappings.facility.facilityGuarantee(
+  //   deal,
+  //   facility,
+  //   { dealAcbsData, facilityAcbsData: { parties } },
+  //   CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER,
+  // );
+
+  // const facilityBondIssuerGuarantee = yield context.df.callActivity(
+  //   'activity-create-facility-guarantee',
+  //   { acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput },
+  //   retryOptions,
+  // );
+
+  // const acbsFacilityBondBeneficiaryGuaranteeInput = mappings.facility.facilityGuarantee(
+  //   deal,
+  //   facility,
+  //   { dealAcbsData, facilityAcbsData: { parties } },
+  //   CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY,
+  // );
+
+  // const facilityBondBeneficiaryGuarantee = yield context.df.callActivity(
+  //   'activity-create-facility-guarantee',
+  //   { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
+  //   retryOptions,
+  // );
+>>>>>>> 6239865a3... dtfs2-3410 Renamed activities and added ACBS facility update
 
 
   return {
