@@ -11,6 +11,7 @@ const facilities = async (req, res) => {
   facilityType = facilityType || 'CASH';
   const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
 
+
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
       facilityType: facilityTypeString,
@@ -21,10 +22,10 @@ const facilities = async (req, res) => {
 
   try {
     const { details } = await api.getFacility(facilityId);
-    const { hasBeenIssued } = details;
+    const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
     return res.render('partials/facilities.njk', {
       facilityType: facilityTypeString,
-      hasBeenIssued,
+      hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
       applicationId,
       status,
     });
