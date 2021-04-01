@@ -34,7 +34,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, deal `loss given default` defaults to `50%`', () => {
+  it('Portal deal is submitted to UKEF - deal `loss given default` defaults to `50%`, `probability of default` defaults to `Less than 14.1%`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -82,5 +82,12 @@ context('Portal to TFM deal submission', () => {
     tfmPages.underwritingPricingAndRiskPage.creditRatingTableLossGivenDefault().invoke('text').then((text) => {
       expect(text.trim()).to.eq('50%');
     });
+
+    tfmPages.underwritingPricingAndRiskPage.creditRatingTableProbabilityOfDefault().should('exist');
+
+    tfmPages.underwritingPricingAndRiskPage.creditRatingTableProbabilityOfDefault().invoke('text').then((text) => {
+      expect(text.trim()).to.eq('Less than 14.1%');
+    });
+
   });
 });
