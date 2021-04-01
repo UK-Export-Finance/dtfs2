@@ -9,10 +9,11 @@ const facilities = async (req, res) => {
   let { facilityType } = query;
 
   facilityType = facilityType || 'CASH';
+  const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
 
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
-      facilityType: FACILITY_TYPE[facilityType],
+      facilityType: facilityTypeString,
       applicationId,
       status,
     });
@@ -22,7 +23,7 @@ const facilities = async (req, res) => {
     const { details } = await api.getFacility(facilityId);
     const { hasBeenIssued } = details;
     return res.render('partials/facilities.njk', {
-      facilityType: FACILITY_TYPE[facilityType],
+      facilityType: facilityTypeString,
       hasBeenIssued,
       applicationId,
       status,
@@ -40,13 +41,14 @@ const createFacility = async (req, res) => {
   const hasBeenIssuedErrors = [];
   let facility;
   facilityType = facilityType || 'CASH';
+  const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
 
   try {
     // Don't validate form if user clicks on 'return to application` button
     if (!body.hasBeenIssued) {
       hasBeenIssuedErrors.push({
         errRef: 'hasBeenIssued',
-        errMsg: `Select if your bank has already issued this ${FACILITY_TYPE[facilityType]} facility`,
+        errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
       });
 
       return res.render('partials/facilities.njk', {
