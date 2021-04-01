@@ -4,6 +4,7 @@
   {% set caseId = params.caseId %}
   {% set supplierName = params.supplierName %}
   {% set exporterCreditRating = params.exporterCreditRating %}
+  {% set lossGivenDefault = params.lossGivenDefault %}
   {% set userCanEdit = params.userCanEdit %}
 
   <section data-cy="section-exporter">
@@ -13,6 +14,7 @@
     {% set componentData = {
       caseId: caseId,
       exporterCreditRating: exporterCreditRating,
+      lossGivenDefault: lossGivenDefault,
       userCanEdit: userCanEdit
     } %}
 

@@ -1,5 +1,5 @@
 const MOCK_DEAL = {
-  _id: '223456789',
+  _id: '2234567890',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
@@ -17,7 +17,7 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Manual Inclusion Notice',
+    submissionType: 'Manual Inclusion Application',
     submissionDate: '1606900616651',
     owningBank: {
       id: '123',

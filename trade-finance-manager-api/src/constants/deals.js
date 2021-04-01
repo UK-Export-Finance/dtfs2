@@ -24,10 +24,15 @@ const CREDIT_RATING = {
   ACCEPTABLE: 'Acceptable (B+)',
 };
 
+const LOSS_GIVEN_DEFAULT = {
+  '50_PERCENT': '50%',
+};
+
 module.exports = {
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
   DEAL_STATUS_PORTAL,
   DEAL_STAGE_TFM,
   CREDIT_RATING,
+  LOSS_GIVEN_DEFAULT,
 };

@@ -2,7 +2,7 @@ const { findOnePortalDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
-const { addDealRiskRating } = require('./deal.risk-rating');
+const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 const { addDealStage } = require('./deal.add-deal-stage');
 const CONSTANTS = require('../../constants');
@@ -21,9 +21,9 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithTasks = await createDealTasks(updatedDealWithPartyUrn);
 
-  const updatedDealWithRiskRating = await addDealRiskRating(updatedDealWithTasks);
+  const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithTasks);
 
-  const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithRiskRating);
+  const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
 
   const updatedDealWithTfmDealStage = await addDealStage(updatedDealWithDealCurrencyConversions);
 

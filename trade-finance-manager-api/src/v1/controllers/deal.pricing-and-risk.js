@@ -2,7 +2,7 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const DEFAULTS = require('../defaults');
 
-const addDealRiskRating = async (deal) => {
+const addDealPricingAndRisk = async (deal) => {
   if (!deal) {
     return false;
   }
@@ -17,25 +17,29 @@ const addDealRiskRating = async (deal) => {
     details,
   } = dealSnapshot;
 
-  const {
-    submissionType,
-  } = details;
+  const { submissionType } = details;
+
+  // TODO: wrap pricing-risk things into object?
+
+  let dealUpdate = {
+    tfm: {
+      lossGivenDefault: DEFAULTS.LOSS_GIVEN_DEFAULT,
+    },
+  };
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    const dealUpdate = {
+    dealUpdate = {
       tfm: {
         ...tfm,
+        ...dealUpdate.tfm,
         exporterCreditRating: DEFAULTS.CREDIT_RATING.AIN,
       },
     };
-
-
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
-
-    return updatedDeal;
   }
 
-  return deal;
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+
+  return updatedDeal;
 };
 
-exports.addDealRiskRating = addDealRiskRating;
+exports.addDealPricingAndRisk = addDealPricingAndRisk;

@@ -14,6 +14,7 @@ const MOCK_DEAL_FACILITIES_USD_CURRENCY_2 = require('../../../src/v1/__mocks__/m
 const MOCK_DEAL_FACILITIES_USD_CURRENCY_3 = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency-3');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_DEAL_MIN_2 = require('../../../src/v1/__mocks__/mock-deal-MIN-2');
+const MOCK_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
 const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
@@ -225,6 +226,29 @@ describe('/v1/deals', () => {
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toBeUndefined();
         });
+      });
+    });
+
+    describe('lossGivenDefault', () => {
+      it('should be added to AIN deals', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+        expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
+      });
+
+      it('should be added to MIA deals', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+        expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
+      });
+
+      it('should be added to MIN deals', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+        expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
       });
     });
 
