@@ -58,6 +58,7 @@ const GET_DEAL = gql`
         exporterCreditRating
         supplyContractValueInGBP
         lossGivenDefault
+        probabilityOfDefault
         stage
       }
       dealSnapshot {
