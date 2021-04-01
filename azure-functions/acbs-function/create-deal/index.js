@@ -8,7 +8,9 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const moment = require('moment');
 const api = require('../api');
+const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
@@ -21,7 +23,7 @@ const mandatoryFields = [
   'obligorIndustryClassification',
 ];
 
-const createDeal = (context) => {
+const createDeal = async (context) => {
   const { deal } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(deal, mandatoryFields);
@@ -30,7 +32,26 @@ const createDeal = (context) => {
     return Promise.resolve({ missingMandatory });
   }
 
-  return api.createDeal(deal);
+  const submittedToACBS = moment().format();
+
+  const { status, data } = await api.createDeal(deal);
+
+  if (isHttpErrorStatus(status)) {
+    throw new Error(`
+      ACBS Deal create error. 
+      dealIdentifier: ${deal.dealIdentifier}, 
+      submittedToACBS: ${submittedToACBS}, 
+      receivedFromACBS: ${moment().format()}, 
+      dataReceived: ${JSON.stringify(data, null, 4)}
+      dataSent: ${JSON.stringify(deal, null, 4)}
+     `);
+  }
+
+  return {
+    submittedToACBS,
+    receivedFromACBS: moment().format(),
+    ...data,
+  };
 };
 
 module.exports = createDeal;

@@ -1,4 +1,5 @@
 const { now } = require('../../helpers/date');
+const { getSmeType } = require('./helpers');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -12,7 +13,7 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   officerRiskDate           date    yyyy-MM-dd i.e. 2019-10-21, Date of creation (we use current date)
 */
 
-const indemnifier = (deal) => {
+const indemnifier = ({ deal }) => {
   const { submissionDetails } = deal.dealSnapshot;
 
   const countryCode = submissionDetails['indemnifier-address-country'] && submissionDetails['indemnifier-address-country'].code;
@@ -22,7 +23,7 @@ const indemnifier = (deal) => {
     alternateIdentifier: deal.tfm.parties.indemnifier.partyUrn,
     industryClassification: '0001',
     name1: submissionDetails['indemnifier-name'],
-    smeType: '70',
+    smeType: getSmeType(''),
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,

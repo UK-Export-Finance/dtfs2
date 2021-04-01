@@ -39,7 +39,9 @@
     "graphql-tools": "^6.2.5",
     "is-port-reachable": "^3.0.0",
     "moment": "^2.29.1",
-    "mongodb": "^3.6.3"
+    "mongo-dot-notation": "^2.0.0",
+    "mongodb": "^3.6.3",
+    "node-cron": "^3.0.0"
   },
   "devDependencies": {
     "apollo-server-testing": "^2.19.0",

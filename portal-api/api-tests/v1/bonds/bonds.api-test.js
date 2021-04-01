@@ -345,6 +345,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...coverEndDate(),
           currency: {
+            currencyId: expectedCurrency.currencyId,
             text: expectedCurrency.text,
             id: expectedCurrency.id,
           },
@@ -412,6 +413,7 @@ describe('/v1/deals/:id/bond', () => {
           associatedDealId: dealId,
           ...updatedBondAsIssued,
           currency: {
+            currencyId: expectedCurrency.currencyId,
             text: expectedCurrency.text,
             id: expectedCurrency.id,
           },
@@ -484,6 +486,7 @@ describe('/v1/deals/:id/bond', () => {
           associatedDealId: dealId,
           ...updatedBondAsUnissued,
           currency: {
+            currencyId: expectedCurrency.currencyId,
             text: expectedCurrency.text,
             id: expectedCurrency.id,
           },
@@ -542,6 +545,7 @@ describe('/v1/deals/:id/bond', () => {
         associatedDealId: dealId,
         ...bondBody,
         currency: {
+          currencyId: expectedCurrency.currencyId,
           text: expectedCurrency.text,
           id: expectedCurrency.id,
         },
@@ -609,6 +613,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(updatedBond.currency).toEqual({
+          currencyId: expectedCurrency.currencyId,
           text: expectedCurrency.text,
           id: expectedCurrency.id,
         });
@@ -684,7 +689,6 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
       expect(body.lastEdited).toEqual(expect.any(String));
     });
-
   });
 
   describe('DELETE /v1/deals/:id/bond/:id', () => {

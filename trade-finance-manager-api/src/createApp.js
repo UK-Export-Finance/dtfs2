@@ -11,10 +11,12 @@ const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 
 const healthcheck = require('./healthcheck');
 const { openRouter } = require('./v1/routes');
+const initScheduler = require('./scheduler');
 
 dotenv.config();
 
 // const { CORS_ORIGIN } = process.env;
+initScheduler();
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));

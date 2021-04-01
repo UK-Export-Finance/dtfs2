@@ -366,6 +366,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(200);
       const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
       expect(body.currency).toEqual({
+        currencyId: expectedCurrency.currencyId,
         text: expectedCurrency.text,
         id: expectedCurrency.id,
       });
@@ -408,6 +409,7 @@ describe('/v1/deals/:id/loan', () => {
 
         const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(body.currency).toEqual({
+          currencyId: expectedCurrency.currencyId,
           text: expectedCurrency.text,
           id: expectedCurrency.id,
         });
@@ -517,7 +519,6 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('adds an empty loan to a deal, with facility createdDate, facilityType', async () => {
-
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 

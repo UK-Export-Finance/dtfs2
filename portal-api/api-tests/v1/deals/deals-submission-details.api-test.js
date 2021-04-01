@@ -222,6 +222,7 @@ describe('/v1/deals/:id/submission-details', () => {
         const { body, status } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(status).toEqual(200);
         expect(body.data.supplyContractCurrency).toEqual({
+          currencyId: 12,
           id: 'GBP',
           text: 'GBP - UK Sterling',
         });
@@ -233,7 +234,7 @@ describe('/v1/deals/:id/submission-details', () => {
         const updatedSubmissionDetails = await as(anHSBCMaker).put(updateBody).to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(updatedSubmissionDetails.status).toEqual(200);
 
-        const expectedCurrencyObj = { id: 'CAD', text: 'CAD - Canadian Dollars' };
+        const expectedCurrencyObj = { currencyId: 5, id: 'CAD', text: 'CAD - Canadian Dollars' };
 
         expect(updatedSubmissionDetails.body.data.supplyContractCurrency).toEqual(expectedCurrencyObj);
       });
