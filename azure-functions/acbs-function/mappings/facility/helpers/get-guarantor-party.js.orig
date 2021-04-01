@@ -1,0 +1,34 @@
+const CONSTANTS = require('../../../constants');
+
+<<<<<<< HEAD:azure-functions/acbs-function/mappings/facility/helpers/get-guarantor-party.js
+const getGuarantorParty = ({ acbsData, facilityAcbsData }, guaranteeTypeCode) => {
+=======
+const getFacilityGuaranteeLimitKey = ({ dealAcbsData, facilityAcbsData }, guaranteeTypeCode) => {
+>>>>>>> fc0d41fc9... dtfs2-3410 ACBS save ACBS info in deal & facility record:azure-functions/acbs-function/mappings/facility/helpers/get-facility-guarantee-limit-key.js
+  switch (guaranteeTypeCode) {
+    case CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY:
+      return facilityAcbsData.parties.bondBeneficiary
+        ? facilityAcbsData.parties.bondBeneficiary.partyIdentifier
+        : dealAcbsData.parties.buyer.partyIdentifier;
+
+    case CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER:
+      return facilityAcbsData.parties.bondIssuer
+        ? facilityAcbsData.parties.bondIssuer.partyIdentifier
+        : dealAcbsData.parties.bank.partyIdentifier;
+
+    case CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER:
+<<<<<<< HEAD:azure-functions/acbs-function/mappings/facility/helpers/get-guarantor-party.js
+      return acbsData.parties.bank.partyIdentifier;
+=======
+      return dealAcbsData.parties.indemnifier.partyIdentifier || dealAcbsData.parties.exporter.partyIdentifier;
+>>>>>>> fc0d41fc9... dtfs2-3410 ACBS save ACBS info in deal & facility record:azure-functions/acbs-function/mappings/facility/helpers/get-facility-guarantee-limit-key.js
+
+    case CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS:
+      return acbsData.parties.buyer.partyIdentifier;
+
+    default:
+      return '';
+  }
+};
+
+module.exports = getGuarantorParty;

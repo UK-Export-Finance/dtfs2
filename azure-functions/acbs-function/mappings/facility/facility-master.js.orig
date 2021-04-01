@@ -41,7 +41,7 @@ const helpers = require('./helpers');
 
 const { formatTimestamp } = require('../../helpers/date');
 
-const facilityMaster = (deal, facility, acbsData, acbsReference) => {
+const facilityMaster = (deal, facility, dealAcbsData, acbsReference) => {
   const { details, submissionDetails } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
 
@@ -54,11 +54,16 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   const issueDate = helpers.getIssueDate(facility, details.submissionDate);
 
   return {
-    dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
+    dealIdentifier: dealAcbsData.deal.dealIdentifier.padStart(10, 0),
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
     portfolioIdentifier: 'E1',
+<<<<<<< HEAD
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility),
+=======
+    dealBorrowerIdentifier: dealAcbsData.parties.exporter.partyIdentifier,
+    maximumLiability: Number(facilitySnapshot.facilityValue),
+>>>>>>> fc0d41fc9... dtfs2-3410 ACBS save ACBS info in deal & facility record
     productTypeId: helpers.getProductTypeId(facilitySnapshot.facilityType),
     capitalConversionFactorCode,
     productTypeName: facilitySnapshot.facilityType,
@@ -80,7 +85,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     issueDate,
     description: helpers.getDescription(facility),
     agentBankIdentifier: '00000000',
-    obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
+    obligorPartyIdentifier: dealAcbsData.parties.exporter.partyIdentifier,
     obligorName: submissionDetails['supplier-name'],
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
 

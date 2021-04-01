@@ -20,32 +20,33 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
 
   const {
-    deal, facility, dealAcbsData,
+    deal, facility, acbsData,
   } = context.df.getInput();
 
   // EWCS route
   // Create Guarantee (Facility Provider)
+<<<<<<< HEAD
   const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
-    { dealAcbsData },
+    { acbsData },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
   );
   const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
-    { dealAcbsData },
+    { acbsData },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
   );
 
   const facilityProviderTask = context.df.callActivity(
-    'activity-create-facility-guarantee',
+    'create-facility-guarantee',
     { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
     retryOptions,
   );
 
   const facilityBuyerTask = context.df.callActivity(
-    'activity-create-facility-guarantee',
+    'create-facility-guarantee',
     { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
     retryOptions,
   );
@@ -55,4 +56,37 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     facilityProviderGuarantee: facilityProviderTask.result,
     facilityBuyerGuarantee: facilityBuyerTask.result,
   };
+=======
+  // const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
+  //   deal,
+  //   facility,
+  //   dealAcbsData,
+  //   CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
+  // );
+  // const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
+  //   deal,
+  //   facility,
+  //   dealAcbsData,
+  //   CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
+  // );
+
+  // const facilityProviderTask = context.df.callActivity(
+  //   'activity-create-facility-guarantee',
+  //   { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
+  //   retryOptions,
+  // );
+  // const facilityBuyerTask = context.df.callActivity(
+  //   'activity-create-facility-guarantee',
+  //   { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
+  //   retryOptions,
+  // );
+  // yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
+
+  // return {
+  //   facilityProviderGuarantee: facilityProviderTask.result,
+  //   facilityBuyerGuarantee: facilityBuyerTask.result,
+  // };
+
+  yield {};
+>>>>>>> 6239865a3... dtfs2-3410 Renamed activities and added ACBS facility update
 });

@@ -131,6 +131,9 @@ module.exports = {
         facilityValueInGBP: '123,45.00',
         bondIssuerPartyUrn: '456-test',
         bondBeneficiaryPartyUrn: '123-test',
+        acbs: {
+          facilityStage: 'Unissued',
+        },
       },
     };
   },
@@ -177,6 +180,20 @@ module.exports = {
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
-  createACBS: () => {},
+  createACBS: jest.fn(() => ({})),
+  updateACBSfacility: jest.fn(() => Promise.resolve({
+    acbsTaskLinks: {
+      mockLinkUrl: 'mockLinkUrl',
+    },
+  })),
+  getFunctionsAPI: jest.fn((statusQueryGetUri) => Promise.resolve({
+    runtimeStatus: 'Completed',
+    name: statusQueryGetUri,
+    output: {
+      facilities: [
+        { facilityId: '1234' },
+      ],
+    },
+  })),
   createEstoreFolders: (deal) => deal,
 };

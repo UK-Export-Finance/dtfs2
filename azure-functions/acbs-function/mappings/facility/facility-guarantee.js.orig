@@ -13,7 +13,7 @@
 const helpers = require('./helpers');
 const { formatTimestamp } = require('../../helpers/date');
 
-const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
+const facilityGuarantee = (deal, facility, dealAcbsData, guaranteeTypeCode) => {
   const { details } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
 
@@ -23,11 +23,17 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
     effectiveDate,
   } = helpers.getGuaranteeDates(facility, details.submissionDate);
 
+
   return {
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
     guaranteeCommencementDate,
+<<<<<<< HEAD
     guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
-    limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
+    limitKey: acbsData.acbsData.parties.exporter.partyIdentifier,
+=======
+    guarantorParty: '00000141',
+    limitKey: helpers.getFacilityGuaranteeLimitKey(dealAcbsData, guaranteeTypeCode),
+>>>>>>> fc0d41fc9... dtfs2-3410 ACBS save ACBS info in deal & facility record
     guaranteeExpiryDate,
     effectiveDate: formatTimestamp(effectiveDate),
     maximumLiability: helpers.getMaximumLiability(facility),

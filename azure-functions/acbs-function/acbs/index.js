@@ -24,56 +24,56 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
   const industryCode = deal.dealSnapshot.submissionDetails['industry-class']
                         && deal.dealSnapshot.submissionDetails['industry-class'].code;
   const acbsReference = {
-    supplierAcbsIndustryCode: yield context.df.callActivity('get-acbs-industry-sector', { industryCode }, retryOptions),
+    supplierAcbsIndustryCode: yield context.df.callActivity('activity-get-acbs-industry-sector', { industryCode }, retryOptions),
   };
 
   // Create Parties
-  const exporterTask = context.df.callActivity('create-party', { party: mappings.party.exporter({ deal, acbsReference }) }, retryOptions);
-  const buyerTask = context.df.callActivity('create-party', { party: mappings.party.buyer({ deal }) }, retryOptions);
-  const agentTask = context.df.callActivity('create-party', { party: mappings.party.agent({ deal }) }, retryOptions);
-  const indemnifierTask = context.df.callActivity('create-party', { party: mappings.party.indemnifier({ deal }) }, retryOptions);
-  const bankTask = context.df.callActivity('create-party', { party: mappings.party.bank({ bank }) }, retryOptions);
+  const exporterTask = context.df.callActivity('activity-create-party', { party: mappings.party.exporter({ deal, acbsReference }) }, retryOptions);
+  const buyerTask = context.df.callActivity('activity-create-party', { party: mappings.party.buyer({ deal }) }, retryOptions);
+  const agentTask = context.df.callActivity('activity-create-party', { party: mappings.party.agent({ deal }) }, retryOptions);
+  const indemnifierTask = context.df.callActivity('activity-create-party', { party: mappings.party.indemnifier({ deal }) }, retryOptions);
+  const bankTask = context.df.callActivity('activity-create-party', { party: mappings.party.bank({ bank }) }, retryOptions);
 
   // Party tasks are run in parallel so wait for them all to be finished.
   yield context.df.Task.all([exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
 
-  const acbsData = {
-    parties: {
-      exporter: exporterTask.result,
-      buyer: buyerTask.result,
-      agent: agentTask.result,
-      indemnifier: indemnifierTask.result,
-      bank: bankTask.result,
-    },
+  const parties = {
+    exporter: exporterTask.result,
+    buyer: buyerTask.result,
+    agent: agentTask.result,
+    indemnifier: indemnifierTask.result,
+    bank: bankTask.result,
+
   };
 
   // Create Deal
   const acbsDealInput = mappings.deal.deal(
-    deal, acbsData.parties.exporter.partyIdentifier, acbsReference,
+    deal, parties.exporter.partyIdentifier, acbsReference,
   );
 
-  const dealRecord = yield context.df.callActivity('create-deal', { deal: acbsDealInput }, retryOptions);
+  const dealRecord = yield context.df.callActivity('activity-create-deal', { deal: acbsDealInput }, retryOptions);
 
   // Create Deal investor
   const acbsDealInvestorInput = mappings.deal.dealInvestor(deal);
 
-  const dealInvestorRecord = yield context.df.callActivity('create-deal-investor', { investor: acbsDealInvestorInput }, retryOptions);
+  const dealInvestorRecord = yield context.df.callActivity('activity-create-deal-investor', { investor: acbsDealInvestorInput }, retryOptions);
 
   // Create Deal Guarantee
-  const dealGuaranteeLimitKey = acbsData.parties.indemnifier.partyIdentifier
-                                || acbsData.parties.exporter.partyIdentifier;
+  const dealGuaranteeLimitKey = parties.indemnifier.partyIdentifier
+                                || parties.exporter.partyIdentifier;
 
   const acbsDealGuaranteeInput = mappings.deal.dealGuarantee(deal, dealGuaranteeLimitKey);
-  const dealGuaranteeRecord = yield context.df.callActivity('create-deal-guarantee', { guarantee: acbsDealGuaranteeInput }, retryOptions);
+  const dealGuaranteeRecord = yield context.df.callActivity('activity-create-deal-guarantee', { guarantee: acbsDealGuaranteeInput }, retryOptions);
 
-  acbsData.deal = {
+  const dealAcbsData = {
+    parties,
     deal: dealRecord,
     investor: dealInvestorRecord,
     guarantee: dealGuaranteeRecord,
   };
 
   const facilityTasks = deal.dealSnapshot.facilities.map((facility) => context.df.callSubOrchestrator('acbs-facility', {
-    deal, facility, acbsData, acbsReference, bank,
+    deal, facility, dealAcbsData, acbsReference, bank,
   }));
   yield context.df.Task.all([...facilityTasks]);
 
@@ -81,7 +81,7 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
     // eslint-disable-next-line no-underscore-dangle
     portalDealId: deal._id,
     ukefDealId: deal.dealSnapshot.details.ukefDealId,
-    ...acbsData,
-    facilties: facilityTasks.map(({ result }) => result),
+    deal: dealAcbsData,
+    facilities: facilityTasks.map(({ result }) => result),
   };
 });
