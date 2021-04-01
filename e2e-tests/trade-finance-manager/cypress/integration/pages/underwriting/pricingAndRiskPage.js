@@ -4,6 +4,8 @@ const pricingAndRiskPage = {
   creditRatingTableRatingValue: () => cy.get('[data-cy="credit-rating-table-rating-value"]'),
   creditRatingTableChangeLink: () => cy.get('[data-cy="credit-rating-table-change-link"]'),
   creditRatingTableLossGivenDefault: () => cy.get('[data-cy="credit-rating-table-loss-given-default-value"]'),
+  creditRatingTableProbabilityOfDefault: () => cy.get('[data-cy="credit-rating-table-probability-of-default-value"]'),
+
 
   facilityTable: (facilityId) => {
     const table = cy.get(`[data-cy="facility-${facilityId}-pricing-risk-table"]`);
