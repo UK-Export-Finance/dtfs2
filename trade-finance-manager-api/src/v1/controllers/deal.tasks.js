@@ -24,7 +24,10 @@ const createDealTasks = async (deal) => {
 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
-  return updatedDeal;
+  return {
+    dealSnapshot,
+    tfm: updatedDeal.tfm,
+  };
 };
 
 exports.createDealTasks = createDealTasks;

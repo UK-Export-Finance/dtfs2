@@ -4,7 +4,8 @@ const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const DEFAULTS = require('../defaults');
 
 const updateFacilities = async (deal) => {
-  const modifiedDeal = deal;
+  // Create deep clone
+  const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
   const {
     submissionDate: dealSubmissionDate,
@@ -35,7 +36,6 @@ const updateFacilities = async (deal) => {
         ...facilityExposurePeriod,
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
       };
-
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
 
       updatedCount += 1;
