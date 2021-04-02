@@ -19,9 +19,7 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
-  const updatedDealWithTasks = await createDealTasks(updatedDealWithPartyUrn);
-
-  const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithTasks);
+  const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithPartyUrn);
 
   const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
 
@@ -34,6 +32,10 @@ const submitDeal = async (dealId) => {
       dealId,
       CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
     );
+
+    const updatedDealWithTasks = await createDealTasks(updatedDealWithUpdatedFacilities);
+
+    return api.updateDeal(dealId, updatedDealWithTasks);
   }
 
   return api.updateDeal(dealId, updatedDealWithUpdatedFacilities);

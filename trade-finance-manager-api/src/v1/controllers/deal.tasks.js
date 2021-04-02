@@ -21,20 +21,16 @@ const createDealTasks = async (deal) => {
     submissionType,
   } = details;
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    const dealUpdate = {
-      tfm: {
-        ...tfm,
-        tasks: DEFAULTS.TASKS.AIN,
-      },
-    };
+  const dealUpdate = {
+    tfm: {
+      ...tfm,
+      tasks: DEFAULTS.TASKS.AIN,
+    },
+  };
 
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
-    return updatedDeal;
-  }
-
-  return deal;
+  return updatedDeal;
 };
 
 exports.createDealTasks = createDealTasks;
