@@ -1,5 +1,4 @@
 const api = require('../api');
-const CONSTANTS = require('../../constants');
 const DEFAULTS = require('../defaults');
 
 const createDealTasks = async (deal) => {
@@ -14,12 +13,7 @@ const createDealTasks = async (deal) => {
 
   const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-    details,
   } = dealSnapshot;
-
-  const {
-    submissionType,
-  } = details;
 
   const dealUpdate = {
     tfm: {
