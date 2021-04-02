@@ -5,5 +5,5 @@ const SUBMISSION_TYPE = {
 };
 
 module.exports = {
-  SUBMISSION_TYPE
+  SUBMISSION_TYPE,
 };
