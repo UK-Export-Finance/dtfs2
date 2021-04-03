@@ -316,6 +316,25 @@ const getFunctionsAPI = async (url = '') => {
   }
 };
 
+const createEstoreFolders = async (eStoreFolderInfo) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/estore`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        eStoreFolderInfo,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.log({ err });
+    return err;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -335,4 +354,5 @@ module.exports = {
   getFacilityExposurePeriod,
   createACBS,
   getFunctionsAPI,
+  createEstoreFolders,
 };
