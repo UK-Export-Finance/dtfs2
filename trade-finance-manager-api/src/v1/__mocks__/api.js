@@ -155,4 +155,5 @@ module.exports = {
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
   createACBS: () => {},
+  createEstoreFolders: (deal) => deal,
 };
