@@ -31,6 +31,8 @@ const updateFacilities = async (deal) => {
       const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
 
+      // TODO
+      // exposure period is not in unit test
       const facilityUpdate = {
         ...facilityCurrencyConversion,
         ...facilityExposurePeriod,

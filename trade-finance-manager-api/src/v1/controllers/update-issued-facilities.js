@@ -1,12 +1,5 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-//
-// TODO: do we need to update TFM facilities  as well?
-// probably, beacuse when facilities are issued, dates etc can change
-//
-// what happens to tfm deal when deal/facilities are submitted for a second time? 
-// probably need to do 
-// const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
 
 const updatedIssuedFacilities = async (deal) => {
   const modifiedDeal = deal;
@@ -34,7 +27,11 @@ const updatedIssuedFacilities = async (deal) => {
         previousFacilityStage,
       } = facility;
 
-      const shouldChangeStatus = (previousFacilityStage === 'Unissued' && facilityStage === 'Issued');
+      // bond facility is either Unissued or Issued.
+      // loan facility is either Conditional or Unconditional
+      const shouldChangeStatus = ((previousFacilityStage === 'Unissued' && facilityStage === 'Issued')
+        || (previousFacilityStage === 'Conditional' && facilityStage === 'Unconditional'));
+
 
       if (shouldChangeStatus) {
         shouldUpdateCount += 1;

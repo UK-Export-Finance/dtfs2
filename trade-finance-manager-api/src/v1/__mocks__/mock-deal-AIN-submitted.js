@@ -6,7 +6,7 @@ const MOCK_DEAL_AIN_SUBMITTED = {
     bankSupplyContractID: 'Mock supply contract ID',
     bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
-    previousStatus: 'Submitted',
+    previousStatus: 'Ready for Checker\'s approval',
     maker: {
       username: 'JOE',
       firstname: 'Joe',
@@ -19,6 +19,7 @@ const MOCK_DEAL_AIN_SUBMITTED = {
     },
     submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
+    submissionCount: 1,
     owningBank: {
       id: '123',
       name: 'Barclays Bank',

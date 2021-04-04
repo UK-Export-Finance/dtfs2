@@ -9,6 +9,7 @@ const MOCK_DEAL_MIA = require('./mock-deal-MIA');
 const MOCK_DEAL_AIN_SUBMITTED = require('./mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
+const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_TASKS = require('./mock-tasks');
 const MOCK_USERS = require('./mock-users');
 
@@ -21,6 +22,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_MIA,
   MOCK_DEAL_AIN_SUBMITTED,
   MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
+  MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
 ];
 
 const ALL_MOCK_FACILITIES = [
@@ -65,6 +67,15 @@ module.exports = {
       },
     };
     return Promise.resolve(updatedDeal);
+  },
+  updatePortalFacilityStatus: (facilityId, statusUpdate) => {
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+    const updatedFacility = {
+      ...facility,
+      previousStatus: facility.status,
+      status: statusUpdate,
+    };
+    return Promise.resolve(updatedFacility);
   },
   queryDeals: () => ALL_MOCK_DEALS,
   updateDeal: (dealId, updatedTfmDealData) => {
