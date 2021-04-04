@@ -1,5 +1,5 @@
-const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
-  _id: 'AIN_DEAL_SUBMITTED_NON_GBP_CONTRACT_VALUE',
+const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
+  _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
@@ -19,7 +19,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     },
     submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
-    submissionCount: 1,
+    submissionCount: 2,
     owningBank: {
       id: '123',
       name: 'Barclays Bank',
@@ -103,8 +103,8 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'USD',
-      text: 'USD - US Dollars',
+      id: 'GBP',
+      text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
   },
@@ -166,11 +166,13 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   bondTransactions: {
     items: [
       {
-        _id: '12345678',
+        _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
+        associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         facilityType: 'bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
-        facilityStage: 'Unissued',
+        facilityStage: 'Issued',
+        previousFacilityStage: 'Unissued',
         ukefGuaranteeInMonths: '10',
         bondBeneficiary: 'test',
         guaranteeFeePayableByBank: '9.0000',
@@ -189,16 +191,19 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         'coverEndDate-day': '20',
         'coverEndDate-month': '10',
         'coverEndDate-year': '2020',
+        status: 'Submitted',
       },
     ],
   },
   loanTransactions: {
     items: [
       {
-        _id: '23456789',
+        _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
+        associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         facilityType: 'loan',
         createdDate: 1610369832226.0,
-        facilityStage: 'Conditional',
+        facilityStage: 'Unconditional',
+        previousFacilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '5678',
         guaranteeFeePayableByBank: '27.0000',
@@ -211,9 +216,6 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         ukefExposure: '246.80',
         premiumType: 'At maturity',
         dayCountBasis: '365',
-        'issuedDate-day': '25',
-        'issuedDate-month': '08',
-        'issuedDate-year': '2020',
         'coverEndDate-day': '24',
         'coverEndDate-month': '09',
         'coverEndDate-year': '2020',
@@ -221,9 +223,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         issueFacilityDetailsStarted: true,
         bankReferenceNumberRequiredForIssuance: true,
         requestedCoverStartDate: 1610369832226.0,
-        issuedDate: 1610369832226.0,
-        issueFacilityDetailsProvided: true,
-        status: 'Acknowledged',
+        status: 'Submitted',
         ukefFacilityID: '65432',
         currency: {
           text: 'GBP - UK Sterling',
@@ -234,4 +234,4 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   },
 };
 
-module.exports = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE;
+module.exports = MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED;
