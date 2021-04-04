@@ -17,7 +17,7 @@ const submitDeal = async (dealId) => {
   }
 
   const { submissionCount } = deal.details;
-  
+
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
 
