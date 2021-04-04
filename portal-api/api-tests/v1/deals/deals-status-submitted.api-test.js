@@ -100,6 +100,39 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       expect(body.deal.details.submissionDate).toEqual(mockSubmissionDate);
     });
 
+    it('increases submissionCount on each submission', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+      const dealId = postResult.body._id;
+
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      // first submit
+      const submitDealCall = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+
+      expect(submitDealCall.status).toEqual(200);
+      expect(submitDealCall.body).toBeDefined();
+
+      const dealAfterFirstSubmission = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(dealAfterFirstSubmission.body.deal.details.submissionCount).toEqual(1);
+
+      // second submit 
+      const submitDealCallAgain = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+
+      expect(submitDealCallAgain.status).toEqual(200);
+      expect(submitDealCallAgain.body).toBeDefined();
+
+      const dealAfterSecondSubmission = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(dealAfterSecondSubmission.body.deal.details.submissionCount).toEqual(2);
+    });
+
     it('creates type_a xml if deal successfully submitted', async () => {
       const files = [
         {
