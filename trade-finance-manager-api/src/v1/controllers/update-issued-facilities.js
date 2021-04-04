@@ -15,9 +15,6 @@ const updatedIssuedFacilities = async (deal) => {
   let updatedCount = 0;
   let shouldUpdateCount = 0;
 
-  // mappedDeal.facilities = await Promise.all(deal.facilities.map(async (facilityId) =>
-  // api.findOneFacility(facilityId)));
-
   return new Promise((resolve) => {
     facilities.forEach(async (facility) => {
       const {
@@ -28,10 +25,14 @@ const updatedIssuedFacilities = async (deal) => {
       } = facility;
 
       // bond facility is either Unissued or Issued.
-      // loan facility is either Conditional or Unconditional
-      const shouldChangeStatus = ((previousFacilityStage === 'Unissued' && facilityStage === 'Issued')
-        || (previousFacilityStage === 'Conditional' && facilityStage === 'Unconditional'));
+      const bondIsNowIssued = (previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED
+        && previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED);
 
+      // loan facility is either Conditional or Unconditional
+      const loanIsNowIssued = (previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL
+        && previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL);
+
+      const shouldChangeStatus = (bondIsNowIssued || loanIsNowIssued);
 
       if (shouldChangeStatus) {
         shouldUpdateCount += 1;
