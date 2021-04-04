@@ -17,8 +17,8 @@ const submitDeal = async (dealId) => {
   }
 
   const { submissionCount } = deal.details;
-  // TODO: if submissionCount is addded to all tfm api mock deals, shouldn't need first condition
-  const firstDealSubmission = (!submissionCount || submissionCount === 1);
+  
+  const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
 
   const submittedDeal = await api.submitDeal(dealId);

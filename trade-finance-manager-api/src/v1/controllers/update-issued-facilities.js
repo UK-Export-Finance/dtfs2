@@ -2,7 +2,8 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 
 const updatedIssuedFacilities = async (deal) => {
-  const modifiedDeal = deal;
+  // Create deep clone
+  const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
   const facilities = [
     ...modifiedDeal.dealSnapshot.bondTransactions.items,
@@ -25,12 +26,12 @@ const updatedIssuedFacilities = async (deal) => {
       } = facility;
 
       // bond facility is either Unissued or Issued.
-      const bondIsNowIssued = (previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED
-        && previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED);
+      const bondIsNowIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED)
+        && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED));
 
       // loan facility is either Conditional or Unconditional
-      const loanIsNowIssued = (previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL
-        && previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL);
+      const loanIsNowIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL)
+        && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL));
 
       const shouldChangeStatus = (bondIsNowIssued || loanIsNowIssued);
 
