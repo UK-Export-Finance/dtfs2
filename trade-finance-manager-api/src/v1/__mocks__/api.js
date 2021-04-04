@@ -9,7 +9,7 @@ const MOCK_DEAL_MIA = require('./mock-deal-MIA');
 const MOCK_DEAL_AIN_SUBMITTED = require('./mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
-const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
+const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_TASKS = require('./mock-tasks');
 const MOCK_USERS = require('./mock-users');
 
