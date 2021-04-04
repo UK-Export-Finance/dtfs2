@@ -5,12 +5,7 @@ const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 // TODO: add unit test
 // so that when this is changed, tests fail.
 
-const dealsReducer = (dealsquery, _productDictionary) => {
-  const {
-    count,
-    deals,
-  } = dealsquery;
-
+const dealsReducer = (deals, _productDictionary) => {
   const mapDeal = (d) => {
     const deal = d;
     deal.dealSnapshot.submissionDetails = mapSubmissionDetails(d.dealSnapshot.submissionDetails);
@@ -29,19 +24,25 @@ const dealsReducer = (dealsquery, _productDictionary) => {
     return deal;
   };
 
-  const dealsMap = (ds) => {
-    const mappedDeals = [];
+  const mapDeals = (ds) => {
+    const mapped = [];
 
     ds.forEach((d) => {
-      mappedDeals.push(mapDeal(d));
+      mapped.push(mapDeal(d));
     });
 
-    return mappedDeals;
+    return mapped;
   };
 
+  const mappedDeals = mapDeals(deals);
+
+  const sortedDeals = mappedDeals.sort((a, b) =>
+    new Date(b.dealSnapshot.details.submissionDate)
+    - new Date(a.dealSnapshot.details.submissionDate));
+
   const results = {
-    count,
-    deals: dealsMap(deals),
+    count: sortedDeals.length,
+    deals: sortedDeals,
   };
 
   return results;
