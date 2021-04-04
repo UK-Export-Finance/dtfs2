@@ -136,7 +136,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('PUT /v1/tfm/facilities/:id', () => {
-    it('doesn\'t update `editedBy` in the associated deal', async () => {
+    it('does NOT update `editedBy` in the associated deal', async () => {
       const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
@@ -159,6 +159,66 @@ describe('/v1/portal/facilities', () => {
       const { body } = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
 
       expect(body.deal.dealSnapshot.editedBy.length).toEqual(0);
+    });
+
+    it('returns 404 when facility does not exist', async() => {
+      const { status } = await api.put({}).to('/v1/tfm/facilities/1234');
+
+      expect(status).toEqual(404);
+    });
+  });
+
+  describe('PUT /v1/portal/facilities/:id/status', () => {
+    const updateFacilityStatusBody = {
+      status: 'Test new status',
+    };
+
+    it('changes facility status', async () => {
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+
+      expect(originalDeal.body.deal.editedBy).toEqual([]);
+
+      await api.put({}).to(`/v1/portal/deals/${newFacility.associatedDealId}/submit`);
+      
+      const mockSubmittedFacility = {
+        ...newFacility,
+        status: 'Submitted',
+      };
+
+      const createdFacilityResponse = await api.post({ facility: mockSubmittedFacility, user: mockUser }).to('/v1/portal/facilities');
+
+      expect(createdFacilityResponse.body.status).toEqual(mockSubmittedFacility.status);
+
+      await api.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${createdFacilityResponse.body._id}/status`);
+
+      const { body } = await api.get(`/v1/portal/facilities/${createdFacilityResponse.body._id}`);
+
+      expect(body.status).toEqual(updateFacilityStatusBody.status);
+    });
+
+    it('does NOT update `editedBy` in the associated deal', async () => {
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+
+      expect(originalDeal.body.deal.editedBy).toEqual([]);
+
+      await api.put({}).to(`/v1/portal/deals/${newFacility.associatedDealId}/submit`);
+
+      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+
+      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      expect(getDealResponse.body.deal.dealSnapshot.editedBy.length).toEqual(0);
+
+      await api.put(updateFacilityStatusBody).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}/status`);
+
+      const { body } = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
+
+      expect(body.deal.dealSnapshot.editedBy.length).toEqual(0);
+    });
+
+    it('returns 404 when facility does not exist', async() => {
+      const { status } = await api.put(updateFacilityStatusBody).to('/v1/portal/facilities/1234/status');
+
+      expect(status).toEqual(404);
     });
   });
 });
