@@ -29,6 +29,10 @@ const FACILITY_RISK_PROFILE = {
   FLAT: 'Flat',
 };
 
+const FACILITY_STATUS_PORTAL = {
+  ACKNOWLEDGED: 'Acknowledged by UKEF',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_PRODUCT_CODE,
@@ -36,4 +40,5 @@ module.exports = {
   FACILITY_STAGE_PORTAL,
   FACILITY_STAGE,
   FACILITY_RISK_PROFILE,
+  FACILITY_STATUS_PORTAL,
 };
