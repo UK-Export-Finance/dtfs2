@@ -177,8 +177,6 @@ describe('/v1/portal/facilities', () => {
       const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
-
-      await api.put({}).to(`/v1/portal/deals/${newFacility.associatedDealId}/submit`);
       
       const mockSubmittedFacility = {
         ...newFacility,
@@ -206,13 +204,15 @@ describe('/v1/portal/facilities', () => {
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
-      expect(getDealResponse.body.deal.dealSnapshot.editedBy.length).toEqual(0);
+
+      // editedBy is updated once when `create facility` is called
+      expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
       await api.put(updateFacilityStatusBody).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}/status`);
 
-      const { body } = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
+      const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
-      expect(body.deal.dealSnapshot.editedBy.length).toEqual(0);
+      expect(body.deal.editedBy.length).toEqual(1);
     });
 
     it('returns 404 when facility does not exist', async() => {
