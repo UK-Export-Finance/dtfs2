@@ -42,7 +42,7 @@ const getDeals = async (args) => {
   const q = await queryDeals(args);
   await Promise.all(q.deals.map(fn));
 
-  const reducedDeals = dealsReducer(q, dict);
+  const reducedDeals = dealsReducer(q.deals, dict);
   return reducedDeals;
 };
 
