@@ -14,6 +14,7 @@ const getFacilityController = require('../controllers/portal/facility/get-facili
 const getFacilitiesController = require('../controllers/portal/facility/get-facilities.controller');
 const updateFacilityController = require('../controllers/portal/facility/update-facility.controller');
 const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
+const updateFacilityStatusController = require('../controllers/portal/facility/update-facility-status.controller');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
@@ -75,6 +76,11 @@ portalRouter.route('/facilities/:id')
   )
   .delete(
     deleteFacilityController.deleteFacility,
+  );
+
+portalRouter.route('/facilities/:id/status')
+  .put(
+    updateFacilityStatusController.updateFacilityStatusPut,
   );
 
 module.exports = portalRouter;
