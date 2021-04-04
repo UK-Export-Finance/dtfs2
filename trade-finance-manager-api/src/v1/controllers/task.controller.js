@@ -1,94 +1,122 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 
+
+const taskCanBeAssigned = (allTasks, taskIdToUpdate) => {  
+  let originalTask;
+
+  const group = allTasks.find((group) => {
+    if (group.groupTasks.find((task) => task.id === taskIdToUpdate)) {
+      return group;
+    }
+  });
+
+  const groupHasOtherTaskInProgress = group.groupTasks.find((task) =>
+    (task.id !== taskIdToUpdate
+    && task.status === 'In progress'));
+
+  if (groupHasOtherTaskInProgress) {
+    return false;
+  }
+
+  return true;
+};
+
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
+  const allTasks = deal.tfm.tasks;
 
   const {
     id: taskIdToUpdate,
     assignedTo,
   } = tfmTaskUpdate;
 
-  const { userId: assignedUserId } = assignedTo;
+  const originalTask = allTasks.find((group) =>
+    group.groupTasks.find((task) => task.id === taskIdToUpdate));
 
-  let newAssigneeFullName;
-  let assignedUser;
+  if (taskCanBeAssigned(allTasks, taskIdToUpdate)) {
 
-  if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
-    newAssigneeFullName = CONSTANTS.TASKS.UNASSIGNED;
-  } else {
-    assignedUser = await api.findUserById(assignedUserId);
-    const { firstName, lastName } = assignedUser;
-    newAssigneeFullName = `${firstName} ${lastName}`;
-  }
+    const { userId: assignedUserId } = assignedTo;
 
-  const cleanTfmTask = {
-    ...tfmTaskUpdate,
-    assignedTo: {
-      userFullName: newAssigneeFullName,
-      userId: assignedUserId,
-    },
-  };
+    let newAssigneeFullName;
+    let assignedUser;
 
-  const originalTasks = deal.tfm.tasks;
+    if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
+      newAssigneeFullName = CONSTANTS.TASKS.UNASSIGNED;
+    } else {
+      assignedUser = await api.findUserById(assignedUserId);
+      const { firstName, lastName } = assignedUser;
+      newAssigneeFullName = `${firstName} ${lastName}`;
+    }
 
-  let originalTaskAssignedUserId;
-
-  const modifiedTasks = originalTasks.map((tGroup) => {
-    let taskGroup = tGroup;
-    taskGroup = {
-      ...taskGroup,
-      groupTasks: taskGroup.groupTasks.map((t) => {
-        let task = t;
-        if (task.id === taskIdToUpdate) {
-          originalTaskAssignedUserId = task.assignedTo.userId;
-
-          task = {
-            ...task,
-            ...cleanTfmTask,
-          };
-        }
-        return task;
-      }),
+    const updatedTask = {
+      ...tfmTaskUpdate,
+      assignedTo: {
+        userFullName: newAssigneeFullName,
+        userId: assignedUserId,
+      },
     };
 
-    return taskGroup;
-  });
+    let originalTaskAssignedUserId;
 
-  const tasksUpdate = {
-    tfm: {
-      tasks: modifiedTasks,
-    },
-  };
+    const modifiedTasks = originalTasks.map((tGroup) => {
+      let taskGroup = tGroup;
+      taskGroup = {
+        ...taskGroup,
+        groupTasks: taskGroup.groupTasks.map((t) => {
+          let task = t;
+          if (task.id === taskIdToUpdate) {
+            originalTaskAssignedUserId = task.assignedTo.userId;
 
-  // update tasks in deal
-  await api.updateDeal(dealId, tasksUpdate);
+            task = {
+              ...task,
+              ...updatedTask,
+            };
+          }
+          return task;
+        }),
+      };
 
-  if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-    // update original assignee's tasks
-    const { assignedTasks: originalTaskAssigneeTasks } = await api.findUserById(originalTaskAssignedUserId);
+      return taskGroup;
+    });
 
-    const modifiedOriginalTaskAssigneeTasks = originalTaskAssigneeTasks.filter((task) => task.id !== taskIdToUpdate);
+    const tasksUpdate = {
+      tfm: {
+        tasks: modifiedTasks,
+      },
+    };
 
-    await api.updateUserTasks(originalTaskAssignedUserId, modifiedOriginalTaskAssigneeTasks);
+    // update tasks in deal
+    await api.updateDeal(dealId, tasksUpdate);
+
+    if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
+      // update original assignee's tasks
+      const { assignedTasks: originalTaskAssigneeTasks } = await api.findUserById(originalTaskAssignedUserId);
+
+      const modifiedOriginalTaskAssigneeTasks = originalTaskAssigneeTasks.filter((task) => task.id !== taskIdToUpdate);
+
+      await api.updateUserTasks(originalTaskAssignedUserId, modifiedOriginalTaskAssigneeTasks);
+    }
+
+    if (assignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
+      // update new assignee's tasks
+
+      const tasksAssignedToUser = [];
+
+      modifiedTasks.map((taskGroup) =>
+        taskGroup.groupTasks.map((task) => {
+          if (task.assignedTo.userId === assignedUserId) {
+            tasksAssignedToUser.push(task);
+          }
+          return task;
+        }));
+
+      await api.updateUserTasks(assignedUserId, tasksAssignedToUser);
+    }
+
+    return cleanTfmTask;
   }
 
-  if (assignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-    // update new assignee's tasks
-
-    const tasksAssignedToUser = [];
-
-    modifiedTasks.map((taskGroup) =>
-      taskGroup.groupTasks.map((task) => {
-        if (task.assignedTo.userId === assignedUserId) {
-          tasksAssignedToUser.push(task);
-        }
-        return task;
-      }));
-
-    await api.updateUserTasks(assignedUserId, tasksAssignedToUser);
-  }
-
-  return cleanTfmTask;
+  return originalTask;
 };
 exports.updateTfmTask = updateTfmTask;
