@@ -14,7 +14,7 @@
       <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="tasks-heading">Tasks for this deal</h2>
 
       {% set filtersComponentData = {
-        tasks: tfm.tasks,
+        tasks: tasks,
         selectedTaskFilter: selectedTaskFilter
       } %}
 
@@ -22,10 +22,10 @@
 
       <h3 class="govuk-heading-s ukef-heading-background" data-cy="tasks-deal-submission-type">{{ deal.details.submissionType }}</h3>
 
-      {% if tfm.tasks.length %}
+      {% if tasks.length %}
 
         {% set tableComponentData = {
-          tasks: tfm.tasks,
+          tasks: tasks,
           caseId: dealId
         } %}
 

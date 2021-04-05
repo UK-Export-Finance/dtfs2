@@ -36,6 +36,7 @@ describe(component, () => {
               name: 'Business support group',
             },
             status: 'In progress',
+            canEdit: true,
           },
         ],
       },
@@ -62,15 +63,30 @@ describe(component, () => {
   });
 
   describe('for each task in a tasks group', () => {
-    it('should render link', () => {
-      params.tasks.forEach((group) => {
-        group.groupTasks.forEach((task) => {
-          const selector = `[data-cy="task-table-row-${task.id}-link"]`;
-          wrapper.expectLink(selector).toLinkTo(
-            `/case/${params.caseId}/tasks/${task.id}`,
-            task.title,
-          );
-        });
+    describe('when a task has `canEdit`', () => {
+      it('should render link to task', () => {
+        const taskWithCanEdit = params.tasks[0].groupTasks[1];
+
+        const linkSelector = `[data-cy="task-table-row-${taskWithCanEdit.id}-link"]`;
+
+        wrapper.expectLink(linkSelector).toLinkTo(
+          `/case/${params.caseId}/tasks/${taskWithCanEdit.id}`,
+          taskWithCanEdit.title,
+        );
+
+        wrapper.expectElement(`[data-cy="task-table-row-${taskWithCanEdit.id}-title"]`).notToExist();
+      });
+    });
+
+    describe('when a task does NOT have `canEdit`', () => {
+      it('should NOT render link to task and render title', () => {
+        const taskWithoutCanEdit = params.tasks[0].groupTasks[0];
+
+        const linkSelector = `[data-cy="task-table-row-${taskWithoutCanEdit.id}-link"]`;
+
+        wrapper.expectElement(linkSelector).notToExist();
+
+        wrapper.expectText(`[data-cy="task-table-row-${taskWithoutCanEdit.id}-title"]`).toRead(taskWithoutCanEdit.title);
       });
     });
 

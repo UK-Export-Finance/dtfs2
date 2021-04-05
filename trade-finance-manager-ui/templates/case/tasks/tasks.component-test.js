@@ -12,14 +12,12 @@ describe(page, () => {
           submissionType: 'Automatic Inclusion Notice',
         },
       },
-      tfm: {
-        tasks: [
-          {
-            groupTitle: 'Testing',
-            groupTasks: [],
-          }
-        ],
-      },
+      tasks: [
+        {
+          groupTitle: 'Testing',
+          groupTasks: [],
+        }
+      ],
       selectedTaskFilter: 'all',
     };
 
@@ -53,9 +51,7 @@ describe(page, () => {
           submissionType: 'Automatic Inclusion Notice',
         },
       },
-      tfm: {
-        tasks: [],
-      },
+      tasks: [],
       selectedTaskFilter: 'all',
     };
 
