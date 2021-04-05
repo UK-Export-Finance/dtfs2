@@ -110,6 +110,48 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   return mapped;
 };
 
+const groupTaskInProgress = (groupTasks) =>
+  groupTasks.find((task) =>
+    (task.status === 'In progress'));
+
+const mapTasks = (tasks) => {
+  // only 1 task can be in progress.
+  // all other tasks cannot be accessed in the UI.
+
+  const allTaskGroups = tasks.map((g) => {
+    const group = {
+      ...g,
+      taskIdInProgress: groupTaskInProgress(g.groupTasks).id,
+    };
+
+    return group;
+  });
+
+  const mappedTasks = allTaskGroups.map((g) => {
+    const group = g;
+
+    if (group.taskIdInProgress) {
+      return {
+        ...group,
+        groupTasks: group.groupTasks.map((task) => {
+          if (task.id === group.taskIdInProgress) {
+            return {
+              ...task,
+              canEdit: true,
+            };
+          }
+
+          return task;
+        }),
+      };
+    }
+
+    return group;
+  });
+
+  return mappedTasks;
+};
+
 export default {
   userFullName,
   userIsInTeam,
@@ -118,4 +160,5 @@ export default {
   getTeamMembersWithoutCurrentUser,
   mapTeamMembersSelectOptions,
   mapAssignToSelectOptions,
+  mapTasks,
 };

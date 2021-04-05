@@ -9,6 +9,7 @@ const {
   getTask,
   mapAssignToSelectOptions,
   userIsInTeam,
+  mapTasks,
 } = helpers;
 
 const res = mockRes();
@@ -125,6 +126,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
+          tasks: mapTasks(mockDeal.tfm.tasks),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
@@ -200,6 +202,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
+          tasks: mapTasks(mockDeal.tfm.tasks),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,

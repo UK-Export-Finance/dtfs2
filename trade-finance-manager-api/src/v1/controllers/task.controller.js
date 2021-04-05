@@ -2,16 +2,16 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 
 
-const taskCanBeAssigned = (allTasks, taskIdToUpdate) => {  
-  let originalTask;
-
-  const group = allTasks.find((group) => {
+const taskCanBeAssigned = (allTasks, taskIdToUpdate) => {
+  const parentGroup = allTasks.find((group) => {
     if (group.groupTasks.find((task) => task.id === taskIdToUpdate)) {
       return group;
     }
+
+    return group;
   });
 
-  const groupHasOtherTaskInProgress = group.groupTasks.find((task) =>
+  const groupHasOtherTaskInProgress = parentGroup.groupTasks.find((task) =>
     (task.id !== taskIdToUpdate
     && task.status === 'In progress'));
 
@@ -35,7 +35,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     group.groupTasks.find((task) => task.id === taskIdToUpdate));
 
   if (taskCanBeAssigned(allTasks, taskIdToUpdate)) {
-
     const { userId: assignedUserId } = assignedTo;
 
     let newAssigneeFullName;
@@ -59,7 +58,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
     let originalTaskAssignedUserId;
 
-    const modifiedTasks = originalTasks.map((tGroup) => {
+    const modifiedTasks = allTasks.map((tGroup) => {
       let taskGroup = tGroup;
       taskGroup = {
         ...taskGroup,
@@ -114,7 +113,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       await api.updateUserTasks(assignedUserId, tasksAssignedToUser);
     }
 
-    return cleanTfmTask;
+    return updatedTask;
   }
 
   return originalTask;
