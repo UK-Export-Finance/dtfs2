@@ -6,6 +6,7 @@ const mockRes = () => {
   const res = {};
   res.redirect = jest.fn();
   res.render = jest.fn();
+
   return res;
 };
 

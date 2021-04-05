@@ -103,13 +103,13 @@ const filterCaseTasks = async (req, res) => {
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const { taskId } = req.params;
+  const { user } = req.session;
+
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
-
-  const { user } = req.session;
 
   let allTasksWithoutGroups = [];
 
@@ -122,6 +122,29 @@ const getCaseTask = async (req, res) => {
   });
 
   const task = getTask(taskId, allTasksWithoutGroups);
+
+  if (!task) {
+    return res.redirect('/not-found');
+  }
+
+  const parentGroup = deal.tfm.tasks.find((group) => {
+    if (group.groupTasks.find((t) => t.id === taskId)) {
+      return group;
+    }
+
+    return group;
+  });
+
+  const groupTaskInProgress = parentGroup.groupTasks.find((t) =>
+    t.status === 'In progress');
+
+  const userCanEdit = (!groupTaskInProgress
+      || (groupTaskInProgress && groupTaskInProgress.id === taskId));
+
+  if (!userCanEdit) {
+    // TODO: ideally we will redirect to custom error page.
+    return res.redirect(`/case/${dealId}/tasks`);
+  }
 
   const allTeamMembers = await api.getTeamMembers(task.team.id);
 

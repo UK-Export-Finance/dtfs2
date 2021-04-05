@@ -335,6 +335,96 @@ describe('controllers - case', () => {
       });
     });
 
+    describe('when another task is in progress and params.taskId does not match in progress id', () => {
+      const mockDealWithInProgressTask = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          tasks: [
+            {
+              groupTitle: 'Testing',
+              groupTasks: [
+                {
+                  id: '123',
+                  assignedTo: {
+                    userId: session.user._id,
+                  },
+                  team: {
+                    id: 'TEAM_1',
+                  },
+                },
+                {
+                  id: '456',
+                  assignedTo: {
+                    userId: session.user._id,
+                  },
+                  team: {
+                    id: 'TEAM_1',
+                  },
+                  status: 'In progress',
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDealWithInProgressTask);
+      });
+
+      it('should redirect to tasks route', async () => {
+        const req = {
+          params: {
+            _id: mockDealWithInProgressTask._id,
+            taskId: '123',
+          },
+          session,
+        };
+
+        await caseController.getCaseTask(req, res);
+
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDealWithInProgressTask._id}/tasks`);
+      });
+    });
+
+    describe('when task does not exist', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          tasks: [
+            {
+              groupTitle: 'Testing',
+              groupTasks: [],
+            },
+          ],
+        },
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            taskId: '12345678',
+          },
+          session,
+        };
+
+        await caseController.getCaseTask(req, res);
+
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
