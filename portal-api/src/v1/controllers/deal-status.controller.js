@@ -12,6 +12,9 @@ const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
 const updateStatus = require('./deal-status/update-status');
 const createSubmissionDate = require('./deal-status/create-submission-date');
 const createMiaSubmissionDate = require('./deal-status/create-mia-submission-date');
+
+const updateSubmissionCount = require('./deal-status/update-submission-count');
+
 const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails');
 const createApprovalDate = require('./deal-status/create-approval-date');
 
@@ -137,6 +140,9 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Submitted') {
       await updateSubmittedIssuedFacilities(req.user, dealAfterAllUpdates);
+
+      dealAfterAllUpdates = await updateSubmissionCount(dealAfterAllUpdates, user);
+
       if (!dealAfterAllUpdates.details.submissionDate) {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
       }

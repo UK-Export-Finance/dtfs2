@@ -15,6 +15,8 @@ const dealReducer = require('../src/graphql/reducers/deal');
 
 const MOCK_DEAL_TFM = {
   exporterCreditRating: 'Good (BB-)',
+  lossGivenDefault: '50%',
+  stage: 'Confirmed',
 };
 
 const GET_DEAL = gql`
@@ -55,7 +57,9 @@ const GET_DEAL = gql`
         }
         exporterCreditRating
         supplyContractValueInGBP
-
+        lossGivenDefault
+        probabilityOfDefault
+        stage
       }
       dealSnapshot {
         _id,

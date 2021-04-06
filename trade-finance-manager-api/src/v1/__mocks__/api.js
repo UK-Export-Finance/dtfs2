@@ -1,38 +1,28 @@
 const MOCK_DEAL = require('./mock-deal');
-const MOCK_DEAL_2 = require('./mock-deal-2');
-const MOCK_DEAL_3 = require('./mock-deal-3');
-const MOCK_DEAL_4 = require('./mock-deal-4');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
-const MOCK_DEAL_NO_COMPANIES_HOUSE_2 = require('./mock-deal-no-companies-house-2');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
-const MOCK_DEAL_FACILITIES_USD_CURRENCY_2 = require('./mock-deal-facilities-USD-currency-2');
-const MOCK_DEAL_FACILITIES_USD_CURRENCY_3 = require('./mock-deal-facilities-USD-currency-3');
 const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
-const MOCK_DEAL_MIN_2 = require('./mock-deal-MIN-2');
+const MOCK_DEAL_MIA = require('./mock-deal-MIA');
 const MOCK_DEAL_AIN_SUBMITTED = require('./mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
+const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_TASKS = require('./mock-tasks');
 const MOCK_USERS = require('./mock-users');
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
-  MOCK_DEAL_2,
-  MOCK_DEAL_3,
-  MOCK_DEAL_4,
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
-  MOCK_DEAL_NO_COMPANIES_HOUSE_2,
   MOCK_DEAL_FACILITIES_USD_CURRENCY,
-  MOCK_DEAL_FACILITIES_USD_CURRENCY_2,
-  MOCK_DEAL_FACILITIES_USD_CURRENCY_3,
   MOCK_DEAL_MIN,
-  MOCK_DEAL_MIN_2,
+  MOCK_DEAL_MIA,
   MOCK_DEAL_AIN_SUBMITTED,
   MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
+  MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
 ];
 
 const ALL_MOCK_FACILITIES = [
@@ -77,6 +67,15 @@ module.exports = {
       },
     };
     return Promise.resolve(updatedDeal);
+  },
+  updatePortalFacilityStatus: (facilityId, statusUpdate) => {
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+    const updatedFacility = {
+      ...facility,
+      previousStatus: facility.status,
+      status: statusUpdate,
+    };
+    return Promise.resolve(updatedFacility);
   },
   queryDeals: () => ALL_MOCK_DEALS,
   updateDeal: (dealId, updatedTfmDealData) => {

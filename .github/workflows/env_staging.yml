@@ -458,12 +458,16 @@ jobs:
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned --shard "_id" \
-            --idx '[{"key": {"keys": ["version"]}}]'
+            --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria --shard "_id" \
-            --idx '[{"key": {"keys": ["version"]}}]'
+            --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
       
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name acbs-log || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name acbs-log --shard "_id" \
+            --idx '[{"key": {"keys": ["status"]}},  {"key": {"keys": ["_id"]}} ]'
+    
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [set-environment, cosmos-db-init, private-dns]
@@ -758,6 +762,19 @@ jobs:
             --functions-version 3 \
             --storage-account tfs${{ env.environment }}storage \
             --deployment-container-image-name ${{ env.registry }}/azure-function-acbs:${{ env.environment }}
+    
+    - name: Set environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
+            --settings \
+              MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
+              MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
+              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
+              MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
+              MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
+              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -919,10 +936,10 @@ jobs:
               MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
               MULESOFT_API_EXPOSURE_PERIOD_URL="${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}" \
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
               ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
-              AZURE_ACBS_FUNCTION_URL="$acbs_function_url"
+              AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url"
  
   dtfs-central-api:
     name: DTFS Central API
@@ -1259,7 +1276,7 @@ jobs:
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               TFM_API="http://$tfm_api_url" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -1577,7 +1594,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
  
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
@@ -1893,7 +1910,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
  
   # END UI setup
 

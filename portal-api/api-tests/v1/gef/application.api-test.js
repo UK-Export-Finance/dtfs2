@@ -69,7 +69,7 @@ describe(baseUrl, () => {
         items: allItems.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
-          createdAt: expect.any(Number)
+          createdAt: expect.any(Number),
         })),
       };
 
