@@ -213,6 +213,8 @@ type TFMDealData {
   exporterCreditRating: String
   supplyContractValueInGBP: String
   stage: String
+  lossGivenDefault: String
+  probabilityOfDefault: String
 }
 
 type TFMFacilityData {

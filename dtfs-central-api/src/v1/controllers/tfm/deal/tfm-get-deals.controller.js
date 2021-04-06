@@ -1,12 +1,12 @@
-
 const db = require('../../../../drivers/db-client');
-
-// const { findOneDeal } = require('../../portal/deal/get-deal.controller');
+const CONSTANTS = require('../../../../constants');
 
 const findDeals = async (callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
-  const deals = await dealsCollection.find({}).toArray();
+  const deals = await dealsCollection.find({
+    'dealSnapshot.details.submissionType': CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+  }).toArray();
 
   if (callback) {
     callback(deals);

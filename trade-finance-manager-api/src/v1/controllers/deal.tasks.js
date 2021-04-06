@@ -1,5 +1,4 @@
 const api = require('../api');
-const CONSTANTS = require('../../constants');
 const DEFAULTS = require('../defaults');
 
 const createDealTasks = async (deal) => {
@@ -14,27 +13,21 @@ const createDealTasks = async (deal) => {
 
   const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-    details,
   } = dealSnapshot;
 
-  const {
-    submissionType,
-  } = details;
+  const dealUpdate = {
+    tfm: {
+      ...tfm,
+      tasks: DEFAULTS.TASKS.AIN,
+    },
+  };
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    const dealUpdate = {
-      tfm: {
-        ...tfm,
-        tasks: DEFAULTS.TASKS.AIN,
-      },
-    };
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
-
-    return updatedDeal;
-  }
-
-  return deal;
+  return {
+    dealSnapshot,
+    tfm: updatedDeal.tfm,
+  };
 };
 
 exports.createDealTasks = createDealTasks;

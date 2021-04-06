@@ -50,7 +50,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal with unissued bond is submitted to UKEF, bond displays correctly in TFM. Bond is then issued in Portal and resubmitted; displays correctly in TFM', () => {
+  it('Portal deal with unissued bond is submitted to UKEF, bond displays correctly in TFM. Bond is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -184,6 +184,17 @@ context('Portal to TFM deal submission', () => {
       // so safe to assert based on `months` appearing, rather than adding regex assertion.
       expect(text.trim()).not.to.contain(bond.ukefGuaranteeInMonths);
       expect(text.trim()).to.contain('month');
+    });
+
+
+    //---------------------------------------------------------------
+    // portal bond status should be updated to `Acknowledged by UKEF``
+    //---------------------------------------------------------------
+    cy.login(MAKER_LOGIN);
+    portalPages.contract.visit(deal);
+
+    bondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
   });
 });
