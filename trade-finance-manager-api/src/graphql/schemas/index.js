@@ -193,12 +193,21 @@ type TFMTaskAssignedTo {
   userFullName: String
 }
 
+type TFMTaskHistory {
+  statusFrom: String
+  statusTo: String
+  assignedUserId: String
+  updatedBy: String
+  timestamp: String
+}
+
 type TFMTask {
   id: String
   title: String
   status: String
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
+  history: [TFMTaskHistory]
 }
 
 type TFMTaskGroup {
@@ -325,6 +334,7 @@ input TFMTaskInput {
   id: String
   assignedTo: TFMTaskAssignedToInput
   status: String
+  updatedBy: String
 }
 
 input TFMCreditRatingInput {

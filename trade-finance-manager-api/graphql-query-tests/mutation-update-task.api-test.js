@@ -21,6 +21,13 @@ const UPDATE_TASK = gql`
         userId
       }
       status
+      history {
+        statusFrom
+        statusTo
+        assignedUserId
+        updatedBy
+        timestamp
+      }
     }
   }
 `;
@@ -50,6 +57,7 @@ describe('graphql mutation - update task', () => {
       assignedTo: {
         userId: MOCK_USER._id,
       },
+      updatedBy: '123456789',
     };
 
     const { data } = await query({
@@ -66,6 +74,15 @@ describe('graphql mutation - update task', () => {
       assignedTo: {
         userId: taskUpdate.assignedTo.userId,
       },
+      history: [
+        {
+          statusFrom: 'To do',
+          statusTo: taskUpdate.status,
+          assignedUserId: taskUpdate.assignedTo.userId,
+          updatedBy: taskUpdate.updatedBy,
+          timestamp: expect.any(String),
+        },
+      ],
     };
 
     expect(data.updateTask).toEqual(expected);
