@@ -73,10 +73,12 @@
                 }
               },
               hint: {
-                html: "<p class='govuk-!-margin-0'>This must be within one calendar month of the date you submit the notice to UKEF. It cannot be earlier than the submission date.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF.</span>"
+                html: "<p class='govuk-!-margin-0'>This must be within one calendar month of the date you submit the notice to UKEF. It cannot be earlier than the submission date.</p><p class='govuk-!-margin-0 has-text-primary'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF.</p>"
               },
               items: [
                 {
+                  label: "Day",
+                  classes: "govuk-input--width-2",
                   name: "coverStartDateDay",
                   value: coverStartDateDay,
                   attributes: {
@@ -84,6 +86,7 @@
                   }
                 },
                 {
+                  label: "Month",
                   classes: "govuk-input--width-2",
                   name: "coverStartDateMonth",
                   value: coverStartDateMonth,
@@ -92,7 +95,8 @@
                   }
                 },
                 {
-                  classes: (yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+                  label: "Year",
+                  classes: "govuk-input--width-4",
                   name: "coverStartDateYear",
                   value: coverStartDateYear,
                   attributes: {
@@ -122,7 +126,7 @@
                 value: 'false',
                 text: "No",
                 conditional: {
-                  html: hasCoverStartDate === 'false'
+                  html: coverStartHtml
                 }
               }
             ]
@@ -139,7 +143,36 @@
             },
             hint: {
               text: "For example, 12 03 2021. Your end date must be within 5 years of the start date"
-            }
+            },
+            items: [
+                {
+                  label: "Day",
+                  classes: "govuk-input--width-2",
+                  name: "coverEndDateDay",
+                  value: coverEndDateDay,
+                  attributes: {
+                    'data-cy': "coverEndDateDay"
+                  }
+                },
+                {
+                  label: "Month",
+                  classes: "govuk-input--width-2",
+                  name: "coverEndDateMonth",
+                  value: coverEndDateMonth,
+                  attributes: {
+                    'data-cy': "coverEndDateMonth"
+                  }
+                },
+                {
+                  label: "Year",
+                  classes: "govuk-input--width-4",
+                  name: "coverEndDateYear",
+                  value: coverEndDateYear,
+                  attributes: {
+                    'data-cy': "coverEndDateYear"
+                  }
+                }
+              ]
           }) }}
 
           <div class="govuk-button-group">

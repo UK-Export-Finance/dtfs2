@@ -11,11 +11,18 @@ const aboutFacility = async (req, res) => {
     const { coverStartDate } = details;
     const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
     const hasCoverStartDate = JSON.stringify(details.hasCoverStartDate);
-    console.log('details', moment(1617275806087, 'DD/MM/YYYY'));
+    const coverStartDate = moment(details.coverStartDate);
+    const coverEndDate = moment(details.coverEndDate);
+
     return res.render('partials/about-facility.njk', {
       facilityType: facilityTypeString,
       hasCoverStartDate: hasCoverStartDate !== 'null' ? hasCoverStartDate : null,
-      coverStartDate: details.coverStartDate,
+      coverStartDateDay: coverStartDate.format('D'),
+      coverStartDateMonth: coverStartDate.format('M'),
+      coverStartDateYear: coverStartDate.format('Y'),
+      coverEndDateDay: coverEndDate.format('D'),
+      coverEndDateMonth: coverEndDate.format('M'),
+      coverEndDateYear: coverEndDate.format('Y'),
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
