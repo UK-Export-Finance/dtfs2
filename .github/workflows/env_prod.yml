@@ -19,6 +19,7 @@ env:
   private_endpoints_cidr: 10.0.1.0/28
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
   # Scheduler switched off until LIVE
   DTFS_PORTAL_SCHEDULER: false
@@ -936,6 +937,9 @@ jobs:
               MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}" \
               MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
               MULESOFT_API_EXPOSURE_PERIOD_URL="${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}" \
+              MULESOFT_API_UKEF_ESTORE_EA_URL="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_URL }}" \
+              MULESOFT_API_UKEF_ESTORE_EA_KEY=${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_KEY }}" \
+              MULESOFT_API_UKEF_ESTORE_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_SECRET }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
