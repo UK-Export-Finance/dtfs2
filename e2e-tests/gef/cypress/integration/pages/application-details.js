@@ -14,9 +14,9 @@ const applicationDetails = {
 
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilityStatus: () => cy.get('[data-cy="facility-status"]'),
-  facilityAddLink: () => cy.get('[data-cy="facility-add-link"]'),
+  addCashFacilityButton: () => cy.get('[data-cy="add-cash-facility-button"]'),
+  addContingentFacilityButton: () => cy.get('[data-cy="add-contingent-facility-button"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
-  facilityAddAnotherButton: () => cy.get('[data-cy="facility-add-button"]'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),

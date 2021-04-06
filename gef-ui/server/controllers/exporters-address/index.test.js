@@ -172,7 +172,7 @@ describe('Validate Exporters Address', () => {
     const mockExporterResponse = new MockExporterResponse();
     const mockApplicationResponse = new MockApplicationResponse();
     const mockResponse = new MockResponse();
-    const mockRejection = { status: 422, data: { errMsg: 'Message', errRef: 'Reference' } };
+    const mockRejection = { status: 422, data: [{ errMsg: 'Message', errRef: 'Reference' }] };
 
     mockRequest.body.correspondence = 'true';
     mockRequest.body.postcode = 'FFFFF';

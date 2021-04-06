@@ -5,8 +5,8 @@ export const PROGRESS = {
 };
 
 export const FACILITY_TYPE = {
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
+  CASH: 'CASH',
+  CONTINGENT: 'CONTINGENT',
 };
 
 export const SME_TYPE = {

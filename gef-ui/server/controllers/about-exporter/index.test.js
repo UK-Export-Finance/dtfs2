@@ -23,6 +23,7 @@ const MockAboutExporterResponse = () => {
     industries: null,
     smeType: null,
     probabilityOfDefault: null,
+    selectedIndustry: null,
     isFinanceIncreasing: null,
   };
   return res;
@@ -45,6 +46,7 @@ describe('GET About Exporter', () => {
       industries: null,
       smeType: null,
       probabilityOfDefault: null,
+      selectedIndustry: null,
       isFinanceIncreasing: null,
       applicationId: '123',
     }));

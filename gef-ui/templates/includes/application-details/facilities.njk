@@ -20,9 +20,7 @@
   </div>
 </div>
 
-{% if facilities.data.length < 1 %}
-  <a class="govuk-link" href="#" data-cy="facility-add-link">Add a facility</a>
-{% else %}
+{% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
     <h3 class="govuk-heading-m" data-cy="facility-type-heading">
       {{item.heading}} facility
@@ -34,14 +32,25 @@
       }
     }) }}
   {% endfor %}
+{% endif %}
 
+<div class="govuk-button-group">
   {{ govukButton({
-    text: "Add another facility",
+    text: "Add a cash facility",
     classes: "govuk-button--secondary",
+    href: applicationId + "/facilities",
     attributes: {
-      'data-cy': 'facility-add-another-button'
+      'data-cy': 'add-cash-facility-button'
     }
   }) }}
-{% endif %}
+  {{ govukButton({
+    text: "Add a contingent facility",
+    classes: "govuk-button--secondary",
+    href: applicationId + "/facilities?facilityType=CONTINGENT",
+    attributes: {
+      'data-cy': 'add-contingent-facility-button'
+    }
+  }) }}
+</div>
 
 <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--m govuk-!-margin-bottom-7 govuk-section-break--visible">
