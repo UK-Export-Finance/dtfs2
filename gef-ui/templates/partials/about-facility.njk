@@ -6,7 +6,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
-{% block pageTitle %}About this {{ facilityType }} facility{% endblock %}
+{% block pageTitle %}About this {{ facilityTypeString }} facility{% endblock %}
 
 {% block content %}
   {% if errors %}
@@ -34,7 +34,7 @@
       Add a facility
     </span>
     <h1 class="govuk-heading-xl" data-cy="main-heading">
-      About this {{ facilityType }} facility
+      About this {{ facilityTypeString }} facility
     </h1>
   </header>
 
@@ -44,18 +44,18 @@
         method="post"
         data-cy="form">
           {{ govukInput({
-            label: {
-              text: "Enter a name for this " + facilityType + " facility",
-              classes: "govuk-label--m"
-            },
+            classes: "govuk-visually-hidden",
             id: "facilityType",
             name: "facilityType",
             value: facilityType,
+            attributes: {
+              'hidden': 'true'
+            }
           }) }}
 
           {{ govukInput({
             label: {
-              text: "Enter a name for this " + facilityType + " facility",
+              text: "Enter a name for this " + facilityTypeString + " facility",
               classes: "govuk-label--m"
             },
             id: "facilityName",
@@ -85,10 +85,16 @@
               hint: {
                 html: "<p class='govuk-!-margin-0'>This must be within one calendar month of the date you submit the notice to UKEF. It cannot be earlier than the submission date.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF.</p>"
               },
+              errorMessage: errors and {
+                text: errors.fieldErrors.coverStartDate.text,
+                attributes: {
+                  'data-cy': 'cover-start-date-error'
+                }
+              },
               items: [
                 {
                   label: "Day",
-                  classes: "govuk-input--width-2",
+                  classes: "govuk-input--error govuk-input--width-2",
                   name: "coverStartDateDay",
                   value: coverStartDateDay,
                   attributes: {
@@ -124,6 +130,12 @@
               legend: {
                 text: "Do you want UKEF cover to start on the day you submit the automatic inclusion notice?",
                 classes: "govuk-fieldset__legend--m"
+              }
+            },
+            errorMessage: errors and {
+              text: errors.fieldErrors.hasCoverStartDate.text,
+              attributes: {
+                'data-cy': 'has-cover-start-date-error'
               }
             },
             items: [
