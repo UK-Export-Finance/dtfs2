@@ -19,11 +19,12 @@ const aboutExporter = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     const { details } = await api.getExporter(exporterId);
     const industries = mappedIndustries(details.industries, JSON.stringify(details.selectedIndustry));
+    const isFinanceIncreasing = JSON.stringify(details.isFinanceIncreasing);
 
     return res.render('partials/about-exporter.njk', {
       smeType: details.smeType,
       probabilityOfDefault: details.probabilityOfDefault,
-      isFinanceIncreasing: details.isFinanceIncreasing ? details.isFinanceIncreasing.toString() : null,
+      isFinanceIncreasing: isFinanceIncreasing !== 'null' ? isFinanceIncreasing : null,
       selectedIndustry: details.selectedIndustry,
       applicationId,
       industries,

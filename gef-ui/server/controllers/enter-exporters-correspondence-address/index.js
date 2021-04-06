@@ -1,5 +1,5 @@
 import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
@@ -41,7 +41,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   const { applicationId } = params;
   const addressErrors = [];
 
-  if (saveAndReturn !== 'true') {
+  if (!isTrueSet(saveAndReturn)) {
     if (!body.addressLine1) {
       addressErrors.push({
         errRef: 'addressLine1',
@@ -69,7 +69,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     const { exporterId } = await api.getApplication(applicationId);
     await api.updateExporter(exporterId, { correspondenceAddress: body });
     req.session.address = null;
-    if (saveAndReturn === 'true' || status === 'change') {
+    if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
     return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
