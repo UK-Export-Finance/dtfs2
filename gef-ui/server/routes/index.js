@@ -10,6 +10,8 @@ import exportersAddressRoutes from './exporters-address';
 import selectExportersCorrespondenceAddressRoutes from './select-exporters-correspondence-address';
 import enterExportersCorrespondenceAddressRoutes from './enter-exporters-correspondence-address';
 import aboutExporterRoutes from './about-exporter';
+import facilitiesRoutes from './facilities';
+import aboutFacilityRoutes from './about-facility';
 
 const router = express.Router();
 
@@ -24,5 +26,7 @@ router.use(exportersAddressRoutes);
 router.use(selectExportersCorrespondenceAddressRoutes);
 router.use(enterExportersCorrespondenceAddressRoutes);
 router.use(aboutExporterRoutes);
+router.use(facilitiesRoutes);
+router.use(aboutFacilityRoutes);
 
 export default router;

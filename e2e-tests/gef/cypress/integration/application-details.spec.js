@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
+import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applicationIds = [];
@@ -52,9 +53,9 @@ context('Application Details Page', () => {
     it('displays the correct facility elements', () => {
       applicationDetails.facilityHeading();
       applicationDetails.facilityStatus().contains('Not started');
-      applicationDetails.facilityAddLink();
+      applicationDetails.addCashFacilityButton();
+      applicationDetails.addContingentFacilityButton();
       applicationDetails.facilitySummaryList().should('not.exist');
-      applicationDetails.facilityAddAnotherButton().should('not.exist');
     });
 
     it('displays the correct submit elements', () => {
@@ -65,12 +66,24 @@ context('Application Details Page', () => {
 
     it('takes you to companies house page when clicking on `Enter details`', () => {
       applicationDetails.exporterDetailsLink().click();
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/companies-house`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}/companies-house`));
     });
 
     it('keeps you on the same page for now when clicking on `Abandon` link', () => {
       applicationDetails.abandonLink().click();
       cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
+    });
+
+    it('takes you to Cash facility page when clicking on `Add a cash facility` button', () => {
+      applicationDetails.addCashFacilityButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      facilities.hasBeenIssuedHeading().contains('cash');
+    });
+
+    it('takes you to Contingent facility page when clicking on `Add a contingent facility` button', () => {
+      applicationDetails.addContingentFacilityButton().click();
+      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities?facilityType=CONTINGENT`));
     });
   });
 

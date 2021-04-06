@@ -82,6 +82,20 @@ describe('getExporter()', () => {
   });
 });
 
+describe('updateExporter()', () => {
+  it('returns the correct response', async () => {
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.updateExporter('fakeId', { payload: 'payload' });
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.put.mockReturnValue(Promise.reject());
+    const response = api.updateExporter();
+    await expect(response).rejects.toThrowError();
+  });
+});
+
 describe('getFacilities()', () => {
   it('returns an empty Array if no application Id is passed', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
@@ -98,6 +112,45 @@ describe('getFacilities()', () => {
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
     await expect(api.getFacilities('fakeId')).rejects.toThrowError();
+  });
+});
+
+describe('getFacility()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getFacility('fakeId');
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.get.mockReturnValue(Promise.reject());
+    await expect(api.getFacility('fakeId')).rejects.toThrowError();
+  });
+});
+
+describe('createFacility()', () => {
+  it('returns the correct response', async () => {
+    Axios.post.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.createFacility();
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.post.mockReturnValue(Promise.reject());
+    await expect(api.createFacility()).rejects.toThrowError();
+  });
+});
+
+describe('updateFacility()', () => {
+  it('returns the correct response', async () => {
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.updateFacility('fakeId', { payload: 'payload' });
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.put.mockReturnValue(Promise.reject());
+    await expect(api.updateFacility('fakeId')).rejects.toThrowError();
   });
 });
 
@@ -137,5 +190,18 @@ describe('getCompaniesHouseDetails()', () => {
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
     await expect(api.getCompaniesHouseDetails()).rejects.toThrowError();
+  });
+});
+
+describe('getAddressesByPostcode()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getAddressesByPostcode();
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.get.mockReturnValue(Promise.reject());
+    await expect(api.getAddressesByPostcode()).rejects.toThrowError();
   });
 });

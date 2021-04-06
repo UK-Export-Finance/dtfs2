@@ -32,10 +32,20 @@ describe('GET Automatic Cover', () => {
     const mockResponse = new MockResponse();
     const mockCoverResponse = new MockCoverResponse();
 
+    mockCoverResponse.terms.push({
+      id: 'coverStart',
+      htmlText: '&lt;p&gt;x. this one shouldn&#39;t show as it&#39;s an old version&lt;/p&gt',
+      errMsg: 'Error message',
+    });
+
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await automaticCover(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/automatic-cover.njk', {
-      terms: expect.any(Array),
+      terms: [{
+        errMsg: 'Error message',
+        htmlText: "<p>x. this one shouldn't show as it's an old version</p>",
+        id: 'coverStart',
+      }],
       applicationId: '123',
     });
   });

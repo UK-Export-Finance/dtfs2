@@ -1,7 +1,7 @@
 import _isEmpty from 'lodash/isEmpty';
 import { decode } from 'html-entities';
 import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
 
 const getMandatoryCriteria = async (req, res) => {
   try {
@@ -41,7 +41,7 @@ const validateMandatoryCriteria = async (req, res) => {
       });
     }
 
-    if (mandatoryCriteria === 'true') {
+    if (isTrueSet(mandatoryCriteria)) {
       return res.redirect('name-application');
     }
 
