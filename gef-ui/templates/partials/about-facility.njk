@@ -74,7 +74,32 @@
               },
               hint: {
                 html: "<p class='govuk-!-margin-0'>This must be within one calendar month of the date you submit the notice to UKEF. It cannot be earlier than the submission date.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF.</span>"
-              }
+              },
+              items: [
+                {
+                  name: "coverStartDateDay",
+                  value: coverStartDateDay,
+                  attributes: {
+                    'data-cy': "coverStartDateDay"
+                  }
+                },
+                {
+                  classes: "govuk-input--width-2",
+                  name: "coverStartDateMonth",
+                  value: coverStartDateMonth,
+                  attributes: {
+                    'data-cy': "coverStartDateMonth"
+                  }
+                },
+                {
+                  classes: (yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+                  name: "coverStartDateYear",
+                  value: coverStartDateYear,
+                  attributes: {
+                    'data-cy': "coverStartDateYear"
+                  }
+                }
+              ]
             }) }}
           {% endset -%}
 
