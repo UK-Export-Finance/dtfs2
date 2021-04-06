@@ -13,6 +13,7 @@ const MOCK_TASKS = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
       {
         id: '2',
@@ -23,6 +24,7 @@ const MOCK_TASKS = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
     ],
   },

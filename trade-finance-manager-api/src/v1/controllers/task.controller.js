@@ -1,6 +1,19 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
+const now = require('../../now');
 
+const updateTaskHistory = ({
+  statusFrom,
+  statusTo,
+  assignedUserId,
+  updatedBy,
+}) => ({
+  statusFrom,
+  statusTo,
+  assignedUserId,
+  updatedBy,
+  timestamp: now(),
+});
 
 const taskCanBeAssigned = (allTasks, taskIdToUpdate) => {
   const parentGroup = allTasks.find((group) => {
@@ -29,10 +42,20 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const {
     id: taskIdToUpdate,
     assignedTo,
+    status: statusTo,
+    updatedBy,
   } = tfmTaskUpdate;
 
-  const originalTask = allTasks.find((group) =>
-    group.groupTasks.find((task) => task.id === taskIdToUpdate));
+  let originalTask;
+
+  allTasks.find((group) =>
+    group.groupTasks.find((task) => {
+      if (task.id === taskIdToUpdate) {
+        originalTask = task;
+      }
+      return task;
+    }));
+
 
   if (taskCanBeAssigned(allTasks, taskIdToUpdate)) {
     const { userId: assignedUserId } = assignedTo;
@@ -49,11 +72,21 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     }
 
     const updatedTask = {
-      ...tfmTaskUpdate,
+      id: taskIdToUpdate,
+      status: statusTo,
       assignedTo: {
         userFullName: newAssigneeFullName,
         userId: assignedUserId,
       },
+      history: [
+        ...originalTask.history,
+        updateTaskHistory({
+          statusFrom: originalTask.status,
+          statusTo,
+          assignedUserId,
+          updatedBy,
+        }),
+      ],
     };
 
     let originalTaskAssignedUserId;
@@ -118,4 +151,5 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
   return originalTask;
 };
+
 exports.updateTfmTask = updateTfmTask;
