@@ -42,7 +42,7 @@ describe('Facilities', () => {
 
     await facilities(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-      facilityType: 'Cash',
+      facilityType: 'cash',
       applicationId: '123',
       status: undefined,
     }));
@@ -57,7 +57,7 @@ describe('Facilities', () => {
     api.getFacility = () => Promise.resolve(mockFacilityResponse);
     await facilities(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-      facilityType: 'Cash',
+      facilityType: 'cash',
       applicationId: '123',
       hasBeenIssued: true,
       status: undefined,
