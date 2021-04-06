@@ -34,12 +34,67 @@ const dealUpdate = {
   },
 };
 
-describe('/v1/portal/deals', () => {
+describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
     await wipeDB.wipe(['tfm-deals']);
     await wipeDB.wipe(['tfm-facilities']);
+  });
+
+  describe('GET /v1/tfm/deals', () => {
+    it('returns only AIN deals', async () => {
+      const miaDeal = {
+        ...newDeal,
+        details: {
+          ...newDeal.details,
+          submissionType: 'Manual Inclusion Application',
+        },
+      };
+
+      const minDeal = {
+        ...newDeal,
+        details: {
+          ...newDeal.details,
+          submissionType: 'Manual Inclusion Notice',
+        },
+      };
+
+      const ainDeal = {
+        ...newDeal,
+        details: {
+          ...newDeal.details,
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
+
+      // create deals
+      const minDealResponse = await api.post({ deal: minDeal, user: mockUser }).to('/v1/portal/deals');
+      const miaDealResponse = await api.post({ deal: miaDeal, user: mockUser }).to('/v1/portal/deals');
+      const ainDeal1Response = await api.post({ deal: ainDeal, user: mockUser }).to('/v1/portal/deals');
+      const ainDeal2Response = await api.post({ deal: ainDeal, user: mockUser }).to('/v1/portal/deals');
+
+      expect(minDealResponse.status).toEqual(200);
+      expect(miaDealResponse.status).toEqual(200);
+      expect(ainDeal1Response.status).toEqual(200);
+      expect(ainDeal2Response.status).toEqual(200);
+
+      // submit deals
+      const minDealResponseSubmitResponse = await api.put({}).to(`/v1/tfm/deals/${minDealResponse.body._id}/submit`);
+      const miaDealResponseSubmitResponse = await api.put({}).to(`/v1/tfm/deals/${miaDealResponse.body._id}/submit`);
+      const ainDeal1ResponseSubmitResponse = await api.put({}).to(`/v1/tfm/deals/${ainDeal1Response.body._id}/submit`);
+      const ainDeal2ResponseSubmitResponse = await api.put({}).to(`/v1/tfm/deals/${ainDeal2Response.body._id}/submit`);
+
+      const { status, body } = await api.get('/v1/tfm/deals');
+
+      expect(status).toEqual(200);
+      const totalAinDeals = 2;
+      expect(body.deals.length).toEqual(totalAinDeals);
+
+      // check they're AIN deals
+      expect(body.deals[0].dealSnapshot.details.submissionType).toEqual('Automatic Inclusion Notice');
+      expect(body.deals[1].dealSnapshot.details.submissionType).toEqual('Automatic Inclusion Notice');
+    });
   });
 
   describe('GET /v1/tfm/deal/:id', () => {

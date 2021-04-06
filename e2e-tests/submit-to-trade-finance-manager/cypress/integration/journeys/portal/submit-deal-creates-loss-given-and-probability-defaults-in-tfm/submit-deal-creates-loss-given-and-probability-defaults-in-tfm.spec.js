@@ -12,7 +12,6 @@ const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') 
 context('Portal to TFM deal submission', () => {
   let deal;
   let dealId;
-  const dealFacilities = [];
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err) => {
@@ -31,13 +30,11 @@ context('Portal to TFM deal submission', () => {
 
         const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN);
       });
   });
 
-  it('Portal deal is submitted to UKEF, `Good` credit rating is added to the deal in TFM', () => {
+  it('Portal deal is submitted to UKEF - deal `loss given default` defaults to `50%`, `probability of default` defaults to `Less than 14.1%`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -72,22 +69,25 @@ context('Portal to TFM deal submission', () => {
 
     cy.forceVisit(tfmRootUrl);
 
-    tfmPages.landingPage.email().type('UNDERWRITING_SUPPORT_1');
+    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/underwriting/pricing-and-risk`);
 
-    // assert elements/value in `pricing and risk` page
-    tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().should('exist');
 
-    tfmPages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acceptable (B+)');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
+      expect(text.trim()).to.eq('50%');
     });
 
-    tfmPages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('be.visible');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().should('exist');
+
+    tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
+      expect(text.trim()).to.eq('Less than 14.1%');
+    });
+
   });
 });

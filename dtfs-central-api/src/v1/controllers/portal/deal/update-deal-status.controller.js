@@ -9,7 +9,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateDeal = async (dealId, status, existingDeal) => {
+const updateDealStatus = async (dealId, status, existingDeal) => {
   const collection = await db.getCollection('deals');
 
   console.log(`Updating Portal deal status to ${status}`);
@@ -35,7 +35,7 @@ const updateDeal = async (dealId, status, existingDeal) => {
 
   return findAndUpdateResponse.value;
 };
-exports.updateDeal = updateDeal;
+exports.updateDealStatus = updateDealStatus;
 
 exports.updateDealStatusPut = async (req, res) => {
   const dealId = req.params.id;
@@ -44,7 +44,7 @@ exports.updateDealStatusPut = async (req, res) => {
 
   await findOneDeal(dealId, async (existingDeal) => {
     if (existingDeal) {
-      const updatedDeal = await updateDeal(
+      const updatedDeal = await updateDealStatus(
         dealId,
         status,
         existingDeal,

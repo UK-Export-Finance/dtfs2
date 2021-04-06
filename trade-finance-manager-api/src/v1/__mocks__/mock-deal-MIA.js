@@ -1,5 +1,5 @@
-const MOCK_DEAL_NO_COMPANIES_HOUSE = {
-  _id: 'NO_COMPANIES_HOUSE_b',
+const MOCK_DEAL = {
+  _id: '2234567890',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
@@ -17,8 +17,9 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Automatic Inclusion Notice',
+    submissionType: 'Manual Inclusion Application',
     submissionDate: '1606900616651',
+    submissionCount: 1,
     owningBank: {
       id: '123',
       name: 'Barclays Bank',
@@ -69,7 +70,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
     'supplier-address-line-3': 'test',
     'supplier-address-postcode': 'test',
     'supplier-address-town': 'test',
-    'supplier-companies-house-registration-number': '',
+    'supplier-companies-house-registration-number': '12345678',
     'supplier-correspondence-address-country': {
       code: 'GBR',
       name: 'United Kingdom',
@@ -167,6 +168,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
       {
         _id: '12345678',
         facilityType: 'bond',
+        createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
         facilityStage: 'Unissued',
@@ -233,4 +235,4 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
   },
 };
 
-module.exports = MOCK_DEAL_NO_COMPANIES_HOUSE;
+module.exports = MOCK_DEAL;

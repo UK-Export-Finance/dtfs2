@@ -86,7 +86,6 @@ const createAcbsRecord = async (deal, bank) => {
       bank,
     },
   }).catch((err) => err);
-
   return response;
 };
 

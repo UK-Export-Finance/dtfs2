@@ -50,7 +50,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM', () => {
+  it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -200,5 +200,14 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.contain('month');
     });
 
+    //---------------------------------------------------------------
+    // portal loan status should be updated to `Acknowledged by UKEF``
+    //---------------------------------------------------------------
+    cy.login(MAKER_LOGIN);
+    portalPages.contract.visit(deal);
+
+    loanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
+    });
   });
 });

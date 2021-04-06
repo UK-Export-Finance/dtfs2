@@ -39,6 +39,8 @@ const dealQuery = gql`
         exporterCreditRating
         supplyContractValueInGBP
         stage
+        lossGivenDefault
+        probabilityOfDefault
       }
       dealSnapshot {
         _id,

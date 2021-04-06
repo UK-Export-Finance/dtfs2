@@ -1,8 +1,11 @@
 const pricingAndRiskPage = {
-  creditRatingNotAddedTag: () => cy.get('[data-cy="credit-rating-table-rating-not-set"]'),
   addRatingLink: () => cy.get('[data-cy="add-credit-rating-link"]'),
-  creditRatingTableRatingValue: () => cy.get('[data-cy="credit-rating-table-rating-value"]'),
-  creditRatingTableChangeLink: () => cy.get('[data-cy="credit-rating-table-change-link"]'),
+  exporterTableCreditRatingNotAddedTag: () => cy.get('[data-cy="exporter-table-credit-rating-not-added"]'),
+  exporterTableRatingValue: () => cy.get('[data-cy="exporter-table-credit-rating-value"]'),
+  exporterTableChangeCreditRatingLink: () => cy.get('[data-cy="exporter-table-change-credit-rating-link"]'),
+  exporterTableLossGivenDefault: () => cy.get('[data-cy="exporter-table-loss-given-default-value"]'),
+  exporterTableProbabilityOfDefault: () => cy.get('[data-cy="exporter-table-probability-of-default-value"]'),
+
 
   facilityTable: (facilityId) => {
     const table = cy.get(`[data-cy="facility-${facilityId}-pricing-risk-table"]`);
