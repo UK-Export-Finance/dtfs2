@@ -51,7 +51,7 @@ const facilityItems = (facilityUrl, type) => [
   {
     label: 'Name',
     id: 'name',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
   },
   {
     label: 'Stage',
@@ -62,13 +62,13 @@ const facilityItems = (facilityUrl, type) => [
   {
     label: 'Cover start date',
     id: 'coverStartDate',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
   },
   {
     label: 'Cover end date',
     id: 'coverEndDate',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
   },
   {
