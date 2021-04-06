@@ -4,7 +4,7 @@ const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
 const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
-const { addDealStage } = require('./deal.add-deal-stage');
+const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
@@ -31,7 +31,7 @@ const submitDeal = async (dealId) => {
 
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
 
-    const updatedDealWithTfmDealStage = await addDealStage(updatedDealWithDealCurrencyConversions);
+    const updatedDealWithTfmDealStage = await addDealStageAndHistory(updatedDealWithDealCurrencyConversions);
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDealStage);
 

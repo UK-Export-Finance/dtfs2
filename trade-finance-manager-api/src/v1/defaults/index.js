@@ -14,7 +14,6 @@ const TASKS = {
             userId: CONSTANTS.TASKS.UNASSIGNED,
             userFullName: CONSTANTS.TASKS.UNASSIGNED,
           },
-          history: [],
         },
         {
           id: '2',
@@ -25,11 +24,14 @@ const TASKS = {
             userId: CONSTANTS.TASKS.UNASSIGNED,
             userFullName: CONSTANTS.TASKS.UNASSIGNED,
           },
-          history: [],
         },
       ],
     },
   ],
+};
+
+const HISTORY = {
+  tasks: [],
 };
 
 const CREDIT_RATING = {
@@ -44,6 +46,7 @@ const PROBABILITY_OF_DEFAULT = CONSTANTS.DEALS.PROBABILITY_OF_DEFAULT.LESS_THAN_
 
 module.exports = {
   TASKS,
+  HISTORY,
   CREDIT_RATING,
   FACILITY_RISK_PROFILE,
   LOSS_GIVEN_DEFAULT,

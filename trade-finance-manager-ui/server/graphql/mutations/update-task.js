@@ -8,13 +8,6 @@ const updateTaskMutation = gql`
         userId
       }
       status
-      history {
-        statusFrom
-        statusTo
-        assignedUserId
-        updatedBy
-        timestamp
-      }
     }
   }
 `;

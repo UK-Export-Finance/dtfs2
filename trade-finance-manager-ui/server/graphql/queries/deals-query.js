@@ -10,6 +10,11 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
       tfm {
         product
         stage
+        history {
+          tasks {
+            timestamp
+          }
+        }
       }
       dealSnapshot{
         _id
