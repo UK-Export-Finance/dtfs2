@@ -284,6 +284,15 @@ describe('/v1/deals', () => {
       });
     });
 
+    it('adds empty TFM history to deal', async () => {
+      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+      expect(status).toEqual(200);
+      expect(body.tfm.history).toEqual({
+        tasks: [],
+      });
+    });
+
     describe('on second deal submission', () => {
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
         // check status before calling submit endpoint

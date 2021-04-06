@@ -2,7 +2,7 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const now = require('../../now');
 
-const updateTaskHistory = ({
+const updateHistory = ({
   statusFrom,
   statusTo,
   assignedUserId,
@@ -78,15 +78,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
         userFullName: newAssigneeFullName,
         userId: assignedUserId,
       },
-      history: [
-        ...originalTask.history,
-        updateTaskHistory({
-          statusFrom: originalTask.status,
-          statusTo,
-          assignedUserId,
-          updatedBy,
-        }),
-      ],
     };
 
     let originalTaskAssignedUserId;
@@ -112,14 +103,27 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       return taskGroup;
     });
 
-    const tasksUpdate = {
+    const tfmHistoryUpdate = {
+      tasks: [
+        ...deal.tfm.history.tasks,
+        updateHistory({
+          statusFrom: originalTask.status,
+          statusTo,
+          assignedUserId,
+          updatedBy,
+        }),
+      ],
+    };
+
+    const tfmDealUpdate = {
       tfm: {
+        history: tfmHistoryUpdate,
         tasks: modifiedTasks,
       },
     };
 
     // update tasks in deal
-    await api.updateDeal(dealId, tasksUpdate);
+    await api.updateDeal(dealId, tfmDealUpdate);
 
     if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
       // update original assignee's tasks

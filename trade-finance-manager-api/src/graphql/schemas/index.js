@@ -193,14 +193,6 @@ type TFMTaskAssignedTo {
   userFullName: String
 }
 
-type TFMTaskHistory {
-  statusFrom: String
-  statusTo: String
-  assignedUserId: String
-  updatedBy: String
-  timestamp: String
-}
-
 type TFMTask {
   id: String
   title: String
@@ -215,6 +207,18 @@ type TFMTaskGroup {
   groupTasks: [TFMTask]
 }
 
+type TFMTaskHistory {
+  statusFrom: String
+  statusTo: String
+  assignedUserId: String
+  updatedBy: String
+  timestamp: String
+}
+
+type TFMDealHistory {
+  tasks: [TFMTaskHistory]
+}
+
 type TFMDealData {
   parties: TFMParties
   product: String
@@ -224,6 +228,7 @@ type TFMDealData {
   stage: String
   lossGivenDefault: String
   probabilityOfDefault: String
+  history: TFMDealHistory
 }
 
 type PremiumScheduleData {
