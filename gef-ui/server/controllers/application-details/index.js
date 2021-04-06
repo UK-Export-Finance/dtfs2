@@ -13,6 +13,7 @@ const applicationDetails = async (req, res) => {
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
+    const facilityUrl = `/gef/application-details/${applicationId}/facilities`;
     const exporterStatus = status[exporter.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
     const facilitiesStatus = status[facilities.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
     const canSubmit = exporterStatus.code === PROGRESS.COMPLETED
@@ -30,7 +31,8 @@ const applicationDetails = async (req, res) => {
         status: facilitiesStatus,
         data: facilities.items.map((item) => ({
           heading: FACILITY_TYPE[item.details.type],
-          rows: mapSummaryList(item, facilityItems(exporterUrl, item.details.type)),
+          // eslint-disable-next-line no-underscore-dangle
+          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details.type)),
         })),
       },
       submit: canSubmit,

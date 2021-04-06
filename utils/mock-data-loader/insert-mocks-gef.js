@@ -50,7 +50,6 @@ const insertMocks = async () => {
       await api.updateFacilities(facilty.details, subitem, token);
     });
   });
-
 };
 
 module.exports = insertMocks;
