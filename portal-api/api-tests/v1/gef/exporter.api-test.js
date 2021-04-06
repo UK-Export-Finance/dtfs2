@@ -222,11 +222,11 @@ describe(baseUrl, () => {
       const item = await as(aMaker).post(applicationAllItems[3]).to(applicationBaseUrl);
       const { status, body } = await as(aMaker).put({ ...updated, smeType: 'TEST' }).to(`${baseUrl}/${item.body.exporterId}`);
       expect(status).toEqual(422);
-      expect(body).toEqual({
+      expect(body).toEqual([{
         errCode: ERROR.ENUM_ERROR,
         errMsg: 'Unrecognised enum',
-        enumField: ['smeType'],
-      });
+        errRef: 'smeType',
+      }]);
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
