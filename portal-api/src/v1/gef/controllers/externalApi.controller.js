@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { companiesHouseError } = require('./validation/external');
 require('dotenv').config();
+const { ERROR } = require('../enums');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
@@ -36,17 +37,29 @@ exports.getByRegistrationNumber = async (req, res) => {
   try {
     const companyNumber = req.params.number;
     if (!companyNumber || companyNumber === '') {
-      res.status(422).send();
+      return res.status(422).send([{
+        errCode: ERROR.MANDATORY_FIELD,
+        errRef: 'regNumber',
+        errMsg: 'Enter a Companies House registration number.',
+      }]);
     }
     const response = await axios({
       method: 'get',
       url: `${referenceProxyUrl}/companies-house/${companyNumber}`,
     });
 
+    if (response.data.type === 'oversea-company') {
+      return res.status(422).send([{
+        errCode: ERROR.OVERSEAS_COMPANY,
+        errRef: 'regNumber',
+        errMsg: 'UKEF can only process applications from companies based in the UK.',
+      }]);
+    }
+
     if (req.query.exporterId) {
       const industries = await findSicCodes(response.data.sic_codes);
       let selectedIndustry = null;
-      if (industries.length === 1) {
+      if (industries && industries.length === 1) {
         // eslint-disable-next-line prefer-destructuring
         selectedIndustry = industries[0];
       }
@@ -72,14 +85,14 @@ exports.getByRegistrationNumber = async (req, res) => {
         }, { returnOriginal: false },
       );
     }
-    res.status(200).send(response.data);
+    return res.status(200).send(response.data);
   } catch (err) {
     const response = companiesHouseError(err);
     let { status } = err.response;
-    if (response.errCode === 'company-profile-not-found') {
+    if (response[0].errCode === 'company-profile-not-found') {
       status = 422;
     }
-    res.status(status).send(response);
+    return res.status(status).send(response);
   }
 };
 
@@ -103,13 +116,13 @@ exports.getAddressesByPostcode = async (req, res) => {
     });
     res.status(200).send(addresses);
   } catch (err) {
-    const response = {
+    const response = [{
       errCode: 'ERROR',
       errRef: 'postcode',
       errMsg: err.response.data.error.message,
-    };
+    }];
     let { status } = err.response;
-    if (response.errMsg) {
+    if (status >= 400 && status < 500) {
       status = 422;
     }
     res.status(status).send(response);

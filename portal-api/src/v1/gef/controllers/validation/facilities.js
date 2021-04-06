@@ -68,7 +68,7 @@ const facilitiesOverallStatus = (facilities) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
-  if (uniqueStatus.length > 1) {
+  if (uniqueStatus.length > 0) {
     result = STATUS.IN_PROGRESS;
   }
   if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === STATUS.COMPLETED) {
@@ -86,7 +86,7 @@ const facilitiesCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push('type');
+      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'type' });
       break;
   }
   switch (doc.paymentType) {
@@ -96,7 +96,7 @@ const facilitiesCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push('paymentType');
+      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'paymentType' });
       break;
   }
   return enumErrors.length === 0 ? null : enumErrors;

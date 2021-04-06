@@ -12,14 +12,20 @@ exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (req.body.type && req.body.applicationId) {
     if (enumValidationErr) {
-      res.status(422).send({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', enumField: enumValidationErr });
+      res.status(422).send(enumValidationErr);
     } else {
       const collection = await db.getCollection(collectionName);
       const doc = await collection.insertOne(new Facility(req.body));
-      res.status(201).json(doc.ops[0]);
+      const value = doc.ops[0];
+      const response = {
+        status: facilitiesStatus(value),
+        details: value,
+        validation: facilitiesValidation(value),
+      };
+      res.status(201).json(response);
     }
   } else {
-    res.status(422).send({ errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' });
+    res.status(422).send([{ errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
   }
 };
 
@@ -62,7 +68,7 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (enumValidationErr) {
-    res.status(422).send({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', enumField: enumValidationErr });
+    res.status(422).send(enumValidationErr);
   } else {
     const collection = await db.getCollection(collectionName);
     const update = new Facility(req.body);
