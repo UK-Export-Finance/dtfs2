@@ -23,6 +23,7 @@ const facilities = async (req, res) => {
   try {
     const { details } = await api.getFacility(facilityId);
     const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
+
     return res.render('partials/facilities.njk', {
       facilityType: facilityTypeString,
       hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
