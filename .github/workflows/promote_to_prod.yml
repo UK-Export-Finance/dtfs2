@@ -443,4 +443,64 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }}
+
+  acbs-functions:
+    name: Promote ACBS Functions
+    runs-on: ubuntu-latest
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    steps:
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ secrets.resource_group }}
+
+    - name: Log in to source container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registry_from }}
+        username: ${{ env.registry_from_username }}
+        password: ${{ env.registry_from_password }}
+
+    - name: Log in to destination container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
+
+    - name: Promote container image
+      run: |
+        docker pull ${{ env.registry_from }}/azure-function-acbs:${{ env.tag_from }}
+        docker tag ${{ env.registry_from }}/azure-function-acbs:${{ env.tag_from }} ${{ env.registry_to }}/azure-function-acbs:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/azure-function-acbs:${{ env.tag_to }}
+
+    - name: Create slot
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-azure-function-acbs
+
+    - name: Swap slot
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }} --action swap
+          
+    - name: Delete slot
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }}
+
     
