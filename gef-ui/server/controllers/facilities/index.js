@@ -8,7 +8,7 @@ const facilities = async (req, res) => {
   const { status } = query;
   let { facilityType } = query;
 
-  facilityType = facilityType || 'CASH';
+  facilityType = facilityType || FACILITY_TYPE.CASH;
   const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
 
 
@@ -41,7 +41,7 @@ const createFacility = async (req, res) => {
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
   let facility;
-  facilityType = facilityType || 'CASH';
+  facilityType = facilityType || FACILITY_TYPE.CASH;
   const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
 
   try {

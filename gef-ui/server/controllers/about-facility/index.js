@@ -8,27 +8,44 @@ const aboutFacility = async (req, res) => {
 
   try {
     const { details } = await api.getFacility(facilityId);
-    const { coverStartDate } = details;
     const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
     const hasCoverStartDate = JSON.stringify(details.hasCoverStartDate);
-    const coverStartDate = moment(details.coverStartDate);
-    const coverEndDate = moment(details.coverEndDate);
+    const coverStartDate = details.coverStartDate ? moment(details.coverStartDate) : null;
+    const coverEndDate = details.coverEndDate ? moment(details.coverEndDate) : null;
 
     return res.render('partials/about-facility.njk', {
       facilityType: facilityTypeString,
       hasCoverStartDate: hasCoverStartDate !== 'null' ? hasCoverStartDate : null,
-      coverStartDateDay: coverStartDate.format('D'),
-      coverStartDateMonth: coverStartDate.format('M'),
-      coverStartDateYear: coverStartDate.format('Y'),
-      coverEndDateDay: coverEndDate.format('D'),
-      coverEndDateMonth: coverEndDate.format('M'),
-      coverEndDateYear: coverEndDate.format('Y'),
+      coverStartDateDay: coverStartDate ? coverStartDate.format('D') : null,
+      coverStartDateMonth: coverStartDate ? coverStartDate.format('M') : null,
+      coverStartDateYear: coverStartDate ? coverStartDate.format('Y') : null,
+      coverEndDateDay: coverEndDate ? coverEndDate.format('D') : null,
+      coverEndDateMonth: coverEndDate ? coverEndDate.format('M') : null,
+      coverEndDateYear: coverEndDate ? coverEndDate.format('Y') : null,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
 };
 
+const validateAboutFacility = async (req, res) => {
+  const { body, query } = req;
+  const { facilityType } = body;
+  const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
+  const { saveAndReturn } = query;
+  const aboutFacilityErrors = [];
+
+  if (!saveAndReturn) {
+    if (!body.facilityName) {
+      aboutFacilityErrors.push({
+        errRef: 'facilityName',
+        errMsg: `Enter a name for this ${facilityTypeString} facility`,
+      });
+    }
+  }
+};
+
 export {
   aboutFacility,
+  validateAboutFacility,
 };
