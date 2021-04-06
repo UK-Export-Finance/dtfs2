@@ -16,6 +16,4 @@ const aboutFacility = async (req, res) => {
   }
 };
 
-export {
-  aboutFacility,
-};
+export default aboutFacility;
