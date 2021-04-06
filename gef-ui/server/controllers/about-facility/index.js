@@ -19,6 +19,7 @@ const aboutFacility = async (req, res) => {
       facilityType: FACILITY_TYPE[details.type],
       facilityName: details.name,
       hasBeenIssued: details.hasBeenIssued,
+      monthsOfCover: details.monthsOfCover,
       hasCoverStartDate: hasCoverStartDate !== 'null' ? hasCoverStartDate : null,
       coverStartDateDay: coverStartDate ? coverStartDate.format('D') : null,
       coverStartDateMonth: coverStartDate ? coverStartDate.format('M') : null,
@@ -102,6 +103,7 @@ const validateAboutFacility = async (req, res) => {
       facilityName: body.facilityName,
       hasCoverStartDate: body.hasCoverStartDate,
       hasBeenIssued: body.hasBeenIssued,
+      monthsOfCover: body.monthsOfCover,
       coverStartDateDay,
       coverStartDateMonth,
       coverStartDateYear,
@@ -120,6 +122,7 @@ const validateAboutFacility = async (req, res) => {
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       hasCoverStartDate: isTrueSet(body.hasCoverStartDate),
+      monthsOfCover: body.monthsOfCover,
       coverStartDate,
       coverEndDate,
     });

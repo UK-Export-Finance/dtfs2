@@ -74,7 +74,7 @@ const facilityItems = (facilityUrl, type) => [
   {
     label: 'Months the UKEF guarantee will be in place for',
     id: 'monthsOfCover',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
     suffix: ' months',
   },
   {

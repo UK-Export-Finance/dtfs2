@@ -216,7 +216,28 @@
             }) }}
           {% else %}
             {# Elements to Show if Unissued #}
-            hello
+            {{ govukInput({
+              label: {
+                text: "How many months will you need UKEF cover for?",
+                classes: "govuk-label--m"
+              },
+              hint: {
+                text: "Round up to the nearest number of months"
+              },
+              id: "monthsOfCover",
+              name: "monthsOfCover",
+              value: monthsOfCover,
+              classes: "govuk-input--width-2",
+              attributes: {
+                'data-cy': 'months-of-cover'
+              },
+              errorMessage: errors and errors.fieldErrors.monthsOfCover and {
+                text: errors.fieldErrors.monthsOfCover.text,
+                attributes: {
+                  'data-cy': 'months-of-cover-error'
+                }
+              }
+            }) }}
           {% endif %}
 
           <div class="govuk-button-group">
