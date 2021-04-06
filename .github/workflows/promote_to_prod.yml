@@ -487,13 +487,13 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment slot create --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-azure-function-acbs
+          az functionapp deployment slot create --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-azure-function-acbs
 
     - name: Swap slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }} --action swap
+          az functionapp deployment slot swap --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
@@ -501,6 +501,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }}
+          az functionapp deployment slot delete --name tfs-${{ env.environment }}-azure-function-acbs --slot ${{ github.sha }}
 
     
