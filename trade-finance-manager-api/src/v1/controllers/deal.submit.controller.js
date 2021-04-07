@@ -54,6 +54,11 @@ const submitDeal = async (dealId) => {
   if (dealHasBeenResubmit) {
     const dealWithUpdatedFacilities = await updatedIssuedFacilities(submittedDeal);
 
+    await api.updatePortalDealStatus(
+      dealId,
+      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+    );
+
     return api.updateDeal(dealId, dealWithUpdatedFacilities);
   }
 
