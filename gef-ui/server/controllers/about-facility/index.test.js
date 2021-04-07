@@ -93,17 +93,20 @@ describe('Validate About Facility', () => {
   it('sets the correct date format using single day, month and year values', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockAboutFacilityResponse = new MockAboutFacilityResponse();
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body['cover-start-date-day'] = '03';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body['cover-start-date-day'] = '3';
     mockRequest.body['cover-start-date-month'] = '12';
     mockRequest.body['cover-start-date-year'] = '2022';
 
-    api.updateFacility = () => Promise.resolve(mockAboutFacilityResponse);
     await validateAboutFacility(mockRequest, mockResponse);
 
-    expect(updateFacilitySpy).toHaveBeenCalledWith({
-      coverStartDate: '123',
+    expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
+      coverEndDate: null,
+      coverStartDate: '2022-12-03T15:21:03.360Z',
+      hasCoverStartDate: null,
+      monthsOfCover: null,
+      name: undefined,
     });
   });
 });

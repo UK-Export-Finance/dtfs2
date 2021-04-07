@@ -134,7 +134,7 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
-    console.log('MONKEY');
+    console.log('MONKEY', coverStartDate);
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       hasCoverStartDate: isTrueSet(body.hasCoverStartDate),
