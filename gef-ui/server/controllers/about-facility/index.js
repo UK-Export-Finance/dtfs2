@@ -14,12 +14,13 @@ const aboutFacility = async (req, res) => {
     const hasCoverStartDate = JSON.stringify(details.hasCoverStartDate);
     const coverStartDate = details.coverStartDate ? moment(details.coverStartDate) : null;
     const coverEndDate = details.coverEndDate ? moment(details.coverEndDate) : null;
+    const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
     return res.render('partials/about-facility.njk', {
       facilityType: FACILITY_TYPE[details.type],
       facilityName: details.name,
       hasBeenIssued: details.hasBeenIssued,
-      monthsOfCover: details.monthsOfCover,
+      monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,
       hasCoverStartDate: hasCoverStartDate !== 'null' ? hasCoverStartDate : null,
       coverStartDateDay: coverStartDate ? coverStartDate.format('D') : null,
       coverStartDateMonth: coverStartDate ? coverStartDate.format('M') : null,
@@ -79,6 +80,12 @@ const validateAboutFacility = async (req, res) => {
         errMsg: 'Enter a cover end date',
       });
     }
+    if (!body.monthsOfCover) {
+      aboutFacilityErrors.push({
+        errRef: 'monthsOfCover',
+        errMsg: 'Enter the number of months you\'ll need UKEF cover for',
+      });
+    }
   }
 
   if (coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
@@ -95,6 +102,13 @@ const validateAboutFacility = async (req, res) => {
     coverEndDate.set('month', Number(coverEndDateMonth) - 1);
     coverEndDate.set('year', Number(coverEndDateYear));
     coverEndDate.format();
+  }
+
+  if (body.monthsOfCover && !/^[0-9]*$/.test(body.monthsOfCover)) {
+    aboutFacilityErrors.push({
+      errRef: 'monthsOfCover',
+      errMsg: 'You can only enter numbers',
+    });
   }
 
   if (aboutFacilityErrors.length > 0) {
@@ -122,7 +136,7 @@ const validateAboutFacility = async (req, res) => {
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       hasCoverStartDate: isTrueSet(body.hasCoverStartDate),
-      monthsOfCover: body.monthsOfCover,
+      monthsOfCover: body.monthsOfCover || null,
       coverStartDate,
       coverEndDate,
     });
