@@ -25,7 +25,7 @@ const addDealStageAndHistory = async (deal) => {
   let dealUpdate = {
     tfm: {
       ...tfm,
-      history: DEFAULTS.DEALS.HISTORY,
+      history: DEFAULTS.HISTORY,
     },
   };
 
