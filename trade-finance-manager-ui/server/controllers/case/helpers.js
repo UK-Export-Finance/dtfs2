@@ -119,10 +119,13 @@ const mapTasks = (tasks) => {
   // all other tasks cannot be accessed in the UI.
 
   const allTaskGroups = tasks.map((g) => {
-    const group = {
-      ...g,
-      taskIdInProgress: groupTaskInProgress(g.groupTasks).id,
-    };
+    const group = g;
+
+    const taskInProgress = groupTaskInProgress(g.groupTasks);
+
+    if (taskInProgress) {
+      group.taskIdInProgress = taskInProgress.id;
+    }
 
     return group;
   });
@@ -130,7 +133,9 @@ const mapTasks = (tasks) => {
   const mappedTasks = allTaskGroups.map((g) => {
     const group = g;
 
+    // task is in progress so only that task can be edited
     if (group.taskIdInProgress) {
+
       return {
         ...group,
         groupTasks: group.groupTasks.map((task) => {
@@ -146,7 +151,26 @@ const mapTasks = (tasks) => {
       };
     }
 
-    return group;
+    // TODO
+    // if no tasks in progress but a task is completed,
+    // incrementally allow edits.
+
+    // no tasks in progress
+    // only the 1st task can be edited
+
+    return {
+      ...group,
+      groupTasks: group.groupTasks.map((task) => {
+        if (task.id === '1') {
+          return {
+            ...task,
+            canEdit: true,
+          };
+        }
+
+        return task;
+      }),
+    };
   });
 
   return mappedTasks;
