@@ -99,14 +99,33 @@ describe('Validate About Facility', () => {
     mockRequest.body['cover-start-date-month'] = '12';
     mockRequest.body['cover-start-date-year'] = '2022';
 
+    mockRequest.body['cover-end-date-day'] = '01';
+    mockRequest.body['cover-end-date-month'] = '02';
+    mockRequest.body['cover-end-date-year'] = '2022';
+
     await validateAboutFacility(mockRequest, mockResponse);
 
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      coverEndDate: null,
-      coverStartDate: '2022-12-03T15:21:03.360Z',
+      coverEndDate: 'February 1, 2022',
+      coverStartDate: 'December 3, 2022',
       hasCoverStartDate: null,
       monthsOfCover: null,
       name: undefined,
     });
+  });
+
+  it('shows error message if month of cover is not a number', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.monthsOfCover = 'ab';
+
+    await validateAboutFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+      }),
+    }));
   });
 });

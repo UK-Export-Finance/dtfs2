@@ -94,7 +94,6 @@ const validateAboutFacility = async (req, res) => {
     coverStartDate.set('date', Number(coverStartDateDay));
     coverStartDate.set('month', Number(coverStartDateMonth) - 1);
     coverStartDate.set('year', Number(coverStartDateYear));
-    coverStartDate.format();
   }
 
   if (coverEndDateDay && coverEndDateMonth && coverEndDateYear) {
@@ -102,7 +101,6 @@ const validateAboutFacility = async (req, res) => {
     coverEndDate.set('date', Number(coverEndDateDay));
     coverEndDate.set('month', Number(coverEndDateMonth) - 1);
     coverEndDate.set('year', Number(coverEndDateYear));
-    coverEndDate.format();
   }
 
   if (body.monthsOfCover && !/^[0-9]*$/.test(body.monthsOfCover)) {
@@ -134,13 +132,12 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
-    console.log('MONKEY', coverStartDate);
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       hasCoverStartDate: isTrueSet(body.hasCoverStartDate),
       monthsOfCover: body.monthsOfCover || null,
-      coverStartDate,
-      coverEndDate,
+      coverStartDate: coverStartDate ? coverStartDate.format('LL') : null,
+      coverEndDate: coverEndDate ? coverEndDate.format('LL') : null,
     });
 
     console.log('MONKEY 2');
