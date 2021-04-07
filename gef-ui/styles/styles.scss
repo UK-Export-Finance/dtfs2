@@ -16,20 +16,6 @@
   width: 30%;
 }
 
-.govuk-button-group {
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: baseline;
-
-  .govuk-button {
-    margin-right: 15px;
-  }
-
-  .govuk-link {
-    line-height: 38px;
-  }
-}
-
 .govuk-form-group {
   &.govuk-form-group--error {
     &.govuk-form-group {
