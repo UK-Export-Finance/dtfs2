@@ -11,6 +11,7 @@ const currencyExchangeRate = require('./controllers/currency-exchange-rate.contr
 const exposurePeriod = require('./controllers/exposure-period.controller');
 const companiesHouse = require('./controllers/companies-house.controller');
 const ordnanceSurvey = require('./controllers/ordnance-survey.controller');
+const eStore = require('./controllers/estore.controller');
 
 openRouter.route('/countries')
   .get(
@@ -85,6 +86,11 @@ openRouter.route('/companies-house/:companyRegNo')
 openRouter.route('/ordnance-survey/:postcode')
   .get(
     ordnanceSurvey.lookup,
+  );
+
+openRouter.route('/estore/')
+  .post(
+    eStore.createEstore,
   );
 
 module.exports = { openRouter };
