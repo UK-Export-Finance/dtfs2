@@ -55,7 +55,7 @@ const validateAboutFacility = async (req, res) => {
   let coverEndDate = null;
 
   if (!saveAndReturn) {
-    // Only validate facility name if hasBeenIssued is set to True
+    // Only validate facility name if hasBeenIssued is set to Yes
     if (isTrueSet(body.hasBeenIssued) && !body.facilityName) {
       aboutFacilityErrors.push({
         errRef: 'facilityName',
@@ -80,7 +80,8 @@ const validateAboutFacility = async (req, res) => {
         errMsg: 'Enter a cover end date',
       });
     }
-    if (!body.monthsOfCover) {
+    // Only validate months of cover if hasBeenIssued is set to No
+    if (!isTrueSet(body.hasBeenIssued) && !body.monthsOfCover) {
       aboutFacilityErrors.push({
         errRef: 'monthsOfCover',
         errMsg: 'Enter the number of months you\'ll need UKEF cover for',
