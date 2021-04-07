@@ -20,10 +20,11 @@ const aboutExporter = async (req, res) => {
     const { details } = await api.getExporter(exporterId);
     const industries = mappedIndustries(details.industries, JSON.stringify(details.selectedIndustry));
     const isFinanceIncreasing = JSON.stringify(details.isFinanceIncreasing);
+    const probabilityOfDefault = JSON.stringify(details.probabilityOfDefault);
 
     return res.render('partials/about-exporter.njk', {
       smeType: details.smeType,
-      probabilityOfDefault: details.probabilityOfDefault,
+      probabilityOfDefault: probabilityOfDefault !== 'null' ? probabilityOfDefault : null,
       isFinanceIncreasing: isFinanceIncreasing !== 'null' ? isFinanceIncreasing : null,
       selectedIndustry: details.selectedIndustry,
       applicationId,
@@ -39,7 +40,7 @@ const validateAboutExporter = async (req, res) => {
   const { body, params, query } = req;
   const { applicationId } = params;
   const aboutExporterErrors = [];
-  const { saveAndReturn } = query;
+  const { saveAndReturn, status } = query;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
@@ -47,7 +48,8 @@ const validateAboutExporter = async (req, res) => {
 
     // Don't validate form if user clicks on 'return to application` button
     if (!saveAndReturn) {
-      if (!body.selectedIndustry && (details.industries && details.industries.length > 0)) {
+      // Only validate industries if it contains more than 1 SIC code
+      if (!body.selectedIndustry && (details.industries && details.industries.length > 1)) {
         aboutExporterErrors.push({
           errRef: 'selectedIndustry',
           errMsg: 'Select most appropriate industry',
@@ -76,6 +78,13 @@ const validateAboutExporter = async (req, res) => {
       }
     }
 
+    if (body.probabilityOfDefault && !/^(0|[1-9][0-9]?|100)$/.test(body.probabilityOfDefault)) {
+      aboutExporterErrors.push({
+        errRef: 'probabilityOfDefault',
+        errMsg: 'You must enter a percentage between 0% to 100%',
+      });
+    }
+
     const industries = mappedIndustries(details.industries, (body.selectedIndustry || details.selectedIndustry));
 
     if (aboutExporterErrors.length > 0) {
@@ -87,6 +96,7 @@ const validateAboutExporter = async (req, res) => {
         selectedIndustry: details.selectedIndustry,
         applicationId,
         industries,
+        status,
       });
     }
 
