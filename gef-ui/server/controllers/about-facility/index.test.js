@@ -1,4 +1,4 @@
-import { aboutFacility } from './index';
+import aboutFacility from './index';
 import * as api from '../../services/api';
 
 const MockResponse = () => {
@@ -38,7 +38,7 @@ describe('GET Facility', () => {
     api.getFacility = () => Promise.resolve(mockAboutFacilityResponse);
     await aboutFacility(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-      facilityType: 'Cash',
+      facilityType: 'CASH',
     }));
   });
 

@@ -188,7 +188,7 @@ context('Portal to TFM deal submission', () => {
 
 
     //---------------------------------------------------------------
-    // portal bond status should be updated to `Acknowledged by UKEF``
+    // portal bond status should be updated to `Acknowledged by UKEF`
     //---------------------------------------------------------------
     cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);
@@ -196,6 +196,18 @@ context('Portal to TFM deal submission', () => {
     bondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
+
+    //---------------------------------------------------------------
+    // portal deal status should be updated to `Acknowledged by UKEF`
+    //---------------------------------------------------------------
+    portalPages.contract.previousStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Submitted');
+    });
+
+    portalPages.contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
+    });
+
   });
 });
 

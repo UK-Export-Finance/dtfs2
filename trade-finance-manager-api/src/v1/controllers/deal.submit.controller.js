@@ -8,6 +8,7 @@ const { addDealStage } = require('./deal.add-deal-stage');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
+const { createEstoreFolders } = require('./estore.controller');
 
 const submitDeal = async (dealId) => {
   const deal = await findOnePortalDeal(dealId);
@@ -34,22 +35,29 @@ const submitDeal = async (dealId) => {
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDealStage);
 
+    const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
+
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       await api.updatePortalDealStatus(
         dealId,
         CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
       );
 
-      const updatedDealWithTasks = await createDealTasks(updatedDealWithUpdatedFacilities);
+      const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       return api.updateDeal(dealId, updatedDealWithTasks);
     }
 
-    return api.updateDeal(dealId, updatedDealWithUpdatedFacilities);
+    return api.updateDeal(dealId, updatedDealWithCreateEstore);
   }
 
   if (dealHasBeenResubmit) {
     const dealWithUpdatedFacilities = await updatedIssuedFacilities(submittedDeal);
+
+    await api.updatePortalDealStatus(
+      dealId,
+      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+    );
 
     return api.updateDeal(dealId, dealWithUpdatedFacilities);
   }

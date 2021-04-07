@@ -18,6 +18,7 @@ const MOCK_DEAL = {
     },
     submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
+    submissionCount: 1,
     owningBank: {
       id: '123',
       name: 'Barclays Bank',
