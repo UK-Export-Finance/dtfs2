@@ -23,5 +23,6 @@ describe('Routes', () => {
 
   it('Sets up all routes', () => {
     expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId/about-facility', validateToken, expect.any(Function));
   });
 });
