@@ -109,6 +109,10 @@ class Facility {
         this.paymentType = checkPaymentType(req.paymentType);
       }
 
+      if (req.hasCoverStartDate === false) {
+        this.coverStartDate = null;
+      }
+
       this.updatedAt = Date.now();
     }
   }
