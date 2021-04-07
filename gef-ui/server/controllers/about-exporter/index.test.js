@@ -102,13 +102,19 @@ describe('Validate About Exporter', () => {
     }));
   });
 
-  it('returns Selected Industry validation error', async () => {
+  it('returns Selected Industry validation error only if there are more than 1 industries', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockAboutExporterResponse = new MockAboutExporterResponse();
 
     mockRequest.body.selectedIndustry = '';
     mockAboutExporterResponse.details.industries = [{
+      name: 'name',
+      class: {
+        name: 'class name',
+      },
+    },
+    {
       name: 'name',
       class: {
         name: 'class name',
@@ -123,11 +129,89 @@ describe('Validate About Exporter', () => {
       errors: expect.objectContaining({
         errorSummary: expect.arrayContaining([{ href: '#selectedIndustry', text: expect.any(String) }]),
       }),
+      selectedIndustry: null,
       industries: expect.any(Array),
       smeType: undefined,
       probabilityOfDefault: undefined,
       isFinanceIncreasing: undefined,
       applicationId: '123',
+    }));
+
+    mockAboutExporterResponse.details.industries = [{
+      name: 'name',
+      class: {
+        name: 'class name',
+      },
+    }];
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.not.arrayContaining([{ href: '#selectedIndustry', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
+  it('returns percentage error if non percentage value is entered', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockAboutExporterResponse = new MockAboutExporterResponse();
+
+    mockRequest.body.probabilityOfDefault = '123';
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
+      }),
+      industries: null,
+      smeType: undefined,
+      probabilityOfDefault: '123',
+      isFinanceIncreasing: undefined,
+      selectedIndustry: null,
+      applicationId: '123',
+    }));
+
+    mockRequest.body.probabilityOfDefault = -10;
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
+      }),
+    }));
+
+    mockRequest.body.probabilityOfDefault = 10.2;
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
+      }),
+    }));
+
+    mockRequest.body.probabilityOfDefault = 20;
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.not.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
+      }),
     }));
   });
 
