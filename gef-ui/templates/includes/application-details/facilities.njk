@@ -20,20 +20,6 @@
   </div>
 </div>
 
-{% if facilities.data.length > 0 %}
-  {% for item in facilities.data %}
-    <h3 class="govuk-heading-m" data-cy="facility-type-heading">
-      {{item.heading}} facility
-    </h3>
-    {{ govukSummaryList({
-      rows: item.rows,
-      attributes: {
-        'data-cy': 'facility-summary-list'
-      }
-    }) }}
-  {% endfor %}
-{% endif %}
-
 <div class="govuk-button-group">
   {{ govukButton({
     text: "Add a cash facility",
@@ -52,5 +38,19 @@
     }
   }) }}
 </div>
+
+{% if facilities.data.length > 0 %}
+  {% for item in facilities.data %}
+    <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+      {{item.heading}} facility
+    </h3>
+    {{ govukSummaryList({
+      rows: item.rows,
+      attributes: {
+        'data-cy': 'facility-summary-list'
+      }
+    }) }}
+  {% endfor %}
+{% endif %}
 
 <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--m govuk-!-margin-bottom-7 govuk-section-break--visible">
