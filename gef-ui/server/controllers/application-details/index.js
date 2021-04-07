@@ -34,7 +34,8 @@ const applicationDetails = async (req, res) => {
           heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
           // eslint-disable-next-line no-underscore-dangle
           rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details.type)),
-        })),
+          createdAt: item.details.createdAt,
+        })).sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
       },
       submit: canSubmit,
       bankInternalRefName,
