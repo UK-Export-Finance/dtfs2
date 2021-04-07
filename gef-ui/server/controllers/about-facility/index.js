@@ -134,6 +134,7 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
+    console.log('MONKEY');
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       hasCoverStartDate: isTrueSet(body.hasCoverStartDate),
@@ -142,9 +143,13 @@ const validateAboutFacility = async (req, res) => {
       coverEndDate,
     });
 
+    console.log('MONKEY 2');
+
     if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
+
+    console.log('MONKEY 3');
 
     return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/provided-facility`);
   } catch (err) {
