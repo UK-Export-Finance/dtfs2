@@ -38,7 +38,7 @@ class Facility {
       }
       this.name = null;
       this.startOnDayOfNotice = null;
-      this.hasCoverStartDate = null;
+      this.shouldCoverStartOnSubmission = null;
       this.coverStartDate = null;
       this.coverEndDate = null;
       this.monthsOfCover = null;
@@ -65,8 +65,8 @@ class Facility {
         this.startOnDayOfNotice = Boolean(req.startOnDayOfNotice);
       }
 
-      if (req.hasCoverStartDate != null) {
-        this.hasCoverStartDate = Boolean(req.hasCoverStartDate);
+      if (req.shouldCoverStartOnSubmission != null) {
+        this.shouldCoverStartOnSubmission = Boolean(req.shouldCoverStartOnSubmission);
       }
 
       if (req.coverStartDate != null) {
@@ -109,9 +109,9 @@ class Facility {
         this.paymentType = checkPaymentType(req.paymentType);
       }
 
-      // if (req.hasCoverStartDate === false) {
-      //   this.coverStartDate = null;
-      // }
+      if (req.shouldCoverStartOnSubmission === true) {
+        this.coverStartDate = null;
+      }
 
       this.updatedAt = Date.now();
     }
