@@ -3,19 +3,19 @@ const CONSTANTS = require('../../../constants');
 const getSmeType = (smeType) => {
   switch (smeType) {
     case CONSTANTS.DEAL.SME_TYPE.MICRO:
-      return '70';
+      return '40';
 
     case CONSTANTS.DEAL.SME_TYPE.SMALL:
-      return '2';
+      return '50';
 
     case CONSTANTS.DEAL.SME_TYPE.MEDIUM:
-      return '3';
+      return '60';
 
     case CONSTANTS.DEAL.SME_TYPE.NOT_KNOWN:
-      return '4';
+      return '70';
 
     case CONSTANTS.DEAL.SME_TYPE.NON_SME:
-      return '5';
+      return '20';
 
     default:
       return '70';
