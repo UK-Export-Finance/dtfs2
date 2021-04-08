@@ -68,7 +68,7 @@ const validateAboutFacility = async (req, res) => {
         errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
       });
     }
-    if (body.hasCoverStartDate === 'false' && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
+    if ((isTrueSet(body.hasBeenIssued) && body.hasCoverStartDate === 'false') && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
       aboutFacilityErrors.push({
         errRef: 'coverStartDate',
         errMsg: 'Enter a cover start date',
@@ -140,13 +140,9 @@ const validateAboutFacility = async (req, res) => {
       coverEndDate: coverEndDate ? coverEndDate.format('LL') : null,
     });
 
-    console.log('MONKEY 2');
-
     if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
-
-    console.log('MONKEY 3');
 
     return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/provided-facility`);
   } catch (err) {

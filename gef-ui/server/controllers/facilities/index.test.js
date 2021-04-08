@@ -59,7 +59,7 @@ describe('Facilities', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
       facilityType: 'cash',
       applicationId: '123',
-      hasBeenIssued: true,
+      hasBeenIssued: 'true',
       status: undefined,
     }));
   });
