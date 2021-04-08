@@ -6,8 +6,6 @@ const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 // so that when this is changed, tests fail.
 
 const dealsReducer = (deals, _productDictionary) => {
-  console.log('dealsReducer........');
-
   const mapDeal = (d) => {
     const deal = d;
     deal.dealSnapshot.submissionDetails = mapSubmissionDetails(d.dealSnapshot.submissionDetails);
@@ -37,8 +35,6 @@ const dealsReducer = (deals, _productDictionary) => {
   };
 
   const mappedDeals = mapDeals(deals);
-
-  console.log('mappedDeals........\n', mappedDeals);
 
   const sortedDeals = mappedDeals.sort((a, b) =>
     new Date(b.dealSnapshot.details.submissionDate)
