@@ -21,7 +21,7 @@ context('About Facility Page', () => {
             .then((res) => {
               applications.push({
                 id: item._id,
-                facilityIds: res.body.items.filter((it) => it.details.applicationId === item._id), // .map((it) => it.details._id),
+                facilities: res.body.items.filter((it) => it.details.applicationId === item._id),
               });
             });
         });
@@ -34,19 +34,21 @@ context('About Facility Page', () => {
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
     console.log('applications', applications);
-    cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilityIds[2].details._id}/about-facility`));
   });
 
   describe('Visiting page with already issued cash facility', () => {
     it('displays the correct elements', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.backLink();
       aboutFacility.headingCaption();
       aboutFacility.mainHeading().contains('cash');
       aboutFacility.mainHeading().should('not.contain', 'contingent');
       aboutFacility.form();
       aboutFacility.facilityName();
+      aboutFacility.facilityNameLabel().contains('cash');
       aboutFacility.shouldCoverStartOnSubmissionYes();
       aboutFacility.shouldCoverStartOnSubmissionNo();
+      aboutFacility.coverStartDate().should('not.be', 'visible');
       aboutFacility.coverEndDateDay();
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
@@ -55,53 +57,139 @@ context('About Facility Page', () => {
       aboutFacility.monthsOfCover().should('not.be', 'visible');
     });
 
-    // it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
-    //   aboutExporter.backLink().click();
-    //   cy.url().should('eq', relative(`/gef/application-details/${applicationIds[1]}/enter-exporters-correspondence-address`));
-    // });
+    it('redirects user to `Has your bank already issued` page when clicking on `Back` Link', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      aboutFacility.backLink().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}`));
+    });
 
-    // it('displays selected Industry string', () => {
-    //   cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
-    //   aboutExporter.industry();
-    // });
+    it('validates form when clicking on Continue', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      aboutFacility.continueButton().click();
+      aboutFacility.errorSummary();
+      aboutFacility.facilityNameError();
+      aboutFacility.shouldCoverStartOnSubmissionError();
+      aboutFacility.coverEndDateError();
+    });
 
-    // it('displays no industry options', () => {
-    //   cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
-    //   aboutExporter.industries().should('be', 'invisible');
-    // });
+    it('redirects user to application page when clicking on `save and return` button', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      aboutFacility.saveAndReturnButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
+    });
+
+    it('shows the cover start date fields when clicking on the `No` radio button', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      aboutFacility.shouldCoverStartOnSubmissionYes().click();
+      aboutFacility.coverStartDate().should('not.be', 'visible');
+      aboutFacility.shouldCoverStartOnSubmissionNo().click();
+      aboutFacility.coverStartDate();
+    });
+
+    it('validates the cover start date fields when clicking on the Continue button', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      aboutFacility.shouldCoverStartOnSubmissionNo().click();
+      aboutFacility.coverStartDate();
+      aboutFacility.continueButton().click();
+      aboutFacility.coverStartDateError();
+    });
+
+    it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      aboutFacility.facilityName().type('Name');
+      aboutFacility.shouldCoverStartOnSubmissionNo().click();
+      aboutFacility.coverStartDateDay().type('10');
+      aboutFacility.coverStartDateMonth().type('10');
+      aboutFacility.coverStartDateYear().type('2022');
+      aboutFacility.coverEndDateDay().type('12');
+      aboutFacility.coverEndDateMonth().type('12');
+      aboutFacility.coverEndDateYear().type('2024');
+      aboutFacility.continueButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
+    });
   });
 
-  // describe('Visiting page with multiple industries', () => {
-  //   it('displays the correct amount of industries', () => {
-  //     cy.visit(relative(`/gef/application-details/${applicationIds[2]}/about-exporter`));
-  //     aboutExporter.industries().find('input[type="radio"]').its('length').should('be.eq', 3);
-  //   });
-  // });
+  describe('Visiting page with unissued cash facility', () => {
+    it('displays the correct elements', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.backLink();
+      aboutFacility.headingCaption();
+      aboutFacility.mainHeading().contains('cash');
+      aboutFacility.mainHeading().should('not.contain', 'contingent');
+      aboutFacility.form();
+      aboutFacility.facilityNameLabel().contains('cash');
+      aboutFacility.shouldCoverStartOnSubmissionYes().should('not.be', 'visible');
+      aboutFacility.shouldCoverStartOnSubmissionNo().should('not.be', 'visible');
+      aboutFacility.coverStartDate().should('not.be', 'visible');
+      aboutFacility.coverEndDateDay().should('not.be', 'visible');
+      aboutFacility.coverEndDateMonth().should('not.be', 'visible');
+      aboutFacility.coverEndDateYear().should('not.be', 'visible');
+      aboutFacility.continueButton();
+      aboutFacility.saveAndReturnButton();
+      aboutFacility.monthsOfCover();
+    });
 
-  // describe('Clicking on Done', () => {
-  //   it('validates form', () => {
-  //     cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
-  //     aboutExporter.doneButton().click();
-  //     aboutExporter.errorSummary();
-  //     aboutExporter.probabilityOfDefaultError();
-  //     aboutExporter.isFinancingIncreasingError();
-  //   });
+    it('doesnt validate facility name field as its optional', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.monthsOfCover().type('10');
+      aboutFacility.continueButton().click();
+      aboutFacility.errorSummary().should('not.be', 'visible');
+      aboutFacility.facilityNameError().should('not.be', 'visible');
+    });
 
-  //   it('takes user back to application details page when form has been filled in', () => {
-  //     cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
-  //     aboutExporter.microRadioButton().click();
-  //     aboutExporter.probabilityOfDefaultInput().type('20');
-  //     aboutExporter.isFinancingIncreasingRadioYes().click();
-  //     aboutExporter.doneButton().click();
-  //     cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
-  //   });
-  // });
+    it('validates `months of cover` field if not a number', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.monthsOfCover().type('ab');
+      aboutFacility.continueButton().click();
+      aboutFacility.monthsOfCoverError();
 
-  // describe('Clicking on Save and return, bypasses validation and takes user back to application details page', () => {
-  //   it('validates form', () => {
-  //     cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
-  //     aboutExporter.saveAndReturnButton().click();
-  //     cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
-  //   });
-  // });
+      aboutFacility.monthsOfCover().clear();
+      aboutFacility.monthsOfCover().type('-100');
+      aboutFacility.continueButton().click();
+      aboutFacility.monthsOfCoverError();
+    });
+  });
+
+  describe('Visiting page with already issued contingent facility', () => {
+    it('displays the correct elements', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[3].details._id}/about-facility`));
+      aboutFacility.backLink();
+      aboutFacility.headingCaption();
+      aboutFacility.mainHeading().contains('contingent');
+      aboutFacility.mainHeading().should('not.contain', 'cash');
+      aboutFacility.form();
+      aboutFacility.facilityName();
+      aboutFacility.facilityNameLabel().contains('contingent');
+      aboutFacility.shouldCoverStartOnSubmissionYes();
+      aboutFacility.shouldCoverStartOnSubmissionNo();
+      aboutFacility.coverStartDate().should('not.be', 'visible');
+      aboutFacility.coverEndDateDay();
+      aboutFacility.coverEndDateMonth();
+      aboutFacility.coverEndDateYear();
+      aboutFacility.continueButton();
+      aboutFacility.saveAndReturnButton();
+      aboutFacility.monthsOfCover().should('not.be', 'visible');
+    });
+  });
+
+  describe('Visiting page with unissued cash facility', () => {
+    it('displays the correct elements', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[2].details._id}/about-facility`));
+      aboutFacility.backLink();
+      aboutFacility.headingCaption();
+      aboutFacility.mainHeading().contains('contingent');
+      aboutFacility.mainHeading().should('not.contain', 'cash');
+      aboutFacility.form();
+      aboutFacility.facilityNameLabel().contains('contingent');
+      aboutFacility.shouldCoverStartOnSubmissionYes().should('not.be', 'visible');
+      aboutFacility.shouldCoverStartOnSubmissionNo().should('not.be', 'visible');
+      aboutFacility.coverStartDate().should('not.be', 'visible');
+      aboutFacility.coverEndDateDay().should('not.be', 'visible');
+      aboutFacility.coverEndDateMonth().should('not.be', 'visible');
+      aboutFacility.coverEndDateYear().should('not.be', 'visible');
+      aboutFacility.continueButton();
+      aboutFacility.saveAndReturnButton();
+      aboutFacility.monthsOfCover();
+    });
+  });
 });
