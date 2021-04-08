@@ -109,7 +109,7 @@
                     name: "day",
                     value: coverStartDateDay,
                     attributes: {
-                      'data-cy': "coverStartDateDay"
+                      'data-cy': "cover-start-date-day"
                     }
                   },
                   {
@@ -118,7 +118,7 @@
                     name: "month",
                     value: coverStartDateMonth,
                     attributes: {
-                      'data-cy': "coverStartDateMonth"
+                      'data-cy': "cover-start-date-month"
                     }
                   },
                   {
@@ -127,7 +127,7 @@
                     name: "year",
                     value: coverStartDateYear,
                     attributes: {
-                      'data-cy': "coverStartDateYear"
+                      'data-cy': "cover-start-date-year"
                     }
                   }
                 ]
@@ -135,32 +135,38 @@
             {% endset -%}
 
             {{ govukRadios({
-              idPrefix: "hasCoverStartDate",
-              name: "hasCoverStartDate",
+              idPrefix: "shouldCoverStartOnSubmission",
+              name: "shouldCoverStartOnSubmission",
               fieldset: {
                 legend: {
                   text: "Do you want UKEF cover to start on the day you submit the automatic inclusion notice?",
                   classes: "govuk-fieldset__legend--m"
                 }
               },
-              errorMessage: errors and errors.fieldErrors.hasCoverStartDate and {
-                text: errors.fieldErrors.hasCoverStartDate.text,
+              errorMessage: errors and errors.fieldErrors.shouldCoverStartOnSubmission and {
+                text: errors.fieldErrors.shouldCoverStartOnSubmission.text,
                 attributes: {
-                  'data-cy': 'has-cover-start-date-error'
+                  'data-cy': 'should-cover-start-on-submission-error'
                 }
               },
               items: [
                 {
                   value: 'true',
                   text: "Yes",
-                  checked: hasCoverStartDate === 'true'
+                  checked: shouldCoverStartOnSubmission === 'true',
+                  attributes: {
+                    'data-cy': "should-cover-start-on-submission-yes"
+                  }
                 },
                 {
                   value: 'false',
                   text: "No",
-                  checked: hasCoverStartDate === 'false',
+                  checked: shouldCoverStartOnSubmission === 'false',
                   conditional: {
                     html: coverStartHtml
+                  },
+                  attributes: {
+                    'data-cy': "should-cover-start-on-submission-no"
                   }
                 }
               ]

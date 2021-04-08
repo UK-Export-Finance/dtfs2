@@ -11,7 +11,7 @@ const aboutFacility = async (req, res) => {
   try {
     const { details } = await api.getFacility(facilityId);
     const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
-    const hasCoverStartDate = JSON.stringify(details.hasCoverStartDate);
+    const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
     const coverStartDate = details.coverStartDate ? moment(details.coverStartDate) : null;
     const coverEndDate = details.coverEndDate ? moment(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
@@ -21,7 +21,7 @@ const aboutFacility = async (req, res) => {
       facilityName: details.name,
       hasBeenIssued: details.hasBeenIssued,
       monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,
-      hasCoverStartDate: hasCoverStartDate !== 'null' ? hasCoverStartDate : null,
+      shouldCoverStartOnSubmission: shouldCoverStartOnSubmission !== 'null' ? shouldCoverStartOnSubmission : null,
       coverStartDateDay: coverStartDate ? coverStartDate.format('D') : null,
       coverStartDateMonth: coverStartDate ? coverStartDate.format('M') : null,
       coverStartDateYear: coverStartDate ? coverStartDate.format('YYYY') : null,
@@ -62,13 +62,13 @@ const validateAboutFacility = async (req, res) => {
         errMsg: `Enter a name for this ${facilityTypeString} facility`,
       });
     }
-    if (isTrueSet(body.hasBeenIssued) && !body.hasCoverStartDate) {
+    if (isTrueSet(body.hasBeenIssued) && !body.shouldCoverStartOnSubmission) {
       aboutFacilityErrors.push({
-        errRef: 'hasCoverStartDate',
+        errRef: 'shouldCoverStartOnSubmission',
         errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
       });
     }
-    if ((isTrueSet(body.hasBeenIssued) && body.hasCoverStartDate === 'false') && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
+    if ((isTrueSet(body.hasBeenIssued) && body.shouldCoverStartOnSubmission === 'false') && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
       aboutFacilityErrors.push({
         errRef: 'coverStartDate',
         errMsg: 'Enter a cover start date',
@@ -114,7 +114,7 @@ const validateAboutFacility = async (req, res) => {
     return res.render('partials/about-facility.njk', {
       errors: validationErrorHandler(aboutFacilityErrors),
       facilityName: body.facilityName,
-      hasCoverStartDate: body.hasCoverStartDate,
+      shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
       hasBeenIssued: body.hasBeenIssued,
       monthsOfCover: body.monthsOfCover,
       coverStartDateDay,
@@ -134,7 +134,7 @@ const validateAboutFacility = async (req, res) => {
   try {
     await api.updateFacility(facilityId, {
       name: body.facilityName,
-      hasCoverStartDate: isTrueSet(body.hasCoverStartDate),
+      shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
       monthsOfCover: body.monthsOfCover || null,
       coverStartDate: coverStartDate ? coverStartDate.format('LL') : null,
       coverEndDate: coverEndDate ? coverEndDate.format('LL') : null,
