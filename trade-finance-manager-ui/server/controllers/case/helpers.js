@@ -56,11 +56,10 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   const taskIsUnassigned = task.assignedTo.userId === 'Unassigned';
 
   // 3 possible states:
-  // task is assigned to someone that is not the current logged in user.
+  // task is assigned to someone that is not the currently logged in user.
   // task is unassigned
-  // task is assigned ot me
+  // task is assigned to me/currently logged in user.
 
-  // default mapping is that task is assigned to someone that is not the current logged in user.
   let mapped = [
     {
       value: currentUserId,
@@ -110,66 +109,39 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   return mapped;
 };
 
-const groupTaskInProgress = (groupTasks) =>
-  groupTasks.find((task) =>
-    (task.status === 'In progress'));
-
 const mapTasks = (tasks) => {
   // only 1 task can be in progress.
-  // all other tasks cannot be accessed in the UI.
+  // all other tasks cannot be accessed or edited.
+  // tasks must be completed sequentially.
 
-  const allTaskGroups = tasks.map((g) => {
+  const mappedTasks = tasks.map((g) => {
     const group = g;
 
-    const taskInProgress = groupTaskInProgress(g.groupTasks);
+    const mappedGroupTasks = group.groupTasks.map((t) => {
+      const task = t;
 
-    if (taskInProgress) {
-      group.taskIdInProgress = taskInProgress.id;
-    }
+      if (task.id === '1'
+        && task.status !== 'Done') {
+        task.canEdit = true;
+      } else if (task.status === 'In progress') {
+        task.canEdit = true;
+      }
 
-    return group;
-  });
+      if (task.id !== '1') {
+        const previousTask = group.groupTasks.find((tsk) =>
+          Number(tsk.id) === Number(task.id - 1));
 
-  const mappedTasks = allTaskGroups.map((g) => {
-    const group = g;
+        if (previousTask.status === 'Done') {
+          task.canEdit = true;
+        }
+      }
 
-    // task is in progress so only that task can be edited
-    if (group.taskIdInProgress) {
-
-      return {
-        ...group,
-        groupTasks: group.groupTasks.map((task) => {
-          if (task.id === group.taskIdInProgress) {
-            return {
-              ...task,
-              canEdit: true,
-            };
-          }
-
-          return task;
-        }),
-      };
-    }
-
-    // TODO
-    // if no tasks in progress but a task is completed,
-    // incrementally allow edits.
-
-    // no tasks in progress
-    // only the 1st task can be edited
+      return task;
+    });
 
     return {
       ...group,
-      groupTasks: group.groupTasks.map((task) => {
-        if (task.id === '1') {
-          return {
-            ...task,
-            canEdit: true,
-          };
-        }
-
-        return task;
-      }),
+      groupTasks: mappedGroupTasks,
     };
   });
 

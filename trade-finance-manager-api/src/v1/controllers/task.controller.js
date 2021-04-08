@@ -1,19 +1,19 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const now = require('../../now');
+// const now = require('../../now');
 
-const updateHistory = ({
-  statusFrom,
-  statusTo,
-  assignedUserId,
-  updatedBy,
-}) => ({
-  statusFrom,
-  statusTo,
-  assignedUserId,
-  updatedBy,
-  timestamp: now(),
-});
+// const updateHistory = ({
+//   statusFrom,
+//   statusTo,
+//   assignedUserId,
+//   updatedBy,
+// }) => ({
+//   statusFrom,
+//   statusTo,
+//   assignedUserId,
+//   updatedBy,
+//   timestamp: now(),
+// });
 
 const taskCanBeAssigned = (allTasks, taskIdToUpdate) => {
   const parentGroup = allTasks.find((group) => {
@@ -43,7 +43,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     id: taskIdToUpdate,
     assignedTo,
     status: statusTo,
-    updatedBy,
+    // updatedBy,
   } = tfmTaskUpdate;
 
   let originalTask;
@@ -55,7 +55,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       }
       return task;
     }));
-
 
   if (taskCanBeAssigned(allTasks, taskIdToUpdate)) {
     const { userId: assignedUserId } = assignedTo;
@@ -103,15 +102,21 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       return taskGroup;
     });
 
+    // TODO add date to the task object as well as history
+    //
+    // TODO for some reason, adding updateHistory() here, breaks things
+    //
     const tfmHistoryUpdate = {
       tasks: [
         ...deal.tfm.history.tasks,
-        updateHistory({
-          statusFrom: originalTask.status,
-          statusTo,
-          assignedUserId,
-          updatedBy,
-        }),
+        // {
+        //   ...updateHistory({
+        //     statusFrom: originalTask.status,
+        //     statusTo,
+        //     assignedUserId,
+        //     updatedBy,
+        //   }),
+        // },
       ],
     };
 

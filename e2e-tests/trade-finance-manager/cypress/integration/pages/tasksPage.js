@@ -6,6 +6,7 @@ const tasksPage = {
       return {
         row,
         link: () => row.get(`[data-cy="task-table-row-${taskId}-link"]`),
+        title: () => row.get(`[data-cy="task-table-row-${taskId}-title"]`),
         assignedTo: () => row.get(`[data-cy="task-table-row-${taskId}-user-full-name"]`),
         status: () => row.get(`[data-cy="task-table-row-${taskId}-status"]`),
       };

@@ -69,6 +69,15 @@ context('Case tasks - AIN deal', () => {
   before(() => {
     cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
+    cy.getUser(businessSupportUser.username).then((userObj) => {
+      userId = userObj._id;
+    });
+
+    loggedInUserTeamName = businessSupportUser.teams[0]; // eslint-disable-line
+    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
+  });
+
+  beforeEach(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         deal = insertedDeal;
@@ -81,19 +90,10 @@ context('Case tasks - AIN deal', () => {
         });
 
         cy.submitDeal(dealId);
+
+        cy.login(businessSupportUser);
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
-
-    cy.getUser(businessSupportUser.username).then((userObj) => {
-      userId = userObj._id;
-    });
-
-    loggedInUserTeamName = businessSupportUser.teams[0]; // eslint-disable-line
-    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
-  });
-
-  beforeEach(() => {
-    cy.login(businessSupportUser);
-    cy.visit(relative(`/case/${dealId}/deal`));
   });
 
   after(() => {
@@ -110,6 +110,33 @@ context('Case tasks - AIN deal', () => {
     pages.tasksPage.tasksTableRows().should('have.length', 0);
   });
 
+  it('user cannot navigate/start task #2 if task #1 is not started', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioYourTeam().click();
+
+    //---------------------------------------------------------------
+    // first task should have status `To do` and link
+    //---------------------------------------------------------------
+    const firstTask = pages.tasksPage.tasks.row('1');
+    firstTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('To do');
+    });
+
+    firstTask.link().should('exist');
+    firstTask.title().should('not.exist');
+
+    //---------------------------------------------------------------
+    // second task should have status `To do` and no link
+    //---------------------------------------------------------------
+    const secondTask = pages.tasksPage.tasks.row('2');
+    firstTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('To do');
+    });
+
+    secondTask.link().should('not.exist');
+    secondTask.title().should('exist');
+  });
 
   it('user can assign a task to themself, change status and then unassign', () => {
     partials.caseSubNavigation.tasksLink().click();
@@ -180,6 +207,102 @@ context('Case tasks - AIN deal', () => {
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
   });
 
+  it('user cannot start task #2 (or any task apart from #1), if task #1 is in progress', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioYourTeam().click();
+
+    // assign first task
+    let firstTask = pages.tasksPage.tasks.row('1');
+    firstTask.link().click();
+
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputInProgress().click();
+    pages.taskPage.submitButton().click();
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    //---------------------------------------------------------------
+    // first task should have status `In progress`
+    //---------------------------------------------------------------
+    firstTask = pages.tasksPage.tasks.row('1');
+    firstTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('In progress');
+    });
+
+    //---------------------------------------------------------------
+    // second task should have status `To do` and no link
+    //---------------------------------------------------------------
+    const secondTask = pages.tasksPage.tasks.row('2');
+    secondTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('To do');
+    });
+
+    secondTask.link().should('not.exist');
+    secondTask.title().should('exist');
+
+    //---------------------------------------------------------------
+    // manually navigating to task #2 page should redirect to tasks page
+    //---------------------------------------------------------------
+    cy.visit(relative(`/case/${dealId}/tasks/2`));
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+  });
+
+  it('user can start task #2 if task #1 is completed', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioYourTeam().click();
+
+    // assign first task and mark as done
+    let firstTask = pages.tasksPage.tasks.row('1');
+    firstTask.link().click();
+
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputDone().click();
+    pages.taskPage.submitButton().click();
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    //---------------------------------------------------------------
+    // first task should have status `Done`
+    //---------------------------------------------------------------
+    firstTask = pages.tasksPage.tasks.row('1');
+    firstTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Done');
+    });
+
+    //---------------------------------------------------------------
+    // second task should have status `To do` and link
+    //---------------------------------------------------------------
+    let secondTask = pages.tasksPage.tasks.row('2');
+    secondTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('To do');
+    });
+
+    secondTask.link().should('exist');
+    secondTask.title().should('not.exist');
+
+    // start second task
+    secondTask.link().click();
+
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputInProgress().click();
+    pages.taskPage.submitButton().click();
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    //---------------------------------------------------------------
+    // second task should have status 'In progress' and link
+    //---------------------------------------------------------------
+    secondTask = pages.tasksPage.tasks.row('2');
+    secondTask.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('In progress');
+    });
+
+    secondTask.link().should('exist');
+    secondTask.title().should('not.exist');
+  });
+
   it('user can assign a task to someone else', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -245,9 +368,7 @@ context('Case tasks - AIN deal', () => {
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
 
-    //---------------------------------------------------------------
     // change task assignee and status, click 'close without saving'
-    //---------------------------------------------------------------
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
 
@@ -285,12 +406,10 @@ context('Case tasks - AIN deal', () => {
 
       pages.tasksPage.filterRadioYourTeam().click();
 
-      // all default AIN tasks are assigned to the users team
+      // all default AIN tasks are assigned to the test users team
       pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
 
-      //---------------------------------------------------------------
       // assign a task to someone else on my team
-      //---------------------------------------------------------------
       const firstTask = pages.tasksPage.tasks.row('1');
       firstTask.link().click();
 
