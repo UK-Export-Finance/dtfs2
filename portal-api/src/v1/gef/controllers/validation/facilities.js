@@ -15,10 +15,13 @@ const hasRequiredItems = (doc) => {
   if (doc.startOnDayOfNotice === null) {
     required.push('startOnDayOfNotice');
   }
-  if (doc.coverStartDate === null) {
+  if (doc.shouldCoverStartOnSubmission === null) {
+    required.push('shouldCoverStartOnSubmission');
+  }
+  if (doc.shouldCoverStartOnSubmission !== true && doc.coverStartDate === null) {
     required.push('coverStartDate');
   }
-  if (doc.coverEndDate === null) {
+  if (doc.shouldCoverStartOnSubmission !== true && doc.coverEndDate === null) {
     required.push('coverEndDate');
   }
   if (doc.monthsOfCover === null) {
