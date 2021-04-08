@@ -12,7 +12,6 @@ const {
   getTask,
   mapAssignToSelectOptions,
   userIsInTeam,
-  mapTasks,
 } = caseHelpers;
 
 
@@ -55,7 +54,7 @@ const getCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    tasks: mapTasks(deal.tfm.tasks),
+    tasks: deal.tfm.tasks,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
@@ -91,7 +90,7 @@ const filterCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    tasks: mapTasks(deal.tfm.tasks),
+    tasks: deal.tfm.tasks,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,

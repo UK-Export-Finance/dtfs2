@@ -109,45 +109,6 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   return mapped;
 };
 
-const mapTasks = (tasks) => {
-  // only 1 task can be in progress.
-  // all other tasks cannot be accessed or edited.
-  // tasks must be completed sequentially.
-
-  const mappedTasks = tasks.map((g) => {
-    const group = g;
-
-    const mappedGroupTasks = group.groupTasks.map((t) => {
-      const task = t;
-
-      if (task.id === '1'
-        && task.status !== 'Done') {
-        task.canEdit = true;
-      } else if (task.status === 'In progress') {
-        task.canEdit = true;
-      }
-
-      if (task.id !== '1') {
-        const previousTask = group.groupTasks.find((tsk) =>
-          Number(tsk.id) === Number(task.id - 1));
-
-        if (previousTask.status === 'Done') {
-          task.canEdit = true;
-        }
-      }
-
-      return task;
-    });
-
-    return {
-      ...group,
-      groupTasks: mappedGroupTasks,
-    };
-  });
-
-  return mappedTasks;
-};
-
 export default {
   userFullName,
   userIsInTeam,
@@ -156,5 +117,4 @@ export default {
   getTeamMembersWithoutCurrentUser,
   mapTeamMembersSelectOptions,
   mapAssignToSelectOptions,
-  mapTasks,
 };

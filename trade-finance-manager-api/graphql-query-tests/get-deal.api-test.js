@@ -48,6 +48,7 @@ const GET_DEAL = gql`
             id,
             title,
             status,
+            canEdit
             assignedTo {
               userId
               userFullName

@@ -34,6 +34,7 @@ const dealQuery = gql`
               id,
               name
             }
+            canEdit
           }
         }
         exporterCreditRating

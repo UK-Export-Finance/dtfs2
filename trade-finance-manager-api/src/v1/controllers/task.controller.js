@@ -15,25 +15,52 @@ const CONSTANTS = require('../../constants');
 //   timestamp: now(),
 // });
 
-const taskCanBeAssigned = (allTasks, taskIdToUpdate) => {
-  const parentGroup = allTasks.find((group) => {
-    if (group.groupTasks.find((task) => task.id === taskIdToUpdate)) {
-      return group;
-    }
+const getTask = (taskId, tasks) =>
+  tasks.find((t) => t.id === taskId);
 
-    return group;
-  });
+const previousTaskIsComplete = (groupTasks, taskId) => {
+  const previousTaskId = String(Number(taskId - 1));
 
-  const groupHasOtherTaskInProgress = parentGroup.groupTasks.find((task) =>
-    (task.id !== taskIdToUpdate
-    && task.status === 'In progress'));
+  const previousTask = getTask(previousTaskId, groupTasks);
 
-  if (groupHasOtherTaskInProgress) {
-    return false;
+  if (!previousTask) {
+    return true;
   }
 
-  return true;
+  if (previousTask.status === 'Done') {
+    return true;
+  }
+
+  return false;
 };
+
+const firstTaskIsComplete = (groupTasks) => {
+  const firstTask = groupTasks.find((t) => t.id === '1');
+
+  if (firstTask.status === 'Done') {
+    return true;
+  }
+
+  return false;
+};
+
+const getTaskParentGroupTasks = (allTaskGroups, taskId) => {
+  let groupTasks;
+
+  allTaskGroups.map((group) => {
+    const taskInGroup = getTask(taskId, group.groupTasks);
+
+    if (taskInGroup) {
+      groupTasks = [...group.groupTasks];
+    }
+
+    return null;
+  });
+
+  return groupTasks;
+};
+
+const isFirstTask = (taskId) => taskId === '1';
 
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
@@ -56,7 +83,13 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       return task;
     }));
 
-  if (taskCanBeAssigned(allTasks, taskIdToUpdate)) {
+  const parentGroupTasks = getTaskParentGroupTasks(allTasks, taskIdToUpdate);
+
+  const canUpdateTask = ((isFirstTask(taskIdToUpdate)
+    && !firstTaskIsComplete(parentGroupTasks))
+    || (!isFirstTask(taskIdToUpdate) && previousTaskIsComplete(parentGroupTasks, taskIdToUpdate)));
+
+  if (canUpdateTask) {
     const { userId: assignedUserId } = assignedTo;
 
     let newAssigneeFullName;
@@ -82,11 +115,13 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     let originalTaskAssignedUserId;
 
     const modifiedTasks = allTasks.map((tGroup) => {
-      let taskGroup = tGroup;
-      taskGroup = {
-        ...taskGroup,
-        groupTasks: taskGroup.groupTasks.map((t) => {
+      let group = tGroup;
+
+      group = {
+        ...group,
+        groupTasks: group.groupTasks.map((t) => {
           let task = t;
+
           if (task.id === taskIdToUpdate) {
             originalTaskAssignedUserId = task.assignedTo.userId;
 
@@ -95,11 +130,42 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
               ...updatedTask,
             };
           }
+
           return task;
         }),
       };
 
-      return taskGroup;
+      return group;
+    });
+
+    const modifiedTasksWithEditStatus = modifiedTasks.map((tGroup) => {
+      let group = tGroup;
+
+      group = {
+        ...group,
+        groupTasks: group.groupTasks.map((t) => {
+          const task = t;
+
+          if (task.status === 'Done') {
+            task.canEdit = false;
+          }
+
+          if (!isFirstTask(task.id)
+            && previousTaskIsComplete(group.groupTasks, task.id)) {
+            task.canEdit = true;
+
+            if (task.id === taskIdToUpdate) {
+              if (task.status === 'Done') {
+                task.canEdit = false;
+              }
+            }
+          }
+
+          return task;
+        }),
+      };
+
+      return group;
     });
 
     // TODO add date to the task object as well as history
@@ -123,7 +189,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     const tfmDealUpdate = {
       tfm: {
         history: tfmHistoryUpdate,
-        tasks: modifiedTasks,
+        tasks: modifiedTasksWithEditStatus,
       },
     };
 
