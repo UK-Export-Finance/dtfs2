@@ -6,7 +6,7 @@ const taskPage = {
   taskStatusRadioInput: () => cy.get('[data-cy="task-status-radios"] input'),
   taskStatusRadioInputTodo: () => cy.get('[data-cy="task-status-to-do"]'),
   taskStatusRadioInputInProgress: () => cy.get('[data-cy="task-status-in-progress"]'),
-  taskStatusRadioInputDone: () => cy.get('[data-cy="task-status-radio-done"]'),
+  taskStatusRadioInputDone: () => cy.get('[data-cy="task-status-done"]'),
 
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   closeLink: () => cy.get('[data-cy="close-link"]'),
