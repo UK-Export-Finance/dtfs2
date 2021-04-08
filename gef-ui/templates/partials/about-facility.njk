@@ -65,7 +65,10 @@
           {{ govukInput({
             label: {
               text: "Enter a name for this " + facilityTypeString + " facility" if hasBeenIssued else "Enter a name for this " + facilityTypeString + " facility (optional)",
-              classes: "govuk-label--m"
+              classes: "govuk-label--m",
+              attributes: {
+                'data-cy': 'facility-name-label'
+              }
             },
             id: "facilityName",
             name: "facilityName",
@@ -95,6 +98,9 @@
                 },
                 hint: {
                   html: "<p class='govuk-!-margin-0'>This must be within one calendar month of the date you submit the notice to UKEF. It cannot be earlier than the submission date.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF.</p>"
+                },
+                attributes: {
+                  'data-cy': "cover-start-date"
                 },
                 errorMessage: errors and errors.fieldErrors.coverStartDate and {
                   text: errors.fieldErrors.coverStartDate.text,
