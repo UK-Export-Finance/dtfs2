@@ -26,7 +26,7 @@ const MockAboutFacilityResponse = () => {
     hasBeenIssued: true,
     monthsOfCover: null,
     coverStartDate: '2030-01-02T00:00:00.000+00:00',
-    hasCoverStartDate: true,
+    shouldCoverStartOnSubmission: true,
     coverEndDate: null,
   };
   return res;
@@ -51,7 +51,7 @@ describe('GET About Facility', () => {
       facilityName: 'Foundry4',
       hasBeenIssued: true,
       monthsOfCover: null,
-      hasCoverStartDate: 'true',
+      shouldCoverStartOnSubmission: 'true',
       coverStartDateDay: '2',
       coverStartDateMonth: '1',
       coverStartDateYear: '2030',
@@ -107,7 +107,7 @@ describe('Validate About Facility', () => {
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
       coverEndDate: 'February 1, 2022',
       coverStartDate: 'December 3, 2022',
-      hasCoverStartDate: null,
+      shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
       name: undefined,
     });
@@ -154,28 +154,28 @@ describe('Validate About Facility', () => {
     }));
   });
 
-  it('shows error message if no hasCoverStartDate radio button has been selected', async () => {
+  it('shows error message if no shouldCoverStartOnSubmission radio button has been selected', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
-    mockRequest.body.hasCoverStartDate = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
 
     await validateAboutFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
       errors: expect.objectContaining({
-        errorSummary: expect.not.arrayContaining([{ href: '#hasCoverStartDate', text: expect.any(String) }]),
+        errorSummary: expect.not.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
       }),
     }));
 
-    mockRequest.body.hasCoverStartDate = '';
+    mockRequest.body.shouldCoverStartOnSubmission = '';
 
     await validateAboutFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
       errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#hasCoverStartDate', text: expect.any(String) }]),
+        errorSummary: expect.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
       }),
     }));
   });
@@ -185,7 +185,7 @@ describe('Validate About Facility', () => {
     const mockRequest = new MockRequest();
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
-    mockRequest.body.hasCoverStartDate = 'false';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
     mockRequest.body['cover-start-date-day'] = '10';
     mockRequest.body['cover-start-date-month'] = '11';
     mockRequest.body['cover-start-date-year'] = '2022';
@@ -281,7 +281,7 @@ describe('Validate About Facility', () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
     mockRequest.body.facilityName = 'Name';
-    mockRequest.body.hasCoverStartDate = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
     mockRequest.body.hasBeenIssued = 'true';
     mockRequest.body.monthsOfCover = '10';
     mockRequest.body['cover-start-date-day'] = '01';
