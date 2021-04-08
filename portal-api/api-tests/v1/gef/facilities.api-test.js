@@ -42,6 +42,7 @@ describe(baseUrl, () => {
         hasBeenIssued: null,
         name: null,
         startOnDayOfNotice: null,
+        shouldCoverStartOnSubmission: null,
         coverStartDate: null,
         coverEndDate: null,
         monthsOfCover: null,
@@ -56,7 +57,7 @@ describe(baseUrl, () => {
         updatedAt: expect.any(Number),
       },
       validation: {
-        required: ['hasBeenIssued', 'name', 'startOnDayOfNotice', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType',
+        required: ['hasBeenIssued', 'name', 'startOnDayOfNotice', 'shouldCoverStartOnSubmission', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType',
         ],
       },
     };
@@ -64,6 +65,7 @@ describe(baseUrl, () => {
       hasBeenIssued: true,
       name: 'TEST',
       startOnDayOfNotice: true,
+      shouldCoverStartOnSubmission: true,
       coverStartDate: new Date(),
       coverEndDate: new Date(),
       monthsOfCover: 12,
@@ -205,12 +207,38 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['startOnDayOfNotice', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['startOnDayOfNotice', 'shouldCoverStartOnSubmission', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
         },
       };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
+    });
+
+    it('removes start cover date if shouldCoverStartOnSubmission is true', async () => {
+      const firstUpdate = {
+        shouldCoverStartOnSubmission: false,
+        coverStartDate: new Date(),
+        coverEndDate: new Date(),
+      };
+      const secondUpdate = {
+        shouldCoverStartOnSubmission: true,
+      };
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+
+      // first update - insert start date
+      const res1 = await as(aMaker).put(firstUpdate).to(`${baseUrl}/${item.body.details._id}`);
+      expect(res1.status).toEqual(200);
+      expect(res1.body.details.shouldCoverStartOnSubmission).toEqual(false);
+      expect(res1.body.details.coverStartDate).toEqual(expect.any(String));
+      expect(res1.body.details.coverEndDate).toEqual(expect.any(String));
+
+      // second update - remove start date
+      const res2 = await as(aMaker).put(secondUpdate).to(`${baseUrl}/${item.body.details._id}`);
+      expect(res2.status).toEqual(200);
+      expect(res2.body.details.shouldCoverStartOnSubmission).toEqual(true);
+      expect(res2.body.details.coverStartDate).toEqual(null);
+      expect(res2.body.details.coverEndDate).toEqual(expect.any(String));
     });
 
     it('fully update a facility ', async () => {
@@ -219,7 +247,8 @@ describe(baseUrl, () => {
         hasBeenIssued: true,
         name: 'test',
         startOnDayOfNotice: true,
-        coverStartDate: '2010-01-01T00:00:00.000Z',
+        shouldCoverStartOnSubmission: true,
+        coverStartDate: null,
         coverEndDate: '2015-01-01T00:00:00.000Z',
         monthsOfCover: 12,
         details: ['test'],
@@ -263,7 +292,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['hasBeenIssued', 'name', 'startOnDayOfNotice', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['hasBeenIssued', 'name', 'startOnDayOfNotice', 'shouldCoverStartOnSubmission', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
         },
       };
 
@@ -280,7 +309,7 @@ describe(baseUrl, () => {
         details: {
           ...details,
           ...completeUpdate,
-          coverStartDate: expect.any(String),
+          coverStartDate: null,
           coverEndDate: expect.any(String),
           updatedAt: expect.any(Number),
         },
