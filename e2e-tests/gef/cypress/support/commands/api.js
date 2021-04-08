@@ -23,18 +23,6 @@ const fetchAllApplications = (token) => cy.request({
   },
 }).then((res) => res);
 
-// const createApplication = (token) => cy.request({
-//   url: `${BASE_URL}/gef/application`,
-//   method: 'POST',
-//   body: {
-//     bankInternalRefName: 'INTERNAL_REF_2',
-//   },
-//   headers: {
-//     'Content-Type': 'application/json',
-//     Authorization: token,
-//   },
-// }).then((res) => res);
-
 const updateExporter = (exporterId, token, address) => cy.request({
   url: `${BASE_URL}/gef/exporter/${exporterId}`,
   method: 'PUT',
@@ -47,8 +35,21 @@ const updateExporter = (exporterId, token, address) => cy.request({
   },
 }).then((res) => res);
 
+const fetchAllFacilities = (applicationId, token) => cy.request({
+  url: `${BASE_URL}/gef/facilities`,
+  params: {
+    applicationId,
+  },
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
+
 export {
   login,
   fetchAllApplications,
   updateExporter,
+  fetchAllFacilities,
 };
