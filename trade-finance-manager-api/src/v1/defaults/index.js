@@ -14,6 +14,7 @@ const TASKS = {
             userId: CONSTANTS.TASKS.UNASSIGNED,
             userFullName: CONSTANTS.TASKS.UNASSIGNED,
           },
+          canEdit: true,
         },
         {
           id: '2',

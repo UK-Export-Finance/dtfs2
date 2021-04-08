@@ -199,6 +199,7 @@ type TFMTask {
   status: String
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
+  canEdit: Boolean
   history: [TFMTaskHistory]
 }
 
