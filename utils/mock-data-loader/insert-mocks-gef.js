@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 
@@ -16,40 +18,41 @@ const insertMocks = async () => {
   });
 
   console.log('inserting mandatory-criteria-versioned');
-  MOCKS.MANDATORY_CRITERIA_VERSIONED.forEach(async (item) => {
+  for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
-  });
+  }
 
   console.log('inserting eligibility-criteria');
-  MOCKS.ELIGIBILITY_CRITERIA.forEach(async (item) => {
+  for (const item of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(item, token);
-  });
+  }
 
   console.log('inserting application');
-  for (data of MOCKS.APPLICATION) {
-    await api.createApplication(data, token);
+  for (const item of MOCKS.APPLICATION) {
+    await api.createApplication(item, token);
   }
 
   const application = await api.listApplication(token);
 
   console.log('update exporter information');
-  MOCKS.EXPORTER.forEach(async (item, index) => {
+  for (const [index, item] of MOCKS.EXPORTER.entries()) {
     if (index > 0) {
       await api.updateExporter(application[index].exporterId, item, token);
     }
-  });
+  }
 
   console.log('inserting and updating facilities information');
-  MOCKS.FACILITIES.forEach(async (item, index) => {
-    item.forEach(async (subitem) => {
+  for (const [index, item] of MOCKS.FACILITIES.entries()) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const subitem of item) {
       // eslint-disable-next-line no-param-reassign
       subitem.applicationId = application[index]._id;
       const facilty = await api.createFacilities(subitem, token);
       // eslint-disable-next-line no-param-reassign
       delete subitem.applicationId;
       await api.updateFacilities(facilty.details, subitem, token);
-    });
-  });
+    }
+  }
 };
 
 module.exports = insertMocks;
