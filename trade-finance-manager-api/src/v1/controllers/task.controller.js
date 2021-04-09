@@ -1,19 +1,21 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-// const now = require('../../now');
+const now = require('../../now');
 
-// const updateHistory = ({
-//   statusFrom,
-//   statusTo,
-//   assignedUserId,
-//   updatedBy,
-// }) => ({
-//   statusFrom,
-//   statusTo,
-//   assignedUserId,
-//   updatedBy,
-//   timestamp: now(),
-// });
+// TODO: rename file to taskS
+
+const updateHistory = ({
+  statusFrom,
+  statusTo,
+  assignedUserId,
+  updatedBy,
+}) => ({
+  statusFrom,
+  statusTo,
+  assignedUserId,
+  updatedBy,
+  timestamp: now(),
+});
 
 const getTask = (taskId, tasks) =>
   tasks.find((t) => t.id === taskId);
@@ -44,7 +46,7 @@ const firstTaskIsComplete = (groupTasks) => {
   return false;
 };
 
-const getTaskParentGroupTasks = (allTaskGroups, taskId) => {
+const getParentGroupTasks = (allTaskGroups, taskId) => {
   let groupTasks;
 
   allTaskGroups.map((group) => {
@@ -62,6 +64,93 @@ const getTaskParentGroupTasks = (allTaskGroups, taskId) => {
 
 const isFirstTask = (taskId) => taskId === '1';
 
+const canUpdateTask = (taskId, parentGroupTasks) => {
+  if (isFirstTask(taskId)
+      && !firstTaskIsComplete(parentGroupTasks)) {
+    return true;
+  }
+
+  if (!isFirstTask(taskId)
+    && previousTaskIsComplete(parentGroupTasks, taskId)) {
+    return true;
+  }
+
+  return false;
+};
+
+const getNewAssigneeFullName = async (assignedUserId) => {
+  let fullName;
+
+  if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
+    fullName = CONSTANTS.TASKS.UNASSIGNED;
+  } else {
+    const user = await api.findUserById(assignedUserId);
+    const { firstName, lastName } = user;
+
+    fullName = `${firstName} ${lastName}`;
+  }
+
+  return fullName;
+};
+
+const updateTask = (allTaskGroups, taskIdToUpdate, taskUpdate) =>
+  allTaskGroups.map((tGroup) => {
+    let group = tGroup;
+
+    group = {
+      ...group,
+      groupTasks: group.groupTasks.map((t) => {
+        let task = t;
+
+        // TODO: need to associate group inside task object
+        // add a check here.
+        // otherwise if eg. task #1 is in multiple groups,
+        // both tasks in both groups will be updated.
+        if (task.id === taskIdToUpdate) {
+          task = {
+            ...task,
+            ...taskUpdate,
+          };
+        }
+
+        return task;
+      }),
+    };
+
+    return group;
+  });
+
+const updateTasksCanEdit = (allTaskGroups, taskIdToUpdate) =>
+  allTaskGroups.map((tGroup) => {
+    let group = tGroup;
+
+    group = {
+      ...group,
+      groupTasks: group.groupTasks.map((t) => {
+        const task = t;
+
+        if (task.status === 'Done') {
+          task.canEdit = false;
+        }
+
+        if (!isFirstTask(task.id)
+          && previousTaskIsComplete(group.groupTasks, task.id)) {
+          task.canEdit = true;
+
+          if (task.id === taskIdToUpdate) {
+            if (task.status === 'Done') {
+              task.canEdit = false;
+            }
+          }
+        }
+
+        return task;
+      }),
+    };
+
+    return group;
+  });
+
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
   const allTasks = deal.tfm.tasks;
@@ -70,38 +159,19 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     id: taskIdToUpdate,
     assignedTo,
     status: statusTo,
-    // updatedBy,
+    updatedBy,
   } = tfmTaskUpdate;
 
-  let originalTask;
+  const parentGroupTasks = getParentGroupTasks(allTasks, taskIdToUpdate);
 
-  allTasks.find((group) =>
-    group.groupTasks.find((task) => {
-      if (task.id === taskIdToUpdate) {
-        originalTask = task;
-      }
-      return task;
-    }));
+  const originalTask = getTask(taskIdToUpdate, parentGroupTasks);
 
-  const parentGroupTasks = getTaskParentGroupTasks(allTasks, taskIdToUpdate);
+  const originalTaskAssignedUserId = originalTask.assignedTo.userId;
 
-  const canUpdateTask = ((isFirstTask(taskIdToUpdate)
-    && !firstTaskIsComplete(parentGroupTasks))
-    || (!isFirstTask(taskIdToUpdate) && previousTaskIsComplete(parentGroupTasks, taskIdToUpdate)));
-
-  if (canUpdateTask) {
+  if (canUpdateTask(taskIdToUpdate, parentGroupTasks)) {
     const { userId: assignedUserId } = assignedTo;
 
-    let newAssigneeFullName;
-    let assignedUser;
-
-    if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
-      newAssigneeFullName = CONSTANTS.TASKS.UNASSIGNED;
-    } else {
-      assignedUser = await api.findUserById(assignedUserId);
-      const { firstName, lastName } = assignedUser;
-      newAssigneeFullName = `${firstName} ${lastName}`;
-    }
+    const newAssigneeFullName = await getNewAssigneeFullName(assignedUserId);
 
     const updatedTask = {
       id: taskIdToUpdate,
@@ -112,77 +182,21 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
-    let originalTaskAssignedUserId;
-
-    const modifiedTasks = allTasks.map((tGroup) => {
-      let group = tGroup;
-
-      group = {
-        ...group,
-        groupTasks: group.groupTasks.map((t) => {
-          let task = t;
-
-          if (task.id === taskIdToUpdate) {
-            originalTaskAssignedUserId = task.assignedTo.userId;
-
-            task = {
-              ...task,
-              ...updatedTask,
-            };
-          }
-
-          return task;
-        }),
-      };
-
-      return group;
-    });
-
-    const modifiedTasksWithEditStatus = modifiedTasks.map((tGroup) => {
-      let group = tGroup;
-
-      group = {
-        ...group,
-        groupTasks: group.groupTasks.map((t) => {
-          const task = t;
-
-          if (task.status === 'Done') {
-            task.canEdit = false;
-          }
-
-          if (!isFirstTask(task.id)
-            && previousTaskIsComplete(group.groupTasks, task.id)) {
-            task.canEdit = true;
-
-            if (task.id === taskIdToUpdate) {
-              if (task.status === 'Done') {
-                task.canEdit = false;
-              }
-            }
-          }
-
-          return task;
-        }),
-      };
-
-      return group;
-    });
+    const modifiedTasks = updateTask(allTasks, taskIdToUpdate, updatedTask);
 
     // TODO add date to the task object as well as history
-    //
-    // TODO for some reason, adding updateHistory() here, breaks things
-    //
+
+    const modifiedTasksWithEditStatus = updateTasksCanEdit(allTasks, taskIdToUpdate);
+
     const tfmHistoryUpdate = {
       tasks: [
         ...deal.tfm.history.tasks,
-        // {
-        //   ...updateHistory({
-        //     statusFrom: originalTask.status,
-        //     statusTo,
-        //     assignedUserId,
-        //     updatedBy,
-        //   }),
-        // },
+        updateHistory({
+          statusFrom: originalTask.status,
+          statusTo,
+          assignedUserId,
+          updatedBy,
+        }),
       ],
     };
 
@@ -193,7 +207,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
-    // update tasks in deal
+    // update deal tasks and history
     await api.updateDeal(dealId, tfmDealUpdate);
 
     if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
@@ -227,4 +241,16 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   return originalTask;
 };
 
-exports.updateTfmTask = updateTfmTask;
+// exports.updateTfmTask = updateTfmTask;
+module.exports = {
+  getTask,
+  previousTaskIsComplete,
+  firstTaskIsComplete,
+  getParentGroupTasks,
+  isFirstTask,
+  canUpdateTask,
+  getNewAssigneeFullName,
+  updateTask,
+  updateTasksCanEdit,
+  updateTfmTask,
+};
