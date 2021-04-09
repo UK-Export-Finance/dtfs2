@@ -43,10 +43,6 @@ const updateFacilities = async (deal) => {
         premiumSchedule: facilityPremiumSchedule,
       };
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
-      console.log(`facilityPremiumSchedule:${JSON.stringify(facilityPremiumSchedule)}`);
-      console.log(`facilityUpdate:${JSON.stringify(facilityUpdate)}`);
-      console.log(`updatedFacility:${JSON.stringify(updatedFacility)}`);
-
 
       updatedCount += 1;
 

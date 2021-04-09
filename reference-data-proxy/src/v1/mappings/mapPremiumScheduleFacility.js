@@ -76,7 +76,7 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod) => {
   map.guaranteePercentage = Number(facility.coveredPercentage);
 
   map.dayBasis = facility.dayCountBasis;
-  map.exposurePeriod = facilityExposurePeriod.exposurePeriodInMonths;
+  map.exposurePeriod = facilityExposurePeriod ? facilityExposurePeriod.exposurePeriodInMonths : 0;
   map.cumulativeAmount = cumulativeAmount;
   map.maximumLiability = facility.ukefExposure ? Number(facility.ukefExposure.split('.')[0].replace(/,/g, '')) : 0;
   return [map];
