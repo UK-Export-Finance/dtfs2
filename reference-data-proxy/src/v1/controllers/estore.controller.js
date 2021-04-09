@@ -24,8 +24,9 @@ const createEstore = async (req, res) => {
   } = eStoreFolderInfo;
 
   const createSiteRes = await apiEstore.createExporterSite(exporterName);
-  if (!createSiteRes.status === 200) {
-    return createSiteRes;
+
+  if (!createSiteRes) {
+    return res.status(200).send({});
   }
 
   const { siteName } = createSiteRes.data;

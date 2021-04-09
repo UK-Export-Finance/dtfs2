@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../../constants');
 
-const getFacilityGuaranteeLimitKey = ({ acbsData, facilityAcbsData }, guaranteeTypeCode) => {
+const getGuarantorParty = ({ acbsData, facilityAcbsData }, guaranteeTypeCode) => {
   switch (guaranteeTypeCode) {
     case CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY:
       return facilityAcbsData.parties.bondBeneficiary
@@ -13,14 +13,14 @@ const getFacilityGuaranteeLimitKey = ({ acbsData, facilityAcbsData }, guaranteeT
         : acbsData.parties.bank.partyIdentifier;
 
     case CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER:
-      return acbsData.parties.indemnifier.partyIdentifier || acbsData.parties.exporter.partyIdentifier;
+      return acbsData.parties.bank.partyIdentifier;
 
     case CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS:
-      return '';
+      return acbsData.parties.buyer.partyIdentifier;
 
     default:
       return '';
   }
 };
 
-module.exports = getFacilityGuaranteeLimitKey;
+module.exports = getGuarantorParty;

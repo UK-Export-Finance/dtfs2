@@ -43,6 +43,10 @@ const updateFacilities = async (deal) => {
         premiumSchedule: facilityPremiumSchedule,
       };
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7abc00054716b70ed1f0fc0e399ef8247f892639
 
       updatedCount += 1;
 

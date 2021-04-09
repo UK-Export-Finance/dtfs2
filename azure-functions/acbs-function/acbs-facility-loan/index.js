@@ -28,20 +28,22 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
-    acbsData,
+    { acbsData },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
   );
   const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
-    acbsData,
+    { acbsData },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
   );
+
   const facilityProviderTask = context.df.callActivity(
     'create-facility-guarantee',
     { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
     retryOptions,
   );
+
   const facilityBuyerTask = context.df.callActivity(
     'create-facility-guarantee',
     { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
