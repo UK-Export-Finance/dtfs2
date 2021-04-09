@@ -2,6 +2,7 @@ import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
 import commaNumber from 'comma-number';
 import cleanDeep from 'clean-deep';
+import { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } from '../../constants';
 
 // Fetches the user token from session
 const userToken = (req) => {
@@ -64,7 +65,7 @@ const mapSummaryList = (data, itemsToShow) => {
   const { details, validation } = data;
   const { required } = validation;
 
-  const valueObj = (val, isRequired, currency, options = {}) => {
+  const valueObj = (val, isRequired, currency, detailsOther, options = {}) => {
     if (isRequired && val === null) {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
@@ -82,7 +83,15 @@ const mapSummaryList = (data, itemsToShow) => {
 
       Object.values(val).forEach((value) => {
         if (value) {
-          list.push(`<li>${value}</li>`);
+          if (options.isDetails) {
+            if (value === 'OTHER') {
+              list.push(`<li class="govuk-!-margin-1">${FACILITY_PROVIDED_DETAILS[value]} ${detailsOther ? '-' : ''} ${detailsOther}</li>`);
+            } else {
+              list.push(`<li class="govuk-!-margin-1">${FACILITY_PROVIDED_DETAILS[value]}</li>`);
+            }
+          } else {
+            list.push(`<li class="govuk-!-margin-1">${value}</li>`);
+          }
         }
       });
 
@@ -100,11 +109,11 @@ const mapSummaryList = (data, itemsToShow) => {
 
   return itemsToShow.map((item) => {
     const {
-      label, href, prefix, suffix, method, isCurrency, isIndustry,
+      label, href, prefix, suffix, method, isCurrency, isIndustry, isDetails,
     } = item;
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
-    const { currency } = details;
+    const { currency, detailsOther } = details;
     const isRequired = required.includes(item.id);
 
     // Don't show row if value is undefined
@@ -114,8 +123,8 @@ const mapSummaryList = (data, itemsToShow) => {
       key: {
         text: label,
       },
-      value: valueObj(value, isRequired, currency, {
-        prefix, suffix, method, isCurrency, isIndustry,
+      value: valueObj(value, isRequired, currency, detailsOther, {
+        prefix, suffix, method, isCurrency, isIndustry, isDetails,
       }),
       actions: {
         items: [

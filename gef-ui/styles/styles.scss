@@ -8,12 +8,17 @@
   }
 }
 
-.govuk-summary-list__key {
-  width: 50%;
-}
-.govuk-summary-list__value {
-  padding-left: 15px;
-  width: 30%;
+.govuk-summary-list {
+  &__key {
+    width: 50%;
+  }
+  &__value {
+    padding-left: 15px;
+    width: 40%;
+  }
+  &__actions {
+    width: 10%;
+  }
 }
 
 .govuk-form-group {
