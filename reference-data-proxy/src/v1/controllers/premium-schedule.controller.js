@@ -9,6 +9,11 @@ const mapPremiumScheduleFalicity = require('../mappings/mapPremiumScheduleFacili
 
 const postPremiumSchedule = async (facility, facilityExposurePeriod) => {
   console.log('premium-schedule');
+
+  if (!facilityExposurePeriod) {
+    console.log('facilityExposurePeriod is undefined');
+    return null;
+  }
   const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod);
 
   const config = {
