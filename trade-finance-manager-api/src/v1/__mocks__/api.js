@@ -96,6 +96,7 @@ module.exports = {
       deal = {
         ...deal,
         tfm: {
+          tasks: updatedTfmDealData.tfm.tasks,
           history: updatedTfmDealData.tfm.history,
         },
       };
