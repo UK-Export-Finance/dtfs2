@@ -252,7 +252,21 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].id = 'address';
 
     const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
-    expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
+    expect(html).toEqual('<ul class="is-unstyled"><li class="govuk-!-margin-1">Test Road</li></ul>');
+  });
+
+  it('returns an unordered list with Provided on details if property contains an object', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+    mockedData.details.details = ['OTHER'];
+    mockedData.details.detailsOther = 'Other text';
+    mockedDisplayItems.slice(1);
+    mockedDisplayItems[0].isDetails = true;
+    mockedDisplayItems[0].label = 'Provided on';
+    mockedDisplayItems[0].id = 'details';
+
+    const other = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(other.html).toEqual('<ul class="is-unstyled"><li class="govuk-!-margin-1">Other - Other text</li></ul>');
   });
 
   it('returns selected industry ', () => {
