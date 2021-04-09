@@ -415,7 +415,7 @@ describe('controllers - case', () => {
 
 
   describe('GET case facility', () => {
-    describe('when facility exists', () => {
+    describe.skip('when facility exists', () => {
       const mockFacility = {
         _id: '1000023',
         facilitySnapshot: {
