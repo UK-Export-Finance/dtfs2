@@ -291,7 +291,7 @@ const getPremiumSchedule = async (facility, facilityExposurePeriod) => {
         facilityExposurePeriod,
       },
     });
-    console.log(`getPremiumSchedule - response.data:${response.data}`);
+
     return response.data;
   } catch ({ response }) {
     return false;
