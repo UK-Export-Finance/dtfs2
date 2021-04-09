@@ -43,24 +43,19 @@
       <form
         method="post"
         data-cy="form">
-          {{ govukInput({
-            classes: "govuk-visually-hidden",
-            id: "facilityType",
-            name: "facilityType",
-            value: facilityType,
-            attributes: {
-              'hidden': 'true'
-            }
-          }) }}
-          {{ govukInput({
-            classes: "govuk-visually-hidden",
-            id: "hasBeenIssued",
-            name: "hasBeenIssued",
-            value: hasBeenIssued,
-            attributes: {
-              'hidden': 'true'
-            }
-          }) }}
+          <input
+            class="govuk-visually-hidden"
+            id: "facilityType"
+            name: "facilityType"
+            hidden="true"
+            value="{{facilityType}}"">
+          
+          <input
+            class="govuk-visually-hidden"
+            id: "hasBeenIssued"
+            name: "hasBeenIssued"
+            hidden="true"
+            value="{{hasBeenIssued}}"">
 
           {{ govukInput({
             label: {

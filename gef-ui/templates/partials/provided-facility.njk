@@ -1,0 +1,142 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Provided facility{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + applicationId + "/facilities/" + facilityId + "/about-facility",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form
+        method="post"
+        data-cy="form">
+          <input
+            class="govuk-visually-hidden"
+            id: "facilityType"
+            name: "facilityType"
+            hidden="true"
+            value="{{facilityType}}"">
+
+          {% set other %}
+            {{ govukCharacterCount({
+              name: "detailsOther",
+              id: "detailsOther",
+              value: detailsOther,
+              maxlength: 300,
+              label: {
+                text: "Enter details"
+              }
+            }) }}
+          {% endset -%}
+
+
+            {{ govukCheckboxes({
+              idPrefix: "details",
+              name: "details",
+              fieldset: {
+                legend: {
+                  text: "Have you provided the " + facilityTypeString + " facility on any of the following",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--xl",
+                  attributes: {
+                    'data-cy': 'main-heading'
+                  }
+                }
+              },
+              hint: {
+                text: "Tick all that apply. You must select at least one option."
+              },
+              items: [
+                {
+                  value: "TERM",
+                  text: "Term basis",
+                  checked: details.includes('TERM')
+                },
+                {
+                  value: "RESOLVING",
+                  text: "Revolving or renewing basis",
+                  checked: details.includes('RESOLVING')
+                },
+                {
+                  value: "COMMITTED",
+                  text: "Committed basis",
+                  checked: details.includes('COMMITTED')
+                },
+                {
+                  value: "UNCOMMITTED",
+                  text: "Uncommitted basis",
+                  checked: details.includes('UNCOMMITTED')
+                },
+                {
+                  value: "ON_DEMAND",
+                  text: "On demand or overdraft basis",
+                  checked: details.includes('ON_DEMAND')
+                },
+                {
+                  value: "FACTORING",
+                  text: "Factoring facility on a with-recourse basis",
+                  checked: details.includes('FACTORING')
+                },
+                {
+                  value: "OTHER",
+                  text: "Other",
+                  checked: details.includes('OTHER'),
+                  conditional: {
+                    html: other
+                  }
+                }
+              ]
+            }) }}
+
+          <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "provided-facility?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+  
+{% endblock %}

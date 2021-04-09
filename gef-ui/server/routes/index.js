@@ -12,6 +12,7 @@ import enterExportersCorrespondenceAddressRoutes from './enter-exporters-corresp
 import aboutExporterRoutes from './about-exporter';
 import facilitiesRoutes from './facilities';
 import aboutFacilityRoutes from './about-facility';
+import providedFacilityRoutes from './provided-facility';
 
 const router = express.Router();
 
@@ -28,5 +29,6 @@ router.use(enterExportersCorrespondenceAddressRoutes);
 router.use(aboutExporterRoutes);
 router.use(facilitiesRoutes);
 router.use(aboutFacilityRoutes);
+router.use(providedFacilityRoutes);
 
 export default router;
