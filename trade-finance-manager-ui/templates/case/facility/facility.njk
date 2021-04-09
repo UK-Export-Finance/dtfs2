@@ -5,7 +5,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% block sub_content %}
-
   {% set facilityDetailsHtml %}
   {% set detailsComponentData = {
     facility: facility,
@@ -18,7 +17,8 @@
 
     {% set scheduleComponentData = {
     facility: facility,
-    schedule: schedule
+    premiumschedule: premiumschedule,
+    premiumTotals: premiumTotals
   } %}
   {{ schedule.render(scheduleComponentData) }}
   {% endset -%}

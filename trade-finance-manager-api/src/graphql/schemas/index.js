@@ -217,6 +217,22 @@ type TFMDealData {
   probabilityOfDefault: String
 }
 
+type PremiumScheduleData {
+  id: Int
+  facilityURN: String
+  calculationDate: String
+  income: Float 
+  incomePerDay: Float
+  exposure: Int
+  period: Int
+  daysInPeriod: Int
+  effectiveFrom: String
+  effectiveTo: String
+  created: String
+  updated: String
+  isAtive: String
+}
+
 type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
@@ -225,6 +241,7 @@ type TFMFacilityData {
   ukefExposure: FacilityUkefExposure
   creditRating: String
   riskProfile: String
+  premiumSchedule: [PremiumScheduleData]
 }
 
 input DashboardFilters {

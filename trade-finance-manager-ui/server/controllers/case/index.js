@@ -2,6 +2,7 @@ import api from '../../api';
 import stringHelpers from '../../helpers/string';
 import caseHelpers from './helpers';
 import CONSTANTS from '../../constants';
+import mapPremiumSchedule from './mapping/mapPremiumSchedule';
 
 const {
   hasValue,
@@ -172,7 +173,10 @@ const getCaseFacility = async (req, res) => {
 
   const { associatedDealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(associatedDealId);
-
+  const premiumschedule = mapPremiumSchedule(facility.tfm.premiumSchedule);
+  const premiumTotals = facility.tfm.premiumSchedule
+    ? facility.tfm.premiumSchedule.map((s) => s.income).reduce((a, b) => a + b, 0).toFixed(2)
+    : 0;
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
@@ -180,7 +184,10 @@ const getCaseFacility = async (req, res) => {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'facility',
     facilityId,
+    premiumschedule,
+    schedule_count: premiumschedule.length,
     facilityTfm: facility.tfm,
+    premiumTotals,
     user: req.session.user,
   });
 };
