@@ -5,20 +5,22 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod) => {
   let premiumTypeId = 0;
   let cumulativeAmount = null;
   if (facility.facilityType === 'bond') {
-    switch (facility.feeFrequency.toLowerCase()) {
-      case 'monthly':
-        premiumFrequencyId = 1;
-        break;
-      case 'quarterly':
-        premiumFrequencyId = 2;
-        break;
-      case 'annually':
-        premiumFrequencyId = 4;
-        break;
-      default:
-        throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+    if (facility.feeFrequency) {
+      switch (facility.feeFrequency.toLowerCase()) {
+        case 'monthly':
+          premiumFrequencyId = 1;
+          break;
+        case 'quarterly':
+          premiumFrequencyId = 2;
+          break;
+        case 'annually':
+          premiumFrequencyId = 4;
+          break;
+        default:
+          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+      }
     }
-
+    if (facility.feeType) {
     switch (facility.feeType.toLowerCase()) {
       case 'in advance':
         premiumTypeId = 1;
@@ -33,33 +35,37 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod) => {
         throw new Error(`facility.feeType "${facility.feeType}" not valid.`);
     }
   } else {
-    switch (facility.premiumFrequency.toLowerCase()) {
-      case 'monthly':
-        premiumFrequencyId = 1;
-        break;
-      case 'quarterly':
-        premiumFrequencyId = 2;
-        break;
-      case 'annually':
-        premiumFrequencyId = 4;
-        break;
-      default:
-        throw new Error(`facility.premiumFrequency "${facility.premiumFrequency}" not valid.`);
+    if (facility.premiumFrequency){
+          switch (facility.premiumFrequency.toLowerCase()) {
+            case 'monthly':
+              premiumFrequencyId = 1;
+              break;
+            case 'quarterly':
+              premiumFrequencyId = 2;
+              break;
+            case 'annually':
+              premiumFrequencyId = 4;
+              break;
+            default:
+              throw new Error(`facility.premiumFrequency "${facility.premiumFrequency}" not valid.`);
+          }
     }
+if(facility.premiumType){
+  switch (facility.premiumType.toLowerCase()) {
+    case 'in advance':
+      premiumTypeId = 1;
+      break;
+    case 'in arrears':
+      premiumTypeId = 2;
+      break;
+    case 'at maturity':
+      premiumTypeId = 3;
+      break;
+    default:
+      throw new Error(`facility.premiumType "${facility.premiumType}" not valid.`);
+  }
+}
 
-    switch (facility.premiumType.toLowerCase()) {
-      case 'in advance':
-        premiumTypeId = 1;
-        break;
-      case 'in arrears':
-        premiumTypeId = 2;
-        break;
-      case 'at maturity':
-        premiumTypeId = 3;
-        break;
-      default:
-        throw new Error(`facility.premiumType "${facility.premiumType}" not valid.`);
-    }
     cumulativeAmount = Number(facility.disbursementAmount);
   }
 
