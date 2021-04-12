@@ -7,6 +7,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'John',
     lastName: 'Davies',
+    assignedTasks: [],
   },
   {
     _id: '6051d94564494924d38ce123',
@@ -16,6 +17,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Sarah',
     lastName: 'Walker',
+    assignedTasks: [],
   },
   {
     _id: '6051d94564494924d38ce456',
@@ -25,6 +27,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Ben',
     lastName: 'Wilson',
+    assignedTasks: [],
   },
 ];
 
