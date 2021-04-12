@@ -8,7 +8,7 @@
                                     Use ACBS Customer Id (J$MRUI)
                                     Note there may be multiple customers in ACBS with the same Party URN.
                                     Use the first record found,
-  "maximumLiability":               facility amount
+  "maximumLiability":               ukef Exposure
   "productTypeId":                  Facility Type i.e. 250 for BOND ??? What is LOAN and GEF?
   "capitalConversionFactorCode":    This field is required for GEF. Cash facility has 8, Contingent facility has 9.
   "productTypeName":                Facility Type Name/ description i.e. BOND (what is LOAN & GEF)
@@ -58,7 +58,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
     portfolioIdentifier: 'E1',
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
-    maximumLiability: Number(facilitySnapshot.facilityValue),
+    maximumLiability: helpers.getMaximumLiability(facility),
     productTypeId: helpers.getProductTypeId(facilitySnapshot.facilityType),
     capitalConversionFactorCode,
     productTypeName: facilitySnapshot.facilityType,
