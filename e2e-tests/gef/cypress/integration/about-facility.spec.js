@@ -138,6 +138,7 @@ context('About Facility Page', () => {
 
     it('validates `months of cover` field if not a number', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.monthsOfCover().clear();
       aboutFacility.monthsOfCover().type('ab');
       aboutFacility.continueButton().click();
       aboutFacility.monthsOfCoverError();
