@@ -203,6 +203,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
         userFullName: newAssigneeFullName,
         userId: assignedUserId,
       },
+      lastEdited: now(),
     };
 
     const modifiedTasks = updateTask(allTasks, taskIdToUpdate, updatedTask);

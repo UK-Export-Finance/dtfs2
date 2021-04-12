@@ -26,6 +26,7 @@ const dealQuery = gql`
             id,
             title,
             status,
+            lastEdited,
             assignedTo {
               userId
               userFullName

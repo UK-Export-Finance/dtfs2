@@ -20,6 +20,7 @@ const UPDATE_TASK = gql`
       assignedTo {
         userId
       }
+      lastEdited
       status
     }
   }
@@ -70,6 +71,7 @@ describe('graphql mutation - update task', () => {
       assignedTo: {
         userId: taskUpdate.assignedTo.userId,
       },
+      lastEdited: expect.any(String),
     };
 
     expect(data.updateTask).toEqual(expected);
