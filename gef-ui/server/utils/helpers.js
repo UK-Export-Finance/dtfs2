@@ -85,12 +85,12 @@ const mapSummaryList = (data, itemsToShow) => {
         if (value) {
           if (options.isDetails) {
             if (value === 'OTHER') {
-              list.push(`<li class="govuk-!-margin-1">${FACILITY_PROVIDED_DETAILS[value]} ${detailsOther ? '-' : ''} ${detailsOther}</li>`);
+              list.push(`<li>${FACILITY_PROVIDED_DETAILS[value]} ${detailsOther ? '-' : ''} ${detailsOther}</li>`);
             } else {
-              list.push(`<li class="govuk-!-margin-1">${FACILITY_PROVIDED_DETAILS[value]}</li>`);
+              list.push(`<li>${FACILITY_PROVIDED_DETAILS[value]}</li>`);
             }
           } else {
-            list.push(`<li class="govuk-!-margin-1">${value}</li>`);
+            list.push(`<li>${value}</li>`);
           }
         }
       });
@@ -109,7 +109,7 @@ const mapSummaryList = (data, itemsToShow) => {
 
   return itemsToShow.map((item) => {
     const {
-      label, href, prefix, suffix, method, isCurrency, isIndustry, isDetails,
+      label, href, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden,
     } = item;
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
@@ -117,7 +117,7 @@ const mapSummaryList = (data, itemsToShow) => {
     const isRequired = required.includes(item.id);
 
     // Don't show row if value is undefined
-    if (value === undefined) { return null; }
+    if (value === undefined || isHidden) { return null; }
 
     return {
       key: {

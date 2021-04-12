@@ -1,6 +1,8 @@
 import moment from 'moment';
 import { isTrueSet } from './helpers';
-import { SME_TYPE, BOOLEAN, STAGE } from '../../constants';
+import {
+  SME_TYPE, BOOLEAN, STAGE, FACILITY_TYPE,
+} from '../../constants';
 
 const exporterItems = (exporterUrl, options = {}) => [
   {
@@ -47,7 +49,7 @@ const exporterItems = (exporterUrl, options = {}) => [
   },
 ];
 
-const facilityItems = (facilityUrl, type) => [
+const facilityItems = (facilityUrl, { type, hasBeenIssued }) => [
   {
     label: 'Name',
     id: 'name',
@@ -63,18 +65,21 @@ const facilityItems = (facilityUrl, type) => [
     id: 'coverStartDate',
     href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
+    isHidden: !hasBeenIssued,
   },
   {
     label: 'Cover end date',
     id: 'coverEndDate',
     href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
+    isHidden: !hasBeenIssued,
   },
   {
     label: 'Months the UKEF guarantee will be in place for',
     id: 'monthsOfCover',
     href: `${facilityUrl}/about-facility?status=change`,
-    suffix: '&nbsp;months',
+    suffix: ' months',
+    isHidden: hasBeenIssued,
   },
   {
     label: 'Facility provided on',
@@ -85,13 +90,13 @@ const facilityItems = (facilityUrl, type) => [
   {
     label: 'Facility value',
     id: 'value',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/facility-currency?status=change`,
     isCurrency: true,
   },
   {
     label: 'Percentage of UKEF cover needed',
     id: 'coverPercentage',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/facility-value?status=change`,
     suffix: '%',
   },
   {
@@ -107,7 +112,7 @@ const facilityItems = (facilityUrl, type) => [
     isCurrency: true,
   },
   {
-    label: type === 0 ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
+    label: type === FACILITY_TYPE.CASH ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
     id: 'interestPercentage',
     href: `${facilityUrl}`,
     suffix: '%',

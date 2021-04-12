@@ -1,6 +1,6 @@
 import * as api from '../../services/api';
 import { FACILITY_TYPE } from '../../../constants';
-import { isTrueSet } from '../../utils/helpers';
+import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 
 const facilityCurrency = async (req, res) => {
   const { params, query } = req;
@@ -14,6 +14,7 @@ const facilityCurrency = async (req, res) => {
 
     return res.render('partials/facility-currency.njk', {
       currency: details.currency,
+      facilityType: facilityTypeConst,
       facilityTypeString,
       applicationId,
       facilityId,
@@ -27,16 +28,41 @@ const facilityCurrency = async (req, res) => {
 const updateFacilityCurrency = async (req, res) => {
   const { params, body, query } = req;
   const { applicationId, facilityId } = params;
-  const { currency } = body;
-  const { saveAndReturn, status } = query;
+  const { currency, facilityType } = body;
+  const { returnToApplication, status } = query;
+  const facilityTypeConst = FACILITY_TYPE[facilityType];
+  const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
+  const facilityCurrencyErrors = [];
+
+  if (isTrueSet(returnToApplication)) {
+    return res.redirect(`/gef/application-details/${applicationId}`);
+  }
+
+  if (!currency) {
+    facilityCurrencyErrors.push({
+      errRef: 'currency',
+      errMsg: `Select a currency of your ${facilityTypeString} facility`,
+    });
+  }
+
+  if (facilityCurrencyErrors.length > 0) {
+    return res.render('partials/facility-currency.njk', {
+      errors: validationErrorHandler(facilityCurrencyErrors),
+      currency,
+      facilityTypeString,
+      applicationId,
+      facilityId,
+      status,
+    });
+  }
 
   try {
     await api.updateFacility(facilityId, {
       currency,
     });
 
-    if (isTrueSet(saveAndReturn) || status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+    if (status === 'change') {
+      return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-value?status=change`);
     }
 
     return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-value`);
