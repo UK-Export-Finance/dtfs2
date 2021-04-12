@@ -45,7 +45,8 @@
             id="facilityType"
             name="facilityType"
             hidden="true"
-            value="{{facilityType}}">
+            value="{{facilityType}}"
+            data-cy="hidden-facility-type">
 
           {% set other %}
             {{ govukCharacterCount({
@@ -61,6 +62,9 @@
                 attributes: {
                   'data-cy': 'details-other-error'
                 }
+              },
+              attributes: {
+                'data-cy': 'details-other'
               }
             }) }}
           {% endset -%}
@@ -73,11 +77,14 @@
                 legend: {
                   text: "Have you provided the " + facilityTypeString + " facility on any of the following",
                   isPageHeading: true,
-                  classes: "govuk-fieldset__legend--xl",
-                  attributes: {
-                    'data-cy': 'main-heading'
-                  }
+                  classes: "govuk-fieldset__legend--xl"
+                },
+                attributes: {
+                  'data-cy': 'main-heading'
                 }
+              },
+              attributes: {
+                'data-cy': 'details'
               },
               hint: {
                 text: "Tick all that apply. You must select at least one option."
@@ -119,6 +126,9 @@
                   checked: details.includes('OTHER'),
                   conditional: {
                     html: other
+                  },
+                  attributes: {
+                    'data-cy': 'other-checkbox'
                   }
                 }
               ]

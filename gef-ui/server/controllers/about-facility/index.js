@@ -40,7 +40,7 @@ const aboutFacility = async (req, res) => {
 
 const validateAboutFacility = async (req, res) => {
   const { body, query, params } = req;
-  const { facilityType } = body;
+  const { facilityType, hasBeenIssued } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
   const { applicationId, facilityId } = params;
@@ -115,8 +115,8 @@ const validateAboutFacility = async (req, res) => {
       errors: validationErrorHandler(aboutFacilityErrors),
       facilityName: body.facilityName,
       shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
-      hasBeenIssued: body.hasBeenIssued,
       monthsOfCover: body.monthsOfCover,
+      hasBeenIssued: isTrueSet(hasBeenIssued),
       coverStartDateDay,
       coverStartDateMonth,
       coverStartDateYear,
