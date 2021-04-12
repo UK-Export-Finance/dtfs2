@@ -27,7 +27,7 @@ const previousTaskIsComplete = (groupTasks, taskId) => {
     return true;
   }
 
-  if (previousTask.status === 'Done') {
+    if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -37,7 +37,7 @@ const previousTaskIsComplete = (groupTasks, taskId) => {
 const firstTaskIsComplete = (groupTasks) => {
   const firstTask = groupTasks.find((t) => t.id === '1');
 
-  if (firstTask.status === 'Done') {
+  if (firstTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -127,7 +127,7 @@ const updateTasksCanEdit = (allTaskGroups, taskIdToUpdate) =>
       groupTasks: group.groupTasks.map((t) => {
         const task = t;
 
-        if (task.status === 'Done') {
+        if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
           task.canEdit = false;
         }
 
@@ -136,7 +136,7 @@ const updateTasksCanEdit = (allTaskGroups, taskIdToUpdate) =>
           task.canEdit = true;
 
           if (task.id === taskIdToUpdate) {
-            if (task.status === 'Done') {
+            if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
               task.canEdit = false;
             }
           }
@@ -208,6 +208,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     // update deal tasks and history
     await api.updateDeal(dealId, tfmDealUpdate);
 
+    // TODO unit test user updates
     if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
       // update original assignee's tasks
       const { assignedTasks: originalTaskAssigneeTasks } = await api.findUserById(originalTaskAssignedUserId);

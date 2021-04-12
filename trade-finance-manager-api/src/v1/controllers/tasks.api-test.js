@@ -11,7 +11,7 @@ const {
   updateTask,
   updateTasksCanEdit,
   updateTfmTask,
-} = require('./task.controller');
+} = require('./tasks.controller');
 
 const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA');
