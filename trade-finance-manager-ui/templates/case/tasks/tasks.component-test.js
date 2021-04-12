@@ -41,6 +41,11 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="tasks-table"]').toExist();
     });
 
+    it('should NOT render `no tasks message` component', () => {
+      wrapper.expectElement('[data-cy="no-tasks-message"]').notToExist();
+    });
+
+
   });
 
   describe('when there are no tasks', () => {
@@ -61,6 +66,10 @@ describe(page, () => {
 
     it('should render `no tasks message` component', () => {
       wrapper.expectElement('[data-cy="no-tasks-message"]').toExist();
+    });
+
+    it('should NOT render tasks table', () => {
+      wrapper.expectElement('[data-cy="tasks-table"]').notToExist();
     });
     
   });

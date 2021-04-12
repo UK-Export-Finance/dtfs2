@@ -126,21 +126,7 @@ const getCaseTask = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const parentGroup = deal.tfm.tasks.find((group) => {
-    if (group.groupTasks.find((t) => t.id === taskId)) {
-      return group;
-    }
-
-    return group;
-  });
-
-  const groupTaskInProgress = parentGroup.groupTasks.find((t) =>
-    t.status === 'In progress');
-
-  const userCanEdit = (!groupTaskInProgress
-      || (groupTaskInProgress && groupTaskInProgress.id === taskId));
-
-  if (!userCanEdit) {
+  if (!task.canEdit) {
     // TODO: ideally we will redirect to custom error page.
     return res.redirect(`/case/${dealId}/tasks`);
   }
