@@ -1,5 +1,5 @@
 const { to2Decimals } = require('../../helpers/currency');
-const { getDealEffectiveDate } = require('./helpers');
+const { getDealEffectiveDate, getDealValue } = require('./helpers');
 
 /*
   dealIdentifier                  string    UKEF ID
@@ -26,7 +26,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => {
   return {
     dealIdentifier: details.ukefDealId.padStart(10, 0),
     currency: submissionDetails.supplyContractCurrency && submissionDetails.supplyContractCurrency.id,
-    dealValue: to2Decimals(submissionDetails.supplyContractValue),
+    dealValue: to2Decimals(getDealValue(deal)),
     guaranteeCommencementDate: getDealEffectiveDate(deal),
     obligorPartyIdentifier,
     obligorName: submissionDetails['supplier-name'],
