@@ -13,5 +13,4 @@ const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod) => {
   return null;
 };
 
-
 module.exports = getFacilityPremiumSchedule;
