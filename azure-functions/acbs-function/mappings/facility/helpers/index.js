@@ -12,6 +12,7 @@ const getNextQuarterDate = require('./get-next-quarter-date');
 const getIssueDate = require('./get-issue-date');
 const getGuaranteeDates = require('./get-guarantee-dates');
 const getGuarantorParty = require('./get-guarantor-party');
+const getFacilityValue = require('./get-facility-value');
 
 module.exports = {
   isIssued,
@@ -28,4 +29,5 @@ module.exports = {
   getIssueDate,
   getGuaranteeDates,
   getGuarantorParty,
+  getFacilityValue,
 };
