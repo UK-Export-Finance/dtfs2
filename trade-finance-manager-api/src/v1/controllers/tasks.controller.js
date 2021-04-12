@@ -2,8 +2,6 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const now = require('../../now');
 
-// TODO: rename file to taskS
-
 const updateHistory = ({
   statusFrom,
   statusTo,
@@ -241,7 +239,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   return originalTask;
 };
 
-// exports.updateTfmTask = updateTfmTask;
 module.exports = {
   getTask,
   previousTaskIsComplete,
