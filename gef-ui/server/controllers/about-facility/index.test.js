@@ -75,7 +75,7 @@ describe('GET About Facility', () => {
 });
 
 describe('Validate About Facility', () => {
-  it('redirects user to application page if application page if save and return is set to true', async () => {
+  it('redirects user to application page if save and return is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockAboutFacilityResponse = new MockAboutFacilityResponse();

@@ -13,6 +13,7 @@ import aboutExporterRoutes from './about-exporter';
 import facilitiesRoutes from './facilities';
 import aboutFacilityRoutes from './about-facility';
 import providedFacilityRoutes from './provided-facility';
+import facilityCurrencyRoutes from './facility-currency';
 
 const router = express.Router();
 
@@ -30,5 +31,6 @@ router.use(aboutExporterRoutes);
 router.use(facilitiesRoutes);
 router.use(aboutFacilityRoutes);
 router.use(providedFacilityRoutes);
+router.use(facilityCurrencyRoutes);
 
 export default router;

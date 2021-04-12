@@ -40,101 +40,101 @@
       <form
         method="post"
         data-cy="form">
-          <input
-            class="govuk-visually-hidden"
-            id="facilityType"
-            name="facilityType"
-            hidden="true"
-            value="{{facilityType}}"
-            data-cy="hidden-facility-type">
+        <input
+          class="govuk-visually-hidden"
+          id="facilityType"
+          name="facilityType"
+          hidden="true"
+          value="{{facilityType}}"
+          data-cy="hidden-facility-type">
 
-          {% set other %}
-            {{ govukCharacterCount({
-              name: "detailsOther",
-              id: "detailsOther",
-              value: detailsOther,
-              maxlength: 300,
-              label: {
-                text: "Enter details"
-              },
-              errorMessage: errors and errors.fieldErrors.detailsOther and {
-                text: errors.fieldErrors.detailsOther.text,
-                attributes: {
-                  'data-cy': 'details-other-error'
-                }
-              },
+        {% set other %}
+          {{ govukCharacterCount({
+            name: "detailsOther",
+            id: "detailsOther",
+            value: detailsOther,
+            maxlength: 300,
+            label: {
+              text: "Enter details"
+            },
+            errorMessage: errors and errors.fieldErrors.detailsOther and {
+              text: errors.fieldErrors.detailsOther.text,
               attributes: {
-                'data-cy': 'details-other'
+                'data-cy': 'details-other-error'
               }
-            }) }}
-          {% endset -%}
+            },
+            attributes: {
+              'data-cy': 'details-other'
+            }
+          }) }}
+        {% endset -%}
 
 
-            {{ govukCheckboxes({
-              idPrefix: "details",
-              name: "details",
-              fieldset: {
-                legend: {
-                  text: "Have you provided the " + facilityTypeString + " facility on any of the following",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--xl"
-                },
-                attributes: {
-                  'data-cy': 'main-heading'
-                }
+        {{ govukCheckboxes({
+          idPrefix: "details",
+          name: "details",
+          fieldset: {
+            legend: {
+              text: "Have you provided the " + facilityTypeString + " facility on any of the following",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            },
+            attributes: {
+              'data-cy': 'main-heading'
+            }
+          },
+          attributes: {
+            'data-cy': 'details'
+          },
+          hint: {
+            text: "Tick all that apply. You must select at least one option."
+          },
+          items: [
+            {
+              value: "TERM",
+              text: "Term basis",
+              checked: details.includes('TERM')
+            },
+            {
+              value: "RESOLVING",
+              text: "Revolving or renewing basis",
+              checked: details.includes('RESOLVING')
+            },
+            {
+              value: "COMMITTED",
+              text: "Committed basis",
+              checked: details.includes('COMMITTED')
+            },
+            {
+              value: "UNCOMMITTED",
+              text: "Uncommitted basis",
+              checked: details.includes('UNCOMMITTED')
+            },
+            {
+              value: "ON_DEMAND",
+              text: "On demand or overdraft basis",
+              checked: details.includes('ON_DEMAND')
+            },
+            {
+              value: "FACTORING",
+              text: "Factoring facility on a with-recourse basis",
+              checked: details.includes('FACTORING')
+            },
+            {
+              value: "OTHER",
+              text: "Other",
+              checked: details.includes('OTHER'),
+              conditional: {
+                html: other
               },
               attributes: {
-                'data-cy': 'details'
-              },
-              hint: {
-                text: "Tick all that apply. You must select at least one option."
-              },
-              items: [
-                {
-                  value: "TERM",
-                  text: "Term basis",
-                  checked: details.includes('TERM')
-                },
-                {
-                  value: "RESOLVING",
-                  text: "Revolving or renewing basis",
-                  checked: details.includes('RESOLVING')
-                },
-                {
-                  value: "COMMITTED",
-                  text: "Committed basis",
-                  checked: details.includes('COMMITTED')
-                },
-                {
-                  value: "UNCOMMITTED",
-                  text: "Uncommitted basis",
-                  checked: details.includes('UNCOMMITTED')
-                },
-                {
-                  value: "ON_DEMAND",
-                  text: "On demand or overdraft basis",
-                  checked: details.includes('ON_DEMAND')
-                },
-                {
-                  value: "FACTORING",
-                  text: "Factoring facility on a with-recourse basis",
-                  checked: details.includes('FACTORING')
-                },
-                {
-                  value: "OTHER",
-                  text: "Other",
-                  checked: details.includes('OTHER'),
-                  conditional: {
-                    html: other
-                  },
-                  attributes: {
-                    'data-cy': 'other-checkbox'
-                  }
-                }
-              ]
-            }) }}
+                'data-cy': 'other-checkbox'
+              }
+            }
+          ]
+        }) }}
 
-          <div class="govuk-button-group">
+        <div class="govuk-button-group">
           {{ govukButton({
             text: "Continue",
             attributes: {
