@@ -27,7 +27,7 @@ const previousTaskIsComplete = (groupTasks, taskId) => {
     return true;
   }
 
-    if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+  if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -149,6 +149,31 @@ const updateTasksCanEdit = (allTaskGroups, taskIdToUpdate) =>
     return group;
   });
 
+const updateUserTasks = async (allTasks, userId) => {
+  const tasksAssignedToUser = [];
+
+  allTasks.map((taskGroup) =>
+    taskGroup.groupTasks.map((task) => {
+      if (task.assignedTo && task.assignedTo.userId === userId) {
+        tasksAssignedToUser.push(task);
+      }
+      return task;
+    }));
+
+  const updatedUser = await api.updateUserTasks(userId, tasksAssignedToUser);
+  return updatedUser.assignedTasks;
+};
+
+const updateOriginalAssigneeTasks = async (originalAssigneeUserId, updatedTaskId) => {
+  const { assignedTasks: originalTaskAssigneeTasks } = await api.findUserById(originalAssigneeUserId);
+
+  const modifiedOriginalTaskAssigneeTasks = originalTaskAssigneeTasks.filter((task) => task.id !== updatedTaskId);
+
+  const updatedUser = await api.updateUserTasks(originalAssigneeUserId, modifiedOriginalTaskAssigneeTasks);
+
+  return updatedUser.assignedTasks;
+};
+
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
   const allTasks = deal.tfm.tasks;
@@ -208,30 +233,12 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     // update deal tasks and history
     await api.updateDeal(dealId, tfmDealUpdate);
 
-    // TODO unit test user updates
     if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-      // update original assignee's tasks
-      const { assignedTasks: originalTaskAssigneeTasks } = await api.findUserById(originalTaskAssignedUserId);
-
-      const modifiedOriginalTaskAssigneeTasks = originalTaskAssigneeTasks.filter((task) => task.id !== taskIdToUpdate);
-
-      await api.updateUserTasks(originalTaskAssignedUserId, modifiedOriginalTaskAssigneeTasks);
+      await updateOriginalAssigneeTasks(originalTaskAssignedUserId, taskIdToUpdate);
     }
 
     if (assignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-      // update new assignee's tasks
-
-      const tasksAssignedToUser = [];
-
-      modifiedTasks.map((taskGroup) =>
-        taskGroup.groupTasks.map((task) => {
-          if (task.assignedTo.userId === assignedUserId) {
-            tasksAssignedToUser.push(task);
-          }
-          return task;
-        }));
-
-      await api.updateUserTasks(assignedUserId, tasksAssignedToUser);
+      await updateUserTasks(modifiedTasks, assignedUserId);
     }
 
     return updatedTask;
@@ -250,5 +257,7 @@ module.exports = {
   getNewAssigneeFullName,
   updateTask,
   updateTasksCanEdit,
+  updateUserTasks,
+  updateOriginalAssigneeTasks,
   updateTfmTask,
 };
