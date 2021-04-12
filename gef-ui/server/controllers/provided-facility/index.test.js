@@ -71,6 +71,42 @@ describe('Validate Provided Facility', () => {
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
   });
 
+  it('redirects user to application page if application page if query status is equal to `change`', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockProvidedFacilityResponse = new MockProvidedFacilityResponse();
+    mockRequest.query.status = 'change';
+
+    api.updateFacility = () => Promise.resolve(mockProvidedFacilityResponse);
+    await validateProvidedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+  });
+
+  it('shows error message if Other textarea is left empty', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    mockRequest.body.details = 'OTHER';
+
+    await validateProvidedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+      }),
+    }));
+
+    mockRequest.body.details = ['OTHER', 'TERMS'];
+
+    await validateProvidedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
   it('calls the updateFacility api with the correct data', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
