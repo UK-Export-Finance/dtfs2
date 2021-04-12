@@ -4,7 +4,7 @@ const {
   getTask,
   previousTaskIsComplete,
   firstTaskIsComplete,
-  getParentGroupTasks,
+  // getParentGroupTasks,
   isFirstTask,
   canUpdateTask,
   getNewAssigneeFullName,
@@ -461,26 +461,26 @@ describe('tasks controller helper functions', () => {
       const updatedUserTasks = await updateUserTasks(mockTasks, userId);
       expect(updatedUserTasks.length).toEqual(1);
 
-      // unassign the task
-      const mockTasksWithUnassigned = [
-        {
-          groupTitle: 'Group 1 tasks',
-          groupTasks: [
-            {
-              id: '1',
-              status: 'In progress',
-              assignedTo: {
-                userFullName: 'Unassigned',
-                userId: 'Unassigned',
-              },
-            },
-          ],
-        },
-        {
-          groupTitle: 'Group 2 tasks',
-          groupTasks: [],
-        },
-      ];
+      // // unassign the task
+      // const mockTasksWithUnassigned = [
+      //   {
+      //     groupTitle: 'Group 1 tasks',
+      //     groupTasks: [
+      //       {
+      //         id: '1',
+      //         status: 'In progress',
+      //         assignedTo: {
+      //           userFullName: 'Unassigned',
+      //           userId: 'Unassigned',
+      //         },
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     groupTitle: 'Group 2 tasks',
+      //     groupTasks: [],
+      //   },
+      // ];
 
       const updatedUserTasksAfterUnassigned = await updateOriginalAssigneeTasks(userId, '1');
 
@@ -514,6 +514,7 @@ describe('tasks controller helper functions', () => {
           userFullName: `${firstName} ${lastName}`,
         },
         status: tfmTaskUpdate.status,
+        lastEdited: expect.any(String),
       };
 
       expect(result).toEqual(expectedUpdatedTask);
