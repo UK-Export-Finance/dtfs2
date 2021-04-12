@@ -46,6 +46,9 @@
               text: "Select currency of your " + facilityTypeString + " facility",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
+            },
+            attributes: {
+              'data-cy': 'main-heading'
             }
           },
           items: [
@@ -67,7 +70,10 @@
             {
               value: "YEN",
               text: "Japanese yen (YEN)",
-              checked: currency === "YEN"
+              checked: currency === "YEN",
+              attributes: {
+                'data-cy': 'yen-checkbox'
+              }
             }
           ]
         }) }}
