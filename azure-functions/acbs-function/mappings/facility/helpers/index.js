@@ -13,6 +13,7 @@ const getIssueDate = require('./get-issue-date');
 const getGuaranteeDates = require('./get-guarantee-dates');
 const getGuarantorParty = require('./get-guarantor-party');
 const getFacilityValue = require('./get-facility-value');
+const getMaximumLiability = require('./get-maximum-liability');
 
 module.exports = {
   isIssued,
@@ -30,4 +31,5 @@ module.exports = {
   getGuaranteeDates,
   getGuarantorParty,
   getFacilityValue,
+  getMaximumLiability,
 };
