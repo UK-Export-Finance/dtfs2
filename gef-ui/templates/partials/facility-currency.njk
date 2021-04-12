@@ -38,6 +38,14 @@
       <form
         method="post"
         data-cy="form">
+        <input
+          class="govuk-visually-hidden"
+          id="facilityType"
+          name="facilityType"
+          hidden="true"
+          value="{{facilityType}}"
+          data-cy="hidden-facility-type">
+
         {{ govukRadios({
           idPrefix: "currency",
           name: "currency",
@@ -49,6 +57,12 @@
             },
             attributes: {
               'data-cy': 'main-heading'
+            }
+          },
+          errorMessage: errors and errors.fieldErrors.currency and {
+            text: errors.fieldErrors.currency.text,
+            attributes: {
+              'data-cy': 'currency-error'
             }
           },
           items: [
@@ -87,11 +101,11 @@
           }) }}
 
           {{ govukButton({
-            text: "Save and return",
+            text: "Return to application",
             classes: "govuk-button--secondary",
             attributes: {
-              formaction: "provided-facility?saveAndReturn=true",
-              'data-cy': 'save-and-return-button'
+              formaction: "facility-currency?returnToApplication=true",
+              'data-cy': 'return-to-application-button'
             }
           }) }}
         </div>

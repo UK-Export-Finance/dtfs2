@@ -252,7 +252,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].id = 'address';
 
     const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
-    expect(html).toEqual('<ul class="is-unstyled"><li class="govuk-!-margin-1">Test Road</li></ul>');
+    expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
   });
 
   it('returns an unordered list with Provided on details if property contains an object', () => {
@@ -266,7 +266,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].id = 'details';
 
     const other = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
-    expect(other.html).toEqual('<ul class="is-unstyled"><li class="govuk-!-margin-1">Other - Other text</li></ul>');
+    expect(other.html).toEqual('<ul class="is-unstyled"><li>Other - Other text</li></ul>');
   });
 
   it('returns selected industry ', () => {

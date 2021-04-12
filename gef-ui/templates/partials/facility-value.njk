@@ -1,0 +1,97 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Facility value, cover and risk margin{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status === 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + applicationId + "/facilities/" + facilityId + "/facility-currency?status=change",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% else %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + applicationId + "/facilities/" + facilityId + "/facility-currency",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+      Value, cover and risk margin
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form
+        method="post"
+        data-cy="form">
+
+        {{ govukInput({
+          label: {
+            text: "Enter value of your " + facilityTypeString + " facility",
+            classes: "govuk-label--m",
+            attributes: {
+              'data-cy': 'value'
+            }
+          },
+          id: "facilityValue",
+          name: "facilityValue",
+          value: facilityValue,
+          suffix: currency,
+          attributes: {
+            'data-cy': 'facility-value'
+          },
+          errorMessage: errors and errors.fieldErrors.facilityValue and {
+            text: errors.fieldErrors.facilityValue.text,
+            attributes: {
+              'data-cy': 'facility-value-error'
+            }
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "provided-facility?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+  
+{% endblock %}
