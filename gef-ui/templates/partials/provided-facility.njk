@@ -42,10 +42,10 @@
         data-cy="form">
           <input
             class="govuk-visually-hidden"
-            id: "facilityType"
-            name: "facilityType"
+            id="facilityType"
+            name="facilityType"
             hidden="true"
-            value="{{facilityType}}"">
+            value="{{facilityType}}">
 
           {% set other %}
             {{ govukCharacterCount({
@@ -55,6 +55,12 @@
               maxlength: 300,
               label: {
                 text: "Enter details"
+              },
+              errorMessage: errors and errors.fieldErrors.detailsOther and {
+                text: errors.fieldErrors.detailsOther.text,
+                attributes: {
+                  'data-cy': 'details-other-error'
+                }
               }
             }) }}
           {% endset -%}

@@ -2,7 +2,7 @@ import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
 import commaNumber from 'comma-number';
 import cleanDeep from 'clean-deep';
-import { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } from '../../constants';
+import { FACILITY_PROVIDED_DETAILS } from '../../constants';
 
 // Fetches the user token from session
 const userToken = (req) => {
