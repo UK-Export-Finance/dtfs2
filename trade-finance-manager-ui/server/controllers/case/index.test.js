@@ -222,9 +222,12 @@ describe('controllers - case', () => {
             _id: '1',
           },
           session,
+          body: {
+            filterType: 'team',
+          },
         };
 
-        await caseController.getCaseTasks(req, res);
+        await caseController.filterCaseTasks(req, res);
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
@@ -254,6 +257,7 @@ describe('controllers - case', () => {
                 },
                 {
                   id: '456',
+                  canEdit: true,
                   assignedTo: {
                     userId: session.user._id,
                   },
@@ -423,6 +427,45 @@ describe('controllers - case', () => {
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
+
+
+    describe('when task cannot be edited', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          tasks: [
+            {
+              groupTitle: 'Testing',
+              groupTasks: [
+                { id: '123', canEdit: false },
+              ],
+            },
+          ],
+        },
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to /tasks route', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            taskId: '123',
+          },
+          session,
+        };
+
+        await caseController.getCaseTask(req, res);
+
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
+      });
+    });
+
 
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
