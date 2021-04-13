@@ -61,6 +61,33 @@ describe('GET Facility Currency', () => {
 });
 
 describe('Update Facility Currency', () => {
+  it('redirects user to application page if returnToApplication is set to true', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
+    mockRequest.query.returnToApplication = 'true';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
+    await updateFacilityCurrency(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+  });
+
+  it('shows error message if no radio buttons have been selected', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
+
+    api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
+    await updateFacilityCurrency(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-currency.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#currency', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
   it('calls the update api with the correct data', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -75,28 +102,17 @@ describe('Update Facility Currency', () => {
     });
   });
 
-  it('redirects user to application page if save and return is set to true', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
-    mockRequest.query.saveAndReturn = 'true';
-
-    api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
-    await updateFacilityCurrency(mockRequest, mockResponse);
-
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
-  });
-
-  it('redirects user to application page if query status is equal to `change`', async () => {
+  it('redirects user to facility value page with correct query if query status is equal to `change`', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
     mockRequest.query.status = 'change';
+    mockRequest.body.currency = 'EUR';
 
     api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-value?status=change');
   });
 
   it('redirects user to facility value page if everything is successful', async () => {
@@ -114,6 +130,7 @@ describe('Update Facility Currency', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
+    mockRequest.body.currency = 'EUR';
 
     api.updateFacility = () => Promise.reject();
     await updateFacilityCurrency(mockRequest, mockResponse);

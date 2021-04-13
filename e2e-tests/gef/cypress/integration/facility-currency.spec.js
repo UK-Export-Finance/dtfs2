@@ -42,9 +42,10 @@ context('Facility Currency Page', () => {
       facilityCurrency.headingCaption();
       facilityCurrency.mainHeading().contains('cash');
       facilityCurrency.mainHeading().should('not.contain', 'contingent');
+      facilityCurrency.hiddenFacilityType().should('be', 'invisible');
       facilityCurrency.form();
       facilityCurrency.continueButton();
-      facilityCurrency.saveAndReturnButton();
+      facilityCurrency.returnToApplicationButton();
     });
 
     it('shows YEN checkbox checked', () => {
@@ -58,6 +59,13 @@ context('Facility Currency Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
     });
 
+    it('shows error message when no radio button has been selected', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
+      facilityCurrency.continueButton().click();
+      facilityCurrency.errorSummary();
+      facilityCurrency.currencyError();
+    });
+
     it('takes you to `Facility value` page when clicking on `Continue` button', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
       facilityCurrency.yenCheckbox().click();
@@ -65,9 +73,9 @@ context('Facility Currency Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
     });
 
-    it('redirects user to application page when clicking on `save and return` button', () => {
+    it('redirects user to application page when clicking on `Return to application` button', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
-      facilityCurrency.saveAndReturnButton().click();
+      facilityCurrency.returnToApplicationButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
     });
 
@@ -85,8 +93,9 @@ context('Facility Currency Page', () => {
       facilityCurrency.mainHeading().contains('contingent');
       facilityCurrency.mainHeading().should('not.contain', 'cash');
       facilityCurrency.form();
+      facilityCurrency.hiddenFacilityType().should('be', 'invisible');
       facilityCurrency.continueButton();
-      facilityCurrency.saveAndReturnButton();
+      facilityCurrency.returnToApplicationButton();
     });
   });
 });
