@@ -1,18 +1,12 @@
-/* eslint-disable no-underscore-dangle */
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
-// TODO: add unit test
-// so that when this is changed, tests fail.
+// TODO: improve unit test coverage
 
-const dealsReducer = (deals, _productDictionary) => {
+const dealsReducer = (deals) => {
   const mapDeal = (d) => {
     const deal = d;
     deal.dealSnapshot.submissionDetails = mapSubmissionDetails(d.dealSnapshot.submissionDetails);
-
-    if (d._id in _productDictionary) {
-      deal.Product = _productDictionary[d._id];
-    }
 
     deal.tfm = {
       ...mapDealTfm(deal.tfm),
@@ -36,9 +30,20 @@ const dealsReducer = (deals, _productDictionary) => {
 
   const mappedDeals = mapDeals(deals);
 
-  const sortedDeals = mappedDeals.sort((a, b) =>
-    new Date(b.dealSnapshot.details.submissionDate)
-    - new Date(a.dealSnapshot.details.submissionDate));
+  const sortedDeals = mappedDeals.sort((x, y) => {
+    const xDate = Number(x.dealSnapshot.details.submissionDate);
+    const yDate = Number(y.dealSnapshot.details.submissionDate);
+
+    if (xDate > yDate) {
+      return -1;
+    }
+
+    if (yDate > xDate) {
+      return 1;
+    }
+
+    return 0;
+  });
 
   const results = {
     count: sortedDeals.length,
