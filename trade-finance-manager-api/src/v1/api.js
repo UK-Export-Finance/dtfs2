@@ -130,6 +130,7 @@ const findOneFacility = async (facilityId) => {
 
 const updateFacility = async (facilityId, facilityUpdate, user) => {
   try {
+    console.log('updateFacility');
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
@@ -292,8 +293,12 @@ const getPremiumSchedule = async (facility, facilityExposurePeriod) => {
         facilityExposurePeriod,
       },
     });
-
-    return response.data;
+    console.log(`response from premium-schedule:${response.status}`);
+    if (response.status === 200 || response.status === 201) {
+      return response.data;
+    }
+    console.log('No premium schedule returned from reference data api.');
+    return false;
   } catch ({ response }) {
     return false;
   }

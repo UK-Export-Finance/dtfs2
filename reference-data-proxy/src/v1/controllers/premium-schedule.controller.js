@@ -10,12 +10,11 @@ const mapPremiumScheduleFalicity = require('../mappings/mapPremiumScheduleFacili
 const postPremiumSchedule = async (facility, facilityExposurePeriod) => {
   console.log('premium-schedule');
 
-  if (!facilityExposurePeriod) {
-    console.log('facilityExposurePeriod is undefined');
+  const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod);
+  if (!data) {
+    console.log('facility data not valid for premium schedule');
     return null;
   }
-  const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod);
-
   const config = {
     method: 'post',
     url: process.env.MULESOFT_API_PREMIUM_SCHEDULE_URL,
@@ -62,6 +61,10 @@ const getScheduleData = async (facilityURN) => {
 const getPremiumSchedule = async (req, res) => {
   const { facility, facilityExposurePeriod } = req.body;
   const postPremiumScheduleResponse = await postPremiumSchedule(facility, facilityExposurePeriod);
+  if (!postPremiumScheduleResponse) {
+    console.log('no postPremiumScheduleResponse');
+    return res.status(400).send();
+  }
   if (postPremiumScheduleResponse === 200 || postPremiumScheduleResponse === 201) {
     const response = await getScheduleData(Number(facility.ukefFacilityID));
     if (response.status === 200 || response.status === 201) {
