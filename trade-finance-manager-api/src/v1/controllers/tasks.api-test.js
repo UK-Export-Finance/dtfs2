@@ -4,7 +4,7 @@ const {
   getTask,
   previousTaskIsComplete,
   firstTaskIsComplete,
-  // getParentGroupTasks,
+  getParentGroupTasks,
   isFirstTask,
   canUpdateTask,
   getNewAssigneeFullName,
@@ -102,38 +102,36 @@ describe('tasks controller helper functions', () => {
     });
   });
 
-  // TODO I don't think this will work with multiple groups.
-  // need a "belongs to group" flag in the actual task.
-  // also need to think about UI routing.
-  // it's currently task/1.
-  // need to do task/1/3 i.e group 1, task 3
+  describe('getParentGroupTasks', () => {
+    it('should return all tasks in a given group by id', () => {
+      const mockGroup1Tasks = [
+        { id: '1', title: 'Group 1 task #1', groupId: 1 },
+        { id: '2', title: 'Group 1 task #2', groupId: 1 },
+      ];
 
-  // describe('getParentGroupTasks', () => {
-  //   it('should return all tasks that the given task.id belongs to', () => {
-  //     const mockGroup1Tasks = [
-  //       { id: '1', , title: 'Group 1 task #1' },
-  //     ];
+      const mockGroup2Tasks = [
+        { id: '1', title: 'Group 2 task #1', groupId: 2 },
+        { id: '2', title: 'Group 2 task #2', groupId: 2 },
+        { id: '3', title: 'Group 2 task #3', groupId: 2 },
+      ];
 
-  //     const mockGroup2Tasks = [
-  //       { id: '1', title: 'Group 2 task #1' },
-  //       { id: '2', title: 'Group 2 task #2' },
-  //       { id: '3', title: 'Group 2 task #3' },
-  //     ];
+      const mockTasks = [
+        {
+          groupTitle: 'Group 1 tasks',
+          id: 1,
+          groupTasks: mockGroup1Tasks,
+        },
+        {
+          groupTitle: 'Group 2 tasks',
+          id: 2,
+          groupTasks: mockGroup2Tasks,
+        },
+      ];
 
-  //     const mockTasks = [
-  //       {
-  //         groupTitle: 'Group 1 tasks',
-  //         groupTasks: mockGroup1Tasks,
-  //       },
-  //       {
-  //         groupTitle: 'Group 2 tasks',
-  //         groupTasks: mockGroup2Tasks,
-  //       },
-  //     ];
-
-  //     const result = getParentGroupTasks(mockTasks, '1');
-  //   });
-  // });
+      const result = getParentGroupTasks(mockTasks, 2);
+      expect(result).toEqual(mockGroup2Tasks);
+    });
+  });
 
   describe('isFirstTask', () => {
     describe('when taskId is `1`', () => {
