@@ -17,6 +17,7 @@ const UPDATE_TASK = gql`
   mutation UpdateTask($dealId: ID!, $taskUpdate: TFMTaskInput) {
     updateTask(dealId: $dealId, taskUpdate: $taskUpdate) {
       id
+      groupId
       assignedTo {
         userId
       }
@@ -30,6 +31,7 @@ describe('graphql mutation - update task', () => {
   let query;
   const baseTaskUpdate = {
     id: '1',
+    groupId: 1,
     assignedTo: {
       userId: MOCK_USER._id,
     },
@@ -67,6 +69,7 @@ describe('graphql mutation - update task', () => {
 
     const expected = {
       id: taskUpdate.id,
+      groupId: taskUpdate.groupId,
       status: taskUpdate.status,
       assignedTo: {
         userId: taskUpdate.assignedTo.userId,

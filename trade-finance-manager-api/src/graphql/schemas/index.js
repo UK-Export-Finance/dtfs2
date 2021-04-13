@@ -195,6 +195,7 @@ type TFMTaskAssignedTo {
 
 type TFMTask {
   id: String
+  groupId: Int
   title: String
   status: String
   team: TFMTeam
@@ -206,6 +207,7 @@ type TFMTask {
 
 type TFMTaskGroup {
   groupTitle: String
+  id: Int
   groupTasks: [TFMTask]
 }
 
@@ -339,6 +341,7 @@ input TFMTaskAssignedToInput {
 
 input TFMTaskInput {
   id: String
+  groupId: Int
   assignedTo: TFMTaskAssignedToInput
   status: String
   updatedBy: String

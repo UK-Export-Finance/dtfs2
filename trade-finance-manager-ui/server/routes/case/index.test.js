@@ -21,7 +21,7 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/tasks', caseController.getCaseTasks);
 
-    expect(get).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.getCaseTask);
+    expect(get).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId', caseController.getCaseTask);
 
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId', caseController.getCaseFacility);
 
@@ -48,7 +48,7 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
-    expect(post).toHaveBeenCalledWith('/:_id/tasks/:taskId', caseController.putCaseTask);
+    expect(post).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', caseController.postExporterPartyDetails);
 

@@ -44,8 +44,10 @@ const GET_DEAL = gql`
         }
         tasks {
           groupTitle
+          id
           groupTasks {
             id,
+            groupId
             title,
             status,
             canEdit

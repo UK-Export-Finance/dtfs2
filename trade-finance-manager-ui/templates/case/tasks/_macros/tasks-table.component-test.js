@@ -13,6 +13,7 @@ describe(component, () => {
         groupTasks: [
           {
             id: '1',
+            groupId: 1,
             title: 'Title A',
             assignedTo: {
               userId: '1234',
@@ -26,6 +27,7 @@ describe(component, () => {
           },
           {
             id: '2',
+            groupId: 1,
             title: 'Title B',
             assignedTo: {
               userId: '5678',
@@ -70,7 +72,7 @@ describe(component, () => {
         const linkSelector = `[data-cy="task-table-row-${taskWithCanEdit.id}-link"]`;
 
         wrapper.expectLink(linkSelector).toLinkTo(
-          `/case/${params.caseId}/tasks/${taskWithCanEdit.id}`,
+          `/case/${params.caseId}/tasks/${taskWithCanEdit.groupId}/${taskWithCanEdit.id}`,
           taskWithCanEdit.title,
         );
 

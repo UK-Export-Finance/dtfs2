@@ -6,8 +6,24 @@ const userFullName = (user) => {
 const userIsInTeam = (user, teamId) =>
   user.teams.includes(teamId);
 
-const getTask = (taskId, tasks) =>
-  tasks.find((t) => t.id === taskId);
+const getGroup = (groupId, allTasks) =>
+  allTasks.find((group) => group.id === groupId);
+
+const getTask = (groupId, taskId, tasks) => {
+  const group = getGroup(groupId, tasks);
+
+  if (group) {
+    const task = group.groupTasks.find((t) => t.id === taskId);
+
+    if (!task) {
+      return null;
+    }
+
+    return task;
+  }
+
+  return null;
+};
 
 const isTaskAssignedToUser = (assignedToUserId, userId) => {
   if (assignedToUserId === userId) {
@@ -112,6 +128,7 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
 export default {
   userFullName,
   userIsInTeam,
+  getGroup,
   getTask,
   isTaskAssignedToUser,
   getTeamMembersWithoutCurrentUser,
