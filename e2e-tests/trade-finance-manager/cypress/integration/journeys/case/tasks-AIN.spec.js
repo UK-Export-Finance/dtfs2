@@ -149,7 +149,7 @@ context('Case tasks - AIN deal', () => {
     const firstTask = pages.tasksPage.tasks.row('1');
     firstTask.link().click();
 
-    cy.url().should('eq', relative(`/case/${dealId}/tasks/1`));
+    cy.url().should('eq', relative(`/case/${dealId}/tasks/1/1`));
 
     // `assign to` should have total amount of users in the team and unassigned users
     const TOTAL_USERS_IN_TEAM = usersInTeam.length;
@@ -244,7 +244,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // manually navigating to task #2 page should redirect to tasks page
     //---------------------------------------------------------------
-    cy.visit(relative(`/case/${dealId}/tasks/2`));
+    cy.visit(relative(`/case/${dealId}/tasks/1/2`));
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
   });
 

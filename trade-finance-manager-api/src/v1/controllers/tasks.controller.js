@@ -44,32 +44,22 @@ const firstTaskIsComplete = (groupTasks) => {
   return false;
 };
 
-const getParentGroupTasks = (allTaskGroups, taskId) => {
-  let groupTasks;
+const getParentGroupTasks = (allTaskGroups, groupId) => {
+  const group = allTaskGroups.find((g) => g.id === groupId);
 
-  allTaskGroups.map((group) => {
-    const taskInGroup = getTask(taskId, group.groupTasks);
-
-    if (taskInGroup) {
-      groupTasks = [...group.groupTasks];
-    }
-
-    return null;
-  });
-
-  return groupTasks;
+  return group.groupTasks;
 };
 
 const isFirstTask = (taskId) => taskId === '1';
 
-const canUpdateTask = (taskId, parentGroupTasks) => {
+const canUpdateTask = (taskId, groupTasks) => {
   if (isFirstTask(taskId)
-      && !firstTaskIsComplete(parentGroupTasks)) {
+      && !firstTaskIsComplete(groupTasks)) {
     return true;
   }
 
   if (!isFirstTask(taskId)
-    && previousTaskIsComplete(parentGroupTasks, taskId)) {
+    && previousTaskIsComplete(groupTasks, taskId)) {
     return true;
   }
 
@@ -91,7 +81,7 @@ const getNewAssigneeFullName = async (assignedUserId) => {
   return fullName;
 };
 
-const updateTask = (allTaskGroups, taskIdToUpdate, taskUpdate) =>
+const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -100,11 +90,8 @@ const updateTask = (allTaskGroups, taskIdToUpdate, taskUpdate) =>
       groupTasks: group.groupTasks.map((t) => {
         let task = t;
 
-        // TODO: need to associate group inside task object
-        // add a check here.
-        // otherwise if eg. task #1 is in multiple groups,
-        // both tasks in both groups will be updated.
-        if (task.id === taskIdToUpdate) {
+        if (task.id === taskIdToUpdate
+          && task.groupId === groupId) {
           task = {
             ...task,
             ...taskUpdate,
@@ -118,7 +105,7 @@ const updateTask = (allTaskGroups, taskIdToUpdate, taskUpdate) =>
     return group;
   });
 
-const updateTasksCanEdit = (allTaskGroups, taskIdToUpdate) =>
+const updateTasksCanEdit = (allTaskGroups, groupId, taskIdToUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -135,7 +122,8 @@ const updateTasksCanEdit = (allTaskGroups, taskIdToUpdate) =>
           && previousTaskIsComplete(group.groupTasks, task.id)) {
           task.canEdit = true;
 
-          if (task.id === taskIdToUpdate) {
+          if (task.id === taskIdToUpdate
+            && task.groupId === groupId) {
             if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
               task.canEdit = false;
             }
@@ -180,24 +168,26 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
   const {
     id: taskIdToUpdate,
+    groupId,
     assignedTo,
     status: statusTo,
     updatedBy,
   } = tfmTaskUpdate;
 
-  const parentGroupTasks = getParentGroupTasks(allTasks, taskIdToUpdate);
+  const groupTasks = getParentGroupTasks(allTasks, groupId);
 
-  const originalTask = getTask(taskIdToUpdate, parentGroupTasks);
+  const originalTask = getTask(taskIdToUpdate, groupTasks);
 
   const originalTaskAssignedUserId = originalTask.assignedTo.userId;
 
-  if (canUpdateTask(taskIdToUpdate, parentGroupTasks)) {
+  if (canUpdateTask(taskIdToUpdate, groupTasks)) {
     const { userId: assignedUserId } = assignedTo;
 
     const newAssigneeFullName = await getNewAssigneeFullName(assignedUserId);
 
     const updatedTask = {
       id: taskIdToUpdate,
+      groupId,
       status: statusTo,
       assignedTo: {
         userFullName: newAssigneeFullName,
@@ -206,11 +196,9 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       lastEdited: now(),
     };
 
-    const modifiedTasks = updateTask(allTasks, taskIdToUpdate, updatedTask);
+    const modifiedTasks = updateTask(allTasks, groupId, taskIdToUpdate, updatedTask);
 
-    // TODO add date to the task object as well as history
-
-    const modifiedTasksWithEditStatus = updateTasksCanEdit(allTasks, taskIdToUpdate);
+    const modifiedTasksWithEditStatus = updateTasksCanEdit(modifiedTasks, groupId, taskIdToUpdate);
 
     const tfmHistoryUpdate = {
       tasks: [

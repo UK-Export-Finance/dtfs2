@@ -4,9 +4,11 @@ const TASKS = {
   AIN: [
     {
       groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
+      id: 1,
       groupTasks: [
         {
           id: '1',
+          groupId: 1,
           title: CONSTANTS.TASKS.AIN.GROUP_1.MATCH_OR_CREATE_PARTIES,
           team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
           status: CONSTANTS.TASKS.STATUS.TO_DO,
@@ -18,6 +20,7 @@ const TASKS = {
         },
         {
           id: '2',
+          groupId: 1,
           title: CONSTANTS.TASKS.AIN.GROUP_1.CREATE_OR_LINK_SALESFORCE,
           team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
           status: CONSTANTS.TASKS.STATUS.TO_DO,

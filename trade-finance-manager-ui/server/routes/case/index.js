@@ -9,8 +9,8 @@ router.get('/:_id/deal', caseController.getCaseDeal);
 router.get('/:_id/tasks', caseController.getCaseTasks);
 router.post('/:_id/tasks', caseController.filterCaseTasks);
 
-router.get('/:_id/tasks/:taskId', caseController.getCaseTask);
-router.post('/:_id/tasks/:taskId', caseController.putCaseTask);
+router.get('/:_id/tasks/:groupId/:taskId', caseController.getCaseTask);
+router.post('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
 router.get('/:_id/facility/:facilityId', caseController.getCaseFacility);
 

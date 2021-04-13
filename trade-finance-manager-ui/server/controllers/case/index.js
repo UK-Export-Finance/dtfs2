@@ -101,7 +101,7 @@ const filterCaseTasks = async (req, res) => {
 
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
-  const { taskId } = req.params;
+  const { groupId, taskId } = req.params;
   const { user } = req.session;
 
   const deal = await api.getDeal(dealId);
@@ -110,17 +110,7 @@ const getCaseTask = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  let allTasksWithoutGroups = [];
-
-  deal.tfm.tasks.forEach((group) => {
-    const { groupTasks } = group;
-    allTasksWithoutGroups = [
-      ...allTasksWithoutGroups,
-      ...groupTasks,
-    ];
-  });
-
-  const task = getTask(taskId, allTasksWithoutGroups);
+  const task = getTask(Number(groupId), taskId, deal.tfm.tasks);
 
   if (!task) {
     return res.redirect('/not-found');
@@ -148,7 +138,7 @@ const getCaseTask = async (req, res) => {
 const putCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
 
-  const { taskId } = req.params;
+  const { groupId, taskId } = req.params;
 
   const deal = await api.getDeal(dealId);
 
@@ -163,6 +153,7 @@ const putCaseTask = async (req, res) => {
 
   const update = {
     id: taskId,
+    groupId: Number(groupId),
     status,
     assignedTo: {
       userId: assignedToValue,

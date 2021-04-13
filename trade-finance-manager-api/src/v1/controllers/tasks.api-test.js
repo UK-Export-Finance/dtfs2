@@ -25,9 +25,9 @@ describe('tasks controller helper functions', () => {
   describe('getTask', () => {
     it('should return task by id', () => {
       const mockGroupTasks = [
-        { id: '1' },
-        { id: '2' },
-        { id: '3' },
+        { id: '1', groupId: 1 },
+        { id: '2', groupId: 1 },
+        { id: '3', groupId: 1 },
       ];
 
       const result = getTask('2', mockGroupTasks);
@@ -39,7 +39,7 @@ describe('tasks controller helper functions', () => {
     describe('when there is no previous task', () => {
       it('should return true', () => {
         const mockGroupTasks = [
-          { id: '1' },
+          { id: '1', groupId: 1 },
         ];
 
         const result = previousTaskIsComplete(mockGroupTasks, '1');
@@ -50,9 +50,9 @@ describe('tasks controller helper functions', () => {
     describe('when the previous task has status `Done`', () => {
       it('should return true', () => {
         const mockGroupTasks = [
-          { id: '1', status: 'Done' },
-          { id: '2', status: 'To do' },
-          { id: '3', status: 'To do' },
+          { id: '1', groupId: 1, status: 'Done' },
+          { id: '2', groupId: 1, status: 'To do' },
+          { id: '3', groupId: 1, status: 'To do' },
         ];
 
         const result = previousTaskIsComplete(mockGroupTasks, '2');
@@ -63,9 +63,9 @@ describe('tasks controller helper functions', () => {
     describe('when the previous task status is NOT `Done`', () => {
       it('should return false', () => {
         const mockGroupTasks = [
-          { id: '1', status: 'In progress' },
-          { id: '2', status: 'To do' },
-          { id: '3', status: 'To do' },
+          { id: '1', groupId: 1, status: 'In progress' },
+          { id: '2', groupId: 1, status: 'To do' },
+          { id: '3', groupId: 1, status: 'To do' },
         ];
 
         const result = previousTaskIsComplete(mockGroupTasks, '3');
@@ -78,9 +78,9 @@ describe('tasks controller helper functions', () => {
     describe('when the first task has status `Done`', () => {
       it('should return true', () => {
         const mockGroupTasks = [
-          { id: '1', status: 'Done' },
-          { id: '2', status: 'To do' },
-          { id: '3', status: 'To do' },
+          { id: '1', groupId: 1, status: 'Done' },
+          { id: '2', groupId: 1, status: 'To do' },
+          { id: '3', groupId: 1, status: 'To do' },
         ];
 
         const result = firstTaskIsComplete(mockGroupTasks);
@@ -91,9 +91,9 @@ describe('tasks controller helper functions', () => {
     describe('when the first task status is NOT `Done`', () => {
       it('should return true', () => {
         const mockGroupTasks = [
-          { id: '1', status: 'In progress' },
-          { id: '2', status: 'To do' },
-          { id: '3', status: 'To do' },
+          { id: '1', groupId: 1, status: 'In progress' },
+          { id: '2', groupId: 1, status: 'To do' },
+          { id: '3', groupId: 1, status: 'To do' },
         ];
 
         const result = firstTaskIsComplete(mockGroupTasks);
@@ -156,9 +156,9 @@ describe('tasks controller helper functions', () => {
       describe('when first task is NOT complete', () => {
         it('should return true', () => {
           const mockParentGroupTasks = [
-            { id: '1', status: 'To do' },
-            { id: '2', status: 'To do' },
-            { id: '3', status: 'To do' },
+            { id: '1', groupId: 1, status: 'To do' },
+            { id: '2', groupId: 1, status: 'To do' },
+            { id: '3', groupId: 1, status: 'To do' },
           ];
 
           const result = canUpdateTask('1', mockParentGroupTasks);
@@ -170,9 +170,9 @@ describe('tasks controller helper functions', () => {
         describe('when first task is complete', () => {
           it('should return false', () => {
             const mockParentGroupTasks = [
-              { id: '1', status: 'Done' },
-              { id: '2', status: 'To do' },
-              { id: '3', status: 'To do' },
+              { id: '1', groupId: 1, status: 'Done' },
+              { id: '2', groupId: 1, status: 'To do' },
+              { id: '3', groupId: 1, status: 'To do' },
             ];
 
             const result = canUpdateTask('1', mockParentGroupTasks);
@@ -187,9 +187,9 @@ describe('tasks controller helper functions', () => {
       describe('when previous task is complete', () => {
         it('should return true', () => {
           const mockParentGroupTasks = [
-            { id: '1', status: 'Done' },
-            { id: '2', status: 'Done' },
-            { id: '3', status: 'To do' },
+            { id: '1', groupId: 1, status: 'Done' },
+            { id: '2', groupId: 1, status: 'Done' },
+            { id: '3', groupId: 1, status: 'To do' },
           ];
 
           const result = canUpdateTask('3', mockParentGroupTasks);
@@ -201,9 +201,9 @@ describe('tasks controller helper functions', () => {
       describe('when previous task is NOT complete', () => {
         it('should return false', () => {
           const mockParentGroupTasks = [
-            { id: '1', status: 'Done' },
-            { id: '2', status: 'In prorgess' },
-            { id: '3', status: 'To do' },
+            { id: '1', groupId: 1, status: 'Done' },
+            { id: '2', groupId: 1, status: 'In prorgess' },
+            { id: '3', groupId: 1, status: 'To do' },
           ];
 
           const result = canUpdateTask('3', mockParentGroupTasks);
@@ -235,26 +235,29 @@ describe('tasks controller helper functions', () => {
   });
 
   describe('updateTask', () => {
-    it('should update a single task in a group', () => {
+    it('should update a single task in a group  ', () => {
       const mockGroup1Tasks = [
-        { id: '1', status: 'Done' },
-        { id: '2', status: 'In progress' },
-        { id: '3', status: 'To do' },
+        { id: '1', groupId: 1, status: 'Done' },
+        { id: '2', groupId: 1, status: 'In progress' },
+        { id: '3', groupId: 1, status: 'To do' },
       ];
 
       const mockTasks = [
         {
           groupTitle: 'Group 1 tasks',
+          id: 1,
           groupTasks: mockGroup1Tasks,
         },
         {
           groupTitle: 'Group 2 tasks',
+          id: 2,
           groupTasks: [],
         },
       ];
 
       const taskUpdate = {
         id: '2',
+        groupId: 1,
         status: 'Done',
         assignedTo: {
           userFullName: 'Test Name',
@@ -262,11 +265,12 @@ describe('tasks controller helper functions', () => {
         },
       };
 
-      const result = updateTask(mockTasks, '2', taskUpdate);
+      const result = updateTask(mockTasks, 1, '2', taskUpdate);
 
       const expected = [
         {
           groupTitle: 'Group 1 tasks',
+          id: 1,
           groupTasks: [
             mockGroup1Tasks[0],
             {
@@ -278,6 +282,7 @@ describe('tasks controller helper functions', () => {
         },
         {
           groupTitle: 'Group 2 tasks',
+          id: 2,
           groupTasks: [],
         },
       ];
@@ -290,23 +295,40 @@ describe('tasks controller helper functions', () => {
     describe('when given a task with `Done` status', () => {
       it('should mark the task as canEdit = false', () => {
         const mockGroup1Tasks = [
-          { id: '1', status: 'Done', canEdit: true },
-          { id: '2', status: 'To do', canEdit: false },
-          { id: '3', status: 'To do', canEdit: false },
+          {
+            id: '1',
+            groupId: 1,
+            status: 'Done',
+            canEdit: true,
+          },
+          {
+            id: '2',
+            groupId: 1,
+            status: 'To do',
+            canEdit: false,
+          },
+          {
+            id: '3',
+            groupId: 1,
+            status: 'To do',
+            canEdit: false,
+          },
         ];
 
         const mockTasks = [
           {
             groupTitle: 'Group 1 tasks',
+            id: 1,
             groupTasks: mockGroup1Tasks,
           },
         ];
 
-        const result = updateTasksCanEdit(mockTasks, '1');
+        const result = updateTasksCanEdit(mockTasks, 1, '1');
 
         const expected = [
           {
             groupTitle: 'Group 1 tasks',
+            id: 1,
             groupTasks: [
               {
                 ...mockGroup1Tasks[0],
@@ -325,23 +347,40 @@ describe('tasks controller helper functions', () => {
     describe('when given a task that is not task #1, and previous task has `Done` status', () => {
       it('should mark the task as canEdit = false', () => {
         const mockGroup1Tasks = [
-          { id: '1', status: 'Done', canEdit: false },
-          { id: '2', status: 'Done', canEdit: true },
-          { id: '3', status: 'To do', canEdit: false },
+          {
+            id: '1',
+            groupId: 1,
+            status: 'Done',
+            canEdit: false,
+          },
+          {
+            id: '2',
+            groupId: 1,
+            status: 'Done',
+            canEdit: true,
+          },
+          {
+            id: '3',
+            groupId: 1,
+            status: 'To do',
+            canEdit: false,
+          },
         ];
 
         const mockTasks = [
           {
             groupTitle: 'Group 1 tasks',
+            id: 1,
             groupTasks: mockGroup1Tasks,
           },
         ];
 
-        const result = updateTasksCanEdit(mockTasks, '2');
+        const result = updateTasksCanEdit(mockTasks, 1, '2');
 
         const expected = [
           {
             groupTitle: 'Group 1 tasks',
+            id: 1,
             groupTasks: [
               mockGroup1Tasks[0],
               {
@@ -371,6 +410,7 @@ describe('tasks controller helper functions', () => {
       const mockGroup1Tasks = [
         {
           id: '1',
+          groupId: 1,
           status: 'In progress',
           assignedTo: {
             userFullName: `${firstName} ${lastName}`,
@@ -379,10 +419,12 @@ describe('tasks controller helper functions', () => {
         },
         {
           id: '2',
+          groupId: 1,
           status: 'To do',
         },
         {
           id: '3',
+          groupId: 1,
           status: 'To do',
         },
       ];
@@ -390,10 +432,12 @@ describe('tasks controller helper functions', () => {
       const mockTasks = [
         {
           groupTitle: 'Group 1 tasks',
+          id: 1,
           groupTasks: mockGroup1Tasks,
         },
         {
           groupTitle: 'Group 2 tasks',
+          id: 2,
           groupTasks: [],
         },
       ];
@@ -424,6 +468,7 @@ describe('tasks controller helper functions', () => {
       const mockGroup1Tasks = [
         {
           id: '1',
+          groupId: 1,
           status: 'In progress',
           assignedTo: {
             userFullName: `${firstName} ${lastName}`,
@@ -432,10 +477,12 @@ describe('tasks controller helper functions', () => {
         },
         {
           id: '2',
+          groupId: 1,
           status: 'To do',
         },
         {
           id: '3',
+          groupId: 1,
           status: 'To do',
         },
       ];
@@ -443,10 +490,12 @@ describe('tasks controller helper functions', () => {
       const mockTasks = [
         {
           groupTitle: 'Group 1 tasks',
+          id: 1,
           groupTasks: mockGroup1Tasks,
         },
         {
           groupTitle: 'Group 2 tasks',
+          id: 2,
           groupTasks: [],
         },
       ];
@@ -460,27 +509,6 @@ describe('tasks controller helper functions', () => {
       // assign a task to user
       const updatedUserTasks = await updateUserTasks(mockTasks, userId);
       expect(updatedUserTasks.length).toEqual(1);
-
-      // // unassign the task
-      // const mockTasksWithUnassigned = [
-      //   {
-      //     groupTitle: 'Group 1 tasks',
-      //     groupTasks: [
-      //       {
-      //         id: '1',
-      //         status: 'In progress',
-      //         assignedTo: {
-      //           userFullName: 'Unassigned',
-      //           userId: 'Unassigned',
-      //         },
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     groupTitle: 'Group 2 tasks',
-      //     groupTasks: [],
-      //   },
-      // ];
 
       const updatedUserTasksAfterUnassigned = await updateOriginalAssigneeTasks(userId, '1');
 
@@ -498,6 +526,7 @@ describe('tasks controller helper functions', () => {
     it('should return the updated task', async () => {
       const tfmTaskUpdate = {
         id: '1',
+        groupId: 1,
         assignedTo: {
           userId,
         },
@@ -509,6 +538,7 @@ describe('tasks controller helper functions', () => {
 
       const expectedUpdatedTask = {
         id: tfmTaskUpdate.id,
+        groupId: tfmTaskUpdate.groupId,
         assignedTo: {
           userId: tfmTaskUpdate.assignedTo.userId,
           userFullName: `${firstName} ${lastName}`,
@@ -528,6 +558,7 @@ describe('tasks controller helper functions', () => {
 
         const tfmTaskUpdate = {
           id: '2',
+          groupId: 1,
           assignedTo: {
             userId,
           },

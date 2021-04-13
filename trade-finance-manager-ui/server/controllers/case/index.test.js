@@ -245,9 +245,11 @@ describe('controllers - case', () => {
           tasks: [
             {
               groupTitle: 'Testing',
+              id: 1,
               groupTasks: [
                 {
                   id: '123',
+                  groupId: 1,
                   assignedTo: {
                     userId: session.user._id,
                   },
@@ -257,6 +259,7 @@ describe('controllers - case', () => {
                 },
                 {
                   id: '456',
+                  groupId: 1,
                   canEdit: true,
                   assignedTo: {
                     userId: session.user._id,
@@ -302,22 +305,17 @@ describe('controllers - case', () => {
         const req = {
           params: {
             _id: mockDeal._id,
+            groupId: '1',
             taskId: '456',
           },
           session,
         };
 
-        let allTasksWithoutGroups = [];
-
-        mockDeal.tfm.tasks.forEach((group) => {
-          const { groupTasks } = group;
-          allTasksWithoutGroups = [
-            ...allTasksWithoutGroups,
-            ...groupTasks,
-          ];
-        });
-
-        const expectedTask = getTask(req.params.taskId, allTasksWithoutGroups);
+        const expectedTask = getTask(
+          Number(req.params.groupId),
+          req.params.taskId,
+          mockDeal.tfm.tasks,
+        );
 
         await caseController.getCaseTask(req, res);
 
@@ -348,9 +346,11 @@ describe('controllers - case', () => {
           tasks: [
             {
               groupTitle: 'Testing',
+              id: 1,
               groupTasks: [
                 {
                   id: '123',
+                  groupId: 1,
                   assignedTo: {
                     userId: session.user._id,
                   },
@@ -360,6 +360,7 @@ describe('controllers - case', () => {
                 },
                 {
                   id: '456',
+                  groupId: 1,
                   assignedTo: {
                     userId: session.user._id,
                   },
@@ -382,6 +383,7 @@ describe('controllers - case', () => {
         const req = {
           params: {
             _id: mockDealWithInProgressTask._id,
+            groupId: '1',
             taskId: '123',
           },
           session,
@@ -403,6 +405,7 @@ describe('controllers - case', () => {
           tasks: [
             {
               groupTitle: 'Testing',
+              id: 1,
               groupTasks: [],
             },
           ],
@@ -439,8 +442,9 @@ describe('controllers - case', () => {
           tasks: [
             {
               groupTitle: 'Testing',
+              id: 1,
               groupTasks: [
-                { id: '123', canEdit: false },
+                { id: '123', groupId: 1, canEdit: false },
               ],
             },
           ],
@@ -455,6 +459,7 @@ describe('controllers - case', () => {
         const req = {
           params: {
             _id: mockDeal._id,
+            groupId: '1',
             taskId: '123',
           },
           session,
@@ -512,6 +517,7 @@ describe('controllers - case', () => {
         const req = {
           params: {
             _id: mockDeal._id,
+            groupId: '1',
             taskId: '456',
           },
           session,
@@ -537,6 +543,7 @@ describe('controllers - case', () => {
         const req = {
           params: {
             _id: '1',
+            groupId: '1',
             taskId: '456',
           },
           session,
