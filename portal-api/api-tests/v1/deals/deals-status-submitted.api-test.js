@@ -210,6 +210,49 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         expect(typeof loan.ukefFacilityID).toEqual('string');
       });
     });
+
+    describe.only('when the deal has already been submitted', () => {
+      it('should NOT add/change the deal and facilities UKEF ids', async () => {
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+        const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
+        const dealId = postResult.body._id;
+
+        await createFacilities(tfmMaker, dealId, completedDeal.mockFacilities);
+
+        const createdDeal = postResult.body;
+
+        // first submit
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
+
+        const dealAfterFirstSubmission = await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+
+        // second submit
+        await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+
+        const dealAfterSecondSubmission = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+        expect(dealAfterSecondSubmission.body.deal.details.ukefDealId).toEqual(dealAfterFirstSubmission.body.details.ukefDealId);
+
+        dealAfterSecondSubmission.body.deal.bondTransactions.items.forEach((bond) => {
+          const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((b) => 
+            b._id === bond._id);
+
+          expect(bond.ukefFacilityID).toEqual(bondInFirstSubmission.ukefFacilityID);
+        });
+
+        dealAfterSecondSubmission.body.deal.loanTransactions.items.forEach((loan) => {
+          const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((l) =>
+            l._id === loan._id);
+
+          expect(loan.ukefFacilityID).toEqual(loanInFirstSubmission.ukefFacilityID);
+        });
+
+      });
+    });
   });
 
   describe('when the status changes to `Submitted` on invalid deal', () => {
