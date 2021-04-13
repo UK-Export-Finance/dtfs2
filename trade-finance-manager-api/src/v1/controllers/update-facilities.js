@@ -32,14 +32,12 @@ const updateFacilities = async (deal) => {
       const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
       const facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod);
-
       // TODO
       // exposure period is not in unit test
       const facilityUpdate = {
         ...facilityCurrencyConversion,
         ...facilityExposurePeriod,
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-        ...facilityPremiumSchedule,
         premiumSchedule: facilityPremiumSchedule,
       };
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
