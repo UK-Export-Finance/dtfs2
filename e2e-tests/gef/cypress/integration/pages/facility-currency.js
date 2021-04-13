@@ -5,9 +5,11 @@ const facilityCurrency = {
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   form: () => cy.get('[data-cy="form"]'),
+  hiddenFacilityType: () => cy.get('[data-cy="hidden-facility-type"]'),
+  currencyError: () => cy.get('[data-cy="currency-error"]'),
   yenCheckbox: () => cy.get('[data-cy="yen-checkbox"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
-  saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
+  returnToApplicationButton: () => cy.get('[data-cy="return-to-application-button"]'),
 };
 
 export default facilityCurrency;
