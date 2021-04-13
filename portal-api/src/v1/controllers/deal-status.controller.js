@@ -154,7 +154,7 @@ exports.update = (req, res) => {
 
       const useTFM = await (isTFMBank(user.bank && user.bank.id));
 
-      if (useTFM) {
+      if (useTFM && dealAfterAllUpdates.details.submissionCount === 1) {
         dealAfterAllUpdates = await createUkefIds(
           req.params.id,
           dealAfterAllUpdates,
