@@ -17,10 +17,10 @@ const postPremiumSchedule = async (facility, facilityExposurePeriod) => {
   }
   const config = {
     method: 'post',
-    url: process.env.MULESOFT_API_PREMIUM_SCHEDULE_URL,
+    url: `${process.env.MULESOFT_API_UKEF_MDM_EA_URL}/premium/schedule`,
     auth: {
-      username: process.env.MULESOFT_API_PREMIUM_SCHEDULE_KEY,
-      password: process.env.MULESOFT_API_PREMIUM_SCHEDULE_SECRET,
+      username: process.env.MULESOFT_API_UKEF_MDM_EA_KEY,
+      password: process.env.MULESOFT_API_UKEF_MDM_EA_SECRET,
     },
     headers: {
       'Content-Type': 'application/json',
@@ -41,13 +41,13 @@ const postPremiumSchedule = async (facility, facilityExposurePeriod) => {
 };
 
 const getScheduleData = async (facilityURN) => {
-  const url = `${process.env.MULESOFT_API_PREMIUM_SEGMENTS_URL}/${facilityURN}`;
+  const url = `${process.env.MULESOFT_API_UKEF_MDM_EA_URL}/premium/segments/${facilityURN}`;
   const response = await axios({
     method: 'get',
     url,
     auth: {
-      username: process.env.MULESOFT_API_PREMIUM_SCHEDULE_KEY,
-      password: process.env.MULESOFT_API_PREMIUM_SCHEDULE_SECRET,
+      username: process.env.MULESOFT_API_UKEF_MDM_EA_KEY,
+      password: process.env.MULESOFT_API_UKEF_MDM_EA_SECRET,
     },
   }).catch((catchErr) => catchErr);
   if (response) {
