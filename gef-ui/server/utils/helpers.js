@@ -70,6 +70,10 @@ const mapSummaryList = (data, itemsToShow) => {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
 
+    if (options.shouldCoverStartOnSubmission) {
+      return { text: 'Date you submit the notice' };
+    }
+
     if (val === null || isEmpty(val)) {
       return { text: '—' };
     }
@@ -109,12 +113,14 @@ const mapSummaryList = (data, itemsToShow) => {
 
   return itemsToShow.map((item) => {
     const {
-      label, href, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden,
+      id, label, href, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden,
+      shouldCoverStartOnSubmission,
     } = item;
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
     const isRequired = required.includes(item.id);
+    const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
 
     // Don't show row if value is undefined
     if (value === undefined || isHidden) { return null; }
@@ -124,7 +130,7 @@ const mapSummaryList = (data, itemsToShow) => {
         text: label,
       },
       value: valueObj(value, isRequired, currency, detailsOther, {
-        prefix, suffix, method, isCurrency, isIndustry, isDetails,
+        prefix, suffix, method, isCurrency, isIndustry, isDetails, shouldCoverStartOnSubmission,
       }),
       actions: {
         items: [
@@ -133,7 +139,7 @@ const mapSummaryList = (data, itemsToShow) => {
             /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
             properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
             Object is empty or not. */
-            text: `${!isEmpty(value) ? 'Change' : 'Add'}`,
+            text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
             visuallyHiddenText: item.label,
           }] : []),
         ],
