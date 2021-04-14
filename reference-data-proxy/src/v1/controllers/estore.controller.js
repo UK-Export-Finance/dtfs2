@@ -35,7 +35,7 @@ const createEstore = async (req, res) => {
     siteName,
   };
 
-  if (createSiteRes.status !== 200) {
+  if (createSiteRes.status > 299) {
     return res.status(createSiteRes.status).send(createSiteRes.data);
   }
 
@@ -65,17 +65,16 @@ const createEstore = async (req, res) => {
       facilityIdentifier,
       destinationMarket,
       riskMarket,
-    })
-      .then(({ status, data }) => {
-        if (status !== 201) {
-          reject(Error(data));
-        }
-        resolve({
-          facilityIdentifier,
-          ...data,
-        });
-      },
-      (err) => reject(err))),
+    }).then(({ status, data }) => {
+      if (status !== 201) {
+        reject(Error(data));
+      }
+      resolve({
+        facilityIdentifier,
+        ...data,
+      });
+    },
+    (err) => reject(err))),
   );
 
   result.facilities = await Promise.all(createFacilities);
