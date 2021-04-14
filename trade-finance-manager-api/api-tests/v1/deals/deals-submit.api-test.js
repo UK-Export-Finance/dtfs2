@@ -179,7 +179,6 @@ describe('/v1/deals', () => {
           const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
-          console.log('test........ \n', body.tfm);
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
         });
       });
