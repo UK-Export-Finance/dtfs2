@@ -20,26 +20,20 @@ const isFacilityValidForPremiumSchedule = (
       return false;
     }
   }
-  if (!facility.requestedCoverStartDate) {
-    return false;
-  }
-  if (!facility.coverEndDate) {
-    return false;
-  }
   if (!facility.ukefFacilityID) {
     return false;
   }
   if (!facility.requestedCoverStartDate
     && (!facility['requestedCoverStartDate-year']
-          || facility['requestedCoverStartDate-month']
-          || facility['requestedCoverStartDate-day'])) {
+          || !facility['requestedCoverStartDate-month']
+          || !facility['requestedCoverStartDate-day'])) {
     return false;
   }
 
   if (!facility.coverEndDate
     && (!facility['coverEndDate-year']
-          || facility['coverEndDate-month']
-          || facility['coverEndDate-day'])) {
+          || !facility['coverEndDate-month']
+          || !facility['coverEndDate-day'])) {
     return false;
   }
 
