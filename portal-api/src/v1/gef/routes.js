@@ -20,6 +20,10 @@ router.route('/application/:id')
   .put(validate({ role: ['maker', 'data-admin'] }), application.update)
   .delete(validate({ role: ['maker', 'data-admin'] }), application.delete);
 
+router.route('/application/status/:id')
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getStatus)
+  .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.changeStatus);
+
 // Exporter
 router.route('/exporter/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), exporter.getById)
