@@ -43,7 +43,7 @@ const CURRENCY = {
   EUR: 'EUR',
   USD: 'USD',
   YEN: 'YEN',
-}
+};
 
 module.exports = {
   SME_TYPE,

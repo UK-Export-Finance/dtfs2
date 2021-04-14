@@ -37,12 +37,13 @@ const updateFacilityValue = async (req, res) => {
   const {
     value, interestPercentage, coverPercentage, facilityType, currency,
   } = body;
+
   const { status } = query;
   const facilityTypeConst = FACILITY_TYPE[facilityType];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityValueErrors = [];
 
-  if (coverPercentage && !/^([1-9]|[12][0-9]|8[0])$/.test(coverPercentage)) {
+  if (coverPercentage && !/^(?:[1-9]|[1-7][0-9]|80)$/.test(coverPercentage)) {
     facilityValueErrors.push({
       errRef: 'coverPercentage',
       errMsg: 'You can only only enter a number between 1 and 80',
@@ -64,6 +65,7 @@ const updateFacilityValue = async (req, res) => {
       value,
       coverPercentage,
       interestPercentage,
+      facilityType,
       facilityTypeString,
       applicationId,
       facilityId,

@@ -96,6 +96,8 @@ describe('Update Facility Value', () => {
       }),
     }));
 
+    jest.clearAllMocks();
+
     mockRequest.body.coverPercentage = '2.0';
 
     api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
@@ -108,43 +110,123 @@ describe('Update Facility Value', () => {
     }));
   });
 
-  it('calls the update api with the correct data', async () => {
+  it('shows error message if cover percentage value is not between 1 and 80', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityValueResponse = new MockFacilityValueResponse();
+
+    mockRequest.body.coverPercentage = '0';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      }),
+    }));
+
+    jest.clearAllMocks();
+
+    mockRequest.body.coverPercentage = '81';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      }),
+    }));
+
+    jest.clearAllMocks();
+
+    mockRequest.body.coverPercentage = '80';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).not.toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
+  it('shows error message if interest percentage value is not a number', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityValueResponse = new MockFacilityValueResponse();
+
+    mockRequest.body.interestPercentage = 'abc';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
+  it('shows error message if interest percentage value is not between 0 and 100', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityValueResponse = new MockFacilityValueResponse();
+
+    mockRequest.body.interestPercentage = '-1';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      }),
+    }));
+
+    jest.clearAllMocks();
+
+    mockRequest.body.interestPercentage = '101';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      }),
+    }));
+
+    jest.clearAllMocks();
+
+    mockRequest.body.interestPercentage = '100';
+
+    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
+    await updateFacilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.render).not.toHaveBeenCalledWith('partials/facility-value.njk');
+  });
+
+  it('calls the update api with the correct data and redirects user back to application page', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
 
-    mockRequest.body.currency = 'EUR';
+    mockRequest.body.coverPercentage = '79';
+    mockRequest.body.interestPercentage = '10';
+    mockRequest.body.value = '1000';
 
     await updateFacilityValue(mockRequest, mockResponse);
 
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      currency: 'EUR',
+      coverPercentage: '79',
+      interestPercentage: '10',
+      value: '1000',
     });
-  });
 
-  it('redirects user to facility value page with correct query if query status is equal to `change`', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityValueResponse = new MockFacilityValueResponse();
-    mockRequest.query.status = 'change';
-    mockRequest.body.currency = 'EUR';
-
-    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
-    await updateFacilityValue(mockRequest, mockResponse);
-
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-value?status=change');
-  });
-
-  it('redirects user to facility value page if everything is successful', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityValueResponse = new MockFacilityValueResponse();
-
-    mockRequest.body.currency = 'EUR';
-
-    api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
-    await updateFacilityValue(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-value');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {

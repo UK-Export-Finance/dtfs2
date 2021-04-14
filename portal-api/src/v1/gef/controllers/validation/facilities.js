@@ -15,16 +15,16 @@ const hasRequiredItems = (doc) => {
   if (doc.startOnDayOfNotice === null) {
     required.push('startOnDayOfNotice');
   }
-  if (doc.shouldCoverStartOnSubmission === null) {
-    required.push('shouldCoverStartOnSubmission');
-  }
-  if (doc.shouldCoverStartOnSubmission !== true && doc.coverStartDate === null) {
+  // if (doc.hasBeenIssued === true && doc.shouldCoverStartOnSubmission === null) {
+  //   required.push('shouldCoverStartOnSubmission');
+  // }
+  if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && doc.coverStartDate === null)) {
     required.push('coverStartDate');
   }
-  if (doc.shouldCoverStartOnSubmission !== true && doc.coverEndDate === null) {
+  if (doc.hasBeenIssued === true && doc.coverEndDate === null) {
     required.push('coverEndDate');
   }
-  if (doc.monthsOfCover === null) {
+  if (doc.hasBeenIssued === false && doc.monthsOfCover === null) {
     required.push('monthsOfCover');
   }
   if (doc.details === null) {
