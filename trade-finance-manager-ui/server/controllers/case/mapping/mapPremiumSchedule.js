@@ -9,6 +9,7 @@ const mapPremiumSchedule = (schedule) => {
       map.push(item);
     });
   }
+
   return map;
 };
 export default mapPremiumSchedule;
