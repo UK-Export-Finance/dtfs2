@@ -90,7 +90,7 @@ context('Provided Facility Page', () => {
 
   describe('Visiting page as contingent facility', () => {
     it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[2].details._id}/provided-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[2].details._id}/provided-facility`));
       providedFacility.backLink();
       providedFacility.headingCaption();
       providedFacility.mainHeading().contains('contingent');
