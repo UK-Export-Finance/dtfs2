@@ -5,7 +5,7 @@ const { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, CURRENCY, PAYMENT_TYPE } = req
 const FACILITIES = [[],
   [{
     type: FACILITY_TYPE.CASH,
-    hasBeenIssued: null,
+    hasBeenIssued: true,
     name: null,
     startOnDayOfNotice: null,
     shouldCoverStartOnSubmission: null,
@@ -21,7 +21,7 @@ const FACILITIES = [[],
     paymentType: null,
   }, {
     type: FACILITY_TYPE.CASH,
-    hasBeenIssued: null,
+    hasBeenIssued: true,
     name: null,
     startOnDayOfNotice: null,
     shouldCoverStartOnSubmission: null,
