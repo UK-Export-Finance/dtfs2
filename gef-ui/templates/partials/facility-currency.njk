@@ -53,7 +53,7 @@
             legend: {
               text: "Select currency of your " + facilityTypeString + " facility",
               isPageHeading: true,
-              classes: "govuk-fieldset__legend--l"
+              classes: "govuk-fieldset__legend--xl"
             },
             attributes: {
               'data-cy': 'main-heading'
@@ -69,17 +69,26 @@
             {
               value: "GBP",
               text: "UK sterling (GBP)",
-              checked: currency === "GBP"
+              checked: currency === "GBP",
+              attributes: {
+                'data-cy': 'gbp-radio-button'
+              }
             },
             {
               value: "EUR",
               text: "Euros (EUR)",
-              checked: currency === "EUR"
+              checked: currency === "EUR",
+              attributes: {
+                'data-cy': 'eur-radio-button'
+              }
             },
             {
               value: "USD",
               text: "US dollars (USD)",
-              checked: currency === "USD"
+              checked: currency === "USD",
+              attributes: {
+                'data-cy': 'usd-radio-button'
+              }
             },
             {
               value: "YEN",
