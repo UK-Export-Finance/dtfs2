@@ -111,7 +111,7 @@ class Facility {
         this.paymentType = checkPaymentType(req.paymentType);
       }
 
-      // nullify values based on previous questions 
+      // nullify values based on previous questions
       if (req.shouldCoverStartOnSubmission === true) {
         this.coverStartDate = null;
       }
