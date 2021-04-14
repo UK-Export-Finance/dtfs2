@@ -179,12 +179,22 @@ describe('/v1/deals', () => {
           const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
+          console.log('test........ \n', body.tfm);
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
         });
       });
 
-      describe('when deal is NOT AIN', () => {
-        it('adds NOT add default AIN tasks to the deal', async () => {
+      describe('when deal is MIA', () => {
+        it('adds default MIA tasks to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.MIA);
+        });
+      });
+
+      describe('when deal is MIN', () => {
+        it('adds NOT add tasks to the deal', async () => {
           const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
