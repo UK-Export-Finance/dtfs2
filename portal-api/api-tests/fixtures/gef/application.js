@@ -4,6 +4,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 1',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -11,6 +13,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 2',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -18,6 +22,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 3',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -25,6 +31,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 4',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -32,6 +40,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 5',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -39,6 +49,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 6',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -46,6 +58,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 7',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -53,6 +67,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 8',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -60,6 +76,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 9',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -67,6 +85,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 10',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -74,6 +94,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 11',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -81,6 +103,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 12',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -88,6 +112,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 13',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -95,6 +121,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 14',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }, {
   userId: null,
@@ -102,6 +130,8 @@ const APPLICATION = [{
   additionalRefName: 'Team 15',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: 'IN_PROGRESS',
   updatedAt: null,
 }];
 
