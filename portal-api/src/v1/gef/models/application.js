@@ -1,10 +1,14 @@
+const { STATUS } = require('../enums');
+
 class Application {
   constructor(req, exporterId) {
     if (exporterId) {
       // New Application
       this.userId = req.userId ? String(req.userId) : null;
+      this.status = STATUS.IN_PROGRESS;
       this.exporterId = exporterId;
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
+      this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;
       this.createdAt = Date.now();
       this.updatedAt = null;
     } else {
