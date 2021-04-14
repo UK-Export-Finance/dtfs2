@@ -1,6 +1,6 @@
 import * as api from '../../services/api';
 import { FACILITY_TYPE } from '../../../constants';
-import { isTrueSet } from '../../utils/helpers';
+import { validationErrorHandler } from '../../utils/helpers';
 
 const facilityValue = async (req, res) => {
   const { params, query } = req;
@@ -11,12 +11,16 @@ const facilityValue = async (req, res) => {
     const { details } = await api.getFacility(facilityId);
     const facilityTypeConst = FACILITY_TYPE[details.type];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
+    const value = JSON.stringify(details.value);
+    const coverPercentage = JSON.stringify(details.coverPercentage);
+    const interestPercentage = JSON.stringify(details.interestPercentage);
 
     return res.render('partials/facility-value.njk', {
       currency: details.currency,
-      facilityvalue: details.value,
-      coverPercentage: details.coverPercentage,
-      interestPercentage: details.interestPercentage,
+      value: value !== 'null' ? value : null,
+      facilityType: facilityTypeConst,
+      coverPercentage: coverPercentage !== 'null' ? coverPercentage : null,
+      interestPercentage: interestPercentage !== 'null' ? interestPercentage : null,
       facilityTypeString,
       applicationId,
       facilityId,
@@ -27,28 +31,60 @@ const facilityValue = async (req, res) => {
   }
 };
 
-// const validateFacilityValue = async (req, res) => {
-//   const { params, body, query } = req;
-//   const { applicationId, facilityId } = params;
-//   const { currency } = body;
-//   const { saveAndReturn, status } = query;
+const updateFacilityValue = async (req, res) => {
+  const { params, body, query } = req;
+  const { applicationId, facilityId } = params;
+  const {
+    value, interestPercentage, coverPercentage, facilityType, currency,
+  } = body;
+  const { status } = query;
+  const facilityTypeConst = FACILITY_TYPE[facilityType];
+  const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
+  const facilityValueErrors = [];
 
-//   try {
-//     await api.updateFacility(facilityId, {
-//       currency,
-//     });
+  if (coverPercentage && !/^([1-9]|[12][0-9]|8[0])$/.test(coverPercentage)) {
+    facilityValueErrors.push({
+      errRef: 'coverPercentage',
+      errMsg: 'You can only only enter a number between 1 and 80',
+    });
+  }
 
-//     if (isTrueSet(saveAndReturn) || status === 'change') {
-//       return res.redirect(`/gef/application-details/${applicationId}`);
-//     }
+  if (interestPercentage && !/^(\d{0,2}(\.\d{1,2})?|100(\.00?)?)$/.test(interestPercentage)) {
+    facilityValueErrors.push({
+      errRef: 'interestPercentage',
+      errMsg: 'You can only only enter a number between 0 and 100',
+    });
+  }
 
-//     return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-value`);
-//   } catch (err) {
-//     return res.render('partials/problem-with-service.njk');
-//   }
-// };
+
+  if (facilityValueErrors.length > 0) {
+    return res.render('partials/facility-value.njk', {
+      errors: validationErrorHandler(facilityValueErrors),
+      currency,
+      value,
+      coverPercentage,
+      interestPercentage,
+      facilityTypeString,
+      applicationId,
+      facilityId,
+      status,
+    });
+  }
+
+  try {
+    await api.updateFacility(facilityId, {
+      coverPercentage: coverPercentage || null,
+      interestPercentage: interestPercentage || null,
+      value: value ? value.replace(',', '') : null,
+    });
+
+    return res.redirect(`/gef/application-details/${applicationId}`);
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
+  }
+};
 
 export {
   facilityValue,
-  // validateFacilityValue,
+  updateFacilityValue,
 };
