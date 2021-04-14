@@ -49,7 +49,7 @@ const exporterItems = (exporterUrl, options = {}) => [
   },
 ];
 
-const facilityItems = (facilityUrl, { type, hasBeenIssued }) => [
+const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission }) => [
   {
     label: 'Name',
     id: 'name',
@@ -66,6 +66,7 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued }) => [
     href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
     isHidden: !hasBeenIssued,
+    shouldCoverStartOnSubmission,
   },
   {
     label: 'Cover end date',
@@ -114,7 +115,7 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued }) => [
   {
     label: type === FACILITY_TYPE.CASH ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
     id: 'interestPercentage',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/facility-value?status=change`,
     suffix: '%',
   },
 ];
