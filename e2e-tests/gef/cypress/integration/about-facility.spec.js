@@ -33,11 +33,12 @@ context('About Facility Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
+    console.log(applications);
   });
 
   describe('Visiting page with already issued cash facility', () => {
     it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.backLink();
       aboutFacility.headingCaption();
       aboutFacility.mainHeading().contains('cash');
@@ -57,13 +58,13 @@ context('About Facility Page', () => {
     });
 
     it('redirects user to `Has your bank already issued` page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}`));
     });
 
     it('validates form when clicking on Continue', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.continueButton().click();
       aboutFacility.errorSummary();
       aboutFacility.facilityNameError();
@@ -72,13 +73,13 @@ context('About Facility Page', () => {
     });
 
     it('redirects user to application page when clicking on `save and return` button', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
     });
 
     it('shows the cover start date fields when clicking on the `No` radio button', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
       aboutFacility.coverStartDate().should('not.be', 'visible');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
@@ -86,7 +87,7 @@ context('About Facility Page', () => {
     });
 
     it('validates the cover start date fields when clicking on the Continue button', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
       aboutFacility.coverStartDate();
       aboutFacility.continueButton().click();
@@ -94,7 +95,7 @@ context('About Facility Page', () => {
     });
 
     it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
       aboutFacility.coverStartDateDay().type('10');
@@ -104,13 +105,13 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth().type('12');
       aboutFacility.coverEndDateYear().type('2024');
       aboutFacility.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/provided-facility`));
     });
   });
 
   describe('Visiting page with unissued cash facility', () => {
     it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.backLink();
       aboutFacility.headingCaption();
       aboutFacility.mainHeading().contains('cash');
@@ -129,7 +130,7 @@ context('About Facility Page', () => {
     });
 
     it('doesnt validate facility name field as its optional', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.monthsOfCover().type('10');
       aboutFacility.continueButton().click();
       aboutFacility.errorSummary().should('not.be', 'visible');
@@ -137,7 +138,7 @@ context('About Facility Page', () => {
     });
 
     it('validates `months of cover` field if not a number', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.monthsOfCover().clear();
       aboutFacility.monthsOfCover().type('ab');
       aboutFacility.continueButton().click();
@@ -152,7 +153,7 @@ context('About Facility Page', () => {
 
   describe('Visiting page with already issued contingent facility', () => {
     it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[3].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[2].details._id}/about-facility`));
       aboutFacility.backLink();
       aboutFacility.headingCaption();
       aboutFacility.mainHeading().contains('contingent');
@@ -172,9 +173,9 @@ context('About Facility Page', () => {
     });
   });
 
-  describe('Visiting page with unissued cash facility', () => {
+  describe('Visiting page with unissued contingent facility', () => {
     it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[2].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/about-facility`));
       aboutFacility.backLink();
       aboutFacility.headingCaption();
       aboutFacility.mainHeading().contains('contingent');
