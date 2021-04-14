@@ -1,3 +1,5 @@
+const TEAMS = require('./teams');
+
 const AIN_AND_MIA = {
   GROUP_1: {
     GROUP_TITLE: 'Set up deal',
@@ -9,35 +11,87 @@ const AIN_AND_MIA = {
 const AIN = {
   GROUP_1: {
     GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
-    MATCH_OR_CREATE_PARTIES: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-    CREATE_OR_LINK_SALESFORCE: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+    TASKS: [
+      {
+        title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+        team: TEAMS.BUSINESS_SUPPORT,
+      },
+      {
+        title: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+        team: TEAMS.BUSINESS_SUPPORT,
+      },
+    ],
   },
 };
 
 const MIA = {
   GROUP_1: {
     GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
-    MATCH_OR_CREATE_PARTIES: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-    CREATE_OR_LINK_SALESFORCE: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
-    FILE_ALL_DEAL_EMAILS: 'File all deal emails in this deal',
-    CREATE_CREDIT_ANALYSIS_DOCUMENT: 'Create a credit analysis document',
-    ASSIGN_UNDERWRITER: 'Assign an underwriter for this deal',
+    TASKS: [
+      {
+        title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+        team: TEAMS.BUSINESS_SUPPORT,
+      },
+      {
+        title: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+        team: TEAMS.BUSINESS_SUPPORT,
+      },
+      {
+        title: 'File all deal emails in this deal',
+        team: TEAMS.UNDERWRITING_SUPPORT,
+      },
+      {
+        title: 'Create a credit analysis document',
+        team: TEAMS.UNDERWRITING_SUPPORT,
+      },
+      {
+        title: 'Assign an underwriter for this deal',
+        team: TEAMS.UNDERWRITER_MANAGERS,
+      },
+    ],
   },
   GROUP_2: {
     GROUP_TITLE: 'Adverse history check',
-    COMPLETE_ADVERSE_HISTORY_CHECK: 'Complete an adverse history check',
+    TASKS: [
+      {
+        title: 'Complete an adverse history check',
+        team: TEAMS.UNDERWRITER_MANAGERS,
+      },
+    ],
   },
   GROUP_3: {
     GROUP_TITLE: 'Underwriting',
-    CHECK_EXPOSURE: 'Check exposure',
-    GIVE_EXPORTER_CREDIT_RATING: 'Give the exporter a credit rating',
-    COMPLETE_CREDIT_ANALYSIS: 'Complete a credit analysisa',
+    TASKS: [
+      {
+        title: 'Check exposure',
+        team: TEAMS.UNDERWRITERS,
+      },
+      {
+        title: 'Give the exporter a credit rating',
+        team: TEAMS.UNDERWRITERS,
+      },
+      {
+        title: 'Complete a credit analysis',
+        team: TEAMS.UNDERWRITERS,
+      },
+    ],
   },
   GROUP_4: {
     GROUP_TITLE: 'Approvals',
-    CHECK_CREDIT_ANALYSIS: 'Check the credit analysis',
-    COMPELTE_RISK_ANALYSIS: 'Complete risk analysis (RAD)',
-    APPROVE_OR_DECLINE_DEAL: 'Approve or decline the deal',
+    TASKS: [
+      {
+        title: 'Check the credit analysis',
+        team: TEAMS.UNDERWRITER_MANAGERS,
+      },
+      {
+        title: 'Complete risk analysis (RAD)',
+        team: TEAMS.RISK_MANAGERS,
+      },
+      {
+        title: 'Approve or decline the deal',
+        team: TEAMS.UNDERWRITER_MANAGERS,
+      },
+    ],
   },
 };
 
