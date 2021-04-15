@@ -2,7 +2,7 @@ const FACILITIES = [
   [{
     applicationId: 'IGNORE_POST-POPULATED',
     type: 'CASH',
-    hasBeenIssued: null,
+    hasBeenIssued: true,
     name: null,
     startOnDayOfNotice: null,
     coverStartDate: null,
@@ -18,7 +18,7 @@ const FACILITIES = [
   }, {
     applicationId: 'IGNORE_POST-POPULATED',
     type: 'CASH',
-    hasBeenIssued: null,
+    hasBeenIssued: false,
     name: null,
     startOnDayOfNotice: null,
     coverStartDate: null,
@@ -34,7 +34,7 @@ const FACILITIES = [
   }, {
     applicationId: 'IGNORE_POST-POPULATED',
     type: 'CONTINGENT',
-    hasBeenIssued: null,
+    hasBeenIssued: true,
     name: null,
     startOnDayOfNotice: null,
     coverStartDate: null,
