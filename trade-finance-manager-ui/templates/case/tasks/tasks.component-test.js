@@ -12,14 +12,12 @@ describe(page, () => {
           submissionType: 'Automatic Inclusion Notice',
         },
       },
-      tfm: {
-        tasks: [
-          {
-            groupTitle: 'Testing',
-            groupTasks: [],
-          }
-        ],
-      },
+      tasks: [
+        {
+          groupTitle: 'Testing',
+          groupTasks: [],
+        }
+      ],
       selectedTaskFilter: 'all',
     };
 
@@ -43,6 +41,11 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="tasks-table"]').toExist();
     });
 
+    it('should NOT render `no tasks message` component', () => {
+      wrapper.expectElement('[data-cy="no-tasks-message"]').notToExist();
+    });
+
+
   });
 
   describe('when there are no tasks', () => {
@@ -53,9 +56,7 @@ describe(page, () => {
           submissionType: 'Automatic Inclusion Notice',
         },
       },
-      tfm: {
-        tasks: [],
-      },
+      tasks: [],
       selectedTaskFilter: 'all',
     };
 
@@ -65,6 +66,10 @@ describe(page, () => {
 
     it('should render `no tasks message` component', () => {
       wrapper.expectElement('[data-cy="no-tasks-message"]').toExist();
+    });
+
+    it('should NOT render tasks table', () => {
+      wrapper.expectElement('[data-cy="tasks-table"]').notToExist();
     });
     
   });

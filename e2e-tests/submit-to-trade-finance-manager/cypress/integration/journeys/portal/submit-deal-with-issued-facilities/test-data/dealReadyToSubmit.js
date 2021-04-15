@@ -23,5 +23,13 @@ module.exports = () => {
   deal.mockFacilities[1]['coverEndDate-month'] = aMonthInTheFuture.format('MM');
   deal.mockFacilities[1]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
 
+  deal.mockFacilities[0]['conversionRateDate-day'] = moment().format('DD');
+  deal.mockFacilities[0]['conversionRateDate-month'] = moment().format('MM');
+  deal.mockFacilities[0]['conversionRateDate-year'] = moment().format('YYYY');
+
+  deal.mockFacilities[1]['conversionRateDate-day'] = moment().format('DD');
+  deal.mockFacilities[1]['conversionRateDate-month'] = moment().format('MM');
+  deal.mockFacilities[1]['conversionRateDate-year'] = moment().format('YYYY');
+
   return deal;
 };

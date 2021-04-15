@@ -17,6 +17,9 @@ const MOCK_DEAL_TFM = {
   exporterCreditRating: 'Good (BB-)',
   lossGivenDefault: '50%',
   stage: 'Confirmed',
+  history: {
+    tasks: [],
+  },
 };
 
 const GET_DEAL = gql`
@@ -41,10 +44,14 @@ const GET_DEAL = gql`
         }
         tasks {
           groupTitle
+          id
           groupTasks {
             id,
+            groupId
             title,
             status,
+            canEdit
+            lastEdited
             assignedTo {
               userId
               userFullName

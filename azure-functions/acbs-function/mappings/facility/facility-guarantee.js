@@ -27,11 +27,11 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
   return {
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
     guaranteeCommencementDate,
-    guarantorParty: '00000141',
-    limitKey: helpers.getFacilityGuaranteeLimitKey(acbsData, guaranteeTypeCode),
+    guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
+    limitKey: acbsData.acbsData.parties.exporter.partyIdentifier,
     guaranteeExpiryDate,
     effectiveDate: formatTimestamp(effectiveDate),
-    maximumLiability: Number(facilitySnapshot.facilityValue),
+    maximumLiability: helpers.getMaximumLiability(facility),
     guaranteeTypeCode,
   };
 };

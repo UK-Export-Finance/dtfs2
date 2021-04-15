@@ -32,10 +32,17 @@ const ALL_MOCK_FACILITIES = [
 
 module.exports = {
   findOneDeal: (dealId) => {
-    const dealSnapshot = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    let tfmHistory = { tasks: [] };
+
+    if (mockDeal && mockDeal.tfm && mockDeal.tfm.history) {
+      tfmHistory = mockDeal.tfm.history;
+    }
+
     const deal = {
       _id: dealId,
-      dealSnapshot,
+      dealSnapshot: mockDeal,
       tfm: {
         tasks: MOCK_TASKS,
         exporterCreditRating: 'Good (BB-)',
@@ -47,10 +54,11 @@ module.exports = {
         },
         bondIssuerPartyUrn: '',
         bondBeneficiaryPartyUrn: '',
+        history: tfmHistory,
       },
     };
 
-    return dealSnapshot ? Promise.resolve(deal) : Promise.reject();
+    return mockDeal ? Promise.resolve(deal) : Promise.reject();
   },
   findOnePortalDeal: (dealId) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
@@ -79,7 +87,22 @@ module.exports = {
   },
   queryDeals: () => ALL_MOCK_DEALS,
   updateDeal: (dealId, updatedTfmDealData) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    // if history is updated, add to the mock deal.
+    if (updatedTfmDealData.tfm && updatedTfmDealData.tfm.history) {
+      const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+      deal = {
+        ...deal,
+        tfm: {
+          tasks: updatedTfmDealData.tfm.tasks,
+          history: updatedTfmDealData.tfm.history,
+        },
+      };
+      ALL_MOCK_DEALS[dealIndex] = deal;
+    }
+
     return {
       dealSnapshot: {
         ...deal,

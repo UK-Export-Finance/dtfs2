@@ -3,10 +3,13 @@ const mapSupplyContractValueInGBP = require('./mapSupplyContractValueInGBP');
 const mapDealTfm = (dealTfm) => {
   const { supplyContractValueInGBP } = dealTfm;
 
-  return {
+
+  const result = {
     ...dealTfm,
     supplyContractValueInGBP: mapSupplyContractValueInGBP(supplyContractValueInGBP),
   };
+
+  return result;
 };
 
 module.exports = mapDealTfm;

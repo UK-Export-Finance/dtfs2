@@ -22,18 +22,22 @@ const dealQuery = gql`
         }
         tasks {
           groupTitle
+          id
           groupTasks {
             id,
+            groupId,
             title,
             status,
+            lastEdited,
             assignedTo {
-              userId
+              userId,
               userFullName
             }
             team {
               id,
               name
             }
+            canEdit
           }
         }
         exporterCreditRating

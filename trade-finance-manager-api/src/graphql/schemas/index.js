@@ -195,15 +195,32 @@ type TFMTaskAssignedTo {
 
 type TFMTask {
   id: String
+  groupId: Int
   title: String
   status: String
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
+  canEdit: Boolean
+  lastEdited: String
+  history: [TFMTaskHistory]
 }
 
 type TFMTaskGroup {
   groupTitle: String
+  id: Int
   groupTasks: [TFMTask]
+}
+
+type TFMTaskHistory {
+  statusFrom: String
+  statusTo: String
+  assignedUserId: String
+  updatedBy: String
+  timestamp: String
+}
+
+type TFMDealHistory {
+  tasks: [TFMTaskHistory]
 }
 
 type TFMDealData {
@@ -215,6 +232,23 @@ type TFMDealData {
   stage: String
   lossGivenDefault: String
   probabilityOfDefault: String
+  history: TFMDealHistory
+}
+
+type PremiumScheduleData {
+  id: Int
+  facilityURN: String
+  calculationDate: String
+  income: Float 
+  incomePerDay: Float
+  exposure: Int
+  period: Int
+  daysInPeriod: Int
+  effectiveFrom: String
+  effectiveTo: String
+  created: String
+  updated: String
+  isAtive: String
 }
 
 type TFMFacilityData {
@@ -225,6 +259,7 @@ type TFMFacilityData {
   ukefExposure: FacilityUkefExposure
   creditRating: String
   riskProfile: String
+  premiumSchedule: [PremiumScheduleData]
 }
 
 input DashboardFilters {
@@ -306,8 +341,10 @@ input TFMTaskAssignedToInput {
 
 input TFMTaskInput {
   id: String
+  groupId: Int
   assignedTo: TFMTaskAssignedToInput
   status: String
+  updatedBy: String
 }
 
 input TFMCreditRatingInput {

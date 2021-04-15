@@ -4,7 +4,7 @@ const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
 const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
-const { addDealStage } = require('./deal.add-deal-stage');
+const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
@@ -25,24 +25,26 @@ const submitDeal = async (dealId) => {
   const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
+    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+      await api.updatePortalDealStatus(
+        dealId,
+        CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+      );
+    }
+
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
     const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithPartyUrn);
 
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
 
-    const updatedDealWithTfmDealStage = await addDealStage(updatedDealWithDealCurrencyConversions);
+    const updatedDealWithTfmDealStage = await addDealStageAndHistory(updatedDealWithDealCurrencyConversions);
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDealStage);
 
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-      await api.updatePortalDealStatus(
-        dealId,
-        CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
-      );
-
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       return api.updateDeal(dealId, updatedDealWithTasks);

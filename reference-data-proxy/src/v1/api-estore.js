@@ -1,6 +1,10 @@
 const axios = require('axios');
 
 const postToAPI = async (apiEndpoint, apiData) => {
+  if (!process.env.MULESOFT_API_UKEF_ESTORE_EA_URL) {
+    return false;
+  }
+
   const response = await axios({
     method: 'post',
     url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,

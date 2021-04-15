@@ -24,23 +24,21 @@ Issued (straight to Issued)   Cover Start Date        Cover Start Date
 const getGuaranteeDates = (facility, submissionDate) => {
   const guaranteeCommencementDate = moment(new Date(Number(submissionDate))).add(3, 'months').valueOf();
   let guaranteeExpiryDate;
-  let effectiveDate;
+
   const { facilitySnapshot } = facility;
 
   if (isIssued(facility)) {
     guaranteeExpiryDate = dateHelpers.formatDate(`${facilitySnapshot['coverEndDate-year']}-${facilitySnapshot['coverEndDate-month']}-${facilitySnapshot['coverEndDate-day']}`);
-    effectiveDate = facilitySnapshot.requestedCoverStartDate;
   } else {
     guaranteeExpiryDate = dateHelpers.formatTimestamp(
       moment(Number(guaranteeCommencementDate)).add(facilitySnapshot.ukefGuaranteeInMonths, 'months').valueOf(),
     );
-    effectiveDate = submissionDate;
   }
 
   return {
     guaranteeCommencementDate: dateHelpers.formatTimestamp(guaranteeCommencementDate),
     guaranteeExpiryDate,
-    effectiveDate,
+    effectiveDate: submissionDate,
   };
 };
 

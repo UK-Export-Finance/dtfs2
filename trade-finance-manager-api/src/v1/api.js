@@ -130,6 +130,7 @@ const findOneFacility = async (facilityId) => {
 
 const updateFacility = async (facilityId, facilityUpdate, user) => {
   try {
+    console.log('updateFacility');
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
@@ -278,7 +279,33 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
   }
 };
 
+const getPremiumSchedule = async (facility, facilityExposurePeriod) => {
+  console.log('$api.getPremiumSchedule');
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${refDataUrl}/premium-schedule`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        facility,
+        facilityExposurePeriod,
+      },
+    });
+    console.log(`response from premium-schedule:${response.status}`);
+    if (response.status === 200 || response.status === 201) {
+      return response.data;
+    }
+    console.log('No premium schedule returned from reference data api.');
+    return false;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 const createACBS = async (deal, bank) => {
+  console.log(`${refDataUrl}/acbs`);
   try {
     const response = await axios({
       method: 'post',
@@ -352,6 +379,7 @@ module.exports = {
   findTeamMembers,
   getCurrencyExchangeRate,
   getFacilityExposurePeriod,
+  getPremiumSchedule,
   createACBS,
   getFunctionsAPI,
   createEstoreFolders,

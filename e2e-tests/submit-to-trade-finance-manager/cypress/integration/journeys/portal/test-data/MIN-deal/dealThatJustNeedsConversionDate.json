@@ -44,7 +44,8 @@
     "legallyDistinct" : "true",
     "sme-type" : "Small",
     "supplier-address-country" : {
-      "code": "GBR"
+      "code": "GBR",
+      "name": "United Kingdom"
     },
     "supplier-address-line-3" : "London",
     "supplier-address-line-1" : "1 Horseguards Road",
@@ -53,7 +54,8 @@
     "supplier-address-town" : "Westminster",
     "supplier-companies-house-registration-number" : "",
     "supplier-correspondence-address-country" : {
-      "code": "GBR"
+      "code": "GBR",
+      "name": "United Kingdom"
     },
     "supplier-correspondence-address-line-3" : "Edinburgh",
     "supplier-correspondence-address-line-1" : "2 Horseguards Road",
@@ -65,7 +67,8 @@
     "supplier-correspondence-address-is-different" : "true",
     "supply-contract-description" : "Description.",
     "buyer-address-country" : {
-      "code": "USA"
+      "code": "USA",
+      "name": "United States"
     },
     "buyer-address-line-1" : "Corner of East and Main",
     "buyer-address-line-2" : "",
@@ -74,7 +77,8 @@
     "buyer-address-town" : "New York",
     "buyer-name" : "Huggy Bear",
     "destinationOfGoodsAndServices" : {
-      "code": "USA"
+      "code": "USA",
+      "name": "United States"
     },
     "viewedPreviewPage" : true,
     "supplyContractConversionRateToGBP" : "1.123456",
@@ -121,9 +125,6 @@
       "requestedCoverStartDate-year": "2021",
       "ukefGuaranteeInMonths": null,
       "conversionRate": "50",
-      "conversionRateDate-day": "10",
-      "conversionRateDate-month": "03",
-      "conversionRateDate-year": "2021",
       "coveredPercentage": "12",
       "currency": {
         "id": "AUD",
@@ -159,9 +160,6 @@
       "ukefGuaranteeInMonths": null,
       "uniqueIdentificationNumber": "1234",
       "conversionRate": "100",
-      "conversionRateDate-day": "10",
-      "conversionRateDate-month": "03",
-      "conversionRateDate-year": "2021",
       "coveredPercentage": "24",
       "currency": {
         "id": "EUR",

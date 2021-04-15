@@ -155,11 +155,13 @@ exports.update = (req, res) => {
       const useTFM = await (isTFMBank(user.bank && user.bank.id));
 
       if (useTFM) {
-        dealAfterAllUpdates = await createUkefIds(
-          req.params.id,
-          dealAfterAllUpdates,
-          user,
-        );
+        if (dealAfterAllUpdates.details.submissionCount === 1) {
+          dealAfterAllUpdates = await createUkefIds(
+            req.params.id,
+            dealAfterAllUpdates,
+            user,
+          );
+        }
 
         // Integrate with TFM
         api.tfmDealSubmit(deal._id); // eslint-disable-line no-underscore-dangle
