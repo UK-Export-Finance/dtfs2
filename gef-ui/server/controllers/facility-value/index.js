@@ -57,7 +57,7 @@ const updateFacilityValue = async (req, res) => {
   if (interestPercentage && !zeroToOneHundredRegex.test(interestPercentage)) {
     facilityValueErrors.push({
       errRef: 'interestPercentage',
-      errMsg: 'You can only only enter a number between 0 and 100',
+      errMsg: 'You can only enter a number between 0 and 100',
     });
   }
 
