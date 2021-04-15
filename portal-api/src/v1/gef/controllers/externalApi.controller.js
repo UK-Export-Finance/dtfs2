@@ -104,15 +104,17 @@ exports.getAddressesByPostcode = async (req, res) => {
     });
     const addresses = [];
     response.data.results.forEach((item) => {
-      addresses.push({
-        organisationName: item.DPA.ORGANISATION_NAME || null,
-        addressLine1: (`${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`).trim(),
-        addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
-        addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
-        locality: item.DPA.POST_TOWN || null,
-        postalCode: item.DPA.POSTCODE || null,
-        country: null, // keys to match registered Address as requested, but not available in OS Places
-      });
+      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) { // Ordance survey sends duplicated results with the welsh version too via 'CY'
+        addresses.push({
+          organisationName: item.DPA.ORGANISATION_NAME || null,
+          addressLine1: (`${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`).trim(),
+          addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
+          addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
+          locality: item.DPA.POST_TOWN || null,
+          postalCode: item.DPA.POSTCODE || null,
+          country: null, // keys to match registered Address as requested, but not available in OS Places
+        });
+      }
     });
     res.status(200).send(addresses);
   } catch (err) {

@@ -2,7 +2,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { validationApplicationCreate } = require('./validation/applicationExists');
+const { validationApplicationCreate, validatorStatusCheckEnums } = require('./validation/applicationExists');
 
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
@@ -71,6 +71,16 @@ exports.getById = async (req, res) => {
   }
 };
 
+exports.getStatus = async (req, res) => {
+  const collection = await db.getCollection(applicationCollectionName);
+  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  if (doc) {
+    res.status(200).send({ status: doc.status });
+  } else {
+    res.status(204).send();
+  }
+};
+
 exports.update = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const update = new Application(req.body);
@@ -82,6 +92,27 @@ exports.update = async (req, res) => {
     response = result.value;
   }
   res.status(utils.mongoStatus(result)).send(response);
+};
+
+exports.changeStatus = async (req, res) => {
+  const enumValidationErr = validatorStatusCheckEnums(req.body);
+  if (enumValidationErr) {
+    res.status(422).send(enumValidationErr);
+  } else {
+    const collection = await db.getCollection(applicationCollectionName);
+    const result = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(String(req.params.id)) } }, {
+        $set: {
+          status: req.body.status,
+        },
+      }, { returnOriginal: false },
+    );
+    let response;
+    if (result.value) {
+      response = result.value;
+    }
+    res.status(utils.mongoStatus(result)).send(response);
+  }
 };
 
 exports.delete = async (req, res) => {

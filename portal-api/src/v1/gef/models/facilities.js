@@ -37,7 +37,6 @@ class Facility {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
       this.name = null;
-      this.startOnDayOfNotice = null;
       this.shouldCoverStartOnSubmission = null;
       this.coverStartDate = null;
       this.coverEndDate = null;
@@ -61,10 +60,6 @@ class Facility {
         this.name = String(req.name);
       }
 
-      if (req.startOnDayOfNotice != null) {
-        this.startOnDayOfNotice = Boolean(req.startOnDayOfNotice);
-      }
-
       if (req.shouldCoverStartOnSubmission != null) {
         this.shouldCoverStartOnSubmission = Boolean(req.shouldCoverStartOnSubmission);
       }
@@ -77,7 +72,9 @@ class Facility {
         this.coverEndDate = new Date(req.coverEndDate);
       }
 
-      if (req.monthsOfCover != null) {
+      if (req.monthsOfCover === null) {
+        this.monthsOfCover = req.monthsOfCover;
+      } else if (req.monthsOfCover !== undefined) {
         this.monthsOfCover = Number(req.monthsOfCover);
       }
 
@@ -89,7 +86,7 @@ class Facility {
         this.detailsOther = String(req.detailsOther);
       }
 
-      if (req.currency !== null) {
+      if (req.currency != null) {
         this.currency = req.currency;
       }
 
@@ -109,8 +106,17 @@ class Facility {
         this.paymentType = checkPaymentType(req.paymentType);
       }
 
+      // nullify values based on previous questions
       if (req.shouldCoverStartOnSubmission === true) {
         this.coverStartDate = null;
+      }
+
+      if (req.hasBeenIssued === false) {
+        this.coverStartDate = null;
+        this.coverEndDate = null;
+        this.shouldCoverStartOnSubmission = null;
+      } else if (req.hasBeenIssued === true) {
+        this.monthsOfCover = null;
       }
 
       this.updatedAt = Date.now();

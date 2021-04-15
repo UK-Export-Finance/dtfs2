@@ -107,6 +107,30 @@ describe(baseUrl, () => {
     });
   });
 
+  describe(`GET ${baseUrl}/status/:id`, () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().get(`${baseUrl}/status/1`);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { status } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
+      expect(status).toEqual(200);
+    });
+
+    it('returns a status', async () => {
+      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
+      expect(body).toEqual({ status: 'IN_PROGRESS' });
+    });
+
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).get(`${baseUrl}/status/doesnotexist`);
+      expect(status).toEqual(204);
+    });
+  });
+
   describe(`POST ${baseUrl}`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(allItems[0]).to(baseUrl);
@@ -123,7 +147,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
-        createdAt: expect.any(Number)
+        createdAt: expect.any(Number),
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -187,6 +211,36 @@ describe(baseUrl, () => {
 
     it('returns a 204 - "No Content" if there are no records', async () => {
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
+    });
+  });
+
+  describe(`PUT ${baseUrl}/status/:id`, () => {
+
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().put({ status: 'COMPLETED' }).to(`${baseUrl}/status/1`);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/${body._id}`);
+      expect(status).toEqual(200);
+    });
+
+    it('returns a enum error if I send an incorrect status', async () => {
+      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
+      expect(res.status).toEqual(422);
+      expect(res.body).toEqual([{
+        errCode: 'ENUM_ERROR',
+        errRef: 'status',
+        errMsg: 'Unrecognised enum',
+      }]);
+    });
+
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/doesnotexist`);
       expect(status).toEqual(204);
     });
   });
