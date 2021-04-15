@@ -43,14 +43,18 @@ const updateFacilityValue = async (req, res) => {
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityValueErrors = [];
 
-  if (coverPercentage && !/^(?:[1-9]|[1-7][0-9]|80)$/.test(coverPercentage)) {
+  // Regex tests to see if value between 1 and 80
+  const oneToEightyRegex = /^(?:[1-9]|[1-7][0-9]|80)$/;
+  if (coverPercentage && !oneToEightyRegex.test(coverPercentage)) {
     facilityValueErrors.push({
       errRef: 'coverPercentage',
       errMsg: 'You can only only enter a number between 1 and 80',
     });
   }
 
-  if (interestPercentage && !/^(\d{0,2}(\.\d{1,2})?|100(\.00?)?)$/.test(interestPercentage)) {
+  // Regex tests to see if value is between 0 and 100. Also allows for decimal places ie. 20.1
+  const zeroToOneHundredRegex = /^(\d{0,2}(\.\d{1,2})?|100(\.00?)?)$/;
+  if (interestPercentage && !zeroToOneHundredRegex.test(interestPercentage)) {
     facilityValueErrors.push({
       errRef: 'interestPercentage',
       errMsg: 'You can only only enter a number between 0 and 100',
