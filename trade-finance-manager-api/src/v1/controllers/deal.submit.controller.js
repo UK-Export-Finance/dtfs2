@@ -25,6 +25,13 @@ const submitDeal = async (dealId) => {
   const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
+    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+      await api.updatePortalDealStatus(
+        dealId,
+        CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+      );
+    }
+
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
     const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithPartyUrn);
@@ -38,11 +45,6 @@ const submitDeal = async (dealId) => {
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-      await api.updatePortalDealStatus(
-        dealId,
-        CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
-      );
-
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       return api.updateDeal(dealId, updatedDealWithTasks);

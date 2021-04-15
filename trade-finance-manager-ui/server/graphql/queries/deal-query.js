@@ -25,12 +25,12 @@ const dealQuery = gql`
           id
           groupTasks {
             id,
-            groupId
+            groupId,
             title,
             status,
             lastEdited,
             assignedTo {
-              userId
+              userId,
               userFullName
             }
             team {
