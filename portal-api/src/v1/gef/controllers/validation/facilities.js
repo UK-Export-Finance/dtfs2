@@ -12,9 +12,6 @@ const hasRequiredItems = (doc) => {
   if (doc.name === null) {
     required.push('name');
   }
-  if (doc.startOnDayOfNotice === null) {
-    required.push('startOnDayOfNotice');
-  }
   // if (doc.hasBeenIssued === true && doc.shouldCoverStartOnSubmission === null) {
   //   required.push('shouldCoverStartOnSubmission');
   // }
