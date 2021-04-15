@@ -122,11 +122,11 @@ describe(baseUrl, () => {
     it('returns a status', async () => {
       const item = await as(aMaker).post(allItems[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
-      expect(body).toEqual({status: 'IN_PROGRESS' });
+      expect(body).toEqual({ status: 'IN_PROGRESS' });
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
+      const { status } = await as(aMaker).get(`${baseUrl}/status/doesnotexist`);
       expect(status).toEqual(204);
     });
   });
@@ -147,7 +147,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
-        createdAt: expect.any(Number)
+        createdAt: expect.any(Number),
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -230,13 +230,13 @@ describe(baseUrl, () => {
 
     it('returns a enum error if I send an incorrect status', async () => {
       const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
-      const { status } = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
-      expect(status).toEqual(422);
-      expect(body).toEqual({
+      const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
+      expect(res.status).toEqual(422);
+      expect(res.body).toEqual([{
         errCode: 'ENUM_ERROR',
         errRef: 'status',
         errMsg: 'Unrecognised enum',
-      });
+      }]);
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
