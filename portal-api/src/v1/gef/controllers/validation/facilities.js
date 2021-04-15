@@ -39,9 +39,9 @@ const hasRequiredItems = (doc) => {
   if (doc.interestPercentage === null) {
     required.push('interestPercentage');
   }
-  if (doc.paymentType === null) {
-    required.push('paymentType');
-  }
+  // if (doc.paymentType === null) {
+  //   required.push('paymentType');
+  // }
   return required;
 };
 
