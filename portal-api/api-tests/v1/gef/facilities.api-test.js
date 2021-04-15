@@ -41,7 +41,6 @@ describe(baseUrl, () => {
         type: expect.any(String),
         hasBeenIssued: false,
         name: null,
-        startOnDayOfNotice: null,
         shouldCoverStartOnSubmission: null,
         coverStartDate: null,
         coverEndDate: null,
@@ -57,14 +56,13 @@ describe(baseUrl, () => {
         updatedAt: expect.any(Number),
       },
       validation: {
-        required: ['name', 'startOnDayOfNotice', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType',
+        required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType',
         ],
       },
     };
     completeUpdate = {
       hasBeenIssued: false,
       name: 'TEST',
-      startOnDayOfNotice: true,
       shouldCoverStartOnSubmission: null,
       coverStartDate: new Date(),
       coverEndDate: new Date(),
@@ -212,7 +210,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['startOnDayOfNotice', 'monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
         },
       };
 
@@ -251,7 +249,6 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: true,
         name: 'test',
-        startOnDayOfNotice: true,
         shouldCoverStartOnSubmission: true,
         coverStartDate: null,
         coverEndDate: '2015-01-01T00:00:00.000Z',
@@ -298,7 +295,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number)
         },
         validation: {
-          required: ['name', 'startOnDayOfNotice', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['name', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
         },
       };
 

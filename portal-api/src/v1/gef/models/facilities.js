@@ -37,7 +37,6 @@ class Facility {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
       this.name = null;
-      this.startOnDayOfNotice = null;
       this.shouldCoverStartOnSubmission = null;
       this.coverStartDate = null;
       this.coverEndDate = null;
@@ -59,10 +58,6 @@ class Facility {
 
       if (req.name != null) {
         this.name = String(req.name);
-      }
-
-      if (req.startOnDayOfNotice != null) {
-        this.startOnDayOfNotice = Boolean(req.startOnDayOfNotice);
       }
 
       if (req.shouldCoverStartOnSubmission != null) {
