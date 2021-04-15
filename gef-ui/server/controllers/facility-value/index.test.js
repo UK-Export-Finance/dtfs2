@@ -68,18 +68,6 @@ describe('GET Facility Value', () => {
 });
 
 describe('Update Facility Value', () => {
-  // it('redirects user to application page if returnToApplication is set to true', async () => {
-  //   const mockResponse = new MockResponse();
-  //   const mockRequest = new MockRequest();
-  //   const mockFacilityValueResponse = new MockFacilityValueResponse();
-  //   mockRequest.query.returnToApplication = 'true';
-
-  //   api.updateFacility = () => Promise.resolve(mockFacilityValueResponse);
-  //   await updateFacilityValue(mockRequest, mockResponse);
-
-  //   expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
-  // });
-
   it('shows error message if cover percentage value is not a number', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
