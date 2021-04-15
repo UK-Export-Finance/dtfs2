@@ -56,8 +56,7 @@ describe(baseUrl, () => {
         updatedAt: expect.any(Number),
       },
       validation: {
-        required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType',
-        ],
+        required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
       },
     };
     completeUpdate = {
@@ -210,7 +209,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage'],
         },
       };
 
@@ -295,7 +294,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number)
         },
         validation: {
-          required: ['name', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['name', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
         },
       };
 
