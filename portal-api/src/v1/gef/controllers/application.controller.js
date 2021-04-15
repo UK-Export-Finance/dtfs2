@@ -101,7 +101,11 @@ exports.changeStatus = async (req, res) => {
   } else {
     const collection = await db.getCollection(applicationCollectionName);
     const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: { status: req.body.status } }, { returnOriginal: false },
+      { _id: { $eq: ObjectId(String(req.params.id)) } }, {
+        $set: {
+          status: req.body.status,
+        },
+      }, { returnOriginal: false },
     );
     let response;
     if (result.value) {
