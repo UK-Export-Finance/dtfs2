@@ -39,9 +39,8 @@ describe(baseUrl, () => {
         _id: expect.any(String),
         applicationId: applicationItem.body._id,
         type: expect.any(String),
-        hasBeenIssued: null,
+        hasBeenIssued: false,
         name: null,
-        startOnDayOfNotice: null,
         shouldCoverStartOnSubmission: null,
         coverStartDate: null,
         coverEndDate: null,
@@ -57,15 +56,13 @@ describe(baseUrl, () => {
         updatedAt: expect.any(Number),
       },
       validation: {
-        required: ['hasBeenIssued', 'name', 'startOnDayOfNotice', 'shouldCoverStartOnSubmission', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType',
-        ],
+        required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
       },
     };
     completeUpdate = {
-      hasBeenIssued: true,
+      hasBeenIssued: false,
       name: 'TEST',
-      startOnDayOfNotice: true,
-      shouldCoverStartOnSubmission: true,
+      shouldCoverStartOnSubmission: null,
       coverStartDate: new Date(),
       coverEndDate: new Date(),
       monthsOfCover: 12,
@@ -94,11 +91,13 @@ describe(baseUrl, () => {
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
         type: FACILITY_TYPE.CASH,
+        hasBeenIssued: false,
       }).to(baseUrl);
 
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
         type: FACILITY_TYPE.CONTINGENT,
+        hasBeenIssued: false,
       }).to(baseUrl);
 
       const { body, status } = await as(aChecker).get(baseUrl);
@@ -111,16 +110,19 @@ describe(baseUrl, () => {
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
         type: FACILITY_TYPE.CASH,
+        hasBeenIssued: false,
       }).to(baseUrl);
 
       await as(aMaker).post({
         applicationId: applicationItem.body._id,
         type: FACILITY_TYPE.CONTINGENT,
+        hasBeenIssued: false,
       }).to(baseUrl);
 
       await as(aMaker).post({
         applicationId: 'shouldNotBeInTheList',
         type: FACILITY_TYPE.CONTINGENT,
+        hasBeenIssued: false,
       }).to(baseUrl);
 
       const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${applicationItem.body._id}`);
@@ -145,13 +147,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${item.body.details._id}`);
       expect(status).toEqual(200);
     });
 
     it('returns an individual item', async () => {
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body.details._id}`);
       expect(body).toEqual(newFacility);
     });
@@ -169,12 +171,12 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const { status } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(status).toEqual(201);
     });
 
     it('returns me a new application upon creation', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
   });
@@ -197,7 +199,7 @@ describe(baseUrl, () => {
         name: 'Matt',
         currency: 'GBP',
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.IN_PROGRESS,
@@ -207,7 +209,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['startOnDayOfNotice', 'shouldCoverStartOnSubmission', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage'],
         },
       };
 
@@ -224,7 +226,7 @@ describe(baseUrl, () => {
       const secondUpdate = {
         shouldCoverStartOnSubmission: true,
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       // first update - insert start date
       const res1 = await as(aMaker).put(firstUpdate).to(`${baseUrl}/${item.body.details._id}`);
@@ -246,7 +248,6 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: true,
         name: 'test',
-        startOnDayOfNotice: true,
         shouldCoverStartOnSubmission: true,
         coverStartDate: null,
         coverEndDate: '2015-01-01T00:00:00.000Z',
@@ -259,7 +260,7 @@ describe(baseUrl, () => {
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.COMPLETED,
@@ -267,6 +268,7 @@ describe(baseUrl, () => {
           ...details,
           ...update,
           updatedAt: expect.any(Number),
+          monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
         },
         validation: {
           required: [],
@@ -282,17 +284,17 @@ describe(baseUrl, () => {
       const update = {
         details: ['other'],
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.IN_PROGRESS,
         details: {
           ...details,
           ...update,
-          updatedAt: expect.any(Number),
+          updatedAt: expect.any(Number)
         },
         validation: {
-          required: ['hasBeenIssued', 'name', 'startOnDayOfNotice', 'shouldCoverStartOnSubmission', 'coverStartDate', 'coverEndDate', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'paymentType'],
+          required: ['name', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
         },
       };
 
@@ -302,7 +304,7 @@ describe(baseUrl, () => {
 
     it('completely update a facility ', async () => {
       const { details } = newFacility;
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.COMPLETED,
@@ -310,7 +312,7 @@ describe(baseUrl, () => {
           ...details,
           ...completeUpdate,
           coverStartDate: null,
-          coverEndDate: expect.any(String),
+          coverEndDate: null,
           updatedAt: expect.any(Number),
         },
         validation: {
@@ -335,14 +337,14 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body.details._id)}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it('removes all items by application ID', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}?applicationId=${applicationItem.body._id}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
@@ -356,9 +358,9 @@ describe(baseUrl, () => {
 
   describe(`Overall Status: ${baseUrl}`, () => {
     it(`overall status shows as "${STATUS.NOT_STARTED}" if all status is marked as "${STATUS.NOT_STARTED}"`, async () => {
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { body, status } = await as(aMaker).get(baseUrl);
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.IN_PROGRESS);
@@ -366,8 +368,8 @@ describe(baseUrl, () => {
     });
 
     it(`overall status shows as "${STATUS.IN_PROGRESS}" if some status is marked as "${STATUS.IN_PROGRESS}"`, async () => {
-      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
-      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put({ name: 'test' }).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
       const { body, status } = await as(aMaker).get(baseUrl);
@@ -377,9 +379,9 @@ describe(baseUrl, () => {
     });
 
     it(`overall status shows as "${STATUS.COMPLETED}" if all status is marked as "${STATUS.COMPLETED}"`, async () => {
-      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
-      const item2 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
-      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH }).to(baseUrl);
+      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item2 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item2.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
@@ -391,23 +393,47 @@ describe(baseUrl, () => {
   });
 
   describe('ENUM errors', () => {
-    it('returns an enum error when putting the wrong type', async () => {
-      const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'TEST' }).to(baseUrl);
-      expect(status).toEqual(422);
-      expect(body).toEqual([{
-        errCode: ERROR.ENUM_ERROR,
-        errMsg: 'Unrecognised enum',
-        errRef: 'type',
-      }]);
+    describe('POST', () => {
+      it('returns an enum error when putting the wrong type', async () => {
+        const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'TEST' }).to(baseUrl);
+        expect(status).toEqual(422);
+        expect(body).toEqual([{
+          errCode: ERROR.ENUM_ERROR,
+          errMsg: 'Unrecognised enum',
+          errRef: 'type',
+        }]);
+      });
+      it('returns an enum error when putting the payment type', async () => {
+        const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH', paymentType: 'TEST' }).to(baseUrl);
+        expect(status).toEqual(422);
+        expect(body).toEqual([{
+          errCode: ERROR.ENUM_ERROR,
+          errMsg: 'Unrecognised enum',
+          errRef: 'paymentType',
+        }]);
+      });
     });
-    it('returns an enum error when putting the payment type', async () => {
-      const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH', paymentType: 'TEST' }).to(baseUrl);
-      expect(status).toEqual(422);
-      expect(body).toEqual([{
-        errCode: ERROR.ENUM_ERROR,
-        errMsg: 'Unrecognised enum',
-        errRef: 'paymentType',
-      }]);
+    describe('PUT', () => {
+      it('returns an enum error when putting the wrong type', async () => {
+        const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
+        expect(res.status).toEqual(422);
+        expect(res.body).toEqual([{
+          errCode: ERROR.ENUM_ERROR,
+          errMsg: 'Unrecognised enum',
+          errRef: 'paymentType',
+        }]);
+      });
+      it('returns an enum error when putting the payment type', async () => {
+        const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
+        expect(res.status).toEqual(422);
+        expect(res.body).toEqual([{
+          errCode: ERROR.ENUM_ERROR,
+          errMsg: 'Unrecognised enum',
+          errRef: 'paymentType',
+        }]);
+      });
     });
   });
 
