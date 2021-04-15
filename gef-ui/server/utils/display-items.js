@@ -14,10 +14,10 @@ const exporterItems = (exporterUrl, options = {}) => [
     label: 'Company name',
     id: 'companyName',
   },
-  // {
-  //   label: 'Registered Address',
-  //   id: 'registeredAddress',
-  // },
+  {
+    label: 'Registered Address',
+    id: 'registeredAddress',
+  },
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
