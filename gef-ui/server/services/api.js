@@ -96,6 +96,15 @@ const updateFacility = async (facilityId, payload) => {
   }
 };
 
+const deleteFacility = async (facilityId) => {
+  try {
+    const { data } = await Axios.delete(`/gef/facilities/${facilityId}`);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getEligibilityCriteria = async () => {
   try {
     const { data } = await Axios.get('/gef/eligibility-criteria/latest');
@@ -135,6 +144,7 @@ export {
   createFacility,
   getFacility,
   updateFacility,
+  deleteFacility,
   getCompaniesHouseDetails,
   getAddressesByPostcode,
 };
