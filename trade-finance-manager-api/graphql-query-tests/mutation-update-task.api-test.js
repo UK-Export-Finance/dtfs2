@@ -17,9 +17,11 @@ const UPDATE_TASK = gql`
   mutation UpdateTask($dealId: ID!, $taskUpdate: TFMTaskInput) {
     updateTask(dealId: $dealId, taskUpdate: $taskUpdate) {
       id
+      groupId
       assignedTo {
         userId
       }
+      lastEdited
       status
     }
   }
@@ -27,6 +29,13 @@ const UPDATE_TASK = gql`
 
 describe('graphql mutation - update task', () => {
   let query;
+  const baseTaskUpdate = {
+    id: '1',
+    groupId: 1,
+    assignedTo: {
+      userId: MOCK_USER._id,
+    },
+  };
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -45,11 +54,9 @@ describe('graphql mutation - update task', () => {
 
   it('should return updated task', async () => {
     const taskUpdate = {
-      id: '1',
+      ...baseTaskUpdate,
       status: 'In progress',
-      assignedTo: {
-        userId: MOCK_USER._id,
-      },
+      updatedBy: '123456789',
     };
 
     const { data } = await query({
@@ -62,12 +69,65 @@ describe('graphql mutation - update task', () => {
 
     const expected = {
       id: taskUpdate.id,
+      groupId: taskUpdate.groupId,
       status: taskUpdate.status,
       assignedTo: {
         userId: taskUpdate.assignedTo.userId,
       },
+      lastEdited: expect.any(String),
     };
 
     expect(data.updateTask).toEqual(expected);
+  });
+
+  it('deal history should be updated', async () => {
+    const taskUpdate = {
+      ...baseTaskUpdate,
+      status: 'To do',
+      updatedBy: 'DUMMY_USER_ID',
+    };
+
+    await query({
+      query: UPDATE_TASK,
+      variables: {
+        dealId: MOCK_DEAL._id,
+        taskUpdate,
+      },
+    });
+
+    const GET_DEAL = gql`
+      query Deal($_id: String! $tasksFilters: TasksFilters) {
+        deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
+          _id
+          tfm { 
+            history {
+              tasks {
+                statusFrom
+                statusTo
+                assignedUserId
+                updatedBy
+                timestamp
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const { data } = await query({
+      query: GET_DEAL,
+      variables: { _id: MOCK_DEAL._id },
+    });
+
+    const expected = {
+      statusFrom: 'To do',
+      statusTo: taskUpdate.status,
+      assignedUserId: taskUpdate.assignedTo.userId,
+      updatedBy: taskUpdate.updatedBy,
+      timestamp: expect.any(String),
+    };
+
+    expect(data.deal.tfm.history.tasks.length).toEqual(2);
+    expect(data.deal.tfm.history.tasks[1]).toEqual(expected);
   });
 });

@@ -258,8 +258,6 @@ describe('/v1/portal/facilities', () => {
 
       const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
-      console.log('body.deal.editedBy... \n', body.deal.editedBy);
-
       expect(body.deal.editedBy[1].userId).toEqual(updatedFacility.user._id);
       expect(body.deal.editedBy[1].bank).toEqual(updatedFacility.user.bank);
       expect(body.deal.editedBy[1].roles).toEqual(updatedFacility.user.roles);

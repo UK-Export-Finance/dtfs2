@@ -43,6 +43,7 @@ const getDeals = async (args) => {
   await Promise.all(q.deals.map(fn));
 
   const reducedDeals = dealsReducer(q.deals, dict);
+
   return reducedDeals;
 };
 

@@ -11,7 +11,9 @@ const getDescription = require('./get-description');
 const getNextQuarterDate = require('./get-next-quarter-date');
 const getIssueDate = require('./get-issue-date');
 const getGuaranteeDates = require('./get-guarantee-dates');
-const getFacilityGuaranteeLimitKey = require('./get-facility-guarantee-limit-key');
+const getGuarantorParty = require('./get-guarantor-party');
+const getFacilityValue = require('./get-facility-value');
+const getMaximumLiability = require('./get-maximum-liability');
 
 module.exports = {
   isIssued,
@@ -27,5 +29,7 @@ module.exports = {
   getNextQuarterDate,
   getIssueDate,
   getGuaranteeDates,
-  getFacilityGuaranteeLimitKey,
+  getGuarantorParty,
+  getFacilityValue,
+  getMaximumLiability,
 };

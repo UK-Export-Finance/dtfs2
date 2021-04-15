@@ -28,7 +28,7 @@ const facilityCovenant = (deal, facility, covenantType) => {
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
     portfolioIdentifier: 'E1',
     covenantType,
-    maximumLiability: Number(facilitySnapshot.facilityValue),
+    maximumLiability: helpers.getMaximumLiability(facility),
     currency: facilitySnapshot.currency.currencyId,
     guaranteeCommencementDate,
     guaranteeExpiryDate,

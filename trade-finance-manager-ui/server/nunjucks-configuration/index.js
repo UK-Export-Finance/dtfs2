@@ -7,6 +7,7 @@ import countriesWithEmptyInitialOption from './filter-countriesWithEmptyInitialO
 import replaceWhiteSpaceWithDash from './filter-replaceWhiteSpaceWithDash';
 import bondBeneficiaryFacilities from './filter-bondBeneficiaryFacilities';
 import bondIssuerFacilities from './filter-bondIssuerFacilities';
+import formatAsDecimal from './formatAsDecimal';
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -25,6 +26,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
+  nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
   return nunjucks;
 };
 

@@ -61,11 +61,11 @@ context('A TFM checker submits a deal', () => {
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
 
     pages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
+      expect(text.trim()).to.equal('Submitted');
     });
 
     // IDs are generated via external API. We cannot check the actual ID.

@@ -4,6 +4,7 @@ const corsAdapter = require('axios/lib/adapters/http');
 
 const mockFiles = [
   './src/v1/api',
+  './src/v1/api-estore',
 ];
 
 mockFiles.forEach((mockFile) => {

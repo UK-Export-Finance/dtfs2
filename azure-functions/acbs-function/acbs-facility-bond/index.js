@@ -59,37 +59,37 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   }
 
   // Facility Guarantee Bond Issuer
-  // const acbsFacilityBondIssuerGuaranteeInput = mappings.facility.facilityGuarantee(
-  //   deal,
-  //   facility,
-  //   { acbsData, facilityAcbsData: { parties } },
-  //   CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER,
-  // );
+  const acbsFacilityBondIssuerGuaranteeInput = mappings.facility.facilityGuarantee(
+    deal,
+    facility,
+    { acbsData, facilityAcbsData: { parties } },
+    CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER,
+  );
 
-  // const facilityBondIssuerGuarantee = yield context.df.callActivity(
-  //   'create-facility-guarantee',
-  //   { acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput },
-  //   retryOptions,
-  // );
+  const facilityBondIssuerGuarantee = yield context.df.callActivity(
+    'create-facility-guarantee',
+    { acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput },
+    retryOptions,
+  );
 
-  // const acbsFacilityBondBeneficiaryGuaranteeInput = mappings.facility.facilityGuarantee(
-  //   deal,
-  //   facility,
-  //   { acbsData, facilityAcbsData: { parties } },
-  //   CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY,
-  // );
+  const acbsFacilityBondBeneficiaryGuaranteeInput = mappings.facility.facilityGuarantee(
+    deal,
+    facility,
+    { acbsData, facilityAcbsData: { parties } },
+    CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY,
+  );
 
-  // const facilityBondBeneficiaryGuarantee = yield context.df.callActivity(
-  //   'create-facility-guarantee',
-  //   { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
-  //   retryOptions,
-  // );
+  const facilityBondBeneficiaryGuarantee = yield context.df.callActivity(
+    'create-facility-guarantee',
+    { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
+    retryOptions,
+  );
 
 
   return {
     parties,
     facilityCovenantChargeable,
-    //    facilityBondIssuerGuarantee,
-    // facilityBondBeneficiaryGuarantee,
+    facilityBondIssuerGuarantee,
+    facilityBondBeneficiaryGuarantee,
   };
 });

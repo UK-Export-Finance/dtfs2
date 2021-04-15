@@ -6,8 +6,24 @@ const userFullName = (user) => {
 const userIsInTeam = (user, teamId) =>
   user.teams.includes(teamId);
 
-const getTask = (taskId, tasks) =>
-  tasks.find((t) => t.id === taskId);
+const getGroup = (groupId, allTasks) =>
+  allTasks.find((group) => group.id === groupId);
+
+const getTask = (groupId, taskId, tasks) => {
+  const group = getGroup(groupId, tasks);
+
+  if (group) {
+    const task = group.groupTasks.find((t) => t.id === taskId);
+
+    if (!task) {
+      return null;
+    }
+
+    return task;
+  }
+
+  return null;
+};
 
 const isTaskAssignedToUser = (assignedToUserId, userId) => {
   if (assignedToUserId === userId) {
@@ -56,11 +72,10 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   const taskIsUnassigned = task.assignedTo.userId === 'Unassigned';
 
   // 3 possible states:
-  // task is assigned to someone that is not the current logged in user.
+  // task is assigned to someone that is not the currently logged in user.
   // task is unassigned
-  // task is assigned ot me
+  // task is assigned to me/currently logged in user.
 
-  // default mapping is that task is assigned to someone that is not the current logged in user.
   let mapped = [
     {
       value: currentUserId,
@@ -113,6 +128,7 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
 export default {
   userFullName,
   userIsInTeam,
+  getGroup,
   getTask,
   isTaskAssignedToUser,
   getTeamMembersWithoutCurrentUser,

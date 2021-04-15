@@ -24,23 +24,29 @@ const createEstore = async (req, res) => {
   } = eStoreFolderInfo;
 
   const createSiteRes = await apiEstore.createExporterSite(exporterName);
-  if (!createSiteRes.status === 200) {
-    return createSiteRes;
+
+  if (!createSiteRes) {
+    return res.status(200).send({});
   }
 
   const { siteName } = createSiteRes.data;
 
-  if (createSiteRes.status !== 200) {
-    res.status(createSiteRes.status).send(createSiteRes.data);
+  const result = {
+    siteName,
+  };
+
+  if (createSiteRes.status > 299) {
+    return res.status(createSiteRes.status).send(createSiteRes.data);
   }
 
-  const createBuyer = apiEstore.createBuyerFolder({
+  const createBuyer = await apiEstore.createBuyerFolder({
     siteName,
     exporterName,
     buyerName,
   });
+  result.buyerName = createBuyer.data.buyerName;
 
-  const createDeal = apiEstore.createDealFolder({
+  const createDeal = await apiEstore.createDealFolder({
     siteName,
     exporterName,
     buyerName,
@@ -48,16 +54,7 @@ const createEstore = async (req, res) => {
     destinationMarket,
     riskMarket,
   });
-
-  const createResult = await Promise.all([createBuyer, createDeal]);
-
-  const result = createResult.map(({ data }) => data).reduce(
-    (acc, curr) => ({
-      ...acc,
-      ...curr,
-    }),
-    {},
-  );
+  result.folderName = createDeal.data.folderName;
 
   const createFacilities = facilityIdentifiers.map(
     (facilityIdentifier) => new Promise((resolve, reject) => apiEstore.createFacilityFolder({
@@ -68,22 +65,19 @@ const createEstore = async (req, res) => {
       facilityIdentifier,
       destinationMarket,
       riskMarket,
-    })
-      .then(({ status, data }) => {
-        if (status !== 201) {
-          reject(Error(data));
-        }
-        resolve({
-          facilityIdentifier,
-          ...data,
-        });
-      },
-      (err) => reject(err))),
+    }).then(({ status, data }) => {
+      if (status !== 201) {
+        reject(Error(data));
+      }
+      resolve({
+        facilityIdentifier,
+        ...data,
+      });
+    },
+    (err) => reject(err))),
   );
 
   result.facilities = await Promise.all(createFacilities);
-
-  result.siteName = siteName;
 
   return res.status(200).send(result);
 };

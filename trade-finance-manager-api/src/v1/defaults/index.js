@@ -4,9 +4,11 @@ const TASKS = {
   AIN: [
     {
       groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
+      id: 1,
       groupTasks: [
         {
           id: '1',
+          groupId: 1,
           title: CONSTANTS.TASKS.AIN.GROUP_1.MATCH_OR_CREATE_PARTIES,
           team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
           status: CONSTANTS.TASKS.STATUS.TO_DO,
@@ -14,9 +16,11 @@ const TASKS = {
             userId: CONSTANTS.TASKS.UNASSIGNED,
             userFullName: CONSTANTS.TASKS.UNASSIGNED,
           },
+          canEdit: true,
         },
         {
           id: '2',
+          groupId: 1,
           title: CONSTANTS.TASKS.AIN.GROUP_1.CREATE_OR_LINK_SALESFORCE,
           team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
           status: CONSTANTS.TASKS.STATUS.TO_DO,
@@ -28,6 +32,10 @@ const TASKS = {
       ],
     },
   ],
+};
+
+const HISTORY = {
+  tasks: [],
 };
 
 const CREDIT_RATING = {
@@ -42,6 +50,7 @@ const PROBABILITY_OF_DEFAULT = CONSTANTS.DEALS.PROBABILITY_OF_DEFAULT.LESS_THAN_
 
 module.exports = {
   TASKS,
+  HISTORY,
   CREDIT_RATING,
   FACILITY_RISK_PROFILE,
   LOSS_GIVEN_DEFAULT,

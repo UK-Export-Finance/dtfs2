@@ -2,6 +2,7 @@ import api from '../../api';
 import stringHelpers from '../../helpers/string';
 import caseHelpers from './helpers';
 import CONSTANTS from '../../constants';
+import mapPremiumSchedule from './mapping/mapPremiumSchedule';
 
 const {
   hasValue,
@@ -53,6 +54,7 @@ const getCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    tasks: deal.tfm.tasks,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
@@ -88,6 +90,7 @@ const filterCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    tasks: deal.tfm.tasks,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
@@ -98,26 +101,25 @@ const filterCaseTasks = async (req, res) => {
 
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
-  const { taskId } = req.params;
+  const { groupId, taskId } = req.params;
+  const { user } = req.session;
+
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const { user } = req.session;
+  const task = getTask(Number(groupId), taskId, deal.tfm.tasks);
 
-  let allTasksWithoutGroups = [];
+  if (!task) {
+    return res.redirect('/not-found');
+  }
 
-  deal.tfm.tasks.forEach((group) => {
-    const { groupTasks } = group;
-    allTasksWithoutGroups = [
-      ...allTasksWithoutGroups,
-      ...groupTasks,
-    ];
-  });
-
-  const task = getTask(taskId, allTasksWithoutGroups);
+  if (!task.canEdit) {
+    // TODO: ideally we will redirect to custom error page.
+    return res.redirect(`/case/${dealId}/tasks`);
+  }
 
   const allTeamMembers = await api.getTeamMembers(task.team.id);
 
@@ -136,7 +138,7 @@ const getCaseTask = async (req, res) => {
 const putCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
 
-  const { taskId } = req.params;
+  const { groupId, taskId } = req.params;
 
   const deal = await api.getDeal(dealId);
 
@@ -151,10 +153,12 @@ const putCaseTask = async (req, res) => {
 
   const update = {
     id: taskId,
+    groupId: Number(groupId),
     status,
     assignedTo: {
       userId: assignedToValue,
     },
+    updatedBy: req.session.user._id, // eslint-disable-line no-underscore-dangle
   };
 
   await api.updateTask(dealId, update);
@@ -172,7 +176,10 @@ const getCaseFacility = async (req, res) => {
 
   const { associatedDealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(associatedDealId);
-
+  const premiumschedule = mapPremiumSchedule(facility.tfm.premiumSchedule);
+  const premiumTotals = facility.tfm.premiumSchedule
+    ? facility.tfm.premiumSchedule.map((s) => s.income).reduce((a, b) => a + b, 0).toFixed(2)
+    : 0;
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
@@ -180,7 +187,10 @@ const getCaseFacility = async (req, res) => {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'facility',
     facilityId,
+    premiumschedule,
+    schedule_count: premiumschedule.length,
     facilityTfm: facility.tfm,
+    premiumTotals,
     user: req.session.user,
   });
 };
