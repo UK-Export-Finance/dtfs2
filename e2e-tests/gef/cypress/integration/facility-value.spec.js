@@ -41,7 +41,7 @@ context('Facility Value Page', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.backLink();
       facilityValue.headingCaption();
-      facilityValue.mainHeading();
+      facilityValue.mainHeading().contains('interest');
       facilityValue.hiddenFacilityType().should('be', 'invisible');
       facilityValue.valueLabel().should('contain', 'cash');
       facilityValue.valueSuffix().should('contain', 'EUR');
@@ -65,7 +65,7 @@ context('Facility Value Page', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[2].details._id}/facility-value`));
       facilityValue.backLink();
       facilityValue.headingCaption();
-      facilityValue.mainHeading();
+      facilityValue.mainHeading().contains('risk');
       facilityValue.hiddenFacilityType().should('be', 'invisible');
       facilityValue.valueLabel().should('contain', 'contingent');
       facilityValue.valueSuffix().should('contain', 'YEN');
