@@ -11,6 +11,9 @@ import selectExportersCorrespondenceAddressRoutes from '../select-exporters-corr
 import aboutExporter from '../about-exporter';
 import facilities from '../facilities';
 import aboutFacility from '../about-facility';
+import providedFacility from '../provided-facility';
+import facilityCurrency from '../facility-currency';
+import facilityValue from '../facility-value';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -45,5 +48,8 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(aboutExporter);
     expect(useSpy).toHaveBeenCalledWith(facilities);
     expect(useSpy).toHaveBeenCalledWith(aboutFacility);
+    expect(useSpy).toHaveBeenCalledWith(providedFacility);
+    expect(useSpy).toHaveBeenCalledWith(facilityCurrency);
+    expect(useSpy).toHaveBeenCalledWith(facilityValue);
   });
 });

@@ -2,10 +2,18 @@
   color: $govuk-error-colour;
 }
 
+.has-text {
+  color: $govuk-text-colour;
+}
+
 ul {
   &.is-unstyled {
     list-style: none;
     margin: 0;
     padding: 0;
+
+    li:not(:last-child) {
+      margin-bottom: 5px;
+    }
   }
 }

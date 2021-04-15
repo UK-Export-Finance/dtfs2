@@ -50,7 +50,7 @@
     "express-json2csv": "^0.3.6",
     "express-session": "1.17.0",
     "form-data": "3.0.0",
-    "govuk-frontend": "^3.6.0",
+    "govuk-frontend": "^3.11.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
     "html-entities": "^2.1.0",
