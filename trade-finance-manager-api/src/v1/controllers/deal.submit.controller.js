@@ -47,7 +47,8 @@ const submitDeal = async (dealId) => {
 
     const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       return api.updateDeal(dealId, updatedDealWithTasks);
