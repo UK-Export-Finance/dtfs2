@@ -12,9 +12,6 @@ const hasRequiredItems = (doc) => {
   if (doc.name === null) {
     required.push('name');
   }
-  // if (doc.hasBeenIssued === true && doc.shouldCoverStartOnSubmission === null) {
-  //   required.push('shouldCoverStartOnSubmission');
-  // }
   if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && doc.coverStartDate === null)) {
     required.push('coverStartDate');
   }
@@ -42,9 +39,9 @@ const hasRequiredItems = (doc) => {
   if (doc.interestPercentage === null) {
     required.push('interestPercentage');
   }
-  if (doc.paymentType === null) {
-    required.push('paymentType');
-  }
+  // if (doc.paymentType === null) {
+  //   required.push('paymentType');
+  // }
   return required;
 };
 
