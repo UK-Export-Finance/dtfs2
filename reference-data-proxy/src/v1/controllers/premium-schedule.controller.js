@@ -8,9 +8,8 @@ const axios = require('axios');
 const mapPremiumScheduleFalicity = require('../mappings/mapPremiumScheduleFacility');
 
 const postPremiumSchedule = async (facility, facilityExposurePeriod) => {
-  console.log('premium-schedule');
-
   const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod);
+
   if (!data) {
     console.log('facility data not valid for premium schedule');
     return null;
