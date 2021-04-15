@@ -61,14 +61,20 @@
         {{ govukInput({
           label: {
             text: "Enter value of your " + facilityTypeString + " facility",
-            classes: "govuk-label--m"
+            classes: "govuk-label--m",
+            attributes: {
+              'data-cy': 'value-label'
+            }
           },
           id: "value",
           name: "value",
           classes: "govuk-input--width-10",
           value: value,
           suffix: {
-            text: currency
+            text: currency,
+            attributes: {
+              'data-cy': 'value-suffix'
+            }
           },
           attributes: {
             'data-cy': 'value',
@@ -103,7 +109,7 @@
           errorMessage: errors and errors.fieldErrors.coverPercentage and {
             text: errors.fieldErrors.coverPercentage.text,
             attributes: {
-              'data-cy': 'cover-percentage-error'
+              'data-cy': 'percentage-cover-error'
             }
           }
         }) }}
