@@ -14,7 +14,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('../about-facility');
+    require('../facility-currency');
   });
 
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId/about-facility', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId/facility-currency', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/facilities/:facilityId/facility-currency', validateToken, expect.any(Function));
   });
 });

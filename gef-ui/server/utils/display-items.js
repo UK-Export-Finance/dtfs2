@@ -1,6 +1,8 @@
 import moment from 'moment';
 import { isTrueSet } from './helpers';
-import { SME_TYPE, BOOLEAN, STAGE } from '../../constants';
+import {
+  SME_TYPE, BOOLEAN, STAGE, FACILITY_TYPE,
+} from '../../constants';
 
 const exporterItems = (exporterUrl, options = {}) => [
   {
@@ -47,11 +49,11 @@ const exporterItems = (exporterUrl, options = {}) => [
   },
 ];
 
-const facilityItems = (facilityUrl, type) => [
+const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission }) => [
   {
     label: 'Name',
     id: 'name',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
   },
   {
     label: 'Stage',
@@ -61,36 +63,41 @@ const facilityItems = (facilityUrl, type) => [
   {
     label: 'Cover start date',
     id: 'coverStartDate',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
+    isHidden: !hasBeenIssued,
+    shouldCoverStartOnSubmission,
   },
   {
     label: 'Cover end date',
     id: 'coverEndDate',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
+    isHidden: !hasBeenIssued,
   },
   {
     label: 'Months the UKEF guarantee will be in place for',
     id: 'monthsOfCover',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/about-facility?status=change`,
     suffix: ' months',
+    isHidden: hasBeenIssued,
   },
   {
     label: 'Facility provided on',
     id: 'details',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/provided-facility?status=change`,
+    isDetails: true,
   },
   {
     label: 'Facility value',
     id: 'value',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/facility-currency?status=change`,
     isCurrency: true,
   },
   {
     label: 'Percentage of UKEF cover needed',
     id: 'coverPercentage',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/facility-value?status=change`,
     suffix: '%',
   },
   {
@@ -106,9 +113,9 @@ const facilityItems = (facilityUrl, type) => [
     isCurrency: true,
   },
   {
-    label: type === 0 ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
+    label: type === FACILITY_TYPE.CASH ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
     id: 'interestPercentage',
-    href: `${facilityUrl}`,
+    href: `${facilityUrl}/facility-value?status=change`,
     suffix: '%',
   },
 ];

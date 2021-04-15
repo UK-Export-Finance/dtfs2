@@ -8,25 +8,25 @@
   }
 }
 
-.govuk-summary-list__key {
-  width: 50%;
-}
-.govuk-summary-list__value {
-  padding-left: 15px;
-  width: 30%;
-}
-
-.govuk-button-group {
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: baseline;
-
-  .govuk-button {
-    margin-right: 15px;
+.govuk-summary-list {
+  &__key {
+    width: 50%;
   }
+  &__value {
+    padding-left: 15px;
+    width: 40%;
+  }
+  &__actions {
+    width: 10%;
+  }
+}
 
-  .govuk-link {
-    line-height: 38px;
+.govuk-form-group {
+  &.govuk-form-group--error {
+    &.govuk-form-group {
+      padding-left: 15px;
+      border-left: 5px solid $govuk-error-colour;
+    }
   }
 }
 

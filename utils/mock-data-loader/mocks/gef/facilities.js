@@ -1,6 +1,8 @@
 // Please note: do not include application ID in these mocks as this will processed as a new facility and contain null fields
 
-const { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, CURRENCY, PAYMENT_TYPE } = require('../../../../portal-api/src/v1/gef/enums');
+const {
+  FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, CURRENCY, PAYMENT_TYPE,
+} = require('../../../../portal-api/src/v1/gef/enums');
 
 const FACILITIES = [[],
   [{
@@ -21,7 +23,7 @@ const FACILITIES = [[],
     paymentType: null,
   }, {
     type: FACILITY_TYPE.CASH,
-    hasBeenIssued: true,
+    hasBeenIssued: false,
     name: null,
     startOnDayOfNotice: null,
     shouldCoverStartOnSubmission: null,

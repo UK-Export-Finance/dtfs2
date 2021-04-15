@@ -1,3 +1,4 @@
+import _startCase from 'lodash/startCase';
 import * as api from '../../services/api';
 import { mapSummaryList, status } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/display-items';
@@ -30,10 +31,11 @@ const applicationDetails = async (req, res) => {
       facilities: {
         status: facilitiesStatus,
         data: facilities.items.map((item) => ({
-          heading: FACILITY_TYPE[item.details.type],
+          heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
           // eslint-disable-next-line no-underscore-dangle
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details.type)),
-        })),
+          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details)),
+          createdAt: item.details.createdAt,
+        })).sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
       },
       submit: canSubmit,
       bankInternalRefName,
