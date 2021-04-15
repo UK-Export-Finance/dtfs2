@@ -103,7 +103,9 @@ const validateAboutFacility = async (req, res) => {
     coverEndDate.set('year', Number(coverEndDateYear));
   }
 
-  if (body.monthsOfCover && !/^[0-9]*$/.test(body.monthsOfCover)) {
+  // Regex tests to see if value is a number only
+  const digitsRegex = /^[0-9]*$/;
+  if (body.monthsOfCover && !digitsRegex.test(body.monthsOfCover)) {
     aboutFacilityErrors.push({
       errRef: 'monthsOfCover',
       errMsg: 'You can only enter numbers',
