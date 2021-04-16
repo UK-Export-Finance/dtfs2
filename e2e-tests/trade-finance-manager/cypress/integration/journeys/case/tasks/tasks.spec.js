@@ -1,8 +1,8 @@
-import relative from '../../relativeURL';
-import partials from '../../partials';
-import pages from '../../pages';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../fixtures/users';
+import relative from '../../../relativeURL';
+import partials from '../../../partials';
+import pages from '../../../pages';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import MOCK_USERS from '../../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
   username: 'MAKER-TFM',
@@ -61,7 +61,6 @@ context('Case tasks - AIN deal', () => {
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
   const nonBusinessSupportUser = MOCK_USERS.find((u) => !u.teams.includes('BUSINESS_SUPPORT'));
-  const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
   let userId;
   let loggedInUserTeamName;
   let usersInTeam;
@@ -136,75 +135,6 @@ context('Case tasks - AIN deal', () => {
 
     secondTask.link().should('not.exist');
     secondTask.title().should('exist');
-  });
-
-  it('user can assign a task to themself, change status and then unassign', () => {
-    partials.caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-    //---------------------------------------------------------------
-    // user assigns task to themself
-    //---------------------------------------------------------------
-    pages.tasksPage.filterRadioYourTeam().click();
-    const firstTask = pages.tasksPage.tasks.row('1');
-    firstTask.link().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/tasks/1/1`));
-
-    // `assign to` should have total amount of users in the team and unassigned users
-    const TOTAL_USERS_IN_TEAM = usersInTeam.length;
-    const expected = TOTAL_USERS_IN_TEAM + 1;
-
-    pages.taskPage.assignedToSelectInputOption().should('have.length', expected);
-
-    // task should be unassigned by default
-    pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
-
-    // select the `assign to me` option
-    pages.taskPage.assignedToSelectInput().select(userId);
-
-    // `assign to me` option should have the correct text
-    const assignToMeSelectOptionText = `${userFullName} (Assign to me)`;
-    pages.taskPage.assignedToSelectInputSelectedOption().should('have.text', assignToMeSelectOptionText);
-
-    // task status should have 3 options, `to do` selected by default
-    pages.taskPage.taskStatusRadioInput().should('have.length', 3);
-    pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
-
-    // change task status
-    pages.taskPage.taskStatusRadioInputInProgress().click();
-
-    // submit form
-    pages.taskPage.submitButton().click();
-
-    // should now be back on the tasks page
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-    // go back into the same task
-    firstTask.link().click();
-
-    // `assigned to` should be updated, only displaying the full name
-    pages.taskPage.assignedToSelectInput().invoke('val').should('eq', userId);
-    pages.taskPage.assignedToSelectInputSelectedOption().should('have.text', userFullName);
-
-    // `in progess` status should be selected
-    pages.taskPage.taskStatusRadioInputInProgress().should('be.checked');
-
-    //---------------------------------------------------------------
-    // user can unassign the task
-    //---------------------------------------------------------------
-    pages.taskPage.assignedToSelectInput().select('Unassigned');
-    pages.taskPage.taskStatusRadioInputTodo().click();
-    pages.taskPage.submitButton().click();
-
-    // should now be back on the tasks page
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-    // go back into the same task, check values
-    pages.tasksPage.filterRadioYourTeam().click();
-    firstTask.link().click();
-    pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', 'Unassigned');
-    pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
   });
 
   it('user cannot start task #2 (or any task apart from #1), if task #1 is in progress', () => {
