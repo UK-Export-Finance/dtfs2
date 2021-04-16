@@ -154,6 +154,19 @@ describe('updateFacility()', () => {
   });
 });
 
+describe('deleteFacility()', () => {
+  it('returns the correct response', async () => {
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.deleteFacility('fakeId');
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.put.mockReturnValue(Promise.reject());
+    await expect(api.deleteFacility('fakeId')).rejects.toThrowError();
+  });
+});
+
 describe('getAutomaticCover()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
