@@ -28,7 +28,6 @@ const dealQuery = gql`
             groupId,
             title,
             status,
-            lastEdited,
             assignedTo {
               userId,
               userFullName

@@ -8,7 +8,7 @@ const findDeals = async (callback) => {
     $or: [
       { 'dealSnapshot.details.submissionType': CONSTANTS.DEALS.SUBMISSION_TYPE.AIN },
       { 'dealSnapshot.details.submissionType': CONSTANTS.DEALS.SUBMISSION_TYPE.MIA },
-    ]
+    ],
   }).toArray();
 
   if (callback) {

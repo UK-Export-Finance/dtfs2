@@ -18,7 +18,7 @@ const createDealTasks = async (deal) => {
   } = dealSnapshot;
 
   const { submissionType } = details;
-  
+
   let tasks;
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {

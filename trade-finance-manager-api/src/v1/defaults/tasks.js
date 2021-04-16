@@ -6,9 +6,10 @@ const taskDefaults = () => ({
     userId: CONSTANTS.TASKS.UNASSIGNED,
     userFullName: CONSTANTS.TASKS.UNASSIGNED,
   },
+  canEdit: false,
 });
 
-createGroupTasks = (tasks, groupId) =>
+const createGroupTasks = (tasks, groupId) =>
   tasks.map((t, index) => {
     let task = t;
 
@@ -63,5 +64,5 @@ const TASKS = {
 module.exports = {
   taskDefaults,
   createGroupTasks,
-  TASKS
+  TASKS,
 };

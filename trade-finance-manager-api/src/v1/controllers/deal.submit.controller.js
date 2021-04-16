@@ -45,8 +45,6 @@ const submitDeal = async (dealId) => {
 
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
-
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
@@ -54,7 +52,7 @@ const submitDeal = async (dealId) => {
       return api.updateDeal(dealId, updatedDealWithTasks);
     }
 
-    return api.updateDeal(dealId, updatedDealWithTasks);
+    return api.updateDeal(dealId, updatedDealWithCreateEstore);
   }
 
   if (dealHasBeenResubmit) {

@@ -30,4 +30,3 @@ module.exports = {
   RISK_MANAGERS,
   BUSINESS_SUPPORT,
 };
-
