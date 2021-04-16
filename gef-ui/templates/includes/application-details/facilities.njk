@@ -41,9 +41,15 @@
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
-    <h3 class="govuk-heading-m" data-cy="facility-type-heading">
-      {{item.heading}} facility
-    </h3>
+    <header class="is-flex is-justify-content-space-between">
+      <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+        {{item.heading}} facility
+      </h3>
+      <a
+        class="govuk-link"
+        href="/gef/application-details/{{applicationId}}/facilities/{{item.facilityId}}/confirm-deletion"
+        data-cy="delete-facility">Delete facility</a>
+    </header>
     {{ govukSummaryList({
       rows: item.rows,
       attributes: {
