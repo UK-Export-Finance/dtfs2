@@ -33,7 +33,6 @@ context('Facility Value Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    console.log(applications);
   });
 
   describe('Visiting page as cash facility', () => {
