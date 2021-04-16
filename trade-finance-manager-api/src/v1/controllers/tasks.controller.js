@@ -116,9 +116,7 @@ const updateTasksCanEdit = (allTaskGroups, groupId, taskIdToUpdate) =>
 
         if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
           task.canEdit = false;
-        }
-
-        if (!isFirstTask(task.id)
+        } else if (!isFirstTask(task.id)
           && previousTaskIsComplete(group.groupTasks, task.id)) {
           task.canEdit = true;
 
