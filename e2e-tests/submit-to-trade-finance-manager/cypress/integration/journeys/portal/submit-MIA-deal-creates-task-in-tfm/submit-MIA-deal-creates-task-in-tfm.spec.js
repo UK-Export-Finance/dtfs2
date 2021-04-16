@@ -1,10 +1,10 @@
-/* eslint-disable no-underscore-dangle */
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
+import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
+import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal MIN deal is submitted to UKEF, `Not set` credit rating displays in TFM facilities', () => {
+  it('Portal MIA deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -63,6 +63,7 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
+    cy.wait(5000); // wait for TFM to do it's thing
 
     //---------------------------------------------------------------
     // user login to TFM
@@ -75,14 +76,16 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
-    const facilityId = dealFacilities[0]._id;
-    const tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${facilityId}`;
-    cy.forceVisit(tfmFacilityPage);
+    const row = tfmPages.dealsPage.dealsTable.row(dealId);
+    row.dealLink().click();
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
 
-    tfmPages.facilityPage.facilityDealCreditRating().should('not.be.visible');
+    tfmPartials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/tasks`);
 
-    tfmPages.facilityPage.facilityDealCreditRatingNotSet().should('be.visible');
+    tfmPages.tasksPage.filterRadioAllTasks().click();
+
+    const TOTAL_MIA_TASKS = 12;
+    tfmPages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
   });
 });
-
-/* eslint-enable no-underscore-dangle */

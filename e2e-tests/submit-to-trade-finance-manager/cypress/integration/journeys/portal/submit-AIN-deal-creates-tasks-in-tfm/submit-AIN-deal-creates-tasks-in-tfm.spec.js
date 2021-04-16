@@ -86,6 +86,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.tasksPage.filterRadioAllTasks().click();
 
-    tfmPages.tasksPage.tasksTableRows().should('have.length', 2);
+    const TOTAL_AIN_TASKS = 2;
+    tfmPages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
   });
 });
