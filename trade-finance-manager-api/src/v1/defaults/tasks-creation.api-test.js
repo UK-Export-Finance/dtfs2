@@ -32,7 +32,7 @@ describe('defaults - tasks creation', () => {
         team: 'Team B',
       },
     ];
-    
+
     it('should return array of tasks with given task id and groupId', () => {
       const result = createGroupTasks(mockTasks, 2);
 
@@ -121,6 +121,6 @@ describe('defaults - tasks creation', () => {
       ];
 
       expect(TASKS.MIA).toEqual(expected);
-    });    
+    });
   });
 });

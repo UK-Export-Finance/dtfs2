@@ -47,19 +47,18 @@ const GET_DEAL = gql`
           id
           groupTasks {
             id,
-            groupId
+            groupId,
             title,
             status,
-            canEdit
-            lastEdited
             assignedTo {
-              userId
+              userId,
               userFullName
             }
             team {
               id,
               name
             }
+            canEdit
           }
         }
         exporterCreditRating
