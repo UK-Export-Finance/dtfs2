@@ -43,7 +43,7 @@ describe('/v1/tfm/deals', () => {
   });
 
   describe('GET /v1/tfm/deals', () => {
-    it('returns only AIN deals', async () => {
+    it('returns only AIN and MIA deals', async () => {
       const miaDeal = {
         ...newDeal,
         details: {
@@ -88,12 +88,13 @@ describe('/v1/tfm/deals', () => {
       const { status, body } = await api.get('/v1/tfm/deals');
 
       expect(status).toEqual(200);
-      const totalAinDeals = 2;
-      expect(body.deals.length).toEqual(totalAinDeals);
+      const totalDeals = 3;
+      expect(body.deals.length).toEqual(totalDeals);
 
       // check they're AIN deals
-      expect(body.deals[0].dealSnapshot.details.submissionType).toEqual('Automatic Inclusion Notice');
+      expect(body.deals[0].dealSnapshot.details.submissionType).toEqual('Manual Inclusion Application');
       expect(body.deals[1].dealSnapshot.details.submissionType).toEqual('Automatic Inclusion Notice');
+      expect(body.deals[2].dealSnapshot.details.submissionType).toEqual('Automatic Inclusion Notice');
     });
   });
 
