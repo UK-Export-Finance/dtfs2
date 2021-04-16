@@ -1,4 +1,5 @@
 import landingPage from './landingPage';
+import dealsPage from './dealsPage';
 import caseDealPage from './caseDealPage';
 import partiesPage from './partiesPage';
 import exporterPage from './exporterPage';
@@ -15,6 +16,7 @@ import underwritingPricingAndRiskEditPage from './underwriting/pricingAndRiskEdi
 
 export default {
   landingPage,
+  dealsPage,
   caseDealPage,
   partiesPage,
   exporterPage,

@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
+  it('Portal AIN deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -64,6 +64,8 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('include', '/dashboard');
 
 
+    cy.wait(5000); // wait for TFM to do it's thing
+
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
@@ -75,8 +77,9 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
-    cy.forceVisit(tfmCaseDealPage);
+    const row = tfmPages.dealsPage.dealsTable.row(dealId);
+    row.dealLink().click();
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
 
     tfmPartials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/tasks`);
