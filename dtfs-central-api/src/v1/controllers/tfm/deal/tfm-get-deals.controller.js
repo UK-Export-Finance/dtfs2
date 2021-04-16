@@ -5,7 +5,10 @@ const findDeals = async (callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
   const deals = await dealsCollection.find({
-    'dealSnapshot.details.submissionType': CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+    $or: [
+      { 'dealSnapshot.details.submissionType': CONSTANTS.DEALS.SUBMISSION_TYPE.AIN },
+      { 'dealSnapshot.details.submissionType': CONSTANTS.DEALS.SUBMISSION_TYPE.MIA },
+    ]
   }).toArray();
 
   if (callback) {
