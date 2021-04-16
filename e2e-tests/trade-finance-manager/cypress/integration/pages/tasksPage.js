@@ -1,5 +1,6 @@
 const tasksPage = {
   tasksTableRows: () => cy.get('[data-cy="tasks-table"] tbody tr'),
+  taskGroupTable: () => cy.get('[data-cy="task-group-table"]'),
   tasks: {
     row: (taskId) => {
       const row = cy.get(`[data-cy="task-${taskId}-row"]`);
