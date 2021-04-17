@@ -46,8 +46,7 @@ describe('acbs controller', () => {
     });
 
     it('should call createACBS ACBS function', async () => {
-      const { ops } = await acbsController.createACBS(MOCK_TFM_DEAL_ACBS);
-      expect(ops[0].deal.dealSnapshot).toEqual(MOCK_DEAL_ACBS);
+      await acbsController.createACBS(MOCK_TFM_DEAL_ACBS);
       expect(api.createACBS).toHaveBeenCalled();
     });
   });
