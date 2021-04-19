@@ -34,7 +34,11 @@ const updateFacilities = async (deal) => {
 
       const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-      const facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
+      const facilityPremiumSchedule = await getFacilityPremiumSchedule(
+        facility,
+        facilityExposurePeriod,
+        facilityGuaranteeDates,
+      );
 
 
       // TODO
