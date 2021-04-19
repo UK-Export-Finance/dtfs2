@@ -44,11 +44,9 @@ const CONSTANTS = require('../../constants');
 const facilityUpdate = (facility, acbsFacility, obligorName) => {
   const { facilitySnapshot } = facility;
 
-  const capitalConversionFactorCode = facilitySnapshot.facilityType === 'GEF' ? helpers.getCapitalConversionFactorCode() : '8';
-
   return {
     ...acbsFacility,
-    capitalConversionFactorCode,
+    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facilitySnapshot.facilityType),
     issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
     facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
     foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
