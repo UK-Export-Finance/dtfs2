@@ -30,10 +30,12 @@ const updateFacilities = async (deal) => {
         facilityType,
       } = facility;
 
+      const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+
       const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-      const facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod);
-      const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+      const facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
+
 
       // TODO
       // exposure period is not in unit test

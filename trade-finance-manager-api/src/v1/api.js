@@ -279,7 +279,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
   }
 };
 
-const getPremiumSchedule = async (facility, facilityExposurePeriod) => {
+const getPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   console.log('$api.getPremiumSchedule');
   try {
     const response = await axios({
@@ -291,6 +291,7 @@ const getPremiumSchedule = async (facility, facilityExposurePeriod) => {
       data: {
         facility,
         facilityExposurePeriod,
+        facilityGuaranteeDates,
       },
     });
     console.log(`response from premium-schedule:${response.status}`);

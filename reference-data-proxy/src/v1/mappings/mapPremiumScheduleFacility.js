@@ -55,7 +55,7 @@ const isFacilityValidForPremiumSchedule = (
   return true;
 };
 
-const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod) => {
+const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod)) {
     return null;
   }
@@ -127,22 +127,12 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod) => {
     cumulativeAmount = Number(facility.disbursementAmount);
   }
 
-  map.guaranteeCommencementDate = facility.requestedCoverStartDate;
-  map.guaranteeExpiryDate = facility.coverEndDate;
-
   map.facilityURN = Number(facility.ukefFacilityID);
   map.productGroup = facility.facilityType === 'bond' ? 'BS' : 'EW';
   map.premiumTypeId = premiumTypeId;
   map.premiumFrequencyId = premiumFrequencyId;
-  map.guaranteeCommencementDate = `${
-    facility['requestedCoverStartDate-year']
-  }-${String(facility['requestedCoverStartDate-month']).padStart(
-    2,
-    '0',
-  )}-${String(facility['requestedCoverStartDate-day']).padStart(2, '0')}`;
-  map.guaranteeExpiryDate = `${facility['coverEndDate-year']}-${String(
-    facility['coverEndDate-month'],
-  ).padStart(2, '0')}-${String(facility['coverEndDate-day']).padStart(2, '0')}`;
+  map.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
+  map.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;
   map.guaranteeFeePercentage = Number(facility.guaranteeFeePayableByBank);
   map.guaranteePercentage = Number(facility.coveredPercentage);
 

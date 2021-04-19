@@ -7,8 +7,8 @@
 const axios = require('axios');
 const mapPremiumScheduleFalicity = require('../mappings/mapPremiumScheduleFacility');
 
-const postPremiumSchedule = async (facility, facilityExposurePeriod) => {
-  const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod);
+const postPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
+  const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod, facilityGuaranteeDates);
 
   if (!data) {
     console.log('facility data not valid for premium schedule');
@@ -58,8 +58,8 @@ const getScheduleData = async (facilityURN) => {
 };
 
 const getPremiumSchedule = async (req, res) => {
-  const { facility, facilityExposurePeriod } = req.body;
-  const postPremiumScheduleResponse = await postPremiumSchedule(facility, facilityExposurePeriod);
+  const { facility, facilityExposurePeriod, facilityGuaranteeDates } = req.body;
+  const postPremiumScheduleResponse = await postPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
   if (!postPremiumScheduleResponse) {
     console.log('no postPremiumScheduleResponse');
     return res.status(400).send();
