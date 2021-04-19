@@ -117,7 +117,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // first task should have status `To do` and link
     //---------------------------------------------------------------
-    const firstTask = pages.tasksPage.tasks.row('1');
+    const firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('To do');
     });
@@ -128,7 +128,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // second task should have status `To do` and no link
     //---------------------------------------------------------------
-    const secondTask = pages.tasksPage.tasks.row('2');
+    const secondTask = pages.tasksPage.tasks.row(1, 2);
     firstTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('To do');
     });
@@ -143,7 +143,7 @@ context('Case tasks - AIN deal', () => {
     pages.tasksPage.filterRadioYourTeam().click();
 
     // assign first task
-    let firstTask = pages.tasksPage.tasks.row('1');
+    let firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
     pages.taskPage.assignedToSelectInput().select(userId);
@@ -155,7 +155,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // first task should have status `In progress`
     //---------------------------------------------------------------
-    firstTask = pages.tasksPage.tasks.row('1');
+    firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('In progress');
     });
@@ -163,7 +163,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // second task should have status `To do` and no link
     //---------------------------------------------------------------
-    const secondTask = pages.tasksPage.tasks.row('2');
+    const secondTask = pages.tasksPage.tasks.row(1, 2);
     secondTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('To do');
     });
@@ -184,7 +184,7 @@ context('Case tasks - AIN deal', () => {
     pages.tasksPage.filterRadioYourTeam().click();
 
     // assign first task and mark as done
-    let firstTask = pages.tasksPage.tasks.row('1');
+    let firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
     pages.taskPage.assignedToSelectInput().select(userId);
@@ -196,7 +196,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // first task should have status `Done`
     //---------------------------------------------------------------
-    firstTask = pages.tasksPage.tasks.row('1');
+    firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Done');
     });
@@ -204,7 +204,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // second task should have status `To do` and link
     //---------------------------------------------------------------
-    let secondTask = pages.tasksPage.tasks.row('2');
+    let secondTask = pages.tasksPage.tasks.row(1, 2);
     secondTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('To do');
     });
@@ -224,7 +224,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     // second task should have status 'In progress' and link
     //---------------------------------------------------------------
-    secondTask = pages.tasksPage.tasks.row('2');
+    secondTask = pages.tasksPage.tasks.row(1, 2);
     secondTask.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('In progress');
     });
@@ -238,7 +238,7 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioYourTeam().click();
-    let firstTask = pages.tasksPage.tasks.row('1');
+    let firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
     const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
@@ -252,7 +252,7 @@ context('Case tasks - AIN deal', () => {
       //---------------------------------------------------------------
       // updated task displays correct assignee and status in the task page
       //---------------------------------------------------------------
-      firstTask = pages.tasksPage.tasks.row('1');
+      firstTask = pages.tasksPage.tasks.row(1, 1);
       firstTask.link().click();
 
       const differentUserInSameTeamFullName = `${firstName} ${lastName}`;
@@ -283,7 +283,7 @@ context('Case tasks - AIN deal', () => {
 
     pages.tasksPage.filterRadioYourTeam().click();
 
-    const firstTask = pages.tasksPage.tasks.row('1');
+    const firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
     // make sure the task is unassigned to start with
@@ -340,7 +340,7 @@ context('Case tasks - AIN deal', () => {
       pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
 
       // assign a task to someone else on my team
-      const firstTask = pages.tasksPage.tasks.row('1');
+      const firstTask = pages.tasksPage.tasks.row(1, 1);
       firstTask.link().click();
 
       const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
