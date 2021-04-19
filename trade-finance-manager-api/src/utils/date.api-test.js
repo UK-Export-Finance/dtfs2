@@ -1,5 +1,7 @@
 const {
   formatYear,
+  formatDate,
+  formatTimestamp,
 } = require('./date');
 
 describe('utils - date', () => {
@@ -16,6 +18,20 @@ describe('utils - date', () => {
         const result = formatYear('2001');
         expect(result).toEqual('2001');
       });
+    });
+  });
+
+  describe('formatDate', () => {
+    it('should return a date in YYYY-MM-DD format', () => {
+      const result = formatDate('20210419');
+      expect(result).toEqual('2021-04-19');
+    });
+  });
+
+  describe('formatTimestamp', () => {
+    it('should return a date in YYYY-MM-DD format', () => {
+      const result = formatTimestamp(1618842665642);
+      expect(result).toEqual('2021-04-19');
     });
   });
 });

@@ -1,5 +1,5 @@
 const moment = require('moment');
-const dateHelpers = require('../../../helpers/date');
+const dateHelpers = require('../../utils/date');
 const isIssued = require('./is-issued');
 
 /*
@@ -25,20 +25,18 @@ const getGuaranteeDates = (facility, submissionDate) => {
   const guaranteeCommencementDate = moment(new Date(Number(submissionDate))).add(3, 'months').valueOf();
   let guaranteeExpiryDate;
 
-  const { facilitySnapshot } = facility;
-
   if (isIssued(facility)) {
-    guaranteeExpiryDate = dateHelpers.formatDate(`${facilitySnapshot['coverEndDate-year']}-${facilitySnapshot['coverEndDate-month']}-${facilitySnapshot['coverEndDate-day']}`);
+    guaranteeExpiryDate = dateHelpers.formatDate(`${facility['coverEndDate-year']}-${facility['coverEndDate-month']}-${facility['coverEndDate-day']}`);
   } else {
     guaranteeExpiryDate = dateHelpers.formatTimestamp(
-      moment(Number(guaranteeCommencementDate)).add(facilitySnapshot.ukefGuaranteeInMonths, 'months').valueOf(),
+      moment(Number(guaranteeCommencementDate)).add(facility.ukefGuaranteeInMonths, 'months').valueOf(),
     );
   }
 
   return {
     guaranteeCommencementDate: dateHelpers.formatTimestamp(guaranteeCommencementDate),
     guaranteeExpiryDate,
-    effectiveDate: submissionDate,
+    effectiveDate: dateHelpers.formatTimestamp(submissionDate),
   };
 };
 

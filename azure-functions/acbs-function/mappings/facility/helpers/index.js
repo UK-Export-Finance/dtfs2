@@ -10,7 +10,6 @@ const getForecastPercentage = require('./get-forecast-percentage');
 const getDescription = require('./get-description');
 const getNextQuarterDate = require('./get-next-quarter-date');
 const getIssueDate = require('./get-issue-date');
-const getGuaranteeDates = require('./get-guarantee-dates');
 const getGuarantorParty = require('./get-guarantor-party');
 const getFacilityValue = require('./get-facility-value');
 const getMaximumLiability = require('./get-maximum-liability');
@@ -28,7 +27,6 @@ module.exports = {
   getDescription,
   getNextQuarterDate,
   getIssueDate,
-  getGuaranteeDates,
   getGuarantorParty,
   getFacilityValue,
   getMaximumLiability,

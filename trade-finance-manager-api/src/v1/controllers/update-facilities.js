@@ -3,6 +3,7 @@ const convertFacilityCurrency = require('./convert-facility-currency');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const DEFAULTS = require('../defaults');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
+const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 
 const updateFacilities = async (deal) => {
   // Create deep clone
@@ -32,11 +33,14 @@ const updateFacilities = async (deal) => {
       const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
       const facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod);
+      const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+
       // TODO
       // exposure period is not in unit test
       const facilityUpdate = {
         ...facilityCurrencyConversion,
         ...facilityExposurePeriod,
+        facilityGuaranteeDates,
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
         premiumSchedule: facilityPremiumSchedule,
       };

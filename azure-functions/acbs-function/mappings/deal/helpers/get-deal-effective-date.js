@@ -8,7 +8,6 @@ Switch Commitment to Issued   Portal Submission Date  Cover Start Date
 Issued (straight to Issued    Cover Start Date        Cover Start Date
 */
 const { formatTimestamp } = require('../../../helpers/date');
-const getGuaranteeDates = require('../../facility/helpers/get-guarantee-dates');
 
 const getDealEffectiveDate = ({ dealSnapshot }) => {
   const { facilities } = dealSnapshot;
@@ -16,11 +15,11 @@ const getDealEffectiveDate = ({ dealSnapshot }) => {
   const { submissionDate } = dealSnapshot.details;
 
   const earliestGuaranteeDate = facilities.reduce((earliestDate, facility) => {
-    const { effectiveDate } = getGuaranteeDates(facility, submissionDate);
+    const { effectiveDate } = facility.tfm.facilityGuaranteeDates;
     return effectiveDate < earliestDate ? effectiveDate : earliestDate;
-  }, submissionDate);
+  }, formatTimestamp(submissionDate));
 
-  return formatTimestamp(earliestGuaranteeDate);
+  return earliestGuaranteeDate;
 };
 
 module.exports = getDealEffectiveDate;

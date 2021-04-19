@@ -15,24 +15,19 @@
   "sectionIdentifier": "00"
  */
 
-const helpers = require('./helpers');
-
-const { formatTimestamp } = require('../../helpers/date');
-
 const codeValueTransaction = (deal, facility) => {
-  const { details } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
 
   const {
     effectiveDate,
-  } = helpers.getGuaranteeDates(facility, details.submissionDate);
+  } = facility.tfm.facilityGuaranteeDates;
 
   return {
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
     lenderTypeCode: '500',
     initialBundleStatusCode: 2,
     portfolioIdentifier: 'E1',
-    effectiveDate: formatTimestamp(effectiveDate),
+    effectiveDate,
     initiatingUserName: 'APIUKEF',
     facilityTransactionCodeValueCode: 'A',
     facilityTransactionTypeCode: '2340',
