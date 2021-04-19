@@ -75,7 +75,7 @@ describe('tasks controller helper functions', () => {
     });
   });
 
-  describe('isFirstTaskInFirstGroup', () => {    
+  describe('isFirstTaskInFirstGroup', () => {
     it('returns true when task id and group id is 1', () => {
       const result = isFirstTaskInFirstGroup('1', 1);
       expect(result).toEqual(true);
@@ -172,7 +172,6 @@ describe('tasks controller helper functions', () => {
           '1',
         );
         expect(result).toEqual(true);
-          
       });
     });
 
@@ -191,7 +190,6 @@ describe('tasks controller helper functions', () => {
         expect(result).toEqual(false);
       });
     });
-
   });
 
   describe('firstTaskIsComplete', () => {
