@@ -45,7 +45,6 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   const { details, submissionDetails } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
 
-  const capitalConversionFactorCode = facilitySnapshot.facilityType === 'GEF' ? helpers.getCapitalConversionFactorCode() : '8';
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
@@ -60,7 +59,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility),
     productTypeId: helpers.getProductTypeId(facilitySnapshot.facilityType),
-    capitalConversionFactorCode,
+    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facilitySnapshot.facilityType),
     productTypeName: facilitySnapshot.facilityType,
     currency: facilitySnapshot.currency.id,
     guaranteeCommencementDate,
