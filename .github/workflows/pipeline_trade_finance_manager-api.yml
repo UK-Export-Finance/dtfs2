@@ -72,15 +72,10 @@ jobs:
     - name: Start Docker Compose
       run: |
         docker-compose up -d
-    - name: Load mock data for api tests
-      run: |
-        cd utils/mock-data-loader
-        npm install
-        node ./re-insert-mocks.js
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
-    - name: Load mock data for e2e
+    - name: Load mock data
       run: |
         cd utils/mock-data-loader
         npm install
