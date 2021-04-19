@@ -53,10 +53,6 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
     const previousTask = getTask(previousTaskId, group.groupTasks);
 
-    // if (!previousTask) {
-    //   return true;
-    // }
-
     if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
     }
