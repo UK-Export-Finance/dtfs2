@@ -2,6 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
+import MOCK_MIA_TASKS from '../../../../fixtures/tasks-MIA';
 import MOCK_USERS from '../../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
@@ -33,6 +34,25 @@ const ADMIN_LOGIN = {
     id: '*',
   },
 };
+
+const getGroup = (groupId) =>
+  MOCK_MIA_TASKS.find((g) => g.id === groupId);
+
+const MIA_TASKS_STRUCTURE = {
+  1: {
+    totalGroupTasks: getGroup(1).groupTasks.length,
+  },
+  2: {
+    totalGroupTasks: getGroup(2).groupTasks.length,
+  },
+  3: {
+    totalGroupTasks: getGroup(3).groupTasks.length,
+  },
+  4: {
+    totalGroupTasks: getGroup(4).groupTasks.length,
+  },
+};
+
 
 context('Case tasks - MIA deal', () => {
   let deal;
@@ -80,7 +100,7 @@ context('Case tasks - MIA deal', () => {
     });
   });
 
-  it('should render all MIA tasks', () => {
+  it('should render all MIA task groups and tasks', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
@@ -160,5 +180,179 @@ context('Case tasks - MIA deal', () => {
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
+  });
+
+  const submitTaskInProgress = (groupId, taskId) => {
+    const firstGroupFirstTask = pages.tasksPage.tasks.row(groupId, taskId);
+    firstGroupFirstTask.link().click();
+
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputInProgress().click();
+    pages.taskPage.submitButton().click();
+  };
+
+  const submitTaskComplete = (groupId, taskId) => {
+    const firstGroupFirstTask = pages.tasksPage.tasks.row(groupId, taskId);
+    firstGroupFirstTask.link().click();
+
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputDone().click();
+    pages.taskPage.submitButton().click();
+  };
+
+  const assertCannotClickPreviousTask = (currentGroupId, currentTaskId) => {
+    if (currentGroupId !== 1) {
+      const isFirstTaskInGroup = currentTaskId === 1;
+
+      if (isFirstTaskInGroup) {
+        const previousGroup = MIA_TASKS_STRUCTURE[currentGroupId - 1];
+        const previousGroupId = currentGroupId - 1;
+
+        const lastTaskIdInPreviousGroup = previousGroup.totalGroupTasks;
+
+        const lastTaskRow = pages.tasksPage.tasks.row(previousGroupId, lastTaskIdInPreviousGroup);
+
+        lastTaskRow.link().should('not.be.visible');
+      }
+    } else if (currentTaskId !== 1) {
+      const previousTaskId = currentTaskId - 1;
+
+      const lastTaskRow = pages.tasksPage.tasks.row(currentGroupId, previousTaskId);
+
+      lastTaskRow.link().should('not.be.visible');
+    }
+  };
+
+  const assertCompleteTask = (groupId, taskId) => {
+    const row = pages.tasksPage.tasks.row(groupId, taskId);
+
+    row.link().should('not.be.visible');
+
+    row.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Done');
+    });
+  };
+
+  const assertNextTaskStatus = (currentGroupId, currentTaskId) => {
+    const currentGroup = MIA_TASKS_STRUCTURE[currentGroupId];
+    const isLastTaskInGroup = currentGroup.totalGroupTasks === currentTaskId;
+    const isLastGroup = currentGroupId === 4;
+
+    if (isLastTaskInGroup && !isLastGroup) {
+      // check the next task in the next group
+      const nextGroupId = currentGroupId + 1;
+
+      const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
+
+      nextGroupFirstTaskRow.status().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
+    } else if (!isLastTaskInGroup && !isLastGroup) {
+      // check the next task in current group
+      const nextTaskId = currentTaskId + 1;
+
+      const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
+
+      nextTaskRow.status().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
+    }
+  };
+
+  const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
+    const currentGroup = MIA_TASKS_STRUCTURE[currentGroupId];
+    const isLastTaskInGroup = currentGroup.totalGroupTasks === currentTaskId;
+    const isLastGroup = currentGroupId === 4;
+
+    if (isLastTaskInGroup && !isLastGroup) {
+      // check the next task in the next group
+      const nextGroupId = currentGroupId + 1;
+
+      const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
+
+      nextGroupFirstTaskRow.link().should('not.be.visible');
+    } else if (!isLastTaskInGroup && !isLastGroup) {
+      // check the next task in current group
+      const nextTaskId = currentTaskId + 1;
+
+      const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
+
+      nextTaskRow.link().should('not.be.visible');
+    }
+  };
+
+  const submitTaskCompleteAndAssertOtherTasks = (groupId, taskId) => {
+    submitTaskInProgress(groupId, taskId);
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    assertCannotClickNextTask(groupId, taskId);
+
+    submitTaskComplete(groupId, taskId);
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    assertCompleteTask(groupId, taskId);
+
+    assertNextTaskStatus(groupId, taskId);
+
+    assertCannotClickPreviousTask(groupId, taskId);
+  };
+
+  it('user cannot start a task in a group until all tasks in the previous group are completed. Each time a task is completed, the next task can be started.', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+
+    // TODO
+    // TODO test cannot manually navigate to group #2 task < should be covered in UI unit test, check.
+
+
+    //---------------------------------------------------------------
+    // complete all tasks in all groups
+    //
+    // - previously completed tasks should NOT be clickable.
+    // - next task should be clickable.
+    // - tasks in the next group should NOT be clickable;
+    // - - unless all tasks in the previous group are completed.
+    //--------------------------------------------------------------
+    const group1Tasks = new Array(MIA_TASKS_STRUCTURE[1].totalGroupTasks);
+    const group2Tasks = new Array(MIA_TASKS_STRUCTURE[2].totalGroupTasks);
+    const group3Tasks = new Array(MIA_TASKS_STRUCTURE[3].totalGroupTasks);
+    const group4Tasks = new Array(MIA_TASKS_STRUCTURE[4].totalGroupTasks);
+
+    cy.wrap(group1Tasks).each((task, index) => {
+      const taskId = index + 1;
+      return new Cypress.Promise((resolve) => {
+        submitTaskCompleteAndAssertOtherTasks(1, taskId);
+        resolve();
+      });
+    });
+
+    cy.wrap(group2Tasks).each((task, index) => {
+      const taskId = index + 1;
+      return new Cypress.Promise((resolve) => {
+        submitTaskCompleteAndAssertOtherTasks(2, taskId);
+        resolve();
+      });
+    });
+
+    cy.wrap(group3Tasks).each((task, index) => {
+      const taskId = index + 1;
+      return new Cypress.Promise((resolve) => {
+        submitTaskCompleteAndAssertOtherTasks(3, taskId);
+        resolve();
+      });
+    });
+
+    cy.wrap(group4Tasks).each((task, index) => {
+      const taskId = index + 1;
+      return new Cypress.Promise((resolve) => {
+        submitTaskCompleteAndAssertOtherTasks(4, taskId);
+        resolve();
+      });
+    });
   });
 });

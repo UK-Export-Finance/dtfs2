@@ -23,11 +23,11 @@
 
           <tbody class="govuk-table__body">
             {% for task in taskGroup.groupTasks %}
-              <tr class="govuk-table__row" data-cy="task-{{ task.id }}-row">
+              <tr class="govuk-table__row" data-cy="task-group-{{ taskGroup.id }}-task-{{ task.id }}-row">
 
                 <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0">
                   {% if task.canEdit %}
-                    <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-{{ task.id }}-link">{{ task.title }}</a>
+                    <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
 
                     {% else %}
                       <span data-cy="task-table-row-{{ task.id }}-title">{{ task.title }}</span>
@@ -43,7 +43,7 @@
                   {{ task.team.name }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right" data-cy="task-table-row-{{ task.id }}-status" aria-labelledby="Task status">
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-status" aria-labelledby="Task status">
                   {% set componentData = {
                     status: task.status
                   } %}
