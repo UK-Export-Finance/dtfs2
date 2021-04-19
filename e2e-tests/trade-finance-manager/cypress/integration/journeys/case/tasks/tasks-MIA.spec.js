@@ -121,7 +121,7 @@ context('Case tasks - MIA deal', () => {
     // user assigns task to themself
     //---------------------------------------------------------------
     pages.tasksPage.filterRadioYourTeam().click();
-    const firstTask = pages.tasksPage.tasks.row('1');
+    const firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks/1/1`));

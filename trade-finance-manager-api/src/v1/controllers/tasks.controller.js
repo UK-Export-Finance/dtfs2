@@ -18,18 +18,49 @@ const updateHistory = ({
 const getTask = (taskId, tasks) =>
   tasks.find((t) => t.id === taskId);
 
-const previousTaskIsComplete = (groupTasks, taskId) => {
-  const previousTaskId = String(Number(taskId - 1));
+const getGroup = (allTaskGroups, groupId) => {
+  const group = allTaskGroups.find((g) => g.id === groupId);
 
-  const previousTask = getTask(previousTaskId, groupTasks);
+  return group;
+};
 
-  if (!previousTask) {
+const isFirstTaskInAGroup = (taskId, groupId) =>
+  (taskId === '1' && groupId > 1);
+
+const isFirstTaskInFirstGroup = (taskId, groupId) =>
+  (taskId === '1' && groupId === 1);
+
+const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
+  if (isFirstTaskInFirstGroup(taskId, group.id)) {
+    // no other tasks/groups before this task, so previous task is irrelevant
     return true;
   }
 
-  if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-    return true;
-  }
+  if (isFirstTaskInAGroup(taskId, group.id)) {
+    // check the last (previous) task in the previous group
+    const previousGroupId = group.id - 1;
+    const previousGroup = getGroup(allTaskGroups, previousGroupId);
+
+    const totalTasksInPreviousGroup = previousGroup.groupTasks.length;
+    const lastTaskInPreviousGroup = previousGroup.groupTasks[totalTasksInPreviousGroup - 1];
+
+    if (lastTaskInPreviousGroup.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      return true;
+    }
+  } else {
+    // check the previous task in the current group
+    const previousTaskId = String(Number(taskId - 1));
+
+    const previousTask = getTask(previousTaskId, group.groupTasks);
+
+    // if (!previousTask) {
+    //   return true;
+    // }
+
+    if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      return true;
+    }
+  }  
 
   return false;
 };
@@ -44,22 +75,12 @@ const firstTaskIsComplete = (groupTasks) => {
   return false;
 };
 
-const getParentGroupTasks = (allTaskGroups, groupId) => {
-  const group = allTaskGroups.find((g) => g.id === groupId);
-
-  return group.groupTasks;
-};
-
 const isFirstTask = (taskId) => taskId === '1';
 
-const canUpdateTask = (taskId, groupTasks) => {
-  if (isFirstTask(taskId)
-      && !firstTaskIsComplete(groupTasks)) {
-    return true;
-  }
+const canUpdateTask = (allTaskGroups, group, taskId) => {
+  const { groupTasks } = group;
 
-  if (!isFirstTask(taskId)
-    && previousTaskIsComplete(groupTasks, taskId)) {
+  if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
     return true;
   }
 
@@ -116,8 +137,7 @@ const updateTasksCanEdit = (allTaskGroups, groupId, taskIdToUpdate) =>
 
         if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
           task.canEdit = false;
-        } else if (!isFirstTask(task.id)
-          && previousTaskIsComplete(group.groupTasks, task.id)) {
+        } else if (previousTaskIsComplete(allTaskGroups, group, task.id)) {
           task.canEdit = true;
 
           if (task.id === taskIdToUpdate
@@ -172,13 +192,13 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     updatedBy,
   } = tfmTaskUpdate;
 
-  const groupTasks = getParentGroupTasks(allTasks, groupId);
+  const group = getGroup(allTasks, groupId);
 
-  const originalTask = getTask(taskIdToUpdate, groupTasks);
+  const originalTask = getTask(taskIdToUpdate, group.groupTasks);
 
   const originalTaskAssignedUserId = originalTask.assignedTo.userId;
 
-  if (canUpdateTask(taskIdToUpdate, groupTasks)) {
+  if (canUpdateTask(allTasks, group, taskIdToUpdate)) {
     const { userId: assignedUserId } = assignedTo;
 
     const newAssigneeFullName = await getNewAssigneeFullName(assignedUserId);
@@ -236,9 +256,11 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
 module.exports = {
   getTask,
+  getGroup,
+  isFirstTaskInAGroup,
+  isFirstTaskInFirstGroup,
   previousTaskIsComplete,
   firstTaskIsComplete,
-  getParentGroupTasks,
   isFirstTask,
   canUpdateTask,
   getNewAssigneeFullName,
