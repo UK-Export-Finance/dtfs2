@@ -59,7 +59,11 @@ const getScheduleData = async (facilityURN) => {
 
 const getPremiumSchedule = async (req, res) => {
   const { facility, facilityExposurePeriod, facilityGuaranteeDates } = req.body;
-  const postPremiumScheduleResponse = await postPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
+  const postPremiumScheduleResponse = await postPremiumSchedule(
+    facility,
+    facilityExposurePeriod,
+    facilityGuaranteeDates,
+  );
   if (!postPremiumScheduleResponse) {
     console.log('no postPremiumScheduleResponse');
     return res.status(400).send();
