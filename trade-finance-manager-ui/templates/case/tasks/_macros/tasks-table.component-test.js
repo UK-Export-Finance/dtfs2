@@ -69,7 +69,7 @@ describe(component, () => {
       it('should render link to task', () => {
         const taskWithCanEdit = params.tasks[0].groupTasks[1];
 
-        const linkSelector = `[data-cy="task-table-row-${taskWithCanEdit.id}-link"]`;
+        const linkSelector = `[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-link"]`;
 
         wrapper.expectLink(linkSelector).toLinkTo(
           `/case/${params.caseId}/tasks/${taskWithCanEdit.groupId}/${taskWithCanEdit.id}`,
