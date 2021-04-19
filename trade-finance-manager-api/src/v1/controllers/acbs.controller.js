@@ -36,9 +36,9 @@ const clearACBSLog = async () => {
 const createACBS = async (deal) => {
   // Add bank's full details so we can reference partyUrn in function
   const bankId = deal.dealSnapshot.details.owningBank.id;
-  console.log({ bankId });
+
   const bank = await findOneBank(bankId);
-  console.log({ bank });
+
   if (!bank) {
     return false;
   }
