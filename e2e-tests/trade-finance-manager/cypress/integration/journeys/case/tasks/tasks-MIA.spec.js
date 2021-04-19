@@ -305,11 +305,6 @@ context('Case tasks - MIA deal', () => {
 
     pages.tasksPage.filterRadioAllTasks().click();
 
-
-    // TODO
-    // TODO test cannot manually navigate to group #2 task < should be covered in UI unit test, check.
-
-
     //---------------------------------------------------------------
     // complete all tasks in all groups
     //
