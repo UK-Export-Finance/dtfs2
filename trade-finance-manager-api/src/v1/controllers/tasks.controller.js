@@ -56,7 +56,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
     if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
     }
-  }  
+  }
 
   return false;
 };
@@ -74,8 +74,6 @@ const firstTaskIsComplete = (groupTasks) => {
 const isFirstTask = (taskId) => taskId === '1';
 
 const canUpdateTask = (allTaskGroups, group, taskId) => {
-  const { groupTasks } = group;
-
   if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
     return true;
   }
