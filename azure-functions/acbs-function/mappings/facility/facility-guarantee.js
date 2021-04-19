@@ -11,17 +11,15 @@
   */
 
 const helpers = require('./helpers');
-const { formatTimestamp } = require('../../helpers/date');
 
 const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
-  const { details } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
 
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
-  } = helpers.getGuaranteeDates(facility, details.submissionDate);
+  } = facility.tfm.facilityGuaranteeDates;
 
   return {
     facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
@@ -29,7 +27,7 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
     guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
     limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
     guaranteeExpiryDate,
-    effectiveDate: formatTimestamp(effectiveDate),
+    effectiveDate,
     maximumLiability: helpers.getMaximumLiability(facility),
     guaranteeTypeCode,
   };

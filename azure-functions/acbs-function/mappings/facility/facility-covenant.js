@@ -11,17 +11,15 @@
   */
 
 const helpers = require('./helpers');
-const { formatTimestamp } = require('../../helpers/date');
 
 const facilityCovenant = (deal, facility, covenantType) => {
-  const { details } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
 
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
-  } = helpers.getGuaranteeDates(facility, details.submissionDate);
+  } = facility.tfm.facilityGuaranteeDates;
 
 
   return {
@@ -32,7 +30,7 @@ const facilityCovenant = (deal, facility, covenantType) => {
     currency: facilitySnapshot.currency.currencyId,
     guaranteeCommencementDate,
     guaranteeExpiryDate,
-    effectiveDate: formatTimestamp(effectiveDate),
+    effectiveDate,
   };
 };
 

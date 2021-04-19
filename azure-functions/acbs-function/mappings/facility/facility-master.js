@@ -39,8 +39,6 @@
 
 const helpers = require('./helpers');
 
-const { formatTimestamp } = require('../../helpers/date');
-
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   const { details, submissionDetails } = deal.dealSnapshot;
   const { facilitySnapshot } = facility;
@@ -49,7 +47,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
-  } = helpers.getGuaranteeDates(facility, details.submissionDate);
+  } = facility.tfm.facilityGuaranteeDates;
   const issueDate = helpers.getIssueDate(facility, details.submissionDate);
 
   return {
@@ -74,7 +72,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility),
     riskCountryCode: 'GBR',
     riskStatusCode: '03',
-    effectiveDate: formatTimestamp(effectiveDate),
+    effectiveDate,
     foreCastPercentage: helpers.getForecastPercentage(facility),
     issueDate,
     description: helpers.getDescription(facility),
