@@ -20,7 +20,7 @@ const {
 const api = require('../api');
 
 const MOCK_USERS = require('../__mocks__/mock-users');
-const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA');
+const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_TASKS = require('../__mocks__/mock-tasks');
 const CONSTANTS = require('../../constants');
 
@@ -576,7 +576,7 @@ describe('tasks controller helper functions', () => {
   });
 
   describe('updateTfmTask', () => {
-    const dealId = MOCK_DEAL_MIA._id;
+    const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
 
     const mockUser = MOCK_USERS[0];
     const userId = mockUser._id;

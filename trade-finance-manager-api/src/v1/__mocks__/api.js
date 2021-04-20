@@ -5,7 +5,8 @@ const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-cu
 const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
-const MOCK_DEAL_MIA = require('./mock-deal-MIA');
+const MOCK_DEAL_MIA_SUBMITTED = require('./mock-deal-MIA-submitted');
+const MOCK_DEAL_MIA_NOT_SUBMITTED = require('./mock-deal-MIA-not-submitted');
 const MOCK_DEAL_AIN_SUBMITTED = require('./mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
@@ -19,7 +20,8 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_NO_COMPANIES_HOUSE,
   MOCK_DEAL_FACILITIES_USD_CURRENCY,
   MOCK_DEAL_MIN,
-  MOCK_DEAL_MIA,
+  MOCK_DEAL_MIA_SUBMITTED,
+  MOCK_DEAL_MIA_NOT_SUBMITTED,
   MOCK_DEAL_AIN_SUBMITTED,
   MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
   MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,

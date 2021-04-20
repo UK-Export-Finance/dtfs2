@@ -4,7 +4,7 @@ import tfmPages from '../../../../../../trade-finance-manager/cypress/integratio
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import MOCK_AIN_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
@@ -23,7 +23,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
+      MOCK_AIN_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         deal = insertedDeals[0];
@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, `Confirmed` deal stage is added to the deal in TFM', () => {
+  it('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------

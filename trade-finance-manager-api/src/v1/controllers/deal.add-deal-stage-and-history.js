@@ -29,16 +29,25 @@ const addDealStageAndHistory = async (deal) => {
     },
   };
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-    && status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMITTED) {
-    dealUpdate = {
-      tfm: {
-        ...tfm,
-        ...dealUpdate.tfm,
-        stage: CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED,
-      },
-    };
+  let tfmDealStage;
+
+  if (status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMITTED) {
+    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED;
+    }
+
+    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION;
+    }
   }
+
+  dealUpdate = {
+    tfm: {
+      ...tfm,
+      ...dealUpdate.tfm,
+      stage: tfmDealStage,
+    },
+  };
 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 

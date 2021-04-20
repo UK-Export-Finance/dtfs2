@@ -18,6 +18,7 @@ const DEAL_STATUS_PORTAL = {
 
 const DEAL_STAGE_TFM = {
   CONFIRMED: 'Confirmed',
+  APPLICATION: 'Application',
 };
 
 const CREDIT_RATING = {
