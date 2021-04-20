@@ -13,6 +13,7 @@ const SUBMISSION_TYPE = {
 const DEAL_STATUS_PORTAL = {
   SUBMITTED: 'Submitted',
   SUBMISSION_ACKNOWLEDGED: 'Acknowledged by UKEF',
+  IN_PROGRESS: 'In progress by UKEF',
 };
 
 const DEAL_STAGE_TFM = {
