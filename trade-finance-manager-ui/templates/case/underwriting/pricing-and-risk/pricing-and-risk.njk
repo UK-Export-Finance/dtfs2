@@ -1,60 +1,28 @@
-{% from "govuk/components/table/macro.njk" import govukTable %}
-{% import './_macros/side-navigation.njk' as sideNavigation %}
 {% import './_macros/section-exporter/section-exporter.njk' as sectionExporter %}
 {% import './_macros/section-facilities/section-facilities.njk' as sectionFacilities %}
 
-{% extends "case/case.njk" %}
+{% extends "case/underwriting/layout.njk" %}
 
-{% block sub_content %}
+{% block underwriting_content %}
+  <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
 
-  <div class="govuk-grid-row">
+  {% set componentData = {
+    caseId: dealId,
+    supplierName: deal.submissionDetails.supplierName,
+    exporterCreditRating: tfm.exporterCreditRating,
+    lossGivenDefault: tfm.lossGivenDefault,
+    probabilityOfDefault: tfm.probabilityOfDefault,
+    userCanEdit: userCanEdit
+  } %}
 
-    <div class="govuk-grid-column-full">
-      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-6" data-cy="underwriting-heading">Underwriting</h2>
-    </div>
+  {{sectionExporter.render(componentData)}}
 
-    <div class="govuk-grid-row">
+  {% set componentData = {
+    caseId: dealId,
+    facilities: deal.facilities,
+    userCanEdit: userCanEdit
+  } %}
 
-      <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-column-two-thirds">
-
-            {% set componentData = {
-              caseId: dealId,
-              activeSideNavigation: activeSideNavigation
-            } %}
-
-            {{sideNavigation.render(componentData)}}
-
-          </div>
-      </div>
-
-      <div class="govuk-grid-column-one-half">
-
-        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
-
-        {% set componentData = {
-          caseId: dealId,
-          supplierName: deal.submissionDetails.supplierName,
-          exporterCreditRating: tfm.exporterCreditRating,
-          lossGivenDefault: tfm.lossGivenDefault,
-          probabilityOfDefault: tfm.probabilityOfDefault,
-          userCanEdit: userCanEdit
-        } %}
-
-        {{sectionExporter.render(componentData)}}
-
-        {% set componentData = {
-          caseId: dealId,
-          facilities: deal.facilities,
-          userCanEdit: userCanEdit
-        } %}
-
-        {{sectionFacilities.render(componentData)}}
-
-      </div>
-
-    </div>
-
-  </div>
+  {{sectionFacilities.render(componentData)}}
 
 {% endblock %}

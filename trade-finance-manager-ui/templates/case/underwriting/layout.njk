@@ -1,0 +1,37 @@
+{% import './_macros/side-navigation.njk' as sideNavigation %}
+
+{% extends "case/case.njk" %}
+
+{% block sub_content %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-6" data-cy="underwriting-heading">Underwriting</h2>
+    </div>
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-one-quarter">
+          <div class="govuk-grid-column-two-thirds">
+
+            {% set componentData = {
+              caseId: dealId,
+              activeSideNavigation: activeSideNavigation
+            } %}
+
+            {{sideNavigation.render(componentData)}}
+
+          </div>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        {% block underwriting_content %}
+        {% endblock %}
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

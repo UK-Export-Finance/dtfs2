@@ -91,6 +91,9 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
           supplierCorrespondenceAddressTown
           smeType
         }
+        dealFiles {
+          security
+        }
       }
     }
   }

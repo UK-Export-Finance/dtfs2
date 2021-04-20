@@ -1,4 +1,5 @@
-const componentRenderer = require('../../../../../component-tests/componentRenderer');
+const componentRenderer = require('../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/side-navigation.njk';
 
 const render = componentRenderer(component);
@@ -22,5 +23,4 @@ describe(component, () => {
     wrapper.expectLink('[data-cy="underwriter-managers-decision"] a')
       .toLinkTo(`/case/${params.caseId}/underwriting/underwriter-managers-decision`, 'Underwriter manager’s decision');
   });
-
 });

@@ -64,6 +64,9 @@ const dealQuery = gql`
           bankSupplyContractID,
           bankSupplyContractName,
         }
+        dealFiles {
+          security
+        }
         totals {
           facilitiesValueInGBP,
           facilitiesUkefExposure
