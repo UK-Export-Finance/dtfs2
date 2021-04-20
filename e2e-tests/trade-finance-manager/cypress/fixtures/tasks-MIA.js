@@ -53,8 +53,8 @@ const MOCK_MIA_TASKS = [
         "groupId": 1,
         "title": "Create a credit analysis document",
         "team": {
-          "id": "UNDERWRITING_SUPPORT",
-          "name": "Underwriting support"
+          "id": "BUSINESS_SUPPORT",
+          "name": " Business support group"
         },
         "status": "To do",
         "assignedTo": {

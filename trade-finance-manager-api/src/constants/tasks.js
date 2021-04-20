@@ -42,7 +42,7 @@ const MIA = {
       },
       {
         title: 'Create a credit analysis document',
-        team: TEAMS.UNDERWRITING_SUPPORT,
+        team: TEAMS.BUSINESS_SUPPORT,
       },
       {
         title: 'Assign an underwriter for this deal',
