@@ -26,14 +26,6 @@ const newDeal = aDeal({
   },
 });
 
-const dealUpdate = {
-  tfm: {
-    submissionDetails: {
-      exporterPartyUrn: '12345',
-    },
-  },
-};
-
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
@@ -168,6 +160,14 @@ describe('/v1/tfm/deals', () => {
   });
 
   describe('PUT /v1/tfm/deals', () => {
+    const dealUpdate = {
+      tfm: {
+        submissionDetails: {
+          exporterPartyUrn: '12345',
+        },
+      },
+    };
+
     it('404s if updating an unknown id', async () => {
       const { status } = await api.put({ dealUpdate }).to('/v1/tfm/deals/12345678');
       expect(status).toEqual(404);
@@ -184,6 +184,44 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
       expect(body.dealSnapshot).toMatchObject(newDeal);
       expect(body.tfm).toEqual(dealUpdate.tfm);
+    });
+  });
+
+  describe('PUT /v1/tfm/deal/:id/stage', () => {
+    const dealStageUpdate = {
+      stage: 'New stage',
+    };
+
+    it('404s if updating an unknown id', async () => {
+      const { status } = await api.put(dealStageUpdate).to('/v1/tfm/deals/12345678/stage');
+      expect(status).toEqual(404);
+    });
+
+    it('updates deal.tfm.stage', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      const dealUpdate = {
+        tfm: {
+          submissionDetails: {
+            exporterPartyUrn: '12345',
+          },
+        },
+      };
+
+      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+
+      // add some dummy data to deal.tfm
+      await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { status, body } = await api.put(dealStageUpdate).to(`/v1/tfm/deals/${dealId}/stage`);
+
+      expect(status).toEqual(200);
+      expect(body.dealSnapshot).toMatchObject(newDeal);
+      expect(body.tfm).toEqual({
+        ...dealUpdate.tfm,
+        stage: dealStageUpdate.stage,
+      });
     });
   });
 });
