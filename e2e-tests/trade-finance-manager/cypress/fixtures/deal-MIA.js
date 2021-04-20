@@ -161,6 +161,9 @@ const MOCK_DEAL = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
+  dealFiles: {
+    security: 'Mock security details',
+  },
   mockFacilities: [
     {
       facilityType: 'bond',
