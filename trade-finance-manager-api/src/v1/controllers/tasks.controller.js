@@ -242,7 +242,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
     if (shouldUpdateDealStage) {
       tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS;
-    }    
+    }
 
     await api.updateDeal(dealId, tfmDealUpdate);
 
