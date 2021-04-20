@@ -101,7 +101,6 @@ module.exports = {
     if (updatedTfmDealData.tfm) {
       if (updatedTfmDealData.tfm.history
         || updatedTfmDealData.tfm.stage) {
-
         const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
         deal = {

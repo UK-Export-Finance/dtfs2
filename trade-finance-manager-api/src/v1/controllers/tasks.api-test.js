@@ -701,6 +701,8 @@ describe('tasks controller  / tasks helper functions', () => {
           updatedBy: userId,
         };
 
+        await updateTfmTask(dealId, tfmTaskUpdateDone);
+
         const dealAfterSecondUpdate = await api.findOneDeal(dealId);
 
         expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
