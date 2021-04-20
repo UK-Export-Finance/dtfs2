@@ -6,6 +6,7 @@ const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
+const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { createEstoreFolders } = require('./estore.controller');
@@ -26,12 +27,11 @@ const submitDeal = async (dealId) => {
   const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-      await api.updatePortalDealStatus(
-        dealId,
-        CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
-      );
-    }
+    await updatePortalDealStatus(
+      dealId,
+      deal.details.submissionType,
+      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+    );
 
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
@@ -58,8 +58,9 @@ const submitDeal = async (dealId) => {
   if (dealHasBeenResubmit) {
     const dealWithUpdatedFacilities = await updatedIssuedFacilities(submittedDeal);
 
-    await api.updatePortalDealStatus(
+    await updatePortalDealStatus(
       dealId,
+      deal.details.submissionType,
       CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
     );
 
