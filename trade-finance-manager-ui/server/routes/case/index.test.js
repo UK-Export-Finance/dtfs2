@@ -3,6 +3,7 @@ import {
   post,
 } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
+import underwritingController from '../../controllers/case/underwriting';
 
 describe('routes - case', () => {
   beforeEach(() => {
@@ -15,7 +16,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(13);
+    expect(get).toHaveBeenCalledTimes(14);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -39,9 +40,12 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk', caseController.getUnderWritingPricingAndRisk);
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk', underwritingController.getUnderWritingPricingAndRisk);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRiskEdit);
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
+
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
+
 
     // POST routes
     expect(post).toHaveBeenCalledTimes(9);
@@ -62,6 +66,6 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', caseController.postUnderWritingPricingAndRisk);
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
   });
 });

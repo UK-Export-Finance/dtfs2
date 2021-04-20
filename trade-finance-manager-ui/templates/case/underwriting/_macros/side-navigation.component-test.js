@@ -1,6 +1,6 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
 
-const component = '../templates/case/underwriting/pricing-and-risk/_macros/side-navigation.njk';
+const component = '../templates/case/underwriting/_macros/side-navigation.njk';
 
 const render = componentRenderer(component);
 
