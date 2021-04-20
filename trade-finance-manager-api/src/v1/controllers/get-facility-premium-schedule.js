@@ -12,7 +12,7 @@ const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, faci
     );
     return premiumSchedule;
   }
-  console.log('get-facility-premium-schedule. No premium schedule returned');
+
   return null;
 };
 
