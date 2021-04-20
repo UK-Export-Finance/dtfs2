@@ -25,3 +25,4 @@ reference-data-proxy/generated_reports
 .vscode/settings.json
 .DS_Store
 e2e-tests/trade-finance-manager/cypress/.eslintrc.json
+db-schema/**
