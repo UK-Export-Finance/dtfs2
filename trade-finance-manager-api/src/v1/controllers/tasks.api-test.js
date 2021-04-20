@@ -24,7 +24,7 @@ const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_TASKS = require('../__mocks__/mock-tasks');
 const CONSTANTS = require('../../constants');
 
-describe('tasks controller helper functions', () => {
+describe('tasks controller  / tasks helper functions', () => {
   describe('getTask', () => {
     it('should return task by id', () => {
       const mockGroupTasks = [
@@ -615,7 +615,7 @@ describe('tasks controller helper functions', () => {
         // has task #1 as 'To do'.
         // therefore task #2 cannot be updated.
 
-        const tfmTaskUpdate = {
+        const tfmTask2Update = {
           id: '2',
           groupId: 1,
           assignedTo: {
@@ -625,11 +625,85 @@ describe('tasks controller helper functions', () => {
           updatedBy: userId,
         };
 
-        const result = await updateTfmTask(dealId, tfmTaskUpdate);
+        const result = await updateTfmTask(dealId, tfmTask2Update);
 
         const originalTask2 = MOCK_TASKS[0].groupTasks[1];
 
         expect(result).toEqual(originalTask2);
+      });
+    });
+
+    describe('when an MIA deal has the first task in the first group completed immediately', () => {
+      it('should update deal.tfm.stage to `In progress`', async () => {
+        const tfmTaskUpdate = {
+          id: '1',
+          groupId: 1,
+          assignedTo: {
+            userId,
+          },
+          status: 'Done',
+          updatedBy: userId,
+        };
+
+        await updateTfmTask(dealId, tfmTaskUpdate);
+
+        const deal = await api.findOneDeal(dealId);
+
+        expect(deal.tfm.stage).toEqual('In progress');
+      });
+    });
+
+    describe('when an MIA deal has the first task in the first group completed after being `In progress`', () => {
+      it('should update deal.tfm.stage to `In progress`', async () => {
+        // make sure task is in `To do` state.
+        const tfmTaskUpdateTodo = {
+          id: '1',
+          groupId: 1,
+          assignedTo: {
+            userId,
+          },
+          status: 'To do',
+          updatedBy: userId,
+        };
+
+        await updateTfmTask(dealId, tfmTaskUpdateTodo);
+
+        // const initalDeal = await updateDealStage(dealId, '');
+        await api.resetDealForApiTest(dealId);
+
+        const initalDeal = await api.findOneDeal(dealId);
+
+        expect(initalDeal.tfm.stage).toBeUndefined();
+
+        const tfmTaskUpdateInProgress = {
+          id: '1',
+          groupId: 1,
+          assignedTo: {
+            userId,
+          },
+          status: 'In progress',
+          updatedBy: userId,
+        };
+
+        await updateTfmTask(dealId, tfmTaskUpdateInProgress);
+
+        const dealAfterFirstUpdate = await api.findOneDeal(dealId);
+
+        expect(dealAfterFirstUpdate.tfm.stage).toEqual('In progress');
+
+        const tfmTaskUpdateDone = {
+          id: '1',
+          groupId: 1,
+          assignedTo: {
+            userId,
+          },
+          status: 'Done',
+          updatedBy: userId,
+        };
+
+        const dealAfterSecondUpdate = await api.findOneDeal(dealId);
+
+        expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
       });
     });
   });

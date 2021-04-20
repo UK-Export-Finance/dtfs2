@@ -37,9 +37,14 @@ module.exports = {
     const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
     let tfmHistory = { tasks: [] };
+    let tfmStage;
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.history) {
       tfmHistory = mockDeal.tfm.history;
+    }
+
+    if (mockDeal && mockDeal.tfm && mockDeal.tfm.stage) {
+      tfmStage = mockDeal.tfm.stage;
     }
 
     const deal = {
@@ -57,6 +62,7 @@ module.exports = {
         bondIssuerPartyUrn: '',
         bondBeneficiaryPartyUrn: '',
         history: tfmHistory,
+        stage: tfmStage,
       },
     };
 
@@ -91,18 +97,23 @@ module.exports = {
   updateDeal: (dealId, updatedTfmDealData) => {
     let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
-    // if history is updated, add to the mock deal.
-    if (updatedTfmDealData.tfm && updatedTfmDealData.tfm.history) {
-      const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    // if history or stage is updated, add to the mock deal.
+    if (updatedTfmDealData.tfm) {
+      if (updatedTfmDealData.tfm.history
+        || updatedTfmDealData.tfm.stage) {
 
-      deal = {
-        ...deal,
-        tfm: {
-          tasks: updatedTfmDealData.tfm.tasks,
-          history: updatedTfmDealData.tfm.history,
-        },
-      };
-      ALL_MOCK_DEALS[dealIndex] = deal;
+        const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+        deal = {
+          ...deal,
+          tfm: {
+            ...updatedTfmDealData.tfm,
+            tasks: updatedTfmDealData.tfm.tasks,
+            history: updatedTfmDealData.tfm.history,
+          },
+        };
+        ALL_MOCK_DEALS[dealIndex] = deal;
+      }
     }
 
     return {
@@ -111,6 +122,21 @@ module.exports = {
       },
       ...updatedTfmDealData,
     };
+  },
+  resetDealForApiTest: (dealId) => {
+    const existingDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    const resetDeal = {
+      _id: dealId,
+      ...existingDeal,
+      tfm: {},
+    };
+
+    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    ALL_MOCK_DEALS[dealIndex] = resetDeal;
+
+    return Promise.resolve(resetDeal);
   },
   submitDeal: (dealId) => ({
     _id: dealId,

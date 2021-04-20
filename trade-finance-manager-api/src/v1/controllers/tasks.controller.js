@@ -231,7 +231,19 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
-    // update deal tasks and history
+    const isMIAdeal = deal.dealSnapshot.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+
+    const taskCompletedImmediately = (statusTo === CONSTANTS.TASKS.STATUS.COMPLETED
+      && originalTask.status === CONSTANTS.TASKS.STATUS.TO_DO);
+
+    const shouldUpdateDealStage = (isMIAdeal
+      && isFirstTaskInFirstGroup(taskIdToUpdate, groupId)
+      && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately));
+
+    if (shouldUpdateDealStage) {
+      tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS;
+    }    
+
     await api.updateDeal(dealId, tfmDealUpdate);
 
     if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
