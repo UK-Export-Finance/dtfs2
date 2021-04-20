@@ -38,7 +38,7 @@ const MIA = {
       },
       {
         title: 'File all deal emails in this deal',
-        team: TEAMS.UNDERWRITING_SUPPORT,
+        team: TEAMS.BUSINESS_SUPPORT,
       },
       {
         title: 'Create a credit analysis document',

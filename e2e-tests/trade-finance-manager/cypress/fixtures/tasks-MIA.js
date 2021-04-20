@@ -38,8 +38,8 @@ const MOCK_MIA_TASKS = [
         "groupId": 1,
         "title": "File all deal emails in this deal",
         "team": {
-          "id": "UNDERWRITING_SUPPORT",
-          "name": "Underwriting support"
+          "id": "BUSINESS_SUPPORT",
+          "name": " Business support group"
         },
         "status": "To do",
         "assignedTo": {
