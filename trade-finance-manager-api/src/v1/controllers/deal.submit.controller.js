@@ -30,7 +30,6 @@ const submitDeal = async (dealId) => {
     await updatePortalDealStatus(
       dealId,
       deal.details.submissionType,
-      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
     );
 
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
@@ -61,7 +60,6 @@ const submitDeal = async (dealId) => {
     await updatePortalDealStatus(
       dealId,
       deal.details.submissionType,
-      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
     );
 
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {

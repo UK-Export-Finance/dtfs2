@@ -74,11 +74,11 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.visit(deal);
 
     portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      expect(text.trim()).to.equal('In progress by UKEF');
     });
 
     portalPages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
   });
 });
