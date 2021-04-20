@@ -93,6 +93,10 @@ type DealSubmissionDetails {
   smeType: String
 }
 
+type DealFiles {
+  security: String
+}
+
 type DealEligibilityCriterion {
   _id: String
   id: Int
@@ -293,6 +297,7 @@ type DealSnapshot {
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility
+  dealFiles: DealFiles
 }
 
 type Deal {

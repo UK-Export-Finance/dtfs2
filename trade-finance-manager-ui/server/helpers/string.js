@@ -15,7 +15,7 @@ const hasValue = (str) => {
 const containsNumber = (str) =>
   /\d/.test(str);
 
-module.exports = {
+export default {
   isEmptyString,
   containsNumber,
   hasValue,

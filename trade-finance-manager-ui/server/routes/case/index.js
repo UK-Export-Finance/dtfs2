@@ -1,6 +1,6 @@
 import express from 'express';
 import caseController from '../../controllers/case';
-
+import underwritingController from '../../controllers/case/underwriting';
 
 const router = express.Router();
 
@@ -34,9 +34,10 @@ router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 router.get('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
-router.get('/:_id/underwriting/pricing-and-risk', caseController.getUnderWritingPricingAndRisk);
-router.get('/:_id/underwriting/pricing-and-risk/edit', caseController.getUnderWritingPricingAndRiskEdit);
-router.post('/:_id/underwriting/pricing-and-risk/edit', caseController.postUnderWritingPricingAndRisk);
+router.get('/:_id/underwriting/pricing-and-risk', underwritingController.getUnderWritingPricingAndRisk);
+router.get('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
+router.post('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
 
+router.get('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
 export default router;
