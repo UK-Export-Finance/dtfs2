@@ -75,7 +75,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
+const updateDeal = async (dealId, dealUpdate) => {
   try {
     const response = await axios({
       method: 'put',
@@ -85,7 +85,25 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       },
       data: {
         dealUpdate,
-        user,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const updateDealStage = async (dealId, stage) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/stage`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        stage,
       },
     });
 
@@ -387,6 +405,7 @@ module.exports = {
   updatePortalDealStatus,
   updatePortalFacilityStatus,
   updateDeal,
+  updateDealStage,
   submitDeal,
   findOneFacility,
   updateFacility,

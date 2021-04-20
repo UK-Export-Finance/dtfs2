@@ -19,6 +19,7 @@ const DEAL_STATUS_PORTAL = {
 const DEAL_STAGE_TFM = {
   CONFIRMED: 'Confirmed',
   APPLICATION: 'Application',
+  IN_PROGRESS: 'In progress',
 };
 
 const CREDIT_RATING = {
