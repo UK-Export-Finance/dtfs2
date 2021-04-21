@@ -1,11 +1,11 @@
 const MOCK_DEAL = {
   details: {
-    status: 'Acknowledged by UKEF',
+    status: 'Submitted',
     bank: 'Mock bank',
     bankSupplyContractID: 'Mock supply contract ID',
     bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
-    previousStatus: 'Submitted',
+    previousStatus: 'Ready for Checker\'s Approval',
     maker: {
       username: 'JOE',
       firstname: 'Joe',

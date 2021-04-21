@@ -350,4 +350,40 @@ context('Case tasks - MIA deal', () => {
       });
     });
   });
+
+  it('starting the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    // check initial deal stage
+    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Application');
+    });
+
+    submitTaskInProgress(1, 1);
+
+    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('In progress');
+    });
+  });
+
+  it('completing the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    // check initial deal stage
+    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Application');
+    });
+
+    submitTaskComplete(1, 1);
+
+    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('In progress');
+    });
+  });
 });
