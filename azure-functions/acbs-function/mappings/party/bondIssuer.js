@@ -1,5 +1,5 @@
 const { now } = require('../../helpers/date');
-const { getSmeType } = require('./helpers');
+const { getSmeType, getPartyNames } = require('./helpers');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -19,14 +19,16 @@ const bondIssuer = ({ deal, facility }) => {
   const countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
   const citizenshipClass = countryCode === 'GBR' ? '1' : '2';
 
+  const partyNames = getPartyNames(facility.facilitySnapshot.bondIssuer);
+
   return {
     alternateIdentifier: facility.tfm.bondIssuerPartyUrn,
     industryClassification: '0001',
-    name1: facility.facilitySnapshot.bondIssuer,
     smeType: getSmeType(''),
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,
+    ...partyNames,
   };
 };
 

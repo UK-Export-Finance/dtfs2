@@ -1,4 +1,5 @@
 const { now } = require('../../helpers/date');
+const { getPartyNames } = require('./helpers');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -12,14 +13,18 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   officerRiskDate           date    yyyy-MM-dd i.e. 2019-10-21, Date of creation (we use current date)
 */
 
-const bankMap = ({ bank }) => ({
-  alternateIdentifier: bank.partyUrn,
-  industryClassification: '2501',
-  name1: bank.name,
-  smeType: '5',
-  citizenshipClass: '1',
-  officerRiskDate: now(),
-  countryCode: 'GBR',
-});
+const bankMap = ({ bank }) => {
+  const partyNames = getPartyNames(bank.name);
+
+  return {
+    alternateIdentifier: bank.partyUrn,
+    industryClassification: '2501',
+    smeType: '5',
+    citizenshipClass: '1',
+    officerRiskDate: now(),
+    countryCode: 'GBR',
+    ...partyNames,
+  };
+};
 
 module.exports = bankMap;

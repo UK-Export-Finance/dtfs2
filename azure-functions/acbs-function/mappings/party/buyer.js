@@ -1,5 +1,5 @@
 const { now } = require('../../helpers/date');
-const { getSmeType } = require('./helpers');
+const { getSmeType, getPartyNames } = require('./helpers');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -19,14 +19,16 @@ const buyer = ({ deal }) => {
   const countryCode = submissionDetails['buyer-address-country'] && submissionDetails['buyer-address-country'].code;
   const citizenshipClass = countryCode === 'GBR' ? '1' : '2';
 
+  const partyNames = getPartyNames(submissionDetails['buyer-name']);
+
   return {
     alternateIdentifier: deal.tfm.parties.buyer.partyUrn,
     industryClassification: '0001',
-    name1: submissionDetails['buyer-name'],
     smeType: getSmeType(''),
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,
+    ...partyNames,
   };
 };
 
