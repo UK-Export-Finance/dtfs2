@@ -14,7 +14,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Product</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Product</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -24,7 +24,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Type</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Type</h4>
         </div>
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s" data-cy="facility-type">{{ facility.facilityType | dashIfEmpty }}</p>
@@ -33,7 +33,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Facility stage</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Facility stage</h4>
         </div>
         <div class="govuk-grid-column-three-quarters">
           {{govukTag({
@@ -49,7 +49,7 @@
       {% if facility.firstDrawdownAmountInExportCurrency %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
-            <h4 class="govuk-heading-s">First drawdown amount (export currency)</h4>
+            <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">First drawdown amount (export currency)</h4>
           </div>
           <div class="govuk-grid-column-three-quarters">
             <p class="govuk-body-s" data-cy="first-drawdown-amount-in-export-currency">{{ facility.firstDrawdownAmountInExportCurrency | dashIfEmpty }}</p>
@@ -59,7 +59,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Bank facility reference</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Bank facility reference</h4>
         </div>
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s" data-cy="bank-facility-reference">{{ facility.bankFacilityReference | dashIfEmpty }}</p>
@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line" data-cy="facility-value-and-exposure">
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6" data-cy="facility-value-and-exposure">
 
     <div class="govuk-grid-column-full">
 
@@ -77,7 +77,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Value (export currency)</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Value (export currency)</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -87,7 +87,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Exchange rate</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Exchange rate</h4>
         </div>
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s">-</p>
@@ -96,7 +96,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Value (GBP)</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Value (GBP)</h4>
         </div>
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s" data-cy="facility-value-gbp">{{ facility.facilityValue | dashIfEmpty }}</p>
@@ -105,7 +105,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">UKEF cover</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">UKEF cover</h4>
         </div>
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s" data-cy="facility-ukef-cover">{{ facility.coveredPercentage | dashIfEmpty }}</p>
@@ -124,7 +124,7 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line" data-cy="facility-dates">
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6" data-cy="facility-dates">
 
     <div class="govuk-grid-column-full">
 
@@ -132,7 +132,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Inclusion notice received</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Inclusion notice received</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -142,7 +142,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Bank issue notice received</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Bank issue notice received</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -152,7 +152,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Cover start date</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Cover start date</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -162,7 +162,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Cover end date</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Cover end date</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -172,7 +172,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Tenor</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Tenor</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -183,7 +183,7 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line" data-cy="facility-pricing-and-risk">
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6" data-cy="facility-pricing-and-risk">
 
     <div class="govuk-grid-column-full">
 
@@ -191,7 +191,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Bank’s interest margin</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Bank’s interest margin</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -201,7 +201,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Guarantee fee payable to UKEF</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Guarantee fee payable to UKEF</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
@@ -211,7 +211,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Credit rating</h4>
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Credit rating</h4>
         </div>
 
         <div class="govuk-grid-column-three-quarters">
