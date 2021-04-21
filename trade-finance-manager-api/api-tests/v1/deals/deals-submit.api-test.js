@@ -13,6 +13,7 @@ const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-curr
 const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
+const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
 
@@ -325,7 +326,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('on second deal submission', () => {
+    describe('AIN deal - on second submission', () => {
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
         // check status before calling submit endpoint
         const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
@@ -346,6 +347,35 @@ describe('/v1/deals', () => {
         expect(initialLoan.status).toEqual('Submitted');
 
         const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+        expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+      });
+    });
+
+    describe('MIA deal - on second submission', () => {
+      it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
+        // check status before calling submit endpoint
+        const initialBond = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+
+        expect(initialBond.status).toEqual('Submitted');
+
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+        expect(updatedBond.status).toEqual('Acknowledged by UKEF');
+      });
+
+      it('should update loan status to `Acknowledged` if the facilityStage changes from `Conditional` to `Unconditional`', async () => {
+        // check status before calling submit endpoint
+        const initialLoan = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
+        expect(initialLoan.status).toEqual('Submitted');
+
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
