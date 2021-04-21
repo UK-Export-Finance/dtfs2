@@ -14,6 +14,9 @@ const {
   updateTasksCanEdit,
   updateUserTasks,
   updateOriginalAssigneeTasks,
+  isMIAdeal,
+  taskIsCompletedImmediately,
+  shouldUpdateDealStage,
   updateTfmTask,
 } = require('./tasks.controller');
 
@@ -575,6 +578,91 @@ describe('tasks controller  / tasks helper functions', () => {
     });
   });
 
+  describe('isMIAdeal', () => {
+    it('should return true when submissionType is MIA', () => {
+      const result = isMIAdeal(MOCK_DEAL_MIA_SUBMITTED.details.submissionType);
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when submissionType is NOT MIA', () => {
+      const result = isMIAdeal('test');
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('taskIsCompletedImmediately', () => {
+    it('should return true when status changes from `To do` to `Done`', () => {
+      const result = taskIsCompletedImmediately(
+        'To do',
+        'Done',
+      );
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when status does NOT change from `To do` to `Done`', () => {
+      const result = taskIsCompletedImmediately(
+        'To do',
+        'In progress',
+      );
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('shouldUpdateDealStage', () => {
+    const submissionType = 'Manual Inclusion Application';
+    const taskId = '1';
+    const groupid = 1;
+
+    it('should return true when submissionType is MIA, is first task in first group, task status changes to `in progress`', () => {
+      const statusFrom = 'To do';
+      const statusTo = 'In progress';
+
+      const result = shouldUpdateDealStage(
+        submissionType,
+        taskId,
+        groupid,
+        statusFrom,
+        statusTo,
+      );
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return true when submissionType is MIA, is first task in first group, task status changes from `To do` to `Done`', () => {
+      const statusFrom = 'To do';
+      const statusTo = 'Done';
+
+      const result = shouldUpdateDealStage(
+        submissionType,
+        taskId,
+        groupid,
+        statusFrom,
+        statusTo,
+      );
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when a condition is not met', () => {
+      const statusFrom = 'To do';
+      const statusTo = 'To do';
+
+      const result = shouldUpdateDealStage(
+        submissionType,
+        taskId,
+        groupid,
+        statusFrom,
+        statusTo,
+      );
+
+      expect(result).toEqual(false);
+    });
+  });
+
   describe('updateTfmTask', () => {
     const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
 
@@ -668,7 +756,6 @@ describe('tasks controller  / tasks helper functions', () => {
 
         await updateTfmTask(dealId, tfmTaskUpdateTodo);
 
-        // const initalDeal = await updateDealStage(dealId, '');
         await api.resetDealForApiTest(dealId);
 
         const initalDeal = await api.findOneDeal(dealId);

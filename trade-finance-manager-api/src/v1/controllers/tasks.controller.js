@@ -174,6 +174,32 @@ const updateOriginalAssigneeTasks = async (originalAssigneeUserId, updatedTaskId
   return updatedUser.assignedTasks;
 };
 
+const isMIAdeal = (submissionType) =>
+  submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+
+const taskIsCompletedImmediately = (statusFrom, statusTo) => {
+  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO
+    && statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    return true;
+  }
+
+  return false;
+};
+
+const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, statusTo) => {
+  const miaDeal = isMIAdeal(submissionType);
+  const firstTaskInFirstGroup = isFirstTaskInFirstGroup(taskId, groupId);
+  const taskCompletedImmediately = taskIsCompletedImmediately(statusFrom, statusTo);
+
+  if (miaDeal
+    && firstTaskInFirstGroup
+    && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
+    return true;
+  }
+
+  return false;
+};
+
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const deal = await api.findOneDeal(dealId);
   const allTasks = deal.tfm.tasks;
@@ -189,6 +215,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const group = getGroup(allTasks, groupId);
 
   const originalTask = getTask(taskIdToUpdate, group.groupTasks);
+
+  const statusFrom = originalTask.status;
 
   const originalTaskAssignedUserId = originalTask.assignedTo.userId;
 
@@ -216,7 +244,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       tasks: [
         ...deal.tfm.history.tasks,
         updateHistory({
-          statusFrom: originalTask.status,
+          statusFrom,
           statusTo,
           assignedUserId,
           updatedBy,
@@ -231,16 +259,15 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
-    const isMIAdeal = deal.dealSnapshot.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+    const updateDealStage = shouldUpdateDealStage(
+      deal.dealSnapshot.details.submissionType,
+      taskIdToUpdate,
+      groupId,
+      statusFrom,
+      statusTo,
+    );
 
-    const taskCompletedImmediately = (statusTo === CONSTANTS.TASKS.STATUS.COMPLETED
-      && originalTask.status === CONSTANTS.TASKS.STATUS.TO_DO);
-
-    const shouldUpdateDealStage = (isMIAdeal
-      && isFirstTaskInFirstGroup(taskIdToUpdate, groupId)
-      && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately));
-
-    if (shouldUpdateDealStage) {
+    if (updateDealStage) {
       tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS;
     }
 
@@ -274,5 +301,8 @@ module.exports = {
   updateTasksCanEdit,
   updateUserTasks,
   updateOriginalAssigneeTasks,
+  isMIAdeal,
+  taskIsCompletedImmediately,
+  shouldUpdateDealStage,
   updateTfmTask,
 };
