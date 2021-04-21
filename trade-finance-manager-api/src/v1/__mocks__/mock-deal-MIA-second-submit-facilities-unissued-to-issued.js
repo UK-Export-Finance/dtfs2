@@ -1,5 +1,5 @@
-const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
-  _id: 'MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
+  _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
@@ -17,7 +17,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Manual Inclusion Application',
+    submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
     submissionCount: 2,
     owningBank: {
@@ -167,7 +167,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     items: [
       {
         _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
-        associatedDealId: 'MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+        associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         facilityType: 'bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
@@ -199,7 +199,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     items: [
       {
         _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
-        associatedDealId: 'MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+        associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         facilityType: 'loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Unconditional',
@@ -234,4 +234,4 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   },
 };
 
-module.exports = MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED;
+module.exports = MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED;

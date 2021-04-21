@@ -70,8 +70,8 @@ const MOCK_FACILIIES = [
     feeFrequency: '12',
   },
   {
-    _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
-    associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+    _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
+    associatedDealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     facilityType: 'bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -98,8 +98,8 @@ const MOCK_FACILIIES = [
     status: 'Submitted',
   },
   {
-    _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
-    associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+    _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
+    associatedDealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     facilityType: 'loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Unconditional',
