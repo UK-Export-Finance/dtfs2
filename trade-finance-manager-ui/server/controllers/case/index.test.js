@@ -3,12 +3,10 @@ import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 import helpers from './helpers';
-import CONSTANTS from '../../constants';
 
 const {
   getTask,
   mapAssignToSelectOptions,
-  userIsInTeam,
 } = helpers;
 
 const res = mockRes();
