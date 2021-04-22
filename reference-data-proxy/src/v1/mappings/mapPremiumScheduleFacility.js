@@ -1,42 +1,27 @@
 const isFacilityValidForPremiumSchedule = (
   facility,
   facilityExposurePeriod,
+  facilityGuaranteeDates,
 ) => {
   if (!facilityExposurePeriod || facilityExposurePeriod < 1) {
     return false;
   }
   if (facility.facilityType === 'bond') {
-    if (!facility.feeFrequency) {
-      return false;
-    }
     if (!facility.feeType) {
       return false;
     }
-  } else {
-    if (!facility.premiumFrequency) {
-      return false;
-    }
-    if (!facility.premiumType) {
-      return false;
-    }
+  } else if (!facility.premiumType) {
+    return false;
   }
   if (!facility.ukefFacilityID) {
     return false;
   }
-  if (!facility.requestedCoverStartDate
-    && (!facility['requestedCoverStartDate-year']
-          || !facility['requestedCoverStartDate-month']
-          || !facility['requestedCoverStartDate-day'])) {
+  if (!facilityGuaranteeDates.guaranteeCommencementDate) {
     return false;
   }
-
-  if (!facility.coverEndDate
-    && (!facility['coverEndDate-year']
-          || !facility['coverEndDate-month']
-          || !facility['coverEndDate-day'])) {
+  if (!facility.guaranteeExpiryDate) {
     return false;
   }
-
   if (!facility.guaranteeFeePayableByBank) {
     return false;
   }
@@ -56,7 +41,7 @@ const isFacilityValidForPremiumSchedule = (
 };
 
 const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
-  if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod)) {
+  if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
     return null;
   }
   const map = {};
@@ -75,9 +60,7 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
         premiumFrequencyId = 4;
         break;
       default:
-        throw new Error(
-          `facility.feeFrequency "${facility.feeFrequency}" not valid.`,
-        );
+        premiumFrequencyId = 0;
     }
     switch (facility.feeType.toLowerCase()) {
       case 'in advance':
@@ -104,9 +87,7 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
         premiumFrequencyId = 4;
         break;
       default:
-        throw new Error(
-          `facility.premiumFrequency "${facility.premiumFrequency}" not valid.`,
-        );
+        premiumFrequencyId = 0;
     }
     switch (facility.premiumType.toLowerCase()) {
       case 'in advance':
