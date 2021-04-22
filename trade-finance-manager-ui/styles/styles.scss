@@ -16,6 +16,7 @@
 @import "./task-filters.scss";
 @import "./tasks-table.scss";
 @import "./facilities-table.scss";
+@import "./deal-parties.scss";
 
 body {
   font-family: Helvetica;
@@ -85,8 +86,20 @@ body {
 }
 
 .separator-line {
-  border-top-style: solid;
-  margin-top: 30px;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background-color: govuk-colour("black");
+    position:absolute;
+  }
+
+  &.govuk-grid-row::before {
+    margin: 0 15px;
+    width: calc(100% - 30px);
+  }
 }
 
 .govuk-grid-column-four-fifths {
