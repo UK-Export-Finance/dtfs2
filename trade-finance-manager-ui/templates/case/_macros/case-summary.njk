@@ -8,108 +8,88 @@
   {% set user = params.user %}
 
   <div data-cy="case-summary" class="case-summary">
-    <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
-      <div class="govuk-grid-column-one-fifth">
+    <div>
+      <div class="case-summary-deal-id">
         <div class="label">Deal ID</div>
         <div class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId }}</div>
       </div>
-      <div class="govuk-grid-column-eight-tenths">
-        <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-            <div class="label">Exporter</div>
-            <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName }}</div>
-          </div>
-          <div class="govuk-grid-column-two-thirds">
-            <div class="label">Buyer</div>
-            <div class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName }}</div>
-          </div>
-        </div>
+      <div class="case-summary-exporter">
+        <div class="label">Exporter</div>
+        <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName }}</div>
+      </div>
+      <div class="case-summary-buyer">
+        <div class="label">Buyer</div>
+        <div class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName }}</div>
       </div>
     </div>
-    <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
+    <div class="case-summary-overview-container">
+      <div class="ukef-grid-column-one-sixth case-summary-overview-column">
+        {% set componentData = {
+          stage: tfm.stage
+        }%}
 
-      <div class="govuk-grid-column-one-fifth">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
+        <div class="case-summary-overview-item case-summary-overview-item__stage">
+          {{ukefDealStage.render(componentData)}}
+        </div>
 
-            {% set componentData = {
-              stage: tfm.stage
-            }%}
-
-            {{ukefDealStage.render(componentData)}}
-
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Date received</div>
+          <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", user.timezone) }}</div>
         </div>
       </div>
 
-      <div class="govuk-grid-column-one-fifth">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Date received</div>
-            <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", user.timezone) }}</div>
-          </div>
+      <div class="case-summary-overview-column ukef-grid-column-one-sixth">
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Type</div>
+          <div class="ukef-body-s" data-cy="submission-type">{{ deal.details.submissionType }}</div>
         </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Type</div>
-            <div class="ukef-body-s" data-cy="submission-type">{{ deal.details.submissionType }}</div>
-          </div>
-        </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Bank</div>
-            <div class="ukef-body-s" data-cy="bank-name">{{deal.details.owningBank.name}}</div>
-          </div>
+
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Bank</div>
+          <div class="ukef-body-s" data-cy="bank-name">{{deal.details.owningBank.name}}</div>
         </div>
       </div>
 
-      <div class="govuk-grid-column-one-fifth">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Export description</div>
-            <div class="ukef-body-s" data-cy="export-description">{{ deal.submissionDetails.supplyContractDescription }}</div>
-          </div>
+      <div class="case-summary-overview-column govuk-grid-column-one-third">
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Export description</div>
+          <div class="ukef-body-s" data-cy="export-description">{{ deal.submissionDetails.supplyContractDescription }}</div>
         </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Destination Country</div>
-            <div class="ukef-body-s" data-cy="destination-country">{{ deal.submissionDetails.destinationCountry }}</div>
-          </div>
+
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Destination Country</div>
+          <div class="ukef-body-s" data-cy="destination-country">{{ deal.submissionDetails.destinationCountry }}</div>
         </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Agent</div>
-            <div class="ukef-body-s"></div>
-          </div>
+
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Agent</div>
+          <div class="ukef-body-s">{{ deal.eligibility.agentName }}</div>
         </div>
       </div>
 
-      <div class="govuk-grid-column-one-third govuk-!-padding-left-9">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Export contract value</div>
-            <div class="ukef-body-s">
-              <span data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}</span>
-              {% if tfm.supplyContractValueInGBP %}
-                <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP }}</span>
-              {% endif %}
-            </div>
+      <div class="case-summary-overview-column govuk-grid-column-one-third">
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Export contract value</div>
+          <div class="ukef-body-s">
+            <span data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}</span>
+            {% if tfm.supplyContractValueInGBP %}
+              <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP }}</span>
+            {% endif %}
           </div>
         </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">Total facilities in this deal</div>
-            <div class="ukef-body-s" data-cy="total-facilities-in-gbp">{{ deal.totals.facilitiesValueInGBP }}</div>
-          </div>
+
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Total facilities in this deal</div>
+          <div class="ukef-body-s" data-cy="total-facilities-in-gbp">{{ deal.totals.facilitiesValueInGBP }}</div>
         </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-            <div class="ukef-heading-xs">UKEF exposure for this deal</div>
-            <div class="ukef-body-s"></div>
-            <div class="ukef-body-s" data-cy="total-ukef-exposure">{{ deal.totals.facilitiesUkefExposure }}</div>
-          </div>
+
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">UKEF exposure for this deal</div>
+          <div class="ukef-body-s" data-cy="total-ukef-exposure">{{ deal.totals.facilitiesUkefExposure }}</div>
         </div>
+
       </div>
+
     </div>
-
   </div>
 {% endmacro %}

@@ -5,9 +5,11 @@
 @import "./moj-sub-navigation.scss";
 @import "./moj-primary-navigation.scss";
 
+// import layout first as more specific css might override aspects. e.g gutter in case-summary
+@import "./layout.scss";
+
 @import "./case-summary.scss";
 @import "./deals-table.scss";
-@import "./layout.scss";
 
 @import "./table.scss";
 @import "./typography.scss";
@@ -85,21 +87,6 @@ body {
 .separator-line {
   border-top-style: solid;
   margin-top: 30px;
-}
-
-.govuk-grid-row {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.govuk-grid-column-full, 
-.govuk-grid-column-two-thirds, 
-.govuk-grid-column-three-quarters, 
-.govuk-grid-column-one-quarter,
-.govuk-grid-column-one-third,
-.govuk-grid-column-one-half
- {
-  padding: 0;
 }
 
 .govuk-grid-column-four-fifths {
