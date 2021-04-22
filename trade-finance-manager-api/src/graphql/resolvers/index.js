@@ -7,6 +7,7 @@ const updateParties = require('./mutation-update-parties');
 const updateFacility = require('./mutation-update-facility');
 const updateTask = require('./mutation-update-task');
 const updateCreditRating = require('./mutation-update-credit-rating');
+const updateUnderwritingManagersDecision = require('./mutation-update-underwriting-managers-decision');
 
 
 const resolvers = {
@@ -21,6 +22,7 @@ const resolvers = {
     updateFacility: (root, args) => updateFacility(args),
     updateTask: (root, args) => updateTask(args),
     updateCreditRating: (root, args) => updateCreditRating(args),
+    updateUnderwritingManagersDecision: (root, args) => updateUnderwritingManagersDecision(args),
   },
 };
 
