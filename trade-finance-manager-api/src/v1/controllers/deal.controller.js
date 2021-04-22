@@ -73,3 +73,21 @@ const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
   return updatedDeal.tfm;
 };
 exports.updateTfmCreditRating = updateTfmCreditRating;
+
+const updateTfmUnderwritingManagersDecision = async (dealId, decision, comments) => {
+  const managerDecisionUpdate = {
+    tfm: {
+      underwritingManagersDecision: {
+        decision,
+        comments,
+      },
+    },
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
+
+  return updatedDeal.tfm;
+};
+exports.updateTfmUnderwritingManagersDecision = updateTfmUnderwritingManagersDecision;
+
