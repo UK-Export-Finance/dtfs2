@@ -1,0 +1,16 @@
+.separator-line {
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background-color: govuk-colour("black");
+    position:absolute;
+  }
+
+  &.govuk-grid-row::before {
+    margin: 0 15px;
+    width: calc(100% - 30px);
+  }
+}

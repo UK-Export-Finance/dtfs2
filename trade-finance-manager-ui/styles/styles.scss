@@ -5,214 +5,21 @@
 @import "./moj-sub-navigation.scss";
 @import "./moj-primary-navigation.scss";
 
-// import layout first as more specific css might override aspects. e.g gutter in case-summary
+@import "./typography.scss";
+
 @import "./layout.scss";
+
+@import "./table.scss";
+@import "./components/separator.scss";
 
 @import "./case-summary.scss";
 @import "./deals-table.scss";
 
-@import "./table.scss";
-@import "./typography.scss";
 @import "./task-filters.scss";
 @import "./tasks-table.scss";
 @import "./facilities-table.scss";
 @import "./deal-parties.scss";
 
-body {
-  font-family: Helvetica;
-}
-
 .js-enabled .js-hidden {
   display: none;
-}
-
-.tfm-width,
-.moj-header__container {
-  max-width: 1440px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.ukef-heading-l {
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 36px;
-  line-height: 39px;
-}
-
-.ukef-heading-xs {
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.ukef-hint {
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 19px;
-  line-height: 25px;
-  color: govuk-colour("dark-grey", $legacy: "grey-1");
-}
-
-.ukef-body-s {
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.ukef-label-grey {
-  font-family: Helvetica;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 27px;
-  line-height: 25px;
-  color: govuk-colour("dark-grey", $legacy: "grey-1");
-}
-
-.header-label {
-  height: 50px;
-  color: #241F20;
-  font-family: Helvetica;
-  font-size: 48px;
-  font-weight: bold;
-  letter-spacing: 0;
-  line-height: 50px;
-}
-
-.separator-line {
-  position: relative;
-
-  &::before {
-    content: '';
-    width: 100%;
-    height: 3px;
-    background-color: govuk-colour("black");
-    position:absolute;
-  }
-
-  &.govuk-grid-row::before {
-    margin: 0 15px;
-    width: calc(100% - 30px);
-  }
-}
-
-.govuk-grid-column-four-fifths {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-four-fifths {
-    width: 80%;
-    float: left;
-  }
-}
-
-.govuk-grid-column-one-fifth {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0 ;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-one-fifth {
-    width: 20%;
-    float: left;
-  }
-}
-
-.govuk-grid-column-one-tenth {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-one-tenth {
-    width: 11%;
-    float: left;
-  }
-}
-
-.govuk-grid-column-two-tenths {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-two-tenths {
-    width: 20%;
-    float: left;
-  }
-}
-
-.govuk-grid-column-nine-tenths {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-nine-tenths {
-    width: 89%;
-    float: left;
-  }
-}
-
-.govuk-grid-column-eight-tenths {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-eight-tenths {
-    width: 78%;
-    float: left;
-  }
-}
-
-.govuk-grid-column-four-tenths {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0;
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-grid-column-four-tenths {
-    width: 39%;
-    float: left;
-  }
-}
-
-.ukef-grey-bg-row-column-left-text {
-  background: govuk-colour('light-grey');
-  padding: .3em;
-  margin-left: -.3em;
-}
-
-.ukef-grey-bg-row-column-right-text {
-  background: govuk-colour('light-grey');
-  display: inline-block;
-  padding: .5em .5em .5em 0;
-  min-height: 21px;
-}
-
-.ukef-flex-container {
-  display: flex;
-    &--align-center-right {
-      align-self: center;
-      text-align: right;
-    }
-}
-.moj-primary-navigation__container {
-  max-width: 1440px;
 }

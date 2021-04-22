@@ -28,3 +28,67 @@
 .word-break-break-word {
   word-break: break-word;
 }
+
+
+.ukef-heading-l {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 39px;
+}
+
+.ukef-heading-xs {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.ukef-body-s {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.ukef-label-grey {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 27px;
+  line-height: 25px;
+  color: govuk-colour("dark-grey", $legacy: "grey-1");
+}
+
+.header-label {
+  height: 50px;
+  color: #241F20;
+  font-family: Helvetica;
+  font-size: 48px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 50px;
+}
+
+.ukef-grey-bg-row-column-left-text {
+  background: govuk-colour('light-grey');
+  padding: .3em;
+  margin-left: -.3em;
+}
+
+.ukef-grey-bg-row-column-right-text {
+  background: govuk-colour('light-grey');
+  display: inline-block;
+  padding: .5em .5em .5em 0;
+  min-height: 21px;
+}
+
+.ukef-hint {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 19px;
+  line-height: 25px;
+  color: govuk-colour("dark-grey", $legacy: "grey-1");
+}
