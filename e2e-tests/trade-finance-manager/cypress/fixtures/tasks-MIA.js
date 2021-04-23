@@ -138,7 +138,7 @@ const MOCK_MIA_TASKS = [
       {
         "id": "3",
         "groupId": 3,
-        "title": "Complete a credit analysis",
+        "title": "Complete the credit analysis",
         "team": {
           "id": "UNDERWRITERS",
           "name": "Underwriters"
