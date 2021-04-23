@@ -71,7 +71,7 @@ const MIA = {
         team: TEAMS.UNDERWRITERS,
       },
       {
-        title: 'Complete a credit analysis',
+        title: 'Complete the credit analysis',
         team: TEAMS.UNDERWRITERS,
       },
     ],
