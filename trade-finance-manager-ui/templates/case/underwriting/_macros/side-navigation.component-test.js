@@ -21,6 +21,6 @@ describe(component, () => {
       .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk`, 'Pricing and risk');
 
     wrapper.expectLink('[data-cy="underwriter-managers-decision"] a')
-      .toLinkTo(`/case/${params.caseId}/underwriting/underwriter-managers-decision`, 'Underwriter manager’s decision');
+      .toLinkTo(`/case/${params.caseId}/underwriting/managers-decision`, 'Underwriter manager’s decision');
   });
 });
