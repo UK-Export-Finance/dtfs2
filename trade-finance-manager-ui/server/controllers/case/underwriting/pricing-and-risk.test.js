@@ -154,7 +154,7 @@ describe('POST underwriting - pricing and risk edit', () => {
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
-      api.updateCreditRating = () => Promise.resolve({
+      api.updateUnderWritingManagersDecision = () => Promise.resolve({
         updateCreditRating: {
           exporterCreditRating: 'Good (BB-)',
         },

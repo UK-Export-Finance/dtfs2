@@ -1,5 +1,6 @@
 import api from '../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
+import mapSubmittedValues from './mapSubmittedValues';
 
 const getUnderWritingManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -62,11 +63,11 @@ const postUnderWritingManagersDecision = async (req, res) => {
     });
   }
 
-  const update = submittedValues;
+  const update = mapSubmittedValues(submittedValues);
 
   await api.updateUnderWritingManagersDecision(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/underwriter-managers-decision`);
+  return res.redirect(`/case/${dealId}/underwriting/managers-decision`);
 };
 
 export default {

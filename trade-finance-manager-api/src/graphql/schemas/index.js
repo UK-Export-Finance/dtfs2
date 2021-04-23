@@ -230,6 +230,7 @@ type TFMDealHistory {
 type TFMDealDecision  {
   decision: String
   comments: String
+  internalComments: String
 }
 
 type TFMDealData {
@@ -242,7 +243,7 @@ type TFMDealData {
   lossGivenDefault: String
   probabilityOfDefault: String
   history: TFMDealHistory
-  underwritingManagersDecision: TFMDealDecision
+  underwriterManagersDecision: TFMDealDecision
 }
 
 type PremiumScheduleData {
@@ -362,9 +363,10 @@ input TFMCreditRatingInput {
   exporterCreditRating: String
 }
 
-input TFMUnderwritingManagersDecisionInput {
+input TFMUnderwriterManagersDecisionInput {
   decision: String
   comments: String
+  internalComments: String
 }
 
 type TeamMember {
@@ -385,7 +387,7 @@ type Mutation {
   updateFacility(_id: ID!, facilityUpdate: TFMFacilityInput): TFMFacilityData
   updateTask(dealId: ID!, taskUpdate: TFMTaskInput): TFMTask
   updateCreditRating(dealId: ID!, creditRatingUpdate: TFMCreditRatingInput): TFMDealData
-  updateUnderwritingManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwritingManagersDecisionInput): TFMDealData
+  updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
 }
 `;
 

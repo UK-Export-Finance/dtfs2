@@ -74,12 +74,13 @@ const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
 };
 exports.updateTfmCreditRating = updateTfmCreditRating;
 
-const updateTfmUnderwritingManagersDecision = async (dealId, decision, comments) => {
+const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, internalComments) => {
   const managerDecisionUpdate = {
     tfm: {
-      underwritingManagersDecision: {
+      underwriterManagersDecision: {
         decision,
         comments,
+        internalComments,
       },
     },
   };
@@ -89,5 +90,4 @@ const updateTfmUnderwritingManagersDecision = async (dealId, decision, comments)
 
   return updatedDeal.tfm;
 };
-exports.updateTfmUnderwritingManagersDecision = updateTfmUnderwritingManagersDecision;
-
+exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
