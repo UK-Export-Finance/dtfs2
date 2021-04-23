@@ -1,6 +1,8 @@
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 
+const acbsController = require('../../../src/v1/controllers/acbs.controller');
+
 // Added multiple versions of mock deal as submit-deal is mutating the mocks somewhere
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
@@ -19,7 +21,15 @@ const CONSTANTS = require('../../../src/constants');
 
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+}));
+
 describe('/v1/deals', () => {
+  beforeEach(() => {
+    acbsController.issueAcbsFacilities.mockClear();
+  });
+
   describe('PUT /v1/deals/:dealId/submit', () => {
     it('404s submission for unknown id', async () => {
       const { status } = await api.put({ dealId: '12345678910' }).to('/v1/deals/submit');
@@ -353,6 +363,13 @@ describe('/v1/deals', () => {
         const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
         expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
       });
+
+      it('should update ACBS`', async () => {
+        const { status } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        expect(status).toEqual(200);
+
+        expect(acbsController.issueAcbsFacilities).toHaveBeenCalled();
+      });
     });
 
     describe('MIA deal - on second submission', () => {
@@ -381,6 +398,13 @@ describe('/v1/deals', () => {
 
         const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
         expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+      });
+
+      it('should not update ACBS`', async () => {
+        const { status } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        expect(status).toEqual(200);
+
+        expect(acbsController.issueAcbsFacilities).not.toHaveBeenCalled();
       });
     });
 
