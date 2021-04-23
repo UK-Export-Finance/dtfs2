@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import underwritingManagersDecisionController from '.';
 import validateSubmittedValues from './validateSubmittedValues';
+import mapSubmittedValues from './mapSubmittedValues';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 
@@ -75,11 +76,16 @@ describe('GET underwriting - underwriting managers decision', () => {
 
 describe('POST underwriting - underwriting managers decision', () => {
   describe('when there are NO validation errors', () => {
+    const apiUpdateSpy = jest.fn(() => Promise.resolve({
+      test: true,
+    }));
+
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      api.updateUnderWritingManagersDecision = apiUpdateSpy;
     });
 
-    it('should redirect to underwriter-managers-decision route', async () => {
+    it('should call API and redirect to underwriter-managers-decision route', async () => {
       const req = {
         params: {
           _id: dealId,
@@ -92,7 +98,12 @@ describe('POST underwriting - underwriting managers decision', () => {
 
       await underwritingManagersDecisionController.postUnderWritingManagersDecision(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/underwriter-managers-decision`);
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        dealId,
+        mapSubmittedValues(req.body),
+      );
+
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/managers-decision`);
     });
   });
 

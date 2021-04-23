@@ -12,11 +12,12 @@ const resolvers = require('../src/graphql/resolvers');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 
 const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
-  mutation UpdateUnderwritingManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwritingManagersDecisionInput) {
-    updateUnderwritingManagersDecision(dealId: $dealId, managersDecisionUpdate: $managersDecisionUpdate) {
-      underwritingManagersDecision {
+  mutation UpdateUnderwritingManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
+    updateUnderwriterManagersDecision(dealId: $dealId, managersDecisionUpdate: $managersDecisionUpdate) {
+      underwriterManagersDecision {
         decision
         comments
+        internalComments
       }
     }
   }
@@ -46,6 +47,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
       managersDecisionUpdate: {
         decision: 'Approve without conditions',
         comments: 'Test comment',
+        internalComments: 'Internal comment',
       },
     };
 
@@ -55,12 +57,13 @@ describe('graphql mutation - update underwriting managers decision', () => {
     });
 
     const expected = {
-      underwritingManagersDecision: {
+      underwriterManagersDecision: {
         decision: mutationVars.managersDecisionUpdate.decision,
         comments: mutationVars.managersDecisionUpdate.comments,
-      },
+        internalComments: mutationVars.managersDecisionUpdate.internalComments,
+      }
     };
 
-    expect(data.updateUnderwritingManagersDecision).toEqual(expected);
+    expect(data.updateUnderwriterManagersDecision).toEqual(expected);
   });
 });
