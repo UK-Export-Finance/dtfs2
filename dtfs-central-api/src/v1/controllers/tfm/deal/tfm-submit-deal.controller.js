@@ -14,6 +14,7 @@ const createDealSnapshot = async (deal) => {
   const collection = await db.getCollection('tfm-deals');
   const update = {
     dealSnapshot: deal,
+    tfm: {},
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -34,7 +35,7 @@ const createFacilitiesSnapshot = async (dealId) => {
     dealFacilities.map(async (facility) => collection.findOneAndUpdate(
     // eslint-disable-next-line no-underscore-dangle
       { _id: facility._id },
-      $.flatten({ facilitySnapshot: facility }),
+      $.flatten({ facilitySnapshot: facility, tfm: {} }),
       { returnOriginal: false, upsert: true },
     )),
   );
