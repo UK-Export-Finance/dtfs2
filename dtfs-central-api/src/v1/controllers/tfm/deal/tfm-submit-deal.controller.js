@@ -12,9 +12,15 @@ const withoutId = (obj) => {
 
 const createDealSnapshot = async (deal) => {
   const collection = await db.getCollection('tfm-deals');
+  const tfmInit = deal.details.submissionCount === 1
+    ? {
+      tfm: {},
+    }
+    : null;
+
   const update = {
     dealSnapshot: deal,
-    tfm: {},
+    ...tfmInit,
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -27,15 +33,22 @@ const createDealSnapshot = async (deal) => {
   return findAndUpdateResponse.value;
 };
 
-const createFacilitiesSnapshot = async (dealId) => {
-  const dealFacilities = await findAllFacilitiesByDealId(dealId);
+const createFacilitiesSnapshot = async (deal) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const dealFacilities = await findAllFacilitiesByDealId(deal._id);
   const collection = await db.getCollection('tfm-facilities');
+
+  const tfmInit = deal.details.submissionCount === 1
+    ? {
+      tfm: {},
+    }
+    : null;
 
   const updatedFacilties = Promise.all(
     dealFacilities.map(async (facility) => collection.findOneAndUpdate(
     // eslint-disable-next-line no-underscore-dangle
       { _id: facility._id },
-      $.flatten({ facilitySnapshot: facility, tfm: {} }),
+      $.flatten({ facilitySnapshot: facility, ...tfmInit }),
       { returnOriginal: false, upsert: true },
     )),
   );
@@ -46,7 +59,7 @@ const createFacilitiesSnapshot = async (dealId) => {
 const submitDeal = async (deal) => {
   await createDealSnapshot(deal);
   // eslint-disable-next-line no-underscore-dangle
-  await createFacilitiesSnapshot(deal._id);
+  await createFacilitiesSnapshot(deal);
 
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await tfmController.findOneDeal(deal._id);
