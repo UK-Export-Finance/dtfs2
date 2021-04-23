@@ -29,7 +29,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => {
     dealValue: to2Decimals(getDealValue(deal)),
     guaranteeCommencementDate: getDealEffectiveDate(deal),
     obligorPartyIdentifier,
-    obligorName: submissionDetails['supplier-name'],
+    obligorName: submissionDetails['supplier-name'].substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   };
 };
