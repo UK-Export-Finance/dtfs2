@@ -19,7 +19,7 @@ const isFacilityValidForPremiumSchedule = (
   if (!facilityGuaranteeDates.guaranteeCommencementDate) {
     return false;
   }
-  if (!facility.guaranteeExpiryDate) {
+  if (!facilityGuaranteeDates.guaranteeExpiryDate) {
     return false;
   }
   if (!facility.guaranteeFeePayableByBank) {
@@ -49,18 +49,22 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
   let premiumTypeId = 0;
   let cumulativeAmount = null;
   if (facility.facilityType === 'bond') {
-    switch (facility.feeFrequency.toLowerCase()) {
-      case 'monthly':
-        premiumFrequencyId = 1;
-        break;
-      case 'quarterly':
-        premiumFrequencyId = 2;
-        break;
-      case 'annually':
-        premiumFrequencyId = 4;
-        break;
-      default:
-        premiumFrequencyId = 0;
+    if (!facility.feeFrequency) {
+      premiumFrequencyId = 0;
+    } else {
+      switch (facility.feeFrequency.toLowerCase()) {
+        case 'monthly':
+          premiumFrequencyId = 1;
+          break;
+        case 'quarterly':
+          premiumFrequencyId = 2;
+          break;
+        case 'annually':
+          premiumFrequencyId = 4;
+          break;
+        default:
+          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+      }
     }
     switch (facility.feeType.toLowerCase()) {
       case 'in advance':
@@ -76,18 +80,22 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
         throw new Error(`facility.feeType "${facility.feeType}" not valid.`);
     }
   } else {
-    switch (facility.premiumFrequency.toLowerCase()) {
-      case 'monthly':
-        premiumFrequencyId = 1;
-        break;
-      case 'quarterly':
-        premiumFrequencyId = 2;
-        break;
-      case 'annually':
-        premiumFrequencyId = 4;
-        break;
-      default:
-        premiumFrequencyId = 0;
+    if (!facility.premiumFrequency) {
+      premiumFrequencyId = 0;
+    } else {
+      switch (facility.premiumFrequency.toLowerCase()) {
+        case 'monthly':
+          premiumFrequencyId = 1;
+          break;
+        case 'quarterly':
+          premiumFrequencyId = 2;
+          break;
+        case 'annually':
+          premiumFrequencyId = 4;
+          break;
+        default:
+          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+      }
     }
     switch (facility.premiumType.toLowerCase()) {
       case 'in advance':
