@@ -11,28 +11,26 @@
         </div>
         <div class="govuk-grid-column-three-quarters">
           <p class="govuk-body-s" data-cy="facility-premium-type">
-            {% if facility.facilityProduct.name =='Bond Support Scheme' %}
-              {{ facility.feeType }}
-            {% else %}
-              {{ facility.premiumType }}
-            {% endif %}
+            {{ facility.feeType }}
           </p>
         </div>
       </div>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">How often</h4>
+      {% if not facility.feeType == 'At Maturity' %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <h4 class="govuk-heading-s">How often</h4>
+          </div>
+          <div class="govuk-grid-column-three-quarters">
+            <p class="govuk-body-s" data-cy="facility-premium-frequency">
+              {% if facility.facilityProduct.name =='Bond Support Scheme' %}
+                {{ facility.feeFrequency }}
+              {% else %}
+                {{ facility.premiumFrequency }}
+              {% endif %}
+            </p>
+          </div>
         </div>
-        <div class="govuk-grid-column-three-quarters">
-          <p class="govuk-body-s" data-cy="facility-premium-frequency">
-            {% if facility.facilityProduct.name =='Bond Support Scheme' %}
-              {{ facility.feeFrequency }}
-            {% else %}
-              {{ facility.premiumFrequency }}
-            {% endif %}
-          </p>
-        </div>
-      </div>
+      {% endif %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
           <h4 class="govuk-heading-s">Day count basis</h4>
@@ -49,7 +47,8 @@
           <h4 class="govuk-heading-s">Total to be paid to UKEF:</h4>
         </div>
         <div class="govuk-grid-column-one-quarter ukef-grey-bg-row-column-left-text">
-          <h4 class="govuk-heading-s" data-cy="premiumTotals">GBP {{ premiumTotals }}</h4>
+          <h4 class="govuk-heading-s" data-cy="premiumTotals">GBP
+            {{ premiumTotals }}</h4>
         </div>
       </div>
       <table class="govuk-table facilities-table" data-cy="facilities-table">
@@ -73,7 +72,8 @@
           <tr>
             <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold"></td>
             <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold"></td>
-            <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold" data-cy="premiumTotals">Total: {{ premiumTotals }}</td>
+            <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold" data-cy="premiumTotals">Total:
+              {{ premiumTotals }}</td>
           </tr>
         </tfoot>
       </table>
