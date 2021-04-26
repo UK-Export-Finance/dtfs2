@@ -593,6 +593,7 @@ describe('controllers - case', () => {
         await caseController.getCaseFacility(req, res);
         expect(res.render).toHaveBeenCalledWith('case/facility/facility.njk', {
           deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
           facility: mockFacility.facilitySnapshot,
           facilityTfm: mockFacility.tfm,
