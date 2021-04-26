@@ -20,7 +20,7 @@ describe('mapFirstDrawdownAmountInExportCurrency', () => {
 
       const strippedDisbursementAmount = stripCommas(mockFacility.disbursementAmount);
 
-      const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 4, 4);
+      const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 2, 2);
 
       const expected = `${mockFacility.currency.id} ${formattedDisbursementAmount}`;
       expect(result).toEqual(expected);
