@@ -9,7 +9,7 @@ const mapFirstDrawdownAmountInExportCurrency = (facility) => {
     && facility.disbursementAmount) {
     const strippedDisbursementAmount = stripCommas(facility.disbursementAmount);
 
-    const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 4, 4);
+    const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 2, 2);
 
     return `${facility.currency.id} ${formattedDisbursementAmount}`;
   }
