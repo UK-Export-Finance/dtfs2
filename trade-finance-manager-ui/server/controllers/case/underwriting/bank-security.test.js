@@ -70,7 +70,7 @@ describe('GET underwriting - bank security', () => {
         session,
       };
 
-      await underwritingController.getUnderWritingPricingAndRisk(req, res);
+      await underwritingController.getUnderWritingBankSecurity(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });

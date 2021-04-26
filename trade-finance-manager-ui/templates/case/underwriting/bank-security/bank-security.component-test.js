@@ -27,7 +27,7 @@ describe(page, () => {
   it('should render the security heading', () => {
     const wrapper = render(params);
     wrapper.expectText('[data-cy="bank-security-sub-heading"]').toRead(
-      'Details of the overarching general facility taken by the bank in relation to the exporter.',
+      'Details of the overarching general facility taken by the bank in relation to the exporter',
     );
   });
 
