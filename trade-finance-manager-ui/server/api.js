@@ -8,7 +8,7 @@ import updatePartiesMutation from './graphql/mutations/update-parties';
 import updateFacilityMutation from './graphql/mutations/update-facilities';
 import updateTaskMutation from './graphql/mutations/update-task';
 import updateCreditRatingMutation from './graphql/mutations/update-credit-rating';
-import postUnderwritingManagersDecision from './graphql/mutations/update-underwriting-managers-decision';
+import postUnderwriterManagersDecision from './graphql/mutations/update-underwriter-managers-decision';
 
 require('dotenv').config();
 
@@ -81,13 +81,13 @@ const updateCreditRating = async (dealId, creditRatingUpdate) => {
   return response;
 };
 
-const updateUnderWritingManagersDecision = async (dealId, update) => {
+const updateUnderwriterManagersDecision = async (dealId, update) => {
   const updateVariables = {
     dealId,
     managersDecisionUpdate: update,
   };
 
-  const response = await apollo('PUT', postUnderwritingManagersDecision, updateVariables);
+  const response = await apollo('PUT', postUnderwriterManagersDecision, updateVariables);
 
   return response;
 };
@@ -118,6 +118,6 @@ export default {
   updateFacility,
   updateTask,
   updateCreditRating,
-  updateUnderWritingManagersDecision,
+  updateUnderwriterManagersDecision,
   login,
 };

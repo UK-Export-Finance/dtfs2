@@ -12,7 +12,7 @@ const resolvers = require('../src/graphql/resolvers');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 
 const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
-  mutation UpdateUnderwritingManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
+  mutation UpdateUnderwriterManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
     updateUnderwriterManagersDecision(dealId: $dealId, managersDecisionUpdate: $managersDecisionUpdate) {
       underwriterManagersDecision {
         decision
