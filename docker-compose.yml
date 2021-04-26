@@ -190,21 +190,21 @@ services:
     command: node dist/server.js
   
   # ACBS function is causing an out of memory error on github actions. disable for now
-  # acbs-function:
-  #   build: ./azure-functions/acbs-function
-  #   image: dtfs/azure-function-acbs
-  #   restart: always
-  #   ports:
-  #     - "7071:80"
-  #   environment:
-  #     - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-  #     - WEBSITE_HOSTNAME=localhost:7071
-  #     - MULESOFT_API_KEY
-  #     - MULESOFT_API_SECRET
-  #     - MULESOFT_API_UKEF_TF_EA_URL
-  #     - MULESOFT_API_UKEF_MDM_EA_URL
-  #     - MULESOFT_API_UKEF_MDM_EA_KEY
-  #     - MULESOFT_API_UKEF_MDM_EA_SECRET
+  acbs-function:
+    build: ./azure-functions/acbs-function
+    image: dtfs/azure-function-acbs
+    restart: always
+    ports:
+      - "7071:80"
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - WEBSITE_HOSTNAME=localhost:7071
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+      - MULESOFT_API_UKEF_TF_EA_URL
+      - MULESOFT_API_UKEF_MDM_EA_URL
+      - MULESOFT_API_UKEF_MDM_EA_KEY
+      - MULESOFT_API_UKEF_MDM_EA_SECRET
 
   redis:
     image: "redis:alpine"
