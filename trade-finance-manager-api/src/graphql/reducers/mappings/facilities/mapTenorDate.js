@@ -19,7 +19,11 @@ const mapTenorDate = (facility, facilityTfm) => {
     period = facilityTfm.exposurePeriodInMonths;
   }
 
-  return `${period} ${monthString(period)}`;
+  if (period) {
+    return `${period} ${monthString(period)}`;
+  }
+
+  return null;
 };
 
 module.exports = mapTenorDate;
