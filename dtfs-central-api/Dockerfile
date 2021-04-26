@@ -12,6 +12,7 @@ FROM node:lts AS lint
 WORKDIR /app
 COPY --from=image /app /app
 
+
 ADD ./.eslintrc.js ./.eslintrc.js
 RUN npm run lint
 
@@ -35,3 +36,4 @@ ADD ./bin ./bin
 
 #USER 1000
 CMD node src/index.js
+
