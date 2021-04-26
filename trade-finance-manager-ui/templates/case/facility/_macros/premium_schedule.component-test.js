@@ -26,7 +26,7 @@ describe(page, () => {
       banksInterestMargin: '10%',
       firstDrawdownAmountInExportCurrency: 'GBP 1,234',
       feeType: 'At maturity',
-      feeFrequency: 'Monthly',
+      feeFrequency: '',
       dayCountBasis: '365',
       dates: {
         inclusionNoticeReceived: '1606900616651',
