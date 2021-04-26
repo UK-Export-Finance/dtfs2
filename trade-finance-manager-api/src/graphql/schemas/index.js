@@ -231,6 +231,7 @@ type TFMDealDecision  {
   decision: String
   comments: String
   internalComments: String
+  timestamp: String
 }
 
 type TFMDealData {

@@ -66,6 +66,11 @@ const GET_DEAL = gql`
         lossGivenDefault
         probabilityOfDefault
         stage
+        underwriterManagersDecision {
+          decision
+          internalComments
+          timestamp
+        }
       }
       dealSnapshot {
         _id,
