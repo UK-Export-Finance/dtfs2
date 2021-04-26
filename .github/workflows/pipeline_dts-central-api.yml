@@ -154,5 +154,3 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }}
-
-  
