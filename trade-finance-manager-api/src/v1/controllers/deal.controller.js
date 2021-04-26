@@ -3,6 +3,7 @@ const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
+const now = require('../../now');
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -81,6 +82,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
         decision,
         comments,
         internalComments,
+        timestamp: now(),
       },
     },
   };

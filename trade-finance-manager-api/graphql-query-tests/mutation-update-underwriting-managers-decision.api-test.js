@@ -18,6 +18,7 @@ const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
         decision
         comments
         internalComments
+        timestamp
       }
     }
   }
@@ -41,7 +42,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
     query = doQuery;
   });
 
-  it('should return updated decision', async () => {
+  it('should return updated decision with timestamp', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
       managersDecisionUpdate: {
@@ -61,6 +62,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
         decision: mutationVars.managersDecisionUpdate.decision,
         comments: mutationVars.managersDecisionUpdate.comments,
         internalComments: mutationVars.managersDecisionUpdate.internalComments,
+        timestamp: expect.any(String),
       }
     };
 
