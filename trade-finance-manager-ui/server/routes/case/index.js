@@ -40,8 +40,8 @@ router.post('/:_id/underwriting/pricing-and-risk/edit', underwritingController.p
 
 router.get('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
-router.get('/:_id/underwriting/managers-decision', underwritingController.getUnderWritingManagersDecision);
-router.post('/:_id/underwriting/managers-decision', underwritingController.postUnderWritingManagersDecision);
+router.get('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
+router.post('/:_id/underwriting/managers-decision', underwritingController.postUnderwriterManagersDecision);
 
 
 export default router;

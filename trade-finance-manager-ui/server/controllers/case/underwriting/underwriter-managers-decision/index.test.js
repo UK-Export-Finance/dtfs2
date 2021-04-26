@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import underwritingManagersDecisionController from '.';
+import underwriterManagersDecisionController from '.';
 import validateSubmittedValues from './validateSubmittedValues';
 import mapSubmittedValues from './mapSubmittedValues';
 import api from '../../../../api';
@@ -41,7 +41,7 @@ describe('GET underwriting - underwriting managers decision', () => {
         session,
       };
 
-      await underwritingManagersDecisionController.getUnderWritingManagersDecision(req, res);
+      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
         activePrimaryNavigation: 'manage work',
@@ -68,7 +68,7 @@ describe('GET underwriting - underwriting managers decision', () => {
         session,
       };
 
-      await underwritingManagersDecisionController.getUnderWritingManagersDecision(req, res);
+      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
@@ -82,7 +82,7 @@ describe('POST underwriting - underwriting managers decision', () => {
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
-      api.updateUnderWritingManagersDecision = apiUpdateSpy;
+      api.updateUnderwriterManagersDecision = apiUpdateSpy;
     });
 
     it('should call API and redirect to underwriter-managers-decision route', async () => {
@@ -96,7 +96,7 @@ describe('POST underwriting - underwriting managers decision', () => {
         },
       };
 
-      await underwritingManagersDecisionController.postUnderWritingManagersDecision(req, res);
+      await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         dealId,
@@ -123,7 +123,7 @@ describe('POST underwriting - underwriting managers decision', () => {
         },
       };
 
-      await underwritingManagersDecisionController.postUnderWritingManagersDecision(req, res);
+      await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
         activePrimaryNavigation: 'manage work',
@@ -154,7 +154,7 @@ describe('POST underwriting - underwriting managers decision', () => {
         session,
       };
 
-      await underwritingManagersDecisionController.postUnderWritingManagersDecision(req, res);
+      await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });

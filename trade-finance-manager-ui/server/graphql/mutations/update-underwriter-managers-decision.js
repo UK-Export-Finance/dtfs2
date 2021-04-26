@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
-const updateUnderwritingManagersDecision = gql`
-  mutation UpdateUnderwritingManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
+const updateUnderwriterManagersDecision = gql`
+  mutation UpdateUnderwriterManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
     updateUnderwriterManagersDecision(dealId: $dealId, managersDecisionUpdate: $managersDecisionUpdate) {
       underwriterManagersDecision {
         decision
@@ -12,4 +12,4 @@ const updateUnderwritingManagersDecision = gql`
   }
 `;
 
-export default updateUnderwritingManagersDecision;
+export default updateUnderwriterManagersDecision;
