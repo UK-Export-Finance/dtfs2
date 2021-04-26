@@ -11,10 +11,16 @@
     maxlength: 1000,
     rows: 9,
     label: {
-      text: label
+      text: label,
+      attributes : {
+        'data-cy' : id + '-comments-input-label'
+      }
     },
     errorMessage: validationError and {
       text: validationError.text
+    },
+    attributes : {
+      'data-cy' : id + '-comments-input'
     }
   }) }}
 

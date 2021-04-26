@@ -25,7 +25,7 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3">Underwriter manager’s decision</h3>
+        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
 
         <form method="POST" autocomplete="off">
 
@@ -53,12 +53,18 @@
               items: [
                 {
                   value: "Approve without conditions",
-                  text: "Approve without conditions"
+                  text: "Approve without conditions",
+                  attributes: {
+                    'data-cy': 'approve-without-conditions-radio-button'
+                  }
                 },
                 {
                   value: "Approve with conditions",
                   text: "Approve with conditions",
                   checked: submittedValues.decision === 'Approve with conditions',
+                  attributes: {
+                    'data-cy': 'approve-with-conditions-radio-button'
+                  },
                   conditional: {
                     html: comments.render(approveWithConditionsCommentsComponentData)
                   }
@@ -67,6 +73,9 @@
                   value: "Decline",
                   text: "Decline",
                   checked: submittedValues.decision === 'Decline',
+                  attributes: {
+                    'data-cy': 'decline-radio-button'
+                  },
                   conditional: {
                     html: comments.render(declineCommentsComponentData)
                   }
@@ -89,6 +98,9 @@
             hint: {
               text: "Only UKEF staff will see this. "
             },
+            attributes: {
+              'data-cy': 'internal-comments-input'
+            },
             value: submittedValues.internalComments
           }) }}
 
@@ -99,7 +111,7 @@
             }
           }) }}
 
-          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting/pricing-and-risk" data-cy="close-link">Cancel</a>
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting/pricing-and-risk" data-cy="cancel-link">Cancel</a>
 
         </form>
 
