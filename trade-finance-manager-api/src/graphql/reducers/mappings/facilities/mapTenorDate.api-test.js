@@ -64,4 +64,16 @@ describe('mapTenorDate', () => {
       });
     });
   });
+
+  it('should return null when there is no exposurePeriodInMonths', () => {
+    const mockFacility = {
+      facilityStage: 'Issued',
+    };
+
+    const mockFacilityTfm = {};
+
+    const result = mapTenorDate(mockFacility, mockFacilityTfm);
+
+    expect(result).toEqual(null);
+  });
 });

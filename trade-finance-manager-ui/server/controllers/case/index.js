@@ -175,6 +175,7 @@ const getCaseFacility = async (req, res) => {
     : 0;
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
+    tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     facility: facility.facilitySnapshot,
     activePrimaryNavigation: 'manage work',
