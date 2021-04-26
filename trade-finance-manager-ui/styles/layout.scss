@@ -13,8 +13,7 @@
   max-width: 1440px;
 }
 
-.ukef-grid-column-one-sixth,
-.ukef-grid-column-five-sixths {
+.ukef-grid-column-one-sixth {
   box-sizing:border-box;
   width:100%;
   padding:0 15px
@@ -22,10 +21,6 @@
 @media (min-width:40.0625em) {
   .ukef-grid-column-one-sixth {
     width:16.6667%;
-    float:left
-  }
-  .ukef-grid-column-five-sixths {
-    width:83.3333%;
     float:left
   }
 }

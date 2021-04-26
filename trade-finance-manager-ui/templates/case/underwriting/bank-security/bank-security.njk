@@ -1,20 +1,16 @@
 {% extends "case/underwriting/layout.njk" %}
 
 {% block underwriting_content %}
-  <div class="ukef-grid-row">
-    <div class="ukef-grid-column-full">
-      <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="bank-security-heading">Bank Security</h3>
-    </div>
-  </div>
-  <div class="ukef-grid-row separator-line" data-cy="section-bank-security">
-    <div class="govuk-grid-column-four-fifths">
-      <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-sub-heading">
-        Details of the overarching general facility taken by the bank in relation to the exporter
-      </h4>
+  <section data-cy="section-bank-security">
+    <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="bank-security-heading">Bank Security</h3>
 
-      <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.dealFiles.security }}</p>
+    <h4 class="govuk-heading-s separator-line govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-sub-heading">
+      Details of the overarching general facility taken by the bank in relation to the exporter
+    </h4>
 
-    </div>
-  </div>
+    <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.dealFiles.security }}</p>
+
+  </section>
+
 
 {% endblock %}
