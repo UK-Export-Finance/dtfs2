@@ -3,7 +3,7 @@
   "version": "",
   "description": "",
   "scripts": {
-    "test": "echo \"No tests yet...\""
+    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js "
   },
   "author": "",
   "dependencies": {
