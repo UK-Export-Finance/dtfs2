@@ -7,8 +7,7 @@ describe(page, () => {
   let wrapper;
   let params = {
     dealId: '1234',
-    deal: {
-    }
+    deal: {},
   };
 
   it('should render heading', () => {
@@ -16,31 +15,14 @@ describe(page, () => {
     wrapper.expectText('[data-cy="managers-decision-heading"]').toRead('Underwriter manager’s decision');
   });
 
-  describe('with params.decisionSubmitted',() => {
-    it('should render `decision submitted` component', () => {
-      params = {
-        ...params,
-        decisionSubmitted: true,
-      };
-      
-      const wrapper = render(params);
+  it('should render `decision form` component', () => {
+    params = {
+      ...params,
+    };
 
-      wrapper.expectElement('[data-cy="managers-decision-submitted"]').toExist();
-      wrapper.expectElement('[data-cy="managers-decision-form"]').notToExist();
-    });
-  });
+    const wrapper = render(params);
 
-  describe('with NO params.decisionSubmitted', () => {
-    it('should render `decision form` component', () => {
-      params = {
-        ...params,
-        decisionSubmitted: false,
-      };
-
-      const wrapper = render(params);
-
-      wrapper.expectElement('[data-cy="managers-decision-form"]').toExist();
-      wrapper.expectElement('[data-cy="managers-decision-submitted"]').notToExist();
-    });
+    wrapper.expectElement('[data-cy="managers-decision-form"]').toExist();
+    wrapper.expectElement('[data-cy="managers-decision-submitted"]').notToExist();
   });
 });
