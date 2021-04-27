@@ -4,9 +4,9 @@ import validateSubmittedValues from './validateSubmittedValues';
 import mapSubmittedValues from './mapSubmittedValues';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
-import helpers from './helpers';
+// import helpers from './helpers';
 
-const { isDecisionSubmitted } = helpers;
+// const { isDecisionSubmitted } = helpers;
 
 const res = mockRes();
 
@@ -49,12 +49,12 @@ describe('GET underwriting - underwriting managers decision', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'underwriting',
-        activeSideNavigation: 'bank security',
+        activeSideNavigation: 'underwriter managers decision',
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
         user: session.user,
-        decisionSubmitted: isDecisionSubmitted(mockDeal.tfm),
+        // decisionSubmitted: isDecisionSubmitted(mockDeal.tfm),
       });
     });
   });
@@ -132,7 +132,7 @@ describe('POST underwriting - underwriting managers decision', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'underwriting',
-        activeSideNavigation: 'bank security',
+        activeSideNavigation: 'underwriter managers decision',
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle

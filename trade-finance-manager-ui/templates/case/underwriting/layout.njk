@@ -16,7 +16,8 @@
 
           {% set componentData = {
             caseId: dealId,
-            activeSideNavigation: activeSideNavigation
+            activeSideNavigation: activeSideNavigation,
+            decisionSubmitted: decisionSubmitted
           } %}
 
           {{sideNavigation.render(componentData)}}

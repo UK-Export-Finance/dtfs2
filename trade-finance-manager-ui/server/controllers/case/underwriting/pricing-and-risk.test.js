@@ -2,12 +2,17 @@
 import underwritingController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
-import helpers from '../helpers';
+import caseHelpers from '../helpers';
 import CONSTANTS from '../../../constants';
+import underwritingHelpers from './helpers';
 
 const {
   userIsInTeam,
-} = helpers;
+} = caseHelpers;
+
+const {
+  isDecisionSubmitted,
+} = underwritingHelpers;
 
 const res = mockRes();
 
@@ -57,6 +62,7 @@ describe('GET underwriting - pricing and risk', () => {
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
+          decisionSubmitted: isDecisionSubmitted(mockDeal.tfm),
         });
     });
   });

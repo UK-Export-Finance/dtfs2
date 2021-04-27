@@ -1,6 +1,5 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import './_macros/managers-decision-form.njk' as managersDecisionForm %}
-{% import './_macros/managers-decision-submitted.njk' as managersDecisionSubmitted %}
 
 {% extends "index.njk" %}
 
@@ -25,24 +24,12 @@
 
         <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
 
-        {% if decisionSubmitted %}
+        {% set managersDecisionFormComponentData = {
+          caseId: dealId,
+          validationErrors: validationErrors
+        } %}
 
-          {% set managersDecisionSubmittedComponentData = {
-            caseId: dealId,
-            managersDecision: tfm.managersDecision
-          } %}
-
-          {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
-
-        {% else %}
-
-          {% set managersDecisionFormComponentData = {
-            caseId: dealId,
-            validationErrors: validationErrors
-          } %}
-
-          {{managersDecisionForm.render(managersDecisionFormComponentData)}}
-        {% endif %}
+        {{managersDecisionForm.render(managersDecisionFormComponentData)}}
 
       </div>
 

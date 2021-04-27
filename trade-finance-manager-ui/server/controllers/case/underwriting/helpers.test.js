@@ -2,11 +2,11 @@ import helpers from './helpers';
 
 const { isDecisionSubmitted } = helpers;
 
-describe('underwriter-managers-decision helpers', () => {
+describe('underwriter helpers', () => {
   describe('isDecisionSubmitted', () => {
     it('should return true when decision is submitted', () => {
       const mockDealTfm = {
-        managersDecision: {
+        underwriterManagersDecision: {
           decision: 'Approve with conditions',
           comments: 'Testing',
           internalComments: 'Hello team',
