@@ -1,5 +1,6 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% import './_macros/comments.njk' as comments %}
+{% import './_macros/status-tag.njk' as statusTag %}
 
 {% extends "case/underwriting/layout.njk" %}
 
@@ -12,12 +13,9 @@
     <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2">Decision</h4>
 
     <div class="govuk-!-padding-bottom-3">
-      {{ govukTag({
-        text: tfm.underwriterManagersDecision.decision,
-        attributes: {
-          'data-cy': 'exporter-status'
-        }
-      }) }}
+      {{statusTag.render({
+        decision: tfm.underwriterManagersDecision.decision
+      })}}
     </div>
 
     <div class="govuk-grid-row">

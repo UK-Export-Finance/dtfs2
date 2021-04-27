@@ -46,6 +46,7 @@ const dealQuery = gql`
         probabilityOfDefault
         underwriterManagersDecision {
           decision
+          comments
           internalComments
           timestamp
           userFullName

@@ -68,6 +68,7 @@ const GET_DEAL = gql`
         stage
         underwriterManagersDecision {
           decision
+          comments
           internalComments
           timestamp
           userFullName
