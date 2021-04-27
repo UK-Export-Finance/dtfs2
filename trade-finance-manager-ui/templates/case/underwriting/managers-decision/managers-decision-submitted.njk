@@ -26,7 +26,7 @@
       </div>
 
       <div class="govuk-grid-column-three-quarters">
-        <p class="govuk-body-s">TODO</p>
+        <p class="govuk-body-s">{{ tfm.underwriterManagersDecision.userFullName }}</p>
       </div>
     </div>
 
@@ -36,20 +36,35 @@
       </div>
 
       <div class="govuk-grid-column-three-quarters">
-        <p class="govuk-body-s">TODO</p>
+        <p class="govuk-body-s">
+          {{ tfm.underwriterManagersDecision.timestamp | localiseTimestamp('D MMMM YYYY', user.timezone) }}
+          at {{ tfm.underwriterManagersDecision.timestamp | localiseTimestamp('HH:mm', user.timezone) }}
+          </p>
       </div>
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
+    {% if tfm.underwriterManagersDecision.comments %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
 
-        <h4 class="govuk-heading-m govuk-!-font-weight-bold">Comments</h4>
-        <p>Only UKEF staff will see this.</p>
-        <p class="govuk-body-s">{{ tfm.underwriterManagersDecision.internalComments }}</p>
+          <h4 class="govuk-heading-m govuk-!-font-weight-bold">Conditions</h4>
+          <p class="govuk-body-s preserve-white-space">{{ tfm.underwriterManagersDecision.comments | safe }}</p>
 
+        </div>
       </div>
-    </div>
+    {% endif %}
 
+    {% if tfm.underwriterManagersDecision.internalComments %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+          <h4 class="govuk-heading-m govuk-!-font-weight-bold">Comments</h4>
+          <p>Only UKEF staff will see this.</p>
+          <p class="govuk-body-s preserve-white-space">{{ tfm.underwriterManagersDecision.internalComments | safe }}<p>
+
+        </div>
+      </div>
+    {% endif %}
 
   </div>
 
