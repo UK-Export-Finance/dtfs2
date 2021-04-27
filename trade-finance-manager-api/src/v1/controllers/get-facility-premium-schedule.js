@@ -10,7 +10,9 @@ const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, faci
       facilityExposurePeriod,
       facilityGuaranteeDates,
     );
-    return premiumSchedule;
+    if (premiumSchedule) {
+      return premiumSchedule;
+    }
   }
 
   return null;
