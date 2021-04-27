@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import underwriterManagersDecisionController from '.';
 import validateSubmittedValues from './validateSubmittedValues';
-import mapSubmittedValues from './mapSubmittedValues';
+import mapDecisionObject from './mapDecisionObject';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 // import helpers from './helpers';
@@ -104,7 +104,7 @@ describe('POST underwriting - underwriting managers decision', () => {
 
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         dealId,
-        mapSubmittedValues(req.body),
+        mapDecisionObject(req.body, req.session.user),
       );
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/managers-decision`);

@@ -1,6 +1,6 @@
 import api from '../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
-import mapSubmittedValues from './mapSubmittedValues';
+import mapDecisionObject from './mapDecisionObject';
 import helpers from '../helpers';
 
 const { isDecisionSubmitted } = helpers;
@@ -92,7 +92,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
     });
   }
 
-  const update = mapSubmittedValues(submittedValues);
+  const update = mapDecisionObject(submittedValues, user);
 
   await api.updateUnderwriterManagersDecision(dealId, update);
 

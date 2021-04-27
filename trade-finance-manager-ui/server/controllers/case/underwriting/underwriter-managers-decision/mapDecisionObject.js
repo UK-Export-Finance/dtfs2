@@ -1,8 +1,10 @@
 import stringHelpers from '../../../../helpers/string';
+import userHelpers from '../../../../helpers/user';
 
 const { hasValue } = stringHelpers;
+const { userFullName } = userHelpers;
 
-const mapSubmittedValues = (submittedValues) => {
+const mapDecisionObject = (submittedValues, user) => {
   const {
     decision,
     approveWithConditionsComments,
@@ -13,6 +15,7 @@ const mapSubmittedValues = (submittedValues) => {
   const mapped = {
     decision,
     internalComments,
+    userFullName: userFullName(user),
   };
 
   if (decision === 'Approve with conditions'
@@ -27,4 +30,4 @@ const mapSubmittedValues = (submittedValues) => {
 };
 
 
-export default mapSubmittedValues;
+export default mapDecisionObject;

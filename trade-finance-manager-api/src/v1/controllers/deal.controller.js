@@ -75,13 +75,20 @@ const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
 };
 exports.updateTfmCreditRating = updateTfmCreditRating;
 
-const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, internalComments) => {
+const updateTfmUnderwriterManagersDecision = async (
+  dealId,
+  decision,
+  comments,
+  internalComments,
+  userFullName,
+) => {
   const managerDecisionUpdate = {
     tfm: {
       underwriterManagersDecision: {
         decision,
         comments,
         internalComments,
+        userFullName,
         timestamp: now(),
       },
     },

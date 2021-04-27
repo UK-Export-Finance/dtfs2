@@ -7,6 +7,7 @@ const updateUnderwriterManagersDecision = gql`
         decision
         comments
         internalComments
+        userFullName
       }
     }
   }

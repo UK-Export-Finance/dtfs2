@@ -70,6 +70,7 @@ const GET_DEAL = gql`
           decision
           internalComments
           timestamp
+          userFullName
         }
       }
       dealSnapshot {

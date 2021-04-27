@@ -18,6 +18,7 @@ const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
         decision
         comments
         internalComments
+        userFullName
         timestamp
       }
     }
@@ -49,6 +50,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
         decision: 'Approve without conditions',
         comments: 'Test comment',
         internalComments: 'Internal comment',
+        userFullName: 'Test User',
       },
     };
 
@@ -62,6 +64,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
         decision: mutationVars.managersDecisionUpdate.decision,
         comments: mutationVars.managersDecisionUpdate.comments,
         internalComments: mutationVars.managersDecisionUpdate.internalComments,
+        userFullName: mutationVars.managersDecisionUpdate.userFullName,
         timestamp: expect.any(String),
       }
     };
