@@ -1,6 +1,4 @@
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 {% import './_macros/comments.njk' as comments %}
 
 {% extends "case/underwriting/layout.njk" %}
@@ -9,8 +7,18 @@
  
   <div class="govuk-grid-column-full">
 
-    <h3 class="govuk-heading-l">Decision</h3>
-    <p>TO DO</p>
+    <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
+
+    <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2">Decision</h4>
+
+    <div class="govuk-!-padding-bottom-3">
+      {{ govukTag({
+        text: tfm.underwriterManagersDecision.decision,
+        attributes: {
+          'data-cy': 'exporter-status'
+        }
+      }) }}
+    </div>
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
@@ -33,12 +41,12 @@
     </div>
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Comments</h4>
-      </div>
+      <div class="govuk-grid-column-full">
 
-      <div class="govuk-grid-column-three-quarters">
-        <p class="govuk-body-s">TODO</p>
+        <h4 class="govuk-heading-m govuk-!-font-weight-bold">Comments</h4>
+        <p>Only UKEF staff will see this.</p>
+        <p class="govuk-body-s">{{ tfm.underwriterManagersDecision.internalComments }}</p>
+
       </div>
     </div>
 
