@@ -4,7 +4,7 @@ const mapFacilityTfm = (facilityTfm, dealTfm) =>
   ({
     ...facilityTfm,
     ukefExposure: mapUkefExposure(facilityTfm),
-    // premiumSchedule: facilityTfm.premiumSchedule,
+    premiumSchedule: facilityTfm.premiumSchedule,
     creditRating: dealTfm.exporterCreditRating,
   });
 module.exports = mapFacilityTfm;
