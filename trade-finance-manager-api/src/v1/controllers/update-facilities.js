@@ -2,7 +2,7 @@ const api = require('../api');
 const convertFacilityCurrency = require('./convert-facility-currency');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const DEFAULTS = require('../defaults');
-// const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
+const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 
 const updateFacilities = async (deal) => {
@@ -34,11 +34,11 @@ const updateFacilities = async (deal) => {
 
       const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-      // const facilityPremiumSchedule = await getFacilityPremiumSchedule(
-      //   facility,
-      //   facilityExposurePeriod,
-      //   facilityGuaranteeDates,
-      // );
+      const facilityPremiumSchedule = await getFacilityPremiumSchedule(
+        facility,
+        facilityExposurePeriod,
+        facilityGuaranteeDates,
+      );
 
 
       // TODO
@@ -48,7 +48,7 @@ const updateFacilities = async (deal) => {
         ...facilityExposurePeriod,
         facilityGuaranteeDates,
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-        // premiumSchedule: facilityPremiumSchedule,
+        premiumSchedule: facilityPremiumSchedule,
       };
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
 
