@@ -1,8 +1,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% import './_macros/comments.njk' as comments %}
+{% import './_macros/managers-decision-form.njk' as managersDecisionForm %}
+{% import './_macros/managers-decision-submitted.njk' as managersDecisionSubmitted %}
 
 {% extends "index.njk" %}
 
@@ -17,7 +15,7 @@
           attributes: {
             'data-cy': 'error-summary'
           }
-        })
+        })  
       }}
     {% endif %}
 
@@ -27,93 +25,24 @@
 
         <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
 
-        <form method="POST" autocomplete="off">
+        {% if decisionSubmitted %}
 
-        {% set approveWithConditionsCommentsComponentData = {
-          id: 'approveWithConditionsComments',
-          label: 'Enter conditions (these will be sent to the bank)',
-          validationError: validationErrors.errorList.approveWithConditionsComments
-        } %}
+          {% set managersDecisionSubmittedComponentData = {
+            caseId: dealId,
+            managersDecision: tfm.managersDecision
+          } %}
 
-        {% set declineCommentsComponentData = {
-          id: 'declineComments',
-          label: 'Enter reasons (these will be sent to the bank)',
-          validationError: validationErrors.errorList.declineComments
-        } %}
+          {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
 
-          {{govukRadios({
-              fieldset: {
-                legend: {
-                  text: "What's your decision?",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--l"
-                }
-              },
-              name: "decision",
-              items: [
-                {
-                  value: "Approve without conditions",
-                  text: "Approve without conditions",
-                  attributes: {
-                    'data-cy': 'approve-without-conditions-radio-button'
-                  }
-                },
-                {
-                  value: "Approve with conditions",
-                  text: "Approve with conditions",
-                  checked: submittedValues.decision === 'Approve with conditions',
-                  attributes: {
-                    'data-cy': 'approve-with-conditions-radio-button'
-                  },
-                  conditional: {
-                    html: comments.render(approveWithConditionsCommentsComponentData)
-                  }
-                },
-                {
-                  value: "Decline",
-                  text: "Decline",
-                  checked: submittedValues.decision === 'Decline',
-                  attributes: {
-                    'data-cy': 'decline-radio-button'
-                  },
-                  conditional: {
-                    html: comments.render(declineCommentsComponentData)
-                  }
-                }
-              ],
-              errorMessage: validationErrors and validationErrors.errorList.decision and {
-                text: validationErrors.errorList.decision.text
-              }
-            })
-          }}
+        {% else %}
 
-          {{ govukCharacterCount({
-            name: "internalComments",
-            id: "internalComments",
-            maxlength: 1000,
-            rows: 9,
-            label: {
-              text: "Comments (optional)"
-            },
-            hint: {
-              text: "Only UKEF staff will see this. "
-            },
-            attributes: {
-              'data-cy': 'internal-comments-input'
-            },
-            value: submittedValues.internalComments
-          }) }}
+          {% set managersDecisionFormComponentData = {
+            caseId: dealId,
+            validationErrors: validationErrors
+          } %}
 
-          {{ govukButton({
-            text: "Save",
-            attributes: {
-              'data-cy': 'submit-button'
-            }
-          }) }}
-
-          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting/pricing-and-risk" data-cy="cancel-link">Cancel</a>
-
-        </form>
+          {{managersDecisionForm.render(managersDecisionFormComponentData)}}
+        {% endif %}
 
       </div>
 

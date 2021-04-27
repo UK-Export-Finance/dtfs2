@@ -1,6 +1,9 @@
 import api from '../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
 import mapSubmittedValues from './mapSubmittedValues';
+import helpers from './helpers';
+
+const { isDecisionSubmitted } = helpers;
 
 const getUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -20,6 +23,7 @@ const getUnderwriterManagersDecision = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
+    decisionSubmitted: isDecisionSubmitted(deal.tfm),
   });
 };
 

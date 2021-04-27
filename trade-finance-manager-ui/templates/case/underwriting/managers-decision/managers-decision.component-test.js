@@ -16,40 +16,31 @@ describe(page, () => {
     wrapper.expectText('[data-cy="managers-decision-heading"]').toRead('Underwriter manager’s decision');
   });
 
-  describe('radio buttons', () => {
-    it('should render `Approve without conditions` radio button', () => {
+  describe('with params.decisionSubmitted',() => {
+    it('should render `decision submitted` component', () => {
+      params = {
+        ...params,
+        decisionSubmitted: true,
+      };
+      
       const wrapper = render(params);
-      wrapper.expectElement('[data-cy="approve-without-conditions-radio-button"]').toExist();
-    });
 
-    it('should render `Approve with conditions` radio button', () => {
-      const wrapper = render(params);
-      wrapper.expectElement('[data-cy="approve-with-conditions-radio-button"]').toExist();
-    });
-
-    it('should render `Decline` radio button', () => {
-      const wrapper = render(params);
-      wrapper.expectElement('[data-cy="decline-radio-button"]').toExist();
+      wrapper.expectElement('[data-cy="managers-decision-submitted"]').toExist();
+      wrapper.expectElement('[data-cy="managers-decision-form"]').notToExist();
     });
   });
 
-  it('should render internalComments input', () => {
-    const wrapper = render(params);
-    wrapper.expectElement('[data-cy="internal-comments-input"]').toExist();
-  });
+  describe('with NO params.decisionSubmitted', () => {
+    it('should render `decision form` component', () => {
+      params = {
+        ...params,
+        decisionSubmitted: false,
+      };
 
-  it('should render submit button', () => {
-    const wrapper = render(params);
-    wrapper.expectElement('[data-cy="submit-button"]').toExist();
-    wrapper.expectText('[data-cy="submit-button"]').toRead('Save');
-  });
+      const wrapper = render(params);
 
-  it('should render cancel link', () => {
-    const wrapper = render(params);
-    wrapper.expectLink('[data-cy="cancel-link"]')
-      .toLinkTo(
-        `/case/${params.dealId}/underwriting/pricing-and-risk`,
-        'Cancel',
-      );
+      wrapper.expectElement('[data-cy="managers-decision-form"]').toExist();
+      wrapper.expectElement('[data-cy="managers-decision-submitted"]').notToExist();
+    });
   });
 });
