@@ -48,6 +48,7 @@ const dealQuery = gql`
           decision
           internalComments
           timestamp
+          userFullName
         }
       }
       dealSnapshot {

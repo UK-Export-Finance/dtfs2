@@ -1,7 +1,6 @@
-const userFullName = (user) => {
-  const { firstName, lastName } = user;
-  return `${firstName} ${lastName}`;
-};
+import userHelpers from '../../helpers/user';
+
+const { userFullName } = userHelpers;
 
 const userIsInTeam = (user, teamId) =>
   user.teams.includes(teamId);
@@ -126,7 +125,6 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
 };
 
 export default {
-  userFullName,
   userIsInTeam,
   getGroup,
   getTask,

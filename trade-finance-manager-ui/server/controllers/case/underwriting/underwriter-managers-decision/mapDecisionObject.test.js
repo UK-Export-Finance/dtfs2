@@ -1,17 +1,26 @@
-import mapSubmittedValues from './mapSubmittedValues';
+import mapDecisionObject from './mapDecisionObject';
+import userHelpers from '../../../../helpers/user';
 
-describe('POST underwriting - map submitted values', () => {
+const { userFullName } = userHelpers;
+
+describe('POST underwriting - map decision object', () => {
+  const mockUser = {
+    firstName: 'Hello',
+    lastName: 'World',
+  };
+
   it('should return object with decision and internalComments', () => {
     const submittedValues = {
       decision: 'Test',
       internalComments: 'mock comments',
     };
 
-    const result = mapSubmittedValues(submittedValues);
+    const result = mapDecisionObject(submittedValues, mockUser);
 
     expect(result).toEqual({
       decision: submittedValues.decision,
       internalComments: submittedValues.internalComments,
+      userFullName: userFullName(mockUser),
     });
   });
 
@@ -22,11 +31,12 @@ describe('POST underwriting - map submitted values', () => {
         approveWithConditionsComments: 'approve comments',
       };
 
-      const result = mapSubmittedValues(submittedValues);
+      const result = mapDecisionObject(submittedValues, mockUser);
 
       expect(result).toEqual({
         decision: submittedValues.decision,
         comments: submittedValues.approveWithConditionsComments,
+        userFullName: userFullName(mockUser),
       });
     });
   });
@@ -38,11 +48,12 @@ describe('POST underwriting - map submitted values', () => {
         declineComments: 'decline comments',
       };
 
-      const result = mapSubmittedValues(submittedValues);
+      const result = mapDecisionObject(submittedValues, mockUser);
 
       expect(result).toEqual({
         decision: submittedValues.decision,
         comments: submittedValues.declineComments,
+        userFullName: userFullName(mockUser),
       });
     });
   });

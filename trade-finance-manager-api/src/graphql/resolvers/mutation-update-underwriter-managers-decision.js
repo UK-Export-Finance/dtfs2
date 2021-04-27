@@ -5,6 +5,7 @@ const updateUnderwriterManagersDecision = async ({ dealId, managersDecisionUpdat
     decision,
     comments,
     internalComments,
+    userFullName,
   } = managersDecisionUpdate;
 
   const update = await updateTfmUnderwriterManagersDecision(
@@ -12,6 +13,7 @@ const updateUnderwriterManagersDecision = async ({ dealId, managersDecisionUpdat
     decision,
     comments,
     internalComments,
+    userFullName,
   );
 
   return update;

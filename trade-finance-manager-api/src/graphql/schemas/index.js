@@ -231,6 +231,7 @@ type TFMDealDecision  {
   decision: String
   comments: String
   internalComments: String
+  userFullName: String
   timestamp: String
 }
 
@@ -368,6 +369,7 @@ input TFMUnderwriterManagersDecisionInput {
   decision: String
   comments: String
   internalComments: String
+  userFullName: String
 }
 
 type TeamMember {
