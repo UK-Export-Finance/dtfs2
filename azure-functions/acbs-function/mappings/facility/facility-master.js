@@ -78,7 +78,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     description: helpers.getDescription(facility),
     agentBankIdentifier: '00000000',
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorName: submissionDetails['supplier-name'],
+    obligorName: submissionDetails['supplier-name'].substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
 
   };
