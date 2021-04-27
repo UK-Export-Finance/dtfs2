@@ -4,6 +4,9 @@ import validateSubmittedValues from './validateSubmittedValues';
 import mapSubmittedValues from './mapSubmittedValues';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
+import helpers from './helpers';
+
+const { isDecisionSubmitted } = helpers;
 
 const res = mockRes();
 
@@ -51,6 +54,7 @@ describe('GET underwriting - underwriting managers decision', () => {
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
         user: session.user,
+        decisionSubmitted: isDecisionSubmitted(mockDeal.tfm),
       });
     });
   });
