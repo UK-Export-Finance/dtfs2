@@ -2,15 +2,20 @@ import api from '../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
 import mapDecisionHelper from './mapDecisionObject';
 import helpers from '../helpers';
+import userHelpers from '../../../../helpers/user';
+import CONSTANTS from '../../../../constants';
 
 const { mapDecisionObject } = mapDecisionHelper;
 const { isDecisionSubmitted } = helpers;
+const { userIsInTeam } = userHelpers;
 
 const getUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+
+  if (!deal || !userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS)) {
     return res.redirect('/not-found');
   }
 
@@ -19,8 +24,6 @@ const getUnderwriterManagersDecision = async (req, res) => {
   if (decisionSubmitted) {
     return res.redirect(`/case/${dealId}/underwriting/managers-decision/submitted`);
   }
-
-  const { user } = req.session;
 
   return res.render('case/underwriting/managers-decision/managers-decision.njk', {
     activePrimaryNavigation: 'manage work',
@@ -58,11 +61,11 @@ const postUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+
+  if (!deal || !userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS)) {
     return res.redirect('/not-found');
   }
-
-  const { user } = req.session;
 
   const {
     decision,

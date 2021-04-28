@@ -2,9 +2,6 @@ import userHelpers from '../../helpers/user';
 
 const { userFullName } = userHelpers;
 
-const userIsInTeam = (user, teamId) =>
-  user.teams.includes(teamId);
-
 const getGroup = (groupId, allTasks) =>
   allTasks.find((group) => group.id === groupId);
 
@@ -125,7 +122,6 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
 };
 
 export default {
-  userIsInTeam,
   getGroup,
   getTask,
   isTaskAssignedToUser,

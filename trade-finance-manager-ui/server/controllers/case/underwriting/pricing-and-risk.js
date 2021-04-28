@@ -1,12 +1,12 @@
 import api from '../../../api';
-import caseHelpers from '../helpers';
+import userHelpers from '../../../helpers/user';
 import underwritingHelpers from './helpers';
 import stringHelpers from '../../../helpers/string';
 import CONSTANTS from '../../../constants';
 
 const {
   userIsInTeam,
-} = caseHelpers;
+} = userHelpers;
 
 const {
   isDecisionSubmitted,
