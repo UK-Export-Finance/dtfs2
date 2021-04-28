@@ -63,7 +63,10 @@
           }
         ],
         errorMessage: validationErrors and validationErrors.errorList.decision and {
-          text: validationErrors.errorList.decision.text
+          text: validationErrors.errorList.decision.text,
+          attributes: {
+            'data-cy': 'decision-input-error'
+          }
         }
       })
     }}
@@ -80,7 +83,7 @@
         text: "Only UKEF staff will see this. "
       },
       attributes: {
-        'data-cy': 'internal-comments-input'
+        'data-cy': 'internalComments-input'
       },
       value: submittedValues.internalComments
     }) }}

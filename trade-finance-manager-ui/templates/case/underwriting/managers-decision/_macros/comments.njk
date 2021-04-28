@@ -13,14 +13,17 @@
     label: {
       text: label,
       attributes : {
-        'data-cy' : id + '-comments-input-label'
+        'data-cy' : id + '-input-label'
       }
     },
     errorMessage: validationError and {
-      text: validationError.text
+      text: validationError.text,
+      attributes: {
+        'data-cy': id + '-input-error'
+      }
     },
     attributes : {
-      'data-cy' : id + '-comments-input'
+      'data-cy' : id + '-input'
     }
   }) }}
 
