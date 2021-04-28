@@ -82,6 +82,20 @@ context('Case Underwriting - Pricing and risk', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
   });
 
+  it('a user that is NOT in UNDERWRITER_MANAGERS team should get redirected to not-found route', () => {
+    const nonUnderWritingManager = MOCK_USERS.find((user) =>
+      !user.teams.includes('UNDERWRITER_MANAGERS'));
+
+    cy.login(nonUnderWritingManager);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to underwriter managers decision page
+    partials.caseSubNavigation.underwritingLink().click();
+    partials.underwritingSubNav.underwriterManagerDecisionLink().click();
+
+    cy.url().should('eq', relative('/not-found'));
+  });
+
   it('submitting an empty form displays validation errors', () => {
     pages.managersDecisionFormPage.submitButton().click();
 
@@ -89,24 +103,30 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionFormPage.decisionRadioInputValidationError().should('be.visible');
   });
 
-  it('selecting `Approve with conditions` radio button reveals comments input, throws validation error if no comment provided', () => {
+  it('selecting `Approve with conditions` radio button reveals comments input, throws validation error if no comment provided and persists radio selection', () => {
     pages.managersDecisionFormPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
 
     pages.managersDecisionFormPage.decisionRadioInputApproveWithConditions().click();
     pages.managersDecisionFormPage.commentsInputApproveWithConditions().should('be.visible');
     pages.managersDecisionFormPage.submitButton().click();
 
+    // radio should be selected
+    pages.managersDecisionFormPage.decisionRadioInputApproveWithConditions().should('be.checked');
+
     // assert errors are displayed
     pages.managersDecisionFormPage.errorSummaryItems().should('have.length', 1);
     pages.managersDecisionFormPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
   });
 
-  it('selecting `Decline` radio button reveals comments input, throws validation error if no comment provided', () => {
+  it('selecting `Decline` radio button reveals comments input, throws validation error if no comment provided  and persists radio selection', () => {
     pages.managersDecisionFormPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
 
     pages.managersDecisionFormPage.decisionRadioInputDecline().click();
     pages.managersDecisionFormPage.commentsInputDecline().should('be.visible');
     pages.managersDecisionFormPage.submitButton().click();
+
+    // radio should be selected
+    pages.managersDecisionFormPage.decisionRadioInputDecline().should('be.checked');
 
     // assert errors are displayed
     pages.managersDecisionFormPage.errorSummaryItems().should('have.length', 1);

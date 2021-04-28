@@ -3,7 +3,6 @@ import helpers from './helpers';
 import userHelpers from '../../helpers/user';
 
 const {
-  userIsInTeam,
   getGroup,
   getTask,
   isTaskAssignedToUser,
@@ -15,26 +14,6 @@ const {
 const { userFullName } = userHelpers;
 
 describe('case - helpers', () => {
-  describe('userIsInTeam', () => {
-    it('should return true when user is in a team', () => {
-      const mockUser = {
-        teams: ['TEAMA'],
-      };
-
-      const result = userIsInTeam(mockUser, 'TEAMA');
-      expect(result).toEqual(true);
-    });
-
-    it('should return false when user is NOT in a team', () => {
-      const mockUser = {
-        teams: ['TEAMB'],
-      };
-
-      const result = userIsInTeam(mockUser, 'TEAMA');
-      expect(result).toEqual(false);
-    });
-  });
-
   describe('getGroup', () => {
     it('should return group by id', () => {
       const mockTasks = [

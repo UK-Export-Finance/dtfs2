@@ -2,13 +2,13 @@
 import underwritingController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
-import caseHelpers from '../helpers';
+import userHelpers from '../../../helpers/user';
 import CONSTANTS from '../../../constants';
 import underwritingHelpers from './helpers';
 
 const {
   userIsInTeam,
-} = caseHelpers;
+} = userHelpers;
 
 const {
   isDecisionSubmitted,

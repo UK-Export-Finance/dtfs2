@@ -15,7 +15,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['TEAM1'],
+    teams: ['UNDERWRITER_MANAGERS'],
   },
 };
 
@@ -53,8 +53,27 @@ describe('GET underwriting - underwriting managers decision', () => {
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
         user: session.user,
-        // decisionSubmitted: isDecisionSubmitted(mockDeal.tfm),
       });
+    });
+  });
+
+  describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
+    it('should redirect to not-found route', async () => {
+      const req = {
+        params: {
+          _id: dealId,
+        },
+        session: {
+          user: {
+            ...session.user,
+            teams: ['TEAM1'],
+          },
+        },
+      };
+
+      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
+
+      expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
 
@@ -84,17 +103,6 @@ describe('GET underwriting - underwriting managers decision', () => {
       await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/managers-decision/submitted`);
-
-      // expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
-      //   activePrimaryNavigation: 'manage work',
-      //   activeSubNavigation: 'underwriting',
-      //   activeSideNavigation: 'underwriter managers decision',
-      //   deal: mockDeal.dealSnapshot,
-      //   tfm: mockDeal.tfm,
-      //   dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
-      //   user: session.user,
-      //   // decisionSubmitted: isDecisionSubmitted(mockDeal.tfm),
-      // });
     });
   });
 
@@ -181,6 +189,26 @@ describe('POST underwriting - underwriting managers decision', () => {
         },
         validationErrors: validateSubmittedValues(req.body),
       });
+    });
+  });
+
+  describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
+    it('should redirect to not-found route', async () => {
+      const req = {
+        params: {
+          _id: dealId,
+        },
+        session: {
+          user: {
+            ...session.user,
+            teams: ['TEAM1'],
+          },
+        },
+      };
+
+      await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
+
+      expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
 
