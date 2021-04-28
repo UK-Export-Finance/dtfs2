@@ -298,29 +298,30 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
 };
 
 const getPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
-  console.log('$api.getPremiumSchedule');
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${refDataUrl}/premium-schedule`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        facility,
-        facilityExposurePeriod,
-        facilityGuaranteeDates,
-      },
-    });
-    console.log(`response from premium-schedule:${response.status}`);
-    if (response.status === 200 || response.status === 201) {
-      return response.data;
-    }
-    console.log('No premium schedule returned from reference data api.');
-    return false;
-  } catch ({ response }) {
-    return false;
-  }
+  console.log(facility, facilityExposurePeriod, facilityGuaranteeDates);
+  return false;
+  // try {
+  //   const response = await axios({
+  //     method: 'get',
+  //     url: `${refDataUrl}/premium-schedule`,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     data: {
+  //       facility,
+  //       facilityExposurePeriod,
+  //       facilityGuaranteeDates,
+  //     },
+  //   });
+  //   console.log(`response from premium-schedule:${response.status}`);
+  //   if (response.status === 200 || response.status === 201) {
+  //     return response.data;
+  //   }
+  //   console.log('No premium schedule returned from reference data api.');
+  //   return false;
+  // } catch ({ response }) {
+  //   return false;
+  // }
 };
 
 const createACBS = async (deal, bank) => {
