@@ -10,7 +10,7 @@
 
     <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
 
-    <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2">Decision</h4>
+    <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2" data-cy="managers-decision-subheading">Decision</h4>
 
     <div class="govuk-!-padding-bottom-3">
       {{statusTag.render({
@@ -20,24 +20,21 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
-        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Decision made by</h4>
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="decision-made-by-heading">Decision made by</h4>
       </div>
 
       <div class="govuk-grid-column-three-quarters">
-        <p class="govuk-body-s">{{ tfm.underwriterManagersDecision.userFullName }}</p>
+        <p class="govuk-body-s" data-cy="decision-made-by-value">{{ tfm.underwriterManagersDecision.userFullName }}</p>
       </div>
     </div>
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
-        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Date and time</h4>
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="date-time-heading">Date and time</h4>
       </div>
 
       <div class="govuk-grid-column-three-quarters">
-        <p class="govuk-body-s">
-          {{ tfm.underwriterManagersDecision.timestamp | localiseTimestamp('D MMMM YYYY', user.timezone) }}
-          at {{ tfm.underwriterManagersDecision.timestamp | localiseTimestamp('HH:mm', user.timezone) }}
-          </p>
+        <p class="govuk-body-s" data-cy="date-time-value">{{ tfm.underwriterManagersDecision.timestamp | localiseTimestamp('D MMMM YYYY', user.timezone) }} at {{ tfm.underwriterManagersDecision.timestamp | localiseTimestamp('HH:mm', user.timezone) }}</p>
       </div>
     </div>
 
@@ -45,8 +42,8 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-          <h4 class="govuk-heading-m govuk-!-font-weight-bold">Conditions</h4>
-          <p class="govuk-body-s preserve-white-space">{{ tfm.underwriterManagersDecision.comments | safe }}</p>
+          <h4 class="govuk-heading-m govuk-!-font-weight-bold" data-cy="conditions-heading">Conditions</h4>
+          <p class="govuk-body-s preserve-white-space" data-cy="conditions-value">{{ tfm.underwriterManagersDecision.comments | safe }}</p>
 
         </div>
       </div>
@@ -56,9 +53,9 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-          <h4 class="govuk-heading-m govuk-!-font-weight-bold">Comments</h4>
+          <h4 class="govuk-heading-m govuk-!-font-weight-bold" data-cy="internal-comments-heading">Comments</h4>
           <p>Only UKEF staff will see this.</p>
-          <p class="govuk-body-s preserve-white-space">{{ tfm.underwriterManagersDecision.internalComments | safe }}<p>
+          <p class="govuk-body-s preserve-white-space" data-cy="internal-comments-value">{{ tfm.underwriterManagersDecision.internalComments | safe }}<p>
 
         </div>
       </div>
