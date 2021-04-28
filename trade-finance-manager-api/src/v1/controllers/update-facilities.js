@@ -48,7 +48,7 @@ const updateFacilities = async (deal) => {
         ...facilityExposurePeriod,
         facilityGuaranteeDates,
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-        // premiumSchedule: facilityPremiumSchedule,
+        premiumSchedule: {}, // facilityPremiumSchedule,
       };
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
 
