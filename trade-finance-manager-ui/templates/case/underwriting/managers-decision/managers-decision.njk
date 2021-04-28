@@ -26,7 +26,8 @@
 
         {% set managersDecisionFormComponentData = {
           caseId: dealId,
-          validationErrors: validationErrors
+          validationErrors: validationErrors,
+          submittedValues: submittedValues
         } %}
 
         {{managersDecisionForm.render(managersDecisionFormComponentData)}}

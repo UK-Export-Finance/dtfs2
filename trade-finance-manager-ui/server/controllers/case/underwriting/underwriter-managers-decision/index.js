@@ -14,7 +14,11 @@ const getUnderwriterManagersDecision = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  // TODO if decision submitted, redirect
+  const decisionSubmitted = isDecisionSubmitted(deal.tfm);
+
+  if (decisionSubmitted) {
+    return res.redirect(`/case/${dealId}/underwriting/managers-decision/submitted`);
+  }
 
   const { user } = req.session;
 
@@ -33,9 +37,7 @@ const getUnderwriterManagersDecisionSubmitted = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  const decisionSubmitted = isDecisionSubmitted(deal.tfm);
-
-  if (!deal || !decisionSubmitted) {
+  if (!deal) {
     return res.redirect('/not-found');
   }
 
@@ -49,7 +51,6 @@ const getUnderwriterManagersDecisionSubmitted = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    decisionSubmitted,
   });
 };
 
@@ -97,7 +98,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
 
   await api.updateUnderwriterManagersDecision(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/managers-decision`);
+  return res.redirect(`/case/${dealId}/underwriting/managers-decision/submitted`);
 };
 
 export default {

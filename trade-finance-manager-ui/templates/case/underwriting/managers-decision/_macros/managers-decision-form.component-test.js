@@ -28,7 +28,7 @@ describe(component, () => {
 
   it('should render internalComments input', () => {
     const wrapper = render(params);
-    wrapper.expectElement('[data-cy="internal-comments-input"]').toExist();
+    wrapper.expectElement('[data-cy="internalComments-input"]').toExist();
   });
 
   it('should render submit button', () => {
