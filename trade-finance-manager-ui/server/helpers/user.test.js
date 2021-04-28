@@ -6,7 +6,7 @@ const {
   userIsInTeam,
 } = userHelpers;
 
-describe('user shelpers', () => {
+describe('user helpers', () => {
   describe('userFullName', () => {
     it('should return first and last name', () => {
       const mockUser = {
