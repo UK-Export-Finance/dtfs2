@@ -12,7 +12,7 @@
 
     <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2" data-cy="managers-decision-subheading">Decision</h4>
 
-    <div class="govuk-!-padding-bottom-3">
+    <div class="govuk-!-padding-bottom-7">
       {{statusTag.render({
         decision: tfm.underwriterManagersDecision.decision
       })}}
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row govuk-!-padding-bottom-4">
       <div class="govuk-grid-column-one-quarter">
         <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="date-time-heading">Date and time</h4>
       </div>
@@ -39,11 +39,11 @@
     </div>
 
     {% if tfm.underwriterManagersDecision.comments %}
-      <div class="govuk-grid-row">
+      <div class="govuk-grid-row govuk-!-padding-bottom-4">
         <div class="govuk-grid-column-full">
 
           <h4 class="govuk-heading-m govuk-!-font-weight-bold" data-cy="conditions-heading">Conditions</h4>
-          <p class="govuk-body-s preserve-white-space" data-cy="conditions-value">{{ tfm.underwriterManagersDecision.comments | safe }}</p>
+          <p class="preserve-white-space" data-cy="conditions-value">{{ tfm.underwriterManagersDecision.comments | safe }}</p>
 
         </div>
       </div>
@@ -53,9 +53,9 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-          <h4 class="govuk-heading-m govuk-!-font-weight-bold" data-cy="internal-comments-heading">Comments</h4>
-          <p>Only UKEF staff will see this.</p>
-          <p class="govuk-body-s preserve-white-space" data-cy="internal-comments-value">{{ tfm.underwriterManagersDecision.internalComments | safe }}<p>
+          <h4 class="govuk-heading-m govuk-!-font-weight-bold govuk-!-margin-bottom-1" data-cy="internal-comments-heading">Comments</h4>
+          <p class="ukef-heading-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
+          <p class="preserve-white-space" data-cy="internal-comments-value">{{ tfm.underwriterManagersDecision.internalComments | safe }}<p>
 
         </div>
       </div>
