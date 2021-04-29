@@ -33,6 +33,38 @@ describe('mapTenorDate', () => {
     });
   });
 
+  describe('when facilityStage is `Issued`', () => {
+    const mockFacilityTfm = {};
+
+    it('should return facility.ukefGuaranteeInMonths', () => {
+      const mockFacility = {
+        facilityStage: 'Issued',
+        ukefGuaranteeInMonths: '11',
+      };
+
+      const result = mapTenorDate(mockFacility, mockFacilityTfm);
+
+      const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
+
+      expect(result).toEqual(expected);
+    });
+
+    describe('when ukefGuaranteeInMonths is exactly 1', () => {
+      it('should return `month` instead and not `months`', () => {
+        const mockFacility = {
+          facilityStage: 'Issued',
+          ukefGuaranteeInMonths: '1',
+        };
+
+        const result = mapTenorDate(mockFacility, mockFacilityTfm);
+
+        const expected = `${mockFacility.ukefGuaranteeInMonths} month`;
+
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
   describe('when facilityTfm has exposurePeriodInMonths', () => {
     const mockFacility = {
       facilityStage: 'Issued',
