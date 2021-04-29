@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
+import MOCK_MIN_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
@@ -21,7 +21,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_MIA_DEAL_READY_TO_SUBMIT(),
+      MOCK_MIN_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         deal = insertedDeals[0];
@@ -35,7 +35,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal MIA deal is submitted to UKEF, TFM acknowledges the submission and updates the portal deal status from `Submitted` to `Acknowledged by UKEF`', () => {
+  it('Portal MIN deal is submitted to UKEF, TFM acknowledges the submission and updates the portal deal status from `Submitted` to `Acknowledged by UKEF`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -74,7 +74,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.visit(deal);
 
     portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress by UKEF');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
 
     portalPages.contract.previousStatus().invoke('text').then((text) => {
