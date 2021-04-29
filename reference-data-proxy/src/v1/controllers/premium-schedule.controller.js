@@ -5,12 +5,9 @@
 // 1) Post parameters to Premium Schedule API, returns  header location to load the segments
 // 2) Premium Schedule Segments gets the segments by facilityURN
 const axios = require('axios');
-const mapPremiumScheduleFalicity = require('../mappings/mapPremiumScheduleFacility');
 
-const postPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
-  const data = mapPremiumScheduleFalicity(facility, facilityExposurePeriod, facilityGuaranteeDates);
-
-  if (!data) {
+const postPremiumSchedule = async (premiumScheduleParameters) => {
+  if (!premiumScheduleParameters) {
     console.log('facility data not valid for premium schedule');
     return null;
   }
@@ -24,7 +21,7 @@ const postPremiumSchedule = async (facility, facilityExposurePeriod, facilityGua
     headers: {
       'Content-Type': 'application/json',
     },
-    data,
+    data: [premiumScheduleParameters],
   };
 
   const response = await axios(config);
@@ -36,7 +33,7 @@ const postPremiumSchedule = async (facility, facilityExposurePeriod, facilityGua
   }
 
   // eslint-disable-next-line no-underscore-dangle
-  return new Error(`Error calling Post Premium schedule. facilityURN:${facility._id}`);
+  return new Error(`Error calling Post Premium schedule. facilityURN:${premiumScheduleParameters.facilityURN}`);
 };
 
 const getScheduleData = async (facilityURN) => {
@@ -58,22 +55,20 @@ const getScheduleData = async (facilityURN) => {
 };
 
 const getPremiumSchedule = async (req, res) => {
-  const { facility, facilityExposurePeriod, facilityGuaranteeDates } = req.body;
+  const premiumScheduleParameters = req.body;
   const postPremiumScheduleResponse = await postPremiumSchedule(
-    facility,
-    facilityExposurePeriod,
-    facilityGuaranteeDates,
+    premiumScheduleParameters,
   );
   if (!postPremiumScheduleResponse) {
     console.log('no postPremiumScheduleResponse');
     return res.status(400).send();
   }
   if (postPremiumScheduleResponse === 200 || postPremiumScheduleResponse === 201) {
-    const response = await getScheduleData(Number(facility.ukefFacilityID));
+    const response = await getScheduleData(Number(premiumScheduleParameters.facilityURN));
     if (response.status === 200 || response.status === 201) {
       return res.status(response.status).send(response.data);
     }
   }
-  return new Error(`Error calling Premium schedule. Facility:${facility.ukefFacilityId}`);
+  return new Error(`Error calling Premium schedule. Facility:${premiumScheduleParameters.facilityURN}`);
 };
 exports.getPremiumSchedule = getPremiumSchedule;
