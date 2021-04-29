@@ -299,7 +299,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
 
 const getPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   console.log(facility, facilityExposurePeriod, facilityGuaranteeDates);
-  return false;
+  return null;
   // try {
   //   const response = await axios({
   //     method: 'get',
