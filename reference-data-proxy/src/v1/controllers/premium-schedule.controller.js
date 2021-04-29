@@ -58,7 +58,6 @@ const getScheduleData = async (facilityURN) => {
 };
 
 const getPremiumSchedule = async (req, res) => {
-  console.log(req, res);
   const { facility, facilityExposurePeriod, facilityGuaranteeDates } = req.body;
   const postPremiumScheduleResponse = await postPremiumSchedule(
     facility,
