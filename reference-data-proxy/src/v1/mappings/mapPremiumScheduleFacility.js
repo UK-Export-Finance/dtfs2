@@ -41,7 +41,7 @@ const isFacilityValidForPremiumSchedule = (
 };
 
 const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
-  if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod)) {
+  if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
     return null;
   }
   const map = {};
@@ -49,20 +49,22 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
   let premiumTypeId = 0;
   let cumulativeAmount = null;
   if (facility.facilityType === 'bond') {
-    switch (facility.feeFrequency.toLowerCase()) {
-      case 'monthly':
-        premiumFrequencyId = 1;
-        break;
-      case 'quarterly':
-        premiumFrequencyId = 2;
-        break;
-      case 'annually':
-        premiumFrequencyId = 4;
-        break;
-      default:
-        throw new Error(
-          `facility.feeFrequency "${facility.feeFrequency}" not valid.`,
-        );
+    if (!facility.feeFrequency) {
+      premiumFrequencyId = 0;
+    } else {
+      switch (facility.feeFrequency.toLowerCase()) {
+        case 'monthly':
+          premiumFrequencyId = 1;
+          break;
+        case 'quarterly':
+          premiumFrequencyId = 2;
+          break;
+        case 'annually':
+          premiumFrequencyId = 4;
+          break;
+        default:
+          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+      }
     }
     switch (facility.feeType.toLowerCase()) {
       case 'in advance':
@@ -78,20 +80,22 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
         throw new Error(`facility.feeType "${facility.feeType}" not valid.`);
     }
   } else {
-    switch (facility.premiumFrequency.toLowerCase()) {
-      case 'monthly':
-        premiumFrequencyId = 1;
-        break;
-      case 'quarterly':
-        premiumFrequencyId = 2;
-        break;
-      case 'annually':
-        premiumFrequencyId = 4;
-        break;
-      default:
-        throw new Error(
-          `facility.premiumFrequency "${facility.premiumFrequency}" not valid.`,
-        );
+    if (!facility.premiumFrequency) {
+      premiumFrequencyId = 0;
+    } else {
+      switch (facility.premiumFrequency.toLowerCase()) {
+        case 'monthly':
+          premiumFrequencyId = 1;
+          break;
+        case 'quarterly':
+          premiumFrequencyId = 2;
+          break;
+        case 'annually':
+          premiumFrequencyId = 4;
+          break;
+        default:
+          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+      }
     }
     switch (facility.premiumType.toLowerCase()) {
       case 'in advance':
@@ -108,8 +112,10 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
           `facility.premiumType "${facility.premiumType}" not valid.`,
         );
     }
+
     cumulativeAmount = Number(facility.disbursementAmount);
   }
+
   map.facilityURN = Number(facility.ukefFacilityID);
   map.productGroup = facility.facilityType === 'bond' ? 'BS' : 'EW';
   map.premiumTypeId = premiumTypeId;
@@ -118,6 +124,7 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
   map.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;
   map.guaranteeFeePercentage = Number(facility.guaranteeFeePayableByBank);
   map.guaranteePercentage = Number(facility.coveredPercentage);
+
   map.dayBasis = facility.dayCountBasis;
   map.exposurePeriod = facilityExposurePeriod
     ? facilityExposurePeriod.exposurePeriodInMonths
@@ -128,4 +135,5 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
     : 0;
   return [map];
 };
+
 module.exports = mapPremiumScheduleFalicity;
