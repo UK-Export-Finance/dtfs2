@@ -13,10 +13,12 @@ const mapTenorDate = (facility, facilityTfm) => {
 
   let period;
 
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
-    period = facility.ukefGuaranteeInMonths;
-  } else if (facilityTfm.exposurePeriodInMonths) {
+  if (facilityTfm.exposurePeriodInMonths) {
     period = facilityTfm.exposurePeriodInMonths;
+  } else if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
+    period = facility.ukefGuaranteeInMonths;
+  } else if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED) {
+    period = facility.ukefGuaranteeInMonths;
   }
 
   if (period) {
