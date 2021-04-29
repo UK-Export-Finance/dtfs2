@@ -297,7 +297,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
   }
 };
 
-const getPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
+const getPremiumSchedule = async (premiumScheduleParameters) => {
   try {
     const response = await axios({
       method: 'get',
@@ -306,9 +306,7 @@ const getPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuar
         'Content-Type': 'application/json',
       },
       data: {
-        facility,
-        facilityExposurePeriod,
-        facilityGuaranteeDates,
+        premiumScheduleParameters,
       },
     });
     console.log(`response from premium-schedule:${response.status}`);
