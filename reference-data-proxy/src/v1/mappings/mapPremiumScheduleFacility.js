@@ -1,54 +1,42 @@
 const isFacilityValidForPremiumSchedule = (
   facility,
   facilityExposurePeriod,
+  facilityGuaranteeDates,
 ) => {
   if (!facilityExposurePeriod || facilityExposurePeriod < 1) {
     return false;
   }
   if (facility.facilityType === 'bond') {
-    if (!facility.feeFrequency) {
-      return false;
-    }
     if (!facility.feeType) {
       return false;
     }
-  } else {
-    if (!facility.premiumFrequency) {
-      return false;
-    }
-    if (!facility.premiumType) {
-      return false;
-    }
+  } else if (!facility.premiumType) {
+    return false;
   }
   if (!facility.ukefFacilityID) {
     return false;
   }
-  if (!facility.requestedCoverStartDate
-    && (!facility['requestedCoverStartDate-year']
-          || !facility['requestedCoverStartDate-month']
-          || !facility['requestedCoverStartDate-day'])) {
+  if (!facilityGuaranteeDates.guaranteeCommencementDate) {
     return false;
   }
-
-  if (!facility.coverEndDate
-    && (!facility['coverEndDate-year']
-          || !facility['coverEndDate-month']
-          || !facility['coverEndDate-day'])) {
+  if (!facilityGuaranteeDates.guaranteeExpiryDate) {
     return false;
   }
-
   if (!facility.guaranteeFeePayableByBank) {
     return false;
   }
   if (!facility.coveredPercentage) {
     return false;
   }
+
   if (!facility.dayCountBasis) {
     return false;
   }
+
   if (!facility.ukefExposure) {
     return false;
   }
+
   return true;
 };
 
