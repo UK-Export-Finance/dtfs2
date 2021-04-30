@@ -15,13 +15,19 @@ const mapTenorDate = (facility, facilityTfm) => {
 
   if (facilityTfm.exposurePeriodInMonths) {
     period = facilityTfm.exposurePeriodInMonths;
-  } else if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
-    period = facility.ukefGuaranteeInMonths;
-  } else if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED) {
-    period = facility.ukefGuaranteeInMonths;
+
+    return `${period} ${monthString(period)}`;
   }
 
-  if (period) {
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
+    period = facility.ukefGuaranteeInMonths;
+
+    return `${period} ${monthString(period)}`;
+  }
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED) {
+    period = facility.ukefGuaranteeInMonths;
+
     return `${period} ${monthString(period)}`;
   }
 
