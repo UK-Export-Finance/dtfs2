@@ -5,7 +5,6 @@ const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
 // TODO: add unit test
 // so that when this is changed, tests fail.
-
 const dealReducer = (deal) => {
   const {
     tfm: dealTfm,
