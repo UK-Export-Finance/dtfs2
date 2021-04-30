@@ -38,15 +38,16 @@ const createFacilityGuarantee = async (context) => {
   const { status, data } = await api.createFacilityGuarantee(acbsFacilityGuaranteeInput);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Facility Guarantee create error. 
-      status: ${status},
-      facilityIdentifier: ${acbsFacilityGuaranteeInput.facilityIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(acbsFacilityGuaranteeInput, null, 4)}
-     `);
+    throw new Error(
+      JSON.stringify({
+        name: 'ACBS Facility Guarantee create error',
+        dealIdentifier: acbsFacilityGuaranteeInput.dealIdentifier,
+        submittedToACBS,
+        receivedFromACBS: moment().format(),
+        dataReceived: data,
+        dataSent: acbsFacilityGuaranteeInput,
+      }, null, 4),
+    );
   }
 
   return {

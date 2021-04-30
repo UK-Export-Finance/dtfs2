@@ -57,14 +57,16 @@ const createFacilityMaster = async (context) => {
   const { status, data } = await api.createFacility(acbsFacilityMasterInput);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Facility create error. 
-      dealIdentifier: ${acbsFacilityMasterInput.dealIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      datSent: ${JSON.stringify(acbsFacilityMasterInput, null, 4)}
-     `);
+    throw new Error(
+      JSON.stringify({
+        name: 'ACBS Facility Master create error',
+        dealIdentifier: acbsFacilityMasterInput.dealIdentifier,
+        submittedToACBS,
+        receivedFromACBS: moment().format(),
+        dataReceived: data,
+        dataSent: acbsFacilityMasterInput,
+      }, null, 4),
+    );
   }
 
   return {

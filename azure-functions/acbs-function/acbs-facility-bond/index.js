@@ -12,13 +12,9 @@
 const df = require('durable-functions');
 const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
+const retryOptions = require('../helpers/retryOptions');
 
 module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
-  const firstRetryIntervalInMilliseconds = 5000;
-  const maxNumberOfAttempts = 3;
-
-  const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
-
   const {
     deal, facility, dealAcbsData,
   } = context.df.getInput();
@@ -33,28 +29,28 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   // Facility Covenant
   const acbsFacilityBondCovenantInput = mappings.facility.facilityCovenant(deal, facility, convenantCode);
 
-  const facilityCovenantChargeable = yield context.df.callActivity(
+  const facilityCovenantChargeable = yield context.df.callActivityWithRetry(
     'activity-create-facility-covenant',
-    { acbsFacilityCovenantInput: acbsFacilityBondCovenantInput },
     retryOptions,
+    { acbsFacilityCovenantInput: acbsFacilityBondCovenantInput },
   );
 
 
   const parties = {};
   // Create facility parties
   if (facility.tfm.bondIssuerPartyUrn) {
-    parties.bondIssuer = yield context.df.callActivity(
+    parties.bondIssuer = yield context.df.callActivityWithRetryWithRetry(
       'activity-create-party',
-      { party: mappings.party.bondIssuer({ deal, facility }) },
       retryOptions,
+      { party: mappings.party.bondIssuer({ deal, facility }) },
     );
   }
 
   if (facility.tfm.bondBeneficiaryPartyUrn) {
-    parties.bondBeneficiary = yield context.df.callActivity(
+    parties.bondBeneficiary = yield context.df.callActivityWithRetry(
       'activity-create-party',
-      { party: mappings.party.bondBeneficiary({ deal, facility }) },
       retryOptions,
+      { party: mappings.party.bondBeneficiary({ deal, facility }) },
     );
   }
 
@@ -66,10 +62,10 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER,
   );
 
-  const facilityBondIssuerGuarantee = yield context.df.callActivity(
+  const facilityBondIssuerGuarantee = yield context.df.callActivityWithRetry(
     'activity-create-facility-guarantee',
-    { acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput },
     retryOptions,
+    { acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput },
   );
 
   const acbsFacilityBondBeneficiaryGuaranteeInput = mappings.facility.facilityGuarantee(
@@ -79,10 +75,10 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY,
   );
 
-  const facilityBondBeneficiaryGuarantee = yield context.df.callActivity(
+  const facilityBondBeneficiaryGuarantee = yield context.df.callActivityWithRetry(
     'activity-create-facility-guarantee',
-    { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
     retryOptions,
+    { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
   );
 
 

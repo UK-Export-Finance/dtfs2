@@ -36,15 +36,15 @@ const createDealGuarantee = async (context) => {
   const { status, data } = await api.createDealGuarantee(guarantee);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Deal Guarantee create error. 
-      status: ${status},
-      dealIdentifier: ${guarantee.dealIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(guarantee, null, 4)}
-     `);
+    throw new Error(JSON.stringify({
+      name: 'ACBS Deal Guarantee create error',
+      status,
+      dealIdentifier: guarantee.dealIdentifier,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      dataReceived: data,
+      dataSent: guarantee,
+    }, null, 4));
   }
 
   return {

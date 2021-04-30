@@ -51,14 +51,14 @@ const createFacilityCovenant = async (context) => {
   const submittedToACBS = moment().format();
   const { status, data } = await api.createFacilityCovenant(acbsFacilityCovenantInput);
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Facility covenant create error. 
-      dealIdentifier: ${acbsFacilityCovenantInput.dealIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(acbsFacilityCovenantInput, null, 4)}
-     `);
+    throw new Error(JSON.stringify({
+      name: 'ACBS Facility Covenant create error',
+      dealIdentifier: acbsFacilityCovenantInput.dealIdentifier,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      dataReceived: data,
+      dataSent: acbsFacilityCovenantInput,
+    }, null, 4));
   }
 
   return {

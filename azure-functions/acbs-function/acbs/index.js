@@ -11,28 +11,24 @@
 
 const df = require('durable-functions');
 const mappings = require('../mappings');
+const retryOptions = require('../helpers/retryOptions');
 
 module.exports = df.orchestrator(function* acbsDeal(context) {
-  const firstRetryIntervalInMilliseconds = 5000;
-  const maxNumberOfAttempts = 3;
-
-  const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
-
   const { deal, bank } = context.df.getInput();
 
   // Get ACBS industry code
   const industryCode = deal.dealSnapshot.submissionDetails['industry-class']
                         && deal.dealSnapshot.submissionDetails['industry-class'].code;
   const acbsReference = {
-    supplierAcbsIndustryCode: yield context.df.callActivity('activity-get-acbs-industry-sector', { industryCode }, retryOptions),
+    supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, { industryCode }),
   };
 
   // Create Parties
-  const exporterTask = context.df.callActivity('activity-create-party', { party: mappings.party.exporter({ deal, acbsReference }) }, retryOptions);
-  const buyerTask = context.df.callActivity('activity-create-party', { party: mappings.party.buyer({ deal }) }, retryOptions);
-  const agentTask = context.df.callActivity('activity-create-party', { party: mappings.party.agent({ deal }) }, retryOptions);
-  const indemnifierTask = context.df.callActivity('activity-create-party', { party: mappings.party.indemnifier({ deal }) }, retryOptions);
-  const bankTask = context.df.callActivity('activity-create-party', { party: mappings.party.bank({ bank }) }, retryOptions);
+  const exporterTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.exporter({ deal, acbsReference }) });
+  const buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.buyer({ deal }) });
+  const agentTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.agent({ deal }) });
+  const indemnifierTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.indemnifier({ deal }) });
+  const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.bank({ bank }) });
 
   // Party tasks are run in parallel so wait for them all to be finished.
   yield context.df.Task.all([exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
@@ -51,19 +47,19 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
     deal, parties.exporter.partyIdentifier, acbsReference,
   );
 
-  const dealRecord = yield context.df.callActivity('activity-create-deal', { deal: acbsDealInput }, retryOptions);
+  const dealRecord = yield context.df.callActivityWithRetry('activity-create-deal', retryOptions, { deal: acbsDealInput });
 
   // Create Deal investor
   const acbsDealInvestorInput = mappings.deal.dealInvestor(deal);
 
-  const dealInvestorRecord = yield context.df.callActivity('activity-create-deal-investor', { investor: acbsDealInvestorInput }, retryOptions);
+  const dealInvestorRecord = yield context.df.callActivityWithRetry('activity-create-deal-investor', retryOptions, { investor: acbsDealInvestorInput });
 
   // Create Deal Guarantee
   const dealGuaranteeLimitKey = parties.indemnifier.partyIdentifier
                                 || parties.exporter.partyIdentifier;
 
   const acbsDealGuaranteeInput = mappings.deal.dealGuarantee(deal, dealGuaranteeLimitKey);
-  const dealGuaranteeRecord = yield context.df.callActivity('activity-create-deal-guarantee', { guarantee: acbsDealGuaranteeInput }, retryOptions);
+  const dealGuaranteeRecord = yield context.df.callActivityWithRetry('activity-create-deal-guarantee', retryOptions, { guarantee: acbsDealGuaranteeInput });
 
   const dealAcbsData = {
     parties,
@@ -72,9 +68,13 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
     guarantee: dealGuaranteeRecord,
   };
 
-  const facilityTasks = deal.dealSnapshot.facilities.map((facility) => context.df.callSubOrchestrator('acbs-facility', {
-    deal, facility, dealAcbsData, acbsReference, bank,
-  }));
+  const facilityTasks = deal.dealSnapshot.facilities.map((facility) => context.df.callSubOrchestrator(
+    'acbs-facility',
+    {
+      deal, facility, dealAcbsData, acbsReference, bank,
+    },
+  ));
+
   yield context.df.Task.all([...facilityTasks]);
 
   return {
