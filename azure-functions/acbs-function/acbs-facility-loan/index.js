@@ -12,13 +12,9 @@
 const df = require('durable-functions');
 const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
+const retryOptions = require('../helpers/retryOptions');
 
 module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
-  const firstRetryIntervalInMilliseconds = 5000;
-  const maxNumberOfAttempts = 3;
-
-  const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
-
   const {
     deal, facility, dealAcbsData,
   } = context.df.getInput();
@@ -38,16 +34,16 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
   );
 
-  const facilityProviderTask = context.df.callActivity(
+  const facilityProviderTask = context.df.callActivityWithRetry(
     'activity-create-facility-guarantee',
-    { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
     retryOptions,
+    { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
   );
 
-  const facilityBuyerTask = context.df.callActivity(
+  const facilityBuyerTask = context.df.callActivityWithRetry(
     'activity-create-facility-guarantee',
-    { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
     retryOptions,
+    { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
   );
   yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
 

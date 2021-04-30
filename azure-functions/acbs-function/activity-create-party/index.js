@@ -36,16 +36,15 @@ const createParty = async (context) => {
   const { status, data } = await api.createParty(party);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Party create error. 
-      status: ${status},
-      UKEF_ID: ${party.alternateIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
+    throw new Error(JSON.stringify({
+      name: 'ACBS Party create error',
       status,
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(party, null, 4)}
-     `);
+      UKEF_ID: party.alternateIdentifier,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      dataReceived: data,
+      dataSent: party,
+    }, null, 4));
   }
 
   return {

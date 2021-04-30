@@ -36,14 +36,18 @@ const createFacilityInvestor = async (context) => {
   const { status, data } = await api.createFacilityInvestor(acbsFacilityInvestorInput);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Facility Investor create error. 
-      dealIdentifier: ${acbsFacilityInvestorInput.dealIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(acbsFacilityInvestorInput, null, 4)}
-     `);
+    console.log('XXXX');
+    console.log({ data });
+    throw new Error(
+      JSON.stringify({
+        name: 'ACBS Facility Investor create error',
+        dealIdentifier: acbsFacilityInvestorInput.dealIdentifier,
+        submittedToACBS,
+        receivedFromACBS: moment().format(),
+        dataReceived: data,
+        dataSent: acbsFacilityInvestorInput,
+      }, null, 4),
+    );
   }
 
   return {

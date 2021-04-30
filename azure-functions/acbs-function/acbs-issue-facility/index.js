@@ -10,34 +10,29 @@
  */
 
 const df = require('durable-functions');
-
+const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 
 module.exports = df.orchestrator(function* updateACBSfacility(context) {
-  const firstRetryIntervalInMilliseconds = 5000;
-  const maxNumberOfAttempts = 3;
-
-  const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
-
   const {
     facilityId, facility, supplierName,
   } = context.df.getInput();
 
   // Facility Master
-  const { acbsFacility, etag } = yield context.df.callActivity(
+  const { acbsFacility, etag } = yield context.df.callActivityWithRetry(
     'activity-get-facility-master',
-    { facilityId },
     retryOptions,
+    { facilityId },
   );
 
   const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facility, acbsFacility, supplierName);
 
-  const issuedFacilityMaster = yield context.df.callActivity(
+  const issuedFacilityMaster = yield context.df.callActivityWithRetry(
     'activity-update-facility-master',
+    retryOptions,
     {
       facilityId, acbsFacilityMasterInput, updateType: 'issue', etag,
     },
-    retryOptions,
   );
 
   return {

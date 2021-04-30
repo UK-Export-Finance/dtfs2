@@ -34,15 +34,15 @@ const createDealInvestor = async (context) => {
   const { status, data } = await api.createDealInvestor(investor);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Deal Investor create error. 
-      status: ${status}
-      dealIdentifier: ${investor.dealIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(investor, null, 4)}
-     `);
+    throw new Error(JSON.stringify({
+      name: 'ACBS Deal Investor create error',
+      status,
+      dealIdentifier: investor.dealIdentifier,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      dataReceived: data,
+      dataSent: investor,
+    }, null, 4));
   }
 
   return {

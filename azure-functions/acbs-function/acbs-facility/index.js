@@ -10,80 +10,89 @@
  */
 
 const df = require('durable-functions');
+const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 
 module.exports = df.orchestrator(function* createACBSfacility(context) {
-  const firstRetryIntervalInMilliseconds = 5000;
-  const maxNumberOfAttempts = 3;
-
-  const retryOptions = new df.RetryOptions(firstRetryIntervalInMilliseconds, maxNumberOfAttempts);
-
   const {
     deal, facility, dealAcbsData, acbsReference,
   } = context.df.getInput();
 
   const { facilitySnapshot } = facility;
 
+  try {
   // Facility Master
-  const acbsFacilityMasterInput = mappings.facility.facilityMaster(
-    deal, facility, dealAcbsData, acbsReference,
-  );
+    const acbsFacilityMasterInput = mappings.facility.facilityMaster(
+      deal, facility, dealAcbsData, acbsReference,
+    );
 
-  const facilityMaster = yield context.df.callActivity(
-    'activity-create-facility-master',
-    { acbsFacilityMasterInput },
-    retryOptions,
-  );
+    const facilityMaster = yield context.df.callActivityWithRetry(
+      'activity-create-facility-master',
+      retryOptions,
+      { acbsFacilityMasterInput },
+    );
 
-  // Facility Investor
-  const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
+    // Facility Investor
+    const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
 
-  const facilityInvestor = yield context.df.callActivity(
-    'activity-create-facility-investor',
-    { acbsFacilityInvestorInput },
-    retryOptions,
-  );
+    const facilityInvestor = yield context.df.callActivityWithRetry(
+      'activity-create-facility-investor',
+      retryOptions,
+      { acbsFacilityInvestorInput },
+    );
 
-  // Facility Covenant
-  const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(
-    deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
-  );
-  const facilityCovenant = yield context.df.callActivity(
-    'activity-create-facility-covenant',
-    { acbsFacilityCovenantInput },
-    retryOptions,
-  );
+    // Facility Covenant
+    const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(
+      deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
+    );
+    const facilityCovenant = yield context.df.callActivityWithRetry(
+      'activity-create-facility-covenant',
+      retryOptions,
+      { acbsFacilityCovenantInput },
+    );
 
-  let facilityTypeSpecific = {};
+    let facilityTypeSpecific = {};
 
-  if (facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
-    facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-loan', {
-      deal, facility, dealAcbsData,
-    });
-  } else {
-    facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-bond', {
-      deal, facility, dealAcbsData,
-    });
-  }
+    if (facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
+      facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-loan', {
+        deal, facility, dealAcbsData,
+      });
+    } else {
+      facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-bond', {
+        deal, facility, dealAcbsData,
+      });
+    }
 
-  // Activate bundle
-  const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction(deal, facility);
+    // Activate bundle
+    const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction(deal, facility);
 
-  const codeValueTransaction = yield context.df.callActivity(
-    'activity-create-code-value-transaction',
-    { acbsCodeValueTransactionInput },
-    retryOptions,
-  );
+    const codeValueTransaction = yield context.df.callActivity(
+      'activity-create-code-value-transaction',
+      { acbsCodeValueTransactionInput },
+      retryOptions,
+    );
 
-  return {
+    return {
     // eslint-disable-next-line no-underscore-dangle
-    facilityId: facility._id,
-    facilityStage: facility.facilitySnapshot.facilityStage,
-    facilityMaster,
-    facilityInvestor,
-    facilityCovenant,
-    ...facilityTypeSpecific,
-    codeValueTransaction,
-  };
+      facilityId: facility._id,
+      facilityStage: facility.facilitySnapshot.facilityStage,
+      facilityMaster,
+      facilityInvestor,
+      facilityCovenant,
+      ...facilityTypeSpecific,
+      codeValueTransaction,
+    };
+  } catch ({ message }) {
+    const [type, errorDetails] = message.split('Error: ');
+
+    return {
+      error: {
+        type,
+        details: JSON.parse(errorDetails),
+      },
+    };
+    //    throw new Error(err);
+    //    return Promise.resolve(err);
+  }
 });

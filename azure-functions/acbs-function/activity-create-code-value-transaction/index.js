@@ -32,16 +32,15 @@ const createCodeValueTransaction = async (context) => {
   const { status, data } = await api.createCodeValueTransaction(acbsCodeValueTransactionInput);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(`
-      ACBS Party create error. 
-      status: ${status},
-      UKEF_ID: ${acbsCodeValueTransactionInput.facilityIdentifier}, 
-      submittedToACBS: ${submittedToACBS}, 
-      receivedFromACBS: ${moment().format()}, 
+    throw new Error(JSON.stringify({
+      name: 'ACBS Party create error',
       status,
-      dataReceived: ${JSON.stringify(data, null, 4)}
-      dataSent: ${JSON.stringify(acbsCodeValueTransactionInput, null, 4)}
-     `);
+      dealIdentifier: acbsCodeValueTransactionInput.dealIdentifier,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      dataReceived: data,
+      dataSent: acbsCodeValueTransactionInput,
+    }, null, 4));
   }
 
   return {
