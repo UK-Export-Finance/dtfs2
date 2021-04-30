@@ -16,34 +16,68 @@ describe('POST underwriting - validate submitted values', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return validationErrors when `decision` is `Approve with conditions` but no `c`', () => {
-    const result = validateSubmittedValues({
-      decision: 'Approve with conditions',
-      approveWithConditionsComments: '',
+  describe('when `decision` is `Approve with conditions`', () => {
+    it('should return validationErrors when there is no `approveWithConditionsComments`', () => {
+      const result = validateSubmittedValues({
+        decision: 'Approve with conditions',
+        approveWithConditionsComments: '',
+      });
+
+      const expected = generateValidationError(
+        'approveWithConditionsComments',
+        'Enter conditions',
+        1,
+      );
+
+      expect(result).toEqual(expected);
     });
 
-    const expected = generateValidationError(
-      'approveWithConditionsComments',
-      'Enter conditions',
-      1,
-    );
+    it('should return validationErrors when `approveWithConditionsComments` is over 1000 characters', () => {
+      const result = validateSubmittedValues({
+        decision: 'Approve with conditions',
+        approveWithConditionsComments: 'a'.repeat(1001),
+      });
 
-    expect(result).toEqual(expected);
+      const expected = generateValidationError(
+        'approveWithConditionsComments',
+        'Conditions must be 1000 or fewer',
+        1,
+      );
+
+      expect(result).toEqual(expected);
+    });
   });
 
-  it('should return validationErrors when `decision` is `Decline` but no `declineComments`', () => {
-    const result = validateSubmittedValues({
-      decision: 'Decline',
-      declineComments: '',
+  describe('when `decision` is `Decline`', () => {
+    it('should return validationErrors when there is no `declineComments`', () => {
+      const result = validateSubmittedValues({
+        decision: 'Decline',
+        declineComments: '',
+      });
+
+      const expected = generateValidationError(
+        'declineComments',
+        'Enter reasons',
+        1,
+      );
+
+      expect(result).toEqual(expected);
     });
 
-    const expected = generateValidationError(
-      'declineComments',
-      'Enter reasons',
-      1,
-    );
+    it('should return validationErrors when `declineComments` is over 1000 characters', () => {
+      const result = validateSubmittedValues({
+        decision: 'Decline',
+        declineComments: 'a'.repeat(1001),
+      });
 
-    expect(result).toEqual(expected);
+      const expected = generateValidationError(
+        'declineComments',
+        'Reasons must be 1000 or fewer',
+        1,
+      );
+
+      expect(result).toEqual(expected);
+    });
   });
 
   it('should return false when there are no validationErrors', () => {
