@@ -378,7 +378,7 @@ describe('/v1/deals', () => {
           expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
         });
 
-        it('should update loan.exposurePeriodInMonths', async () => {)
+        it('should update loan.exposurePeriodInMonths', async () => {
           const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
