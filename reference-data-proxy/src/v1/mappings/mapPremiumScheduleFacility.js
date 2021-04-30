@@ -52,12 +52,16 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
     if (!facility.feeFrequency) {
       premiumFrequencyId = 0;
     } else {
+      // TODO: change to constants
       switch (facility.feeFrequency.toLowerCase()) {
         case 'monthly':
           premiumFrequencyId = 1;
           break;
         case 'quarterly':
           premiumFrequencyId = 2;
+          break;
+        case 'semi-annually':
+          premiumFrequencyId = 3;
           break;
         case 'annually':
           premiumFrequencyId = 4;
