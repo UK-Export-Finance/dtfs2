@@ -180,6 +180,9 @@ module.exports = {
       },
     };
   },
+  getFacilityExposurePeriod: () => ({
+    exposurePeriodInMonths: 12,
+  }),
   getPartyDbInfo: ({ companyRegNo }) => (
     companyRegNo === 'NO_MATCH'
       ? false

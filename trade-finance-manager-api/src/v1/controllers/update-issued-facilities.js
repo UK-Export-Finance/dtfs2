@@ -1,5 +1,6 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
+const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
@@ -33,20 +34,33 @@ const updatedIssuedFacilities = async (deal) => {
       const loanIsNowIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL)
         && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL));
 
-      const shouldChangeStatus = (bondIsNowIssued || loanIsNowIssued);
+      const shouldUpdateFacility = (bondIsNowIssued || loanIsNowIssued);
 
-      if (shouldChangeStatus) {
+      if (shouldUpdateFacility) {
         shouldUpdateCount += 1;
 
+        // update portal facility status
         const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
-
         const updatedFacility = await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
-        // update deal object to return in response
+
+        // update TFM facility exposure period / AKA 'Tenor'
+        const { exposurePeriodInMonths } = await getFacilityExposurePeriod(facility);
+        const tfmFacilityUpdate = { exposurePeriodInMonths };
+        await api.updateFacility(facilityId, tfmFacilityUpdate);
+
+        // update object to return in response
+        const updatedFacilityResponseObj = {
+          ...updatedFacility,
+          tfm: {
+            ...tfmFacilityUpdate,
+          },
+        };
+
         if (facilityType === 'bond') {
-          bonds.push(updatedFacility);
+          bonds.push(updatedFacilityResponseObj);
         } else if (facilityType === 'loan') {
-          loans.push(updatedFacility);
+          loans.push(updatedFacilityResponseObj);
         }
 
         updatedCount += 1;

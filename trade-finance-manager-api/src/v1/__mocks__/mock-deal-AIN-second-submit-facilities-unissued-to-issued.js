@@ -191,6 +191,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         'coverEndDate-day': '20',
         'coverEndDate-month': '10',
         'coverEndDate-year': '2020',
+        requestedCoverStartDate: 1610369832226.0,
         status: 'Submitted',
       },
     ],
