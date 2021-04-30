@@ -337,31 +337,57 @@ describe('/v1/deals', () => {
     });
 
     describe('AIN deal - on second submission', () => {
-      it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
-        // check status before calling submit endpoint
-        const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+      describe('when a facilityStage changes from `Unissued` to `Issued`', () => {
+        it('should update bond status to `Acknowledged`', async () => {
+          // check status before calling submit endpoint
+          const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
 
-        expect(initialBond.status).toEqual('Submitted');
+          expect(initialBond.status).toEqual('Submitted');
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
 
-        expect(status).toEqual(200);
+          expect(status).toEqual(200);
 
-        const updatedBond = body.dealSnapshot.bondTransactions.items[0];
-        expect(updatedBond.status).toEqual('Acknowledged by UKEF');
+          const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+          expect(updatedBond.status).toEqual('Acknowledged by UKEF');
+        });
+
+        it('should update bond.exposurePeriodInMonths', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+          const expected = 12; // value is declared in mock api response.
+          expect(updatedBond.tfm.exposurePeriodInMonths).toEqual(expected);
+        });
       });
 
-      it('should update loan status to `Acknowledged` if the facilityStage changes from `Conditional` to `Unconditional`', async () => {
-        // check status before calling submit endpoint
-        const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
-        expect(initialLoan.status).toEqual('Submitted');
+      describe('when a facilityStage changes from `Conditional` to `Unconditional`', () => {
+        it('should update loan status to `Acknowledged`', async () => {
+          // check status before calling submit endpoint
+          const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
+          expect(initialLoan.status).toEqual('Submitted');
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
 
-        expect(status).toEqual(200);
+          expect(status).toEqual(200);
 
-        const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
-        expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+          const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+          expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+        });
+
+        it('should update loan.exposurePeriodInMonths', async () => {)
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+          const expected = 12; // value is declared in mock api response.
+          expect(updatedLoan.tfm.exposurePeriodInMonths).toEqual(expected);
+        });
       });
 
       it('should update ACBS`', async () => {
