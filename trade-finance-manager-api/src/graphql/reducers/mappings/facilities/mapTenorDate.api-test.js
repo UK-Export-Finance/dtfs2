@@ -97,9 +97,9 @@ describe('mapTenorDate', () => {
     });
   });
 
-  it('should return null when there is no exposurePeriodInMonths', () => {
+  it('should return null', () => {
     const mockFacility = {
-      facilityStage: 'Issued',
+      facilityStage: '',
     };
 
     const mockFacilityTfm = {};
