@@ -4,6 +4,7 @@ const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
 const now = require('../../now');
+const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -95,8 +96,26 @@ const updateTfmUnderwriterManagersDecision = async (
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
+
+  const newPortalStatus = mapTfmDealStageToPortalStatus(decision);
+
+  await api.updatePortalDealStatus(
+    dealId,
+    newPortalStatus,
+  );
+
+  let portalCommentType = 'ukefComments';
+
+  if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.APPROVED_WITH_CONDITIONS) {
+    let portalCommentType = 'specialConditions';
+  }
+
+  api.addPortalDealComment(
+    dealId,
+    portalCommentType,
+    comments,
+  );
 
   return updatedDeal.tfm;
 };

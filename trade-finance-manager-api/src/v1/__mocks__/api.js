@@ -97,6 +97,11 @@ module.exports = {
     };
     return Promise.resolve(updatedFacility);
   },
+  addPortalDealComment: (dealId, commentType, comment) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    return Promise.resolve(deal);
+  },
   queryDeals: () => ALL_MOCK_DEALS,
   updateDeal: (dealId, updatedTfmDealData) => {
     let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
