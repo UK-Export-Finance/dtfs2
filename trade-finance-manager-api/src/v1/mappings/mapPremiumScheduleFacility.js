@@ -1,3 +1,59 @@
+const CONSTANTS = require('../../constants');
+
+function GetPremiumFrequencyId(facility) {
+  let premiumFrequencyId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.UNDEFINED;
+
+  let searchString = '';
+  if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+    searchString = facility.feeFrequency ? facility.feeFrequency.toLowerCase() : '';
+  } else {
+    searchString = facility.premiumFrequency ? facility.premiumFrequency.toLowerCase() : '';
+  }
+  if (facility.premiumFrequency) {
+    switch (searchString) {
+      case 'monthly':
+        premiumFrequencyId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.MONTHLY;
+        break;
+      case 'quarterly':
+        premiumFrequencyId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.QUARTERLY;
+        break;
+      case 'semi-annually':
+        premiumFrequencyId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.SEMIANNUALLY;
+        break;
+      case 'annually':
+        premiumFrequencyId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.ANNUALLY;
+        break;
+      default:
+        throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
+    }
+  }
+  return premiumFrequencyId;
+}
+
+function GetPremiumTypeId(facility) {
+  let premiumTypeId = 0;
+  let searchString = '';
+  if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+    searchString = facility.feeType ? facility.feeType.toLowerCase() : '';
+  } else {
+    searchString = facility.premiumType ? facility.premiumType.toLowerCase() : '';
+  }
+  switch (searchString) {
+    case 'in advance':
+      premiumTypeId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.IN_ADVANCE;
+      break;
+    case 'in arrears':
+      premiumTypeId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.IN_ARREARS;
+      break;
+    case 'at maturity':
+      premiumTypeId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.AT_MATURITY;
+      break;
+    default:
+      throw new Error(`facility.feeType "${facility.feeType}" not valid.`);
+  }
+  return premiumTypeId;
+}
+
 const isFacilityValidForPremiumSchedule = (
   facility,
   facilityExposurePeriod,
@@ -6,7 +62,7 @@ const isFacilityValidForPremiumSchedule = (
   if (!facilityExposurePeriod || facilityExposurePeriod < 1) {
     return false;
   }
-  if (facility.facilityType === 'bond') {
+  if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
     if (!facility.feeType) {
       return false;
     }
@@ -48,76 +104,14 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
   let premiumFrequencyId = 0;
   let premiumTypeId = 0;
   let cumulativeAmount = null;
-  if (facility.facilityType === 'bond') {
-    if (!facility.feeFrequency) {
-      premiumFrequencyId = 0;
-    } else {
-      switch (facility.feeFrequency.toLowerCase()) {
-        case 'monthly':
-          premiumFrequencyId = 1;
-          break;
-        case 'quarterly':
-          premiumFrequencyId = 2;
-          break;
-        case 'annually':
-          premiumFrequencyId = 4;
-          break;
-        default:
-          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
-      }
-    }
-    switch (facility.feeType.toLowerCase()) {
-      case 'in advance':
-        premiumTypeId = 1;
-        break;
-      case 'in arrears':
-        premiumTypeId = 2;
-        break;
-      case 'at maturity':
-        premiumTypeId = 3;
-        break;
-      default:
-        throw new Error(`facility.feeType "${facility.feeType}" not valid.`);
-    }
-  } else {
-    if (!facility.premiumFrequency) {
-      premiumFrequencyId = 0;
-    } else {
-      switch (facility.premiumFrequency.toLowerCase()) {
-        case 'monthly':
-          premiumFrequencyId = 1;
-          break;
-        case 'quarterly':
-          premiumFrequencyId = 2;
-          break;
-        case 'annually':
-          premiumFrequencyId = 4;
-          break;
-        default:
-          throw new Error(`facility.feeFrequency "${facility.feeFrequency}" not valid.`);
-      }
-    }
-    switch (facility.premiumType.toLowerCase()) {
-      case 'in advance':
-        premiumTypeId = 1;
-        break;
-      case 'in arrears':
-        premiumTypeId = 2;
-        break;
-      case 'at maturity':
-        premiumTypeId = 3;
-        break;
-      default:
-        throw new Error(
-          `facility.premiumType "${facility.premiumType}" not valid.`,
-        );
-    }
-
-    cumulativeAmount = Number(facility.disbursementAmount);
-  }
+  premiumFrequencyId = GetPremiumFrequencyId(facility);
+  premiumTypeId = GetPremiumTypeId(facility, premiumTypeId);
+  cumulativeAmount = facility.disbursementAmount ? Number(facility.disbursementAmount) : null;
 
   map.facilityURN = Number(facility.ukefFacilityID);
-  map.productGroup = facility.facilityType === 'bond' ? 'BS' : 'EW';
+  map.productGroup = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
+    ? CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.BOND
+    : CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.LOAN;
   map.premiumTypeId = premiumTypeId;
   map.premiumFrequencyId = premiumFrequencyId;
   map.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
