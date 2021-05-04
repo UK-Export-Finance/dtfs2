@@ -91,6 +91,7 @@ const updateTfmUnderwriterManagersDecision = async (
         userFullName,
         timestamp: now(),
       },
+      stage: decision,
     },
   };
 
