@@ -20,7 +20,7 @@
 
         {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
 
-      {% else %}
+      {% elseif userCanEdit %}
         <div class="separator-line govuk-!-padding-top-7">
           <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/managers-decision/edit" data-cy="add-decision-link">Add your decision</a></p>
         </div>
