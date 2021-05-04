@@ -21,7 +21,7 @@ const postPremiumSchedule = async (premiumScheduleParameters) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    premiumScheduleParameters,
+    data: [premiumScheduleParameters],
   };
 
   const response = await axios(config);

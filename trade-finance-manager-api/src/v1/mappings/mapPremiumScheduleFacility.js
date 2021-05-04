@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 
-function GetPremiumFrequencyId(facility) {
+function getPremiumFrequencyId(facility) {
   let premiumFrequencyId = CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.UNDEFINED;
 
   let searchString = '';
@@ -30,7 +30,7 @@ function GetPremiumFrequencyId(facility) {
   return premiumFrequencyId;
 }
 
-function GetPremiumTypeId(facility) {
+function getPremiumTypeId(facility) {
   let premiumTypeId = 0;
   let searchString = '';
   if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
@@ -104,8 +104,8 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
   let premiumFrequencyId = 0;
   let premiumTypeId = 0;
   let cumulativeAmount = null;
-  premiumFrequencyId = GetPremiumFrequencyId(facility);
-  premiumTypeId = GetPremiumTypeId(facility, premiumTypeId);
+  premiumFrequencyId = getPremiumFrequencyId(facility);
+  premiumTypeId = getPremiumTypeId(facility, premiumTypeId);
   cumulativeAmount = facility.disbursementAmount ? Number(facility.disbursementAmount) : null;
 
   map.facilityURN = Number(facility.ukefFacilityID);
@@ -127,7 +127,7 @@ const mapPremiumScheduleFalicity = (facility, facilityExposurePeriod, facilityGu
   map.maximumLiability = facility.ukefExposure
     ? Number(facility.ukefExposure.split('.')[0].replace(/,/g, ''))
     : 0;
-  return [map];
+  return map;
 };
 
 module.exports = mapPremiumScheduleFalicity;

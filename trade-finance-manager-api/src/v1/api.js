@@ -305,9 +305,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {
-        premiumScheduleParameters,
-      },
+      data: premiumScheduleParameters,
     });
     console.log(`response from premium-schedule:${response.status}`);
     if (response.status === 200 || response.status === 201) {
