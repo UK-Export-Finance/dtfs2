@@ -133,7 +133,7 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionFormPage.commentsInputDeclineValidationError().should('be.visible');
   });
 
-  it('after valid form submit, redirects to `/submitted` route and displays submitted values', () => {
+  it('after valid form submit, redirects to `/submitted` route, displays submitted values and updates deal stage', () => {
     const MOCK_COMMENTS = 'Testing';
     const MOCK_INTERNAL_COMMENTS = 'Internal comment';
 
@@ -145,7 +145,7 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionFormPage.submitButton().click();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision/submitted`));
 
-    // assert values are displayed
+    // assert values are displayed in decision page
     pages.managersDecisionPage.decisionStatusTag().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Approved with conditions');
     });
@@ -169,6 +169,12 @@ context('Case Underwriting - Pricing and risk', () => {
 
     pages.managersDecisionPage.internalComments().invoke('text').then((text) => {
       expect(text.trim()).to.equal(MOCK_INTERNAL_COMMENTS);
+    });
+
+    // deal stage
+    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      // text formatting is slightly different to the submitted form value
+      expect(text.trim()).to.equal('Approved (with conditions)');
     });
   });
 
