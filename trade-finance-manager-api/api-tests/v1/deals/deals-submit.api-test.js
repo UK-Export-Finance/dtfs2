@@ -1,5 +1,6 @@
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
+const externalApi = require('../../../src/v1/api');
 
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 
@@ -8,6 +9,7 @@ const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
+const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
 const MOCK_MIA_NOT_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-not-submitted');
@@ -28,6 +30,8 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
+    externalApi.getFacilityExposurePeriod.mockClear();
+    externalApi.getPremiumSchedule.mockClear();
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -169,6 +173,45 @@ describe('/v1/deals', () => {
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
           expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+        });
+      });
+
+      describe('exposure period', () => {
+        it('gets the exposure period  for issued facility', async () => {
+          const { status } = await api.put({ dealId: MOCK_DEAL_ISSUED_FACILITIES._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          expect(externalApi.getFacilityExposurePeriod.mock.calls).toEqual([
+            ['2021-01-11', '2023-01-11', 'bond'],
+            ['2021-01-11', '2023-01-11', 'loan'],
+          ]);
+        });
+
+        it('does not gets the exposure period info for unissued facility', async () => {
+          const { status } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          expect(externalApi.getFacilityExposurePeriod).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('premium scheduler', () => {
+        it('gets the premium scheduler info for issued facility', async () => {
+          const { status } = await api.put({ dealId: MOCK_DEAL_ISSUED_FACILITIES._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          expect(externalApi.getPremiumSchedule.mock.calls).toHaveLength(2);
+        });
+
+        it('does not gets the premium scheduler info for unissued facility', async () => {
+          const { status } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          expect(externalApi.getPremiumSchedule).not.toHaveBeenCalled();
         });
       });
 

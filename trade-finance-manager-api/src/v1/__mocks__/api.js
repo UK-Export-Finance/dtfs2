@@ -2,6 +2,7 @@ const MOCK_DEAL = require('./mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
+const MOCK_DEAL_ISSUED_FACILITIES = require('./mock-deal-issued-facilities');
 const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
@@ -20,6 +21,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
   MOCK_DEAL_FACILITIES_USD_CURRENCY,
+  MOCK_DEAL_ISSUED_FACILITIES,
   MOCK_DEAL_MIN,
   MOCK_DEAL_MIA_SUBMITTED,
   MOCK_DEAL_MIA_NOT_SUBMITTED,
@@ -225,4 +227,16 @@ module.exports = {
     },
   })),
   createEstoreFolders: (deal) => deal,
+  getPremiumSchedule: jest.fn(() => ([
+    {
+      mockPremiumSchedule: 1,
+    },
+  ])),
+  getFacilityExposurePeriod: jest.fn((formattedStartDate,
+    formattedEndDate,
+    facilityType) => (
+    {
+      exposurePeriodInMonths: 10,
+    }
+  )),
 };
