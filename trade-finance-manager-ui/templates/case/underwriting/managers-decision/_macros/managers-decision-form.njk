@@ -13,13 +13,15 @@
     {% set approveWithConditionsCommentsComponentData = {
       id: 'approveWithConditionsComments',
       label: 'Enter conditions (these will be sent to the bank)',
-      validationError: validationErrors.errorList.approveWithConditionsComments
+      validationError: validationErrors.errorList.approveWithConditionsComments,
+      value: submittedValues.approveWithConditionsComments
     } %}
 
     {% set declineCommentsComponentData = {
       id: 'declineComments',
       label: 'Enter reasons (these will be sent to the bank)',
-      validationError: validationErrors.errorList.declineComments
+      validationError: validationErrors.errorList.declineComments,
+      value: submittedValues.declineComments
     } %}
 
     {{govukRadios({

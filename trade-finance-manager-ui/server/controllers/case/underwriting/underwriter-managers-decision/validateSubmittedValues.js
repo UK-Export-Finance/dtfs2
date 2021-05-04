@@ -1,6 +1,6 @@
 import { hasValue } from '../../../../helpers/string';
 import { increment } from '../../../../helpers/number';
-import { generateValidationError } from '../../../../helpers/validation';
+import { generateValidationErrors } from '../../../../helpers/validation';
 
 const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};
@@ -12,15 +12,17 @@ const validateSubmittedValues = (submittedValues) => {
     decision,
     approveWithConditionsComments,
     declineComments,
+    internalComments,
   } = submittedValues;
 
   if (!hasValue(decision)) {
     errorsCount = increment(errorsCount);
 
-    validationErrors = generateValidationError(
+    validationErrors = generateValidationErrors(
       'decision',
       'Select if you approve or decline',
       errorsCount,
+      validationErrors,
     );
   }
 
@@ -28,10 +30,11 @@ const validateSubmittedValues = (submittedValues) => {
     if (!hasValue(approveWithConditionsComments)) {
       errorsCount = increment(errorsCount);
 
-      validationErrors = generateValidationError(
+      validationErrors = generateValidationErrors(
         'approveWithConditionsComments',
         'Enter conditions',
         errorsCount,
+        validationErrors,
       );
     }
 
@@ -39,10 +42,11 @@ const validateSubmittedValues = (submittedValues) => {
       && approveWithConditionsComments.length > MAX_COMMENTS_LENGTH) {
       errorsCount = increment(errorsCount);
 
-      validationErrors = generateValidationError(
+      validationErrors = generateValidationErrors(
         'approveWithConditionsComments',
         `Conditions must be ${MAX_COMMENTS_LENGTH} or fewer`,
         errorsCount,
+        validationErrors,
       );
     }
   }
@@ -51,10 +55,11 @@ const validateSubmittedValues = (submittedValues) => {
     if (!hasValue(declineComments)) {
       errorsCount = increment(errorsCount);
 
-      validationErrors = generateValidationError(
+      validationErrors = generateValidationErrors(
         'declineComments',
         'Enter reasons',
         errorsCount,
+        validationErrors,
       );
     }
 
@@ -62,12 +67,25 @@ const validateSubmittedValues = (submittedValues) => {
       && declineComments.length > MAX_COMMENTS_LENGTH) {
       errorsCount = increment(errorsCount);
 
-      validationErrors = generateValidationError(
+      validationErrors = generateValidationErrors(
         'declineComments',
         `Reasons must be ${MAX_COMMENTS_LENGTH} or fewer`,
         errorsCount,
+        validationErrors,
       );
     }
+  }
+
+  if (hasValue(internalComments)
+    && internalComments.length > MAX_COMMENTS_LENGTH) {
+    errorsCount = increment(errorsCount);
+
+    validationErrors = generateValidationErrors(
+      'internalComments',
+      `Comments must be ${MAX_COMMENTS_LENGTH} or fewer`,
+      errorsCount,
+      validationErrors,
+    );
   }
 
   if (Object.keys(validationErrors).length > 0) {
