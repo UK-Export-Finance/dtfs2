@@ -1,17 +1,41 @@
-const generateValidationError = (fieldId, errorText, count) => ({
+const generateValidationErrors = (
+  fieldId,
+  errorText,
   count,
-  errorList: {
-    [fieldId]: {
+  errors = { errorList: {}, summary: [] },
+) => {
+  let summary = [
+    {
       text: errorText,
-      order: count,
+      href: `#${fieldId}`,
     },
-  },
-  summary: [{
-    text: errorText,
-    href: `#${fieldId}`,
-  }],
-});
+  ];
+
+  if (errors && errors.summary && errors.summary.length) {
+    summary = [
+      ...errors.summary,
+      {
+        text: errorText,
+        href: `#${fieldId}`,
+      },
+    ];
+  }
+
+  const result = {
+    count,
+    errorList: {
+      ...errors.errorList,
+      [fieldId]: {
+        text: errorText,
+        order: count,
+      },
+    },
+    summary,
+  };
+
+  return result;
+};
 
 module.exports = {
-  generateValidationError,
+  generateValidationErrors,
 };
