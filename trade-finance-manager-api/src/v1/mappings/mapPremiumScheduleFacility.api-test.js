@@ -95,7 +95,7 @@ describe('Premium schedule', () => {
         guaranteeExpiryDate: '2023-05-01',
       };
       const result = mapPremiumScheduleFacility(facility, facilityExposurePeriod, facilityGuaranteeDates);
-      const expected = [{
+      const expected = {
         cumulativeAmount: null,
         dayBasis: '360',
         exposurePeriod: 25,
@@ -105,10 +105,10 @@ describe('Premium schedule', () => {
         guaranteeFeePercentage: 1.08,
         guaranteePercentage: 80,
         maximumLiability: 1920,
-        premiumFrequencyId: 0,
+        premiumFrequencyId: 1,
         premiumTypeId: 1,
         productGroup: 'BS',
-      }];
+      };
       expect(result).toEqual(expected);
     });
   });
