@@ -48,7 +48,7 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/submitted', underwritingController.getUnderwriterManagersDecisionSubmitted);
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 
 
     // POST routes
@@ -72,6 +72,6 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision', underwritingController.postUnderwriterManagersDecision);
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
   });
 });

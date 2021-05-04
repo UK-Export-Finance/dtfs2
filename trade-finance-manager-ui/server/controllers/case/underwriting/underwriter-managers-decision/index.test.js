@@ -57,6 +57,53 @@ describe('GET underwriting - underwriting managers decision', () => {
     });
   });
 
+  describe('when deal does NOT exist', () => {
+    beforeEach(() => {
+      api.getDeal = () => Promise.resolve();
+    });
+
+    it('should redirect to not-found route', async () => {
+      const req = {
+        params: {
+          _id: '1',
+        },
+        session,
+      };
+
+      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
+      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+    });
+  });
+});
+
+describe('GET underwriting - underwriting managers decision edit', () => {
+  describe('when deal exists', () => {
+    beforeEach(() => {
+      api.getDeal = () => Promise.resolve(mockDeal);
+    });
+
+    it('should render template with data', async () => {
+      const req = {
+        params: {
+          _id: dealId,
+        },
+        session,
+      };
+
+      await underwriterManagersDecisionController.getUnderwriterManagersDecisionEdit(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/edit-managers-decision.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'underwriting',
+        activeSideNavigation: 'underwriter managers decision',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        user: session.user,
+      });
+    });
+  });
+
   describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
     it('should redirect to not-found route', async () => {
       const req = {
@@ -71,38 +118,9 @@ describe('GET underwriting - underwriting managers decision', () => {
         },
       };
 
-      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
+      await underwriterManagersDecisionController.getUnderwriterManagersDecisionEdit(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
-    });
-  });
-
-  describe('when decision has already been made', () => {
-    beforeEach(() => {
-      const mockDealDecided = {
-        ...mockDeal,
-        tfm: {
-          underwriterManagersDecision: {
-            timestamp: '1234',
-            decision: 'Declined',
-          },
-        },
-      };
-
-      api.getDeal = () => Promise.resolve(mockDealDecided);
-    });
-
-    it('should redirect to `/submitted`', async () => {
-      const req = {
-        params: {
-          _id: dealId,
-        },
-        session,
-      };
-
-      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
-
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/managers-decision/submitted`);
     });
   });
 
@@ -119,60 +137,13 @@ describe('GET underwriting - underwriting managers decision', () => {
         session,
       };
 
-      await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
+      await underwriterManagersDecisionController.getUnderwriterManagersDecisionEdit(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
 });
 
-describe('GET underwriting - underwriting managers decision', () => {
-  describe('when deal exists', () => {
-    beforeEach(() => {
-      api.getDeal = () => Promise.resolve(mockDeal);
-    });
-
-    it('should render template with data', async () => {
-      const req = {
-        params: {
-          _id: dealId,
-        },
-        session,
-      };
-
-      await underwriterManagersDecisionController.getUnderwriterManagersDecisionSubmitted(req, res);
-
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
-        activePrimaryNavigation: 'manage work',
-        activeSubNavigation: 'underwriting',
-        activeSideNavigation: 'underwriter managers decision',
-        deal: mockDeal.dealSnapshot,
-        tfm: mockDeal.tfm,
-        dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
-        user: session.user,
-      });
-    });
-  });
-
-  describe('when deal does NOT exist', () => {
-    beforeEach(() => {
-      api.getDeal = () => Promise.resolve();
-    });
-
-    it('should redirect to not-found route', async () => {
-      const req = {
-        params: {
-          _id: '1',
-        },
-        session,
-      };
-
-      await underwriterManagersDecisionController.getUnderwriterManagersDecisionSubmitted(req, res);
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
-    });
-  });
-});
-
-describe('POST underwriting - underwriting managers decision', () => {
+describe('POST underwriting - underwriting managers decision edit', () => {
   describe('when there are NO validation errors', () => {
     const apiUpdateSpy = jest.fn(() => Promise.resolve({
       test: true,
@@ -183,7 +154,7 @@ describe('POST underwriting - underwriting managers decision', () => {
       api.updateUnderwriterManagersDecision = apiUpdateSpy;
     });
 
-    it('should call API and redirect to `/submitted` route', async () => {
+    it('should call API and redirect to `/managers-decision` route', async () => {
       const req = {
         params: {
           _id: dealId,
@@ -201,7 +172,7 @@ describe('POST underwriting - underwriting managers decision', () => {
         mapDecisionObject(req.body, req.session.user),
       );
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/managers-decision/submitted`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting/managers-decision`);
     });
   });
 
@@ -223,7 +194,7 @@ describe('POST underwriting - underwriting managers decision', () => {
 
       await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/edit-managers-decision.njk', {
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'underwriting',
         activeSideNavigation: 'underwriter managers decision',

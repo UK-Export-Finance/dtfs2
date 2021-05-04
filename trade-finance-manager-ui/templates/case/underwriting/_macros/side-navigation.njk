@@ -7,15 +7,6 @@
 
   <div data-cy="side-navigation">
 
-    {% if decisionSubmitted %}
-
-      {% set underwriterManagersDecisionLink = '/case/' + caseId + '/underwriting/managers-decision/submitted' %}
-
-      {% else %}
-
-      {% set underwriterManagersDecisionLink = '/case/' + caseId + '/underwriting/managers-decision'%}
-    {% endif %}
-
     {{ mojSideNavigation({
       label: 'Side navigation',
       classes: 'ukef-underwriting-side-nav',
@@ -35,7 +26,7 @@
         }
       }, {
         text: 'Underwriter manager’s decision',
-        href: underwriterManagersDecisionLink,
+        href: '/case/' + caseId + '/underwriting/managers-decision',
         active: activeSideNavigation === 'underwriter managers decision',
         attributes: {
           'data-cy': 'underwriter-managers-decision'

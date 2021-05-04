@@ -1,13 +1,13 @@
 import api from '../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
 import mapDecisionHelper from './mapDecisionObject';
-import helpers from '../helpers';
 import userHelpers from '../../../../helpers/user';
 import CONSTANTS from '../../../../constants';
 
 const { mapDecisionObject } = mapDecisionHelper;
-const { isDecisionSubmitted } = helpers;
 const { userIsInTeam } = userHelpers;
+
+// TODO only if deal is MIA
 
 const getUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -15,14 +15,8 @@ const getUnderwriterManagersDecision = async (req, res) => {
 
   const { user } = req.session;
 
-  if (!deal || !userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS)) {
+  if (!deal) {
     return res.redirect('/not-found');
-  }
-
-  const decisionSubmitted = isDecisionSubmitted(deal.tfm);
-
-  if (decisionSubmitted) {
-    return res.redirect(`/case/${dealId}/underwriting/managers-decision/submitted`);
   }
 
   return res.render('case/underwriting/managers-decision/managers-decision.njk', {
@@ -36,17 +30,17 @@ const getUnderwriterManagersDecision = async (req, res) => {
   });
 };
 
-const getUnderwriterManagersDecisionSubmitted = async (req, res) => {
+const getUnderwriterManagersDecisionEdit = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+
+  if (!deal || !userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS)) {
     return res.redirect('/not-found');
   }
 
-  const { user } = req.session;
-
-  return res.render('case/underwriting/managers-decision/managers-decision-submitted.njk', {
+  return res.render('case/underwriting/managers-decision/edit-managers-decision.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
     activeSideNavigation: 'underwriter managers decision',
@@ -84,7 +78,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
   const validationErrors = validateSubmittedValues(submittedValues);
 
   if (validationErrors) {
-    return res.render('case/underwriting/managers-decision/managers-decision.njk', {
+    return res.render('case/underwriting/managers-decision/edit-managers-decision.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
       activeSideNavigation: 'underwriter managers decision',
@@ -101,11 +95,11 @@ const postUnderwriterManagersDecision = async (req, res) => {
 
   await api.updateUnderwriterManagersDecision(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/managers-decision/submitted`);
+  return res.redirect(`/case/${dealId}/underwriting/managers-decision`);
 };
 
 export default {
   getUnderwriterManagersDecision,
-  getUnderwriterManagersDecisionSubmitted,
+  getUnderwriterManagersDecisionEdit,
   postUnderwriterManagersDecision,
 };
