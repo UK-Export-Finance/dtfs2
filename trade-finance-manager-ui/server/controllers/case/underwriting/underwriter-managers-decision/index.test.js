@@ -1,10 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 import underwriterManagersDecisionController from '.';
+import underwriterManagersDecisionHelpers from './helpers';
 import validateSubmittedValues from './validateSubmittedValues';
 import mapDecisionHelper from './mapDecisionObject';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 
+const { canUserEdit } = underwriterManagersDecisionHelpers;
 const { mapDecisionObject } = mapDecisionHelper;
 
 const res = mockRes();
@@ -23,6 +25,9 @@ const mockDeal = {
   _id: '1000023',
   dealSnapshot: {
     _id: '1000023',
+    details: {
+      submissionType: 'Manual Inclusion Application',
+    },
   },
   tfm: {},
 };
@@ -30,6 +35,12 @@ const mockDeal = {
 const dealId = mockDeal._id;
 
 describe('GET underwriting - underwriting managers decision', () => {
+  const userCanEdit = canUserEdit(
+    session.user,
+    mockDeal.dealSnapshot.details.submissionType,
+    mockDeal.tfm,
+  );
+
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
@@ -46,6 +57,7 @@ describe('GET underwriting - underwriting managers decision', () => {
       await underwriterManagersDecisionController.getUnderwriterManagersDecision(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/managers-decision/managers-decision.njk', {
+        userCanEdit,
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'underwriting',
         activeSideNavigation: 'underwriter managers decision',
@@ -104,7 +116,7 @@ describe('GET underwriting - underwriting managers decision edit', () => {
     });
   });
 
-  describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
+  describe('when user cannot edit (i.e, NOT in UNDERWRITER_MANAGERS team)', () => {
     it('should redirect to not-found route', async () => {
       const req = {
         params: {
@@ -210,7 +222,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
     });
   });
 
-  describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
+  describe('when user cannot edit (i.e, is NOT in UNDERWRITER_MANAGERS team)', () => {
     it('should redirect to not-found route', async () => {
       const req = {
         params: {

@@ -1,13 +1,10 @@
 import api from '../../../../api';
+import underwriterManagersDecisionHelpers from './helpers';
 import validateSubmittedValues from './validateSubmittedValues';
 import mapDecisionHelper from './mapDecisionObject';
-import userHelpers from '../../../../helpers/user';
-import CONSTANTS from '../../../../constants';
 
+const { canUserEdit } = underwriterManagersDecisionHelpers;
 const { mapDecisionObject } = mapDecisionHelper;
-const { userIsInTeam } = userHelpers;
-
-// TODO only if deal is MIA
 
 const getUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -19,7 +16,14 @@ const getUnderwriterManagersDecision = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const userCanEdit = canUserEdit(
+    user,
+    deal.dealSnapshot.details.submissionType,
+    deal.tfm,
+  );
+
   return res.render('case/underwriting/managers-decision/managers-decision.njk', {
+    userCanEdit,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
     activeSideNavigation: 'underwriter managers decision',
@@ -36,7 +40,17 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
 
   const { user } = req.session;
 
-  if (!deal || !userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS)) {
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const userCanEdit = canUserEdit(
+    user,
+    deal.dealSnapshot.details.submissionType,
+    deal.tfm,
+  );
+
+  if (!userCanEdit) {
     return res.redirect('/not-found');
   }
 
@@ -57,7 +71,17 @@ const postUnderwriterManagersDecision = async (req, res) => {
 
   const { user } = req.session;
 
-  if (!deal || !userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS)) {
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const userCanEdit = canUserEdit(
+    user,
+    deal.dealSnapshot.details.submissionType,
+    deal.tfm,
+  );
+
+  if (!userCanEdit) {
     return res.redirect('/not-found');
   }
 

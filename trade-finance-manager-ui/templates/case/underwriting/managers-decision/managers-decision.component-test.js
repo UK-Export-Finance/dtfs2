@@ -33,10 +33,11 @@ describe(page, () => {
     });
   });
 
-  describe('with NO params.tfm.underwriterManagersDecision.decision', () => {
+  describe('with NO params.tfm.underwriterManagersDecision.decision and params.userCanEdit', () => {
     const params = {
       ...params,
       tfm: {},
+      userCanEdit: true,
     };
 
     it('should NOT render managers-decision-submitted component', () => {
