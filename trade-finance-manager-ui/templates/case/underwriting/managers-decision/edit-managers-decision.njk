@@ -1,0 +1,41 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import './_macros/managers-decision-form.njk' as managersDecisionForm %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+  <section class="govuk-!-margin-top-9"> 
+
+    {% if validationErrors.count %}
+      {{
+        govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        })  
+      }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
+
+        {% set managersDecisionFormComponentData = {
+          caseId: dealId,
+          validationErrors: validationErrors,
+          submittedValues: submittedValues
+        } %}
+
+        {{managersDecisionForm.render(managersDecisionFormComponentData)}}
+
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}
