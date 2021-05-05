@@ -5,6 +5,4 @@ const increment = (count) => {
   return ++result;
 };
 
-module.exports = {
-  increment,
-};
+export default increment;

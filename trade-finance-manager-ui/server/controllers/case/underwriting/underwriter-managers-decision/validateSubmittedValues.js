@@ -1,6 +1,6 @@
 import { hasValue } from '../../../../helpers/string';
-import { increment } from '../../../../helpers/number';
-import { generateValidationErrors } from '../../../../helpers/validation';
+import increment from '../../../../helpers/number';
+import generateValidationErrors from '../../../../helpers/validation';
 
 const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};

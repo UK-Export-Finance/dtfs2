@@ -1,5 +1,5 @@
 import validateSubmittedValues from './validateSubmittedValues';
-import { generateValidationErrors } from '../../../../helpers/validation';
+import generateValidationErrors from '../../../../helpers/validation';
 
 describe('POST underwriting - validate submitted values', () => {
   it('should return validationErrors when there is no `decision` value', () => {

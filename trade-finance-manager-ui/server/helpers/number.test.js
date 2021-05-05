@@ -1,6 +1,4 @@
-const {
-  increment,
-} = require('./number');
+import increment from './number';
 
 describe('helpers - number', () => {
   describe('increment', () => {

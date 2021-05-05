@@ -2,12 +2,8 @@
 import underwritingController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
-import userHelpers from '../../../helpers/user';
+import { userIsInTeam } from '../../../helpers/user';
 import CONSTANTS from '../../../constants';
-
-const {
-  userIsInTeam,
-} = userHelpers;
 
 const res = mockRes();
 
