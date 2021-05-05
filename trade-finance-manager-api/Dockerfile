@@ -12,7 +12,7 @@ FROM node:lts AS lint
 WORKDIR /app
 COPY --from=image /app /app
 
-ADD ../.eslintrc.js ./.eslintrc.js
+ADD ./.eslintrc.js ./.eslintrc.js
 RUN npm run lint
 
 FROM node:lts AS test
