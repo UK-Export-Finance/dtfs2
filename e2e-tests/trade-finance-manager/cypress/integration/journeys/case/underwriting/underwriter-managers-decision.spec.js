@@ -97,6 +97,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('submitting an empty form displays validation errors', () => {
+    pages.managersDecisionPage.addDecisionLink().click();
     pages.managersDecisionPage.submitButton().click();
 
     pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
@@ -104,6 +105,8 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('selecting `Approve with conditions` radio button reveals comments input, throws validation error if no comment provided and persists radio selection', () => {
+    pages.managersDecisionPage.addDecisionLink().click();
+
     pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
 
     pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
@@ -119,6 +122,8 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('selecting `Decline` radio button reveals comments input, throws validation error if no comment provided  and persists radio selection', () => {
+    pages.managersDecisionPage.addDecisionLink().click();
+
     pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
 
     pages.managersDecisionPage.decisionRadioInputDecline().click();
@@ -134,6 +139,8 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('after valid form submit, displays submitted values and updates deal stage', () => {
+    pages.managersDecisionPage.addDecisionLink().click();
+
     const MOCK_COMMENTS = 'Testing';
     const MOCK_INTERNAL_COMMENTS = 'Internal comment';
 
@@ -176,21 +183,5 @@ context('Case Underwriting - Pricing and risk', () => {
       // text formatting is slightly different to the submitted form value
       expect(text.trim()).to.equal('Approved (with conditions)');
     });
-  });
-
-  describe('after valid form submit', () => {
-    // NOTE: previous specs have already submitted decision
-    // it('Clicking `managers decision` navigation link goes to the submitted decision page', () => {
-    //   // go back to main deal page
-    //   cy.visit(relative(`/case/${dealId}/deal`));
-
-    //   // click on underwriting and managers decision link
-    //   partials.caseSubNavigation.underwritingLink().click();
-    //   partials.underwritingSubNav.underwriterManagerDecisionLink().click();
-
-    //   cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
-    // });
-
-    // TODO values are displayed
   });
 });
