@@ -1,4 +1,8 @@
-const UNDERWRITING_SUPPORT = 'UNDERWRITING_SUPPORT';
+const SUBMISSION_TYPE = {
+  AIN: 'Automatic Inclusion Notice',
+  MIA: 'Manual Inclusion Application',
+  MIN: 'Manual Inclusion Notice',
+};
 
 const UNDERWRITING_MANAGERS_DECISION_INPUT = {
   APPROVE_WITH_CONDITIONS: 'Approve with conditions',
@@ -13,7 +17,7 @@ const DEAL_STAGE = {
 };
 
 module.exports = {
-  UNDERWRITING_SUPPORT,
+  SUBMISSION_TYPE,
   UNDERWRITING_MANAGERS_DECISION_INPUT,
   DEAL_STAGE,
 };

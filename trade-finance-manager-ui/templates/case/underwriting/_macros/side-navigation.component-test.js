@@ -23,18 +23,4 @@ describe(component, () => {
     wrapper.expectLink('[data-cy="underwriter-managers-decision"] a')
       .toLinkTo(`/case/${params.caseId}/underwriting/managers-decision`, 'Underwriter manager’s decision');
   });
-
-  describe('with params.decisionSubmitted as true', () => {
-    it('should render underwriter-managers-decision link with `submitted` route', () => {
-      const params = {
-        caseId: '1234',
-        decisionSubmitted: true,
-      };
-
-      wrapper = render(params);
-
-      wrapper.expectLink('[data-cy="underwriter-managers-decision"] a')
-        .toLinkTo(`/case/${params.caseId}/underwriting/managers-decision/submitted`, 'Underwriter manager’s decision');
-    });
-  });
 });

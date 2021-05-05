@@ -1,21 +1,12 @@
 import api from '../../../api';
-import userHelpers from '../../../helpers/user';
-import underwritingHelpers from './helpers';
-import stringHelpers from '../../../helpers/string';
-import CONSTANTS from '../../../constants';
-
-const {
+import {
   userIsInTeam,
-} = userHelpers;
-
-const {
-  isDecisionSubmitted,
-} = underwritingHelpers;
-
-const {
+} from '../../../helpers/user';
+import {
   hasValue,
   containsNumber,
-} = stringHelpers;
+} from '../../../helpers/string';
+import CONSTANTS from '../../../constants';
 
 const getUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -27,8 +18,6 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
 
   const { user } = req.session;
 
-  const decisionSubmitted = isDecisionSubmitted(deal.tfm);
-
   return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
     userCanEdit: userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
     activePrimaryNavigation: 'manage work',
@@ -38,7 +27,6 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    decisionSubmitted,
   });
 };
 

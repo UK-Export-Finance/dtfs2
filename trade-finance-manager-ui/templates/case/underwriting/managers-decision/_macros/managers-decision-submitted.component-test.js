@@ -1,29 +1,22 @@
-const pageRenderer = require('../../../../component-tests/pageRenderer');
-const page = '../templates/case/underwriting/managers-decision/managers-decision-submitted.njk'
-const filterLocaliseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const componentRenderer = require('../../../../../component-tests/componentRenderer');
+const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk'
+const filterLocaliseTimestamp = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
-const render = pageRenderer(page);
+const render = componentRenderer(component);
 
 const localiseTimestamp = filterLocaliseTimestamp.default;
 
-describe(page, () => {
+describe(component, () => {
   let wrapper;
   let params = {
-    tfm: {
-      underwriterManagersDecision: {
-        userFullName: 'Joe Bloggs',
-        timestamp: '1606900616651',
-      },
+    decision: {
+      userFullName: 'Joe Bloggs',
+      timestamp: '1606900616651',
     },
     user: {
       timezone: 'Europe/London',
     },
   };
-
-  it('should render heading', () => {
-    const wrapper = render(params);
-    wrapper.expectText('[data-cy="managers-decision-heading"]').toRead('Underwriter manager’s decision');
-  });
 
   it('should render subheading', () => {
     const wrapper = render(params);
@@ -46,7 +39,7 @@ describe(page, () => {
     it('should render value', () => {
       const wrapper = render(params);
 
-      wrapper.expectText('[data-cy="decision-made-by-value"]').toRead(params.tfm.underwriterManagersDecision.userFullName);
+      wrapper.expectText('[data-cy="decision-made-by-value"]').toRead(params.decision.userFullName);
     });
   });
 
@@ -60,8 +53,8 @@ describe(page, () => {
     it('should render value', () => {
       const wrapper = render(params);
 
-      const formattedDay = localiseTimestamp(params.tfm.underwriterManagersDecision.timestamp, 'D MMMM YYYY', params.user.timezone);
-      const formattedTime = localiseTimestamp(params.tfm.underwriterManagersDecision.timestamp, 'HH:mm', params.user.timezone);
+      const formattedDay = localiseTimestamp(params.decision.timestamp, 'D MMMM YYYY', params.user.timezone);
+      const formattedTime = localiseTimestamp(params.decision.timestamp, 'HH:mm', params.user.timezone);
 
       const expected = `${formattedDay} at ${formattedTime}`;
       wrapper.expectText('[data-cy="date-time-value"]').toRead(expected);
@@ -71,12 +64,9 @@ describe(page, () => {
   describe('with tfm.underwriterManagersDecision.comments', () => {
     const paramsWithComments = {
       ...params,
-      tfm: {
-        ...params.tfm,
-        underwriterManagersDecision: {
-          ...params.tfm.underwriterManagersDecision,
-          comments: 'Testing 123',
-        },
+      decision: {
+        ...params.decision,
+        comments: 'Testing 123',
       },
     };
 
@@ -90,19 +80,16 @@ describe(page, () => {
       const wrapper = render(paramsWithComments);
 
       wrapper.expectElement('[data-cy="conditions-value"]').toExist();
-      wrapper.expectElement('[data-cy="conditions-value"]').hasClass('preserve-white-space');
+      wrapper.expectElement('[data-cy="conditions-value"]').hasClass('word-break-break-word');
     });
   });
 
   describe('with tfm.underwriterManagersDecision.internalComments', () => {
     const paramsWithInternalComments = {
       ...params,
-      tfm: {
-        ...params.tfm,
-        underwriterManagersDecision: {
-          ...params.tfm.underwriterManagersDecision,
-          internalComments: 'Testing 123',
-        },
+      decision: {
+        ...params.decision,
+        internalComments: 'Testing 123',
       },
     };
 
@@ -116,7 +103,7 @@ describe(page, () => {
       const wrapper = render(paramsWithInternalComments);
 
       wrapper.expectElement('[data-cy="internal-comments-value"]').toExist();
-      wrapper.expectElement('[data-cy="internal-comments-value"]').hasClass('preserve-white-space');
+      wrapper.expectElement('[data-cy="internal-comments-value"]').hasClass('word-break-break-word');
     });
   });
 });

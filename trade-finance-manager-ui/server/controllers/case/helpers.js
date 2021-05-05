@@ -1,11 +1,9 @@
-import userHelpers from '../../helpers/user';
+import { userFullName } from '../../helpers/user';
 
-const { userFullName } = userHelpers;
-
-const getGroup = (groupId, allTasks) =>
+export const getGroup = (groupId, allTasks) =>
   allTasks.find((group) => group.id === groupId);
 
-const getTask = (groupId, taskId, tasks) => {
+export const getTask = (groupId, taskId, tasks) => {
   const group = getGroup(groupId, tasks);
 
   if (group) {
@@ -21,7 +19,7 @@ const getTask = (groupId, taskId, tasks) => {
   return null;
 };
 
-const isTaskAssignedToUser = (assignedToUserId, userId) => {
+export const isTaskAssignedToUser = (assignedToUserId, userId) => {
   if (assignedToUserId === userId) {
     return true;
   }
@@ -29,12 +27,12 @@ const isTaskAssignedToUser = (assignedToUserId, userId) => {
   return false;
 };
 
-const getTeamMembersWithoutCurrentUser = (teamMembers, currentUserId) =>
+export const getTeamMembersWithoutCurrentUser = (teamMembers, currentUserId) =>
   teamMembers.filter((teamMember) =>
     teamMember._id !== currentUserId); // eslint-disable-line no-underscore-dangle
 
 
-const mapTeamMembersSelectOptions = (members, taskAssignedTo, currentUserId) => {
+export const mapTeamMembersSelectOptions = (members, taskAssignedTo, currentUserId) => {
   const membersWithoutCurrentUser = getTeamMembersWithoutCurrentUser(members, currentUserId);
 
   return membersWithoutCurrentUser.map((member) => {
@@ -49,7 +47,7 @@ const mapTeamMembersSelectOptions = (members, taskAssignedTo, currentUserId) => 
   });
 };
 
-const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
+export const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   const taskAssignedTo = task.assignedTo.userId;
   // eslint-disable-next-line no-underscore-dangle
   const taskIsAssignedToUser = isTaskAssignedToUser(taskAssignedTo, currentUser._id);
@@ -119,13 +117,4 @@ const mapAssignToSelectOptions = (task, currentUser, allTeamMembers) => {
   }
 
   return mapped;
-};
-
-export default {
-  getGroup,
-  getTask,
-  isTaskAssignedToUser,
-  getTeamMembersWithoutCurrentUser,
-  mapTeamMembersSelectOptions,
-  mapAssignToSelectOptions,
 };

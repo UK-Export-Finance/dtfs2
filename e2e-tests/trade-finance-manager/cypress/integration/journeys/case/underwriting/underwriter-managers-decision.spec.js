@@ -82,7 +82,7 @@ context('Case Underwriting - Pricing and risk', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
   });
 
-  it('a user that is NOT in UNDERWRITER_MANAGERS team should get redirected to not-found route', () => {
+  it('a user that is NOT in UNDERWRITER_MANAGERS team should not see `Add decision` link', () => {
     const nonUnderWritingManager = MOCK_USERS.find((user) =>
       !user.teams.includes('UNDERWRITER_MANAGERS'));
 
@@ -93,59 +93,66 @@ context('Case Underwriting - Pricing and risk', () => {
     partials.caseSubNavigation.underwritingLink().click();
     partials.underwritingSubNav.underwriterManagerDecisionLink().click();
 
-    cy.url().should('eq', relative('/not-found'));
+    pages.managersDecisionPage.addDecisionLink().should('not.be.visible');
   });
 
   it('submitting an empty form displays validation errors', () => {
-    pages.managersDecisionFormPage.submitButton().click();
+    pages.managersDecisionPage.addDecisionLink().click();
+    pages.managersDecisionPage.submitButton().click();
 
-    pages.managersDecisionFormPage.errorSummaryItems().should('have.length', 1);
-    pages.managersDecisionFormPage.decisionRadioInputValidationError().should('be.visible');
+    pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+    pages.managersDecisionPage.decisionRadioInputValidationError().should('be.visible');
   });
 
   it('selecting `Approve with conditions` radio button reveals comments input, throws validation error if no comment provided and persists radio selection', () => {
-    pages.managersDecisionFormPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
+    pages.managersDecisionPage.addDecisionLink().click();
 
-    pages.managersDecisionFormPage.decisionRadioInputApproveWithConditions().click();
-    pages.managersDecisionFormPage.commentsInputApproveWithConditions().should('be.visible');
-    pages.managersDecisionFormPage.submitButton().click();
+    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
+
+    pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
+    pages.managersDecisionPage.commentsInputApproveWithConditions().should('be.visible');
+    pages.managersDecisionPage.submitButton().click();
 
     // radio should be selected
-    pages.managersDecisionFormPage.decisionRadioInputApproveWithConditions().should('be.checked');
+    pages.managersDecisionPage.decisionRadioInputApproveWithConditions().should('be.checked');
 
     // assert errors are displayed
-    pages.managersDecisionFormPage.errorSummaryItems().should('have.length', 1);
-    pages.managersDecisionFormPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
+    pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
   });
 
   it('selecting `Decline` radio button reveals comments input, throws validation error if no comment provided  and persists radio selection', () => {
-    pages.managersDecisionFormPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
+    pages.managersDecisionPage.addDecisionLink().click();
 
-    pages.managersDecisionFormPage.decisionRadioInputDecline().click();
-    pages.managersDecisionFormPage.commentsInputDecline().should('be.visible');
-    pages.managersDecisionFormPage.submitButton().click();
+    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
+
+    pages.managersDecisionPage.decisionRadioInputDecline().click();
+    pages.managersDecisionPage.commentsInputDecline().should('be.visible');
+    pages.managersDecisionPage.submitButton().click();
 
     // radio should be selected
-    pages.managersDecisionFormPage.decisionRadioInputDecline().should('be.checked');
+    pages.managersDecisionPage.decisionRadioInputDecline().should('be.checked');
 
     // assert errors are displayed
-    pages.managersDecisionFormPage.errorSummaryItems().should('have.length', 1);
-    pages.managersDecisionFormPage.commentsInputDeclineValidationError().should('be.visible');
+    pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+    pages.managersDecisionPage.commentsInputDeclineValidationError().should('be.visible');
   });
 
-  it('after valid form submit, redirects to `/submitted` route and displays submitted values', () => {
+  it('after valid form submit, displays submitted values and updates deal stage', () => {
+    pages.managersDecisionPage.addDecisionLink().click();
+
     const MOCK_COMMENTS = 'Testing';
     const MOCK_INTERNAL_COMMENTS = 'Internal comment';
 
-    pages.managersDecisionFormPage.decisionRadioInputApproveWithConditions().click();
+    pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
 
-    pages.managersDecisionFormPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
-    pages.managersDecisionFormPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
+    pages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
+    pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
 
-    pages.managersDecisionFormPage.submitButton().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision/submitted`));
+    pages.managersDecisionPage.submitButton().click();
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
 
-    // assert values are displayed
+    // assert values are displayed in decision page
     pages.managersDecisionPage.decisionStatusTag().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Approved with conditions');
     });
@@ -170,30 +177,11 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionPage.internalComments().invoke('text').then((text) => {
       expect(text.trim()).to.equal(MOCK_INTERNAL_COMMENTS);
     });
-  });
 
-  describe('after valid form submit', () => {
-    // NOTE: previous specs have already submitted decision
-    it('Clicking `managers decision` navigation link goes to the submitted decision page', () => {
-      // go back to main deal page
-      cy.visit(relative(`/case/${dealId}/deal`));
-
-      // click on underwriting and managers decision link
-      partials.caseSubNavigation.underwritingLink().click();
-      partials.underwritingSubNav.underwriterManagerDecisionLink().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision/submitted`));
-    });
-
-    it('Manually navigating to the managers-decision page redirects to the submitted values page ', () => {
-      // go back to main deal page
-      cy.visit(relative(`/case/${dealId}/deal`));
-
-      // try to manually visit decision form page
-      cy.visit(relative(`/case/${dealId}/underwriting/managers-decision`));
-
-      // should be redirected
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision/submitted`));
+    // deal stage
+    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      // text formatting is slightly different to the submitted form value
+      expect(text.trim()).to.equal('Approved (with conditions)');
     });
   });
 });

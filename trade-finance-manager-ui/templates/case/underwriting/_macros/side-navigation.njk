@@ -3,18 +3,8 @@
 {% macro render(params) %}
   {% set caseId = params.caseId %}
   {% set activeSideNavigation = params.activeSideNavigation %}
-  {% set decisionSubmitted = params.decisionSubmitted %}
 
   <div data-cy="side-navigation">
-
-    {% if decisionSubmitted %}
-
-      {% set underwriterManagersDecisionLink = '/case/' + caseId + '/underwriting/managers-decision/submitted' %}
-
-      {% else %}
-
-      {% set underwriterManagersDecisionLink = '/case/' + caseId + '/underwriting/managers-decision'%}
-    {% endif %}
 
     {{ mojSideNavigation({
       label: 'Side navigation',
@@ -35,7 +25,7 @@
         }
       }, {
         text: 'Underwriter manager’s decision',
-        href: underwriterManagersDecisionLink,
+        href: '/case/' + caseId + '/underwriting/managers-decision',
         active: activeSideNavigation === 'underwriter managers decision',
         attributes: {
           'data-cy': 'underwriter-managers-decision'
