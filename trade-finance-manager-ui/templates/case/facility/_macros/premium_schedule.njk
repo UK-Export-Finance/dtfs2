@@ -2,56 +2,59 @@
   {% set facility = params.facility %}
   {% set schedule = params.premiumschedule %}
   {% set premiumTotals = params.premiumTotals %}
+  {% set premiumFrequency = facility.feeFrequency or facility.premiumFrequency %}
+
   <div class="govuk-grid-row" data-cy="facility-overview">
     <div class="govuk-grid-column-full">
       <h3 class="govuk-heading-l">Premium Schedule</h3>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">How bank will pay</h4>
-        </div>
-        <div class="govuk-grid-column-three-quarters">
-          <p class="govuk-body-s" data-cy="facility-premium-type">
-            {{ facility.feeType }}
-          </p>
-        </div>
-      </div>
-
-
-      {% if not facility.feeType == 'At Maturity' %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter">
-            <h4 class="govuk-heading-s">How often</h4>
-          </div>
-          <div class="govuk-grid-column-three-quarters">
-            <p class="govuk-body-s" data-cy="facility-premium-frequency">
-              {% if facility.facilityProduct.name =='Bond Support Scheme' %}
-                {{ facility.feeFrequency }}
-              {% else %}
-                {{ facility.premiumFrequency }}
-              {% endif %}
-            </p>
-          </div>
-        </div>
-      {% endif %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s">Day count basis</h4>
-        </div>
-        <div class="govuk-grid-column-three-quarters" data-cy="facility-premium-daycountbasis">{{ facility.dayCountBasis }}</div>
-      </div>
     </div>
   </div>
-  <div class="govuk-grid-row separator-line" data-cy="facility-premium-schedule">
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="ukef-grid-column-one-sixth">
+      <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How bank will pay</span>
+    </div>
+    <div class="ukef-grid-column-one-sixth">
+        <span class="govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType }}</span>
+    </div>
+  </div>
+
+  {% if premiumFrequency %}
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+      <div class="ukef-grid-column-one-sixth">
+        <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How often</span>
+      </div>
+      <div class="ukef-grid-column-one-sixth">
+        <span class="govuk-body-s" data-cy="facility-premium-frequency">
+          {{ premiumFrequency }}
+        </span>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="ukef-grid-column-one-sixth">
+      <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Day count basis</span>
+    </div>
+    <div class="ukef-grid-column-one-sixth" data-cy="facility-premium-daycountbasis">
+      <span class="govuk-body-s" data-cy="facility-premium-frequency">
+        {{ facility.dayCountBasis }}
+      </span>
+    </div>
+  </div>
+
+
+  <div class="govuk-grid-row separator-line govuk-!-margin-top-7 govuk-!-padding-top-6" data-cy="facility-premium-schedule">
     <div class="govuk-grid-column-two-thirds">
       <h3 class="govuk-heading-l">Dates and amounts</h3>
       <div class="govuk-grid-row ">
-        <div class="govuk-grid-column-one-third ukef-grey-bg-row-column-left-text">
-          <h4 class="govuk-heading-s">Total to be paid to UKEF:</h4>
+        <div class="govuk-grid-column-one-half">
+          <div class="ukef-grey-bg-row-column-left-text">
+            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF:</span>
+            <span class="govuk-!-font-size-16" data-cy="premiumTotals">
+            GBP {{ premiumTotals }}
+            </span>
         </div>
-        <div class="govuk-grid-column-one-quarter ukef-grey-bg-row-column-left-text">
-          <h4 class="govuk-heading-s" data-cy="premiumTotals">GBP
-            {{ premiumTotals }}</h4>
-        </div>
+
       </div>
       <table class="govuk-table facilities-table" data-cy="facilities-table">
         <thead class="govuk-table__head">
