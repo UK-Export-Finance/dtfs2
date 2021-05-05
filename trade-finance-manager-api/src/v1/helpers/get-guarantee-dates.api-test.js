@@ -42,7 +42,7 @@ describe('get-guarantee-dates', () => {
       } = getGuaranteeDates(unissuedFacility, submissionDateTimestamp);
 
       expect(guaranteeCommencementDate).toEqual('2021-07-24');
-      expect(guaranteeExpiryDate).toEqual('2023-07-23');
+      expect(guaranteeExpiryDate).toEqual('2023-07-24');
       expect(effectiveDate).toEqual(submissionDate);
     });
   });
