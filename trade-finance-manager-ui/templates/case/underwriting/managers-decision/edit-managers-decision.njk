@@ -1,5 +1,8 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import './_macros/managers-decision-form.njk' as managersDecisionForm %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import './_macros/comments.njk' as comments %}
 
 {% extends "index.njk" %}
 
@@ -24,13 +27,98 @@
 
         <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
 
-        {% set managersDecisionFormComponentData = {
-          caseId: dealId,
-          validationErrors: validationErrors,
-          submittedValues: submittedValues
-        } %}
+        <form method="POST" autocomplete="off" data-cy="managers-decision-form">
 
-        {{managersDecisionForm.render(managersDecisionFormComponentData)}}
+          {% set approveWithConditionsCommentsComponentData = {
+            id: 'approveWithConditionsComments',
+            label: 'Enter conditions (these will be sent to the bank)',
+            validationError: validationErrors.errorList.approveWithConditionsComments,
+            value: submittedValues.approveWithConditionsComments
+          } %}
+
+          {% set declineCommentsComponentData = {
+            id: 'declineComments',
+            label: 'Enter reasons (these will be sent to the bank)',
+            validationError: validationErrors.errorList.declineComments,
+            value: submittedValues.declineComments
+          } %}
+
+          {{govukRadios({
+              fieldset: {
+                legend: {
+                  text: "What's your decision?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--l"
+                }
+              },
+              name: "decision",
+              items: [
+                {
+                  value: "Approve without conditions",
+                  text: "Approve without conditions",
+                  attributes: {
+                    'data-cy': 'approve-without-conditions-radio-button'
+                  }
+                },
+                {
+                  value: "Approve with conditions",
+                  text: "Approve with conditions",
+                  checked: submittedValues.decision === 'Approve with conditions',
+                  attributes: {
+                    'data-cy': 'approve-with-conditions-radio-button'
+                  },
+                  conditional: {
+                    html: comments.render(approveWithConditionsCommentsComponentData)
+                  }
+                },
+                {
+                  value: "Decline",
+                  text: "Decline",
+                  checked: submittedValues.decision === 'Decline',
+                  attributes: {
+                    'data-cy': 'decline-radio-button'
+                  },
+                  conditional: {
+                    html: comments.render(declineCommentsComponentData)
+                  }
+                }
+              ],
+              errorMessage: validationErrors and validationErrors.errorList.decision and {
+                text: validationErrors.errorList.decision.text,
+                attributes: {
+                  'data-cy': 'decision-input-error'
+                }
+              }
+            })
+          }}
+
+          {{ govukCharacterCount({
+            name: "internalComments",
+            id: "internalComments",
+            maxlength: 1000,
+            rows: 9,
+            label: {
+              text: "Comments (optional)"
+            },
+            hint: {
+              text: "Only UKEF staff will see this. "
+            },
+            attributes: {
+              'data-cy': 'internalComments-input'
+            },
+            value: submittedValues.internalComments
+          }) }}
+
+          {{ govukButton({
+            text: "Save",
+            attributes: {
+              'data-cy': 'submit-button'
+            }
+          }) }}
+
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting/pricing-and-risk" data-cy="cancel-link">Cancel</a>
+
+        </form>
 
       </div>
 
