@@ -73,8 +73,10 @@
 
 .ukef-grey-bg-row-column-left-text {
   background: govuk-colour('light-grey');
-  padding: .3em;
-  margin-left: -.3em;
+  padding: 10px;
+  margin-left: -10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .ukef-grey-bg-row-column-right-text {
