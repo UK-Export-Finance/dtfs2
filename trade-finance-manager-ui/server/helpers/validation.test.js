@@ -1,4 +1,4 @@
-import { generateValidationErrors } from './validation';
+import generateValidationErrors from './validation';
 
 describe('validation - generateValidationErrors', () => {
   it('should return errorList and summary from given params', () => {

@@ -1,7 +1,5 @@
 import CONSTANTS from '../../../../constants';
-import userHelpers from '../../../../helpers/user';
-
-const { userIsInTeam } = userHelpers;
+import { userIsInTeam } from '../../../../helpers/user';
 
 const canUserEdit = (user, dealSubmissionType, dealTfm) => {
   const isManager = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS);
@@ -20,6 +18,4 @@ const canUserEdit = (user, dealSubmissionType, dealTfm) => {
   return false;
 };
 
-export default {
-  canUserEdit,
-};
+export default canUserEdit;

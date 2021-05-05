@@ -1,13 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 import underwriterManagersDecisionController from '.';
-import underwriterManagersDecisionHelpers from './helpers';
+import canUserEdit from './helpers';
 import validateSubmittedValues from './validateSubmittedValues';
-import mapDecisionHelper from './mapDecisionObject';
+import { mapDecisionObject } from './mapDecisionObject';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
-
-const { canUserEdit } = underwriterManagersDecisionHelpers;
-const { mapDecisionObject } = mapDecisionHelper;
 
 const res = mockRes();
 

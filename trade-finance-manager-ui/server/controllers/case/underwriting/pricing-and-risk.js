@@ -1,16 +1,12 @@
 import api from '../../../api';
-import userHelpers from '../../../helpers/user';
-import stringHelpers from '../../../helpers/string';
-import CONSTANTS from '../../../constants';
-
-const {
+import {
   userIsInTeam,
-} = userHelpers;
-
-const {
+} from '../../../helpers/user';
+import {
   hasValue,
   containsNumber,
-} = stringHelpers;
+} from '../../../helpers/string';
+import CONSTANTS from '../../../constants';
 
 const getUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle

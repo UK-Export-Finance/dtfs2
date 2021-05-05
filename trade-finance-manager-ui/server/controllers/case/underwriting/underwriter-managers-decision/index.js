@@ -1,10 +1,7 @@
 import api from '../../../../api';
-import underwriterManagersDecisionHelpers from './helpers';
+import canUserEdit from './helpers';
 import validateSubmittedValues from './validateSubmittedValues';
-import mapDecisionHelper from './mapDecisionObject';
-
-const { canUserEdit } = underwriterManagersDecisionHelpers;
-const { mapDecisionObject } = mapDecisionHelper;
+import { mapDecisionObject } from './mapDecisionObject';
 
 const getUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle

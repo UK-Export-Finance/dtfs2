@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import underwriterManagersDecisionHelpers from './helpers';
-
-const { canUserEdit } = underwriterManagersDecisionHelpers;
+import canUserEdit from './helpers';
 
 describe('case - underwriter-managers-decision - helpers', () => {
   describe('canUserEdit', () => {

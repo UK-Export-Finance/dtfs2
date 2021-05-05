@@ -2,12 +2,10 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import helpers from './helpers';
-
-const {
+import {
   getTask,
   mapAssignToSelectOptions,
-} = helpers;
+} from './helpers';
 
 const res = mockRes();
 

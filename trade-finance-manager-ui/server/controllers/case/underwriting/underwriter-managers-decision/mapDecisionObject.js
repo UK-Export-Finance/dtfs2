@@ -1,11 +1,8 @@
-import stringHelpers from '../../../../helpers/string';
-import userHelpers from '../../../../helpers/user';
+import { hasValue } from '../../../../helpers/string';
+import { userFullName } from '../../../../helpers/user';
 import CONSTANTS from '../../../../constants';
 
-const { hasValue } = stringHelpers;
-const { userFullName } = userHelpers;
-
-const mapDecisionValue = (decision) => {
+export const mapDecisionValue = (decision) => {
   if (decision === CONSTANTS.DEAL.UNDERWRITING_MANAGERS_DECISION_INPUT.APPROVE_WITHOUT_CONDITIONS) {
     return CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS;
   }
@@ -21,7 +18,7 @@ const mapDecisionValue = (decision) => {
   return null;
 };
 
-const mapDecisionObject = (submittedValues, user) => {
+export const mapDecisionObject = (submittedValues, user) => {
   const {
     decision,
     approveWithConditionsComments,
@@ -45,10 +42,4 @@ const mapDecisionObject = (submittedValues, user) => {
   mapped.decision = mapDecisionValue(decision);
 
   return mapped;
-};
-
-
-export default {
-  mapDecisionValue,
-  mapDecisionObject,
 };
