@@ -1,13 +1,23 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% macro render(params) %}
   {% set stage = params.stage %}
+  {% set text = params.stage %}
+
+  {% if stage === 'Approved with conditions' %}
+    {% set text = 'Approved (with conditions)' %}
+  {% endif %}
+
+  {% if stage === 'Approved without conditions' %}
+    {% set text = 'Approved (no conditions)' %}
+  {% endif %}
+
 
   <div data-cy="ukef-deal-stage" class="ukef-deal-stage">
 
     <div class="ukef-heading-xs ukef-deal-stage__title">Deal stage</div>
 
     {{ govukTag({
-      text: stage,
+      text: text,
       classes: 'govuk-tag--blue ukef-body-s govuk-!-font-weight-bold',
       attributes: {
         'data-cy': 'ukef-deal-stage-value'

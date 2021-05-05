@@ -1,36 +1,90 @@
-import stringHelpers from '../../../../helpers/string';
-import { generateValidationError } from '../../../../helpers/validation';
-
-const { hasValue } = stringHelpers;
+import { hasValue } from '../../../../helpers/string';
+import increment from '../../../../helpers/number';
+import generateValidationErrors from '../../../../helpers/validation';
 
 const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};
+  let errorsCount = 0;
+
+  const MAX_COMMENTS_LENGTH = 1000;
 
   const {
     decision,
     approveWithConditionsComments,
     declineComments,
+    internalComments,
   } = submittedValues;
 
   if (!hasValue(decision)) {
-    validationErrors = generateValidationError(
+    errorsCount = increment(errorsCount);
+
+    validationErrors = generateValidationErrors(
       'decision',
       'Select if you approve or decline',
-      1,
+      errorsCount,
+      validationErrors,
     );
-  } else if (decision === 'Approve with conditions'
-    && !hasValue(approveWithConditionsComments)) {
-    validationErrors = generateValidationError(
-      'approveWithConditionsComments',
-      'Enter conditions',
-      1,
-    );
-  } else if (decision === 'Decline'
-    && !hasValue(declineComments)) {
-    validationErrors = generateValidationError(
-      'declineComments',
-      'Enter reasons',
-      1,
+  }
+
+  if (decision === 'Approve with conditions') {
+    if (!hasValue(approveWithConditionsComments)) {
+      errorsCount = increment(errorsCount);
+
+      validationErrors = generateValidationErrors(
+        'approveWithConditionsComments',
+        'Enter conditions',
+        errorsCount,
+        validationErrors,
+      );
+    }
+
+    if (hasValue(approveWithConditionsComments)
+      && approveWithConditionsComments.length > MAX_COMMENTS_LENGTH) {
+      errorsCount = increment(errorsCount);
+
+      validationErrors = generateValidationErrors(
+        'approveWithConditionsComments',
+        `Conditions must be ${MAX_COMMENTS_LENGTH} or fewer`,
+        errorsCount,
+        validationErrors,
+      );
+    }
+  }
+
+  if (decision === 'Decline') {
+    if (!hasValue(declineComments)) {
+      errorsCount = increment(errorsCount);
+
+      validationErrors = generateValidationErrors(
+        'declineComments',
+        'Enter reasons',
+        errorsCount,
+        validationErrors,
+      );
+    }
+
+    if (hasValue(declineComments)
+      && declineComments.length > MAX_COMMENTS_LENGTH) {
+      errorsCount = increment(errorsCount);
+
+      validationErrors = generateValidationErrors(
+        'declineComments',
+        `Reasons must be ${MAX_COMMENTS_LENGTH} or fewer`,
+        errorsCount,
+        validationErrors,
+      );
+    }
+  }
+
+  if (hasValue(internalComments)
+    && internalComments.length > MAX_COMMENTS_LENGTH) {
+    errorsCount = increment(errorsCount);
+
+    validationErrors = generateValidationErrors(
+      'internalComments',
+      `Comments must be ${MAX_COMMENTS_LENGTH} or fewer`,
+      errorsCount,
+      validationErrors,
     );
   }
 

@@ -1,12 +1,10 @@
-import mapDecisionHelper from './mapDecisionObject';
-import userHelpers from '../../../../helpers/user';
-
-const {
+import {
   mapDecisionValue,
   mapDecisionObject,
-} = mapDecisionHelper;
-
-const { userFullName } = userHelpers;
+} from './mapDecisionObject';
+import {
+  userFullName,
+} from '../../../../helpers/user';
 
 describe('POST underwriting - map decision object', () => {
   describe('mapDecisionValue', () => {

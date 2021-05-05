@@ -71,4 +71,39 @@ describe('graphql mutation - update underwriting managers decision', () => {
 
     expect(data.updateUnderwriterManagersDecision).toEqual(expected);
   });
+
+  it('deal stage should be updated', async () => {
+    const mutationVars = {
+      dealId: MOCK_DEAL._id,
+      managersDecisionUpdate: {
+        decision: 'Approve without conditions',
+        comments: 'Test comment',
+        internalComments: 'Internal comment',
+        userFullName: 'Test User',
+      },
+    };
+
+    await query({
+      query: UPDATE_UNDERWRITING_MANAGERS_DECISION,
+      variables: mutationVars,
+    });
+
+    const GET_DEAL = gql`
+      query Deal($_id: String! $tasksFilters: TasksFilters) {
+        deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
+          _id
+          tfm {
+            stage
+          }
+        }
+      }
+    `;
+
+    const { data } = await query({
+      query: GET_DEAL,
+      variables: { _id: MOCK_DEAL._id },
+    });
+
+    expect(data.deal.tfm.stage).toEqual(mutationVars.managersDecisionUpdate.decision);
+  });
 });

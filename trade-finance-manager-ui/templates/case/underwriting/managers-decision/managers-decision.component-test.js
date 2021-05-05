@@ -5,24 +5,49 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  let params = {
-    dealId: '1234',
-    deal: {},
-  };
 
   it('should render heading', () => {
-    const wrapper = render(params);
+    const wrapper = render();
     wrapper.expectText('[data-cy="managers-decision-heading"]').toRead('Underwriter manager’s decision');
   });
 
-  it('should render `decision form` component', () => {
-    params = {
+  describe('with params.tfm.underwriterManagersDecision.decision', () => {
+    const params = {
       ...params,
+      tfm: {
+        underwriterManagersDecision: {
+          decision: 'Declined',
+        },
+      },
     };
 
-    const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="managers-decision-form"]').toExist();
-    wrapper.expectElement('[data-cy="managers-decision-submitted"]').notToExist();
+    it('should render managers-decision-submitted component', () => {
+      const wrapper = render(params);
+      wrapper.expectElement('[data-cy="managers-decision-submitted"]').toExist();
+    });
+
+    it('should NOT render link to edit form', () => {
+      const wrapper = render(params);
+      wrapper.expectElement('[data-cy="add-decision-link"]').notToExist();
+    });
+  });
+
+  describe('with NO params.tfm.underwriterManagersDecision.decision and params.userCanEdit', () => {
+    const params = {
+      ...params,
+      tfm: {},
+      userCanEdit: true,
+    };
+
+    it('should NOT render managers-decision-submitted component', () => {
+      const wrapper = render(params);
+      wrapper.expectElement('[data-cy="managers-decision-submitted"]').notToExist();
+    });
+
+    it('should render link to edit form', () => {
+      const wrapper = render(params);
+      wrapper.expectElement('[data-cy="add-decision-link"]').toExist();
+    });
   });
 });

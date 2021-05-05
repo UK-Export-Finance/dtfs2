@@ -4,7 +4,7 @@ const {
   containsNumber,
 } = require('./string');
 
-describe('utils - string', () => {
+describe('helpers - string', () => {
   describe('isEmptyString', () => {
     it('should return true when string is empty or is pure whitespace', () => {
       expect(isEmptyString('')).toEqual(true);

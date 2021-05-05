@@ -1,12 +1,10 @@
 import api from '../../api';
-import caseHelpers from './helpers';
-import CONSTANTS from '../../constants';
-import mapPremiumSchedule from './mapping/mapPremiumSchedule';
-
-const {
+import {
   getTask,
   mapAssignToSelectOptions,
-} = caseHelpers;
+} from './helpers';
+import CONSTANTS from '../../constants';
+import mapPremiumSchedule from './mapping/mapPremiumSchedule';
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle

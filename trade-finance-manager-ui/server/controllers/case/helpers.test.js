@@ -1,17 +1,13 @@
 /* eslint-disable no-underscore-dangle */
-import helpers from './helpers';
-import userHelpers from '../../helpers/user';
-
-const {
+import {
   getGroup,
   getTask,
   isTaskAssignedToUser,
   getTeamMembersWithoutCurrentUser,
   mapTeamMembersSelectOptions,
   mapAssignToSelectOptions,
-} = helpers;
-
-const { userFullName } = userHelpers;
+} from './helpers';
+import { userFullName } from '../../helpers/user';
 
 describe('case - helpers', () => {
   describe('getGroup', () => {

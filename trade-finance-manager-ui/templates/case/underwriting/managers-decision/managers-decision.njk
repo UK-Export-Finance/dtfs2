@@ -1,41 +1,34 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import './_macros/managers-decision-form.njk' as managersDecisionForm %}
+{% import './_macros/managers-decision-submitted.njk' as managersDecisionSubmitted %}
 
-{% extends "index.njk" %}
+{% extends "case/underwriting/layout.njk" %}
 
-{% block content %}
-  <section class="govuk-!-margin-top-9"> 
+{% block underwriting_content %}
 
-    {% if validationErrors.count %}
-      {{
-        govukErrorSummary({
-          titleText: "There is a problem",
-          errorList: validationErrors.summary,
-          attributes: {
-            'data-cy': 'error-summary'
-          }
-        })  
-      }}
-    {% endif %}
+  <div class="govuk-grid-row">
 
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
 
-      <div class="govuk-grid-column-three-quarters">
+    <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
 
-        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
+      {% if tfm.underwriterManagersDecision.decision %}
 
-        {% set managersDecisionFormComponentData = {
-          caseId: dealId,
-          validationErrors: validationErrors,
-          submittedValues: submittedValues
+        {% set managersDecisionSubmittedComponentData = {
+          decision: tfm.underwriterManagersDecision,
+          user: user
         } %}
 
-        {{managersDecisionForm.render(managersDecisionFormComponentData)}}
+        {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
 
-      </div>
+      {% elseif userCanEdit %}
+        <div class="separator-line govuk-!-padding-top-7">
+          <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/managers-decision/edit" data-cy="add-decision-link">Add your decision</a></p>
+        </div>
+      {% endif %}
+      
 
     </div>
 
-  </section>
+  </div>
 
 {% endblock %}
