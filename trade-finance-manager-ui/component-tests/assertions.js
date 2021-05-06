@@ -78,6 +78,9 @@ const assertions = (wrapper, html, params) => ({
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
       expect(wrapper(selector).html().length).toEqual(expected);
     },
+    toHaveCount: (expectedCount) => {
+      expect(wrapper(selector).length).toEqual(expectedCount);
+    },
   }),
   expectInput: (selector) => ({
     toHaveValue: (value) => {

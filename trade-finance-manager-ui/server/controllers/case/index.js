@@ -171,6 +171,8 @@ const getCaseFacility = async (req, res) => {
   const premiumTotals = facility.tfm.premiumSchedule
     ? facility.tfm.premiumSchedule.map((s) => s.income).reduce((a, b) => a + b, 0).toFixed(2)
     : 0;
+
+  console.log({ premiumschedule, premiumTotals });
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,

@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line govuk-!-padding-top-6" data-cy="facility-value-and-exposure">
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6 govuk-!-margin-top-7" data-cy="facility-value-and-exposure">
 
     <div class="govuk-grid-column-full">
 
@@ -113,18 +113,22 @@
       </div>
 
       <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s ukef-grey-bg-row-column-left-text">Maximum UKEF exposure</h4>
-        </div>
-        <div class="govuk-grid-column-three-quarters">
-          <p class="govuk-body-s ukef-grey-bg-row-column-right-text" data-cy="facility-maximum-ukef-exposure">{{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}</p>
+        <div class="govuk-grid-column-one-half">
+          <div class="ukef-grey-bg-row-column-left-text">
+            <div class="govuk-grid-row govuk-grid-column-one-half">
+              <h4 class="govuk-!-margin-0 govuk-!-font-size-16">Maximum UKEF exposure</h4>
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <span class="govuk-body-s" data-cy="facility-maximum-ukef-exposure">{{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line govuk-!-padding-top-6" data-cy="facility-dates">
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6 govuk-!-margin-top-7" data-cy="facility-dates">
 
     <div class="govuk-grid-column-full">
 
@@ -183,7 +187,7 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line govuk-!-padding-top-6" data-cy="facility-pricing-and-risk">
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6 govuk-!-margin-top-7" data-cy="facility-pricing-and-risk">
 
     <div class="govuk-grid-column-full">
 
