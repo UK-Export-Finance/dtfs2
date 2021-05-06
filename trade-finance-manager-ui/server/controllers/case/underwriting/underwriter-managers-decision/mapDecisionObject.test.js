@@ -11,14 +11,14 @@ describe('POST underwriting - map decision object', () => {
     describe('when value is `Approve without conditions`', () => {
       it('should return mapped value', () => {
         const result = mapDecisionValue('Approve with conditions');
-        expect(result).toEqual('Approved with conditions');
+        expect(result).toEqual('Approved (with conditions)');
       });
     });
 
     describe('when value is `Approve without conditions`', () => {
       it('should return mapped value', () => {
         const result = mapDecisionValue('Approve without conditions');
-        expect(result).toEqual('Approved without conditions');
+        expect(result).toEqual('Approved (without conditions)');
       });
     });
 

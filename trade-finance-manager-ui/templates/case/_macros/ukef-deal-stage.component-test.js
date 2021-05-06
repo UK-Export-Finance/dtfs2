@@ -16,32 +16,4 @@ describe(component, () => {
 
     wrapper.expectText('[data-cy="ukef-deal-stage-value"]').toRead(params.stage);
   });
-
-  describe('when params.text is `Approved with conditions`', () => {
-    it('should render modified text', () => {
-      const params = {
-        stage: 'Approved with conditions',
-      };
-
-      wrapper = render(params);
-
-      const expected = 'Approved (with conditions)';
-
-      wrapper.expectText('[data-cy="ukef-deal-stage-value"]').toRead(expected);
-    });
-  });
-
-  describe('when params.text is `Approved without conditions`', () => {
-    it('should render modified text', () => {
-      const params = {
-        stage: 'Approved without conditions',
-      };
-
-      wrapper = render(params);
-
-      const expected = 'Approved (no conditions)';
-
-      wrapper.expectText('[data-cy="ukef-deal-stage-value"]').toRead(expected);
-    });
-  });
 });

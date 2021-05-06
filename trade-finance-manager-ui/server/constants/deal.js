@@ -11,8 +11,8 @@ const UNDERWRITING_MANAGERS_DECISION_INPUT = {
 };
 
 const DEAL_STAGE = {
-  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
-  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  APPROVED_WITH_CONDITIONS: 'Approved (with conditions)',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved (without conditions)',
   DECLINED: 'Declined',
 };
 
