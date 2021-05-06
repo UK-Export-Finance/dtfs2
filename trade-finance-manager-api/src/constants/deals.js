@@ -14,8 +14,8 @@ const DEAL_STAGE_TFM = {
   CONFIRMED: 'Confirmed',
   APPLICATION: 'Application',
   IN_PROGRESS: 'In progress',
-  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
-  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  APPROVED_WITH_CONDITIONS: 'Approved (with conditions)',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved (without conditions)',
   DECLINED: 'Declined',
 };
 
