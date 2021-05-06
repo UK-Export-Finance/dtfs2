@@ -99,6 +99,15 @@ module.exports = [
     assignedTasks: [],
   },
   {
+    username: 'UNDERWRITER_MANAGER_2',
+    email: '',
+    teams: ['UNDERWRITER_MANAGERS'],
+    timezone: 'Europe/London',
+    firstName: 'Jonathan',
+    lastName: 'Roberts',
+    assignedTasks: [],
+  },
+  {
     username: 'UNDERWRITER_1',
     email: '',
     teams: ['UNDERWRITERS'],
