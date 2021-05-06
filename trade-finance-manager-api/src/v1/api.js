@@ -44,13 +44,15 @@ const updatePortalDealStatus = async (dealId, status) => {
 const addPortalDealComment = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
-      method: 'put',
+      method: 'post',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
       headers: {
         'Content-Type': 'application/json',
       },
       data: {
-        status,
+        dealId,
+        commentType,
+        comment,
       },
     });
 
@@ -61,7 +63,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
 };
 
 const updatePortalFacilityStatus = async (facilityId, status) => {
-  try { 
+  try {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
@@ -416,6 +418,7 @@ const createEstoreFolders = async (eStoreFolderInfo) => {
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
+  addPortalDealComment,
   updatePortalDealStatus,
   updatePortalFacilityStatus,
   updateDeal,

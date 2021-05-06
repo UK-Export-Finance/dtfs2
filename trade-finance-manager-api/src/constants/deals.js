@@ -41,6 +41,11 @@ const DEAL_STATUS_PORTAL = {
   REFUSED: 'Rejected by UKEF',
 };
 
+const DEAL_COMMENT_TYPE_PORTAL = {
+  UKEF_COMMENT: 'ukefComments',
+  SPECIAL_CONDITIONS: 'specialConditions',
+};
+
 module.exports = {
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
@@ -49,4 +54,5 @@ module.exports = {
   LOSS_GIVEN_DEFAULT,
   PROBABILITY_OF_DEFAULT,
   DEAL_STATUS_PORTAL,
+  DEAL_COMMENT_TYPE_PORTAL,
 };

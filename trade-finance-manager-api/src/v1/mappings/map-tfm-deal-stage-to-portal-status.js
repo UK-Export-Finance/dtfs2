@@ -10,7 +10,7 @@ const mapTfmDealStageToPortalStatus = (tfmStatus) => {
   }
 
   if (tfmStatus === CONSTANTS.DEALS.DEAL_STAGE_TFM.DECLINED) {
-    return CONSTANTS.DEALS.DEAL_STATUS_PORTAL.DECLINED;
+    return CONSTANTS.DEALS.DEAL_STATUS_PORTAL.REFUSED;
   }
 
   return null;
