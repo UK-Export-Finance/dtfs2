@@ -22,7 +22,7 @@ describe('mapTfmDealStageToPortalStatus', () => {
     it('should return portal status DECLINED', () => {
       const result = mapTfmDealStageToPortalStatus('Declined');
 
-      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL.DECLINED);
+      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL.REFUSED);
     });
   });
 });

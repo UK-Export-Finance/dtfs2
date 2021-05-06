@@ -105,16 +105,20 @@ const updateTfmUnderwriterManagersDecision = async (
     newPortalStatus,
   );
 
-  let portalCommentType = 'ukefComments';
+  let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
   if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.APPROVED_WITH_CONDITIONS) {
-    let portalCommentType = 'specialConditions';
+    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.SPECIAL_CONDITIONS;
   }
+
+  const portalCommentObj = {
+    text: comments,
+  };
 
   api.addPortalDealComment(
     dealId,
     portalCommentType,
-    comments,
+    portalCommentObj,
   );
 
   return updatedDeal.tfm;

@@ -14,7 +14,6 @@ import taskPage from './taskPage';
 import underwritingPricingAndRiskPage from './underwriting/pricingAndRiskPage';
 import underwritingPricingAndRiskEditPage from './underwriting/pricingAndRiskEditPage';
 import underwritingBankSecurity from './underwriting/bankSecurityPage';
-import managersDecisionFormPage from './underwriting/managersDecisionFormPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
 
 export default {
@@ -34,6 +33,5 @@ export default {
   underwritingPricingAndRiskPage,
   underwritingPricingAndRiskEditPage,
   underwritingBankSecurity,
-  managersDecisionFormPage,
   managersDecisionPage,
 };
