@@ -25,8 +25,8 @@ describe(page, () => {
       guaranteeFeePayableToUkef: '10%',
       banksInterestMargin: '10%',
       firstDrawdownAmountInExportCurrency: 'GBP 1,234',
-      feeType: 'At maturity',
-      feeFrequency: '',
+      feeType: 'In arrears',
+      feeFrequency: 'Monthly',
       dayCountBasis: '365',
       dates: {
         inclusionNoticeReceived: '1606900616651',
@@ -45,6 +45,57 @@ describe(page, () => {
     user: {
       timezone: 'Europe/London',
     },
+    premiumschedule: [
+      {
+        id: 2035,
+        calculationDate: '2021-05-06',
+        income: 99.2,
+        incomePerDay: 3.2,
+        exposure: 64000,
+        period: 1,
+        daysInPeriod: 31,
+        effectiveFrom: '2021-05-06T00:00:00',
+        effectiveTo: '2023-05-05T00:00:00',
+        created: '2021-05-06T11:08:41',
+        updated: '2021-05-06T11:08:41',
+        isAtive: 'Y',
+        __typename: 'PremiumScheduleData',
+        formattedIncome: '99.20',
+      },
+      {
+        id: 2036,
+        calculationDate: '2021-06-06',
+        income: 96,
+        incomePerDay: 3.2,
+        exposure: 64000,
+        period: 2,
+        daysInPeriod: 30,
+        effectiveFrom: '2021-05-06T00:00:00',
+        effectiveTo: '2023-05-05T00:00:00',
+        created: '2021-05-06T11:08:41',
+        updated: '2021-05-06T11:08:41',
+        isAtive: 'Y',
+        __typename: 'PremiumScheduleData',
+        formattedIncome: '96.00',
+      },
+      {
+        id: 2037,
+        calculationDate: '2021-07-06',
+        income: 99.2,
+        incomePerDay: 3.2,
+        exposure: 64000,
+        period: 3,
+        daysInPeriod: 31,
+        effectiveFrom: '2021-05-06T00:00:00',
+        effectiveTo: '2023-05-05T00:00:00',
+        created: '2021-05-06T11:08:41',
+        updated: '2021-05-06T11:08:41',
+        isAtive: 'Y',
+        __typename: 'PremiumScheduleData',
+        formattedIncome: '99.20',
+      },
+    ],
+    premiumTotals: '294.40',
   };
 
   beforeEach(() => {
@@ -62,6 +113,27 @@ describe(page, () => {
 
     it('should render day count basis', () => {
       wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead(params.facility.dayCountBasis);
+    });
+
+    it('should render correct nmber of premium schedule rows', () => {
+      wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumschedule.length);
+    });
+
+    describe('at maturity', () => {
+      beforeEach(() => {
+        const atMaturityParams = {
+          facility: {
+            ...params.facility,
+            feeType: 'At maturity',
+            feeFrequency: '',
+          },
+        };
+        wrapper = render(atMaturityParams);
+      });
+
+      it('should not render fee frequency', () => {
+        wrapper.expectText('[data-cy="facility-premium-frequency"]').notToExist();
+      });
     });
   });
 });

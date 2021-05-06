@@ -49,36 +49,39 @@
       <div class="govuk-grid-row ">
         <div class="govuk-grid-column-one-half">
           <div class="ukef-grey-bg-row-column-left-text">
-            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF:</span>
+            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF</span>
             <span class="govuk-!-font-size-16" data-cy="premiumTotals">
-            GBP {{ premiumTotals }}
+            GBP {{ premiumTotals | formatAsCurrency }}
             </span>
+          </div>
         </div>
-
       </div>
-      <table class="govuk-table facilities-table" data-cy="facilities-table">
+      
+      <table class="govuk-table govuk-!-margin-top-9" data-cy="facilities-table">
         <thead class="govuk-table__head">
-          <tr>
-            <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-facility-id">Payment</th>
-            <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-cover-end-date">Due date</th>
-            <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-value-gbp">Amount to be paid to UKEF (GBP)</th>
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter govuk-table__header--numeric govuk-body-s" data-cy="facilities-table-heading-facility-id">Payment</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter govuk-table__header--numeric govuk-body-s" data-cy="facilities-table-heading-cover-end-date">Due date</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter govuk-table__header--numeric govuk-body-s" data-cy="facilities-table-heading-value-gbp">Amount to be paid to UKEF (GBP)</th>
+            <th class="govuk-table__header govuk-!-width-one-quarter"></th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
           {% for schedule_item in schedule %}
-            <tr class="govuk-table__row" data-cy="schedule_item-{{ schedule_item.id }}">
-              <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ schedule_item._id }}-payment">{{ schedule_item.period }}</td>
-              <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ schedule_item._id }}-dueDate">{{ schedule_item.calculationDate | dashIfEmpty }}</td>
-              <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ schedule_item._id }}-amount">{{ schedule_item.formattedIncome }}</td>
+            <tr class="govuk-table__row" data-cy="schedule_item">
+              <th scope="row" class="govuk-table__cell govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item._id }}-payment">{{ schedule_item.period }}</th>
+              <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item._id }}-dueDate">{{ schedule_item.calculationDate | formatDate('DD MMM YYYY') }}</td>
+              <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item._id }}-amount">{{ schedule_item.formattedIncome }}</td>
+              <td class="govuk-table__cell govuk-!-width-one-quarter"></td> 
             </tr>
           {% endfor %}
         </tbody>
         <tfoot>
           <tr>
-            <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold"></td>
-            <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold"></td>
-            <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold" data-cy="premiumTotals">Total:
-              {{ premiumTotals }}</td>
+            <td colspan="3" class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold govuk-table__cell--numeric" data-cy="premiumTotals">
+              Total {{ premiumTotals | formatAsCurrency }}
+            </td>
+            <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
           </tr>
         </tfoot>
       </table>

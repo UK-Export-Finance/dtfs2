@@ -8,6 +8,7 @@ import replaceWhiteSpaceWithDash from './filter-replaceWhiteSpaceWithDash';
 import bondBeneficiaryFacilities from './filter-bondBeneficiaryFacilities';
 import bondIssuerFacilities from './filter-bondIssuerFacilities';
 import formatAsDecimal from './formatAsDecimal';
+import formatDate from './formatDate';
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -27,6 +28,8 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
+  nunjucksEnvironment.addFilter('formatDate', formatDate);
+
   return nunjucks;
 };
 
