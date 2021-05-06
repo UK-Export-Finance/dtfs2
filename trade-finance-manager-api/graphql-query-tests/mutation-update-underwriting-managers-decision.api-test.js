@@ -47,7 +47,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
       managersDecisionUpdate: {
-        decision: 'Approve without conditions',
+        decision: 'Approved without conditions',
         comments: 'Test comment',
         internalComments: 'Internal comment',
         userFullName: 'Test User',
