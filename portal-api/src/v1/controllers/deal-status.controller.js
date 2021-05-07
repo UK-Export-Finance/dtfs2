@@ -164,7 +164,7 @@ exports.update = (req, res) => {
         }
 
         // Integrate with TFM
-        api.tfmDealSubmit(deal._id); // eslint-disable-line no-underscore-dangle
+        await api.tfmDealSubmit(deal._id, req.user); // eslint-disable-line no-underscore-dangle
       } else {
         // Integrate with workflow
         const { previousWorkflowStatus } = deal.details;

@@ -1,29 +1,44 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 
-const updatePortalDealStatus = async (dealId, submissionType) => {
+const updatePortalDealStatus = async (deal) => {
+  const { _id: dealId } = deal;
+  const { submissionType} = deal.details;
+
+  let newStatus;
+
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED;
+
     await api.updatePortalDealStatus(
       dealId,
-      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+      newStatus,
     );
   }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL.IN_PROGRESS;
+
     await api.updatePortalDealStatus(
       dealId,
-      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.IN_PROGRESS,
+      newStatus,
     );
   }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
+    newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED;
+
     await api.updatePortalDealStatus(
       dealId,
-      CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED,
+      newStatus,
     );
   }
 
-  return null;
+  if (newStatus) {
+    deal.details.status = newStatus;
+  }
+
+  return deal;
 };
 
 exports.updatePortalDealStatus = updatePortalDealStatus;
