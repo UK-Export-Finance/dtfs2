@@ -1,4 +1,7 @@
-const { findOnePortalDeal } = require('./deal.controller');
+const {
+  findOneDeal,
+  findOnePortalDeal,
+} = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
@@ -12,12 +15,14 @@ const api = require('../api');
 const { createEstoreFolders } = require('./estore.controller');
 const acbsController = require('./acbs.controller');
 
-const submitDeal = async (dealId) => {
+const submitDeal = async (dealId, portalChecker) => {
   const deal = await findOnePortalDeal(dealId);
 
   if (!deal) {
     return false;
   }
+
+  const { tfm: tfmDeal } = await findOneDeal(dealId);
 
   const { submissionCount } = deal.details;
 
@@ -27,10 +32,7 @@ const submitDeal = async (dealId) => {
   const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
-    await updatePortalDealStatus(
-      dealId,
-      deal.details.submissionType,
-    );
+    await updatePortalDealStatus(deal);
 
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
@@ -57,14 +59,35 @@ const submitDeal = async (dealId) => {
   if (dealHasBeenResubmit) {
     const dealWithUpdatedFacilities = await updatedIssuedFacilities(submittedDeal);
 
-    await updatePortalDealStatus(
-      dealId,
-      deal.details.submissionType,
-    );
-
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       await acbsController.issueAcbsFacilities(dealWithUpdatedFacilities);
     }
+
+    // update submission type
+    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+      if (tfmDeal.underwriterManagersDecision) {
+        if (tfmDeal.underwriterManagersDecision.decision === 'Approved (with conditions)'
+          || tfmDeal.underwriterManagersDecision.decision === 'Approved (without conditions)') {
+
+          const dealUpdate = {
+            details: {
+              submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+              checkerMIN: portalChecker,
+              // manualInclusionNoticeSubmissionDate
+            },
+          };
+
+          await api.updatePortalDeal(
+            dealId,
+            dealUpdate,
+          );
+
+          deal.details.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+        }
+      }
+    }
+
+    await updatePortalDealStatus(deal);
 
     return api.updateDeal(dealId, dealWithUpdatedFacilities);
   }
@@ -75,7 +98,10 @@ const submitDeal = async (dealId) => {
 exports.submitDeal = submitDeal;
 
 const submitDealPUT = async (req, res) => {
-  const { dealId } = req.body;
+  const {
+    dealId,
+    portalChecker,
+  } = req.body;
 
   const dealInit = await submitDeal(dealId);
 
