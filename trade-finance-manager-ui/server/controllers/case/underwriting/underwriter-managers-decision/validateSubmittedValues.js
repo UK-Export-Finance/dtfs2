@@ -1,12 +1,53 @@
-import { hasValue } from '../../../../helpers/string';
+import {
+  hasValue,
+  isAlphanumeric,
+} from '../../../../helpers/string';
 import increment from '../../../../helpers/number';
 import generateValidationErrors from '../../../../helpers/validation';
 
-const validateSubmittedValues = (submittedValues) => {
+const MAX_COMMENTS_LENGTH = 1000;
+
+export const validateCommentField = (
+  validationErrors,
+  errorsCount,
+  fieldLabel,
+  fieldId,
+  value,
+) => {
+  let errors = validationErrors;
+  let count = errorsCount;
+
+  if (!isAlphanumeric(value)) {
+    count = increment(count);
+
+    errors = generateValidationErrors(
+      fieldId,
+      `${fieldLabel} must only include letters a to z, numbers, hyphens and spaces`,
+      count,
+      errors,
+    );
+  }
+
+  if (value.length > MAX_COMMENTS_LENGTH) {
+    count = increment(count);
+
+    errors = generateValidationErrors(
+      fieldId,
+      `${fieldLabel} must be ${MAX_COMMENTS_LENGTH} characters or fewer`,
+      count,
+      errors,
+    );
+  }
+
+  return {
+    errorsCount: count,
+    validationErrors: errors,
+  };
+};
+
+export const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};
   let errorsCount = 0;
-
-  const MAX_COMMENTS_LENGTH = 1000;
 
   const {
     decision,
@@ -38,16 +79,17 @@ const validateSubmittedValues = (submittedValues) => {
       );
     }
 
-    if (hasValue(approveWithConditionsComments)
-      && approveWithConditionsComments.length > MAX_COMMENTS_LENGTH) {
-      errorsCount = increment(errorsCount);
-
-      validationErrors = generateValidationErrors(
-        'approveWithConditionsComments',
-        `Conditions must be ${MAX_COMMENTS_LENGTH} or fewer`,
-        errorsCount,
+    if (hasValue(approveWithConditionsComments)) {
+      const validatedConditionsComments = validateCommentField(
         validationErrors,
+        errorsCount,
+        'Conditions',
+        'approveWithConditionsComments',
+        approveWithConditionsComments,
       );
+
+      validationErrors = validatedConditionsComments.validationErrors;
+      errorsCount = validatedConditionsComments.errorsCount;
     }
   }
 
@@ -63,29 +105,31 @@ const validateSubmittedValues = (submittedValues) => {
       );
     }
 
-    if (hasValue(declineComments)
-      && declineComments.length > MAX_COMMENTS_LENGTH) {
-      errorsCount = increment(errorsCount);
-
-      validationErrors = generateValidationErrors(
-        'declineComments',
-        `Reasons must be ${MAX_COMMENTS_LENGTH} or fewer`,
-        errorsCount,
+    if (hasValue(declineComments)) {
+      const validatedDeclineComments = validateCommentField(
         validationErrors,
+        errorsCount,
+        'Reasons',
+        'declineComments',
+        declineComments,
       );
+
+      validationErrors = validatedDeclineComments.validationErrors;
+      errorsCount = validatedDeclineComments.errorsCount;
     }
   }
 
-  if (hasValue(internalComments)
-    && internalComments.length > MAX_COMMENTS_LENGTH) {
-    errorsCount = increment(errorsCount);
-
-    validationErrors = generateValidationErrors(
-      'internalComments',
-      `Comments must be ${MAX_COMMENTS_LENGTH} or fewer`,
-      errorsCount,
+  if (hasValue(internalComments)) {
+    const validatedInternalComments = validateCommentField(
       validationErrors,
+      errorsCount,
+      'Comments',
+      'internalComments',
+      internalComments,
     );
+
+    validationErrors = validatedInternalComments.validationErrors;
+    errorsCount = validatedInternalComments.errorsCount;
   }
 
   if (Object.keys(validationErrors).length > 0) {
@@ -94,5 +138,3 @@ const validateSubmittedValues = (submittedValues) => {
 
   return false;
 };
-
-export default validateSubmittedValues;

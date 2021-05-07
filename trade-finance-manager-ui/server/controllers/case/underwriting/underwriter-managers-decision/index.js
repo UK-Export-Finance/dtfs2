@@ -1,6 +1,6 @@
 import api from '../../../../api';
 import canUserEdit from './helpers';
-import validateSubmittedValues from './validateSubmittedValues';
+import { validateSubmittedValues } from './validateSubmittedValues';
 import { mapDecisionObject } from './mapDecisionObject';
 
 const getUnderwriterManagersDecision = async (req, res) => {
