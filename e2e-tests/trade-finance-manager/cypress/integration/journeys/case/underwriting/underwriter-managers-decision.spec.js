@@ -154,7 +154,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
     // assert values are displayed in decision page
     pages.managersDecisionPage.decisionStatusTag().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Approved with conditions');
+      expect(text.trim()).to.equal('Approved (with conditions)');
     });
 
     pages.managersDecisionPage.decisionMadeBy().invoke('text').then((text) => {
