@@ -329,6 +329,30 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
 
+
+const getUnderWritingPricingAndRiskFacilityRiskProfileEdit = async (req, res) => {
+  const {
+    _id: dealId, // eslint-disable-line no-underscore-dangle
+    facilityId,
+  } = req.params;
+
+  const deal = await api.getDeal(dealId);
+  const facility = await api.getFacility(facilityId);
+
+  if (!deal || !facility) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/underwriting/pricing-and-risk/edit-facility-risk-profile.njk', {
+    deal: deal.dealSnapshot,
+    facilityId,
+    tfm: deal.tfm,
+    dealId,
+    user: req.session.user,
+  });
+};
+
+
 export default {
   getUnderWritingPricingAndRisk,
   getUnderWritingPricingAndRiskEdit,
