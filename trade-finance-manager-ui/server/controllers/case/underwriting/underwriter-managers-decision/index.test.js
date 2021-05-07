@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import underwriterManagersDecisionController from '.';
 import canUserEdit from './helpers';
-import validateSubmittedValues from './validateSubmittedValues';
+import { validateSubmittedValues } from './validateSubmittedValues';
 import { mapDecisionObject } from './mapDecisionObject';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
