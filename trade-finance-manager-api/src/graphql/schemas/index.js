@@ -365,6 +365,10 @@ input TFMCreditRatingInput {
   exporterCreditRating: String
 }
 
+input TFMLossGivenDefaultInput {
+  lossGivenDefault: String
+}
+
 input TFMUnderwriterManagersDecisionInput {
   decision: String
   comments: String
@@ -390,6 +394,7 @@ type Mutation {
   updateFacility(_id: ID!, facilityUpdate: TFMFacilityInput): TFMFacilityData
   updateTask(dealId: ID!, taskUpdate: TFMTaskInput): TFMTask
   updateCreditRating(dealId: ID!, creditRatingUpdate: TFMCreditRatingInput): TFMDealData
+  updateLossGivenDefault(dealId: ID!, lossGivenDefaultUpdate: TFMLossGivenDefaultInput): TFMDealData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
 }
 `;

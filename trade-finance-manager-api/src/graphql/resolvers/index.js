@@ -7,6 +7,7 @@ const updateParties = require('./mutation-update-parties');
 const updateFacility = require('./mutation-update-facility');
 const updateTask = require('./mutation-update-task');
 const updateCreditRating = require('./mutation-update-credit-rating');
+const updateLossGivenDefault = require('./mutation-update-loss-given-default');
 const updateUnderwriterManagersDecision = require('./mutation-update-underwriter-managers-decision');
 
 
@@ -22,6 +23,7 @@ const resolvers = {
     updateFacility: (root, args) => updateFacility(args),
     updateTask: (root, args) => updateTask(args),
     updateCreditRating: (root, args) => updateCreditRating(args),
+    updateLossGivenDefault: (root, args) => updateLossGivenDefault(args),
     updateUnderwriterManagersDecision: (root, args) => updateUnderwriterManagersDecision(args),
   },
 };

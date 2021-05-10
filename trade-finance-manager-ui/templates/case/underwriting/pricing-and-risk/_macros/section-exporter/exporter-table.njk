@@ -48,7 +48,13 @@
         </td>
 
         <td class="govuk-table__cell" data-cy="exporter-table-loss-given-default-value">
-          {{ lossGivenDefault }}
+          {{ lossGivenDefault }}%
+        </td>
+
+        <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
+          {% if userCanEdit %}
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/loss-given-default" data-cy="exporter-table-change-credit-rating-link">Change</a>
+          {% endif %}
         </td>
         
       </tr>
