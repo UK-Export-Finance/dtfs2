@@ -1,3 +1,4 @@
+import moment from 'moment';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
@@ -87,9 +88,6 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('UNDERWRITER_MANAGER_1');
     tfmPages.landingPage.submitButton().click();
 
-    // const row = tfmPages.dealsPage.dealsTable.row(dealId);
-    // row.dealLink().click();
-    // cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
     cy.forceVisit(`${tfmRootUrl}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
@@ -183,6 +181,17 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
 
-    // TODO: check for MIA/MIN changes
+    //---------------------------------------------------------------
+    // portal deal should now be MIN with submission date
+    //---------------------------------------------------------------
+    portalPages.contract.eligibilitySubmissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Manual Inclusion Notice');
+    });
+
+    portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().invoke('text').then((text) => {
+      const todayFormatted = moment().format('DD/MM/YYYY');
+
+      expect(text.trim()).to.contain(todayFormatted);
+    });
   });
 });
