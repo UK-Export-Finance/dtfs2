@@ -64,7 +64,7 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('include', '/dashboard');
 
 
-    cy.wait(5000); // wait for TFM to do it's thing
+    cy.wait(10000); // wait for TFM to do it's thing
 
     //---------------------------------------------------------------
     // user login to TFM
