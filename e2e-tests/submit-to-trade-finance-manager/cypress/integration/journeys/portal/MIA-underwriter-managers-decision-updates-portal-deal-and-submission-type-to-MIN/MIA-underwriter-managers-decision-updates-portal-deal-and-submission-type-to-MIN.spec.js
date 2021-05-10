@@ -1,6 +1,5 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
-import portalPartials from '../../../../../../portal/cypress/integration/partials';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
@@ -42,7 +41,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Todo.........', () => {
+  it('MIA is submitted, TFM Underwriter submits `Approved` decision. Portal status updates; Portal deal is resubmitted and then should become an MIN', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -123,23 +122,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
     });
-
-    // //---------------------------------------------------------------
-    // // Portal deal comments/conditions should be displayed
-    // //---------------------------------------------------------------
-    // portalPages.contract.commentsTab().click();
-
-    // portalPartials.ukefComments.specialCondition.title().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal('Special Conditions:');
-    // });
-
-    // portalPartials.ukefComments.specialCondition.text().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal(MOCK_COMMENTS);
-    // });
-
-
-
-    // ANYTHING BELOW HERE IS NOT IN ANOTHER E2E TEST.
 
     //---------------------------------------------------------------
     // portal maker goes back into the deal
