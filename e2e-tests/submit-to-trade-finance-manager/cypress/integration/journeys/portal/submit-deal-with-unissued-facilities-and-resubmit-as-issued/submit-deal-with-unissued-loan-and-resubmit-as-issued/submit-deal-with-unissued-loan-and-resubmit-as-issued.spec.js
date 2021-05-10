@@ -77,7 +77,6 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('include', '/dashboard');
 
 
-
     //---------------------------------------------------------------
     // TFM loan values should render in an unissued state
     //---------------------------------------------------------------
@@ -173,8 +172,8 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.facilityPage.firstDrawdownAmountInExportCurrency().invoke('text').then((text) => {
       const expectedValue = Number(DISBURSEMENT_AMOUNT_VALUE).toLocaleString('en', {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 4,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
       });
 
       const expected = `${loan.currency.id} ${expectedValue}`;
