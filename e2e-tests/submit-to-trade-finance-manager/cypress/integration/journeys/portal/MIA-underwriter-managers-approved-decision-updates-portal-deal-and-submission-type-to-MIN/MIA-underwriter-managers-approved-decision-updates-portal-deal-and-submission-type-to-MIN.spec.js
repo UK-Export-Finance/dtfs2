@@ -78,6 +78,13 @@ context('Portal to TFM deal submission', () => {
     });
 
     //---------------------------------------------------------------
+    // Portal deal submission type should be MIA to start with
+    //---------------------------------------------------------------
+    portalPages.contract.eligibilitySubmissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Manual Inclusion Application');
+    });
+
+    //---------------------------------------------------------------
     // Underwriter Manager logs in to TFM
     //---------------------------------------------------------------
     // Cypress.config('tfmUrl') returns incorrect url...
@@ -89,6 +96,13 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.submitButton().click();
 
     cy.forceVisit(`${tfmRootUrl}/case/${dealId}/deal`);
+
+    //---------------------------------------------------------------
+    // TFM deal submission type should be MIA to start with
+    //---------------------------------------------------------------
+    tfmPartials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Manual Inclusion Application');
+    });
 
     //---------------------------------------------------------------
     // Underwriter Manager submits a decision
@@ -175,7 +189,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal deal status should be updated
     //---------------------------------------------------------------
-    cy.wait(1000); // wait for TFM to do it's thing
+    cy.wait(3000); // wait for TFM to do it's thing
     portalPages.contract.visit(deal);
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acknowledged by UKEF');
@@ -192,6 +206,25 @@ context('Portal to TFM deal submission', () => {
       const todayFormatted = moment().format('DD/MM/YYYY');
 
       expect(text.trim()).to.contain(todayFormatted);
+    });
+
+    //---------------------------------------------------------------
+    // Go back to TFM
+    //---------------------------------------------------------------
+    cy.forceVisit(tfmRootUrl);
+
+    tfmPages.landingPage.email().type('UNDERWRITER_MANAGER_1');
+    tfmPages.landingPage.submitButton().click();
+
+    cy.forceVisit(`${tfmRootUrl}/case/${dealId}/deal`);
+
+    // TODO add check for init MIA in TFM
+    // TODO add check for init MIA in Portal?
+    //---------------------------------------------------------------
+    // TFM deal submission type should have changed from MIA to MIN
+    //---------------------------------------------------------------
+    tfmPartials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Manual Inclusion Notice');
     });
   });
 });

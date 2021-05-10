@@ -59,21 +59,30 @@ const submitDeal = async (dealId, portalChecker) => {
   }
 
   if (dealHasBeenResubmit) {
-    const dealWithUpdatedFacilities = await updatedIssuedFacilities(submittedDeal);
+    const updatedDeal = await updatedIssuedFacilities(submittedDeal);
 
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-      await acbsController.issueAcbsFacilities(dealWithUpdatedFacilities);
+      await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
     if (shouldUpdateDealFromMIAtoMIN(deal, tfmDeal)) {
-      await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
+      const minUpdate = await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
 
-      deal.details.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+      // add MIN details to TFM deal
+      // updatedDeal.dealSnapshot.details = {
+      //   ...updatedDeal.dealSnapshot.details,
+      //   ...minUpdate,
+      // };
+
+      // TODO
+      // issue is that central api doesn't allow snapshot to be changed.
+      // how to do this... have dev chat (see slack)
+      // :/
     }
 
-    await updatePortalDealStatus(deal);
+    await updatePortalDealStatus(updatedDeal.dealSnapshot);
 
-    return api.updateDeal(dealId, dealWithUpdatedFacilities);
+    return api.updateDeal(dealId, updatedDeal);
   }
 
   return api.updateDeal(dealId, submittedDeal);
