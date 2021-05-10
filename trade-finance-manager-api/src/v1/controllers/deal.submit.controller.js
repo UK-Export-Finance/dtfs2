@@ -84,9 +84,10 @@ exports.submitDeal = submitDeal;
 const submitDealPUT = async (req, res) => {
   const {
     dealId,
+    portalChecker,
   } = req.body;
 
-  const dealInit = await submitDeal(dealId);
+  const dealInit = await submitDeal(dealId, portalChecker);
 
   if (!dealInit) {
     return res.status(404).send();
