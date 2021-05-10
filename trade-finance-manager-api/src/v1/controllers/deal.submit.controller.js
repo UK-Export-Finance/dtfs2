@@ -14,6 +14,8 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { createEstoreFolders } = require('./estore.controller');
 const acbsController = require('./acbs.controller');
+const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
+const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 
 const submitDeal = async (dealId, portalChecker) => {
   const deal = await findOnePortalDeal(dealId);
@@ -63,28 +65,10 @@ const submitDeal = async (dealId, portalChecker) => {
       await acbsController.issueAcbsFacilities(dealWithUpdatedFacilities);
     }
 
-    // update submission type
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      if (tfmDeal.underwriterManagersDecision) {
-        if (tfmDeal.underwriterManagersDecision.decision === 'Approved (with conditions)'
-          || tfmDeal.underwriterManagersDecision.decision === 'Approved (without conditions)') {
+    if (shouldUpdateDealFromMIAtoMIN(deal, tfmDeal)) {
+      await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
 
-          const dealUpdate = {
-            details: {
-              submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-              checkerMIN: portalChecker,
-              // manualInclusionNoticeSubmissionDate
-            },
-          };
-
-          await api.updatePortalDeal(
-            dealId,
-            dealUpdate,
-          );
-
-          deal.details.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
-        }
-      }
+      deal.details.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
     }
 
     await updatePortalDealStatus(deal);
@@ -100,7 +84,6 @@ exports.submitDeal = submitDeal;
 const submitDealPUT = async (req, res) => {
   const {
     dealId,
-    portalChecker,
   } = req.body;
 
   const dealInit = await submitDeal(dealId);
