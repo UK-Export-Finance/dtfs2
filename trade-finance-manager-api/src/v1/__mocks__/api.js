@@ -76,6 +76,10 @@ module.exports = {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
+  updatePortalDeal: (dealId, update) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    return Promise.resolve(deal);
+  };
   updatePortalDealStatus: (dealId, statusUpdate) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     const updatedDeal = {

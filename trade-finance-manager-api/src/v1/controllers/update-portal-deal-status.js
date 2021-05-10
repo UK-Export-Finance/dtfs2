@@ -36,10 +36,6 @@ const updatePortalDealStatus = async (deal) => {
     );
   }
 
-  if (newStatus) {
-    updatedDeal.details.status = newStatus;
-  }
-
   return updatedDeal;
 };
 
