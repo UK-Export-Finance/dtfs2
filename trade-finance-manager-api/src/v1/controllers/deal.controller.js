@@ -76,6 +76,20 @@ const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
 };
 exports.updateTfmCreditRating = updateTfmCreditRating;
 
+const updateTfmLossGivenDefault = async (dealId, lossGivenDefault) => {
+  const lossGivenDefaultUpdate = {
+    tfm: {
+      lossGivenDefault,
+    },
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedDeal = await api.updateDeal(dealId, lossGivenDefaultUpdate);
+
+  return updatedDeal.tfm;
+};
+exports.updateTfmLossGivenDefault = updateTfmLossGivenDefault;
+
 const updateTfmUnderwriterManagersDecision = async (
   dealId,
   decision,
