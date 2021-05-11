@@ -31,12 +31,18 @@
             label: {
               text: labelText,
               isPageHeading: true,
-              classes: "govuk-label--l"
+              classes: "govuk-label--l",
+              attributes: {
+                'data-cy': 'label-heading'
+              }
             },
             value: tfm.lossGivenDefault,
             classes: "govuk-input--width-5",
             id: "lossGivenDefault",
             name: "lossGivenDefault",
+            attributes: {
+              'data-cy': 'input-loss-given-default'
+            },
             suffix: {
               text: "%"
             },

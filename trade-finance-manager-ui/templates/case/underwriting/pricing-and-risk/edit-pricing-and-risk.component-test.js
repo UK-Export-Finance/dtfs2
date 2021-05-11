@@ -1,4 +1,5 @@
 const pageRenderer = require('../../../../component-tests/pageRenderer');
+
 const page = '../templates/case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk';
 
 const render = pageRenderer(page);

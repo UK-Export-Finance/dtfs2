@@ -1,15 +1,16 @@
 const componentRenderer = require('../../../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/exporter-table.njk';
 
 const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  let defaultParams = {
+  const defaultParams = {
     caseId: '1234',
     exporterCreditRating: 'Good (BB-)',
     userCanEdit: false,
-    lossGivenDefault: '50%',
+    lossGivenDefault: '50',
     probabilityOfDefault: 'Less than 14.1%',
   };
 
@@ -59,8 +60,11 @@ describe(component, () => {
 
         wrapper.expectLink('[data-cy="exporter-table-change-credit-rating-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change');
+
+        wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');
       });
-    })
+    });
   });
 
   describe('loss given default', () => {
@@ -73,7 +77,7 @@ describe(component, () => {
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead(defaultParams.lossGivenDefault);
+      wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead(`${defaultParams.lossGivenDefault}%`);
     });
   });
 
