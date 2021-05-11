@@ -25,7 +25,7 @@ describe('POST underwriting - validate submitted values', () => {
           errorsCount: 1,
           validationErrors: generateValidationErrors(
             fieldId,
-            `${fieldLabel} must only include letters a to z, numbers, hyphens and spaces`,
+            `${fieldLabel} must only include letters a to z, numbers, hyphens, commas and spaces`,
             count + 1,
             errors,
           ),

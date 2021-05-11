@@ -106,7 +106,10 @@
             attributes: {
               'data-cy': 'internalComments-input'
             },
-            value: submittedValues.internalComments
+            value: submittedValues.internalComments,
+            errorMessage: validationErrors.errorList.internalComments and {
+              text: validationErrors.errorList.internalComments.text
+            }
           }) }}
 
           {{ govukButton({

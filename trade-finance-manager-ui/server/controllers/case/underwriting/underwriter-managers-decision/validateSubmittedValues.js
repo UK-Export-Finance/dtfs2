@@ -22,7 +22,7 @@ export const validateCommentField = (
 
     errors = generateValidationErrors(
       fieldId,
-      `${fieldLabel} must only include letters a to z, numbers, hyphens and spaces`,
+      `${fieldLabel} must only include letters a to z, numbers, hyphens, commas and spaces`,
       count,
       errors,
     );
