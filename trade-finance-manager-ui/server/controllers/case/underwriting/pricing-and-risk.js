@@ -158,7 +158,10 @@ const getUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+
+  if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
   }
 
@@ -177,7 +180,10 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+
+  if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
   }
 

@@ -209,6 +209,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
     pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
     pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
+    pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.be.visible');
   });
 
   // TODO what if they manually navigate to the page?
