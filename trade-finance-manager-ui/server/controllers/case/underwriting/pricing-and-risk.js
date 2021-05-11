@@ -186,22 +186,22 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
 
   const { lossGivenDefault } = req.body;
 
-  if (!lossGivenDefault) {
-    errorMsg = 'Enter a loss given default';
-  }
-
-
+  // eslint-disable-next-line eqeqeq
   if (Number(lossGivenDefault) != lossGivenDefault
     || Number(lossGivenDefault) < 1
     || Number(lossGivenDefault) > 100) {
     errorMsg = 'Enter a value between 1 - 100';
   }
 
+  if (!lossGivenDefault) {
+    errorMsg = 'Enter a loss given default';
+  }
+
   if (errorMsg) {
     validationErrors = {
       count: 1,
       errorList: {
-        exporterCreditRating: {
+        lossGivenDefault: {
           text: errorMsg,
           order: '1',
         },
