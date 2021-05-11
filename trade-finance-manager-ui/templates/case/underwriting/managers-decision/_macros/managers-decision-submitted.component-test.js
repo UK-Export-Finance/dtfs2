@@ -70,10 +70,34 @@ describe(component, () => {
       },
     };
 
-    it('should render `Conditions` / comments heading', () => {
-      const wrapper = render(paramsWithComments);
+    describe('comments heading', () => {
+      it('should render `Conditions` text', () => {
+        params = {
+          ...paramsWithComments,
+          decision: {
+            ...paramsWithComments.decision,
+            decision: 'Approved (with conditions)'
+          },
+        };
 
-      wrapper.expectText('[data-cy="conditions-heading"]').toRead('Conditions');
+        const wrapper = render(params);
+
+        wrapper.expectText('[data-cy="comments-heading"]').toRead('Conditions');
+      });
+
+      it('should render `Reasons` text when decision is `Declined`', () => {
+        params = {
+          ...paramsWithComments,
+          decision: {
+            ...paramsWithComments.decision,
+            decision: 'Declined'
+          },
+        };
+
+        const wrapper = render(params);
+
+        wrapper.expectText('[data-cy="comments-heading"]').toRead('Reasons');
+      });
     });
 
     it('should render `Conditions` / comments value', () => {
