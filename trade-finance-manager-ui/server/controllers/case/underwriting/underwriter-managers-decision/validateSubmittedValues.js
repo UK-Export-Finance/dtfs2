@@ -28,7 +28,13 @@ export const validateCommentField = (
     );
   }
 
-  if (value.length > MAX_COMMENTS_LENGTH) {
+  // remove new lines from textarea input value
+  const strippedValueArray = value.split(/[\r]/g);
+
+  // combine split values into single array
+  const strippedValue = strippedValueArray.reduce((a, b) => [...a, ...b], []);
+
+  if (strippedValue.length > MAX_COMMENTS_LENGTH) {
     count = increment(count);
 
     errors = generateValidationErrors(
