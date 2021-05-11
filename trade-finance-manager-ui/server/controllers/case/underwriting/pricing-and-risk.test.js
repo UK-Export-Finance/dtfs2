@@ -13,7 +13,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['TEAM1'],
+    teams: ['UNDERWRITING_SUPPORT'],
   },
 };
 
@@ -373,7 +373,7 @@ describe('GET underwriting - loss given default', () => {
       api.getDeal = () => Promise.resolve(mockDeal);
     });
 
-    it('should render loan given default template with data', async () => {
+    it('should render loss given default template with data', async () => {
       const req = {
         params: {
           _id: mockDeal._id,
