@@ -18,15 +18,16 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 
 const submitDeal = async (dealId, portalChecker) => {
-  const deal = await findOnePortalDeal(dealId);
+  // TOO RENAME to portalDeal
+  const portalDeal = await findOnePortalDeal(dealId);
 
-  if (!deal) {
+  if (!portalDeal) {
     return false;
   }
 
   const { tfm: tfmDeal } = await findOneDeal(dealId);
 
-  const { submissionCount } = deal.details;
+  const { submissionCount } = portalDeal.details;
 
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
@@ -34,7 +35,7 @@ const submitDeal = async (dealId, portalChecker) => {
   const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
-    await updatePortalDealStatus(deal);
+    await updatePortalDealStatus(portalDeal);
 
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
@@ -48,8 +49,8 @@ const submitDeal = async (dealId, portalChecker) => {
 
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       return api.updateDeal(dealId, updatedDealWithTasks);
@@ -61,11 +62,11 @@ const submitDeal = async (dealId, portalChecker) => {
   if (dealHasBeenResubmit) {
     const updatedDeal = await updatedIssuedFacilities(submittedDeal);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
-    if (shouldUpdateDealFromMIAtoMIN(deal, tfmDeal)) {
+    if (shouldUpdateDealFromMIAtoMIN(portalDeal, tfmDeal)) {
       const minUpdate = await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
 
       // add MIN details to TFM deal
@@ -78,6 +79,8 @@ const submitDeal = async (dealId, portalChecker) => {
       // issue is that central api doesn't allow snapshot to be changed.
       // how to do this... have dev chat (see slack)
       // :/
+
+      // updateSnapshot(portalDeal);
     }
 
     await updatePortalDealStatus(updatedDeal.dealSnapshot);
