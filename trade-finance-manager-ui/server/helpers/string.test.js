@@ -51,6 +51,18 @@ describe('helpers - string', () => {
       expect(result).toEqual(true);
     });
 
+    it('should return true when string contains multiple lines', () => {
+      const str = 'this\
+      is\
+      a\
+      multi\
+      line\
+      string';
+
+      const result = isAlphanumeric(str);
+      expect(result).toEqual(true);
+    });
+
     it('should return false when invalid characters provided', () => {
       const str = '!@£$%^&*(){}[];;"|<>?/`~';
 

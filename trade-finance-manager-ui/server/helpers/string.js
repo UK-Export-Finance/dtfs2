@@ -16,7 +16,18 @@ export const containsNumber = (str) =>
   /\d/.test(str);
 
 export const isAlphanumeric = (str) => {
-  const ALPHA_NUMBERIC_ONLY = new RegExp('^[A-Za-z0-9/\' .,-]+[A-Za-z0-9 .,-]+$');
+  // allowed characters:
+  // A-Z
+  // 0-9
+  // commas
+  // full stops
+  // apostrophes
+  // white/empty space
+  // hyphens
+  const ALPHA_NUMBERIC_ONLY = new RegExp('^[A-Za-z0-9/\' s+.,-]+[A-Za-z0-9 s+.,-]+$', 'g');
 
-  return ALPHA_NUMBERIC_ONLY.test(str);
+  // ensure new lines are removed (new lines inputted by html textarea)
+  const arr = str.split(/[\n\r]/g);
+
+  return ALPHA_NUMBERIC_ONLY.test(arr);
 };
