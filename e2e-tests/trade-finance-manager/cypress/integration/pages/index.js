@@ -13,6 +13,7 @@ import tasksPage from './tasksPage';
 import taskPage from './taskPage';
 import underwritingPricingAndRiskPage from './underwriting/pricingAndRiskPage';
 import underwritingPricingAndRiskEditPage from './underwriting/pricingAndRiskEditPage';
+import underwritingLossGivenDefaultPage from './underwriting/lossGivenDefaultPage';
 import underwritingBankSecurity from './underwriting/bankSecurityPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
 
@@ -32,6 +33,7 @@ export default {
   taskPage,
   underwritingPricingAndRiskPage,
   underwritingPricingAndRiskEditPage,
+  underwritingLossGivenDefaultPage,
   underwritingBankSecurity,
   managersDecisionPage,
 };
