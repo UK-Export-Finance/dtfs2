@@ -52,6 +52,7 @@ describe('helpers - string', () => {
     });
 
     it('should return true when string contains multiple lines', () => {
+      // eslint-disable-next-line no-multi-str
       const str = 'this\
       is\
       a\
