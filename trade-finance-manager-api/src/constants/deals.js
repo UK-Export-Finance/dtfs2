@@ -36,7 +36,7 @@ const DEAL_STATUS_PORTAL = {
   SUBMITTED: 'Submitted',
   SUBMISSION_ACKNOWLEDGED: 'Acknowledged by UKEF',
   IN_PROGRESS: 'In progress by UKEF',
-  APPROVED: 'Accepted by UKEF (without conditions)',
+  APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
   REFUSED: 'Rejected by UKEF',
 };
