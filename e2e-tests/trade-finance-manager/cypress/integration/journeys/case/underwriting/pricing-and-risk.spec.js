@@ -78,6 +78,12 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
+  it('should dispay the correct change links', () => {
+    pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
+    pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('visible');
+    pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('visible');
+  });
+
   it('clicking underwriting nav link should direct to pricing-and-risk page and render `Not added` tag and `add rating` link. Clicking `add rating` takes user to edit page', () => {
     pages.underwritingPricingAndRiskPage.exporterTableCreditRatingNotAddedTag().should('be.visible');
 
@@ -209,7 +215,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
     pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
     pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
-    pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.be.visible');
+    pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.be.visible');
   });
 
   // TODO what if they manually navigate to the page?
