@@ -90,6 +90,20 @@ const updateTfmLossGivenDefault = async (dealId, lossGivenDefault) => {
 };
 exports.updateTfmLossGivenDefault = updateTfmLossGivenDefault;
 
+const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
+  const probabilityOfDefaultUpdate = {
+    tfm: {
+      probabilityOfDefault,
+    },
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedDeal = await api.updateDeal(dealId, probabilityOfDefaultUpdate);
+
+  return updatedDeal.tfm;
+};
+exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
+
 const updateTfmUnderwriterManagersDecision = async (
   dealId,
   decision,

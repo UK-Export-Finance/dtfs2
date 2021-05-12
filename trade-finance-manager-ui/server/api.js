@@ -9,6 +9,7 @@ import updateFacilityMutation from './graphql/mutations/update-facilities';
 import updateTaskMutation from './graphql/mutations/update-task';
 import updateCreditRatingMutation from './graphql/mutations/update-credit-rating';
 import updateLossGivenDefaultMutation from './graphql/mutations/update-loss-given-default';
+import updateProbabilityOfDefaultMutation from './graphql/mutations/update-probability-of-default';
 import postUnderwriterManagersDecision from './graphql/mutations/update-underwriter-managers-decision';
 
 require('dotenv').config();
@@ -92,6 +93,16 @@ const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate) => {
   return response;
 };
 
+const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate) => {
+  const updateVariables = {
+    dealId,
+    probabilityOfDefaultUpdate,
+  };
+
+  const response = await apollo('PUT', updateProbabilityOfDefaultMutation, updateVariables);
+  return response;
+};
+
 const updateUnderwriterManagersDecision = async (dealId, update) => {
   const updateVariables = {
     dealId,
@@ -130,6 +141,7 @@ export default {
   updateTask,
   updateCreditRating,
   updateLossGivenDefault,
+  updateProbabilityOfDefault,
   updateUnderwriterManagersDecision,
   login,
 };

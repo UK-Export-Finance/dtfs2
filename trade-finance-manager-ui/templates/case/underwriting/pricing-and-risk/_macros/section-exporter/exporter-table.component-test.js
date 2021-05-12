@@ -11,7 +11,7 @@ describe(component, () => {
     exporterCreditRating: 'Good (BB-)',
     userCanEdit: false,
     lossGivenDefault: '50',
-    probabilityOfDefault: 'Less than 14.1%',
+    probabilityOfDefault: '14.1',
   };
 
   describe('credit rating', () => {
@@ -63,6 +63,9 @@ describe(component, () => {
 
         wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');
+
+        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change');
       });
     });
   });
@@ -91,7 +94,8 @@ describe(component, () => {
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead(defaultParams.probabilityOfDefault);
+      wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]')
+        .toRead(`Less than ${defaultParams.probabilityOfDefault}%`);
     });
   });
 });
