@@ -339,7 +339,7 @@ describe('/v1/deals', () => {
           });
         });
 
-        describe('when deal status is NOT `Submitted` ', () => {
+        describe('when deal status is NOT `Submitted`', () => {
           it('should NOT add tfm stage', async () => {
             const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
 
@@ -478,7 +478,7 @@ describe('/v1/deals', () => {
         expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
       });
 
-      it('should not update ACBS`', async () => {
+      it('should NOT update ACBS`', async () => {
         const { status } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
         expect(status).toEqual(200);
 
