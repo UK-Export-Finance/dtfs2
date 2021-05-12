@@ -281,13 +281,13 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
 
   const { probabilityOfDefault } = req.body;
 
+  if (!probabilityOfDefault) {
+    errorMsg = 'Enter a probability of default';
+  }
+
   // eslint-disable-next-line eqeqeq
   if (Number(probabilityOfDefault) != probabilityOfDefault) {
     errorMsg = 'Enter a numeric value';
-  }
-
-  if (!probabilityOfDefault) {
-    errorMsg = 'Enter a probability of default';
   }
 
   if (errorMsg) {
