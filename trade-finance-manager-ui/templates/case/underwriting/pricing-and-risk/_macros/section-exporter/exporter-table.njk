@@ -66,9 +66,14 @@
         </td>
 
         <td class="govuk-table__cell" data-cy="exporter-table-probability-of-default-value">
-          {{ probabilityOfDefault }}
+          Less than {{ probabilityOfDefault }}%
         </td>
         
+        <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
+          {% if userCanEdit %}
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/probability-of-default" data-cy="exporter-table-change-probability-of-default-link">Change</a>
+          {% endif %}
+        </td>
       </tr>
 
     </tbody>

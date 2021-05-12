@@ -39,6 +39,8 @@ router.get('/:_id/underwriting/pricing-and-risk/edit', underwritingController.ge
 router.post('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
 router.get('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.getUnderWritingLossGivenDefault);
 router.post('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.postUnderWritingLossGivenDefault);
+router.get('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.getUnderWritingProbabilityOfDefault);
+router.post('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.postUnderWritingProbabilityOfDefault);
 
 router.get('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 

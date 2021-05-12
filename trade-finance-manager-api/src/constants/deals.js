@@ -29,7 +29,7 @@ const LOSS_GIVEN_DEFAULT = {
 };
 
 const PROBABILITY_OF_DEFAULT = {
-  LESS_THAN_14_PERCENT: 'Less than 14.1%',
+  DEFAULT_VALUE: '14.1',
 };
 
 const DEAL_STATUS_PORTAL = {
