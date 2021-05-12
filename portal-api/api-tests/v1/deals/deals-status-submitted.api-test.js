@@ -211,7 +211,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       });
     });
 
-    describe.only('when the deal has already been submitted', () => {
+    describe('when the deal has already been submitted', () => {
       it('should NOT add/change the deal and facilities UKEF ids', async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
