@@ -218,8 +218,6 @@ context('Portal to TFM deal submission', () => {
 
     cy.forceVisit(`${tfmRootUrl}/case/${dealId}/deal`);
 
-    // TODO add check for init MIA in TFM
-    // TODO add check for init MIA in Portal?
     //---------------------------------------------------------------
     // TFM deal submission type should have changed from MIA to MIN
     //---------------------------------------------------------------
