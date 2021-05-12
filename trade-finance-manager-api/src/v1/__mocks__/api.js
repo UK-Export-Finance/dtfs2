@@ -13,6 +13,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+const MOCK_MIA_SECOND_SUBMIT = require('./mock-deal-MIA-second-submit');
 const MOCK_TASKS = require('./mock-tasks');
 const MOCK_USERS = require('./mock-users');
 
@@ -29,6 +30,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
   MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
   MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
+  MOCK_MIA_SECOND_SUBMIT,
 ];
 
 const ALL_MOCK_FACILITIES = [
@@ -69,6 +71,14 @@ module.exports = {
         stage: tfmStage,
       },
     };
+
+    if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SECOND_SUBMIT') {
+      if (deal.dealSnapshot.details.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details.submissionCount === 2) {
+        deal.tfm.underwriterManagersDecision = {
+          decision: 'Approved (without conditions)',
+        };
+      }
+    }
 
     return mockDeal ? Promise.resolve(deal) : Promise.reject();
   },
@@ -140,6 +150,20 @@ module.exports = {
       },
       ...updatedTfmDealData,
     };
+  },
+  updateDealSnapshot: (dealId, snapshotUpdate) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    const updatedDeal = {
+      ...deal,
+      dealSnapshot: snapshotUpdate,
+    };
+
+    ALL_MOCK_DEALS[dealIndex] = updatedDeal;
+
+    return updatedDeal;
   },
   resetDealForApiTest: (dealId) => {
     const existingDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle

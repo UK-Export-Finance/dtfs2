@@ -18,6 +18,7 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
 
@@ -451,6 +452,35 @@ describe('/v1/deals', () => {
     });
 
     describe('MIA deal - on second submission', () => {
+      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot', async () => {
+        // check submission type before submission
+        expect(MOCK_MIA_SECOND_SUBMIT.details.submissionType).toEqual('Manual Inclusion Application');
+        
+        const mockPortalChecker = {
+          bank: {
+            id: '9',
+            name: 'UKEF test bank (Delegated) (TFM)'
+          },
+          email: 'test@testing.com',
+          firstname: 'Test',
+          surname: 'User',
+          roles: ['checker'],
+          timezone: 'Europe/London',
+          username: 'CHECKER-TFM'
+        };
+
+        const { status, body } = await api.put({
+          dealId: MOCK_MIA_SECOND_SUBMIT._id,
+          portalChecker: mockPortalChecker,
+        }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        expect(body.dealSnapshot.details.submissionType).toEqual('Manual Inclusion Notice');
+        expect(typeof body.dealSnapshot.details.manualInclusionNoticeSubmissionDate).toEqual('string');
+        expect(body.dealSnapshot.details.checkerMIN).toEqual(mockPortalChecker);
+      });
+
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
         // check status before calling submit endpoint
         const initialBond = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
