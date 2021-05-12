@@ -187,6 +187,46 @@ describe('/v1/tfm/deals', () => {
     });
   });
 
+  describe('PUT /v1/tfm/deal/:id/snapshot', () => {
+    it('404s if updating an unknown id', async () => {
+      const { status } = await api.put({}).to('/v1/tfm/deals/12345678/snapshot');
+      expect(status).toEqual(404);
+    });
+
+    it('updates deal.dealSnapshot whilst retaining deal.tfm', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      const mockTfm = {
+        tfm: {
+          submissionDetails: {
+            exporterPartyUrn: '12345',
+          },
+        },
+      };
+      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+
+      // add some dummy data to deal.tfm
+      await api.put({
+        dealUpdate: mockTfm,
+      }).to(`/v1/tfm/deals/${dealId}`);
+
+      const snapshotUpdate = {
+        someNewField: true,
+        testing: true,
+      };
+
+      const { status, body } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
+
+      expect(status).toEqual(200);
+      expect(body.dealSnapshot).toMatchObject({
+        ...newDeal,
+        ...snapshotUpdate,
+      });
+      expect(body.tfm).toEqual(mockTfm.tfm);
+    });
+  });
+
   describe('PUT /v1/tfm/deal/:id/stage', () => {
     const dealStageUpdate = {
       stage: 'New stage',

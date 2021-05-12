@@ -37,6 +37,11 @@ tfmRouter.route('/deals/:id/submit')
     tfmSubmitDealController.submitDealPut,
   );
 
+tfmRouter.route('/deals/:id/snapshot')
+  .put(
+    tfmUpdateDealController.updateDealSnapshotPut,
+  );
+
 tfmRouter.route('/deals/:id/stage')
   .put(
     tfmUpdateDealStageController.updateDealStagePut,

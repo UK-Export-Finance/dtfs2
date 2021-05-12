@@ -18,7 +18,6 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 
 const submitDeal = async (dealId, portalChecker) => {
-  // TOO RENAME to portalDeal
   const portalDeal = await findOnePortalDeal(dealId);
 
   if (!portalDeal) {
@@ -67,20 +66,11 @@ const submitDeal = async (dealId, portalChecker) => {
     }
 
     if (shouldUpdateDealFromMIAtoMIN(portalDeal, tfmDeal)) {
-      const minUpdate = await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
+      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
 
-      // add MIN details to TFM deal
-      // updatedDeal.dealSnapshot.details = {
-      //   ...updatedDeal.dealSnapshot.details,
-      //   ...minUpdate,
-      // };
+      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
-      // TODO
-      // issue is that central api doesn't allow snapshot to be changed.
-      // how to do this... have dev chat (see slack)
-      // :/
-
-      // updateSnapshot(portalDeal);
+      updatedDeal.dealSnapshot = dealSnapshot;
     }
 
     await updatePortalDealStatus(updatedDeal.dealSnapshot);

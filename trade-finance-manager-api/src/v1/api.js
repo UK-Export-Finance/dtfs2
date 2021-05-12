@@ -153,6 +153,24 @@ const updateDealStage = async (dealId, stage) => {
   }
 };
 
+const updateDealSnapshot = async (dealId, snapshotUpdate) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: snapshotUpdate,
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+
 const submitDeal = async (dealId) => {
   try {
     const response = await axios({
@@ -443,6 +461,7 @@ module.exports = {
   updatePortalFacilityStatus,
   updateDeal,
   updateDealStage,
+  updateDealSnapshot,
   submitDeal,
   findOneFacility,
   updateFacility,

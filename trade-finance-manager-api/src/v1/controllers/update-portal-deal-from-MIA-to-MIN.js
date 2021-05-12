@@ -16,7 +16,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, portalChecker) => {
     dealUpdate,
   );
 
-  return dealUpdate.details;
+  return update;
 };
 
 exports.updatePortalDealFromMIAtoMIN = updatePortalDealFromMIAtoMIN;
