@@ -6,7 +6,12 @@ const facilityIsIssued = (facilityStage) => (facilityStage === 'Issued' || facil
 const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   const isIssued = facilityIsIssued(facility.facilityStage);
   if (isIssued && facilityExposurePeriod) {
-    const parameters = mapPremiumScheduleFacility(facility, facilityExposurePeriod, facilityGuaranteeDates);
+    const parameters = mapPremiumScheduleFacility(
+      facility,
+      facilityExposurePeriod,
+      facilityGuaranteeDates,
+    );
+
     const premiumSchedule = await api.getPremiumSchedule(
       parameters,
     );

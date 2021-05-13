@@ -206,7 +206,6 @@ const findOneFacility = async (facilityId) => {
 
 const updateFacility = async (facilityId, facilityUpdate, user) => {
   try {
-    console.log('updateFacility');
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
