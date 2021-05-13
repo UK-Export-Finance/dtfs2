@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
+const api = require('../../../src/v1/api')
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
@@ -47,6 +48,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);      
+    api.tfmDealSubmit = () => Promise.resolve();
   });
 
   describe('when the status changes to `Submitted`', () => {
