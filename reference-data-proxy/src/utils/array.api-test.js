@@ -4,7 +4,7 @@ describe('utils - array', () => {
   describe('sortArrayAlphabetically', () => {
     it('should return sorted array', async () => {
       const mockArray = [
-        { mockField: 'x'  },
+        { mockField: 'x' },
         { mockField: 'y' },
         { mockField: 'z' },
         { mockField: 'e' },
