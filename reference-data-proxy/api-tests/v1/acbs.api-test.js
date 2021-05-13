@@ -76,7 +76,7 @@ describe('/acbs', () => {
     });
   });
 
-  describe('POST /v1/acbs/facility/:id/issue', async () => {
+  describe('POST /v1/acbs/facility/:id/issue', () => {
     const mockACBSInput = {
       facilityId: '1234',
       facility: {},
