@@ -23,7 +23,7 @@ const MOCK_USERS = [
     _id: '6051d94564494924d38ce124',
     username: 'myUsername',
     email: 'test@testing.com',
-    teams: ['UNDEWRITING_SUPPORT'],
+    teams: ['UNDERWRITING_SUPPORT'],
     timezone: 'Europe/London',
     firstName: 'Ben',
     lastName: 'Wilson',
