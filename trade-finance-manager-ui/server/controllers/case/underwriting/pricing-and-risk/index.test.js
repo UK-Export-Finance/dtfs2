@@ -2,8 +2,10 @@
 import pricingAndRiskController from '..';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
-import { userIsInTeam } from '../../../../helpers/user';
-import CONSTANTS from '../../../../constants';
+import {
+  userCanEditExporterCreditRating,
+  canUserEditFacilityRiskProfile,
+} from './helpers';
 
 const res = mockRes();
 
@@ -45,7 +47,8 @@ describe('GET underwriting - pricing and risk', () => {
       await pricingAndRiskController.getUnderWritingPricingAndRisk(req, res);
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
         {
-          userCanEdit: userIsInTeam(session.user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
+          userCanEditExporterCreditRating: userCanEditExporterCreditRating(session.user),
+          canUserEditFacilityRiskProfile: canUserEditFacilityRiskProfile(session.user),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
           activeSideNavigation: 'pricing and risk',

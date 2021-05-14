@@ -12,7 +12,7 @@
     exporterCreditRating: tfm.exporterCreditRating,
     lossGivenDefault: tfm.lossGivenDefault,
     probabilityOfDefault: tfm.probabilityOfDefault,
-    userCanEdit: userCanEdit
+    userCanEdit: userCanEditExporterCreditRating
   } %}
 
   {{sectionExporter.render(componentData)}}
@@ -20,7 +20,7 @@
   {% set componentData = {
     caseId: dealId,
     facilities: deal.facilities,
-    userCanEdit: userCanEdit
+    userCanEdit: canUserEditFacilityRiskProfile
   } %}
 
   {{sectionFacilities.render(componentData)}}
