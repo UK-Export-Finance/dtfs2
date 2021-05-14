@@ -52,11 +52,11 @@ describe('GET underwriting - loss given default', () => {
         session,
       };
 
-      await facilityRiskProfileController.getUnderWritingPricingAndRiskFacilityRiskProfileEdit(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-facility-risk-profile.njk',
+      await facilityRiskProfileController.getUnderWritingRiskFacilityRiskProfileEdit(req, res);
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk',
         {
           deal: mockDeal.dealSnapshot,
-          facilityId: mockFacility._id,
+          facility: mockFacility,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
@@ -79,7 +79,7 @@ describe('GET underwriting - loss given default', () => {
         session,
       };
 
-      await facilityRiskProfileController.getUnderWritingPricingAndRiskFacilityRiskProfileEdit(req, res);
+      await facilityRiskProfileController.getUnderWritingRiskFacilityRiskProfileEdit(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
@@ -94,12 +94,12 @@ describe('GET underwriting - loss given default', () => {
       const req = {
         params: {
           _id: mockDeal._id,
-          facilityId: '2',
+          facility: mockFacility._id,
         },
         session,
       };
 
-      await facilityRiskProfileController.getUnderWritingPricingAndRiskFacilityRiskProfileEdit(req, res);
+      await facilityRiskProfileController.getUnderWritingRiskFacilityRiskProfileEdit(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
