@@ -1,0 +1,8 @@
+{% macro render(params) %}
+  {% set caseId = params.caseId %}
+  {% set facility = params.facility %}
+
+  <a class="govuk-link" href="/case/{{ caseId }}/facility/{{ facility._id }}">{{ facility.facilitySnapshot.ukefFacilityID }}</a>
+  &nbsp; <span>{{ facility.facilitySnapshot.facilityType }}</span>
+
+{% endmacro %}

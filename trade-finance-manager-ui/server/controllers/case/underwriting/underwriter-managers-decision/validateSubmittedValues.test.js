@@ -4,7 +4,7 @@ import {
 } from './validateSubmittedValues';
 import generateValidationErrors from '../../../../helpers/validation';
 
-describe('POST underwriting - validate submitted values', () => {
+describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {
     describe('when field is NOT alphanumeric', () => {
       it('should return validationError and errorsCount', () => {
