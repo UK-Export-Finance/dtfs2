@@ -3,6 +3,7 @@
 {% macro render(params) %}
   {% set facilities = params.facilities %}
   {% set caseId = params.caseId %}
+  {% set userCanEdit = params.userCanEdit %}
 
   <section data-cy="section-facilities">
 
@@ -12,7 +13,8 @@
     
       {% set componentData = {
         caseId: caseId,
-        facility: facility
+        facility: facility,
+        userCanEdit: userCanEdit
       } %}
 
       {{facilityPricingRiskTable.render(componentData)}}
