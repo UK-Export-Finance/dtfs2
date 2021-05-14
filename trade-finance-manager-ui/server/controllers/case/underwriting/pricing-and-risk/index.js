@@ -1,15 +1,15 @@
 import api from '../../../../api';
 import {
-  userIsInTeam,
-} from '../../../../helpers/user';
-import {
   hasValue,
   containsNumber,
 } from '../../../../helpers/string';
-import CONSTANTS from '../../../../constants';
 import lossGivenDefaultControllers from './loss-given-default';
 import probabilityOfDefaultControllers from './probability-of-default';
 import facilityRiskProfileControllers from './facility-risk-profile';
+import {
+  userCanEditExporterCreditRating,
+  canUserEditFacilityRiskProfile,
+} from './helpers';
 
 const getUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -22,7 +22,8 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
   const { user } = req.session;
 
   return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
-    userCanEdit: userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
+    userCanEditExporterCreditRating: userCanEditExporterCreditRating(user),
+    canUserEditFacilityRiskProfile: canUserEditFacilityRiskProfile(user),
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
     activeSideNavigation: 'pricing and risk',
@@ -52,6 +53,7 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   });
 };
 
+// TODO: POST should probably be restricted
 const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
