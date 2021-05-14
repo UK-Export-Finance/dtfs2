@@ -1,6 +1,7 @@
 {% macro render(params) %}
   {% set facility = params.facility %}
   {% set caseId = params.caseId %}
+  {% set userCanEdit = params.userCanEdit %}
 
   <table class="govuk-table" data-cy="facility-{{ facility._id }}-pricing-risk-table">
     <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-bottom-6">
@@ -18,16 +19,27 @@
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header govuk-body-s width-half govuk-table__cell--border-top">Guarantee fee % payable to UKEF</th>
         <td class="govuk-table__cell govuk-table__cell--border-top">-</td>
+        <td class="govuk-table__cell govuk-table__cell--border-top"></td>
       </tr>
 
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header govuk-body-s width-half">Bank’s interest margin</th>
         <td class="govuk-table__cell">-</td>
+        <td class="govuk-table__cell"></td>
       </tr>
 
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header govuk-body-s width-half" data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</th>
         <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile }}</td>
+
+        {% if userCanEdit %}
+          <td class="govuk-table__cell text-align-right">
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/facility/{{ facility._id }}/risk-profile" data-cy="facility-{{ facility._id}}-change-risk-profile-value-link">Change</a>
+          </td>
+
+          {% else %}
+          <td class="govuk-table__cell"></td>
+        {% endif %}
       </tr>
     </tbody>
   </table>
