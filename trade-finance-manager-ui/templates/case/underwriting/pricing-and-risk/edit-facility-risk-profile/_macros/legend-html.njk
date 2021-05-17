@@ -1,8 +1,18 @@
 {% macro render(params) %}
   {% set caseId = params.caseId %}
-  {% set facility = params.facility %}
+  {% set facilityId = params.facilityId %}
+  {% set ukefFacilityID = params.ukefFacilityID %}
+  {% set facilityType = params.facilityType %}
 
-  <a class="govuk-link" href="/case/{{ caseId }}/facility/{{ facility._id }}">{{ facility.facilitySnapshot.ukefFacilityID }}</a>
-  &nbsp; <span>{{ facility.facilitySnapshot.facilityType }}</span>
+  <div data-cy="edit-facility-risk-profile-legend">
+
+    <a
+      class="govuk-link"
+      href="/case/{{ caseId }}/facility/{{ facilityId }}"
+      data-cy="edit-facility-risk-profile-legend-link"
+    >{{ ukefFacilityID }}</a>
+    &nbsp; <span data-cy="edit-facility-risk-profile-legend-facility-type">{{ facilityType }}</span>
+
+  </div>
 
 {% endmacro %}

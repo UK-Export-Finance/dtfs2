@@ -24,13 +24,15 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-3">What’s the risk profile for this facility?</h1>
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-3" data-cy="edit-facility-risk-profile-heading">What’s the risk profile for this facility?</h1>
 
         <form method="POST" autocomplete="off">
 
         {% set legendHtmlComponentData = {
           caseId: caseId,
-          facility: facility
+          facilityId: facility._id,
+          ukefFacilityID: facility.facilitySnapshot.ukefFacilityID,
+          facilityType: facility.facilitySnapshot.facilityType
         }%}
 
           {{govukRadios({
@@ -71,7 +73,7 @@
             }
           }) }}
 
-          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting/pricing-and-risk" data-cy="close-link">Cancel</a>
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk" data-cy="cancel-link">Cancel</a>
 
         </form>
 
