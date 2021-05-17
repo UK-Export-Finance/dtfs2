@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import underwriterManagersDecisionController from '.';
-import canUserEdit from './helpers';
+import canUserEditManagersDecision from './helpers';
 import { validateSubmittedValues } from './validateSubmittedValues';
 import { mapDecisionObject } from './mapDecisionObject';
 import api from '../../../../api';
@@ -32,7 +32,7 @@ const mockDeal = {
 const dealId = mockDeal._id;
 
 describe('GET underwriting - underwriting managers decision', () => {
-  const userCanEdit = canUserEdit(
+  const userCanEdit = canUserEditManagersDecision(
     session.user,
     mockDeal.dealSnapshot.details.submissionType,
     mockDeal.tfm,

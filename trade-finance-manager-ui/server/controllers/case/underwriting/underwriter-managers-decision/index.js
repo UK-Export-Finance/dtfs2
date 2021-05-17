@@ -1,5 +1,5 @@
 import api from '../../../../api';
-import canUserEdit from './helpers';
+import canUserEditManagersDecision from './helpers';
 import { validateSubmittedValues } from './validateSubmittedValues';
 import { mapDecisionObject } from './mapDecisionObject';
 
@@ -13,7 +13,7 @@ const getUnderwriterManagersDecision = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEdit(
+  const userCanEdit = canUserEditManagersDecision(
     user,
     deal.dealSnapshot.details.submissionType,
     deal.tfm,
@@ -41,7 +41,7 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEdit(
+  const userCanEdit = canUserEditManagersDecision(
     user,
     deal.dealSnapshot.details.submissionType,
     deal.tfm,
@@ -72,7 +72,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEdit(
+  const userCanEdit = canUserEditManagersDecision(
     user,
     deal.dealSnapshot.details.submissionType,
     deal.tfm,
