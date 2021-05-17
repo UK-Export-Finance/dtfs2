@@ -9,7 +9,7 @@ const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
@@ -31,7 +31,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');

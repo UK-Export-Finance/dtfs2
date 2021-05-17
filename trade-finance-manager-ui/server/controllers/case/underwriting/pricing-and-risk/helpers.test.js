@@ -6,6 +6,18 @@ import {
 
 describe('case - underwriting - pricing and risk - helpers', () => {
   describe('userCanEditExporterCreditRating', () => {
+    it('should return true when user is in UNDERWRITERS team', () => {
+      const result = userCanEditExporterCreditRating(
+        {
+          firstName: 'Joe',
+          lastName: 'Bloggs',
+          teams: ['UNDERWRITERS'],
+        },
+      );
+
+      expect(result).toEqual(true);
+    });
+
     it('should return true when user is in UNDERWRITING_SUPPORT team', () => {
       const result = userCanEditExporterCreditRating(
         {
