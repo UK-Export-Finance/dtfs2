@@ -373,6 +373,9 @@ input TFMProbabilityOfDefaultInput {
   probabilityOfDefault: String
 }
 
+input TFMFacilityRiskProfileInput {
+  riskProfile: String
+}
 
 input TFMUnderwriterManagersDecisionInput {
   decision: String
@@ -401,6 +404,7 @@ type Mutation {
   updateCreditRating(dealId: ID!, creditRatingUpdate: TFMCreditRatingInput): TFMDealData
   updateLossGivenDefault(dealId: ID!, lossGivenDefaultUpdate: TFMLossGivenDefaultInput): TFMDealData
   updateProbabilityOfDefault(dealId: ID!, probabilityOfDefaultUpdate: TFMProbabilityOfDefaultInput): TFMDealData
+  updateFacilityRiskProfile(_id: ID!, facilityUpdate: TFMFacilityRiskProfileInput): TFMFacilityData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
 }
 `;

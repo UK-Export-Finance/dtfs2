@@ -6,6 +6,7 @@ import facilityQuery from './graphql/queries/facility-query';
 import teamMembersQuery from './graphql/queries/team-members-query';
 import updatePartiesMutation from './graphql/mutations/update-parties';
 import updateFacilityMutation from './graphql/mutations/update-facilities';
+import updateFacilityRiskProfileMutation from './graphql/mutations/update-facility-risk-profile';
 import updateTaskMutation from './graphql/mutations/update-task';
 import updateCreditRatingMutation from './graphql/mutations/update-credit-rating';
 import updateLossGivenDefaultMutation from './graphql/mutations/update-loss-given-default';
@@ -59,6 +60,15 @@ const updateFacility = async (id, facilityUpdate) => {
     facilityUpdate,
   };
   const response = await apollo('PUT', updateFacilityMutation, updateVariables);
+  return response;
+};
+
+const updateFacilityRiskProfile = async (id, facilityUpdate) => {
+  const updateVariables = {
+    id,
+    facilityUpdate,
+  };
+  const response = await apollo('PUT', updateFacilityRiskProfileMutation, updateVariables);
   return response;
 };
 
@@ -135,6 +145,7 @@ export default {
   getDeal,
   getDeals,
   getFacility,
+  updateFacilityRiskProfile,
   getTeamMembers,
   updateParty,
   updateFacility,

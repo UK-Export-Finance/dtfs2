@@ -7,6 +7,8 @@ const findOneFacility = async (_id) => {
   return facility;
 };
 
+// TODO: rename this as it's only used in certain scenario
+// don't want to call 'submitIfAllPartiesHaveUrn' for generic facility update
 const updateTfmFacility = async (facilityId, tfmUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
@@ -16,8 +18,16 @@ const updateTfmFacility = async (facilityId, tfmUpdate) => {
   return updatedFacility.tfm;
 };
 
+const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
+
+  return updatedFacility.tfm;
+};
+
 
 module.exports = {
   findOneFacility,
   updateTfmFacility,
+  updateTfmFacilityRiskProfile,
 };

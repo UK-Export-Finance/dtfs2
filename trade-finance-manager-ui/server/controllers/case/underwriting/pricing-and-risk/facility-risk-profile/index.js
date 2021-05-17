@@ -50,8 +50,9 @@ const postUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
     });
   }
 
-  // const update = req.body;
-  // await api.updateUnderwriterManagersDecision(dealId, update);
+  const facilityUpdate = req.body;
+
+  await api.updateFacilityRiskProfile(facilityId, facilityUpdate);
 
   return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
