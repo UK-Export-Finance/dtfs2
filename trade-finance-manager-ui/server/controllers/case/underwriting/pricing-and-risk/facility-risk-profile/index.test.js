@@ -43,7 +43,7 @@ describe('GET underwriting - loss given default', () => {
       api.getFacility = () => Promise.resolve(mockFacility);
     });
 
-    it('should render loss given default template with data', async () => {
+    it('should render edit facility risk profile template with data', async () => {
       const req = {
         params: {
           _id: mockDeal._id,

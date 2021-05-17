@@ -11,7 +11,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['UNDERWRITING_SUPPORT'],
+    teams: ['UNDERWRITERS'],
   },
 };
 
