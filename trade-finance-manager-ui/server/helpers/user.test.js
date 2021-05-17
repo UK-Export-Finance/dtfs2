@@ -24,7 +24,7 @@ describe('user helpers', () => {
         teams: ['TEAMA'],
       };
 
-      const result = userIsInTeam(mockUser, 'TEAMA');
+      const result = userIsInTeam(mockUser, ['TEAMA']);
       expect(result).toEqual(true);
     });
 
@@ -33,7 +33,7 @@ describe('user helpers', () => {
         teams: ['TEAMB'],
       };
 
-      const result = userIsInTeam(mockUser, 'TEAMA');
+      const result = userIsInTeam(mockUser, ['TEAMA']);
       expect(result).toEqual(false);
     });
   });

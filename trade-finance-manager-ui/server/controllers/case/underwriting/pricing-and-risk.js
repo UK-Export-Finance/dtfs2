@@ -17,9 +17,8 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
   }
 
   const { user } = req.session;
-
   return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
-    userCanEdit: userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
+    userCanEdit: userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]),
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
     activeSideNavigation: 'pricing and risk',
@@ -159,7 +158,7 @@ const getUnderWritingLossGivenDefault = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
@@ -181,7 +180,7 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
@@ -248,7 +247,7 @@ const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
@@ -270,7 +269,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');

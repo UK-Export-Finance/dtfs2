@@ -19,7 +19,7 @@ const MOCK_MAKER_TFM = {
       'checker@ukexportfinance.gov.uk',
     ],
   },
-  teams: ['UNDERWRITING_SUPPORT'],
+  teams: ['UNDERWRITERS'],
 };
 
 const ADMIN_LOGIN = {
@@ -60,7 +60,7 @@ context('Case Underwriting - Bank Security', () => {
 
   beforeEach(() => {
     const underWritingSupportUser = MOCK_USERS.find((user) =>
-      user.teams.includes('UNDERWRITING_SUPPORT'));
+      user.teams.includes('UNDERWRITERS'));
 
     cy.login(underWritingSupportUser);
     cy.visit(relative(`/case/${dealId}/deal`));
