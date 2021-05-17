@@ -3,5 +3,5 @@ export const userFullName = (user) => {
   return `${firstName} ${lastName}`;
 };
 
-export const userIsInTeam = (user, teamId) =>
-  user.teams.includes(teamId);
+export const userIsInTeam = (user, teamList) =>
+  teamList.some((teamId) => user.teams.includes(teamId));

@@ -20,7 +20,7 @@ const MOCK_MAKER_TFM = {
       'checker@ukexportfinance.gov.uk',
     ],
   },
-  teams: ['UNDERWRITING_SUPPORT'],
+  teams: ['UNDERWRITERS'],
 };
 
 const ADMIN_LOGIN = {

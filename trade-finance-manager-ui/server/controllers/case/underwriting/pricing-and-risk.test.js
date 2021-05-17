@@ -13,7 +13,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['UNDERWRITING_SUPPORT'],
+    teams: ['UNDERWRITERS'],
   },
 };
 
@@ -45,7 +45,7 @@ describe('GET underwriting - pricing and risk', () => {
       await underwritingController.getUnderWritingPricingAndRisk(req, res);
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
         {
-          userCanEdit: userIsInTeam(session.user, CONSTANTS.TEAMS.UNDERWRITING_SUPPORT),
+          userCanEdit: userIsInTeam(session.user, [CONSTANTS.TEAMS.UNDERWRITERS]),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
           activeSideNavigation: 'pricing and risk',
