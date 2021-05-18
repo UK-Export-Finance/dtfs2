@@ -48,7 +48,7 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.getUnderWritingProbabilityOfDefault);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingRiskFacilityRiskProfileEdit);
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
@@ -82,7 +82,7 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.postUnderWritingProbabilityOfDefault);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingRiskFacilityRiskProfileEdit);
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
   });
