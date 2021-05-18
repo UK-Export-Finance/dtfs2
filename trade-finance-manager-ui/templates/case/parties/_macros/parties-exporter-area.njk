@@ -10,8 +10,7 @@
 {% set exporter = params.tfm.parties.exporter %}
 
 {% if not exporter.partyUrn %}
-  {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
-  {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
+  {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
 {% endif %}
 
 <div class="govuk-grid-row ukef-flex-container separator-line deal" data-cy="parties-exporter">
@@ -41,7 +40,8 @@
           <div class="govuk-grid-column-one-half">
           {{ govukInput({
             label: {
-              text: "Unique reference number (URN)"
+              text: "Unique reference number (URN)",
+              classes: "ukef-heading-xs"
             },
             id: "partyUrn",
             name: "partyUrn",
@@ -55,7 +55,6 @@
       {% else %}
         {{ keyValueGridRow.render({
           key: 'Unique reference number',
-          keyClass: uniqueRefKeyStyle,
           value: exporter.partyUrn or "NOT MATCHED",
           valueStyle: uniqueRefStyle,
           dataCy: 'exporter-unique-ref'

@@ -9,8 +9,7 @@
 {% set indemnifier = params.tfm.parties.indemnifier %}
 
   {% if not indemnifier.partyUrn %}
-    {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
-    {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
+    {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
   {% endif %}
 
   <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}" data-cy="parties-indemnifier">
@@ -54,7 +53,6 @@
       {% else %}
         {{ keyValueGridRow.render({
           key: 'Unique reference number',
-          keyClass: uniqueRefKeyStyle,
           value: indemnifier.partyUrn or "NOT MATCHED",
           valueStyle: uniqueRefStyle,
           dataCy: 'indemnifier-unique-ref'
