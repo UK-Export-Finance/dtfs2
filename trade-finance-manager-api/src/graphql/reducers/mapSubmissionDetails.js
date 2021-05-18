@@ -61,6 +61,7 @@ const mapSubmissionDetails = (submissionDetails) => {
       submissionDetails['supplier-correspondence-address-postcode'],
     supplierCorrespondenceAddressTown:
       submissionDetails['supplier-correspondence-address-town'],
+    supplierType: submissionDetails['supplier-type'],
     smeType: submissionDetails['sme-type'],
   };
 

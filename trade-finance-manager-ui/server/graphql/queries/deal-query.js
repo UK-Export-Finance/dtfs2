@@ -181,6 +181,7 @@ const dealQuery = gql`
           supplierCorrespondenceAddressLine3,
           supplierCorrespondenceAddressPostcode,
           supplierCorrespondenceAddressTown,
+          supplierType,
           smeType
         }
       }

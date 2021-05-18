@@ -90,6 +90,7 @@ type DealSubmissionDetails {
   supplierCorrespondenceAddressPostcode: String,
   supplierCorrespondenceAddressTown: String,
   supplierAddress: String,
+  supplierType: String,
   smeType: String
 }
 
