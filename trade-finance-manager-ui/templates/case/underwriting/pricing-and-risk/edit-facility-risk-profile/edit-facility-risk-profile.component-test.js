@@ -7,14 +7,10 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const params = {
-    caseId: '1234',
+    dealId: '1234',
     facility: {
-      facilitySnapshot: {
-
-      },
-      
-    }
-    
+      facilitySnapshot: {},
+    },
   };
 
   beforeEach(() => {
@@ -50,7 +46,7 @@ describe(page, () => {
     it('should render cancel link', () => {
       wrapper.expectLink('[data-cy="cancel-link"]')
         .toLinkTo(
-          `/case/${params.caseId}/underwriting/pricing-and-risk`,
+          `/case/${params.dealId}/underwriting/pricing-and-risk`,
           'Cancel',
         );
     });
