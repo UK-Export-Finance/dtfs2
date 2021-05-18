@@ -9,7 +9,8 @@ describe(component, () => {
   const defaultParams = {
     caseId: '1234',
     exporterCreditRating: 'Good (BB-)',
-    userCanEdit: false,
+    userCanEditExporterCreditRating: false,
+    userCanEditGeneral: false,
     lossGivenDefault: '50',
     probabilityOfDefault: '14.1',
   };
@@ -48,11 +49,11 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="exorter-table-change-credit-rating-link"]').notToExist();
     });
 
-    describe('with params.exporterCreditRating and params.userCanEdit', () => {
+    describe('with params.exporterCreditRating and params.userCanEditExporterCreditRating', () => {
       it('should render `Change` link', () => {
         const params = {
           ...defaultParams,
-          userCanEdit: true,
+          userCanEditExporterCreditRating: true,
           exporterCreditRating: 'Good (BB-)',
         };
 
@@ -60,6 +61,23 @@ describe(component, () => {
 
         wrapper.expectLink('[data-cy="exporter-table-change-credit-rating-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change');
+
+        wrapper.expectElement('[data-cy="exporter-table-change-loss-given-default-link"]').notToExist();
+
+        wrapper.expectElement('[data-cy="exporter-table-change-probability-of-default-link"]').notToExist();
+      });
+    });
+
+    describe('with params.userCanEditGeneral', () => {
+      it('should render `Change` link', () => {
+        const params = {
+          ...defaultParams,
+          userCanEditGeneral: true,
+        };
+
+        wrapper = render(params);
+
+        wrapper.expectElement('[data-cy="exporter-table-change-credit-rating-link"]').notToExist();
 
         wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');

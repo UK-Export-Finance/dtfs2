@@ -5,7 +5,8 @@
   {% set exporterCreditRating = params.exporterCreditRating %}
   {% set lossGivenDefault = params.lossGivenDefault %}
   {% set probabilityOfDefault  = params.probabilityOfDefault  %}
-  {% set userCanEdit = params.userCanEdit %}
+  {% set userCanEditExporterCreditRating = params.userCanEditExporterCreditRating %}
+  {% set userCanEditGeneral = params.userCanEditGeneral %}
 
   <table class="govuk-table govuk-!-margin-bottom-8" data-cy="exporter-table">
     <tbody class="govuk-table__body">
@@ -34,7 +35,7 @@
         </td>
         
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
-          {% if exporterCreditRating and userCanEdit %}
+          {% if exporterCreditRating and userCanEditExporterCreditRating %}
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change</a>
           {% endif %}
         </td>
@@ -52,7 +53,7 @@
         </td>
 
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
-          {% if userCanEdit %}
+          {% if userCanEditGeneral %}
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/loss-given-default" data-cy="exporter-table-change-loss-given-default-link">Change</a>
           {% endif %}
         </td>
@@ -70,7 +71,7 @@
         </td>
         
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
-          {% if userCanEdit %}
+          {% if userCanEditGeneral %}
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/probability-of-default" data-cy="exporter-table-change-probability-of-default-link">Change</a>
           {% endif %}
         </td>

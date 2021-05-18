@@ -1,4 +1,5 @@
 const componentRenderer = require('../../../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/section-exporter.njk';
 
 const render = componentRenderer(component);
@@ -43,12 +44,12 @@ describe(component, () => {
     });
   });
 
-  describe('with no params.exporterCreditRating and params.userCanEdit is true', () => {
+  describe('with no params.exporterCreditRating and params.userCanEditExporterCreditRating is true', () => {
     it('should render link to add credit rating', () => {
       params = {
         ...params,
         exporterCreditRating: null,
-        userCanEdit: true,
+        userCanEditExporterCreditRating: true,
       };
 
       const wrapper = render(params);

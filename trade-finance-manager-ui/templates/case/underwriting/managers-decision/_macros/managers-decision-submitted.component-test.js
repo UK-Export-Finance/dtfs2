@@ -1,5 +1,6 @@
 const componentRenderer = require('../../../../../component-tests/componentRenderer');
-const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk'
+
+const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk';
 const filterLocaliseTimestamp = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
@@ -76,7 +77,7 @@ describe(component, () => {
           ...paramsWithComments,
           decision: {
             ...paramsWithComments.decision,
-            decision: 'Approved (with conditions)'
+            decision: 'Approved (with conditions)',
           },
         };
 
@@ -90,7 +91,7 @@ describe(component, () => {
           ...paramsWithComments,
           decision: {
             ...paramsWithComments.decision,
-            decision: 'Declined'
+            decision: 'Declined',
           },
         };
 
@@ -104,7 +105,7 @@ describe(component, () => {
       const wrapper = render(paramsWithComments);
 
       wrapper.expectElement('[data-cy="conditions-value"]').toExist();
-      wrapper.expectElement('[data-cy="conditions-value"]').hasClass('word-break-break-word');
+      wrapper.expectElement('[data-cy="conditions-value"]').hasClass('ukef-preserve-white-space');
     });
   });
 
@@ -127,7 +128,7 @@ describe(component, () => {
       const wrapper = render(paramsWithInternalComments);
 
       wrapper.expectElement('[data-cy="internal-comments-value"]').toExist();
-      wrapper.expectElement('[data-cy="internal-comments-value"]').hasClass('word-break-break-word');
+      wrapper.expectElement('[data-cy="internal-comments-value"]').hasClass('ukef-preserve-white-space');
     });
   });
 });

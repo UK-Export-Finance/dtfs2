@@ -4,7 +4,7 @@ import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import {
   userCanEditExporterCreditRating,
-  canUserEditFacilityRiskProfile,
+  userCanEditGeneral,
 } from './helpers';
 
 const res = mockRes();
@@ -48,7 +48,7 @@ describe('GET underwriting - pricing and risk', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
         {
           userCanEditExporterCreditRating: userCanEditExporterCreditRating(session.user),
-          canUserEditFacilityRiskProfile: canUserEditFacilityRiskProfile(session.user),
+          userCanEditGeneral: userCanEditGeneral(session.user),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
           activeSideNavigation: 'pricing and risk',
