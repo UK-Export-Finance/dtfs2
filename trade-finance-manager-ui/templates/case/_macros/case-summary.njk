@@ -6,7 +6,7 @@
   {% set deal = params.deal %}
   {% set tfm = params.tfm %}
   {% set user = params.user %}
-
+  
   <div data-cy="case-summary" class="case-summary">
     <div>
       <div class="case-summary-deal-id">
@@ -14,7 +14,13 @@
         <div class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId }}</div>
       </div>
       <div class="case-summary-exporter">
-        <div class="label">Exporter</div>
+        <div class="label" data-cy="supplier-type">
+          {% if deal.submissionDetails.supplierType == 'UK Supplier'%}
+            Tier 1 supplier
+          {% else %}
+            Exporter
+          {% endif %}
+          </div>
         <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName }}</div>
       </div>
       <div class="case-summary-buyer">

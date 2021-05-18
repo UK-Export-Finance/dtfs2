@@ -33,6 +33,10 @@ describe(component, () => {
     wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.deal.details.ukefDealId);
   });
 
+  it('should render correct supplier type', () => {
+    wrapper.expectText('[data-cy="supplier-type"]').toRead('Exporter');
+  });
+
   it('should render supplier name', () => {
     wrapper.expectText('[data-cy="supplier-name"]').toRead(params.deal.submissionDetails.supplierName);
   });
@@ -77,4 +81,16 @@ describe(component, () => {
   //   wrapper.expectText('[data-cy="submission-date"]').toRead(params.details.submissionDate);
   // });
 
+  describe('tier 1 exporter', () => {
+    beforeEach(() => {
+      const tier1Params = JSON.parse(JSON.stringify(params));
+      tier1Params.deal.submissionDetails.supplierType = 'UK Supplier';
+
+      wrapper = render(tier1Params);
+    });
+
+    it('should render correct supplier type', () => {
+      wrapper.expectText('[data-cy="supplier-type"]').toRead('Tier 1 supplier');
+    });
+  });
 });
