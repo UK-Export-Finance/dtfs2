@@ -1,7 +1,8 @@
 import api from '../../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
+import { canUserEditFacilityRiskProfile } from '../helpers';
 
-const getUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
+const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
     facilityId,
@@ -10,7 +11,9 @@ const getUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
   const deal = await api.getDeal(dealId);
   const facility = await api.getFacility(facilityId);
 
-  if (!deal || !facility) {
+  if (!deal
+    || !facility
+    || !canUserEditFacilityRiskProfile(req.session.user)) {
     return res.redirect('/not-found');
   }
 
@@ -24,7 +27,7 @@ const getUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
 };
 
 
-const postUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
+const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
     facilityId,
@@ -33,7 +36,7 @@ const postUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
   const deal = await api.getDeal(dealId);
   const facility = await api.getFacility(facilityId);
 
-  if (!deal || !facility) {
+  if (!deal || !facility || !canUserEditFacilityRiskProfile(req.session.user)) {
     return res.redirect('/not-found');
   }
 
@@ -58,6 +61,6 @@ const postUnderWritingRiskFacilityRiskProfileEdit = async (req, res) => {
 };
 
 export default {
-  getUnderWritingRiskFacilityRiskProfileEdit,
-  postUnderWritingRiskFacilityRiskProfileEdit,
+  getUnderWritingFacilityRiskProfileEdit,
+  postUnderWritingFacilityRiskProfileEdit,
 };

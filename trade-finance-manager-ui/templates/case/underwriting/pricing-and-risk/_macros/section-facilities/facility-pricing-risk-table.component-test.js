@@ -50,7 +50,7 @@ describe(component, () => {
     it('should NOT render change link', () => {
       wrapper = render(params);
 
-      wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-value-link"]`).notToExist();
+      wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).notToExist();
     });
 
     describe('with params.userCanEdit', () => {
@@ -64,7 +64,7 @@ describe(component, () => {
 
         const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
 
-        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-value-link"]`)
+        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`)
           .toLinkTo(expectedLink,'Change');
       });
     });
