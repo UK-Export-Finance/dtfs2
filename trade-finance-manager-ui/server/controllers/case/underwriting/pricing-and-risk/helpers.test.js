@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import {
   userCanEditExporterCreditRating,
-  canUserEditFacilityRiskProfile,
+  userCanEditGeneral,
 } from './helpers';
 
 describe('case - underwriting - pricing and risk - helpers', () => {
@@ -45,9 +45,9 @@ describe('case - underwriting - pricing and risk - helpers', () => {
     });
   });
 
-  describe('canUserEditFacilityRiskProfile', () => {
+  describe('userCanEditGeneral', () => {
     it('should return true when user is in UNDERWRITER_MANAGERS team', () => {
-      const result = canUserEditFacilityRiskProfile(
+      const result = userCanEditGeneral(
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
@@ -59,7 +59,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
     });
 
     it('should return true when user is in UNDERWRITERS team', () => {
-      const result = canUserEditFacilityRiskProfile(
+      const result = userCanEditGeneral(
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
@@ -72,7 +72,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
 
     describe('when user is NOT in an allowed team', () => {
       it('should return false', () => {
-        const result = canUserEditFacilityRiskProfile(
+        const result = userCanEditGeneral(
           {
             firstName: 'Joe',
             lastName: 'Bloggs',

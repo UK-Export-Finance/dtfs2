@@ -1,5 +1,6 @@
 const pageRenderer = require('../../../../component-tests/pageRenderer');
-const page = '../templates/case/underwriting/managers-decision/managers-decision.njk'
+
+const page = '../templates/case/underwriting/managers-decision/managers-decision.njk';
 
 const render = pageRenderer(page);
 

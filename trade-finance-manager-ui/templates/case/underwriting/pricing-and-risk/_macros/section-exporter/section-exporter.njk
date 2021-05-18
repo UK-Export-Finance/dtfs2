@@ -6,7 +6,9 @@
   {% set exporterCreditRating = params.exporterCreditRating %}
   {% set lossGivenDefault = params.lossGivenDefault %}
   {% set probabilityOfDefault = params.probabilityOfDefault %}
-  {% set userCanEdit = params.userCanEdit %}
+  {% set userCanEditGeneral = params.userCanEditGeneral %}
+  {% set userCanEditExporterCreditRating = params.userCanEditExporterCreditRating %}
+  
 
   <section data-cy="section-exporter">
 
@@ -17,12 +19,13 @@
       exporterCreditRating: exporterCreditRating,
       lossGivenDefault: lossGivenDefault,
       probabilityOfDefault: probabilityOfDefault,
-      userCanEdit: userCanEdit
+      userCanEditExporterCreditRating: userCanEditExporterCreditRating,
+      userCanEditGeneral: userCanEditGeneral
     } %}
 
     {{ exporterTable.render(componentData) }}
 
-    {% if not exporterCreditRating and userCanEdit %}
+    {% if not exporterCreditRating and userCanEditExporterCreditRating %}
       <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="add-credit-rating-link">Add a credit rating for {{ supplierName }}</a></p>
     {% endif %}
 

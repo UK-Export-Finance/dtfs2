@@ -1,6 +1,6 @@
 import api from '../../../../../api';
 import validateSubmittedValues from './validateSubmittedValues';
-import { canUserEditFacilityRiskProfile } from '../helpers';
+import { userCanEditGeneral } from '../helpers';
 
 const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const {
@@ -13,7 +13,7 @@ const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
 
   if (!deal
     || !facility
-    || !canUserEditFacilityRiskProfile(req.session.user)) {
+    || !userCanEditGeneral(req.session.user)) {
     return res.redirect('/not-found');
   }
 
@@ -36,7 +36,7 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const deal = await api.getDeal(dealId);
   const facility = await api.getFacility(facilityId);
 
-  if (!deal || !facility || !canUserEditFacilityRiskProfile(req.session.user)) {
+  if (!deal || !facility || !userCanEditGeneral(req.session.user)) {
     return res.redirect('/not-found');
   }
 
