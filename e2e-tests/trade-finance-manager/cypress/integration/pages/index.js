@@ -17,6 +17,7 @@ import underwritingLossGivenDefaultPage from './underwriting/lossGivenDefaultPag
 import underwritingProbabilityOfDefaultPage from './underwriting/probabilityOfDefaultPage';
 import underwritingBankSecurity from './underwriting/bankSecurityPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
+import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
 
 export default {
   landingPage,
@@ -38,4 +39,5 @@ export default {
   underwritingProbabilityOfDefaultPage,
   underwritingBankSecurity,
   managersDecisionPage,
+  facilityRiskProfilePage,
 };
