@@ -14,6 +14,7 @@ const pricingAndRiskPage = {
       table,
       facilityLink: () => table.get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
       riskProfile: () => table.get(`[data-cy="facility-${facilityId}-risk-profile-value"]`),
+      changeRiskProfileLink: () => table.get(`[data-cy="facility-${facilityId}-change-risk-profile-link"]`),
     };
   },
 };

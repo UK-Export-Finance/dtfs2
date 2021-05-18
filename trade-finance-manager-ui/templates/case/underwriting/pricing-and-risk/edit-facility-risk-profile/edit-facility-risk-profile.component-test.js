@@ -34,11 +34,11 @@ describe(page, () => {
 
     describe('radio buttons', () => {
       it('should render `Flat` radio button', () => {
-        wrapper.expectElement('[data-cy="risk-profile-flat"]').toExist();
+        wrapper.expectElement('[data-cy="facility-risk-profile-input-flat"]').toExist();
       });
 
       it('should render `Variable` radio button', () => {
-        wrapper.expectElement('[data-cy="risk-profile-variable"]').toExist();
+        wrapper.expectElement('[data-cy="facility-risk-profile-input-variable"]').toExist();
       });
     });
 
