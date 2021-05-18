@@ -93,3 +93,7 @@
   line-height: 25px;
   color: govuk-colour("dark-grey", $legacy: "grey-1");
 }
+
+.ukef-preserve-white-space {
+  white-space: pre-wrap;
+}
