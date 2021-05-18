@@ -31,7 +31,9 @@
     {{ bondIssuerFacilitiesTable.render(componentData) }}
 
   {% else %}
-    <p data-cy="bond-issuer-not-applicable">Not applicable</p>
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body-s" data-cy="bond-issuer-not-applicable">Not applicable</p>
+    </div>
   {% endif %}
 
 </div>

@@ -9,8 +9,7 @@
 {% set agent = params.tfm.parties.agent %}
 
 {% if not agent.partyUrn %}
-  {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
-  {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
+  {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
 {% endif %}
 
  <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}" data-cy="parties-agent">
@@ -54,7 +53,6 @@
       {% else %}
         {{ keyValueGridRow.render({
           key: 'Unique reference number',
-          keyClass: uniqueRefKeyStyle,
           value: agent.partyUrn or "NOT MATCHED",
           valueStyle: uniqueRefStyle,
           dataCy: 'agent-unique-ref'

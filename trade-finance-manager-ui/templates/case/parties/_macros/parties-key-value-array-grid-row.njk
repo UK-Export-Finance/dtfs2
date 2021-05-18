@@ -5,7 +5,7 @@
       <p class="ukef-heading-xs">{{params.key}}</p>
     </div>
     <div class="govuk-grid-column-two-thirds">
-      {% if params.dataCy %}<p data-cy="{{ params.dataCy }}">{% else %}<p>{% endif %}
+      <p class="govuk-body-s govuk-!-margin-top-3" data-cy="{{ params.dataCy }}">
         {% for value in params.values %}
           {% if value %}{{ value }}<br>{% endif %}
         {% endfor %}
