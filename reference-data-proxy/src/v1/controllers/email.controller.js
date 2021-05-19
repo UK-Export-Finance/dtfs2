@@ -9,6 +9,8 @@ exports.sendEmail = async (req, res) => {
     emailVariables,
   } = req.body;
 
+  console.log('Calling Notify API');
+
   const personalisation = emailVariables;
 
   const response = await notifyClient
@@ -16,8 +18,12 @@ exports.sendEmail = async (req, res) => {
       personalisation,
       reference: null,
     })
-    .then((response) => response)
+    .then((response) => {
+      console.log(`Sent Notify email to ${sendToEmailAddress} with templateId ${templateId}`);
+      return response;
+    })
     .catch((err) => {
+      console.log('Error calling Notify API');
       console.log(err.stack);
       return false;
     });
