@@ -1,6 +1,6 @@
 const moment = require('moment');
 const api = require('../api');
-const { formattedTimestamp } = require('../formattedTimestamp');
+const formattedTimestamp = require('../formattedTimestamp');
 
 const facilityIsIssued = (facilityStage) => (facilityStage === 'Issued' || facilityStage === 'Unconditional');
 
