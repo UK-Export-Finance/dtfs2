@@ -15,8 +15,8 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: dtfs-submissions
-  application_gateway_cidr: 172.16.40.0/24
-  private_endpoints_cidr: 172.16.41.0/24
+  application_gateway_cidr: 10.0.0.0/28
+  private_endpoints_cidr: 10.0.1.0/28
   api_portal_access_port: 44232
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
