@@ -34,7 +34,7 @@ describe(component, () => {
   });
 
   it('should render correct supplier type', () => {
-    wrapper.expectText('[data-cy="supplier-type"]').toRead('Exporter');
+    wrapper.expectText('[data-cy="case-summary"] [data-cy="supplier-type"]').toRead('Exporter');
   });
 
   it('should render supplier name', () => {
@@ -90,7 +90,7 @@ describe(component, () => {
     });
 
     it('should render correct supplier type', () => {
-      wrapper.expectText('[data-cy="supplier-type"]').toRead('Tier 1 supplier');
+      wrapper.expectText('[data-cy="case-summary"] [data-cy="supplier-type"]').toRead('Tier 1 supplier');
     });
   });
 });

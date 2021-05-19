@@ -82,6 +82,10 @@ describe(page, () => {
     wrapper = render(params);
   });
 
+  it('should render correct supplier type', () => {
+    wrapper.expectText('[data-cy="parties-exporter"] [data-cy="supplier-type"]').toRead('Exporter');
+  });
+
   it('should render exporter name', () => {
     wrapper
       .expectText('[data-cy="exporter-name"]')
@@ -171,5 +175,18 @@ describe(page, () => {
     wrapper
       .expectText('[data-cy="sme-size"]')
       .toRead(params.deal.submissionDetails.smeType);
+  });
+
+  describe('tier 1 exporter', () => {
+    beforeEach(() => {
+      const tier1Params = JSON.parse(JSON.stringify(params));
+      tier1Params.deal.submissionDetails.supplierType = 'UK Supplier';
+
+      wrapper = render(tier1Params);
+    });
+
+    it('should render correct supplier type', () => {
+      wrapper.expectText('[data-cy="parties-exporter"] [data-cy="supplier-type"]').toRead('Tier 1 supplier');
+    });
   });
 });

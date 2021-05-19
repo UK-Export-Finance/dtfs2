@@ -1,6 +1,6 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% import './ukef-deal-stage.njk' as ukefDealStage %}
-
+{% import './supplier-type.njk' as supplierType %}
 
 {% macro render(params) %}
   {% set deal = params.deal %}
@@ -14,13 +14,9 @@
         <div class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId }}</div>
       </div>
       <div class="case-summary-exporter">
-        <div class="label" data-cy="supplier-type">
-          {% if deal.submissionDetails.supplierType == 'UK Supplier'%}
-            Tier 1 supplier
-          {% else %}
-            Exporter
-          {% endif %}
-          </div>
+        <div class="label">
+          {{ supplierType.render(deal.submissionDetails.supplierType) }}
+        </div>
         <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName }}</div>
       </div>
       <div class="case-summary-buyer">
