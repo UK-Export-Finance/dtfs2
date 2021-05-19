@@ -3,6 +3,7 @@
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../_macros/supplier-type.njk' as supplierType %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% macro render(params) %}
@@ -18,7 +19,9 @@
       {% if params.editable %}
         <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading" data-cy="edit-heading">Edit exporter details</h1>
       {% else %}
-        <h2 class="ukef-heading-l" data-cy="edit-heading" data-cy="edit-heading">Exporter</h2>
+        <h2 class="ukef-heading-l" data-cy="edit-heading" data-cy="edit-heading">
+          {{ supplierType.render(deal.submissionDetails.supplierType) }}
+        </h2>
       {% endif %}
     </div>
     {% if not params.editable %}
