@@ -946,7 +946,8 @@ jobs:
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
               ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
-              AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url"
+              AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
+              GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}"
  
   dtfs-central-api:
     name: DTFS Central API

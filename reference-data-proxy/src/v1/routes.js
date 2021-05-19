@@ -13,6 +13,7 @@ const companiesHouse = require('./controllers/companies-house.controller');
 const ordnanceSurvey = require('./controllers/ordnance-survey.controller');
 const eStore = require('./controllers/estore.controller');
 const premiumSchedule = require('./controllers/premium-schedule.controller');
+const email = require('./controllers/email.controller');
 
 openRouter.route('/countries')
   .get(
@@ -103,6 +104,11 @@ openRouter.route('/ordnance-survey/:postcode')
 openRouter.route('/estore/')
   .post(
     eStore.createEstore,
+  );
+
+openRouter.route('/email')
+  .post(
+    email.sendEmail,
   );
 
 module.exports = { openRouter };

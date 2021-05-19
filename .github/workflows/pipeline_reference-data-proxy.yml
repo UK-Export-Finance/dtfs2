@@ -68,6 +68,7 @@ jobs:
       MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
       MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
 
     steps:
     - uses: actions/checkout@v2
