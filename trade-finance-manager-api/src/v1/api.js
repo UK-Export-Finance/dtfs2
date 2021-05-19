@@ -451,6 +451,31 @@ const createEstoreFolders = async (eStoreFolderInfo) => {
   }
 };
 
+const sendEmail = async (
+  templateId,
+  sendToEmailAddress,
+  emailVariables,
+) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/email`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        templateId,
+        sendToEmailAddress,
+        emailVariables,
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -477,4 +502,5 @@ module.exports = {
   updateACBSfacility,
   getFunctionsAPI,
   createEstoreFolders,
+  sendEmail,
 };
