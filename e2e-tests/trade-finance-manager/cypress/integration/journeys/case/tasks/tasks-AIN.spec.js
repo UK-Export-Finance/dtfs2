@@ -80,7 +80,7 @@ context('Case tasks - AIN deal', () => {
     });
   });
 
-  it('should render all MIA tasks', () => {
+  it('should render all AIN tasks', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
