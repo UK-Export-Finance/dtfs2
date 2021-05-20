@@ -215,6 +215,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   const group = getGroup(allTasks, groupId);
 
   const originalTask = getTask(taskIdToUpdate, group.groupTasks);
+  // const { team } = originalTask;
 
   const statusFrom = originalTask.status;
 
@@ -280,6 +281,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     if (assignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
       await updateUserTasks(modifiedTasks, assignedUserId);
     }
+
+    // await sendTaskEmail(updatedTask, team, deal);
 
     return updatedTask;
   }

@@ -16,6 +16,7 @@ const { createEstoreFolders } = require('./estore.controller');
 const acbsController = require('./acbs.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
+const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
 
 const submitDeal = async (dealId, portalChecker) => {
   const portalDeal = await findOnePortalDeal(dealId);
@@ -52,8 +53,13 @@ const submitDeal = async (dealId, portalChecker) => {
       || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
+      await sendDealSubmitEmails(updatedDealWithTasks);
+
       return api.updateDeal(dealId, updatedDealWithTasks);
     }
+
+    // TODO: will need to do this with other tickets
+    // await sendDealSubmitEmails(updatedDealWithCreateEstore);
 
     return api.updateDeal(dealId, updatedDealWithCreateEstore);
   }
