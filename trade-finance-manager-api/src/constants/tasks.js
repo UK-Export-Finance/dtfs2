@@ -104,6 +104,7 @@ const STATUS = {
 const UNASSIGNED = 'Unassigned';
 
 module.exports = {
+  AIN_AND_MIA,
   AIN,
   MIA,
   STATUS,

@@ -276,4 +276,21 @@ module.exports = {
       mockPremiumSchedule: 1,
     },
   ])),
+  sendEmail: (
+    templateId,
+    sendToEmailAddress,
+    emailVariables,
+  ) => {
+    const mockResponse = {
+      content: {
+        body: {},
+      },
+      id: templateId,
+      email: sendToEmailAddress,
+      ...emailVariables,
+      template: {},
+    };
+
+    return Promise.resolve(mockResponse);
+  },
 };
