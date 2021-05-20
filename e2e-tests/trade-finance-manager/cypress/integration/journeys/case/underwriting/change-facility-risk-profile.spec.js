@@ -94,7 +94,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     });
   });
 
-  it('clicking `Change` link in facilities table redirects to Facility Risk profile page', () => {
+  it('clicking `Change` link in facilities table goes to Facility Risk profile page', () => {
     cy.login(underWritingManagerUser);
     cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -108,6 +108,25 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     facilityRow.changeRiskProfileLink().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
+  });
+
+  it('clicking `ukefFacilityID` link in the legend goes to the Facility page', () => {
+    cy.login(underWritingManagerUser);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to pricing and risk page
+    partials.caseSubNavigation.underwritingLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+
+    const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
+
+    facilityRow.changeRiskProfileLink().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
+
+    pages.facilityRiskProfilePage.legendLink().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
   });
 
   it('clicking `cancel` link in the form redirects to `Pricing and risk` page', () => {
