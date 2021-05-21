@@ -55,7 +55,8 @@ const submitDeal = async (dealId, portalChecker) => {
 
       await sendDealSubmitEmails(updatedDealWithTasks);
 
-      return api.updateDeal(dealId, updatedDealWithTasks);
+      const updatedDeal = api.updateDeal(dealId, updatedDealWithTasks);
+      return updatedDeal;
     }
 
     // TODO: will need to do this with other tickets

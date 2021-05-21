@@ -42,7 +42,7 @@ module.exports = {
   findOneDeal: (dealId) => {
     const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
-    let tfmHistory = { tasks: [] };
+    let tfmHistory = { tasks: [], emails: [] };
     let tfmStage;
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.history) {
