@@ -168,7 +168,7 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(404);
     });
 
-    it('updates the created deal with correct fields', async () => {
+    it('updates the created deal with correct fields, retaining original dealSnapshot', async () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
@@ -179,6 +179,61 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
       expect(body.dealSnapshot).toMatchObject(newDeal);
       expect(body.tfm).toEqual(dealUpdate.tfm);
+    });
+
+    it('retains existing deal.tfm.history when adding new history', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+
+      const firstHistoryUpdate = {
+        tfm: {
+          history: {
+            tasks: [
+              { firstTaskHistory: true },
+            ],
+            emails: [
+              { firstEmailHistory: true },
+            ],
+          },
+        },
+      };
+
+      const firstUpdateResponse = await api.put({ dealUpdate: firstHistoryUpdate }).to(`/v1/tfm/deals/${dealId}`);
+
+      expect(firstUpdateResponse.status).toEqual(200);
+      expect(firstUpdateResponse.body.tfm.history).toEqual(firstHistoryUpdate.tfm.history);
+
+      const secondHistoryUpdate = {
+        tfm: {
+          history: {
+            tasks: [
+              { secondTaskHistory: true },
+            ],
+            emails: [
+              { secondEmailHistory: true },
+            ],
+          },
+        },
+      };
+
+      const secondUpdateResponse = await api.put({ dealUpdate: secondHistoryUpdate }).to(`/v1/tfm/deals/${dealId}`);
+
+      expect(secondUpdateResponse.status).toEqual(200);
+
+      const expectedHistory = {
+        tasks: [
+          ...firstHistoryUpdate.tfm.history.tasks,
+          ...secondHistoryUpdate.tfm.history.tasks,
+        ],
+        emails: [
+          ...firstHistoryUpdate.tfm.history.emails,
+          ...secondHistoryUpdate.tfm.history.emails,
+        ],
+      };
+
+      expect(secondUpdateResponse.body.tfm.history).toEqual(expectedHistory);
     });
   });
 
