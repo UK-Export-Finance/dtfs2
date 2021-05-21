@@ -3,6 +3,7 @@ const { TASKS } = require('./tasks');
 
 const HISTORY = {
   tasks: [],
+  emails: [],
 };
 
 const CREDIT_RATING = {
