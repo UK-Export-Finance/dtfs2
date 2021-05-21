@@ -21,18 +21,22 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       tfm: {
         ...existingDeal.tfm,
         ...update.tfm,
-        history: {
-          tasks: [
-            ...existingDeal.tfm.history.tasks,
-            ...update.tfm.history.tasks,
-          ],
-          emails: [
-            ...existingDeal.tfm.history.emails,
-            ...update.tfm.history.emails,
-          ],
-        },
       },
     };
+
+    if (update.tfm.history.tasks) {
+      tfmUpdate.tfm.history.tasks = {
+        ...existingDeal.tfm.history.tasks,
+        ...update.tfm.history.tasks,
+      }
+    }
+
+    if (update.tfm.history.emails) {
+      tfmUpdate.tfm.history.emails = {
+        ...existingDeal.tfm.history.emails,
+        ...update.tfm.history.emails,
+      }
+    }
   }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
