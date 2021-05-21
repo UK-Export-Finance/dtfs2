@@ -14,7 +14,13 @@ const createDealSnapshot = async (deal) => {
   const collection = await db.getCollection('tfm-deals');
   const tfmInit = deal.details.submissionCount === 1
     ? {
-      tfm: {},
+      // tfm: {},
+      tfm: {
+        history: {
+          tasks: [],
+          emails: [],
+        },
+      },
     }
     : null;
 

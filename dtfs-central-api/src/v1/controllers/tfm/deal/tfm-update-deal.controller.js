@@ -7,15 +7,37 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateDeal = async (dealId, dealChanges) => {
+const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const collection = await db.getCollection('tfm-deals');
 
-  // Remove dealSnapshot to ensure its not updated
+  // remove dealSnapshot to ensure its not updated
   const { dealSnapshot, ...update } = dealChanges;
+
+  let tfmUpdate = update;
+
+  // ensure that deal.tfm.history is not wiped
+  if (existingDeal.tfm && existingDeal.tfm.history) {
+    tfmUpdate = {
+      tfm: {
+        ...existingDeal.tfm,
+        ...update.tfm,
+        history: {
+          tasks: [
+            ...existingDeal.tfm.history.tasks,
+            ...update.tfm.history.tasks,
+          ],
+          emails: [
+            ...existingDeal.tfm.history.emails,
+            ...update.tfm.history.emails,
+          ],
+        },
+      },
+    };
+  }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: dealId },
-    $.flatten(withoutId(update)),
+    $.flatten(withoutId(tfmUpdate)),
     { returnOriginal: false },
   );
 
@@ -25,15 +47,14 @@ const updateDeal = async (dealId, dealChanges) => {
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
-  const { user, dealUpdate } = req.body;
+  const { dealUpdate } = req.body;
   const deal = await findOneDeal(dealId, false, 'tfm');
+
   if (deal) {
     const updatedDeal = await updateDeal(
       dealId,
       dealUpdate,
-      user,
       deal,
-      req.routePath,
     );
     return res.status(200).json(updatedDeal);
   }
