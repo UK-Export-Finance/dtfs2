@@ -1,6 +1,7 @@
+const moment = require('moment');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
-const externalApi = require('../../../src/v1/api');
+const externalApis = require('../../../src/v1/api');
 
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 
@@ -19,10 +20,16 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
 const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
 
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
+const formattedTimestamp = require('../../../src/v1/formattedTimestamp');
+
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+  MOCK_NOTIFY_EMAIL_RESPONSE,
+));
 
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
@@ -31,8 +38,11 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    externalApi.getFacilityExposurePeriod.mockClear();
-    externalApi.getPremiumSchedule.mockClear();
+    externalApis.getFacilityExposurePeriod.mockClear();
+    externalApis.getPremiumSchedule.mockClear();
+
+    sendEmailApiSpy.mockClear();
+    externalApis.sendEmail = sendEmailApiSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -191,7 +201,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          expect(externalApi.getFacilityExposurePeriod.mock.calls).toEqual([
+          expect(externalApis.getFacilityExposurePeriod.mock.calls).toEqual([
             ['2021-01-11', '2023-01-11', 'bond'],
             ['2021-01-11', '2023-01-11', 'loan'],
           ]);
@@ -202,7 +212,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          expect(externalApi.getFacilityExposurePeriod).not.toHaveBeenCalled();
+          expect(externalApis.getFacilityExposurePeriod).not.toHaveBeenCalled();
         });
       });
 
@@ -212,7 +222,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          expect(externalApi.getPremiumSchedule.mock.calls).toHaveLength(2);
+          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(2);
         });
 
         it('does not gets the premium scheduler info for unissued facility', async () => {
@@ -220,7 +230,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          expect(externalApi.getPremiumSchedule).not.toHaveBeenCalled();
+          expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
         });
       });
 
@@ -245,6 +255,29 @@ describe('/v1/deals', () => {
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
         });
+
+        it('should call externalApis.sendEmail', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+
+          const firstTask = body.tfm.tasks[0].groupTasks[0];
+
+          const expected = {
+            templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
+            sendToEmailAddress: process.env[`TFM_TEAM_EMAIL_${firstTask.team.id}`],
+            emailVariables: {
+              exporterName: body.dealSnapshot.submissionDetails['supplier-name'],
+              submissionType: body.dealSnapshot.details.submissionType,
+              submissionDate: moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
+              bank: body.dealSnapshot.details.owningBank.name,
+            },
+          };
+
+          expect(sendEmailApiSpy).toHaveBeenCalledWith(
+            expected.templateId,
+            expected.sendToEmailAddress,
+            expected.emailVariables,
+          );
+        });
       });
 
       describe('when deal is MIA', () => {
@@ -254,6 +287,29 @@ describe('/v1/deals', () => {
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.MIA);
         });
+
+        it('should call externalApis.sendEmail', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SUBMITTED._id }).to('/v1/deals/submit');
+
+          const firstTask = body.tfm.tasks[0].groupTasks[0];
+
+          const expected = {
+            templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
+            sendToEmailAddress: process.env[`TFM_TEAM_EMAIL_${firstTask.team.id}`],
+            emailVariables: {
+              exporterName: body.dealSnapshot.submissionDetails['supplier-name'],
+              submissionType: body.dealSnapshot.details.submissionType,
+              submissionDate: moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
+              bank: body.dealSnapshot.details.owningBank.name,
+            },
+          };
+
+          expect(sendEmailApiSpy).toHaveBeenCalledWith(
+            expected.templateId,
+            expected.sendToEmailAddress,
+            expected.emailVariables,
+          );
+        });
       });
 
       describe('when deal is MIN', () => {
@@ -262,6 +318,11 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toBeUndefined();
+        });
+
+        it('should NOT call externalApis.sendEmail', async () => {
+          await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+          expect(sendEmailApiSpy).not.toHaveBeenCalled();
         });
       });
     });
@@ -386,6 +447,7 @@ describe('/v1/deals', () => {
       expect(status).toEqual(200);
       expect(body.tfm.history).toEqual({
         tasks: [],
+        emails: [],
       });
     });
 

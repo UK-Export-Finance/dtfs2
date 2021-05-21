@@ -9,7 +9,10 @@ const sendTfmEmail = require('./send-tfm-email');
 const shouldSendFirstTaskEmail = (firstTask) =>
   (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
 
-const sendFirstTaskEmail = async (tasks, dealSnapshot) => {
+const sendFirstTaskEmail = async (deal) => {
+  const { tfm, dealSnapshot } = deal;
+  const { tasks } = tfm;
+
   const firstTask = getFirstTask(tasks);
 
   const { team } = firstTask;
@@ -41,6 +44,7 @@ const sendFirstTaskEmail = async (tasks, dealSnapshot) => {
       templateId,
       sendToEmailAddress,
       emailVariables,
+      deal,
     );
     return emailResponse;
   }
@@ -53,11 +57,9 @@ const sendDealSubmitEmails = async (deal) => {
     return false;
   }
 
-  const { tfm, dealSnapshot } = deal;
-  const { tasks } = tfm;
-
   // send email for the first task
-  const firstTaskEmail = await sendFirstTaskEmail(tasks, dealSnapshot);
+  const firstTaskEmail = await sendFirstTaskEmail(deal);
+
   // TODO in future ticket DTFS2-3221 - send email for MIA acknowledgment
 
   return firstTaskEmail;

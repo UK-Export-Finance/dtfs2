@@ -8,31 +8,38 @@ const CONSTANTS = require('../../constants');
 const formattedTimestamp = require('../formattedTimestamp');
 
 describe('send-deal-submit-emails', () => {
-  const mockDealSnapshot = {
-    details: {
-      submissionType: 'Manual Inclusion Application',
-      submissionDate: '1606900616651',
-      owningBank: {
-        name: 'Test Bank',
+  const mockDeal = {
+    dealSnapshot: {
+      details: {
+        submissionType: 'Manual Inclusion Application',
+        submissionDate: '1606900616651',
+        owningBank: {
+          name: 'Test Bank',
+        },
+      },
+      submissionDetails: {
+        'supplier-name': 'Test Exporter Name',
       },
     },
-    submissionDetails: {
-      'supplier-name': 'Test Exporter Name',
-    },
-  };
-
-  const mockTasksWithMatchCreatePartiesFirstTask = [
-    {
-      groupTasks: [
+    tfm: {
+      tasks: [
         {
-          title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-          team: {
-            id: 'BUSINESS_SUPPORT',
-          },
+          groupTasks: [
+            {
+              title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+              team: {
+                id: 'BUSINESS_SUPPORT',
+              },
+            },
+          ],
         },
       ],
+      history: {
+        tasks: [],
+        emails: [],
+      },
     },
-  ];
+  };
 
   describe('shouldSendFirstTaskEmail', () => {
     it('should return true when task title is `match or create parties`', () => {
@@ -56,13 +63,13 @@ describe('send-deal-submit-emails', () => {
 
   describe('sendFirstTaskEmail', () => {
     it('should return API response with correct emailVariables', async () => {
-      const firstTask = mockTasksWithMatchCreatePartiesFirstTask[0].groupTasks[0];
+      const firstTask = mockDeal.tfm.tasks[0].groupTasks[0];
 
       const expectedEmailVariables = {
-        exporterName: mockDealSnapshot.submissionDetails['supplier-name'],
-        submissionType: mockDealSnapshot.details.submissionType,
-        submissionDate: moment(formattedTimestamp(mockDealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
-        bank: mockDealSnapshot.details.owningBank.name,
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        submissionType: mockDeal.dealSnapshot.details.submissionType,
+        submissionDate: moment(formattedTimestamp(mockDeal.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
+        bank: mockDeal.dealSnapshot.details.owningBank.name,
       };
 
       // api response is mocked/stubbed
@@ -76,23 +83,29 @@ describe('send-deal-submit-emails', () => {
         template: {},
       };
 
-      const result = await sendFirstTaskEmail(mockTasksWithMatchCreatePartiesFirstTask, mockDealSnapshot);
+      const result = await sendFirstTaskEmail(mockDeal);
 
       expect(result).toEqual(expected);
     });
 
     it('should return null when first task email should NOT be sent', async () => {
-      const mockTasks = [
-        {
-          groupTasks: [
+      const mockDealWithInvalidFirstTask = {
+        ...mockDeal,
+        tfm: {
+          ...mockDeal.tfm,
+          tasks: [
             {
-              title: 'Test',
+              groupTasks: [
+                {
+                  title: 'Test',
+                },
+              ],
             },
           ],
         },
-      ];
+      };
 
-      const result = await sendFirstTaskEmail(mockTasks, {});
+      const result = await sendFirstTaskEmail(mockDealWithInvalidFirstTask);
 
       expect(result).toEqual(null);
     });
@@ -105,16 +118,9 @@ describe('send-deal-submit-emails', () => {
     });
 
     it('should return sendDealSubmitEmails response', async () => {
-      const mockDeal = {
-        dealSnapshot: mockDealSnapshot,
-        tfm: {
-          tasks: mockTasksWithMatchCreatePartiesFirstTask,
-        },
-      };
-
       const result = await sendDealSubmitEmails(mockDeal);
 
-      const expected = await sendFirstTaskEmail(mockDeal.tfm.tasks, mockDeal.dealSnapshot);
+      const expected = await sendFirstTaskEmail(mockDeal);
       expect(result).toEqual(expected);
     });
   });

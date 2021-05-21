@@ -224,8 +224,15 @@ type TFMTaskHistory {
   timestamp: String
 }
 
+type TFMEmailHistory {
+  recipient: String
+  templateId: String
+  timestamp: String
+}
+
 type TFMDealHistory {
   tasks: [TFMTaskHistory]
+  emails: [TFMEmailHistory]
 }
 
 type TFMDealDecision  {
