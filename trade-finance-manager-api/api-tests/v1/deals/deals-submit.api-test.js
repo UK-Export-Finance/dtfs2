@@ -261,9 +261,11 @@ describe('/v1/deals', () => {
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
+          const { email: expectedTeamEmailAddress } = await api.get(`/v1/teams/${firstTask.team.id}`);
+
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
-            sendToEmailAddress: process.env[`TFM_TEAM_EMAIL_${firstTask.team.id}`],
+            sendToEmailAddress: expectedTeamEmailAddress,
             emailVariables: {
               exporterName: body.dealSnapshot.submissionDetails['supplier-name'],
               submissionType: body.dealSnapshot.details.submissionType,
@@ -293,9 +295,11 @@ describe('/v1/deals', () => {
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
+          const { email: expectedTeamEmailAddress } = await api.get(`/v1/teams/${firstTask.team.id}`);
+
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
-            sendToEmailAddress: process.env[`TFM_TEAM_EMAIL_${firstTask.team.id}`],
+            sendToEmailAddress: expectedTeamEmailAddress,
             emailVariables: {
               exporterName: body.dealSnapshot.submissionDetails['supplier-name'],
               submissionType: body.dealSnapshot.details.submissionType,

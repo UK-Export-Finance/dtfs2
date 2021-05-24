@@ -1,4 +1,5 @@
 const moment = require('moment');
+const api = require('../api');
 const CONSTANTS = require('../../constants');
 const formattedTimestamp = require('../formattedTimestamp');
 const { getFirstTask } = require('../helpers/tasks');
@@ -19,7 +20,8 @@ const sendFirstTaskEmail = async (deal) => {
 
   if (shouldSendFirstTaskEmail(firstTask)) {
     const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES;
-    const sendToEmailAddress = process.env[`TFM_TEAM_EMAIL_${team.id}`];
+
+    const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
     const {
       submissionType,

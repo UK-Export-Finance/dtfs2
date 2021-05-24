@@ -16,6 +16,7 @@ const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./moc
 const MOCK_MIA_SECOND_SUBMIT = require('./mock-deal-MIA-second-submit');
 const MOCK_TASKS = require('./mock-tasks');
 const MOCK_USERS = require('./mock-users');
+const MOCK_TEAMS = require('./mock-teams');
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
@@ -252,6 +253,8 @@ module.exports = {
   },
   findTeamMembers: (teamId) =>
     MOCK_USERS.filter((user) => user.teams.includes(teamId)),
+  findOneTeam: (teamId) =>
+    MOCK_TEAMS.filter((team) => team.id === teamId),
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
