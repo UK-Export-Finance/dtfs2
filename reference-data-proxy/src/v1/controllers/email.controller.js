@@ -13,7 +13,7 @@ exports.sendEmail = async (req, res) => {
 
   const personalisation = emailVariables;
 
-  const response = await notifyClient
+  const notifyResponse = await notifyClient
     .sendEmail(templateId, sendToEmailAddress, {
       personalisation,
       reference: null,
@@ -28,7 +28,7 @@ exports.sendEmail = async (req, res) => {
       return false;
     });
 
-  const { status, data } = response;
+  const { status, data } = notifyResponse;
 
   return res.status(status).send(data);
 };
