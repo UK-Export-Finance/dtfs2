@@ -184,7 +184,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
     const tfmHistoryUpdate = {
       tasks: [
-        ...deal.tfm.history.tasks,
         updateHistory({
           statusFrom,
           statusTo,

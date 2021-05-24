@@ -21,6 +21,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       tfm: {
         ...existingDeal.tfm,
         ...update.tfm,
+        history: existingDeal.tfm.history,
       },
     };
 
