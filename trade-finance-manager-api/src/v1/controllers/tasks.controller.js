@@ -8,6 +8,7 @@ const {
   getTask,
   canUpdateTask,
 } = require('../helpers/tasks');
+const sendTfmEmail = require('./send-tfm-email');
 
 const updateHistory = ({
   statusFrom,
@@ -61,8 +62,41 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
     return group;
   });
 
-const updateTasksCanEdit = (allTaskGroups, groupId, taskIdToUpdate) =>
-  allTaskGroups.map((tGroup) => {
+const sendUpdatedTaskEmail = async (task, deal) => {
+  let emailVariables = {};
+  let templateId;
+  let sendToEmailAddress;
+  let team;
+
+  switch (task.title) {
+    case CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE:
+      emailVariables = {
+        exporterName: deal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: deal.dealSnapshot.details.ukefDealId,
+      };
+
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL;
+      team = await api.findOneTeam(task.team && task.team.id);
+      sendToEmailAddress = team.email;
+
+      break;
+    default:
+  }
+
+  if (templateId) {
+    await sendTfmEmail(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
+      sendToEmailAddress,
+      emailVariables,
+      deal,
+    );
+  }
+};
+
+const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal) => {
+  const sendUpdatedEmailRequests = [];
+
+  const taskGroups = allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
     group = {
@@ -80,15 +114,21 @@ const updateTasksCanEdit = (allTaskGroups, groupId, taskIdToUpdate) =>
             if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
               task.canEdit = false;
             }
+          } else {
+            // Send task notification emails
+            sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal));
           }
         }
-
         return task;
       }),
     };
 
     return group;
   });
+
+  await Promise.all(sendUpdatedEmailRequests);
+  return taskGroups;
+};
 
 const updateUserTasks = async (allTasks, userId) => {
   const tasksAssignedToUser = [];
@@ -180,7 +220,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
     const modifiedTasks = updateTask(allTasks, groupId, taskIdToUpdate, updatedTask);
 
-    const modifiedTasksWithEditStatus = updateTasksCanEdit(modifiedTasks, groupId, taskIdToUpdate);
+    const modifiedTasksWithEditStatus = await updateTasksCanEdit(modifiedTasks, groupId, taskIdToUpdate, deal);
 
     const tfmHistoryUpdate = {
       tasks: [
