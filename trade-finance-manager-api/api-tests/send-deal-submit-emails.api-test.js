@@ -1,11 +1,13 @@
 const moment = require('moment');
+const app = require('../src/createApp');
+const api = require('./api')(app);
 const {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
   sendDealSubmitEmails,
-} = require('./send-deal-submit-emails');
-const CONSTANTS = require('../../constants');
-const formattedTimestamp = require('../formattedTimestamp');
+} = require('../src/v1/controllers/send-deal-submit-emails');
+const CONSTANTS = require('../src/constants');
+const formattedTimestamp = require('../src/v1/formattedTimestamp');
 
 describe('send-deal-submit-emails', () => {
   const mockDeal = {
@@ -72,13 +74,15 @@ describe('send-deal-submit-emails', () => {
         bank: mockDeal.dealSnapshot.details.owningBank.name,
       };
 
+      const { email: expectedTeamEmailAddress } = await api.get(`/v1/teams/${firstTask.team.id}`);
+
       // api response is mocked/stubbed
       const expected = {
         content: {
           body: {},
         },
         id: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
-        email: process.env[`TFM_TEAM_EMAIL_${firstTask.team.id}`],
+        email: expectedTeamEmailAddress,
         ...expectedEmailVariables,
         template: {},
       };
