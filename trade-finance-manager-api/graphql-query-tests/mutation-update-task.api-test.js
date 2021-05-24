@@ -127,7 +127,7 @@ describe('graphql mutation - update task', () => {
       timestamp: expect.any(String),
     };
 
-    expect(data.deal.tfm.history.tasks.length).toEqual(2);
-    expect(data.deal.tfm.history.tasks[1]).toEqual(expected);
+    expect(data.deal.tfm.history.tasks.length).toEqual(1);
+    expect(data.deal.tfm.history.tasks[0]).toEqual(expected);
   });
 });
