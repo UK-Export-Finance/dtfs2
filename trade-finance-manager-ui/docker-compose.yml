@@ -167,6 +167,7 @@ services:
       - MULESOFT_API_UKEF_ESTORE_EA_KEY
       - MULESOFT_API_UKEF_ESTORE_EA_SECRET
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - GOV_NOTIFY_API_KEY
     entrypoint: npx nodemon src/index.js
 
   redis:
