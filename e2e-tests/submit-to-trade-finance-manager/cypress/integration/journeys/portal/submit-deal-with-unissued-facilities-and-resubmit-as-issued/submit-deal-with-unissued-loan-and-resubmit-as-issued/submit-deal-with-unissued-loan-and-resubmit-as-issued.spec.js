@@ -7,7 +7,7 @@ import {
   COVER_END_DATE_VALUE,
   DISBURSEMENT_AMOUNT_VALUE,
   fillAndSubmitIssueLoanFacilityForm,
-} from './fillAndSubmitIssueLoanFacilityForm';
+} from '../../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
 
 import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT from './test-data/dealWithUnissuedLoanReadyToSubmit';
