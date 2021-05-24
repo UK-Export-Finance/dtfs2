@@ -1,17 +1,18 @@
 const moment = require('moment');
 const pages = require('../../../pages');
 
-export const ISSUED_BOND_DATE_VALUE = moment();
+const ISSUED_BOND_DATE_VALUE = moment();
+export const COVER_START_DATE_VALUE = moment().add(2, 'day');
+export const COVER_END_DATE_VALUE = moment().add(1, 'month');
 
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
   pages.bondIssueFacility.issuedDateDayInput().type(ISSUED_BOND_DATE_VALUE.format('DD'));
   pages.bondIssueFacility.issuedDateMonthInput().type(ISSUED_BOND_DATE_VALUE.format('MM'));
   pages.bondIssueFacility.issuedDateYearInput().type(ISSUED_BOND_DATE_VALUE.format('YYYY'));
 
-  const coverEndDate = moment().add(1, 'month');
-  pages.bondIssueFacility.coverEndDateDayInput().type(coverEndDate.format('DD'));
-  pages.bondIssueFacility.coverEndDateMonthInput().type(coverEndDate.format('MM'));
-  pages.bondIssueFacility.coverEndDateYearInput().type(coverEndDate.format('YYYY'));
+  pages.bondIssueFacility.coverEndDateDayInput().type(COVER_END_DATE_VALUE.format('DD'));
+  pages.bondIssueFacility.coverEndDateMonthInput().type(COVER_END_DATE_VALUE.format('MM'));
+  pages.bondIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.format('YYYY'));
 
   pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
 
@@ -23,20 +24,18 @@ export const fillAndSubmitIssueBondFacilityForm = () => {
   pages.bondIssueFacility.issuedDateMonthInput().type(ISSUED_BOND_DATE_VALUE.format('MM'));
   pages.bondIssueFacility.issuedDateYearInput().type(ISSUED_BOND_DATE_VALUE.format('YYYY'));
 
-  const requestedCoverStartDate = moment().add(2, 'day');
   pages.bondIssueFacility.requestedCoverStartDateDayInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateDayInput().type(requestedCoverStartDate.format('DD'));
+  pages.bondIssueFacility.requestedCoverStartDateDayInput().type(COVER_START_DATE_VALUE.format('DD'));
 
   pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateMonthInput().type(requestedCoverStartDate.format('MM'));
+  pages.bondIssueFacility.requestedCoverStartDateMonthInput().type(COVER_START_DATE_VALUE.format('MM'));
 
   pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateYearInput().type(requestedCoverStartDate.format('YYYY'));
+  pages.bondIssueFacility.requestedCoverStartDateYearInput().type(COVER_START_DATE_VALUE.format('YYYY'));
 
-  const coverEndDate = moment().add(1, 'month');
-  pages.bondIssueFacility.coverEndDateDayInput().type(coverEndDate.format('DD'));
-  pages.bondIssueFacility.coverEndDateMonthInput().type(coverEndDate.format('MM'));
-  pages.bondIssueFacility.coverEndDateYearInput().type(coverEndDate.format('YYYY'));
+  pages.bondIssueFacility.coverEndDateDayInput().type(COVER_END_DATE_VALUE.format('DD'));
+  pages.bondIssueFacility.coverEndDateMonthInput().type(COVER_END_DATE_VALUE.format('MM'));
+  pages.bondIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.format('YYYY'));
 
   pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
 

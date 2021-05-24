@@ -116,7 +116,6 @@
         "bondType": "bond type",
         "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "24",
-        "uniqueIdentificationNumber": "1234",
         "bondBeneficiary": "test",
         "facilityValue": "100000.00",
         "currencySameAsSupplyContractCurrency": "true",
