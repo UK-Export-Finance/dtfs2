@@ -34,6 +34,14 @@ function delete-subnet {
   echo Deleted subnet $1
 }
 
+read -p "This will delete tfs-${app_service_plan}-vnet subnet and all associated resources. Are you sure? " -n 1 -r
+echo # (optional) move to a new line
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+  exit
+fi
+
 for environment in "${environments[@]}"
 do
   # Delete webapp vnet integration
@@ -70,3 +78,7 @@ done
 
 delete-subnet ${resource_group}-vm
 delete-subnet ${app_service_plan}-app-service-plan-egress
+
+echo Deleting tfs-${app_service_plan}-vnet
+az network vnet delete --name tfs-${app_service_plan}-vnet
+echo Deleted tfs-${app_service_plan}-vnet
