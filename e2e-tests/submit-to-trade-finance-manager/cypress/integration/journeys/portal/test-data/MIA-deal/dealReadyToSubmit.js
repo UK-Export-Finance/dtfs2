@@ -1,10 +1,10 @@
 const moment = require('moment');
-const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
+const dealThatJustNeedsDates = require('./dealThatJustNeedsDates');
 
 module.exports = () => {
   const now = moment();
 
-  const deal = JSON.parse(JSON.stringify(dealThatJustNeedsConversionDate));
+  const deal = JSON.parse(JSON.stringify(dealThatJustNeedsDates));
 
   deal.submissionDetails['supplyContractConversionDate-day'] = `${now.format('DD')}`;
   deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
