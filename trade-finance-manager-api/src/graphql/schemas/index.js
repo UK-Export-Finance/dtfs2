@@ -217,6 +217,8 @@ type TFMTaskGroup {
 }
 
 type TFMTaskHistory {
+  taskId: String
+  groupId: String
   statusFrom: String
   statusTo: String
   assignedUserId: String
@@ -281,6 +283,7 @@ type TFMFacilityData {
   creditRating: String
   riskProfile: String
   premiumSchedule: [PremiumScheduleData]
+  premiumTotals: String
 }
 
 input DashboardFilters {

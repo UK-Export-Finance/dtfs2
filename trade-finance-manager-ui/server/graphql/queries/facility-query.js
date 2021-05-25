@@ -47,7 +47,7 @@ const facilityQuery = gql`
           exposure,
           timestamp
         },
-        premiumSchedule{
+        premiumSchedule {
           id
           calculationDate
           income
@@ -61,6 +61,7 @@ const facilityQuery = gql`
           updated
           isAtive
         },
+        premiumTotals
         creditRating
       }
     }

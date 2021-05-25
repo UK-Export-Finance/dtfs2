@@ -15,10 +15,10 @@
   {% endset %}
   {% set premiumScheduleHtml %}
 
-    {% set scheduleComponentData = {
+  {% set scheduleComponentData = {
     facility: facility,
-    premiumschedule: premiumschedule,
-    premiumTotals: premiumTotals
+    premiumSchedule: facilityTfm.premiumSchedule,
+    premiumTotals: facilityTfm.premiumTotals
   } %}
   {{ schedule.render(scheduleComponentData) }}
   {% endset -%}

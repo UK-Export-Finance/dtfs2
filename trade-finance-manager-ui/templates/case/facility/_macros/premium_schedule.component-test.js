@@ -45,7 +45,7 @@ describe(page, () => {
     user: {
       timezone: 'Europe/London',
     },
-    premiumschedule: [
+    premiumSchedule: [
       {
         id: 2035,
         calculationDate: '2021-05-06',
@@ -115,8 +115,8 @@ describe(page, () => {
       wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead(params.facility.dayCountBasis);
     });
 
-    it('should render correct nmber of premium schedule rows', () => {
-      wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumschedule.length);
+    it('should render correct number of premium schedule rows', () => {
+      wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumSchedule.length);
     });
 
     describe('at maturity', () => {

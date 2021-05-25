@@ -11,11 +11,15 @@ const {
 const sendTfmEmail = require('./send-tfm-email');
 
 const updateHistory = ({
+  taskId,
+  groupId,
   statusFrom,
   statusTo,
   assignedUserId,
   updatedBy,
 }) => ({
+  taskId,
+  groupId,
   statusFrom,
   statusTo,
   assignedUserId,
@@ -227,6 +231,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     const tfmHistoryUpdate = {
       tasks: [
         updateHistory({
+          taskId: taskIdToUpdate,
+          groupId,
           statusFrom,
           statusTo,
           assignedUserId,
