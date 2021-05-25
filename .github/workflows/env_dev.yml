@@ -779,6 +779,81 @@ jobs:
               MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
               MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
 
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
+        inlineScript: |
+          az functionapp vnet-integration add --name tfs-${{ env.environment }}-function-acbs \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource".
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          reference_data_api_id=$(az functionapp show --name tfs-${{ env.environment }}-function-acbs --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-function-acbs \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$reference_data_api_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-function-acbs
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        # NB the -z tests below are checking 
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-function-acbs --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-function-acbs.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
       with:
