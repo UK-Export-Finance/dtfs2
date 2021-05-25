@@ -1,6 +1,6 @@
 const sendTfmEmail = require('../src/v1/controllers/send-tfm-email');
 const app = require('../src/createApp');
-const api = require('./api')(app); 
+const api = require('./api')(app);
 const externalApis = require('../src/v1/api');
 const { findOneDeal } = require('../src/v1/controllers/deal.controller');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');

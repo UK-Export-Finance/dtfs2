@@ -254,7 +254,7 @@ module.exports = {
   findTeamMembers: (teamId) =>
     MOCK_USERS.filter((user) => user.teams.includes(teamId)),
   findOneTeam: (teamId) =>
-    MOCK_TEAMS.filter((team) => team.id === teamId),
+    MOCK_TEAMS.find((team) => team.id === teamId),
   getCurrencyExchangeRate: () => ({
     midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
@@ -279,7 +279,7 @@ module.exports = {
       mockPremiumSchedule: 1,
     },
   ])),
-  sendEmail: (
+  sendEmail: jest.fn((
     templateId,
     sendToEmailAddress,
     emailVariables,
@@ -295,5 +295,5 @@ module.exports = {
     };
 
     return Promise.resolve(mockResponse);
-  },
+  }),
 };

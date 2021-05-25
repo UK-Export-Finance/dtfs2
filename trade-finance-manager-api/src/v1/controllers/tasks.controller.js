@@ -84,13 +84,15 @@ const sendUpdatedTaskEmail = async (task, deal) => {
   }
 
   if (templateId) {
-    await sendTfmEmail(
+    return sendTfmEmail(
       CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
       sendToEmailAddress,
       emailVariables,
       deal,
     );
   }
+
+  return null;
 };
 
 const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal) => {
@@ -280,4 +282,5 @@ module.exports = {
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
+  sendUpdatedTaskEmail,
 };

@@ -1,6 +1,4 @@
 const moment = require('moment');
-const app = require('../src/createApp');
-const api = require('./api')(app);
 const {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
@@ -8,6 +6,7 @@ const {
 } = require('../src/v1/controllers/send-deal-submit-emails');
 const CONSTANTS = require('../src/constants');
 const formattedTimestamp = require('../src/v1/formattedTimestamp');
+const MOCK_TEAMS = require('../src/v1/__mocks__/mock-teams');
 
 describe('send-deal-submit-emails', () => {
   const mockDeal = {
@@ -74,7 +73,7 @@ describe('send-deal-submit-emails', () => {
         bank: mockDeal.dealSnapshot.details.owningBank.name,
       };
 
-      const { email: expectedTeamEmailAddress } = await api.get(`/v1/teams/${firstTask.team.id}`);
+      const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
       // api response is mocked/stubbed
       const expected = {
