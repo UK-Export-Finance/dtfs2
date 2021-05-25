@@ -33,8 +33,13 @@ export const fillAndSubmitIssueBondFacilityForm = () => {
   pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
   pages.bondIssueFacility.requestedCoverStartDateYearInput().type(COVER_START_DATE_VALUE.format('YYYY'));
 
+  pages.bondIssueFacility.coverEndDateDayInput().clear();
   pages.bondIssueFacility.coverEndDateDayInput().type(COVER_END_DATE_VALUE.format('DD'));
+
+  pages.bondIssueFacility.coverEndDateMonthInput().clear();
   pages.bondIssueFacility.coverEndDateMonthInput().type(COVER_END_DATE_VALUE.format('MM'));
+
+  pages.bondIssueFacility.coverEndDateYearInput().clear();
   pages.bondIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.format('YYYY'));
 
   pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');

@@ -35,10 +35,16 @@ export const fillAndSubmitIssueLoanFacilityForm = () => {
   pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
   pages.loanIssueFacility.requestedCoverStartDateYearInput().type(COVER_START_DATE_VALUE.format('YYYY'));
 
+  pages.bondIssueFacility.coverEndDateDayInput().clear();
   pages.loanIssueFacility.coverEndDateDayInput().type(COVER_END_DATE_VALUE.format('DD'));
+
+  pages.bondIssueFacility.coverEndDateMonthInput().clear();
   pages.loanIssueFacility.coverEndDateMonthInput().type(COVER_END_DATE_VALUE.format('MM'));
+
+  pages.bondIssueFacility.coverEndDateYearInput().clear();
   pages.loanIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.format('YYYY'));
 
+  pages.loanIssueFacility.disbursementAmount().clear();
   pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
   pages.loanIssueFacility.bankReferenceNumber().type('5678');
 
