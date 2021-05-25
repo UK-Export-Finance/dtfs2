@@ -21,6 +21,7 @@ const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../..
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
 const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
+const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
 
@@ -261,7 +262,7 @@ describe('/v1/deals', () => {
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
-          const { email: expectedTeamEmailAddress } = await api.get(`/v1/teams/${firstTask.team.id}`);
+          const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
@@ -295,7 +296,7 @@ describe('/v1/deals', () => {
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
-          const { email: expectedTeamEmailAddress } = await api.get(`/v1/teams/${firstTask.team.id}`);
+          const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
@@ -521,18 +522,18 @@ describe('/v1/deals', () => {
       it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot', async () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.details.submissionType).toEqual('Manual Inclusion Application');
-        
+
         const mockPortalChecker = {
           bank: {
             id: '9',
-            name: 'UKEF test bank (Delegated) (TFM)'
+            name: 'UKEF test bank (Delegated) (TFM)',
           },
           email: 'test@testing.com',
           firstname: 'Test',
           surname: 'User',
           roles: ['checker'],
           timezone: 'Europe/London',
-          username: 'CHECKER-TFM'
+          username: 'CHECKER-TFM',
         };
 
         const { status, body } = await api.put({

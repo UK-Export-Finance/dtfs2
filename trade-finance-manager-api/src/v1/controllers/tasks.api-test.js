@@ -10,6 +10,7 @@ const {
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
+  sendUpdatedTaskEmail,
 } = require('./tasks.controller');
 
 const api = require('../api');
@@ -17,6 +18,7 @@ const api = require('../api');
 const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_TASKS = require('../__mocks__/mock-tasks');
+const CONSTANTS = require('../../constants');
 
 describe('tasks controller  / tasks helper functions', () => {
   describe('getNewAssigneeFullName', () => {
@@ -98,7 +100,7 @@ describe('tasks controller  / tasks helper functions', () => {
 
   describe('updateTasksCanEdit', () => {
     describe('when given a task with `Done` status', () => {
-      it('should mark the task as canEdit = false', () => {
+      it('should mark the task as canEdit = false', async () => {
         const mockGroup1Tasks = [
           {
             id: '1',
@@ -128,7 +130,7 @@ describe('tasks controller  / tasks helper functions', () => {
           },
         ];
 
-        const result = updateTasksCanEdit(mockTasks, 1, '1');
+        const result = await updateTasksCanEdit(mockTasks, 1, '1');
 
         const expected = [
           {
@@ -150,7 +152,7 @@ describe('tasks controller  / tasks helper functions', () => {
     });
 
     describe('when given a task that is not task #1, and previous task has `Done` status', () => {
-      it('should mark the task as canEdit = false', () => {
+      it('should mark the task as canEdit = false', async () => {
         const mockGroup1Tasks = [
           {
             id: '1',
@@ -180,7 +182,7 @@ describe('tasks controller  / tasks helper functions', () => {
           },
         ];
 
-        const result = updateTasksCanEdit(mockTasks, 1, '2');
+        const result = await updateTasksCanEdit(mockTasks, 1, '2');
 
         const expected = [
           {
@@ -537,6 +539,52 @@ describe('tasks controller  / tasks helper functions', () => {
 
         expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
       });
+    });
+  });
+
+  describe('sends updated task email', () => {
+    beforeEach(() => {
+      api.sendEmail.mockClear();
+    });
+
+    it('should send a task email if necessary', async () => {
+      const salesforceTask = MOCK_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+      );
+      const deal = {
+        dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
+        tfm: {
+          history: {
+            emails: [],
+          },
+        },
+      };
+      await sendUpdatedTaskEmail(salesforceTask, deal);
+
+      const salesforceTeam = api.findOneTeam(salesforceTask.team.id);
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
+        salesforceTeam.email,
+        expect.any(Object),
+      );
+    });
+
+    it('should not send a task email if not necessary', async () => {
+      const nonSalesforceTask = MOCK_TASKS[0].groupTasks.find(
+        (t) => t.title !== CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+      );
+      const deal = {
+        dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
+        tfm: {
+          history: {
+            emails: [],
+          },
+        },
+      };
+      await sendUpdatedTaskEmail(nonSalesforceTask, deal);
+
+      expect(api.sendEmail).not.toHaveBeenCalled();
     });
   });
 });
