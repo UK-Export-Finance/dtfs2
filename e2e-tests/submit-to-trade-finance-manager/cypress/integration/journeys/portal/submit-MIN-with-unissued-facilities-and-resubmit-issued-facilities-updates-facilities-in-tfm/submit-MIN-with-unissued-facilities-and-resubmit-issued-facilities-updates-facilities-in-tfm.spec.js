@@ -1,16 +1,23 @@
 import moment from 'moment';
-import relative from '../../../../relativeURL';
-import portalPages from '../../../../../../../portal/cypress/integration/pages';
-import tfmPages from '../../../../../../../trade-finance-manager/cypress/integration/pages';
+import relative from '../../../relativeURL';
+import portalPages from '../../../../../../portal/cypress/integration/pages';
+import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
+
+import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
+import MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal-unissued-facilities/dealReadyToSubmit';
+
 import {
-  COVER_START_DATE_VALUE,
-  COVER_END_DATE_VALUE,
+  COVER_START_DATE_VALUE as BOND_COVER_START_DATE_VALUE,
+  COVER_END_DATE_VALUE as BOND_COVER_END_DATE_VALUE,
+  fillAndSubmitIssueBondFacilityForm,
+} from '../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm';
+
+import {
+  COVER_START_DATE_VALUE as LOAN_COVER_START_DATE_VALUE,
+  COVER_END_DATE_VALUE as LOAN_COVER_END_DATE_VALUE,
   DISBURSEMENT_AMOUNT_VALUE,
   fillAndSubmitIssueLoanFacilityForm,
-} from '../../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
-
-import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT from './test-data/dealWithUnissuedLoanReadyToSubmit';
+} from '../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
@@ -22,8 +29,6 @@ context('Portal to TFM deal submission', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
-  let loan;
-  let loanId;
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err) => {
@@ -34,7 +39,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT(),
+      MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         deal = insertedDeals[0];
@@ -43,14 +48,17 @@ context('Portal to TFM deal submission', () => {
         const { mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-          loan = createdFacilities[0];
-          loanId = loan._id;
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+
         });
       });
   });
 
-  it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
+  it('MIN deal with unissued facilities that then become issued updates facilties in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -76,65 +84,42 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-
     //---------------------------------------------------------------
-    // TFM loan values should render in an unissued state
-    //---------------------------------------------------------------
-    cy.wait(25000); // wait for TFM to do it's thing
-    cy.forceVisit(tfmRootUrl);
-
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
-
-    let tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${loanId}`;
-    cy.forceVisit(tfmFacilityPage);
-
-    tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Commitment');
-    });
-
-    tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('-');
-    });
-
-    tfmPages.facilityPage.firstDrawdownAmountInExportCurrency().should('not.be.visible');
-
-    tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('-');
-    });
-
-    tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('-');
-    });
-
-    tfmPages.facilityPage.facilityTenor().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${loan.ukefGuaranteeInMonths} months`);
-    });
-
-
-    //---------------------------------------------------------------
-    // portal maker completes loan inssuance form
+    // portal maker completes bond issuance form
     //---------------------------------------------------------------
     cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);
+
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
+
+    bondRow.issueFacilityLink().click();
+
+    fillAndSubmitIssueBondFacilityForm();
+
+    //---------------------------------------------------------------
+    // portal maker completes loan issuance form
+    //---------------------------------------------------------------
+    cy.login(MAKER_LOGIN);
+    portalPages.contract.visit(deal);
+
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.issueFacilityLink().click();
 
     fillAndSubmitIssueLoanFacilityForm();
 
-
     //---------------------------------------------------------------
-    // portal maker submits deal to checker
+    // portal maker submits deal for review
     //---------------------------------------------------------------
+    cy.login(MAKER_LOGIN);
+    portalPages.contract.visit(deal);
     portalPages.contract.proceedToReview().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('Issued');
+    portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
-    // expect to land on the /dashboard page with a success message
-    cy.url().should('include', '/dashboard');
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -150,14 +135,52 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('include', '/dashboard');
 
     //---------------------------------------------------------------
-    // TFM loan values should be updated
+    // login to TFM
     //---------------------------------------------------------------
     cy.forceVisit(tfmRootUrl);
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
-    tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${loanId}`;
-    cy.forceVisit(tfmFacilityPage);
+    //---------------------------------------------------------------
+    // bond facility should be updated
+    //---------------------------------------------------------------
+    const tfmBondFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${bondId}`;
+    cy.forceVisit(tfmBondFacilityPage);
+
+    tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Issued');
+    });
+
+    tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
+      // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
+      // but in this e2e test it will always be today so to simplify..
+      const expectedDate = moment().format('D MMMM YYYY');
+      expect(text.trim()).to.equal(expectedDate);
+    });
+
+    tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
+      const expectedDate = moment(BOND_COVER_START_DATE_VALUE).format('D MMMM YYYY');
+      expect(text.trim()).to.equal(expectedDate);
+    });
+
+    tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
+      const expectedDate = moment(BOND_COVER_END_DATE_VALUE).format('D MMMM YYYY');
+      expect(text.trim()).to.equal(expectedDate);
+    });
+
+    tfmPages.facilityPage.facilityTenor().invoke('text').then((text) => {
+      // the actual month is generated dynamically via API.
+      // 'months' is added to the mapping of the API result.
+      // so safe to assert based on `months` appearing, rather than adding regex assertion.
+      expect(text.trim()).not.to.contain(dealFacilities.bonds[0].ukefGuaranteeInMonths);
+      expect(text.trim()).to.contain('month');
+    });
+
+    //---------------------------------------------------------------
+    // loan facility should be updated
+    //---------------------------------------------------------------
+    const tfmLoanFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${loanId}`;
+    cy.forceVisit(tfmLoanFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issued');
@@ -176,18 +199,18 @@ context('Portal to TFM deal submission', () => {
         maximumFractionDigits: 2,
       });
 
-      const expected = `${loan.currency.id} ${expectedValue}`;
+      const expected = `${dealFacilities.loans[0].currency.id} ${expectedValue}`;
 
       expect(text.trim()).to.equal(expected);
     });
 
     tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      const expectedDate = moment(COVER_START_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = moment(LOAN_COVER_START_DATE_VALUE).format('D MMMM YYYY');
       expect(text.trim()).to.equal(expectedDate);
     });
 
     tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      const expectedDate = moment(COVER_END_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = moment(LOAN_COVER_END_DATE_VALUE).format('D MMMM YYYY');
       expect(text.trim()).to.equal(expectedDate);
     });
 
@@ -195,29 +218,9 @@ context('Portal to TFM deal submission', () => {
       // the actual month is generated dynamically via API.
       // 'months' is added to the mapping of the API result.
       // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).not.to.contain(loan.ukefGuaranteeInMonths);
+      expect(text.trim()).not.to.contain(dealFacilities.loans[0].ukefGuaranteeInMonths);
       expect(text.trim()).to.contain('month');
     });
 
-    //---------------------------------------------------------------
-    // portal loan status should be updated to `Acknowledged by UKEF`
-    //---------------------------------------------------------------
-    cy.login(MAKER_LOGIN);
-    portalPages.contract.visit(deal);
-
-    loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
-    });
-
-    //---------------------------------------------------------------
-    // portal deal status should be updated to `Acknowledged by UKEF`
-    //---------------------------------------------------------------
-    portalPages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
-
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
-    });
   });
 });

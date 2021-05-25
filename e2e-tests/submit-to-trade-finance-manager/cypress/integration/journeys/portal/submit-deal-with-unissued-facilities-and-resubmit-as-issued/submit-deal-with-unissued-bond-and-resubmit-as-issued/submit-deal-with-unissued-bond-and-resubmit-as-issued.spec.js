@@ -7,7 +7,7 @@ import {
   COVER_START_DATE_VALUE,
   COVER_END_DATE_VALUE,
   fillAndSubmitIssueBondFacilityForm,
-} from './fillAndSubmitIssueBondFacilityForm';
+} from '../../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm';
 
 import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT from './test-data/dealWithUnissuedBondReadyToSubmit';

@@ -2,7 +2,7 @@
   "details": {
     "bankSupplyContractID": "abc-1-def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
-    "submissionType": "Automatic Inclusion Notice",
+    "submissionType": "Manual Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "956",
@@ -111,27 +111,53 @@
   },
   "mockFacilities": [
     {
-        "facilityType": "bond",
-        "bondIssuer": "issuer",
-        "bondType": "bond type",
-        "facilityStage": "Unissued",
-        "ukefGuaranteeInMonths": "24",
-        "bondBeneficiary": "test",
-        "facilityValue": "100000.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "currency": {
-          "id": "GBP",
-          "text": "GBP - UK Sterling"
-        },
-        "conversionRate": "100",
-        "conversionRateDate-day": "03",
-        "conversionRateDate-month": "03",
-        "conversionRateDate-year": "2021",
-        "riskMarginFee": "12",
-        "coveredPercentage": "24",
-        "feeType": "test",
-        "feeFrequency": "test",
-        "dayCountBasis": "test"
+      "facilityType": "loan",
+      "createdDate": "1615380531878",
+      "facilityStage": "Conditional",
+      "lastEdited": "1615380612045",
+      "ukefGuaranteeInMonths": "12",
+      "conversionRate": "50",
+      "coveredPercentage": "12",
+      "currency": {
+        "id": "AUD",
+        "text": "AUD - Australian Dollars"
+      },
+      "currencySameAsSupplyContractCurrency": "false",
+      "disbursementAmount": "100.00",
+      "facilityValue": "100,000.00",
+      "guaranteeFeePayableByBank": "21.6000",
+      "interestMarginFee": "24",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "148.08",
+      "dayCountBasis": "365",
+      "premiumFrequency": null,
+      "premiumType": "At maturity",
+      "status": "Completed"
     },
+    {
+      "facilityType": "bond",
+      "createdDate": "1615380491206",
+      "bondBeneficiary": "",
+      "bondIssuer": "",
+      "bondType": "Advance payment guarantee",
+      "facilityStage": "Unissued",
+      "lastEdited": "1615380612017",
+      "ukefGuaranteeInMonths": "12",
+      "conversionRate": "100",
+      "coveredPercentage": "24",
+      "currency": {
+        "id": "EUR",
+        "text": "EUR - Euros"
+      },
+      "currencySameAsSupplyContractCurrency": "false",
+      "facilityValue": "2400.00",
+      "guaranteeFeePayableByBank": "10.8000",
+      "minimumRiskMarginFee": "",
+      "riskMarginFee": "12",
+      "ukefExposure": "576.00",
+      "dayCountBasis": "365",
+      "feeFrequency": null,
+      "feeType": "At maturity"
+    }
   ]
 }
