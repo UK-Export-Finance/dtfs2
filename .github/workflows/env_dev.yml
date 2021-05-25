@@ -1443,12 +1443,8 @@ jobs:
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
-              TFM_TEAM_EMAIL_UNDERWRITING_SUPPORT="${{ secrets.TFM_TEAM_EMAIL_UNDERWRITING_SUPPORT }}" \
-              TFM_TEAM_EMAIL_BUSINESS_SUPPORT="${{ secrets.TFM_TEAM_EMAIL_BUSINESS_SUPPORT }}" \
-              TFM_TEAM_EMAIL_UNDERWRITER_MANAGERS="${{ secrets.TFM_TEAM_EMAIL_UNDERWRITER_MANAGERS }}" \
-              TFM_TEAM_EMAIL_UNDERWRITERS="${{ secrets.TFM_TEAM_EMAIL_UNDERWRITERS }}" \
-              TFM_TEAM_EMAIL_RISK_MANAGERS="${{ secrets.TFM_TEAM_EMAIL_RISK_MANAGERS }}"
+              DTFS_CENTRAL_API="http://$dtfs_central_api_url"
+              
   # END API setup
  
   # START UI setup
