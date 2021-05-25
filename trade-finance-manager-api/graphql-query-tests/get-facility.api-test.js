@@ -82,6 +82,21 @@ const GET_FACILITY = gql`
           timestamp
         },
         creditRating
+        premiumSchedule {
+          id
+          calculationDate
+          income
+          incomePerDay
+          exposure
+          period
+          daysInPeriod
+          effectiveFrom
+          effectiveTo
+          created
+          updated
+          isAtive
+        },
+        premiumTotals
       }
     }
   }

@@ -283,6 +283,7 @@ type TFMFacilityData {
   creditRating: String
   riskProfile: String
   premiumSchedule: [PremiumScheduleData]
+  premiumTotals: String
 }
 
 input DashboardFilters {
