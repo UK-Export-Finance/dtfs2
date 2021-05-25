@@ -1,5 +1,7 @@
 const mapFacilityTfm = require('./mapFacilityTfm');
 const mapUkefExposure = require('./mapUkefExposure');
+const mapPremiumSchedule = require('./mapPremiumSchedule');
+const mapPremiumTotals = require('./mapPremiumTotals');
 
 describe('mapFacilityTfm', () => {
   it('should return mapped object', () => {
@@ -19,6 +21,8 @@ describe('mapFacilityTfm', () => {
     const expected = {
       ...mockFacilityTfm,
       ukefExposure: mapUkefExposure(mockFacilityTfm),
+      premiumSchedule: mapPremiumSchedule(mockFacilityTfm.premiumSchedule),
+      premiumTotals: mapPremiumTotals(mockFacilityTfm.premiumSchedule),
       creditRating: mockDealTfm.exporterCreditRating,
     };
 

@@ -102,6 +102,8 @@ describe('graphql mutation - update task', () => {
           tfm { 
             history {
               tasks {
+                taskId
+                groupId
                 statusFrom
                 statusTo
                 assignedUserId
@@ -120,6 +122,8 @@ describe('graphql mutation - update task', () => {
     });
 
     const expected = {
+      taskId: taskUpdate.id,
+      groupId: String(taskUpdate.groupId),
       statusFrom: 'To do',
       statusTo: taskUpdate.status,
       assignedUserId: taskUpdate.assignedTo.userId,

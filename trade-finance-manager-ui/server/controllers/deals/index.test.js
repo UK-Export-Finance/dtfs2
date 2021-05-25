@@ -4,30 +4,49 @@ import { mockRes } from '../../test-mocks';
 
 const res = mockRes();
 
-describe.skip('controllers - deals', () => {
+describe('controllers - deals', () => {
   describe('GET deals', () => {
-    describe('when deals exist', () => {
-      const deals = [{
-        _id: '1000023',
-        mock: true,
-      }, {
-        _id: '1000024',
-        mock: true,
-      }];
+    describe('when there are deals', () => {
+      const mockDeals = [
+        { _id: '1000023' },
+        { _id: '1000024' },
+      ];
 
       beforeEach(() => {
-        api.getDeal = () => Promise.resolve(deals);
+        api.getDeals = () => Promise.resolve(mockDeals);
       });
 
-      it('should render deal template', async () => {
-        const req = {};
+      it('should render deals template with data', async () => {
+        const mockReq = {
+          session: {
+            user: {},
+          },
+        };
 
-        await caseController.getCaseDeal(req, res);
-        expect(res.render).toHaveBeenCalledWith('deals.njk', {
-          deals,
+        await caseController.getDeals(mockReq, res);
+        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
+          deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
+          user: mockReq.session.user,
         });
+      });
+    });
+
+    describe('when there are no deals', () => {
+      beforeEach(() => {
+        api.getDeals = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const mockReq = {
+          session: {
+            user: {},
+          },
+        };
+
+        await caseController.getDeals(mockReq, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
   });
