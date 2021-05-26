@@ -2,7 +2,7 @@ const relative = require('../../../../relativeURL');
 const pages = require('../../../../pages');
 const MIADealWithUnissuedFacilities = require('../MIA-deal-with-unissued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const { fillAndSubmitIssueBondFacilityForm } = require('../../../maker/submit-issued-facilities-for-review/fillAndSubmitIssueBondFacilityForm');
+const { fillAndSubmitIssueBondFacilityForm } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
