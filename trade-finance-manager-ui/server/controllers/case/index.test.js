@@ -489,6 +489,10 @@ describe('controllers - case', () => {
 
   describe('POST case task', () => {
     describe('when deal exists', () => {
+      const apiUpdateSpy = jest.fn(() => Promise.resolve({
+        test: true,
+      }));
+
       const mockDeal = {
         _id: '1000023',
         dealSnapshot: {
@@ -506,10 +510,10 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
-        api.updateTask = () => Promise.resolve({});
+        api.updateTask = apiUpdateSpy;
       });
 
-      it('should redirect to /tasks', async () => {
+      it('should call API and redirect to /tasks', async () => {
         const req = {
           params: {
             _id: mockDeal._id,
@@ -521,9 +525,28 @@ describe('controllers - case', () => {
             assignedTo: session.user._id,
             status: 'In progress',
           },
+          headers: {
+            origin: 'http://test.com',
+          },
         };
 
         await caseController.putCaseTask(req, res);
+
+        const expectedUpdateObj = {
+          id: req.params.taskId,
+          groupId: Number(req.params.groupId),
+          status: req.body.status,
+          assignedTo: {
+            userId: req.body.assignedTo,
+          },
+          updatedBy: req.session.user._id, // eslint-disable-line no-underscore-dangle
+          urlOrigin: req.headers.origin,
+        };
+
+        expect(apiUpdateSpy).toHaveBeenCalledWith(
+          mockDeal._id,
+          expectedUpdateObj,
+        );
 
         // eslint-disable-next-line no-underscore-dangle
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
@@ -543,6 +566,9 @@ describe('controllers - case', () => {
             taskId: '456',
           },
           session,
+          headers: {
+            origin: 'http://test.com',
+          },
         };
 
         await caseController.putCaseTask(req, res);

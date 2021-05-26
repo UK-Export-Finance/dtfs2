@@ -149,6 +149,7 @@ const putCaseTask = async (req, res) => {
       userId: assignedToValue,
     },
     updatedBy: req.session.user._id, // eslint-disable-line no-underscore-dangle
+    urlOrigin: req.headers.origin,
   };
 
   await api.updateTask(dealId, update);
