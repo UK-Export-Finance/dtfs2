@@ -6,11 +6,11 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const {
   fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate,
   ISSUED_BOND_DATE_VALUE,
-} = require('./fillAndSubmitIssueBondFacilityForm');
+} = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 const {
   fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
   ISSUED_LOAN_DATE_VALUE,
-} = require('./fillAndSubmitIssueLoanFacilityForm');
+} = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 

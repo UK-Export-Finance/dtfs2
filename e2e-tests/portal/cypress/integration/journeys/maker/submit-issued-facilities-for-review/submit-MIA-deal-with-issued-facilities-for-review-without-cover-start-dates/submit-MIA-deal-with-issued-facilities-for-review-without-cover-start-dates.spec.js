@@ -9,10 +9,10 @@ const miaDealReadyToSubmit = require('./MIA-deal-ready-to-submit');
 
 const {
   fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate,
-} = require('../fillAndSubmitIssueBondFacilityForm');
+} = require('../../fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 const {
   fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
-} = require('../fillAndSubmitIssueLoanFacilityForm');
+} = require('../../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
 context('Checker submits an MIA deal, workflow responds, Maker completes issue facility forms without cover start dates, submits deal to checker for review', () => {
   let deal;
