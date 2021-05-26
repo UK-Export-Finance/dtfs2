@@ -674,6 +674,53 @@ describe('tasks controller  / tasks helper functions', () => {
       );
     });
 
+
+    it('should send an email for MIA - GIVE_EXPORTER_A_CREDIT_RATING task', async () => {
+      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const underwritersTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
+    });
+
+    it('should send an email for MIA - COMPLETE_CREDIT_ANALYSIS task', async () => {
+      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const underwritersTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
+    });
+
     it('should not send a task email if not necessary', async () => {
       const nonSalesforceTask = MOCK_AIN_TASKS[0].groupTasks.find(
         (t) => t.title !== CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,

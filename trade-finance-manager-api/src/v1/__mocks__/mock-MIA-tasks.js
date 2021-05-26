@@ -68,7 +68,7 @@ const MOCK_MIA_TASKS = [
       {
         id: '3',
         groupId: 3,
-        title: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS',
+        title: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
         team: CONSTANTS.TEAMS.UNDERWRITERS,
       },
     ],
