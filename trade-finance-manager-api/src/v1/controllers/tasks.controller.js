@@ -66,20 +66,49 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
     return group;
   });
 
+const generateTaskUrl = (dealId, task) => {
+  const {
+    id: taskId,
+    groupId,
+  } = task;
+
+  return `http://localhost:5003/case/${dealId}/tasks/${groupId}/${taskId}`;
+};
+
 const sendUpdatedTaskEmail = async (task, deal) => {
   let emailVariables = {};
   let templateId;
   let sendToEmailAddress;
   let team;
 
+  const { dealSnapshot } = deal;
+  const { submissionDetails, details } = dealSnapshot;
+
+  const { 'supplier-name': exporterName } = submissionDetails;
+  const { ukefDealId } = details;
+
   switch (task.title) {
     case CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE:
       emailVariables = {
-        exporterName: deal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: deal.dealSnapshot.details.ukefDealId,
+        exporterName,
+        ukefDealId,
       };
 
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL;
+      team = await api.findOneTeam(task.team && task.team.id);
+      sendToEmailAddress = team.email;
+
+      break;
+
+    case CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK:
+      emailVariables = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
+        taskUrl: generateTaskUrl(deal.dealSnapshot._id, task),
+        exporterName,
+        ukefDealId,
+      };
+
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
       team = await api.findOneTeam(task.team && task.team.id);
       sendToEmailAddress = team.email;
 
@@ -89,7 +118,7 @@ const sendUpdatedTaskEmail = async (task, deal) => {
 
   if (templateId) {
     return sendTfmEmail(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
+      templateId,
       sendToEmailAddress,
       emailVariables,
       deal,
@@ -281,6 +310,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 module.exports = {
   getNewAssigneeFullName,
   updateTask,
+  generateTaskUrl,
+  sendUpdatedTaskEmail,
   updateTasksCanEdit,
   updateUserTasks,
   updateOriginalAssigneeTasks,
@@ -288,5 +319,4 @@ module.exports = {
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
-  sendUpdatedTaskEmail,
 };
