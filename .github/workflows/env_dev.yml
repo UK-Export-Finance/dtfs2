@@ -772,6 +772,8 @@ jobs:
         inlineScript: |
           az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
             --settings \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
               MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
@@ -795,12 +797,12 @@ jobs:
         # NB: group-id isn't well documented. It means "Target sub-resource".
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          reference_data_api_id=$(az functionapp show --name tfs-${{ env.environment }}-function-acbs --query "id" -o tsv)
+          acbs_function_id=$(az functionapp show --name tfs-${{ env.environment }}-function-acbs --query "id" -o tsv)
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-function-acbs \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$reference_data_api_id" \
+            --private-connection-resource-id "$acbs_function_id" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-function-acbs
 
