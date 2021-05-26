@@ -370,6 +370,7 @@ input TFMTaskInput {
   assignedTo: TFMTaskAssignedToInput
   status: String
   updatedBy: String
+  urlOrigin: String
 }
 
 input TFMCreditRatingInput {

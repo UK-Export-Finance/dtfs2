@@ -66,16 +66,16 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
     return group;
   });
 
-const generateTaskUrl = (dealId, task) => {
+const generateTaskUrl = (urlOrigin, dealId, task) => {
   const {
     id: taskId,
     groupId,
   } = task;
 
-  return `http://localhost:5003/case/${dealId}/tasks/${groupId}/${taskId}`;
+  return `${urlOrigin}/case/${dealId}/tasks/${groupId}/${taskId}`;
 };
 
-const sendUpdatedTaskEmail = async (task, deal) => {
+const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   let emailVariables = {};
   let templateId;
   let sendToEmailAddress;
@@ -103,7 +103,7 @@ const sendUpdatedTaskEmail = async (task, deal) => {
     case CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK:
       emailVariables = {
         taskTitle: CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
-        taskUrl: generateTaskUrl(deal.dealSnapshot._id, task),
+        taskUrl: generateTaskUrl(urlOrigin, deal.dealSnapshot._id, task),
         exporterName,
         ukefDealId,
       };
@@ -128,7 +128,7 @@ const sendUpdatedTaskEmail = async (task, deal) => {
   return null;
 };
 
-const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal) => {
+const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, urlOrigin) => {
   const sendUpdatedEmailRequests = [];
 
   const taskGroups = allTaskGroups.map((tGroup) => {
@@ -151,7 +151,7 @@ const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal) 
             }
           } else {
             // Send task notification emails
-            sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal));
+            sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
           }
         }
         return task;
@@ -226,12 +226,12 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     assignedTo,
     status: statusTo,
     updatedBy,
+    urlOrigin,
   } = tfmTaskUpdate;
 
   const group = getGroup(allTasks, groupId);
 
   const originalTask = getTask(taskIdToUpdate, group.groupTasks);
-  // const { team } = originalTask;
 
   const statusFrom = originalTask.status;
 
@@ -255,7 +255,13 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
     const modifiedTasks = updateTask(allTasks, groupId, taskIdToUpdate, updatedTask);
 
-    const modifiedTasksWithEditStatus = await updateTasksCanEdit(modifiedTasks, groupId, taskIdToUpdate, deal);
+    const modifiedTasksWithEditStatus = await updateTasksCanEdit(
+      modifiedTasks,
+      groupId,
+      taskIdToUpdate,
+      deal,
+      urlOrigin,
+    );
 
     const tfmHistoryUpdate = {
       tasks: [
@@ -298,8 +304,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     if (assignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
       await updateUserTasks(modifiedTasks, assignedUserId);
     }
-
-    // await sendTaskEmail(updatedTask, team, deal);
 
     return updatedTask;
   }

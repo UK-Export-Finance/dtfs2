@@ -35,6 +35,7 @@ describe('graphql mutation - update task', () => {
     assignedTo: {
       userId: MOCK_USER._id,
     },
+    urlOrigin: 'http://test.com',
   };
 
   beforeAll(() => {

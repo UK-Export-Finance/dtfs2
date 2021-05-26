@@ -559,13 +559,13 @@ describe('tasks controller  / tasks helper functions', () => {
     });
 
     it('should send an email for CREATE_OR_LINK_SALESFORCE task', async () => {
-      const salesforceTask = MOCK_AIN_TASKS[0].groupTasks.find(
+      const mockTask = MOCK_AIN_TASKS[0].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
       );
 
-      await sendUpdatedTaskEmail(salesforceTask, mockDeal);
+      await sendUpdatedTaskEmail(mockTask, mockDeal);
 
-      const salesforceTeam = api.findOneTeam(salesforceTask.team.id);
+      const salesforceTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
@@ -580,17 +580,19 @@ describe('tasks controller  / tasks helper functions', () => {
     });
 
     it('should send an email for MIA - COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
-      const completeAdverseHistoryCheckTask = MOCK_MIA_TASKS[1].groupTasks.find(
+      const mockTask = MOCK_MIA_TASKS[1].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
       );
 
-      await sendUpdatedTaskEmail(completeAdverseHistoryCheckTask, mockDeal);
+      const mockUrlOrigin = 'http://test.com';
 
-      const underwriterManagersTeam = api.findOneTeam(completeAdverseHistoryCheckTask.team.id);
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const underwriterManagersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
         taskTitle: CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
-        taskUrl: generateTaskUrl(mockDeal.dealSnapshot._id, completeAdverseHistoryCheckTask),
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
       };
