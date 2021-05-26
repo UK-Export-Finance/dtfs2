@@ -41,6 +41,12 @@ const MIA_GROUP_3_TASKS = {
   COMPLETE_CREDIT_ANALYSIS: 'Complete the credit analysis',
 };
 
+const MIA_GROUP_4_TASKS = {
+  CHECK_THE_CREDIT_ANALYSIS: 'Check the credit analysis',
+  COMPLETE_RISK_ANALYSIS: 'Complete risk analysis (RAD)',
+  APPROVE_OR_DECLINE_THE_DEAL: 'Approve or decline the deal',
+};
+
 const MIA = {
   GROUP_1: {
     GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
@@ -97,15 +103,15 @@ const MIA = {
     GROUP_TITLE: 'Approvals',
     TASKS: [
       {
-        title: 'Check the credit analysis',
+        title: MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
       {
-        title: 'Complete risk analysis (RAD)',
+        title: MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS,
         team: TEAMS.RISK_MANAGERS,
       },
       {
-        title: 'Approve or decline the deal',
+        title: MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
     ],
@@ -127,6 +133,7 @@ module.exports = {
   MIA_GROUP_1_TASKS,
   MIA_GROUP_2_TASKS,
   MIA_GROUP_3_TASKS,
+  MIA_GROUP_4_TASKS,
   STATUS,
   UNASSIGNED,
 };
