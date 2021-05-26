@@ -56,19 +56,19 @@ const MOCK_MIA_TASKS = [
       {
         id: '1',
         groupId: 3,
-        title: 'Check exposure',
+        title: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
         team: CONSTANTS.TEAMS.UNDERWRITERS,
       },
       {
         id: '2',
         groupId: 3,
-        title: 'Give the exporter a credit rating',
+        title: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
         team: CONSTANTS.TEAMS.UNDERWRITERS,
       },
       {
         id: '3',
         groupId: 3,
-        title: 'Complete the credit analysis',
+        title: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS',
         team: CONSTANTS.TEAMS.UNDERWRITERS,
       },
     ],
