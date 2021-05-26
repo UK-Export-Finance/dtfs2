@@ -553,7 +553,31 @@ describe('tasks controller  / tasks helper functions', () => {
     });
   });
 
-  describe('sends updated task email', () => {
+  describe('generateTaskUrl', () => {
+    it('should return url from params', () => {
+      const mockUrlOrigin = 'http://testing.com';
+      const mockDealId = '123456';
+
+      const mockTask = {
+        id: 1,
+        groupId: 2,
+      };
+
+      const result = generateTaskUrl(
+        mockUrlOrigin,
+        mockDealId,
+        mockTask,
+      );
+
+      const { groupId, id } = mockTask;
+
+      const expected = `${mockUrlOrigin}/case/${mockDealId}/tasks/${groupId}/${id}`;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('sendUpdatedTaskEmail', () => {
     beforeEach(() => {
       api.sendEmail.mockClear();
     });
