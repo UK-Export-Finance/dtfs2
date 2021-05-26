@@ -4,7 +4,7 @@ const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
 
 const {
   fillAndSubmitIssueBondFacilityForm,
-} = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueBondFacilityForm');
+} = require('../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 

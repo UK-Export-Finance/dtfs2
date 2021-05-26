@@ -3,10 +3,10 @@ const pages = require('../../pages');
 const mockUsers = require('../../../fixtures/mockUsers');
 const {
   fillAndSubmitIssueBondFacilityForm,
-} = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueBondFacilityForm');
+} = require('../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 const {
   fillAndSubmitIssueLoanFacilityForm,
-} = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueLoanFacilityForm');
+} = require('../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
