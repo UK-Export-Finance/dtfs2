@@ -10,7 +10,7 @@ const {
   canUpdateTask,
 } = require('./tasks');
 
-const MOCK_TASKS = require('../__mocks__/mock-tasks');
+const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
 const CONSTANTS = require('../../constants');
 
 describe('helpers - tasks', () => {
@@ -108,7 +108,7 @@ describe('helpers - tasks', () => {
           ],
         };
 
-        const result = previousTaskIsComplete(MOCK_TASKS, mockGroup, '1');
+        const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '1');
         expect(result).toEqual(true);
       });
     });
@@ -124,7 +124,7 @@ describe('helpers - tasks', () => {
           ],
         };
 
-        const result = previousTaskIsComplete(MOCK_TASKS, mockGroup, '2');
+        const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '2');
         expect(result).toEqual(true);
       });
     });
@@ -140,7 +140,7 @@ describe('helpers - tasks', () => {
           ],
         };
 
-        const MOCK_TASKS_FIRST_GROUP_COMPLETED = [
+        const MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED = [
           {
             groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
             id: 1,
@@ -173,7 +173,7 @@ describe('helpers - tasks', () => {
         ];
 
         const result = previousTaskIsComplete(
-          MOCK_TASKS_FIRST_GROUP_COMPLETED,
+          MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED,
           MOCK_SECOND_GROUP,
           '1',
         );
@@ -192,7 +192,7 @@ describe('helpers - tasks', () => {
           ],
         };
 
-        const result = previousTaskIsComplete(MOCK_TASKS, mockGroup, '3');
+        const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '3');
         expect(result).toEqual(false);
       });
     });
@@ -254,7 +254,7 @@ describe('helpers - tasks', () => {
           ],
         };
 
-        const result = canUpdateTask(MOCK_TASKS, mockParentGroup, '3');
+        const result = canUpdateTask(MOCK_AIN_TASKS, mockParentGroup, '3');
 
         expect(result).toEqual(true);
       });
@@ -272,7 +272,7 @@ describe('helpers - tasks', () => {
           ],
         };
 
-        const result = canUpdateTask(MOCK_TASKS, mockParentGroup, '3');
+        const result = canUpdateTask(MOCK_AIN_TASKS, mockParentGroup, '3');
 
         expect(result).toEqual(false);
       });

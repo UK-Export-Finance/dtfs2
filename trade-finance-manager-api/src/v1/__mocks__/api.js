@@ -14,7 +14,7 @@ const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-MIA-second-submit-facilities-unissued-to-issued');
 const MOCK_MIA_SECOND_SUBMIT = require('./mock-deal-MIA-second-submit');
-const MOCK_TASKS = require('./mock-tasks');
+const MOCK_AIN_TASKS = require('./mock-AIN-tasks');
 const MOCK_USERS = require('./mock-users');
 const MOCK_TEAMS = require('./mock-teams');
 
@@ -58,7 +58,7 @@ module.exports = {
       _id: dealId,
       dealSnapshot: mockDeal,
       tfm: {
-        tasks: MOCK_TASKS,
+        tasks: MOCK_AIN_TASKS,
         exporterCreditRating: 'Good (BB-)',
         supplyContractValueInGBP: '7287.56740999854',
         parties: {
