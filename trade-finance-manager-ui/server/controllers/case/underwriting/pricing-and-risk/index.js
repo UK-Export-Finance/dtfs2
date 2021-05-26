@@ -7,7 +7,6 @@ import lossGivenDefaultControllers from './loss-given-default';
 import probabilityOfDefaultControllers from './probability-of-default';
 import facilityRiskProfileControllers from './facility-risk-profile';
 import {
-  userCanEditExporterCreditRating,
   userCanEditGeneral,
 } from './helpers';
 
@@ -20,8 +19,8 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
   }
 
   const { user } = req.session;
+
   return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
-    userCanEditExporterCreditRating: userCanEditExporterCreditRating(user),
     userCanEditGeneral: userCanEditGeneral(user),
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',

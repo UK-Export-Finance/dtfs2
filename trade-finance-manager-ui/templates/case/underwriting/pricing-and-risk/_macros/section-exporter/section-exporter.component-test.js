@@ -44,12 +44,12 @@ describe(component, () => {
     });
   });
 
-  describe('with no params.exporterCreditRating and params.userCanEditExporterCreditRating is true', () => {
+  describe('with no params.exporterCreditRating and params.userCanEditGeneral is true', () => {
     it('should render link to add credit rating', () => {
       params = {
         ...params,
         exporterCreditRating: null,
-        userCanEditExporterCreditRating: true,
+        userCanEditGeneral: true,
       };
 
       const wrapper = render(params);

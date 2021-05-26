@@ -3,7 +3,6 @@ import pricingAndRiskController from '..';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import {
-  userCanEditExporterCreditRating,
   userCanEditGeneral,
 } from './helpers';
 
@@ -47,7 +46,6 @@ describe('GET underwriting - pricing and risk', () => {
       await pricingAndRiskController.getUnderWritingPricingAndRisk(req, res);
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
         {
-          userCanEditExporterCreditRating: userCanEditExporterCreditRating(session.user),
           userCanEditGeneral: userCanEditGeneral(session.user),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
