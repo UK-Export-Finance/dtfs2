@@ -35,6 +35,12 @@ const MIA_GROUP_2_TASKS = {
   COMPLETE_ADVERSE_HISTORY_CHECK: 'Complete an adverse history check',
 };
 
+const MIA_GROUP_3_TASKS = {
+  CHECK_EXPOSURE: 'Check exposure',
+  GIVE_EXPORTER_A_CREDIT_RATING: 'Give the exporter a credit rating',
+  COMPLETE_CREDIT_ANALYSIS: 'Complete the credit analysis',
+};
+
 const MIA = {
   GROUP_1: {
     GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
@@ -74,15 +80,15 @@ const MIA = {
     GROUP_TITLE: 'Underwriting',
     TASKS: [
       {
-        title: 'Check exposure',
+        title: MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
         team: TEAMS.UNDERWRITERS,
       },
       {
-        title: 'Give the exporter a credit rating',
+        title: MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
         team: TEAMS.UNDERWRITERS,
       },
       {
-        title: 'Complete the credit analysis',
+        title: MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
         team: TEAMS.UNDERWRITERS,
       },
     ],
@@ -120,6 +126,7 @@ module.exports = {
   MIA,
   MIA_GROUP_1_TASKS,
   MIA_GROUP_2_TASKS,
+  MIA_GROUP_3_TASKS,
   STATUS,
   UNASSIGNED,
 };

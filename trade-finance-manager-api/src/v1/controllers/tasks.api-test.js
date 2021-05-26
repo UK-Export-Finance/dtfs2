@@ -651,6 +651,29 @@ describe('tasks controller  / tasks helper functions', () => {
       );
     });
 
+    it('should send an email for MIA - CHECK_EXPOSURE task', async () => {
+      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const underwritersTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
+    });
+
     it('should not send a task email if not necessary', async () => {
       const nonSalesforceTask = MOCK_AIN_TASKS[0].groupTasks.find(
         (t) => t.title !== CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
