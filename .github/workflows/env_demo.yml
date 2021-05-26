@@ -15,8 +15,8 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: dtfs-submissions
-  application_gateway_cidr: 10.0.10.0/28
-  private_endpoints_cidr: 10.0.11.0/28
+  application_gateway_cidr: 172.16.61.0/22 
+  private_endpoints_cidr: 172.16.60.0/22 
   api_portal_access_port: 44232
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
@@ -67,7 +67,8 @@ jobs:
         # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
           az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
-          az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
+          az network vnet create --name tfs-${{ env.app_service_plan }}-vnet \
+            --address-prefixes 172.16.0.0/16
 
     - name: Application Gateway subnet
       uses: Azure/cli@v1.0.0
@@ -122,7 +123,7 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
             --service-endpoints Microsoft.AzureCosmosDB \
-            --address-prefixes 10.0.200.0/28 \
+            --address-prefixes 172.16.42.0/28 \
             --nat-gateway tfs-${{ env.app_service_plan }}-nat-gw
             
     # We'll aim to move this out of this section and consolidate into a single VM job:
@@ -134,7 +135,7 @@ jobs:
           az network vnet subnet create \
             --name ${{secrets.RESOURCE_GROUP }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.210.0/28 \
+            --address-prefixes 172.16.43.0/28 \
             --service-endpoints Microsoft.AzureCosmosDB
           
   private-dns:
@@ -771,12 +772,89 @@ jobs:
         inlineScript: |
           az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
             --settings \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
               MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
               MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
+        inlineScript: |
+          az functionapp vnet-integration add --name tfs-${{ env.environment }}-function-acbs \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource".
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          acbs_function_id=$(az functionapp show --name tfs-${{ env.environment }}-function-acbs --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-function-acbs \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$acbs_function_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-function-acbs
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        # NB the -z tests below are checking 
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-function-acbs --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-function-acbs.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-acbs.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-acbs.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -925,6 +1003,8 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               MULESOFT_API_NUMBER_GENERATOR_URL="${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}" \
               MULESOFT_API_ACBS_DEAL_URL="${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}" \
               MULESOFT_API_ACBS_FACILITY_URL="${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}" \
@@ -1443,6 +1523,7 @@ jobs:
               MONGODB_URI="$mongo_connection_string" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url"
+              
   # END API setup
  
   # START UI setup
@@ -2350,7 +2431,6 @@ jobs:
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
 
-
     # - name: API routing
     #   uses: Azure/cli@v1.0.0
     #   with:
@@ -2379,4 +2459,5 @@ jobs:
     #         --forwarding-protocol HttpsOnly \
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
-  # END Front Door
+  # END Front Doors
+  
