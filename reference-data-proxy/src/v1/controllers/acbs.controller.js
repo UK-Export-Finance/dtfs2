@@ -107,7 +107,12 @@ const createAcbsRecord = async (deal, bank) => {
       deal,
       bank,
     },
-  }).catch((err) => err);
+  }).catch((err) => {
+    console.log('ACBS', { err });
+    return err;
+  });
+
+  console.log('ACBS', { response, data: response.data });
   return response;
 };
 
