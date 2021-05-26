@@ -66,10 +66,10 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  describe('not able to add credit rating', () => {
+  describe('not able to add edit', () => {
     beforeEach(() => {
       const underWritingManagerUser = MOCK_USERS.find((user) =>
-        user.teams.includes('UNDERWRITER_MANAGERS'));
+        user.teams.includes('UNDERWRITING_SUPPORT'));
 
       cy.login(underWritingManagerUser);
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -81,27 +81,6 @@ context('Case Underwriting - Pricing and risk', () => {
 
     it('should dispay the correct change links', () => {
       pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('visible');
-    });
-  });
-
-  describe('only able to add credit rating', () => {
-    beforeEach(() => {
-      const underWritingSupportUser = MOCK_USERS.find((user) =>
-        user.teams.includes('UNDERWRITING_SUPPORT'));
-
-      cy.login(underWritingSupportUser);
-      cy.visit(relative(`/case/${dealId}/deal`));
-
-      // go to pricing and risk page
-      partials.caseSubNavigation.underwritingLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
-    });
-
-    it('should display the correct change links', () => {
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.be.visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.be.visible');
