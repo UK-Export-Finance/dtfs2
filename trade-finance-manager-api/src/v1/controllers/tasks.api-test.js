@@ -578,6 +578,8 @@ describe('tasks controller  / tasks helper functions', () => {
   });
 
   describe('sendUpdatedTaskEmail', () => {
+    const mockUrlOrigin = 'http://test.com';
+
     beforeEach(() => {
       api.sendEmail.mockClear();
     });
@@ -603,12 +605,33 @@ describe('tasks controller  / tasks helper functions', () => {
       );
     });
 
+    it('should send an email for MIA - FILE_ALL_DEAL_EMAILS task', async () => {
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const businessSupportTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
+    });
+
     it('should send an email for MIA - COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
       const mockTask = MOCK_MIA_TASKS[1].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
       );
-
-      const mockUrlOrigin = 'http://test.com';
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
