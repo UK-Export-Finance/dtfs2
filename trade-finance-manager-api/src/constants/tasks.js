@@ -31,7 +31,7 @@ const MIA_GROUP_1_TASKS = {
   ASSIGN_AN_UNDERWRITER: 'Assign an underwriter for this deal',
 };
 
-const MIA_GROUP_2_TASKS =  {
+const MIA_GROUP_2_TASKS = {
   COMPLETE_ADVERSE_HISTORY_CHECK: 'Complete an adverse history check',
 };
 

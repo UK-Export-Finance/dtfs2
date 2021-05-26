@@ -3,6 +3,8 @@
 const {
   getNewAssigneeFullName,
   updateTask,
+  generateTaskUrl,
+  sendUpdatedTaskEmail,
   updateTasksCanEdit,
   updateUserTasks,
   updateOriginalAssigneeTasks,
@@ -10,7 +12,6 @@ const {
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
-  sendUpdatedTaskEmail,
 } = require('./tasks.controller');
 
 const api = require('../api');
@@ -18,16 +19,15 @@ const api = require('../api');
 const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
+const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const CONSTANTS = require('../../constants');
 
 describe('tasks controller  / tasks helper functions', () => {
   const mockDeal = {
-    dealSnapshot: {
-      submissionDetails: {
-        'supplier-name': 'test',
-      },
-      details: {
-        ukefDealId: '1234',
+    dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
+    tfm: {
+      history: {
+        emails: [],
       },
     },
   };
@@ -140,7 +140,7 @@ describe('tasks controller  / tasks helper functions', () => {
             groupTasks: mockGroup1Tasks,
           },
         ];
-        
+
         const result = await updateTasksCanEdit(mockTasks, 1, '1', mockDeal);
 
         const expected = [
@@ -562,45 +562,43 @@ describe('tasks controller  / tasks helper functions', () => {
       const salesforceTask = MOCK_AIN_TASKS[0].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
       );
-      const deal = {
-        dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
-        tfm: {
-          history: {
-            emails: [],
-          },
-        },
-      };
-      await sendUpdatedTaskEmail(salesforceTask, deal);
+
+      await sendUpdatedTaskEmail(salesforceTask, mockDeal);
 
       const salesforceTeam = api.findOneTeam(salesforceTask.team.id);
+
+      const expectedEmailVars = {
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
         CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
         salesforceTeam.email,
-        expect.any(Object),
+        expectedEmailVars,
       );
     });
 
-    it('should send an email for COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
-      const completeAdverseHistoryCheckTask = MOCK_AIN_TASKS[0].groupTasks.find(
+    it('should send an email for MIA - COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
+      const completeAdverseHistoryCheckTask = MOCK_MIA_TASKS[1].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
       );
-      const deal = {
-        dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
-        tfm: {
-          history: {
-            emails: [],
-          },
-        },
-      };
-      await sendUpdatedTaskEmail(completeAdverseHistoryCheckTask, deal);
+
+      await sendUpdatedTaskEmail(completeAdverseHistoryCheckTask, mockDeal);
 
       const underwriterManagersTeam = api.findOneTeam(completeAdverseHistoryCheckTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
+        taskUrl: generateTaskUrl(mockDeal.dealSnapshot._id, completeAdverseHistoryCheckTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
         CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
         underwriterManagersTeam.email,
-        expect.any(Object),
+        expectedEmailVars,
       );
     });
 
@@ -608,15 +606,8 @@ describe('tasks controller  / tasks helper functions', () => {
       const nonSalesforceTask = MOCK_AIN_TASKS[0].groupTasks.find(
         (t) => t.title !== CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
       );
-      const deal = {
-        dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
-        tfm: {
-          history: {
-            emails: [],
-          },
-        },
-      };
-      await sendUpdatedTaskEmail(nonSalesforceTask, deal);
+
+      await sendUpdatedTaskEmail(nonSalesforceTask, mockDeal);
 
       expect(api.sendEmail).not.toHaveBeenCalled();
     });
