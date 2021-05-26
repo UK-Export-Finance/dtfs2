@@ -24,6 +24,17 @@ const AIN = {
   },
 };
 
+
+const MIA_GROUP_1_TASKS = {
+  FILE_ALL_DEAL_EMAILS: 'File all deal emails in this deal',
+  CREATE_CREDIT_ANALYSIS_DOCUMENT: 'Create a credit analysis document',
+  ASSIGN_AN_UNDERWRITER: 'Assign an underwriter for this deal',
+};
+
+const MIA_GROUP_2_TASKS =  {
+  COMPLETE_ADVERSE_HISTORY_CHECK: 'Complete an adverse history check',
+};
+
 const MIA = {
   GROUP_1: {
     GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
@@ -37,15 +48,15 @@ const MIA = {
         team: TEAMS.BUSINESS_SUPPORT,
       },
       {
-        title: 'File all deal emails in this deal',
+        title: MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
         team: TEAMS.BUSINESS_SUPPORT,
       },
       {
-        title: 'Create a credit analysis document',
+        title: MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
         team: TEAMS.UNDERWRITING_SUPPORT,
       },
       {
-        title: 'Assign an underwriter for this deal',
+        title: MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
     ],
@@ -54,7 +65,7 @@ const MIA = {
     GROUP_TITLE: 'Adverse history check',
     TASKS: [
       {
-        title: 'Complete an adverse history check',
+        title: MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
     ],
@@ -107,6 +118,8 @@ module.exports = {
   AIN_AND_MIA,
   AIN,
   MIA,
+  MIA_GROUP_1_TASKS,
+  MIA_GROUP_2_TASKS,
   STATUS,
   UNASSIGNED,
 };
