@@ -127,6 +127,20 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
       sendToEmailAddress = team.email;
 
       break;
+
+    case CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE:
+      emailVariables = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
+        taskUrl: generateTaskUrl(urlOrigin, deal.dealSnapshot._id, task),
+        exporterName,
+        ukefDealId,
+      };
+
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+      team = await api.findOneTeam(task.team && task.team.id);
+      sendToEmailAddress = team.email;
+
+      break;
     default:
   }
 
