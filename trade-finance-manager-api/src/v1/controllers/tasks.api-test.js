@@ -114,18 +114,21 @@ describe('tasks controller  / tasks helper functions', () => {
             groupId: 1,
             status: 'Done',
             canEdit: true,
+            title: 'Test',
           },
           {
             id: '2',
             groupId: 1,
             status: 'To do',
             canEdit: false,
+            title: 'Test',
           },
           {
             id: '3',
             groupId: 1,
             status: 'To do',
             canEdit: false,
+            title: 'Test',
           },
         ];
 
@@ -166,18 +169,21 @@ describe('tasks controller  / tasks helper functions', () => {
             groupId: 1,
             status: 'Done',
             canEdit: false,
+            title: 'Test',
           },
           {
             id: '2',
             groupId: 1,
             status: 'Done',
             canEdit: true,
+            title: 'Test',
           },
           {
             id: '3',
             groupId: 1,
             status: 'To do',
             canEdit: false,
+            title: 'Test',
           },
         ];
 
