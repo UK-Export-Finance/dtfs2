@@ -84,6 +84,8 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
+    cy.wait(5000); // wait for TFM to do it's thing
+
     //---------------------------------------------------------------
     // portal maker completes bond issuance form
     //---------------------------------------------------------------
@@ -130,6 +132,8 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
     portalPages.contractConfirmSubmission.acceptAndSubmit().click();
+
+    cy.wait(5000); // wait for TFM to do it's thing
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
