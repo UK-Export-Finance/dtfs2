@@ -113,6 +113,20 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
       sendToEmailAddress = team.email;
 
       break;
+    
+    case CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT:
+      emailVariables = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
+        taskUrl: generateTaskUrl(urlOrigin, deal.dealSnapshot._id, task),
+        exporterName,
+        ukefDealId,
+      };
+
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+      team = await api.findOneTeam(task.team && task.team.id);
+      sendToEmailAddress = team.email;
+
+      break;
 
     case CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK:
       emailVariables = {
@@ -173,6 +187,20 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
     case CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS:
       emailVariables = {
         taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+        taskUrl: generateTaskUrl(urlOrigin, deal.dealSnapshot._id, task),
+        exporterName,
+        ukefDealId,
+      };
+
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+      team = await api.findOneTeam(task.team && task.team.id);
+      sendToEmailAddress = team.email;
+
+      break;
+
+    case CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL:
+      emailVariables = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
         taskUrl: generateTaskUrl(urlOrigin, deal.dealSnapshot._id, task),
         exporterName,
         ukefDealId,
