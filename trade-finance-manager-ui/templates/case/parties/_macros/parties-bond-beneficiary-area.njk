@@ -28,7 +28,9 @@
         caseId: deal._id
       } %}
               
-      {{ bondBeneficiaryFacilitiesTable.render(componentData) }}
+      <div class="govuk-grid-column-full">
+        {{ bondBeneficiaryFacilitiesTable.render(componentData) }}
+      </div>
 
     {% else %}
       <div class="govuk-grid-column-one-half">
