@@ -1,6 +1,7 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
+const { lowercaseFirstLetter } = require('../../utils/string');
 
 const generateTaskUrl = (urlOrigin, dealId, task) => {
   const {
@@ -12,7 +13,7 @@ const generateTaskUrl = (urlOrigin, dealId, task) => {
 };
 
 const generateTaskEmailVariables = (urlOrigin, task, dealId, exporterName, ukefDealId) => ({
-  taskTitle: task.title,
+  taskTitle: lowercaseFirstLetter(task.title),
   taskUrl: generateTaskUrl(urlOrigin, dealId, task),
   exporterName,
   ukefDealId,

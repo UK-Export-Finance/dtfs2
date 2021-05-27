@@ -5,6 +5,7 @@ const {
   generateTaskEmailVariables,
   sendUpdatedTaskEmail,
 } = require('./task-emails');
+const { lowercaseFirstLetter } = require('../../utils/string');
 
 const api = require('../api');
 
@@ -55,6 +56,7 @@ describe('task emails functions', () => {
       const mockTask = {
         id: 1,
         groupId: 2,
+        title: 'Test',
       };
 
       const mockExporterName = 'test exporter';
@@ -69,7 +71,7 @@ describe('task emails functions', () => {
       );
 
       const expected = {
-        taskTitle: mockTask.title,
+        taskTitle: lowercaseFirstLetter(mockTask.title),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDealId, mockTask),
         exporterName: mockExporterName,
         ukefDealId: mockUkefDealId,
@@ -117,7 +119,7 @@ describe('task emails functions', () => {
       const businessSupportTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -140,7 +142,7 @@ describe('task emails functions', () => {
       const businessSupportTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -163,7 +165,7 @@ describe('task emails functions', () => {
       const underwriterManagersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -186,7 +188,7 @@ describe('task emails functions', () => {
       const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -210,7 +212,7 @@ describe('task emails functions', () => {
       const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -233,7 +235,7 @@ describe('task emails functions', () => {
       const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -256,7 +258,7 @@ describe('task emails functions', () => {
       const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -279,7 +281,7 @@ describe('task emails functions', () => {
       const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
@@ -302,7 +304,7 @@ describe('task emails functions', () => {
       const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
-        taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL),
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,

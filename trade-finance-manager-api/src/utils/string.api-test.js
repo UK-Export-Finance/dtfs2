@@ -3,6 +3,7 @@ const {
   hasValue,
   stripCommas,
   capitalizeFirstLetter,
+  lowercaseFirstLetter,
 } = require('./string');
 
 describe('utils - string', () => {
@@ -41,6 +42,13 @@ describe('utils - string', () => {
     it('should capitalize the first letter of a string', () => {
       const result = capitalizeFirstLetter('testing');
       expect(result).toEqual('Testing');
+    });
+  });
+
+  describe('lowercaseFirstLetter', () => {
+    it('should lowercase the first letter of a string', () => {
+      const result = lowercaseFirstLetter('Testing');
+      expect(result).toEqual('testing');
     });
   });
 });
