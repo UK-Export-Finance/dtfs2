@@ -628,6 +628,29 @@ describe('tasks controller  / tasks helper functions', () => {
       );
     });
 
+    it('should send an email for MIA - CREATE_CREDIT_ANALYSIS_DOCUMENT task', async () => {
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const businessSupportTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
+    });
+
     it('should send an email for MIA - COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
       const mockTask = MOCK_MIA_TASKS[1].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
@@ -732,6 +755,29 @@ describe('tasks controller  / tasks helper functions', () => {
 
       const expectedEmailVars = {
         taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
+        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
+    });
+
+    it('should send an email for MIA - APPROVE_OR_DECLINE_THE_DEAL task', async () => {
+      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const underwritersTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
         taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
