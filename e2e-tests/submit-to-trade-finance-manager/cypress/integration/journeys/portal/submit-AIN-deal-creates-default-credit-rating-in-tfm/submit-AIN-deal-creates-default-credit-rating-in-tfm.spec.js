@@ -72,7 +72,7 @@ context('Portal to TFM deal submission', () => {
 
     cy.forceVisit(tfmRootUrl);
 
-    tfmPages.landingPage.email().type('UNDERWRITING_SUPPORT_1');
+    tfmPages.landingPage.email().type('UNDERWRITER_1');
     tfmPages.landingPage.submitButton().click();
 
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
