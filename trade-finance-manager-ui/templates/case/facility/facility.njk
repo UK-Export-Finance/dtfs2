@@ -30,22 +30,28 @@
 
   <div class="ukef-tabs--no-border">
   {{ govukTabs({
-  items: [
-    {
-      label: "Details",
-      id: "details",
-      panel: {
-        html: facilityDetailsHtml 
+    items: [
+      {
+        label: "Details",
+        id: "details",
+        panel: {
+          html: facilityDetailsHtml 
+        },
+        attributes: {
+          'data-cy': 'facility-details-tab-details'
+        }
+      },
+      {
+        label: "Premium schedule",
+        id: "premium-schedule",
+        panel: {
+          html: premiumScheduleHtml
+        },
+        attributes: {
+          'data-cy': 'facility-details-tab-premium-schedule'
+        }
       }
-    },
-    {
-      label: "Premium schedule",
-      id: "premium-schedule",
-      panel: {
-        html: premiumScheduleHtml
-      }
-    }
-  ]
+    ]
   }) }}
   </div>
 

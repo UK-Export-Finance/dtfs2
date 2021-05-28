@@ -102,7 +102,7 @@ describe(page, () => {
     wrapper = render(params);
   });
 
-  describe('premium schedule section', () => {
+  describe('premium schedule table', () => {
     it('should render fee (premium) type', () => {
       wrapper.expectText('[data-cy="facility-premium-type"]').toRead(params.facility.feeType);
     });
