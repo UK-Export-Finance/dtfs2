@@ -27,12 +27,13 @@ const postPremiumSchedule = async (premiumScheduleParameters) => {
   };
 
   return axios(config)
-    .catch((catchErr) => {
+    .catch(() => {
       console.log(`Error calling Post Premium schedule. facilityURN:${premiumScheduleParameters.facilityURN}`);
     }).then((response) => {
       if (response && response.status) {
         return response.status;
       }
+      return response;
     });
 };
 
