@@ -204,7 +204,7 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
-const updateFacility = async (facilityId, facilityUpdate, user) => {
+const updateFacility = async (facilityId, facilityUpdate) => {
   try {
     const response = await axios({
       method: 'put',
@@ -214,7 +214,6 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
       },
       data: {
         facilityUpdate,
-        user,
       },
     });
 
@@ -380,7 +379,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
       },
       data: premiumScheduleParameters,
     });
-    console.log(`response from premium-schedule:${response.status}`);
+
     if (response.status === 200 || response.status === 201) {
       return response.data;
     }
