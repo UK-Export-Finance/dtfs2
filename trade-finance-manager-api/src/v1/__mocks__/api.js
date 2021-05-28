@@ -13,10 +13,12 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-MIN-second-submit-facilities-unissued-to-issued');
 const MOCK_MIA_SECOND_SUBMIT = require('./mock-deal-MIA-second-submit');
 const MOCK_AIN_TASKS = require('./mock-AIN-tasks');
 const MOCK_USERS = require('./mock-users');
 const MOCK_TEAMS = require('./mock-teams');
+const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('./mock-premium-schedule-response');
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
@@ -31,6 +33,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
   MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
   MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
+  MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
   MOCK_MIA_SECOND_SUBMIT,
 ];
 
@@ -274,11 +277,7 @@ module.exports = {
     },
   })),
   createEstoreFolders: (deal) => deal,
-  getPremiumSchedule: jest.fn(() => ([
-    {
-      mockPremiumSchedule: 1,
-    },
-  ])),
+  getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEUDLE_RESPONSE),
   sendEmail: jest.fn((
     templateId,
     sendToEmailAddress,
