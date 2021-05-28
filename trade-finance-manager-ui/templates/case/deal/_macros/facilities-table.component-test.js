@@ -25,6 +25,7 @@ describe(component, () => {
           facilityStage: 'Commitment',
           dates: {
             coverEndDate: '02 Nov 2021',
+            tenor: '1 month',
           },
         },
         tfm: {
@@ -48,6 +49,7 @@ describe(component, () => {
           facilityStage: 'Issued',
           dates: {
             coverEndDate: '04 Dec 2021',
+            tenor: '1 month',
           },
         },
         tfm: {
@@ -71,6 +73,7 @@ describe(component, () => {
           facilityStage: 'Commitment',
           dates: {
             coverEndDate: '04 Dec 2021',
+            tenor: '1 month',
           },
         },
         tfm: {
@@ -94,6 +97,7 @@ describe(component, () => {
           facilityStage: 'Issued',
           dates: {
             coverEndDate: '04 Dec 2021',
+            tenor: '1 month',
           },
         },
         tfm: {
@@ -204,6 +208,14 @@ describe(component, () => {
         wrapper.expectText(cellSelector).toRead(facility.facilityStage);
       });
     });
+
+    it('should render tenor table cell', () => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
+        const cellSelector = `[data-cy="facility-${facility._id}-tenor"]`;
+        wrapper.expectText(cellSelector).toRead(facility.dates.tenor);
+      });
+    });
+
 
     it('should render coverEndDate table cell', () => {
       params.facilities.forEach(({ facilitySnapshot: facility }) => {

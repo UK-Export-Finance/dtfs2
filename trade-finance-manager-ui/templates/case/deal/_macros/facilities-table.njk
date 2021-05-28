@@ -38,7 +38,7 @@
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-stage">{{ facility.facilitySnapshot.facilityStage | dashIfEmpty}}</td>
 
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-tenor">&nbsp;</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-tenor">{{ facility.facilitySnapshot.dates.tenor | dashIfEmpty }}</td>
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-cover-end-date">
             {% if facility.facilitySnapshot.dates.coverEndDate %}
