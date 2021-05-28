@@ -145,6 +145,30 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
+
+    //---------------------------------------------------------------
+    // tenor for all facilities should be updated in main deal page
+    //---------------------------------------------------------------
+    const tfmDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    cy.forceVisit(tfmDealPage);
+
+    const tfmBondRow = tfmPages.caseDealPage.dealFacilitiesTable.row(bondId);
+    tfmBondRow.facilityTenor().invoke('text').then((text) => {
+      // the actual month is generated dynamically via API.
+      // 'months' is added to the mapping of the API result.
+      // so safe to assert based on `months` appearing, rather than adding regex assertion.
+      expect(text.trim()).to.contain('month');
+    });
+
+    const tfmLoanRow = tfmPages.caseDealPage.dealFacilitiesTable.row(loanId);
+    tfmLoanRow.facilityTenor().invoke('text').then((text) => {
+      // the actual month is generated dynamically via API.
+      // 'months' is added to the mapping of the API result.
+      // so safe to assert based on `months` appearing, rather than adding regex assertion.
+      expect(text.trim()).to.contain('month');
+    });
+
+
     //---------------------------------------------------------------
     // bond facility should be updated
     //---------------------------------------------------------------
@@ -178,6 +202,19 @@ context('Portal to TFM deal submission', () => {
       // so safe to assert based on `months` appearing, rather than adding regex assertion.
       expect(text.trim()).not.to.contain(dealFacilities.bonds[0].ukefGuaranteeInMonths);
       expect(text.trim()).to.contain('month');
+    });
+
+    //---------------------------------------------------------------
+    // bond facility - premium schedule should be updated
+    //---------------------------------------------------------------
+    tfmPages.facilityPage.facilityTabPremiumSchedule().click();
+
+    tfmPages.facilityPage.premiumScheduleTable.total().should('be.visible');
+
+    tfmPages.facilityPage.premiumScheduleTable.total().invoke('text').then((text) => {
+      // total is calculated dynamically so we can only assert the `Total` text.
+      // this text is only displayed if a total exists.
+      expect(text.trim()).to.contain('Total');
     });
 
     //---------------------------------------------------------------

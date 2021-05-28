@@ -12,6 +12,7 @@ const caseDealPage = {
       return {
         row,
         facilityId: () => row.get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityTenor: () => row.get(`[data-cy="facility-${facilityId}-tenor"]`),
       };
     },
   },

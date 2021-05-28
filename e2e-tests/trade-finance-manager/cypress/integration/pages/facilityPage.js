@@ -1,4 +1,7 @@
 const facilityPage = {
+  facilityTabDetails: () => cy.get('[data-cy="facility-details-tab-details"]'),
+  facilityTabPremiumSchedule: () => cy.get('[data-cy="facility-details-tab-premium-schedule"]'),
+
   firstDrawdownAmountInExportCurrency: () => cy.get('[data-cy="first-drawdown-amount-in-export-currency"]'),
   facilityStage: () => cy.get('[data-cy="facility-stage"]'),
 
@@ -14,6 +17,10 @@ const facilityPage = {
 
   facilityDealCreditRating: () => cy.get('[data-cy="credit-rating-value"]'),
   facilityDealCreditRatingNotSet: () => cy.get('[data-cy="credit-rating-not-set-tag"]'),
+
+  premiumScheduleTable: {
+    total: () => cy.get('[data-cy="premium-total"]'),
+  },
 };
 
 module.exports = facilityPage;
