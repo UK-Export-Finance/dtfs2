@@ -5,6 +5,8 @@ const externalApis = require('../../../src/v1/api');
 
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 
+const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
+
 // Added multiple versions of mock deal as submit-deal is mutating the mocks somewhere
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
@@ -19,8 +21,12 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
 const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+
+const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
+
 const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
+const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
 const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
@@ -482,6 +488,31 @@ describe('/v1/deals', () => {
           const expected = 12; // value is declared in mock api response.
           expect(updatedBond.tfm.exposurePeriodInMonths).toEqual(expected);
         });
+
+        it('should add bond.facilityGuaranteeDates', async () => {
+          const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+          const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
+
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+          const expected = getGuaranteeDates(initialBond, dealSubmissionDate);
+          expect(updatedBond.tfm.facilityGuaranteeDates).toEqual(expected);
+        });
+
+        it('should add bond.premiumSchedule', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+          const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+          expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
+        });
       });
 
       describe('when a facilityStage changes from `Conditional` to `Unconditional`', () => {
@@ -507,6 +538,32 @@ describe('/v1/deals', () => {
 
           const expected = 12; // value is declared in mock api response.
           expect(updatedLoan.tfm.exposurePeriodInMonths).toEqual(expected);
+        });
+
+        it('should add loan.facilityGuaranteeDates', async () => {
+          const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
+          const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
+
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+          const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
+          expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
+          
+        });
+
+        it('should add loan.premiumSchedule', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+          const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+          expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
         });
       });
 
@@ -580,6 +637,108 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         expect(acbsController.issueAcbsFacilities).not.toHaveBeenCalled();
+      });
+
+      it('should add bond.facilityGuaranteeDates', async () => {
+        const initialBond = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+        const dealSubmissionDate = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
+
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+        const expected = getGuaranteeDates(initialBond, dealSubmissionDate);
+        expect(updatedBond.tfm.facilityGuaranteeDates).toEqual(expected);
+      });
+
+      it('should add bond.premiumSchedule', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
+      });
+
+      it('should add loan.facilityGuaranteeDates', async () => {
+        const initialLoan = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
+        const dealSubmissionDate = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
+
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+        const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
+        expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
+      });
+
+      it('should add loan.premiumSchedule', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
+      });
+    });
+
+    describe('MIN deal - on second submission', () => {
+      it('should add bond.facilityGuaranteeDates', async () => {
+        const initialBond = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+        const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
+
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+        const expected = getGuaranteeDates(initialBond, dealSubmissionDate);
+        expect(updatedBond.tfm.facilityGuaranteeDates).toEqual(expected);
+      });
+
+      it('should add bond.premiumSchedule', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
+      });
+
+      it('should add loan.facilityGuaranteeDates', async () => {
+        const initialLoan = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
+        const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
+
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+        const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
+        expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
+      });
+
+      it('should add loan.premiumSchedule', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
       });
     });
 
