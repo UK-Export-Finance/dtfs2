@@ -1,10 +1,16 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
+const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
+const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
+
+  const {
+    submissionDate: dealSubmissionDate,
+  } = deal.dealSnapshot.details;
 
   const facilities = [
     ...modifiedDeal.dealSnapshot.bondTransactions.items,
@@ -45,15 +51,29 @@ const updatedIssuedFacilities = async (deal) => {
 
 
         // update TFM facility exposure period / AKA 'Tenor'
-        const { exposurePeriodInMonths } = await getFacilityExposurePeriod(facility);
-        const tfmFacilityUpdate = { exposurePeriodInMonths };
-        await api.updateFacility(facilityId, tfmFacilityUpdate);
+        const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
+
+        const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+
+        const facilityPremiumSchedule = await getFacilityPremiumSchedule(
+          facility,
+          facilityExposurePeriod,
+          facilityGuaranteeDates,
+        );
+
+        const facilityUpdate = {
+          ...facilityExposurePeriod,
+          facilityGuaranteeDates,
+          premiumSchedule: facilityPremiumSchedule,
+        };
+
+        await api.updateFacility(facilityId, facilityUpdate);
 
         // update object to return in response
         const updatedFacilityResponseObj = {
           ...updatedFacility,
           tfm: {
-            ...tfmFacilityUpdate,
+            ...facilityUpdate,
           },
         };
 

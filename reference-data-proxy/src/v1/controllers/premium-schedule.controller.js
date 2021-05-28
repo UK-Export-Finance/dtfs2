@@ -13,8 +13,6 @@ const postPremiumSchedule = async (premiumScheduleParameters) => {
     return null;
   }
 
-  console.log('Calling Premium schedule API');
-
   const config = {
     method: 'post',
     url: `${process.env.MULESOFT_API_UKEF_MDM_EA_URL}/premium/schedule`,
@@ -28,18 +26,14 @@ const postPremiumSchedule = async (premiumScheduleParameters) => {
     data: [premiumScheduleParameters],
   };
 
-  const response = await axios(config);
-
-  if (response.status) {
-    return response.status;
-  }
-
-  if (response && response.response && response.response.status) {
-    return response.response.status;
-  }
-
-  // eslint-disable-next-line no-underscore-dangle
-  return new Error(`Error calling Post Premium schedule. facilityURN:${premiumScheduleParameters.facilityURN}`);
+  return axios(config)
+    .catch((catchErr) => {
+      console.log(`Error calling Post Premium schedule. facilityURN:${premiumScheduleParameters.facilityURN}`);
+    }).then((response) => {
+      if (response && response.status) {
+        return response.status;
+      }
+    });
 };
 
 const getScheduleData = async (facilityURN) => {
@@ -73,6 +67,7 @@ const getPremiumSchedule = async (req, res) => {
 
   if (postPremiumScheduleResponse === 200 || postPremiumScheduleResponse === 201) {
     const response = await getScheduleData(Number(premiumScheduleParameters.facilityURN));
+
     if (response.status === 200 || response.status === 201) {
       return res.status(response.status).send(response.data);
     }
