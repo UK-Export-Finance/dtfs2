@@ -1,47 +1,4 @@
 {% from "moj/components/header/macro.njk" import mojHeader %}
+{% import '../_macros/header.njk' as header %}
 
-
-{% if user %}
-
-{{ mojHeader({
-  organisationLabel: {
-    text: 'UK Export\n Finance',
-    href: '#'
-  },
-  serviceLabel: {
-    text: 'Trade Finance Manager',
-    href: '#'
-  },
-  navigation: {
-    label: 'Account navigation',
-    items: [
-      {
-        text: user.username,
-        href: '#',
-        active: true
-      },
-      {
-        text: 'Sign out',
-        href: '/logout'
-      }
-    ]
-  }
-}) }} 
-
-{% else %}
-
-{{ mojHeader({
-  organisationLabel: {
-    text: 'UK Export\n Finance',
-    href: '#'
-  },
-  serviceLabel: {
-    text: 'Trade Finance Manager',
-    href: '#'
-  }
-}) }}
-
-{% endif %}
-
-
-{% include "_partials/primary-navigation.njk" %}
+{{header.render({ user: user })}}
