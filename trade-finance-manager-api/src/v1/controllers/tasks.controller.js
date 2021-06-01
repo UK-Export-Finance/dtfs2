@@ -96,14 +96,16 @@ const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, 
         if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
           task.canEdit = false;
         } else if (previousTaskIsComplete(allTaskGroups, group, task.id)) {
-          task.canEdit = true;
-
           if (task.id === taskIdToUpdate
             && task.groupId === groupId) {
             if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
               task.canEdit = false;
             }
           } else {
+            // task can be started
+            task.canEdit = true;
+            task.status = CONSTANTS.TASKS.STATUS.TO_DO;
+
             // Send task notification emails
             sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
           }

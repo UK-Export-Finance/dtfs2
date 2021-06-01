@@ -3,6 +3,16 @@
 {% macro render(params) %}
   {% set status = params.status %}
 
+  {% if status === 'Cannot start yet' %}
+    {{govukTag({
+      text: status,
+      attributes: {
+        'data-cy': 'status-tag'
+      },
+      classes: 'govuk-tag--grey'
+    })}}
+  {% endif %}
+
   {% if status === 'To do' %}
     {{govukTag({
       text: status,

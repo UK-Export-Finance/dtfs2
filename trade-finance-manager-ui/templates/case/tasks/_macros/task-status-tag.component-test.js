@@ -6,6 +6,17 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
 
+  describe('when status is `Cannot start yet`', () => {
+    it('should render govukTag with grey class', () => {
+      const params = {
+        status: 'Cannot start yet',
+      };
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="status-tag"]').hasClass('govuk-tag--grey');
+      wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
+    });
+  });
 
   describe('when status is `To do`', () => {
     it('should render govukTag', () => {
@@ -17,7 +28,6 @@ describe(component, () => {
       wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
     });
   });
-
 
   describe('when status is `In progress`', () => {
     it('should render govukTag with yellow class', () => {

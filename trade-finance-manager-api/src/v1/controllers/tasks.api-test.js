@@ -235,7 +235,7 @@ describe('tasks controller  / tasks helper functions', () => {
           {
             id: '3',
             groupId: 1,
-            status: 'To do',
+            status: 'Cannot start yet',
             canEdit: false,
             title: 'Test',
           },
@@ -262,6 +262,65 @@ describe('tasks controller  / tasks helper functions', () => {
                 canEdit: false,
               },
               mockGroup1Tasks[2],
+            ],
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when given a task that is not task #1, and previous task has `Done` status', () => {
+      it('should mark the next task as canEdit = true and change status to `To do`', async () => {
+        const mockGroup1Tasks = [
+          {
+            id: '1',
+            groupId: 1,
+            status: 'Done',
+            canEdit: false,
+            title: 'Test',
+          },
+          {
+            id: '2',
+            groupId: 1,
+            status: 'Done',
+            canEdit: true,
+            title: 'Test',
+          },
+          {
+            id: '3',
+            groupId: 1,
+            status: 'Cannot start yet',
+            canEdit: false,
+            title: 'Test',
+          },
+        ];
+
+        const mockTasks = [
+          {
+            groupTitle: 'Group 1 tasks',
+            id: 1,
+            groupTasks: mockGroup1Tasks,
+          },
+        ];
+
+        const result = await updateTasksCanEdit(mockTasks, 1, '2', mockDeal);
+
+        const expected = [
+          {
+            groupTitle: 'Group 1 tasks',
+            id: 1,
+            groupTasks: [
+              mockGroup1Tasks[0],
+              {
+                ...mockGroup1Tasks[1],
+                canEdit: false,
+              },
+              {
+                ...mockGroup1Tasks[2],
+                canEdit: true,
+                status: 'To do',
+              },
             ],
           },
         ];

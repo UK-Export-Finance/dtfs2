@@ -162,11 +162,11 @@ context('Case tasks - AIN deal', () => {
     });
 
     //---------------------------------------------------------------
-    // second task should have status `To do` and no link
+    // second task should have status `Cannot start`, no link and `cannot start` status
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
     secondTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('To do');
+      expect(text.trim()).to.equal('Cannot start yet');
     });
 
     secondTask.link().should('not.exist');
@@ -377,7 +377,7 @@ context('Case tasks - AIN deal', () => {
     });
   });
 
-  it.only('updates task `date started` and `date completed` table cells`.', () => {
+  it('updates task `date started` and `date completed` table cells`.', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
