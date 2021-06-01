@@ -3,6 +3,7 @@
 {% macro render(params) %}
   {% set caseId = params.caseId %}
   {% set tasks = params.tasks %}
+  {% set userTimezone = params.userTimezone %}
 
   <div data-cy="tasks-table">
     {% for taskGroup in tasks %}
@@ -14,10 +15,12 @@
 
           <thead class="govuk-table__head">
             <tr>
-              <th class="govuk-table__header"></th>
-              <th class="govuk-table__header" data-cy="tasks-table-header-assigned-to">Assigned to</th>
-              <th class="govuk-table__header" data-cy="tasks-table-header-team">Team</th>
-              <th class="govuk-table__header"></th>
+              <th class="govuk-table__header govuk-body-s"></th>
+              <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-assigned-to">Assigned to</th>
+              <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-team">Team</th>
+              <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-started">Date started</th>
+              <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-completed">Date completed</th>
+              <th class="govuk-table__header govuk-body-s"></th>
             </tr>
           </thead>
 
@@ -25,7 +28,7 @@
             {% for task in taskGroup.groupTasks %}
               <tr class="govuk-table__row" data-cy="task-group-{{ taskGroup.id }}-task-{{ task.id }}-row">
 
-                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-45">
+                <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-28">
                   {% if task.canEdit %}
                     <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
 
@@ -36,19 +39,31 @@
                 </td>
 
                 <td
-                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-21 word-break-break-word"
+                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5 word-break-break-word"
                   data-cy="task-table-row-{{ task.id }}-user-full-name">
                   {{ task.assignedTo.userFullName }}
                 </td>
 
                 <td
-                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-21"
+                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
                   data-cy="task-table-row-{{ task.id }}-team-name">
                   {{ task.team.name }}
                 </td>
 
                 <td
-                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right ukef-tasks-table__cell-width-13"
+                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
+                  data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-date-started">
+                  {{ task.dateStarted | localiseTimestamp('DD MMM YYYY', userTimezone) | dashIfEmpty }}
+                </td>
+
+                <td
+                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
+                  data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-date-completed">
+                  {{ task.dateCompleted | localiseTimestamp('DD MMM YYYY', userTimezone) | dashIfEmpty }}
+                </td>
+
+                <td
+                  class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-0 govuk-!-padding-bottom-4 govuk-!-padding-left-0 text-align-right govuk-body-s ukef-tasks-table__cell-width-14"
                   data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-status" aria-labelledby="Task status">
                   {% set componentData = {
                     status: task.status

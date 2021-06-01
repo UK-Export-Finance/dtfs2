@@ -37,6 +37,8 @@ const dealQuery = gql`
               name
             }
             canEdit
+            dateStarted
+            dateCompleted
           }
         }
         exporterCreditRating

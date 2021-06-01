@@ -23,6 +23,8 @@ const UPDATE_TASK = gql`
       }
       lastEdited
       status
+      dateStarted
+      dateCompleted
     }
   }
 `;
@@ -56,7 +58,7 @@ describe('graphql mutation - update task', () => {
   it('should return updated task', async () => {
     const taskUpdate = {
       ...baseTaskUpdate,
-      status: 'In progress',
+      status: 'Done',
       updatedBy: '123456789',
     };
 
@@ -76,6 +78,8 @@ describe('graphql mutation - update task', () => {
         userId: taskUpdate.assignedTo.userId,
       },
       lastEdited: expect.any(String),
+      dateStarted: expect.any(String),
+      dateCompleted: expect.any(String),
     };
 
     expect(data.updateTask).toEqual(expected);

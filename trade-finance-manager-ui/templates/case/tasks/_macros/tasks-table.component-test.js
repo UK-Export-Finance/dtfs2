@@ -1,7 +1,11 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
+const filterLocaliseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+
 const component = '../templates/case/tasks/_macros/tasks-table.njk';
 
 const render = componentRenderer(component);
+
+const localiseTimestamp = filterLocaliseTimestamp.default;
 
 describe(component, () => {
   let wrapper;
@@ -24,6 +28,8 @@ describe(component, () => {
               name: 'Business support group',
             },
             status: 'To do',
+            dateStarted: '1606900616651',
+            dateCompleted: '1606900616651',
           },
           {
             id: '2',
@@ -39,10 +45,13 @@ describe(component, () => {
             },
             status: 'In progress',
             canEdit: true,
+            dateStarted: '1606900616651',
+            dateCompleted: '1606900616651',
           },
         ],
       },
     ],
+    userTimezone: 'Europe/London',
   };
 
   beforeEach(() => {
@@ -56,6 +65,14 @@ describe(component, () => {
 
     it('should render `team` header', () => {
       wrapper.expectText('[data-cy="tasks-table-header-team"]').toRead('Team');
+    });
+
+    it('should render `date started` header', () => {
+      wrapper.expectText('[data-cy="tasks-table-header-date-started"]').toRead('Date started');
+    });
+
+    it('should render `date completed` header', () => {
+      wrapper.expectText('[data-cy="tasks-table-header-date-completed"]').toRead('Date completed');
     });
   });
 
@@ -110,6 +127,28 @@ describe(component, () => {
       });
     });
 
+    it('should render `date started`', () => {
+      params.tasks.forEach((group) => {
+        group.groupTasks.forEach((task) => {
+          const selector = `[data-cy="task-table-row-group-${task.groupId}-task-${task.id}-date-started"]`;
+
+          const expected = localiseTimestamp(task.dateStarted, 'DD MMM YYYY', params.userTimezone);
+          wrapper.expectText(selector).toRead(expected);
+        });
+      });
+    });
+
+    it('should render `date completed`', () => {
+      params.tasks.forEach((group) => {
+        group.groupTasks.forEach((task) => {
+          const selector = `[data-cy="task-table-row-group-${task.groupId}-task-${task.id}-date-completed"]`;
+
+          const expected = localiseTimestamp(task.dateCompleted, 'DD MMM YYYY', params.userTimezone);
+          wrapper.expectText(selector).toRead(expected);
+        });
+      });
+    });
+    
     it('should render status tag', () => {
       params.tasks.forEach((group) => {
         group.groupTasks.forEach((task) => {
@@ -119,4 +158,4 @@ describe(component, () => {
       });
     });
   });
-  });
+});
