@@ -19,6 +19,13 @@ function delete-webapp {
   echo Deleted webapp-vnet $1
 }
 
+function delete-functionapp {
+  echo Deleting Function App $1
+  az functionapp vnet-integration remove --name $1
+  az functionapp delete --name $1
+  echo Deleted Function App $1
+}
+
 function delete-application-gateway {
   echo Deleting Application Gateway $1
   az network application-gateway delete --name $1
@@ -60,7 +67,9 @@ do
   delete-webapp tfs-${environment}-portal-ui
   delete-webapp tfs-${environment}-trade-finance-manager-ui
   delete-webapp tfs-${environment}-gef-ui
-  
+
+  delete-functionapp tfs-${environment}-function-acbs
+
   # Delete db
   echo Deleting MongoDB tfs-${environment}-mongo
   az cosmosdb delete --name tfs-${environment}-mongo --yes
@@ -76,6 +85,8 @@ do
   delete-private-endpoint tfs-${environment}-portal-ui
   delete-private-endpoint tfs-${environment}-trade-finance-manager-ui 
   delete-private-endpoint tfs-${environment}-gef-ui
+  
+  delete-private-endpoint tfs-${environment}-function-acbs
 
   delete-application-gateway tfs-${environment}-gw
   delete-application-gateway tfs-${environment}-tfm-gw
@@ -84,6 +95,7 @@ do
   delete-subnet ${environment}-gateway
 done
 
+delete-vm ${app_service_plan}-vm
 delete-subnet ${resource_group}-vm
 delete-subnet ${app_service_plan}-app-service-plan-egress
 
