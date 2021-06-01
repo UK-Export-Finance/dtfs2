@@ -17,6 +17,9 @@ env:
   database_name: dtfs-submissions
   application_gateway_cidr: 172.16.61.0/24
   private_endpoints_cidr: 172.16.60.0/24 
+  app_service_plan_egress_cidr: 172.16.42.0/28
+  vm_cidr: 172.16.43.0/28
+  vnet_address_prefixes: "172.16.40.0/22 172.16.60.0/23"
   api_portal_access_port: 44232
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
@@ -68,7 +71,7 @@ jobs:
         inlineScript: |
           az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
           az network vnet create --name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 172.16.0.0/16
+            --address-prefixes ${{ env.vnet_address_prefixes }}
 
     - name: Application Gateway subnet
       uses: Azure/cli@v1.0.0
@@ -123,7 +126,7 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
             --service-endpoints Microsoft.AzureCosmosDB \
-            --address-prefixes 172.16.42.0/28 \
+            --address-prefixes ${{ env.app_service_plan_egress_cidr }} \
             --nat-gateway tfs-${{ env.app_service_plan }}-nat-gw
             
     # We'll aim to move this out of this section and consolidate into a single VM job:
@@ -135,7 +138,7 @@ jobs:
           az network vnet subnet create \
             --name ${{secrets.RESOURCE_GROUP }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 172.16.43.0/28 \
+            --address-prefixes ${{ env.vm_cidr }} \
             --service-endpoints Microsoft.AzureCosmosDB
           
   private-dns:
