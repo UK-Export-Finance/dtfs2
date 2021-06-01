@@ -151,7 +151,6 @@ describe('tasks controller  / tasks helper functions', () => {
 
         const expected = {
           lastEdited: expect.any(String),
-          // dateStarted: expect.any(String),
           dateCompleted: expect.any(String),
         };
 
