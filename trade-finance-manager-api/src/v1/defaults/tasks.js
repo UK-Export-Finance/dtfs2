@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 
 const taskDefaults = () => ({
-  status: CONSTANTS.TASKS.STATUS.TO_DO,
+  status: CONSTANTS.TASKS.STATUS.CANNOT_START,
   assignedTo: {
     userId: CONSTANTS.TASKS.UNASSIGNED,
     userFullName: CONSTANTS.TASKS.UNASSIGNED,
@@ -13,17 +13,20 @@ const createGroupTasks = (tasks, groupId) =>
   tasks.map((t, index) => {
     let task = t;
 
+    const taskId = index + 1;
+
     task = {
-      id: String(index + 1),
+      id: String(taskId),
       groupId,
       ...task,
-      ...taskDefaults(),
+      ...taskDefaults(groupId, taskId),
     };
 
-    // task can be edited by default
+    // task can only be edited by default,
     // if it's the first task in the first group.
     if (groupId === 1 && index === 0) {
       task.canEdit = true;
+      task.status = CONSTANTS.TASKS.STATUS.TO_DO;
     }
 
     return task;

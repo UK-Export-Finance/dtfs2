@@ -271,6 +271,10 @@ context('Case tasks - MIA deal', () => {
       const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
 
       nextGroupFirstTaskRow.link().should('not.be.visible');
+
+      nextGroupFirstTaskRow.status().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Cannot start yet');
+      });
     } else if (!isLastTaskInGroup && !isLastGroup) {
       // check the next task in current group
       const nextTaskId = currentTaskId + 1;
@@ -278,6 +282,10 @@ context('Case tasks - MIA deal', () => {
       const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
 
       nextTaskRow.link().should('not.be.visible');
+
+      nextTaskRow.status().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Cannot start yet');
+      });
     }
   };
 

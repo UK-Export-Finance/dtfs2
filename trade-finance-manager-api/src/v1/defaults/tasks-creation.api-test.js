@@ -10,7 +10,7 @@ describe('defaults - tasks creation', () => {
     it('should return object with `to do` status and unassigned assignedTo object', () => {
       const result = taskDefaults();
       const expected = {
-        status: CONSTANTS.TASKS.STATUS.TO_DO,
+        status: CONSTANTS.TASKS.STATUS.CANNOT_START,
         assignedTo: {
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
@@ -68,6 +68,7 @@ describe('defaults - tasks creation', () => {
             title: 'Title A',
             team: 'Team A',
             ...taskDefaults(),
+            status: 'To do',
             canEdit: true,
           },
           {

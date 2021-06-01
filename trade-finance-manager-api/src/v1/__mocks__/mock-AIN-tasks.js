@@ -21,7 +21,7 @@ const MOCK_TASKS = [
         groupId: 1,
         title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
         team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
-        status: CONSTANTS.TASKS.STATUS.TO_DO,
+        status: CONSTANTS.TASKS.STATUS.CANNOT_START,
         assignedTo: {
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
