@@ -59,6 +59,8 @@ const GET_DEAL = gql`
               name
             }
             canEdit
+            dateStarted
+            dateCompleted
           }
         }
         exporterCreditRating

@@ -3,6 +3,7 @@
 const {
   getNewAssigneeFullName,
   updateTask,
+  generateTaskDates,
   updateTasksCanEdit,
   updateUserTasks,
   updateOriginalAssigneeTasks,
@@ -102,6 +103,59 @@ describe('tasks controller  / tasks helper functions', () => {
       ];
 
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('generateTaskDates', () => {
+    it('should return object with lastEdited timestamp', () => {
+      const result = generateTaskDates();
+
+      const expected = {
+        lastEdited: expect.any(String),
+      };
+
+      expect(result).toEqual(expected);
+    });
+
+    describe('when statusFrom is `To do` and statusTo is `In progress`', () => {
+      it('should return dateStarted', () => {
+        const result = generateTaskDates('To do', 'In progress');
+
+        const expected = {
+          lastEdited: expect.any(String),
+          dateStarted: expect.any(String),
+        };
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when statusFrom is `To do` and statusTo is `Done`', () => {
+      it('should return dateStarted and dateCompleted', () => {
+        const result = generateTaskDates('To do', 'Done');
+
+        const expected = {
+          lastEdited: expect.any(String),
+          dateStarted: expect.any(String),
+          dateCompleted: expect.any(String),
+        };
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+
+    describe('when statusFrom is `In progress` and statusTo is `Done`', () => {
+      it('should return dateCompleted', () => {
+        const result = generateTaskDates('In progress', 'Done');
+
+        const expected = {
+          lastEdited: expect.any(String),
+          dateCompleted: expect.any(String),
+        };
+
+        expect(result).toEqual(expected);
+      });
     });
   });
 
@@ -435,7 +489,7 @@ describe('tasks controller  / tasks helper functions', () => {
         assignedTo: {
           userId,
         },
-        status: 'In progress',
+        status: 'Done',
         updatedBy: userId,
       };
 
@@ -450,6 +504,8 @@ describe('tasks controller  / tasks helper functions', () => {
         },
         status: tfmTaskUpdate.status,
         lastEdited: expect.any(String),
+        dateStarted: expect.any(String),
+        dateCompleted: expect.any(String),
       };
 
       expect(result).toEqual(expectedUpdatedTask);

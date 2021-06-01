@@ -9,7 +9,7 @@
   
   <div class="govuk-grid-row" data-cy="case-tasks">
 
-    <div class="govuk-grid-column-four-fifths">
+    <div class="govuk-grid-column-full">
 
       <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="tasks-heading">Tasks for this deal</h2>
 
@@ -26,7 +26,8 @@
 
         {% set tableComponentData = {
           tasks: tasks,
-          caseId: dealId
+          caseId: dealId,
+          userTimezone: user.timezone
         } %}
 
         {{ tasksTable.render(tableComponentData) }}

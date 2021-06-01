@@ -94,7 +94,7 @@ context('Case tasks - AIN deal', () => {
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
   });
 
-  it('user can assign a task to themself, change status and then unassign', () => {
+  it('user can assign a task to themself, change status and then unassign.', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
