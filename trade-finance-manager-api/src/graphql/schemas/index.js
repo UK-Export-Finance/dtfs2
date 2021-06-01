@@ -208,6 +208,8 @@ type TFMTask {
   canEdit: Boolean
   lastEdited: String
   history: [TFMTaskHistory]
+  dateStarted: String
+  dateCompleted: String
 }
 
 type TFMTaskGroup {

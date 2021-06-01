@@ -66,6 +66,22 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
     return group;
   });
 
+const generateTaskDates = (statusFrom, statusTo) => {
+  const dates = {
+    lastEdited: now(),
+  };
+
+  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO) {
+    dates.dateStarted = now();
+  }
+
+  if (statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    dates.dateCompleted = now();
+  }
+
+  return dates;
+};
+
 const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, urlOrigin) => {
   const sendUpdatedEmailRequests = [];
 
@@ -188,7 +204,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
         userFullName: newAssigneeFullName,
         userId: assignedUserId,
       },
-      lastEdited: now(),
+      ...generateTaskDates(statusFrom, statusTo),
     };
 
     const modifiedTasks = updateTask(allTasks, groupId, taskIdToUpdate, updatedTask);
@@ -252,6 +268,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 module.exports = {
   getNewAssigneeFullName,
   updateTask,
+  generateTaskDates,
   updateTasksCanEdit,
   updateUserTasks,
   updateOriginalAssigneeTasks,
