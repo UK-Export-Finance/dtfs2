@@ -19,7 +19,7 @@ env:
   private_endpoints_cidr: 172.16.30.0/24
   app_service_plan_egress_cidr: 172.16.32.0/28
   vm_cidr: 172.16.33.0/28
-  vnet_address_prefixes: "172.16.30.0/22"
+  vnet_address_prefixes: "172.16.30.0/23 172.16.31.0/23 172.16.32.0/23 172.16.33.0/23"
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
