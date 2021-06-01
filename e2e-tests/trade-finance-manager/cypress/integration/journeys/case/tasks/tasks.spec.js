@@ -162,7 +162,7 @@ context('Case tasks - AIN deal', () => {
     });
 
     //---------------------------------------------------------------
-    // second task should have status `Cannot start`, no link and `cannot start` status
+    // second task should have status `Cannot start` and no link
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
     secondTask.status().invoke('text').then((text) => {
