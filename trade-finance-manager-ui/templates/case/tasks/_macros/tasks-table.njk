@@ -3,6 +3,7 @@
 {% macro render(params) %}
   {% set caseId = params.caseId %}
   {% set tasks = params.tasks %}
+  {% set userTimezone = params.userTimezone %}
 
   <div data-cy="tasks-table">
     {% for taskGroup in tasks %}
@@ -51,14 +52,14 @@
 
                 <td
                   class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
-                  data-cy="task-table-row-{{ task.id }}-date-started">
-                  {{ task.dateStarted | dashIfEmpty }}
+                  data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-date-started">
+                  {{ task.dateStarted | localiseTimestamp('DD MMM YYYY', userTimezone) | dashIfEmpty }}
                 </td>
 
                 <td
                   class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
-                  data-cy="task-table-row-{{ task.id }}-date-completed">
-                  {{ task.dateCompleted | dashIfEmpty }}
+                  data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-date-completed">
+                  {{ task.dateCompleted | localiseTimestamp('DD MMM YYYY', userTimezone) | dashIfEmpty }}
                 </td>
 
                 <td
