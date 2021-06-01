@@ -25,6 +25,14 @@ function delete-application-gateway {
   echo Deleted Application Gateway $1
 }
 
+function delete-vm {
+  echo Deleting VM $1
+  vm_nic=az vm show --name $1 --query "networkProfile.networkInterfaces[].id" -o tsv
+  az network nic delete --ids $vm_nic
+  az vm delete --name $1 --yes
+  echo Deleted VM $1
+}
+
 function delete-subnet {
   echo Deleting subnet $1
   az network vnet subnet update --name $1 --vnet-name tfs-${app_service_plan}-vnet  --remove natGateway
