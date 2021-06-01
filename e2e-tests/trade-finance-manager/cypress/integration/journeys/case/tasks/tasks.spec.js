@@ -1,3 +1,4 @@
+import moment from 'moment';
 import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
@@ -373,6 +374,54 @@ context('Case tasks - AIN deal', () => {
 
       pages.tasksPage.filterRadioAllTasks().click();
       pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
+    });
+  });
+
+  it.only('updates task `date started` and `date completed` table cells`.', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    pages.tasksPage.filterRadioYourTeam().click();
+
+    // const secondTask = pages.tasksPage.tasks.row(1, 2);
+    let firstTask = pages.tasksPage.tasks.row(1, 1);
+
+    //---------------------------------------------------------------
+    // task should have empty `date started` and `date completed` values
+    //---------------------------------------------------------------
+
+    firstTask.dateStarted().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('-');
+    });
+
+    firstTask.dateCompleted().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('-');
+    });
+
+    //---------------------------------------------------------------
+    // user completes a task
+    //---------------------------------------------------------------
+    firstTask.link().click();
+
+    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.taskStatusRadioInputDone().click();
+    pages.taskPage.submitButton().click();
+
+    //---------------------------------------------------------------
+    // dates should be updated
+    //---------------------------------------------------------------
+    pages.tasksPage.filterRadioYourTeam().click();
+
+    firstTask = pages.tasksPage.tasks.row(1, 1);
+
+    const expectedDate = moment().format('DD MMM YYYY');
+
+    firstTask.dateStarted().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(expectedDate);
+    });
+
+    firstTask.dateCompleted().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(expectedDate);
     });
   });
 });
