@@ -1,0 +1,56 @@
+{% from "moj/components/header/macro.njk" import mojHeader %}
+
+{% macro render(params) %}
+
+  {% if params.user %}
+
+    {{ mojHeader({
+      organisationLabel: {
+        text: 'UK Export Finance',
+        href: '#'
+      },
+      serviceLabel: {
+        text: 'Trade Finance Manager',
+        href: '#'
+      },
+      navigation: {
+        label: 'Account navigation',
+        items: [
+          {
+            text: params.user.firstName + ' ' + params.user.lastName,
+            href: '#',
+            attributes: {
+              'data-cy': 'header-user-link'
+            }
+          },
+          {
+            text: 'Sign out',
+            href: '/logout',
+            attributes: {
+              'data-cy': 'header-sign-out-link'
+            }
+          }
+        ]
+      }
+    }) }} 
+
+  {% else %}
+
+    {{ mojHeader({
+      organisationLabel: {
+        text: 'UK Export Finance',
+        href: '#'
+      },
+      serviceLabel: {
+        text: 'Trade Finance Manager',
+        href: '#'
+      }
+    }) }}
+
+  {% endif %}
+
+
+  {% include "_partials/primary-navigation.njk" %}
+
+
+{% endmacro %}
