@@ -4,6 +4,7 @@ const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
+const dealController = require('../../../src/v1/controllers/deal.controller');
 
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
 
@@ -41,6 +42,12 @@ const sendEmailApiSpy = jest.fn(() => Promise.resolve(
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
+
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+  submitACBSIfAllPartiesHaveUrn: jest.fn(),
+}));
+
 
 describe('/v1/deals', () => {
   beforeEach(() => {
@@ -552,7 +559,6 @@ describe('/v1/deals', () => {
 
           const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
           expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
-          
         });
 
         it('should add loan.premiumSchedule', async () => {
@@ -603,6 +609,7 @@ describe('/v1/deals', () => {
         expect(body.dealSnapshot.details.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.dealSnapshot.details.manualInclusionNoticeSubmissionDate).toEqual('string');
         expect(body.dealSnapshot.details.checkerMIN).toEqual(mockPortalChecker);
+        expect(dealController.submitACBSIfAllPartiesHaveUrn).toHaveBeenCalled();
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {

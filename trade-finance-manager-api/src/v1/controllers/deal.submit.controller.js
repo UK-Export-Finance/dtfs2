@@ -14,6 +14,7 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { createEstoreFolders } = require('./estore.controller');
 const acbsController = require('./acbs.controller');
+const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
@@ -76,6 +77,8 @@ const submitDeal = async (dealId, portalChecker) => {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
 
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
+
+      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
       updatedDeal.dealSnapshot = dealSnapshot;
     }
