@@ -8,12 +8,12 @@ const findOneFacility = async (_id) => {
 };
 
 // TODO: rename this as it's only used in certain scenario
-// don't want to call 'submitIfAllPartiesHaveUrn' for generic facility update
+// don't want to call 'submitACBSIfAllPartiesHaveUrn' for generic facility update
 const updateTfmFacility = async (facilityId, tfmUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
 
-  await dealController.submitIfAllPartiesHaveUrn(updatedFacility.facilitySnapshot.associatedDealId);
+  await dealController.submitACBSIfAllPartiesHaveUrn(updatedFacility.facilitySnapshot.associatedDealId);
 
   return updatedFacility.tfm;
 };

@@ -31,20 +31,21 @@ const findOnePortalDeal = async (dealId) => {
 };
 exports.findOnePortalDeal = findOnePortalDeal;
 
-const submitIfAllPartiesHaveUrn = async (dealId) => {
+const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   const deal = await findOneDeal(dealId);
+
   if (!deal) {
     return;
   }
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
   // Only want to submit AIN deals to ACBS initially
   if (allRequiredPartiesHaveUrn
-    && deal.dealSnapshot.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    && deal.dealSnapshot.details.submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
     // Start ACBS process
     await acbsController.createACBS(deal);
   }
 };
-exports.submitIfAllPartiesHaveUrn = submitIfAllPartiesHaveUrn;
+exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
 const updateTfmParty = async (dealId, tfmUpdate) => {
   const partyUpdate = {
@@ -56,7 +57,7 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
 
-  await submitIfAllPartiesHaveUrn(dealId);
+  await submitACBSIfAllPartiesHaveUrn(dealId);
 
   return updatedDeal.tfm;
 };
