@@ -573,7 +573,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      it('should update ACBS`', async () => {
+      it('should update ACBS for AIN`', async () => {
         const { status } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
         expect(status).toEqual(200);
 
@@ -639,7 +639,7 @@ describe('/v1/deals', () => {
         expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
       });
 
-      it('should NOT update ACBS`', async () => {
+      it('should NOT update ACBS for MIA`', async () => {
         const { status } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
         expect(status).toEqual(200);
 
@@ -746,6 +746,13 @@ describe('/v1/deals', () => {
 
         const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
         expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
+      });
+
+      it('should update ACBS for MIN`', async () => {
+        const { status } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        expect(status).toEqual(200);
+
+        expect(acbsController.issueAcbsFacilities).toHaveBeenCalled();
       });
     });
 
