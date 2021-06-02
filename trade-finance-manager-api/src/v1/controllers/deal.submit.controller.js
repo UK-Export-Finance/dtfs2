@@ -69,7 +69,9 @@ const submitDeal = async (dealId, portalChecker) => {
   if (dealHasBeenResubmit) {
     const updatedDeal = await updatedIssuedFacilities(submittedDeal);
 
-    if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    ) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
