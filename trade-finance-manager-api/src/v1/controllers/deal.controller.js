@@ -5,6 +5,8 @@ const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
 const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
+const sendDealDecisionEmail = require('./send-deal-decision-email');
+
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -149,6 +151,14 @@ const updateTfmUnderwriterManagersDecision = async (
     portalCommentType,
     portalCommentObj,
   );
+
+  const { dealSnapshot } = updatedDeal;
+  const { details } = dealSnapshot;
+  const { submissionType } = details;
+
+  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    await sendDealDecisionEmail(updatedDeal);
+  }
 
   return updatedDeal.tfm;
 };

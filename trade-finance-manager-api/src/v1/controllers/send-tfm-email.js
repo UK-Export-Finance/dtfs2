@@ -21,7 +21,10 @@ const sendTfmEmail = async (
     timestamp: now(),
   };
 
-  const emailHistory = deal.tfm.history.emails || [];
+  let emailHistory = [];
+  if (deal.tfm.history && deal.tfm.history.emails) {
+    emailHistory = deal.tfm.history.emails;
+  }
 
   const updatedHistory = {
     ...deal.tfm.history,
