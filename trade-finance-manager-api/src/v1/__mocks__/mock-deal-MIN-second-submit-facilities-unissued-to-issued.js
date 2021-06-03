@@ -192,6 +192,7 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
         'coverEndDate-month': '10',
         'coverEndDate-year': '2020',
         status: 'Submitted',
+        ukefFacilityID: '65431',
       },
     ],
   },

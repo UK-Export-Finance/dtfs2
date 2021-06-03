@@ -1,7 +1,6 @@
 const MOCK_FACILIIES = [
   {
     _id: '12345678',
-    ukefFacilityID: '0040004833',
     associatedDealId: '123456789',
     facilityType: 'bond',
     bondIssuer: 'Issuer',
@@ -29,10 +28,11 @@ const MOCK_FACILIIES = [
     uniqueIdentificationNumber: '12345678',
     issuedFacilitySubmittedToUkefTimestamp: '1606900616651',
     requestedCoverStartDate: '1606900616652',
+    ukefFacilityID: '65431',
   },
   {
     _id: '23456789',
-    ukefFacilityID: '0040004834',
+    ukefFacilityID: '65432',
     associatedDealId: '123456789',
     facilityType: 'loan',
     createdDate: 1610369832226.0,
@@ -96,6 +96,7 @@ const MOCK_FACILIIES = [
     'coverEndDate-month': '10',
     'coverEndDate-year': '2020',
     status: 'Submitted',
+    ukefFacilityID: '65431',
   },
   {
     _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
@@ -155,6 +156,7 @@ const MOCK_FACILIIES = [
     },
     requestedCoverStartDate: 1610369832226,
     status: 'Submitted',
+    ukefFacilityID: '65431',
   },
   {
     _id: 'MOCK_DEAL_FACILITY_ISSUED_LOAN',

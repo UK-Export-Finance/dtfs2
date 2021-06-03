@@ -3,6 +3,7 @@ const CONSTANTS = require('../../constants');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
+const sendIssuedFacilityReceivedEmail = require('./send-issued-facility-received-email');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
@@ -82,6 +83,12 @@ const updatedIssuedFacilities = async (deal) => {
         } else if (facilityType === 'loan') {
           loans.push(updatedFacilityResponseObj);
         }
+
+        // send email
+        await sendIssuedFacilityReceivedEmail(
+          modifiedDeal,
+          updatedFacilityResponseObj,
+        );
 
         updatedCount += 1;
       } else if (facilityType === 'bond') {
