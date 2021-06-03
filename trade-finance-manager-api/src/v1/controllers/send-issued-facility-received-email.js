@@ -10,39 +10,50 @@ const sendIssuedFacilityReceivedEmail = async (deal, facility) => {
     bankSupplyContractID: bankReferenceNumber,
     ukefDealId: ukefDealID,
     maker,
+    submissionType,
   } = details;
 
-  const {
-    'supplier-name': exporterName,
-  } = submissionDetails;
+  const shouldSendEmail = (
+    submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+    || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
 
-  const {
-    firstname: recipientName,
-    email: sendToEmailAddress,
-  } = maker;
+  if (shouldSendEmail) {
+    const {
+      'supplier-name': exporterName,
+    } = submissionDetails;
 
-  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED;
+    const {
+      firstname: recipientName,
+      email: sendToEmailAddress,
+    } = maker;
 
-  const {
-    facilityType,
-    ukefFacilityID,
-  } = facility;
+    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED;
 
-  const emailVariables = {
-    recipientName,
-    exporterName,
-    bankReferenceNumber,
-    ukefDealID,
-    facilityType: capitalizeFirstLetter(facilityType),
-    ukefFacilityID,
-  };
+    const {
+      facilityType,
+      ukefFacilityID,
+    } = facility;
 
-  await sendTfmEmail(
-    templateId,
-    sendToEmailAddress,
-    emailVariables,
-    deal,
-  );
+    const emailVariables = {
+      recipientName,
+      exporterName,
+      bankReferenceNumber,
+      ukefDealID,
+      facilityType: capitalizeFirstLetter(facilityType),
+      ukefFacilityID,
+    };
+
+    const emailResponse = await sendTfmEmail(
+      templateId,
+      sendToEmailAddress,
+      emailVariables,
+      deal,
+    );
+
+    return emailResponse;
+  }
+
+  return null;
 };
 
 module.exports = sendIssuedFacilityReceivedEmail;
