@@ -21,8 +21,8 @@
   },
   "scripts": {
     "pipeline": "./bin/pipeline.sh",
-    "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./reference-data-proxy/src",
-    "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./reference-data-proxy/src --fix",
+    "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src",
+    "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
