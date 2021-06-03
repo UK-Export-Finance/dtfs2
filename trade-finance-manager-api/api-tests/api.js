@@ -1,3 +1,4 @@
+/* eslint-disable */
 const request = require('supertest');
 
 module.exports = (app) => ({
@@ -56,3 +57,5 @@ module.exports = (app) => ({
         .send(data),
   }),
 });
+
+/* eslint-enable */
