@@ -50,7 +50,10 @@ module.exports = {
     let tfmStage;
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.history) {
-      tfmHistory = mockDeal.tfm.history;
+      tfmHistory = {
+        ...tfmHistory,
+        ...mockDeal.tfm.history,
+      };
     }
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.stage) {
@@ -188,6 +191,12 @@ module.exports = {
     _id: dealId,
     // eslint-disable-next-line no-underscore-dangle
     dealSnapshot: ALL_MOCK_DEALS.find((d) => d._id === dealId),
+    tfm: {
+      history: {
+        tasks: [],
+        emails: [],
+      },
+    },
   }),
   findOneFacility: (facilityId) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle

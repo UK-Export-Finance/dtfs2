@@ -11,6 +11,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
       username: 'JOE',
       firstname: 'Joe',
       surname: 'Bloggs',
+      email: 'test@testing.com',
     },
     checker: {
       username: 'CHECKER',
@@ -193,6 +194,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         'coverEndDate-year': '2020',
         requestedCoverStartDate: 1610369832226.0,
         status: 'Submitted',
+        ukefFacilityID: '65431',
       },
     ],
   },
