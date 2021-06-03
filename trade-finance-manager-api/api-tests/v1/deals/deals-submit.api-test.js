@@ -751,58 +751,11 @@ describe('/v1/deals', () => {
         expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
       });
 
-      it('should send an email for each newly issued facility', async () => {
+      it('should NOT send an email for each newly issued facility', async () => {
         const mockDeal = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
 
-        const totalFacilities = mockDeal.facilities.length;
-
-        expect(sendEmailApiSpy).toBeCalledTimes(totalFacilities);
-        
-
-        const expectedEmailVariables = (facility) => {
-          const { facilityType, ukefFacilityID } = facility;
-
-          return {
-            exporterName: mockDeal.submissionDetails['supplier-name'],
-            recipientName: mockDeal.details.maker.firstname,
-            exporterName: mockDeal.submissionDetails['supplier-name'],
-            bankReferenceNumber: mockDeal.details.bankSupplyContractID,
-            ukefDealID: mockDeal.details.ukefDealId,
-            facilityType: capitalizeFirstLetter(facilityType),
-            ukefFacilityID,
-          }
-        };
-
-        const loan = mockDeal.loanTransactions.items[0];
-        const bond = mockDeal.bondTransactions.items[0];
-
-        const expectedCall = {
-          templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
-        };
-
-        const expectedFirstCall = {
-          ...expectedCall,
-          emailVariables: expectedEmailVariables(bond),
-        };
-
-        const expectedSecondCall = {
-          ...expectedCall,
-          emailVariables: expectedEmailVariables(loan),
-        };
-
-        expect(sendEmailApiSpy.mock.calls[0]).toEqual([
-          expectedFirstCall.templateId,
-          expectedFirstCall.sendToEmailAddress,
-          expectedFirstCall.emailVariables,
-        ]);
-
-        expect(sendEmailApiSpy.mock.calls[1]).toEqual([
-          expectedSecondCall.templateId,
-          expectedSecondCall.sendToEmailAddress,
-          expectedSecondCall.emailVariables,
-        ]);
+        expect(sendEmailApiSpy).toBeCalledTimes(0);
       });
     });
 
@@ -862,6 +815,59 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalled();
+      });
+
+      it('should send an email for each newly issued facility', async () => {
+        const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
+        await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
+
+        const totalFacilities = mockDeal.facilities.length;
+
+        expect(sendEmailApiSpy).toBeCalledTimes(totalFacilities);
+
+        const expectedEmailVariables = (facility) => {
+          const { facilityType, ukefFacilityID } = facility;
+
+          return {
+            exporterName: mockDeal.submissionDetails['supplier-name'],
+            recipientName: mockDeal.details.maker.firstname,
+            exporterName: mockDeal.submissionDetails['supplier-name'],
+            bankReferenceNumber: mockDeal.details.bankSupplyContractID,
+            ukefDealID: mockDeal.details.ukefDealId,
+            facilityType: capitalizeFirstLetter(facilityType),
+            ukefFacilityID,
+          }
+        };
+
+        const loan = mockDeal.loanTransactions.items[0];
+        const bond = mockDeal.bondTransactions.items[0];
+
+        const expectedCall = {
+          templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
+          sendToEmailAddress: mockDeal.details.maker.email,
+        };
+
+        const expectedFirstCall = {
+          ...expectedCall,
+          emailVariables: expectedEmailVariables(bond),
+        };
+
+        const expectedSecondCall = {
+          ...expectedCall,
+          emailVariables: expectedEmailVariables(loan),
+        };
+
+        expect(sendEmailApiSpy.mock.calls[0]).toEqual([
+          expectedFirstCall.templateId,
+          expectedFirstCall.sendToEmailAddress,
+          expectedFirstCall.emailVariables,
+        ]);
+
+        expect(sendEmailApiSpy.mock.calls[1]).toEqual([
+          expectedSecondCall.templateId,
+          expectedSecondCall.sendToEmailAddress,
+          expectedSecondCall.emailVariables,
+        ]);
       });
     });
 
