@@ -27,7 +27,7 @@ const dealReducer = (deal) => {
       submissionDetails: mapSubmissionDetails(submissionDetails),
       eligibilityCriteria: eligibility.criteria,
     },
-    tfm: mapDealTfm(dealTfm),
+    tfm: mapDealTfm(deal),
   };
 
   return result;
