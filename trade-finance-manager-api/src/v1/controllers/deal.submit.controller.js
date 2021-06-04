@@ -60,9 +60,6 @@ const submitDeal = async (dealId, portalChecker) => {
       return updatedDeal;
     }
 
-    // TODO: will need to do this with other tickets
-    // await sendDealSubmitEmails(updatedDealWithCreateEstore);
-
     return api.updateDeal(dealId, updatedDealWithCreateEstore);
   }
 
