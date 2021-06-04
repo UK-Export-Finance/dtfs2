@@ -19,13 +19,27 @@ const createMockDeal = (submissionDate) => ({
   },
 });
 
+const mockDealWithMappedFacilities = {
+  _id: MOCK_DEAL._id, // eslint-disable-line no-underscore-dangle
+  dealSnapshot: {
+    ...MOCK_DEAL,
+    facilities: [
+      ...MOCK_DEAL.bondTransactions.items,
+      ...MOCK_DEAL.loanTransactions.items,
+    ],
+  },
+  tfm: {
+    supplyContractValueInGBP: 1234,
+  },
+};
+
 const expectedDealShape = (deal) => ({
-  ...deal,
+  _id: deal._id, // eslint-disable-line no-underscore-dangle
   dealSnapshot: {
     ...deal.dealSnapshot,
     submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
   },
-  tfm: mapDealTfm(deal),
+  tfm: mapDealTfm(mockDealWithMappedFacilities),
 });
 
 describe('reducer - deals', () => {

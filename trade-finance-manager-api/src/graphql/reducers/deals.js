@@ -2,13 +2,34 @@ const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
 const dealsReducer = (deals) => {
-  const mapDeal = (d) => {
-    const deal = d;
-    deal.dealSnapshot.submissionDetails = mapSubmissionDetails(d.dealSnapshot.submissionDetails);
+  const mapDeal = (deal) => {
+    // manually merge facilities into facilities array.
+    // this saves performance.
+    // without this, we'd need to do a query for every facility in a deal,
+    // for every single deal in the 'all deals' query.
 
-    deal.tfm = mapDealTfm(deal);
+    const dealWithMappedFacilities = {
+      _id: deal._id, // eslint-disable-line no-underscore-dangle
+      dealSnapshot: {
+        ...deal.dealSnapshot,
+        facilities: [
+          ...deal.dealSnapshot.bondTransactions.items,
+          ...deal.dealSnapshot.loanTransactions.items,
+        ],
+      },
+      tfm: deal.tfm,
+    };
 
-    return deal;
+    const mapped = {
+      _id: deal._id, // eslint-disable-line no-underscore-dangle
+      dealSnapshot: {
+        ...deal.dealSnapshot,
+        submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
+      },
+      tfm: mapDealTfm(dealWithMappedFacilities),
+    };
+
+    return mapped;
   };
 
   const mapDeals = (ds) => {
