@@ -26,7 +26,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Hugo',
     surname: 'Drax',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
@@ -128,7 +128,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Ernst',
     surname: 'Blofeld',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker', 'checker'],
     bank: {
@@ -163,7 +163,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Francisco',
     surname: 'Scaramanga',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['reader'],
     bank: {
@@ -232,7 +232,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker', 'checker'],
     bank: {
@@ -249,7 +249,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Wolfgang',
     surname: 'Weisen',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['reader'],
     bank: {
@@ -267,7 +267,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Tamil',
     surname: 'Rahani',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
@@ -301,7 +301,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker', 'checker'],
     bank: {
@@ -318,7 +318,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Wolfgang',
     surname: 'Weisen',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['reader'],
     bank: {
@@ -336,7 +336,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Tamil',
     surname: 'Rahani',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
@@ -370,7 +370,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker', 'checker'],
     bank: {
@@ -387,7 +387,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Wolfgang',
     surname: 'Weisen',
-    email: 'maker@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['reader'],
     bank: {
