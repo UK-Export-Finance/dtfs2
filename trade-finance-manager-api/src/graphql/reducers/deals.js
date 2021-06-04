@@ -1,19 +1,12 @@
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
-// TODO: improve unit test coverage
-
 const dealsReducer = (deals) => {
   const mapDeal = (d) => {
     const deal = d;
     deal.dealSnapshot.submissionDetails = mapSubmissionDetails(d.dealSnapshot.submissionDetails);
 
-    deal.tfm = {
-      ...mapDealTfm(deal.tfm),
-
-      // hard coded for now
-      product: 'BSS & EWCS',
-    };
+    deal.tfm = mapDealTfm(deal);
 
     return deal;
   };

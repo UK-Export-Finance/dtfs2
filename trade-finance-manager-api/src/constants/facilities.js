@@ -13,7 +13,6 @@ const FACILITY_PRODUCT_CODE = {
   LOAN: 'EWCS',
 };
 
-
 const FACILITY_FEE_TYPE_PORTAL = {
   IN_ADVANCE: 'In advance',
   IN_ARREARS: 'In arrear',

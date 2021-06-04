@@ -1,15 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-
 const dealsReducer = require('./deals');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
 const MOCK_DEAL = require('../../v1/__mocks__/mock-deal-AIN-submitted');
-
-
-// TODO/NOTE:
-// this is just an initial unit test to cover date sorting.
-// need to improve test coverage.
 
 const createMockDeal = (submissionDate) => ({
   ...MOCK_DEAL._id,
@@ -31,10 +25,7 @@ const expectedDealShape = (deal) => ({
     ...deal.dealSnapshot,
     submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
   },
-  tfm: {
-    ...mapDealTfm(deal.tfm),
-    product: 'BSS & EWCS',
-  },
+  tfm: mapDealTfm(deal),
 });
 
 describe('reducer - deals', () => {
