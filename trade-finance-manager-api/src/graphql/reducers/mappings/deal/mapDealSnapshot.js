@@ -1,6 +1,6 @@
 const mapTotals = require('./mapTotals');
 const mapFacilities = require('../facilities/mapFacilities');
-const mapSubmissionDetails = require('../../mapSubmissionDetails');
+const mapSubmissionDetails = require('./mapSubmissionDetails');
 
 const mapDealSnapshot = (deal) => {
   const {

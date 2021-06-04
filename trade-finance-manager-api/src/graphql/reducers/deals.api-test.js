@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const dealsReducer = require('./deals');
-const mapSubmissionDetails = require('./mapSubmissionDetails');
+const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 
 const MOCK_DEAL = require('../../v1/__mocks__/mock-deal-AIN-submitted');

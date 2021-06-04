@@ -1,7 +1,7 @@
 const mapDealSnapshot = require('./mapDealSnapshot');
 const mapTotals = require('./mapTotals');
 const mapFacilities = require('../facilities/mapFacilities');
-const mapSubmissionDetails = require('../../mapSubmissionDetails');
+const mapSubmissionDetails = require('./mapSubmissionDetails');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal-AIN-submitted');
 
 describe('mapDealSnapshot', () => {
