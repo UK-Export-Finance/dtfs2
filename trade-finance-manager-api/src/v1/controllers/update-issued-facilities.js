@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
-const sendIssuedFacilityReceivedEmail = require('./send-issued-facility-received-email');
+const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
@@ -20,6 +20,8 @@ const updatedIssuedFacilities = async (deal) => {
 
   const bonds = [];
   const loans = [];
+
+  const allUpdatedFacilities = [];
 
   let updatedCount = 0;
   let shouldUpdateCount = 0;
@@ -84,12 +86,7 @@ const updatedIssuedFacilities = async (deal) => {
           loans.push(updatedFacilityResponseObj);
         }
 
-        // send email
-        await sendIssuedFacilityReceivedEmail(
-          modifiedDeal,
-          updatedFacilityResponseObj,
-        );
-
+        allUpdatedFacilities.push(updatedFacilityResponseObj);
         updatedCount += 1;
       } else if (facilityType === 'bond') {
         // update deal object to return in response
@@ -101,6 +98,11 @@ const updatedIssuedFacilities = async (deal) => {
       if (shouldUpdateCount === updatedCount) {
         modifiedDeal.dealSnapshot.bondTransactions.items = bonds;
         modifiedDeal.dealSnapshot.loanTransactions.items = loans;
+
+        await sendIssuedFacilitiesReceivedEmail(
+          modifiedDeal,
+          allUpdatedFacilities,
+        );
 
         return resolve(modifiedDeal);
       }

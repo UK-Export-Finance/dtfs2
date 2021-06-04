@@ -4,6 +4,7 @@ const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const dealController = require('../../../src/v1/controllers/deal.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
+const { generateFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
@@ -12,8 +13,6 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../..
 const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
-
-const { capitalizeFirstLetter } = require('../../../src/utils/string');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -144,57 +143,34 @@ describe('/v1/deals', () => {
         });
       });
 
-      it('should send an email for each newly issued facility', async () => {
+      it('should send an email for newly issued facilities', async () => {
         const mockDeal = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
 
-        const totalFacilities = mockDeal.facilities.length;
+        expect(sendEmailApiSpy).toBeCalledTimes(1);
 
-        expect(sendEmailApiSpy).toBeCalledTimes(totalFacilities);
+        const allFacilities = [
+          ...mockDeal.bondTransactions.items,
+          ...mockDeal.loanTransactions.items,
+        ];
 
-
-        const expectedEmailVariables = (facility) => {
-          const { facilityType, ukefFacilityID } = facility;
-
-          return {
+        const expected = {
+          templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
+          sendToEmailAddress: mockDeal.details.maker.email,
+          emailVariables: {
             exporterName: mockDeal.submissionDetails['supplier-name'],
             recipientName: mockDeal.details.maker.firstname,
             bankReferenceNumber: mockDeal.details.bankSupplyContractID,
             ukefDealID: mockDeal.details.ukefDealId,
-            facilityType: capitalizeFirstLetter(facilityType),
-            ukefFacilityID,
-          };
+            facilitiesList: generateFacilitiesListString(allFacilities),
+          },
         };
 
-        const loan = mockDeal.loanTransactions.items[0];
-        const bond = mockDeal.bondTransactions.items[0];
-
-        const expectedCall = {
-          templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
-        };
-
-        const expectedFirstCall = {
-          ...expectedCall,
-          emailVariables: expectedEmailVariables(bond),
-        };
-
-        const expectedSecondCall = {
-          ...expectedCall,
-          emailVariables: expectedEmailVariables(loan),
-        };
-
-        expect(sendEmailApiSpy.mock.calls[0]).toEqual([
-          expectedFirstCall.templateId,
-          expectedFirstCall.sendToEmailAddress,
-          expectedFirstCall.emailVariables,
-        ]);
-
-        expect(sendEmailApiSpy.mock.calls[1]).toEqual([
-          expectedSecondCall.templateId,
-          expectedSecondCall.sendToEmailAddress,
-          expectedSecondCall.emailVariables,
-        ]);
+        expect(sendEmailApiSpy).toHaveBeenCalledWith(
+          expected.templateId,
+          expected.sendToEmailAddress,
+          expected.emailVariables,
+        );
       });
 
       it('should update ACBS for AIN`', async () => {
@@ -386,56 +362,34 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalled();
       });
 
-      it('should send an email for each newly issued facility', async () => {
+      it('should send an email for newly issued facility', async () => {
         const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
 
-        const totalFacilities = mockDeal.facilities.length;
+        expect(sendEmailApiSpy).toBeCalledTimes(1);
 
-        expect(sendEmailApiSpy).toBeCalledTimes(totalFacilities);
+        const allFacilities = [
+          ...mockDeal.bondTransactions.items,
+          ...mockDeal.loanTransactions.items,
+        ];
 
-        const expectedEmailVariables = (facility) => {
-          const { facilityType, ukefFacilityID } = facility;
-
-          return {
+        const expected = {
+          templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
+          sendToEmailAddress: mockDeal.details.maker.email,
+          emailVariables: {
             exporterName: mockDeal.submissionDetails['supplier-name'],
             recipientName: mockDeal.details.maker.firstname,
             bankReferenceNumber: mockDeal.details.bankSupplyContractID,
             ukefDealID: mockDeal.details.ukefDealId,
-            facilityType: capitalizeFirstLetter(facilityType),
-            ukefFacilityID,
-          };
+            facilitiesList: generateFacilitiesListString(allFacilities),
+          },
         };
 
-        const loan = mockDeal.loanTransactions.items[0];
-        const bond = mockDeal.bondTransactions.items[0];
-
-        const expectedCall = {
-          templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
-        };
-
-        const expectedFirstCall = {
-          ...expectedCall,
-          emailVariables: expectedEmailVariables(bond),
-        };
-
-        const expectedSecondCall = {
-          ...expectedCall,
-          emailVariables: expectedEmailVariables(loan),
-        };
-
-        expect(sendEmailApiSpy.mock.calls[0]).toEqual([
-          expectedFirstCall.templateId,
-          expectedFirstCall.sendToEmailAddress,
-          expectedFirstCall.emailVariables,
-        ]);
-
-        expect(sendEmailApiSpy.mock.calls[1]).toEqual([
-          expectedSecondCall.templateId,
-          expectedSecondCall.sendToEmailAddress,
-          expectedSecondCall.emailVariables,
-        ]);
+        expect(sendEmailApiSpy).toHaveBeenCalledWith(
+          expected.templateId,
+          expected.sendToEmailAddress,
+          expected.emailVariables,
+        );
       });
     });
   });
