@@ -22,6 +22,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     guaranteeFeePayableByBank,
     currency,
   } = facility;
+
   const ukefFacilityType = facilityType;
 
   facility.facilityProduct = mapFacilityProduct(facility);
