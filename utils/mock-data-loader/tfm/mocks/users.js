@@ -125,4 +125,13 @@ module.exports = [
     lastName: 'Robinson',
     assignedTasks: [],
   },
+  {
+    username: 'QA',
+    email: '',
+    teams: ['UNDERWRITER_MANAGERS'],
+    timezone: 'Europe/London',
+    firstName: 'Caroline-Test',
+    lastName: 'O’Test Taylor',
+    assignedTasks: [],
+  },
 ];
