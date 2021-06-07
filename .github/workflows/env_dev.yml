@@ -75,14 +75,14 @@ jobs:
         inlineScript: |
           az network route-table route create --name ProductionSubnet \
             --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR-TEST  \
-            --next-hop-type VirtualAppliance 
-            --address-prefix ${{ env.production_subnet_cidr }}
+            --next-hop-type VirtualAppliance \
+            --address-prefix ${{ env.production_subnet_cidr }} \
             --next-hop-ip-address ${{ env.palo_alto_next_hop }}
 
           az network route-table route create --name MulesoftSubnet \
             --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR-TEST  \
-            --next-hop-type VirtualAppliance 
-            --address-prefix ${{ env.mulesoft_subnet_cidr }}
+            --next-hop-type VirtualAppliance \
+            --address-prefix ${{ env.mulesoft_subnet_cidr }} \
             --next-hop-ip-address ${{ env.palo_alto_next_hop }}
     
     -
