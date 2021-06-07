@@ -1,0 +1,30 @@
+{% import './_macros/deal-submitted.njk' as dealSubmitted %}
+
+{% extends "case/case.njk" %}
+
+{% block sub_content %}
+  
+  <div class="govuk-grid-row" data-cy="case-activity">
+
+    <div class="govuk-grid-column-full">
+
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="activity-heading">Activity and comments</h2>
+
+      <ul>
+
+        {% set componentData = {
+          submissionType: deal.details.submissionType,
+          submittedBy: deal.details.owningBank.name,
+          submissionDate: deal.details.submissionDate,
+          userTimezone: user.timezone
+        }%}
+
+        {{dealSubmitted.render(componentData)}}
+
+      </ul>
+
+    </div>
+
+  </div>
+
+{% endblock %}

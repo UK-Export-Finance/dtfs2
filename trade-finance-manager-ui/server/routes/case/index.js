@@ -1,6 +1,7 @@
 import express from 'express';
 import caseController from '../../controllers/case';
 import underwritingController from '../../controllers/case/underwriting';
+import activityController from '../../controllers/case/activity';
 
 const router = express.Router();
 
@@ -33,6 +34,8 @@ router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 
 router.get('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
+
+router.get('/:_id/activity', activityController.getActivity);
 
 router.get('/:_id/underwriting/pricing-and-risk', underwritingController.getUnderWritingPricingAndRisk);
 router.get('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
