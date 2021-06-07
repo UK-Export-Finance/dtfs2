@@ -22,7 +22,7 @@ describe('reducer - deal', () => {
             tfm: {
               facilityValueInGBP: '12,345.00',
             },
-          }
+          },
         ],
       },
       tfm: {
