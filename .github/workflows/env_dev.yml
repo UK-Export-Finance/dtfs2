@@ -184,7 +184,7 @@ jobs:
             --name ${{secrets.RESOURCE_GROUP }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes ${{ env.vm_cidr }} \
-            --service-endpoints Microsoft.AzureCosmosDB
+            --service-endpoints Microsoft.AzureCosmosDB \
             --route-table ${{secrets.RESOURCE_GROUP }}-UDR-TEST
           
   private-dns:
