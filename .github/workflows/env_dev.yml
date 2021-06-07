@@ -20,6 +20,9 @@ env:
   app_service_plan_egress_cidr: 172.16.42.0/28
   vm_cidr: 172.16.43.0/28
   vnet_address_prefixes: "172.16.40.0/22 172.16.60.0/23"
+  production_subnet_cidr: 10.60.0.0/16
+  mulesoft_subnet_cidr: 172.16.10.0/23
+  palo_alto_next_hop: 10.50.0.100
   api_portal_access_port: 44232
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
@@ -41,13 +44,57 @@ jobs:
       run: |
         echo Setting environment to ${{ env.environment }}
 
-      # START Virtual Network setup 
+    # START Route table
+  route-tables:
+    name: Route Tables Create
+    needs: [set-environment]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+
+    - name: Route Table
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network route-table create --name ${{secrets.RESOURCE_GROUP }}-UDR-TEST
+
+    - name: Routes 
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network route-table route create --name ProductionSubnet \
+            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR-TEST  \
+            --next-hop-type VirtualAppliance 
+            --address-prefix ${{ env.production_subnet_cidr }}
+            --next-hop-ip-address ${{ env.palo_alto_next_hop }}
+
+          az network route-table route create --name MulesoftSubnet \
+            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR-TEST  \
+            --next-hop-type VirtualAppliance 
+            --address-prefix ${{ env.mulesoft_subnet_cidr }}
+            --next-hop-ip-address ${{ env.palo_alto_next_hop }}
+    
+    -
+  # END route table
+
+  # START Virtual Network setup 
   vnet:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    needs: set-environment
+    needs: [set-environment, route-tables]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
@@ -140,6 +187,7 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes ${{ env.vm_cidr }} \
             --service-endpoints Microsoft.AzureCosmosDB
+            --route-table ${{secrets.RESOURCE_GROUP }}-UDR-TEST
           
   private-dns:
     name: Private DNS zones
