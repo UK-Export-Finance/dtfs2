@@ -20,7 +20,7 @@ describe('send-issued-facilities-received-email - generateFacilitiesListString',
     const facility2Type = capitalizeFirstLetter(facilities[1].facilityType);
     const facility2Id = facilities[1].ukefFacilityID;
 
-    const expected = `- ${facility1Type} facility with UKEF facility reference: ${facility1Id}\n - ${facility2Type} facility with UKEF facility reference: ${facility2Id}`;
+    const expected = `- ${facility1Type} facility with UKEF facility reference: ${facility1Id}\n- ${facility2Type} facility with UKEF facility reference: ${facility2Id}`;
 
     const result = generateFacilitiesListString(facilities);
 
