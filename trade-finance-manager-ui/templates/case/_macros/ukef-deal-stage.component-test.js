@@ -1,4 +1,3 @@
-const fs = require('fs');
 const componentRenderer = require('../../../component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/ukef-deal-stage.njk';
