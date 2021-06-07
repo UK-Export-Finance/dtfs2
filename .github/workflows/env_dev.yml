@@ -67,20 +67,20 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network route-table create --name ${{secrets.RESOURCE_GROUP }}-UDR-TEST
+          az network route-table create --name ${{secrets.RESOURCE_GROUP }}-UDR
 
     - name: Routes 
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az network route-table route create --name ProductionSubnet \
-            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR-TEST  \
+            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR  \
             --next-hop-type VirtualAppliance \
             --address-prefix ${{ env.production_subnet_cidr }} \
             --next-hop-ip-address ${{ env.palo_alto_next_hop }}
 
           az network route-table route create --name MulesoftSubnet \
-            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR-TEST  \
+            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR  \
             --next-hop-type VirtualAppliance \
             --address-prefix ${{ env.mulesoft_subnet_cidr }} \
             --next-hop-ip-address ${{ env.palo_alto_next_hop }}
@@ -185,7 +185,7 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes ${{ env.vm_cidr }} \
             --service-endpoints Microsoft.AzureCosmosDB \
-            --route-table ${{secrets.RESOURCE_GROUP }}-UDR-TEST
+            --route-table ${{secrets.RESOURCE_GROUP }}-UDR
           
   private-dns:
     name: Private DNS zones
