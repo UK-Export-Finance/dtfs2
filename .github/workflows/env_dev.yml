@@ -84,8 +84,6 @@ jobs:
             --next-hop-type VirtualAppliance \
             --address-prefix ${{ env.mulesoft_subnet_cidr }} \
             --next-hop-ip-address ${{ env.palo_alto_next_hop }}
-    
-    -
   # END route table
 
   # START Virtual Network setup 
