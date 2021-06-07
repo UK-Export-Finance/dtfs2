@@ -14,7 +14,7 @@ const generateFacilitiesListString = (facilities) => {
     if (index === 0) {
       result = listItem;
     } else {
-      result += `\n ${listItem}`;
+      result += `\n${listItem}`;
     }
   });
 
