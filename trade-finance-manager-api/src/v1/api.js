@@ -100,6 +100,24 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
   }
 };
 
+const updatePortalFacility = async (facilityId, update) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: update,
+    });
+
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
+
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
@@ -498,6 +516,7 @@ module.exports = {
   updatePortalDeal,
   updatePortalDealStatus,
   updatePortalFacilityStatus,
+  updatePortalFacility,
   updateDeal,
   updateDealStage,
   updateDealSnapshot,

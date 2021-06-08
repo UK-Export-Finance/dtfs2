@@ -33,27 +33,36 @@ const updatedIssuedFacilities = async (deal) => {
         facilityType,
         facilityStage,
         previousFacilityStage,
+        hasBeenAcknowledged,
       } = facility;
 
-      // bond facility is either Unissued or Issued.
-      const bondIsNowIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED)
+      // we only need to update issued facilities if:
+      // - a facility has changed from `Unissued` to `Issued` (`Conditional` to `Unconditional` for a loan)
+      // - and the facility changing from `Unissued` to `Issued` has NOT been previously acknowledged
+
+      const bondIsIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED)
         && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED));
 
-      // loan facility is either Conditional or Unconditional
-      const loanIsNowIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL)
+      const loanIsIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL)
         && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL));
 
-      const shouldUpdateFacility = (bondIsNowIssued || loanIsNowIssued);
+      const shouldUpdateFacility = ((bondIsIssued || loanIsIssued) && !hasBeenAcknowledged);
 
       if (shouldUpdateFacility) {
         shouldUpdateCount += 1;
 
         // update portal facility status
         const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
-        const updatedFacility = await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+        const updatedFacilityStatus = await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
+        // add acknowledged flag, update Portal facility
+        const portalFacilityUpdate = {
+          hasBeenAcknowledged: true,
+        };
 
-        // update TFM facility exposure period / AKA 'Tenor'
+        const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+
+        // update TFM facility
         const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
 
         const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
@@ -65,6 +74,7 @@ const updatedIssuedFacilities = async (deal) => {
         );
 
         const facilityUpdate = {
+          ...portalFacilityUpdate,
           ...facilityExposurePeriod,
           facilityGuaranteeDates,
           premiumSchedule: facilityPremiumSchedule,
@@ -74,7 +84,8 @@ const updatedIssuedFacilities = async (deal) => {
 
         // update object to return in response
         const updatedFacilityResponseObj = {
-          ...updatedFacility,
+          ...updatedFacilityStatus,
+          ...updatedPortalFacility,
           tfm: {
             ...facilityUpdate,
           },

@@ -115,6 +115,16 @@ module.exports = {
     };
     return Promise.resolve(updatedDeal);
   },
+  updatePortalFacility: (facilityId, facilityUpdate) => {
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+
+    const updatedFacility = {
+      ...facility,
+      ...facilityUpdate,
+    };
+
+    return updatedFacility;
+  },
   updatePortalFacilityStatus: (facilityId, statusUpdate) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
     const updatedFacility = {
