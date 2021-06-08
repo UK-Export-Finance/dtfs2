@@ -13,9 +13,23 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../..
 const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
+const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
+));
+
+const updatePortalFacilityStatusSpy = jest.fn((facilityId, facilityStatusUpdate) => {
+  const facility = MOCK_FACILITIES.find((f) => f._id === facilityId);
+
+  return Promise.resolve({
+    ...facility,
+    status: facilityStatusUpdate,
+  });
+});
+
+const updatePortalFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
+  { ...facilityUpdate },
 ));
 
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
@@ -36,6 +50,12 @@ describe('/v1/deals', () => {
 
     sendEmailApiSpy.mockClear();
     externalApis.sendEmail = sendEmailApiSpy;
+
+    updatePortalFacilitySpy.mockClear();
+    externalApis.updatePortalFacility = updatePortalFacilitySpy;
+
+    updatePortalFacilityStatusSpy.mockClear();
+    externalApis.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -53,6 +73,17 @@ describe('/v1/deals', () => {
 
           const updatedBond = body.dealSnapshot.bondTransactions.items[0];
           expect(updatedBond.status).toEqual('Acknowledged by UKEF');
+        });
+
+        it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
+          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
+
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(
+            bondId,
+            'Acknowledged by UKEF',
+          );
         });
 
         it('should update bond.exposurePeriodInMonths', async () => {
@@ -90,6 +121,25 @@ describe('/v1/deals', () => {
           const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
           expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
         });
+
+        it('should call updatePortalFacility', async () => {
+          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
+
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
+            bondId,
+            { hasBeenAcknowledged: true },
+          );
+        });
+
+        it('should add bond.hasBeenAcknowledged', async () => {
+          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          const updatedBond = body.dealSnapshot.bondTransactions.items[0];
+
+          expect(updatedBond.tfm.hasBeenAcknowledged).toEqual(true);
+        });
       });
 
       describe('when a facilityStage changes from `Conditional` to `Unconditional`', () => {
@@ -104,6 +154,17 @@ describe('/v1/deals', () => {
 
           const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
           expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+        });
+
+        it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
+          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          const loanId = body.dealSnapshot.loanTransactions.items[0]._id;
+
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(
+            loanId,
+            'Acknowledged by UKEF',
+          );
         });
 
         it('should update loan.exposurePeriodInMonths', async () => {
@@ -140,6 +201,25 @@ describe('/v1/deals', () => {
 
           const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
           expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
+        });
+
+        it('should call updatePortalFacility', async () => {
+          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          const loanId = body.dealSnapshot.loanTransactions.items[0]._id;
+
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
+            loanId,
+            { hasBeenAcknowledged: true },
+          );
+        });
+
+        it('should add loan.hasBeenAcknowledged', async () => {
+          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+
+          const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
+
+          expect(updatedLoan.tfm.hasBeenAcknowledged).toEqual(true);
         });
       });
 

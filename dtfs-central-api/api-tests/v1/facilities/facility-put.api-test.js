@@ -56,15 +56,6 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns 400 when user is missing', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const createdFacility = postResult.body;
-      const { status, text } = await api.put({ facility: newFacility }).to(`/v1/portal/facilities/${createdFacility._id}`);
-
-      expect(status).toEqual(400);
-      expect(text).toEqual('User missing');
-    });
-
     it('returns 404 when adding facility to non-existant deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/111111}');
@@ -132,6 +123,22 @@ describe('/v1/portal/facilities', () => {
       expect(body.deal.editedBy[1].roles).toEqual(updatedFacility.user.roles);
       expect(body.deal.editedBy[1].username).toEqual(updatedFacility.user.username);
       expect(typeof body.deal.editedBy[1].date).toEqual('string');
+    });
+
+    it('updates the facility when no req.body.user is provided', async () => {
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const createdFacility = postResult.body;
+
+      const updatedFacility = {
+        ...createdFacility,
+        facilityValue: 123456,
+      };
+
+      await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
+
+      const { body } = await api.get(`/v1/portal/facilities/${createdFacility._id}`);
+
+      expect(body.facilityValue).toEqual(updatedFacility.facilityValue);
     });
   });
 

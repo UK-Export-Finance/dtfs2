@@ -28,7 +28,7 @@ const updateFacility = async (facilityId, facilityBody, associatedDealId, user, 
 
   const { value: updatedFacility } = findAndUpdateResponse;
 
-  if (routePath === PORTAL_ROUTE) {
+  if (routePath === PORTAL_ROUTE && user) {
     // update the deal so that the user that has edited this facility,
     // is also marked as editing the associated deal
 
@@ -42,14 +42,17 @@ exports.updateFacility = updateFacility;
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
 
-  const { user } = req.body;
+  let facilityUpdate;
+  let user;
 
-  if (!user) {
-    return res.status(400).send('User missing');
+  if (req.body.user) {
+    user = req.body.user;
+
+    delete req.body.user;
+    facilityUpdate = req.body;
+  } else {
+    facilityUpdate = req.body;
   }
-
-  delete req.body.user;
-  const facilityUpdate = req.body;
 
   const validationErrors = getUpdateFacilityErrors(facilityUpdate);
 

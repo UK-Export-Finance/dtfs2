@@ -286,6 +286,7 @@ type TFMFacilityData {
   riskProfile: String
   premiumSchedule: [PremiumScheduleData]
   premiumTotals: String
+  hasBeenAcknowledged: Boolean
 }
 
 input DashboardFilters {
