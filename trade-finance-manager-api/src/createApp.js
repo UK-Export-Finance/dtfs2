@@ -6,8 +6,12 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('graphql-tools');
+const graphqlKeyAuthentication = require('./graphql/key-authentication');
+const graphqlPermissions = require('./graphql/middleware/graphql-permissions');
 
-const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
+const {
+  resolvers, typeDefs, graphQlRouter,
+} = require('./graphql');
 
 const healthcheck = require('./healthcheck');
 const { openRouter } = require('./v1/routes');
@@ -31,12 +35,14 @@ app.use('/v1', openRouter);
 app.use(graphQlRouter);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
-const schemaWithMiddleware = applyMiddleware(schema);
+const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
+
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => ({
+    graphqlPermissions: graphqlKeyAuthentication(req),
     user: req.user,
   }),
   schema: schemaWithMiddleware,
