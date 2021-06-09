@@ -46,8 +46,9 @@ module.exports = (app) => ({
     },
   }),
 
-  get: async (url) => request(app)
-    .get(url),
+  get: async (url, data) => request(app)
+    .get(url)
+    .send(data),
 
   remove: (data) => ({
     to: async (url) =>

@@ -241,7 +241,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
-const queryDeals = async ({ query, start = 0, pagesize = 0 }) => {
+const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
       method: 'get',
@@ -250,7 +250,7 @@ const queryDeals = async ({ query, start = 0, pagesize = 0 }) => {
         'Content-Type': 'application/json',
       },
       data: {
-        query,
+        searchParams: queryParams,
         start,
         pagesize,
       },

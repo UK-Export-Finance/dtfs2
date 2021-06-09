@@ -15,6 +15,24 @@ const getDeals = async (req, res) => {
   });
 };
 
+const searchDeals = async (req, res) => {
+  let searchString;
+
+  if (req.body.search) {
+    searchString = req.body.search;
+  }
+
+  const deals = await api.getDeals(searchString);
+
+  return res.render('deals/deals.njk', {
+    deals,
+    activePrimaryNavigation: 'all deals',
+    activeSubNavigation: 'deal',
+    user: req.session.user,
+  });
+};
+
 export default {
   getDeals,
+  searchDeals,
 };
