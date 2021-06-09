@@ -6,6 +6,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 require('dotenv').config();
 
 const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
+const apiToken = process.env.UKEF_TFM_API_SYSTEM_KEY;
 
 const httpLink = createHttpLink({
   uri: `${urlRoot}/graphql`,
@@ -29,14 +30,14 @@ const client = new ApolloClient({
   defaultOptions,
 });
 
-const doQuery = async (query, variables, token) => {
+const doQuery = async (query, variables) => {
   try {
     return await client.query({
       query,
       variables,
       context: {
         headers: {
-          Authorization: token,
+          Authorization: apiToken,
         },
       },
     });
@@ -45,14 +46,14 @@ const doQuery = async (query, variables, token) => {
   }
 };
 
-const doMutate = async (mutation, variables, token) => {
+const doMutate = async (mutation, variables) => {
   try {
     return await client.mutate({
       mutation,
       variables,
       context: {
         headers: {
-          Authorization: token,
+          Authorization: apiToken,
         },
       },
     });

@@ -109,6 +109,8 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - UKEF_TFM_API_SYSTEM_KEY
+      - UKEF_TFM_API_REPORTS_KEY
     entrypoint: npx nodemon src/index.js
 
   gef-ui:
