@@ -191,5 +191,42 @@ describe('/v1/tfm/deals', () => {
 
       expect(body.deals).toEqual(expectedDeals);
     });
+
+    it('returns deals filtered by submissionType', async () => {
+      const ainDeal = newDeal({
+        submissionType: 'Automatic Inclusion Notice',
+      });
+
+      const miaDeal = newDeal({
+        submissionType: 'Manual Inclusion Application',
+      });
+
+      const minDeal = newDeal({
+        submissionType: 'Manual Inclusion Notice',
+      });
+
+      const submittedDeals = await createAndSubmitDeals([
+        ainDeal,
+        miaDeal,
+        minDeal,
+      ]);
+
+      const mockReqBody = {
+        searchParams: {
+          searchString: ainDeal.details.submissionType,
+        },
+      };
+
+      const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+      expect(status).toEqual(200);
+
+      const expectedDeals = submittedDeals.filter((deal) =>
+        deal.dealSnapshot.details.submissionType === ainDeal.details.submissionType);
+
+      expect(body.deals.length).toEqual(expectedDeals.length);
+
+      expect(body.deals).toEqual(expectedDeals);
+    });
   });
 });
