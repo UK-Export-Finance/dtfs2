@@ -27,8 +27,12 @@ const getDeal = async (id, tasksFilters) => {
   return response.data.deal;
 };
 
-const getDeals = async () => {
-  const response = await apollo('GET', dealsQuery);
+const getDeals = async (searchString) => {
+  const queryParams = {
+    searchString,
+  };
+
+  const response = await apollo('GET', dealsQuery, queryParams);
   return response.data.deals;
 };
 

@@ -29,7 +29,7 @@ const getProduct = async (deal) => {
   return '';
 };
 
-const getDeals = async (args) => {
+const getDeals = async (queryParams) => {
   const dict = {};
   const fn = async (d) => {
     if (d.facilities && d.facilities.length > 0) {
@@ -39,7 +39,7 @@ const getDeals = async (args) => {
       });
     }
   };
-  const q = await queryDeals(args);
+  const q = await queryDeals({ queryParams });
   await Promise.all(q.deals.map(fn));
 
   const reducedDeals = dealsReducer(q.deals, dict);

@@ -1,5 +1,7 @@
 
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/deals-table.njk' as dealsTable %}
 
 {% extends "index.njk" %}
@@ -15,6 +17,23 @@
       <p class="header-label">All deals</p>
     </div>
   </div>
+
+  <form method="post" autocomplete="off">
+    {{ govukInput({
+      label: {
+        text: Test
+      },
+      id: "search",
+      name: "search"
+    }) }}
+
+    {{ govukButton({
+      text: "Search",
+      attributes: {
+        'data-cy': 'submit-button'
+      }
+    }) }}
+  </form>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
