@@ -153,7 +153,7 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
 
       const expectedDeals = submittedDeals.filter((deal) =>
-        deal.dealSnapshot.details.maker.bank.name === miaDeal.details.maker.bank.name);
+        deal.dealSnapshot.details.maker.bank.name === miaDeal.details.maker.bank.name).reverse();
 
       expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -265,7 +265,108 @@ describe('/v1/tfm/deals', () => {
       expect(body.deals).toEqual(expectedDeals);
     });
 
-    // TODO
-    // it('returns deals filtered by tfm.facilities productCode', async () => {
+    describe('deals filtered by tfm.facilities productCode', () => {
+      let submittedDeals;
+
+      const dealWithBonds = newDeal({
+        ukefDealId: 'DEAL-WITH-BONDS',
+        submissionType: 'Automatic Inclusion Notice',
+        bondTransactions: {
+          items: [
+            { _id: '1', facilityType: 'bond' },
+          ],
+        },
+      });
+
+      const dealWithLoans = newDeal({
+        ukefDealId: 'DEAL-WITH-LOANS',
+        submissionType: 'Manual Inclusion Application',
+        loanTransactions: {
+          items: [
+            { _id: '1', facilityType: 'loan' },
+          ],
+        },
+      });
+
+      beforeEach(async () => {
+        submittedDeals = await createAndSubmitDeals([
+          dealWithBonds,
+          dealWithLoans,
+        ]);
+      });
+
+      it('returns deals filtered by bond productCode', async () => {
+        const mockReqBody = {
+          searchParams: {
+            searchString: 'BSS',
+          },
+        };
+
+        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+        expect(status).toEqual(200);
+
+        const expectedDeals = submittedDeals.filter((deal) =>
+          deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS');
+
+        expect(body.deals.length).toEqual(expectedDeals.length);
+
+        expect(body.deals).toEqual(expectedDeals);
+      });
+
+      it('returns deals filtered by loan productCode', async () => {
+        const mockReqBody = {
+          searchParams: {
+            searchString: 'EWCS',
+          },
+        };
+
+        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+        expect(status).toEqual(200);
+
+        const expectedDeals = submittedDeals.filter((deal) =>
+          deal.dealSnapshot.ukefDealId === 'DEAL-WITH-LOANS');
+
+        expect(body.deals.length).toEqual(expectedDeals.length);
+
+        expect(body.deals).toEqual(expectedDeals);
+      });
+
+      it('returns deals filtered by bond and loan productCode', async () => {
+        const dealWithBondsAndLoans = newDeal({
+          ukefDealId: 'DEAL-WITH-BONDS-AND-LOANS',
+          submissionType: 'Manual Inclusion Application',
+          loanTransactions: {
+            items: [
+              { _id: '1', facilityType: 'loan' },
+            ],
+          },
+        });
+
+        submittedDeals = await createAndSubmitDeals([
+          dealWithBonds,
+          dealWithLoans,
+          dealWithBondsAndLoans,
+        ]);
+
+        const mockReqBody = {
+          searchParams: {
+            searchString: 'BSS & EWCS',
+          },
+        };
+
+        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+        expect(status).toEqual(200);
+
+        const expectedDeals = submittedDeals.filter((deal) =>
+          deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS-AND-LOANS');
+
+        expect(body.deals.length).toEqual(expectedDeals.length);
+
+        expect(body.deals).toEqual(expectedDeals);
+      });
+    });
   });
 });
