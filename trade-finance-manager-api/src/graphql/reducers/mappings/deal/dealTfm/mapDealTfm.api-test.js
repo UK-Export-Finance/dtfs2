@@ -5,12 +5,22 @@ const mapDealProduct = require('./mapDealProduct');
 describe('mapDealTfm', () => {
   it('should return mapped object', () => {
     const mockDeal = {
-      dealSnapshot: {
-        facilities: [],
-      },
+      dealSnapshot: {},
       tfm: {
         exporterCreditRating: 'Good (BB-)',
         supplyContractValueInGBP: '7287.56740999854',
+        facilities: [
+          {
+            _id: '1',
+            facilityType: 'bond',
+            productCode: 'BSS',
+          },
+          {
+            _id: '2',
+            facilityType: 'bond',
+            productCode: 'BSS',
+          },
+        ],
       },
     };
 
@@ -19,7 +29,7 @@ describe('mapDealTfm', () => {
     const expected = {
       ...mockDeal.tfm,
       supplyContractValueInGBP: mapSupplyContractValueInGBP(mockDeal.tfm.supplyContractValueInGBP),
-      product: mapDealProduct(mockDeal.dealSnapshot),
+      product: mapDealProduct(mockDeal.tfm),
     };
 
     expect(result).toEqual(expected);

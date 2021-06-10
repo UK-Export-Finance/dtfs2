@@ -317,7 +317,7 @@ input DealsInput {
   start: Int
   pagesize: Int
   filters: [DashboardFilters]
-  search: String
+  searchString: String
 }
 
 type DealSnapshot {
