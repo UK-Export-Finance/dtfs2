@@ -124,7 +124,6 @@ const sendDealSubmitEmails = async (deal) => {
   // send email for the first task
   const firstTaskEmail = await sendFirstTaskEmail(deal);
 
-  // TODO in future ticket DTFS2-3221 - send email for MIA acknowledgment
   const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
 
   return {
