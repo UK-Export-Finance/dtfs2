@@ -6,7 +6,7 @@ const findDeals = async (searchString, callback) => {
   // DONE UKEF Deal ID
   // DONE bank
   // DONE exporter
-  // Products
+  // DONE Products
   // DONE Submission type i.e.AIN, MIA, MIN
   // Buyer
   // Deal stage
