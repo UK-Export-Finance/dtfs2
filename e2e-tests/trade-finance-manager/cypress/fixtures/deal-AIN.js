@@ -10,6 +10,7 @@ const MOCK_DEAL = {
       username: 'JOE',
       firstname: 'Joe',
       surname: 'Bloggs',
+      email: 'maker1@ukexportfinance.gov.uk',
     },
     checker: {
       username: 'CHECKER',
