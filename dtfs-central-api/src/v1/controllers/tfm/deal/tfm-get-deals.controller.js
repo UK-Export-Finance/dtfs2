@@ -7,7 +7,7 @@ const findDeals = async (searchString, callback) => {
   // DONE bank
   // DONE exporter
   // Products
-  // Submission type i.e.AIN, MIA, MIN
+  // DONE Submission type i.e.AIN, MIA, MIN
   // Buyer
   // Deal stage
   // Date received
