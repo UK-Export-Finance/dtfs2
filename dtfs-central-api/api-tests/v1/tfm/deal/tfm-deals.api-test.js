@@ -153,7 +153,7 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
 
       const expectedDeals = submittedDeals.filter((deal) =>
-        deal.dealSnapshot.details.maker.bank.name === miaDeal.details.maker.bank.name).reverse();
+        deal.dealSnapshot.details.maker.bank.name === miaDeal.details.maker.bank.name);
 
       expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -259,6 +259,43 @@ describe('/v1/tfm/deals', () => {
 
       const expectedDeals = submittedDeals.filter((deal) =>
         deal.dealSnapshot.submissionDetails['buyer-name'] === ainDeal.submissionDetails['buyer-name']);
+
+      expect(body.deals.length).toEqual(expectedDeals.length);
+
+      expect(body.deals).toEqual(expectedDeals);
+    });
+
+    it('returns deals filtered by tfm stage', async () => {
+      // NOTE: tfm.stage is generated on deal submission.
+
+      const ainDealWithConfirmedStage = newDeal({
+        ukefDealId: 'DEAL-WITH-CONFIRMED-STAGE',
+        status: 'Submitted',
+      });
+
+      const miaDealWithApplicationStage = newDeal({
+        ukefDealId: 'DEAL-WITH-APPLICATION-STAGE',
+        status: 'Submitted',
+        submissionType: 'Manual Inclusion Application',
+      });
+
+      const submittedDeals = await createAndSubmitDeals([
+        ainDealWithConfirmedStage,
+        miaDealWithApplicationStage,
+      ]);
+
+      const mockReqBody = {
+        searchParams: {
+          searchString: 'Confirmed',
+        },
+      };
+
+      const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+      expect(status).toEqual(200);
+
+      const expectedDeals = submittedDeals.filter((deal) =>
+        deal.dealSnapshot.details.ukefDealId === ainDealWithConfirmedStage.details.ukefDealId);
 
       expect(body.deals.length).toEqual(expectedDeals.length);
 
