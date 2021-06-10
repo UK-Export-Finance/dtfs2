@@ -228,5 +228,44 @@ describe('/v1/tfm/deals', () => {
 
       expect(body.deals).toEqual(expectedDeals);
     });
+
+    it('returns deals filtered by submissionDetails.buyer-name', async () => {
+      const ainDeal = newDeal({
+        submissionDetails: {
+          'buyer-name': 'Buyer A',
+        },
+      });
+
+      const miaDeal = newDeal({
+        submissionDetails: {
+          'buyer-name': 'Buyer B',
+        },
+      });
+
+      const submittedDeals = await createAndSubmitDeals([
+        ainDeal,
+        miaDeal,
+      ]);
+
+      const mockReqBody = {
+        searchParams: {
+          searchString: ainDeal.submissionDetails['buyer-name'],
+        },
+      };
+
+      const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+      expect(status).toEqual(200);
+
+      const expectedDeals = submittedDeals.filter((deal) =>
+        deal.dealSnapshot.submissionDetails['buyer-name'] === ainDeal.submissionDetails['buyer-name']);
+
+      expect(body.deals.length).toEqual(expectedDeals.length);
+
+      expect(body.deals).toEqual(expectedDeals);
+    });
+
+    // TODO
+    // it('returns deals filtered by tfm.facilities productCode', async () => {
   });
 });
