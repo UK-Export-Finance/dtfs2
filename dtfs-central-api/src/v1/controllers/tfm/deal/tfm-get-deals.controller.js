@@ -8,7 +8,7 @@ const findDeals = async (searchString, callback) => {
   // DONE exporter
   // DONE Products
   // DONE Submission type i.e.AIN, MIA, MIN
-  // Buyer
+  // DONE Buyer
   // Deal stage
   // Date received
 
@@ -21,6 +21,7 @@ const findDeals = async (searchString, callback) => {
         { 'dealSnapshot.details.maker.bank.name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.details.submissionType': { $regex: searchString, $options: 'i' } },
+        { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchString, $options: 'i' } },
         { 'tfm.facilities': { $elemMatch: { productCode: { $eq: searchString } } } },
       ],
     };
