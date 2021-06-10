@@ -1,7 +1,11 @@
 const CONSTANTS = require('../../../../../constants');
 
-const mapDealProduct = (deal) => {
-  const { facilities } = deal;
+const mapDealProduct = (dealTfm) => {
+  const { facilities } = dealTfm;
+
+  if (!facilities) {
+    return null;
+  }
 
   const bonds = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
   const loans = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
