@@ -40,6 +40,7 @@
     "graphql-tools": "^6.2.5",
     "is-port-reachable": "^3.0.0",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "^3.6.3",
     "node-cron": "^3.0.0"

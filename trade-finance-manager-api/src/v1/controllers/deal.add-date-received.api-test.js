@@ -30,7 +30,7 @@ describe('deal.add-date-received', () => {
         dealSnapshot: {
           details: {
             submissionDate: mockSubmissionDate,
-          }
+          },
         },
         tfm: {
           test: true,
