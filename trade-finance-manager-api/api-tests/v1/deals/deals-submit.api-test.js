@@ -1,3 +1,4 @@
+const moment = require('moment');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
@@ -226,6 +227,20 @@ describe('/v1/deals', () => {
         });
       });
     });
+
+    it('adds dateReceived to deal.tfm from deal submissionDate', async () => {
+      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+      expect(status).toEqual(200);
+
+      const utc = moment(parseInt(MOCK_DEAL_AIN_SUBMITTED.details.submissionDate, 10));
+      const localisedTimestamp = utc.tz('Europe/London');
+
+      const expectedDateReceived = localisedTimestamp.format('DD-MM-YYYY');
+
+      expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
+    });
+
 
     it('adds facilities array of objects to deal.tfm', async () => {
       const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
