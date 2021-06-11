@@ -30,7 +30,7 @@ const findDeals = async (searchString, callback) => {
     };
 
     if (dateString) {
-      query['$or'].push({
+      query.$or.push({
         'tfm.dateReceived': { $regex: dateString, $options: 'i' },
       });
     }
