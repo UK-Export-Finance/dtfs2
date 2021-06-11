@@ -1,20 +1,22 @@
+const moment = require('moment');
 const db = require('../../../../drivers/db-client');
 
 const findDeals = async (searchString, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
-  // DONE UKEF Deal ID
-  // DONE bank
-  // DONE exporter
-  // DONE Products
-  // DONE Submission type i.e.AIN, MIA, MIN
-  // DONE Buyer
-  // DONE Deal stage
-  // Date received
-
   let deals;
 
   if (searchString) {
+    let dateString;
+
+    const date = moment(searchString, 'DD-MM-YYYY');
+
+    const isValidDate = moment(date).isValid();
+
+    if (isValidDate) {
+      dateString = String(moment(date).format('DD-MM-YYYY'));
+    }
+
     const query = {
       $or: [
         { 'dealSnapshot.details.ukefDealId': { $regex: searchString, $options: 'i' } },
@@ -26,6 +28,12 @@ const findDeals = async (searchString, callback) => {
         { 'tfm.facilities': { $elemMatch: { productCode: { $eq: searchString } } } },
       ],
     };
+
+    if (dateString) {
+      query['$or'].push({
+        'tfm.dateReceived': { $regex: dateString, $options: 'i' },
+      });
+    }
 
     deals = await dealsCollection.find(query).toArray();
   } else {
