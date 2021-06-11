@@ -1,8 +1,9 @@
+const moment = require('moment');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
-
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
+const now = require('../../../../src/now');
 
 const mockUser = {
   _id: '123456789',
@@ -404,6 +405,138 @@ describe('/v1/tfm/deals', () => {
 
         expect(body.deals).toEqual(expectedDeals);
       });
+    });
+
+    it('returns deals filtered by tfm.dateReceived in DD-MM-YYYY format', async () => {
+      const yesterday = moment().subtract(1, 'day');
+      const yesterdayTimestamp = moment(yesterday).utc().valueOf().toString();
+
+      const dealSubmittedYesterday = newDeal({
+        ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
+        status: 'Submitted',
+        submissionDate: yesterdayTimestamp,
+      });
+
+      const dealSubmittedToday = newDeal({
+        ukefDealId: 'DEAL-SUBMITTED-TODAY',
+        status: 'Submitted',
+        submissionDate: now(),
+      });
+
+      const submittedDeals = await createAndSubmitDeals([
+        dealSubmittedYesterday,
+        dealSubmittedToday,
+      ]);
+
+      const dealSubmittedYesterdayResponseBody = submittedDeals.find((deal) =>
+        deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId);
+
+      const dealSubmittedTodayResponseBody = submittedDeals.find((deal) =>
+        deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
+
+      const yesterdayFormatted = moment(yesterday).format('DD-MM-YYYY');
+      const todayFormatted = moment().format('DD-MM-YYYY');
+
+      // manually update deal's tfm object for test
+      const dealSubmittedYesterdayUpdateResponse = await api.put({
+        dealUpdate: {
+          tfm: {
+            dateReceived: yesterdayFormatted,
+          },
+        },
+      }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
+      
+      await api.put({
+        dealUpdate: {
+          tfm: {
+            dateReceived: todayFormatted,
+          },
+        },
+      }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
+
+      const mockReqBody = {
+        searchParams: {
+          searchString: String(yesterdayFormatted),
+        },
+      };
+
+      const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+      expect(status).toEqual(200);
+
+      const expectedDeals = [
+        dealSubmittedYesterdayUpdateResponse.body,
+      ];
+
+      expect(body.deals.length).toEqual(expectedDeals.length);
+
+      expect(body.deals).toEqual(expectedDeals);
+    });
+
+    it('returns deals filtered by tfm.dateReceived in DD/MM/YYYY format', async () => {
+      const yesterday = moment().subtract(1, 'day');
+      const yesterdayTimestamp = moment(yesterday).utc().valueOf().toString();
+
+      const dealSubmittedYesterday = newDeal({
+        ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
+        status: 'Submitted',
+        submissionDate: yesterdayTimestamp,
+      });
+
+      const dealSubmittedToday = newDeal({
+        ukefDealId: 'DEAL-SUBMITTED-TODAY',
+        status: 'Submitted',
+        submissionDate: now(),
+      });
+
+      const submittedDeals = await createAndSubmitDeals([
+        dealSubmittedYesterday,
+        dealSubmittedToday,
+      ]);
+
+      const dealSubmittedYesterdayResponseBody = submittedDeals.find((deal) =>
+        deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId);
+
+      const dealSubmittedTodayResponseBody = submittedDeals.find((deal) =>
+        deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
+
+      const yesterdayFormatted = moment(yesterday).format('DD-MM-YYYY');
+      const todayFormatted = moment().format('DD-MM-YYYY');
+
+      // manually update deal's tfm object for test
+      const dealSubmittedYesterdayUpdateResponse = await api.put({
+        dealUpdate: {
+          tfm: {
+            dateReceived: yesterdayFormatted,
+          },
+        },
+      }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
+
+      await api.put({
+        dealUpdate: {
+          tfm: {
+            dateReceived: todayFormatted,
+          },
+        },
+      }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
+
+      const mockReqBody = {
+        searchParams: {
+          searchString: String(moment(yesterday).format('DD/MM/YYYY')),
+        },
+      };
+
+      const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+      expect(status).toEqual(200);
+
+      const expectedDeals = [
+        dealSubmittedYesterdayUpdateResponse.body,
+      ];
+
+      expect(body.deals.length).toEqual(expectedDeals.length);
+
+      expect(body.deals).toEqual(expectedDeals);
     });
   });
 });
