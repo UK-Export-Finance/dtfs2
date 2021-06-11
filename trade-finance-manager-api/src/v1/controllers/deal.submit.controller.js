@@ -8,6 +8,7 @@ const { updateFacilities } = require('./update-facilities');
 const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
+const { addDealDateReceived } = require('./deal.add-date-received');
 const { addFacilitiesArray } = require('./deal.add-facilities-array');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
@@ -47,7 +48,9 @@ const submitDeal = async (dealId, portalChecker) => {
 
     const updatedDealWithTfmDealStage = await addDealStageAndHistory(updatedDealWithDealCurrencyConversions);
 
-    const updatedDealWithMappedFacilitiesArray = await addFacilitiesArray(updatedDealWithTfmDealStage);
+    const updatedDealWithTfmDateReceived = await addDealDateReceived(updatedDealWithTfmDealStage);
+
+    const updatedDealWithMappedFacilitiesArray = await addFacilitiesArray(updatedDealWithTfmDateReceived);
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithMappedFacilitiesArray);
 
