@@ -69,6 +69,9 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
 
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them

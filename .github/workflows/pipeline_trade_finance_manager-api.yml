@@ -56,7 +56,9 @@ jobs:
     environment:
       name: APITEST
     runs-on: ubuntu-latest
-
+    env: 
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
