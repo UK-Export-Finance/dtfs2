@@ -85,7 +85,6 @@ describe('controllers - deals', () => {
 
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: caseController.generateHeadingText(mockGetDeals.count, searchString),
-          submittedValue: searchString,
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
@@ -119,7 +118,6 @@ describe('controllers - deals', () => {
 
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: caseController.generateHeadingText(mockGetDeals.count, searchString),
-          submittedValue: searchString,
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',

@@ -1,0 +1,23 @@
+.ukef-search-form {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  overflow-y: hidden;
+  .govuk-form-group {
+    float: left;
+    width: 80%;
+    max-width: 268px;
+    margin-bottom: 0;
+  }
+}
+
+.ukef-search-form__button {
+  position: absolute;
+  right: 5px;
+  bottom: 0;
+  background: govuk-colour('blue');
+}
+
+.ukef-search-form__button-img {
+  vertical-align: middle;
+}

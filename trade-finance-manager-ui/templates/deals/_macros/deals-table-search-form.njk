@@ -1,0 +1,28 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set submittedValue = params.submittedValue %}
+
+  <form method="post" autocomplete="off" class="ukef-search-form">
+    {{ govukInput({
+      id: 'search',
+      name: 'search',
+      attributes: {
+        'aria-label': 'Search deals',
+        placeholder: 'Search deals'
+      }
+    }) }}
+
+    {{ govukButton({
+      html: '<img src="/assets/images/search.svg" class="ukef-search-form__button-img" alt="" />',
+      classes: 'govuk-!-margin-bottom-0',
+      attributes: {
+        'data-cy': 'submit-button',
+        classes: 'ukef-search-form__button',
+        'aria-label': 'Submit search'
+      }
+    }) }}
+  </form>
+
+{% endmacro %}
