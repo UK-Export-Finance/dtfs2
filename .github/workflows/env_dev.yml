@@ -1571,7 +1571,9 @@ jobs:
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url"
+              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
+              UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}"
               
   # END API setup
  
@@ -1881,7 +1883,8 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}"
               
     - name: Secrets
       uses: Azure/cli@v1.0.0
