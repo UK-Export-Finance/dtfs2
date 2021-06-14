@@ -13,14 +13,14 @@ Prerequisites
 
 ### Tech stack
 
-The main technologies here are:
-
- * node/npm
- * webpack
- * Govuk and MoJ Ddesign systems
- * mongodb
- * docker and docker-compose
- * cypress
+ * Node, NPM
+ * MongoDB
+ * Docker
+ * GraphQL
+ * Cypress (e2e tests)
+ * Webpack
+ * GovUK and MOJ design systems
+ * Nunjucks (UI templates)
 
 ### Secrets
 
