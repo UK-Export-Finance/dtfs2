@@ -14,32 +14,40 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">All deals</p>
+      <h2 class="header-label">{{ heading }}</h2>
+    </div>
+
+    <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
+
+    {# TODO: search button aria label #}
+      <form method="post" autocomplete="off" class="ukef-search-form">
+        {{ govukInput({
+          id: 'search',
+          name: 'search',
+          attributes: {
+            'aria-label': 'Search deals'
+          },
+          value: submittedValue
+        }) }}
+
+        {{ govukButton({
+          text: '*',
+          classes: 'govuk-!-margin-bottom-0',
+          attributes: {
+            'data-cy': 'submit-button'
+          }
+        }) }}
+      </form>
+
     </div>
   </div>
 
-  <form method="post" autocomplete="off">
-    {{ govukInput({
-      label: {
-        text: Test
-      },
-      id: "search",
-      name: "search"
-    }) }}
-
-    {{ govukButton({
-      text: "Search",
-      attributes: {
-        'data-cy': 'submit-button'
-      }
-    }) }}
-  </form>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
         {% set componentData = {
-        deals: deals.deals,
+        deals: deals,
         user: user
       } %}
 

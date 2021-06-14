@@ -27,3 +27,20 @@ $govuk-new-link-styles: true;
 .js-enabled .js-hidden {
   display: none;
 }
+
+
+.ukef-search-form {
+  display: inline-block;
+  vertical-align: baseline;
+  position: relative;
+  width: 100%;
+  .govuk-form-group {
+    width: 85%;
+    margin-bottom: 0;
+  }
+  .govuk-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+}
