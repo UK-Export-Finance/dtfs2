@@ -161,6 +161,9 @@ jobs:
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
