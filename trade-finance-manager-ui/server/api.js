@@ -33,7 +33,13 @@ const getDeals = async (searchString) => {
   };
 
   const response = await apollo('GET', dealsQuery, queryParams);
-  return response.data.deals;
+
+  const { deals: dealsObj } = response.data;
+
+  return {
+    deals: dealsObj.deals,
+    count: dealsObj.count,
+  };
 };
 
 const getFacility = async (id) => {
