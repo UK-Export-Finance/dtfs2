@@ -29,7 +29,6 @@ const searchDeals = async (req, res) => {
 
   return res.render('deals/deals.njk', {
     heading: generateHeadingText(count, searchString),
-    submittedValue: searchString,
     deals,
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',

@@ -1,8 +1,6 @@
-
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/deals-table.njk' as dealsTable %}
+{% import './_macros/deals-table-search-form.njk' as dealsTableSearchForm %}
 
 {% extends "index.njk" %}
 {% set primary = 'deals' %}
@@ -13,40 +11,21 @@
 
 {% block content %}
   <div class="govuk-grid-row">
+
     <div class="govuk-grid-column-three-quarters">
       <h2 class="header-label">{{ heading }}</h2>
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-
-    {# TODO: search button aria label #}
-      <form method="post" autocomplete="off" class="ukef-search-form">
-        {{ govukInput({
-          id: 'search',
-          name: 'search',
-          attributes: {
-            'aria-label': 'Search deals'
-          },
-          value: submittedValue
-        }) }}
-
-        {{ govukButton({
-          text: '*',
-          classes: 'govuk-!-margin-bottom-0',
-          attributes: {
-            'data-cy': 'submit-button'
-          }
-        }) }}
-      </form>
-
+      {{ dealsTableSearchForm.render(componentData) }}
     </div>
-  </div>
 
+  </div>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-        {% set componentData = {
+      {% set componentData = {
         deals: deals,
         user: user
       } %}
@@ -55,6 +34,9 @@
 
     </div>
   </div>
+
 {% endblock %}
 
-{% block sub_content %}{% endblock %}
+{% block sub_content %}
+
+{% endblock %}
