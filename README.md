@@ -101,8 +101,11 @@ http://tfs-test-fd.azurefd.net/
 http://tfs-staging-fd.azurefd.net/
 http://tfs-prod-fd.azurefd.net/
 
-GEF can be accessed by appending /geg
-e.g. http://tfs-test-fd.azurefd.net/gef/deals/1
+### GEF test environment
+GEF is hosted on the same URL as Portal v2. To access GEF:
+- Login to Portal v2: https://tfs-test-fd.azurefd.net
+- Manually navigate to this GEF URL, to create a new GEF application: https://tfs-test-fd.azurefd.net/gef/mandatory-criteria
+- Alternatively, visit an existing GEF deal by ID: http://tfs-test-fd.azurefd.net/gef/deals/1
 
 ### Git workflow
 
