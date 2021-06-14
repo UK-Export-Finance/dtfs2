@@ -2,7 +2,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
-  {% set submittedValue = params.submittedValue %}
 
   <form method="post" autocomplete="off" class="ukef-search-form">
     {{ govukInput({
@@ -10,12 +9,13 @@
       name: 'search',
       attributes: {
         'aria-label': 'Search deals',
-        placeholder: 'Search deals'
+        placeholder: 'Search deals',
+        'data-cy': 'search-input'
       }
     }) }}
 
     {{ govukButton({
-      html: '<img src="/assets/images/search.svg" class="ukef-search-form__button-img" alt="" />',
+      html: '<img src="/assets/images/search.svg" class="ukef-search-form__button-img" data-cy="submit-button-search-icon" alt="" />',
       classes: 'govuk-!-margin-bottom-0',
       attributes: {
         'data-cy': 'submit-button',
