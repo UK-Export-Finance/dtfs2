@@ -20,7 +20,7 @@ const findDeals = async (searchString, callback) => {
     const query = {
       $or: [
         { 'dealSnapshot.details.ukefDealId': { $regex: searchString, $options: 'i' } },
-        { 'dealSnapshot.details.maker.bank.name': { $regex: searchString, $options: 'i' } },
+        { 'dealSnapshot.details.owningBank.name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.details.submissionType': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchString, $options: 'i' } },
@@ -49,12 +49,10 @@ const findDeals = async (searchString, callback) => {
 exports.findDeals = findDeals;
 
 exports.findDealsGet = async (req, res) => {
-  const { searchParams } = req.body;
-
   let searchStr;
 
-  if (searchParams && searchParams.searchString) {
-    searchStr = searchParams.searchString;
+  if (req.body.searchParams && req.body.searchParams.searchString) {
+    searchStr = req.body.searchParams.searchString;
   }
 
   const deals = await findDeals(searchStr);
