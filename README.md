@@ -95,11 +95,11 @@ Several services are built:
 
 ### CI
 Several environments are used:
-http://tfs-dev-fd.azurefd.net/
-http://tfs-demo-fd.azurefd.net/
-http://tfs-test-fd.azurefd.net/
-http://tfs-staging-fd.azurefd.net/
-http://tfs-prod-fd.azurefd.net/
+- http://tfs-dev-fd.azurefd.net/
+- http://tfs-demo-fd.azurefd.net/
+- http://tfs-test-fd.azurefd.net/
+- http://tfs-staging-fd.azurefd.net/
+- http://tfs-prod-fd.azurefd.net/
 
 ### GEF test environment
 GEF is hosted on the same URL as Portal v2. To access GEF:
