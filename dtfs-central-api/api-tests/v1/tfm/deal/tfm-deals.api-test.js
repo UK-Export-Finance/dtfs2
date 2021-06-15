@@ -118,24 +118,24 @@ describe('/v1/tfm/deals', () => {
       expect(body.deals).toEqual(expectedDeals);
     });
 
-    it('returns deals filtered by maker.bank.name', async () => {
+    it('returns deals filtered by details.owningBank.name', async () => {
       const miaDeal = newDeal({
-        maker: {
-          bank: {
-            name: 'My Bank',
-          },
+        owningBank: {
+          name: 'My Bank',
         },
       });
 
       const miaDeal2 = newDeal({
-        maker: {
-          bank: {
-            name: 'My Bank',
-          },
+        owningBank: {
+          name: 'My Bank',
         },
       });
 
-      const minDeal = newDeal({});
+      const minDeal = newDeal({
+        owningBank: {
+          name: 'Another Bank',
+        },
+      });
 
       const submittedDeals = await createAndSubmitDeals([
         miaDeal,
@@ -145,7 +145,7 @@ describe('/v1/tfm/deals', () => {
 
       const mockReqBody = {
         searchParams: {
-          searchString: miaDeal.details.maker.bank.name,
+          searchString: miaDeal.details.owningBank.name,
         },
       };
 
@@ -154,7 +154,7 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
 
       const expectedDeals = submittedDeals.filter((deal) =>
-        deal.dealSnapshot.details.maker.bank.name === miaDeal.details.maker.bank.name);
+        deal.dealSnapshot.details.owningBank.name === miaDeal.details.owningBank.name);
 
       expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -165,7 +165,7 @@ describe('/v1/tfm/deals', () => {
       const miaDeal = newDeal({
         submissionDetails: {
           'supplier-name': 'Test Supplier Name',
-        }
+        },
       });
 
       const minDeal = newDeal({});
