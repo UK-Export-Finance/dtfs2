@@ -5,9 +5,9 @@ const mapTenorDate = require('./mapTenorDate');
 const mapDates = (facility, facilityTfm, dealDetails) => {
   const dates = {};
 
-  const dealSubmissionDate = dealDetails.submissionDate;
+  const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealDetails;
 
-  dates.inclusionNoticeReceived = dealSubmissionDate;
+  dates.inclusionNoticeReceived = manualInclusionNoticeSubmissionDate || dealSubmissionDate;
   dates.bankIssueNoticeReceived = facility.issuedFacilitySubmittedToUkefTimestamp;
   dates.coverStartDate = facility.requestedCoverStartDate;
   dates.coverEndDate = mapCoverEndDate(facility);
