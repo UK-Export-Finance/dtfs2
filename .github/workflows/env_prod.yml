@@ -41,13 +41,55 @@ jobs:
       run: |
         echo Setting environment to ${{ env.environment }}
 
-      # START Virtual Network setup 
+    # START Route table
+  route-tables:
+    name: Route Tables Create
+    needs: [set-environment]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+
+    - name: Route Table
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network route-table create --name ${{secrets.RESOURCE_GROUP }}-UDR
+
+    - name: Routes 
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network route-table route create --name ProductionSubnet \
+            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR  \
+            --next-hop-type VirtualAppliance \
+            --address-prefix ${{ env.production_subnet_cidr }} \
+            --next-hop-ip-address ${{ env.palo_alto_next_hop }}
+
+          az network route-table route create --name MulesoftSubnet \
+            --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR  \
+            --next-hop-type VirtualAppliance \
+            --address-prefix ${{ env.mulesoft_subnet_cidr }} \
+            --next-hop-ip-address ${{ env.palo_alto_next_hop }}
+  # END route table
+
+  # START Virtual Network setup 
   vnet:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    needs: set-environment
+    needs: [set-environment, route-tables]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
@@ -139,7 +181,8 @@ jobs:
             --name ${{secrets.RESOURCE_GROUP }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes ${{ env.vm_cidr }} \
-            --service-endpoints Microsoft.AzureCosmosDB
+            --service-endpoints Microsoft.AzureCosmosDB \
+            --route-table ${{secrets.RESOURCE_GROUP }}-UDR
           
   private-dns:
     name: Private DNS zones
@@ -1525,7 +1568,9 @@ jobs:
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url"
+              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
+              UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}"
               
   # END API setup
  
@@ -1835,7 +1880,8 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}"
               
     - name: Secrets
       uses: Azure/cli@v1.0.0
