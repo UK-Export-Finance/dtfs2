@@ -47,3 +47,26 @@ module.exports.deleteFacility = async (facilityId, user) =>
     expect(resp.status).to.equal(200);
     return resp.body;
   });
+
+module.exports.deleteTfmDeal = (dealId) => cy.request({
+  url: `${api()}/v1/tfm/deals/${dealId}`,
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
+module.exports.getAllTfmDeals = () =>
+  cy.request({
+    url: `${api()}/v1/tfm/deals/`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((resp) => {
+    expect(resp.status).to.equal(200);
+    return resp.body.deals;
+  });
