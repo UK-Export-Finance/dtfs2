@@ -1,6 +1,6 @@
 const MOCK_DEAL = {
   details: {
-    status: 'Acknowledged by UKEF',
+    status: 'Submitted',
     bank: 'Mock bank',
     bankSupplyContractID: 'Mock supply contract ID',
     bankSupplyContractName: 'Mock supply contract name',
