@@ -3,7 +3,7 @@
 
 {% macro render(params) %}
 
-  <form method="post" autocomplete="off" class="ukef-search-form">
+  <form method="post" autocomplete="off" class="ukef-search-form" data-cy="ukef-search-form">
     {{ govukInput({
       id: 'search',
       name: 'search',
