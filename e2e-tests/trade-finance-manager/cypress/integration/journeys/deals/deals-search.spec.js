@@ -9,6 +9,7 @@ import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 
 context('User can view and filter multiple deals', () => {
   let ALL_SUBMITTED_DEALS = [];
+  let ALL_FACILITIES = [];
 
   const DEAL_WITH_TEST_SUPPLIER_NAME = createMockDeal({
     details: { status: 'Submitted' },
@@ -60,7 +61,7 @@ context('User can view and filter multiple deals', () => {
       testUkefDealId: 'DEAL_SUBMITTED_YESTERDAY',
       submissionDate: moment(yesterday).utc().valueOf().toString(),
     },
-  })
+  });
 
   const MOCK_DEALS = [
     DEAL_WITH_TEST_SUPPLIER_NAME,
@@ -83,7 +84,12 @@ context('User can view and filter multiple deals', () => {
             mockFacilities,
           } = deal;
 
-          cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM);
+          cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
+            ALL_FACILITIES = [
+              ...ALL_FACILITIES,
+              ...facilities,
+            ];
+          });
         });
 
         cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
@@ -97,11 +103,12 @@ context('User can view and filter multiple deals', () => {
     cy.url().should('eq', relative('/deals'));
   });
 
-  // after(() => {
-  // dealFacilities.forEach((facility) => {
-  //   cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
-  // });
-  // });
+  after(() => {
+    ALL_FACILITIES.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+    });
+    cy.deleteTfmDeals();
+  });
 
   it('should render all deals by default', () => {
     const TOTAL_DEALS = ALL_SUBMITTED_DEALS.length;
