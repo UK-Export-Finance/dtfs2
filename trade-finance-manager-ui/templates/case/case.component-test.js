@@ -4,8 +4,8 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  let params = {
-    deal : {
+  const params = {
+    deal: {
       _id: '12345678',
       details: {
         submissionType: 'Automatic Inclusion Notice',
@@ -24,7 +24,7 @@ describe(page, () => {
   // TODO page title
 
   it('should render case summary component', () => {
-    wrapper.expectElement(`[data-cy="case-summary"]`).toExist();
+    wrapper.expectElement('[data-cy="case-summary"]').toExist();
   });
 
   it('should render case sub navigation', () => {
