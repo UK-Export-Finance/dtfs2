@@ -10,13 +10,6 @@ import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 context('User can view and filter multiple deals', () => {
   let ALL_SUBMITTED_DEALS = [];
 
-  const DEAL_WITH_TEST_UKEF_DEALID = createMockDeal({
-    details: {
-      status: 'Submitted',
-      ukefDealId: 'DEAL_WITH_TEST_UKEF_DEALID',
-    },
-  });
-
   const DEAL_WITH_TEST_SUPPLIER_NAME = createMockDeal({
     details: { status: 'Submitted' },
     submissionDetails: { 'supplier-name': 'MY-SUPPLIER' },
@@ -36,7 +29,7 @@ context('User can view and filter multiple deals', () => {
 
   const DEAL_WITH_TEST_MIA_SUBMISSION_TYPE = createMockDeal({
     details: {
-      ukefDealId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
+      testUkefDealId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
       status: 'Submitted',
       submissionType: 'Manual Inclusion Application',
     },
@@ -44,7 +37,7 @@ context('User can view and filter multiple deals', () => {
 
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     details: {
-      ukefDealId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
+      testUkefDealId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     },
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'bond'),
@@ -53,7 +46,7 @@ context('User can view and filter multiple deals', () => {
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     details: {
-      ukefDealId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
+      testUkefDealId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     },
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'loan'),
@@ -64,13 +57,12 @@ context('User can view and filter multiple deals', () => {
 
   const DEAL_SUBMITTED_YESTERDAY = createMockDeal({
     details: {
-      ukefDealId: 'DEAL_SUBMITTED_YESTERDAY',
+      testUkefDealId: 'DEAL_SUBMITTED_YESTERDAY',
       submissionDate: moment(yesterday).utc().valueOf().toString(),
     },
   })
 
   const MOCK_DEALS = [
-    DEAL_WITH_TEST_UKEF_DEALID,
     DEAL_WITH_TEST_SUPPLIER_NAME,
     DEAL_WITH_TEST_MIN_SUBMISSION_TYPE,
     DEAL_WITH_TEST_BUYER_NAME,
@@ -121,15 +113,24 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by ukefDealId', () => {
-    const searchString = DEAL_WITH_TEST_UKEF_DEALID.details.ukefDealId;
+    // all mock deals have the same ukefDealId.
+    // changing this causes estore API call to fail.
+    const mockUkefDealId = MOCK_DEAL_AIN.details.ukefDealId;
+
+    const searchString = mockUkefDealId;
+
+    const dealsWithMockUkefDealId = ALL_SUBMITTED_DEALS.filter((d) =>
+      d.dealSnapshot.details.ukefDealId === mockUkefDealId);
+
+    const expectedResultsLength = dealsWithMockUkefDealId.length;
 
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();
 
-    pages.dealsPage.dealsTableRows().should('have.length', 1);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
     pages.dealsPage.heading().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`1 result for "${searchString}"`);
+      expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
     });
   });
 
@@ -198,7 +199,7 @@ context('User can view and filter multiple deals', () => {
     // all other deals used in this e2e spec are either AIN or MIN deals.
 
     const submittedMiaDeal = ALL_SUBMITTED_DEALS.find((deal) =>
-      deal.dealSnapshot.details.ukefDealId === 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE'
+      deal.dealSnapshot.details.testUkefDealId === 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE'
       && deal.tfm.stage === 'Application');
 
     const searchString = submittedMiaDeal.tfm.stage;
@@ -264,7 +265,7 @@ context('User can view and filter multiple deals', () => {
     const searchString = todayFormatted;
 
     const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) =>
-      deal.details.ukefDealId !== 'DEAL_SUBMITTED_YESTERDAY');
+      deal.details.testUkefDealId !== 'DEAL_SUBMITTED_YESTERDAY');
 
     const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
 
@@ -284,7 +285,7 @@ context('User can view and filter multiple deals', () => {
     const searchString = todayFormatted;
 
     const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) =>
-      deal.details.ukefDealId !== 'DEAL_SUBMITTED_YESTERDAY');
+      deal.details.testUkefDealId !== 'DEAL_SUBMITTED_YESTERDAY');
 
     const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
 
