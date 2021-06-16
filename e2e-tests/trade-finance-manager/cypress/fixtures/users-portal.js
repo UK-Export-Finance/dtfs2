@@ -8,7 +8,7 @@ const MOCK_MAKER_TFM = {
   roles: ['maker'],
   bank: {
     id: '9',
-    name: 'UKEF test bank (Delegated)',
+    name: 'UKEF test bank (Delegated) (TFM)',
     emails: [
       'checker@ukexportfinance.gov.uk',
     ],

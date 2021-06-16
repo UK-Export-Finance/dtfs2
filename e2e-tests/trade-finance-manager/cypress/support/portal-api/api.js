@@ -28,8 +28,8 @@ module.exports.deleteDeal = (token, dealId) => cy.request({
   },
   failOnStatusCode: false,
 });
-
 module.exports.insertDeal = (deal, token) => cy.request({
+
   url: `${api()}/v1/deals`,
   method: 'POST',
   body: deal,
