@@ -2,12 +2,13 @@
 import gql from 'graphql-tag';
 
 const dealQuery = gql`
-query Deals($searchString: String, $start: Int, $pagesize: Int, $filters:[DashboardFilters]){
-  deals(params: {searchString: $searchString, start: $start, pagesize: $pagesize, filters: $filters}) {
+query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int, $filters:[DashboardFilters]){
+  deals(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize, filters: $filters}) {
     count
     deals{
       _id
       tfm {
+        dateReceived
         product
         stage
         history {

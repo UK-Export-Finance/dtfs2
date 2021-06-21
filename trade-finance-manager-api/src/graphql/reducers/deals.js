@@ -1,7 +1,8 @@
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const getObjectPropertyValueFromStringPath = require('../../utils/get-object-property-value-from-string-path');
 
-const dealsReducer = (deals) => {
+const dealsReducer = (deals, sortBy) => {
   const mapDeal = (deal) => {
     // manually merge facilities into facilities array.
     // this saves performance.
@@ -44,27 +45,46 @@ const dealsReducer = (deals) => {
 
   const mappedDeals = mapDeals(deals);
 
-  const sortedDeals = mappedDeals.sort((x, y) => {
-    const xDate = Number(x.dealSnapshot.details.submissionDate);
-    const yDate = Number(y.dealSnapshot.details.submissionDate);
+  if (sortBy) {
+    const sortedDeals = mappedDeals.sort((xDeal, yDeal) => {
+      const xField = getObjectPropertyValueFromStringPath(xDeal, sortBy.field);
+      const yField = getObjectPropertyValueFromStringPath(yDeal, sortBy.field);
 
-    if (xDate > yDate) {
-      return -1;
-    }
+      if (sortBy.order === 'ascending') {
+        if (xField > yField) {
+          return 1;
+        }
 
-    if (yDate > xDate) {
-      return 1;
-    }
+        if (yField > xField) {
+          return -1;
+        }
+      }
 
-    return 0;
-  });
+      if (sortBy.order === 'descending') {
+        if (xField > yField) {
+          return -1;
+        }
 
-  const results = {
-    count: sortedDeals.length,
-    deals: sortedDeals,
+        if (yField > xField) {
+          return 1;
+        }
+      }
+
+      return 0;
+    });
+
+    const results = {
+      count: sortedDeals.length,
+      deals: sortedDeals,
+    };
+
+    return results;
+  }
+
+  return {
+    count: mappedDeals.length,
+    deals: mappedDeals,
   };
-
-  return results;
 };
 
 module.exports = dealsReducer;

@@ -6,7 +6,9 @@ require('dotenv').config();
 const getDeals = async (queryParams) => {
   const { deals } = await queryDeals({ queryParams });
 
-  const reducedDeals = dealsReducer(deals);
+  const { sortBy } = queryParams;
+
+  const reducedDeals = dealsReducer(deals, sortBy);
 
   return reducedDeals;
 };
