@@ -1,6 +1,5 @@
 import nunjucks from 'nunjucks';
 import filterLocaliseTimestamp from './filter-localiseTimestamp';
-import formatDate from './formatDate';
 import filterFormatDateString from './filter-formatDateString';
 import dashIfEmpty from './filter-dashIfEmpty';
 import displayName from './filter-displayName';
@@ -22,7 +21,6 @@ const configureNunjucks = (opts) => {
 
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', filterFormatDateString);
-  nunjucksEnvironment.addFilter('formatDate', formatDate);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
   nunjucksEnvironment.addFilter('displayName', displayName);
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
