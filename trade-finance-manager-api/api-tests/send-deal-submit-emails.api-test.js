@@ -299,15 +299,130 @@ describe('send-deal-submit-emails', () => {
       expect(result).toEqual(false);
     });
 
-    it('should return sendDealSubmitEmails response', async () => {
-      const result = await sendDealSubmitEmails(mockDeal);
+    describe('MIA with no issued facilities', () => {
+      it('should return sendDealSubmitEmails response', async () => {
+        const result = await sendDealSubmitEmails(mockDeal);
 
-      const expected = {
-        firstTaskEmail: await sendFirstTaskEmail(mockDeal),
-        emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDeal),
-      };
+        const expected = {
+          firstTaskEmail: await sendFirstTaskEmail(mockDeal),
+          emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDeal),
+          emailAcknowledgementAinMinIssued: null,
+        };
 
-      expect(result).toEqual(expected);
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('MIN with issued facilities', () => {
+      let mockDealIssued;
+
+      beforeAll(async () => {
+        const mockDealMin = await api.findOneDeal('MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED');
+        const mockBonds = mockDealMin.dealSnapshot.bondTransactions.items.map((facility) => ({
+          facilitySnapshot: facility,
+        }));
+        const mockLoans = mockDealMin.dealSnapshot.loanTransactions.items.map((facility) => ({
+          facilitySnapshot: facility,
+        }));
+
+        mockDealIssued = {
+          ...mockDealMin,
+          dealSnapshot: {
+            ...mockDealMin.dealSnapshot,
+            bondTransactions: {
+              items: mockBonds,
+            },
+            loanTransactions: {
+              items: mockLoans,
+            },
+          },
+          tfm: {
+            tasks: [
+              {
+                groupTasks: [
+                  {
+                    title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+                    team: {
+                      id: 'BUSINESS_SUPPORT',
+                    },
+                  },
+                ],
+              },
+            ],
+            history: {
+              tasks: [],
+              emails: [],
+            },
+          },
+        };
+      });
+
+      it('should return sendDealSubmitEmails response', async () => {
+        const result = await sendDealSubmitEmails(mockDealIssued);
+
+        const expected = {
+          bankReferenceNumber: 'Mock supply contract ID',
+          isAin: 'no',
+          isMin: 'yes',
+        };
+
+        expect(result.emailAcknowledgementAinMinIssued).toMatchObject(expected);
+      });
+    });
+
+    describe('AIN', () => {
+      beforeEach(async () => {
+        const mockDealAin = await api.findOneDeal('123456789');
+        const mockBonds = mockDealAin.dealSnapshot.bondTransactions.items.map((facility) => ({
+          facilitySnapshot: facility,
+        }));
+        const mockLoans = mockDealAin.dealSnapshot.loanTransactions.items.map((facility) => ({
+          facilitySnapshot: facility,
+        }));
+
+        mockDeal = {
+          ...mockDealAin,
+          dealSnapshot: {
+            ...mockDealAin.dealSnapshot,
+            bondTransactions: {
+              items: mockBonds,
+            },
+            loanTransactions: {
+              items: mockLoans,
+            },
+          },
+          tfm: {
+            tasks: [
+              {
+                groupTasks: [
+                  {
+                    title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+                    team: {
+                      id: 'BUSINESS_SUPPORT',
+                    },
+                  },
+                ],
+              },
+            ],
+            history: {
+              tasks: [],
+              emails: [],
+            },
+          },
+        };
+      });
+
+      it('should sends emailAcknowledgementAinMinIssued', async () => {
+        const result = await sendDealSubmitEmails(mockDeal);
+
+        const expected = {
+          bankReferenceNumber: 'Mock supply contract ID',
+          isAin: 'yes',
+          isMin: 'no',
+        };
+
+        expect(result.emailAcknowledgementAinMinIssued).toMatchObject(expected);
+      });
     });
   });
 });
