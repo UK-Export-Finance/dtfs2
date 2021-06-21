@@ -100,6 +100,11 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).attr('aria-label')).toEqual(text);
     },
   }),
+  expectAriaSort: (selector) => ({
+    toEqual: (text) => {
+      expect(wrapper(selector).attr('aria-sort')).toEqual(text);
+    },
+  }),
 });
 
 export default assertions;
