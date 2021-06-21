@@ -16,8 +16,21 @@ const DEAL_STAGE = {
   DECLINED: 'Declined',
 };
 
+const TFM_SORT_BY = {
+  ASCENDING: 'ascending',
+  DESCENDING: 'descending',
+};
+
+const TFM_SORT_BY_DEFAULT = {
+  field: 'dealSnapshot.details.submissionDate',
+  order: TFM_SORT_BY.ASCENDING,
+};
+
+
 module.exports = {
   SUBMISSION_TYPE,
   UNDERWRITING_MANAGERS_DECISION_INPUT,
   DEAL_STAGE,
+  TFM_SORT_BY,
+  TFM_SORT_BY_DEFAULT,
 };

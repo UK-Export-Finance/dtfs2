@@ -1,14 +1,10 @@
 import api from '../../api';
 import generateHeadingText from './helpers';
-
-const defaultSortBy = {
-  field: 'dealSnapshot.details.submissionDate',
-  order: 'ascending',
-};
+import CONSTANTS from '../../constants';
 
 const getDeals = async (req, res) => {
   const queryParams = {
-    sortBy: defaultSortBy,
+    sortBy: CONSTANTS.DEAL.TFM_SORT_BY_DEFAULT,
   };
 
   const apiResponse = await api.getDeals(queryParams);
@@ -20,17 +16,16 @@ const getDeals = async (req, res) => {
       activePrimaryNavigation: 'all deals',
       activeSubNavigation: 'deal',
       user: req.session.user,
-      activeSortByField: defaultSortBy.field,
-      activeSortByOrder: defaultSortBy.order,
+      activeSortByField: CONSTANTS.DEAL.TFM_SORT_BY_DEFAULT.field,
+      activeSortByOrder: CONSTANTS.DEAL.TFM_SORT_BY_DEFAULT.order,
     });
   }
 
   return res.redirect('/not-found');
 };
 
-
 const queryDeals = async (req, res) => {
-  let activeSortByOrder = 'ascending';
+  let activeSortByOrder = CONSTANTS.DEAL.TFM_SORT_BY.ASCENDING;
   let activeSortByField = '';
   let searchString = '';
 
@@ -54,7 +49,7 @@ const queryDeals = async (req, res) => {
   const { deals, count } = await api.getDeals(queryParams);
 
   if (req.body.descending) {
-    activeSortByOrder = 'descending';
+    activeSortByOrder = CONSTANTS.DEAL.TFM_SORT_BY.DESCENDING;
   }
 
   return res.render('deals/deals.njk', {
