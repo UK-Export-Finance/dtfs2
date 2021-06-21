@@ -1,6 +1,7 @@
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const getObjectPropertyValueFromStringPath = require('../../utils/get-object-property-value-from-string-path');
+const CONSTANTS = require('../../constants');
 
 const dealsReducer = (deals, sortBy) => {
   const mapDeal = (deal) => {
@@ -50,7 +51,7 @@ const dealsReducer = (deals, sortBy) => {
       const xField = getObjectPropertyValueFromStringPath(xDeal, sortBy.field);
       const yField = getObjectPropertyValueFromStringPath(yDeal, sortBy.field);
 
-      if (sortBy.order === 'ascending') {
+      if (sortBy.order === CONSTANTS.DEALS.TFM_SORT_BY.ASCENDING) {
         if (xField > yField) {
           return 1;
         }
@@ -60,7 +61,7 @@ const dealsReducer = (deals, sortBy) => {
         }
       }
 
-      if (sortBy.order === 'descending') {
+      if (sortBy.order === CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING) {
         if (xField > yField) {
           return -1;
         }

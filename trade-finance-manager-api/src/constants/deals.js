@@ -46,6 +46,11 @@ const DEAL_COMMENT_TYPE_PORTAL = {
   SPECIAL_CONDITIONS: 'specialConditions',
 };
 
+const TFM_SORT_BY = {
+  ASCENDING: 'ascending',
+  DESCENDING: 'descending',
+};
+
 module.exports = {
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
@@ -55,4 +60,5 @@ module.exports = {
   PROBABILITY_OF_DEFAULT,
   DEAL_STATUS_PORTAL,
   DEAL_COMMENT_TYPE_PORTAL,
+  TFM_SORT_BY,
 };
