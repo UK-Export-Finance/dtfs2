@@ -81,6 +81,9 @@ const assertions = (wrapper, html, params) => ({
     toHaveCount: (expectedCount) => {
       expect(wrapper(selector).length).toEqual(expectedCount);
     },
+    toHaveAttribute: (attr, value) => {
+      expect(wrapper(selector).attr(attr)).toEqual(value);
+    },
   }),
   expectInput: (selector) => ({
     toHaveValue: (value) => {
