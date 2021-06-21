@@ -90,12 +90,16 @@ describe('Validate Automatic Cover', () => {
     mockRequest.body = { coverStart: 'false' };
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('ineligible-automatic-cover');
+    expect(mockResponse.redirect).toHaveBeenCalledWith(
+      '/gef/application-details/123/ineligible-automatic-cover',
+    );
 
     mockRequest.body = { coverStart: 'false', value: 'true' };
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('ineligible-automatic-cover');
+    expect(mockResponse.redirect).toHaveBeenCalledWith(
+      '/gef/application-details/123/ineligible-automatic-cover',
+    );
   });
 
   it('redirects user to `application details` page if user selects all true values`', async () => {
@@ -106,17 +110,20 @@ describe('Validate Automatic Cover', () => {
     mockRequest.body = { coverStart: 'true', value: 'true' };
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    expect(mockResponse.redirect).toHaveBeenCalledWith(
+      '/gef/application-details/123/eligible-automatic-cover',
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
+    const next = jest.fn();
 
-    const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+    const mockedRejection = { status: 400, message: 'Whoops' };
 
     api.getEligibilityCriteria = () => Promise.reject(mockedRejection);
-    await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    await validateAutomaticCover(mockRequest, mockResponse, next);
+    expect(next).toHaveBeenCalledWith(mockedRejection);
   });
 });
