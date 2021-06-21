@@ -1,0 +1,34 @@
+{% macro render(params) %}
+  {% set defaultSortByOrder = 'ascending' %}
+
+  {% set buttonText = params.buttonText %}
+  {% set buttonValue = params.buttonValue %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set activeSortByField = params.activeSortByField %}
+
+  {% set fieldHasActiveSortBy = (activeSortByField === buttonValue) %}
+
+  {% set buttonName = 'ascending' %}
+
+  {% if fieldHasActiveSortBy and activeSortByOrder === 'ascending' %}
+    {% set buttonName = 'descending' %}
+  {% endif %}
+
+  <div>
+    <th
+      class="govuk-table__header"
+      data-cy="deals-table-heading-deal-id"
+      aria-sort="{{ (fieldHasActiveSortBy and activeSortByOrder) or defaultSortByOrder }}"
+    >
+      <button
+        type="submit"
+        name="{{ buttonName }}"
+        value="{{ buttonValue }}"
+        data-cy="deals-table-heading-deal-id-button">
+        {{ buttonText }}
+      </button>
+    </th>
+
+  </div>
+
+{% endmacro %}

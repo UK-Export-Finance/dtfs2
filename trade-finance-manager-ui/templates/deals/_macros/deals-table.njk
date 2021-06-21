@@ -1,50 +1,64 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% import './deals-table-heading.njk' as tableHeading %}
+
 {% macro render(params) %}
   {% set deals = params.deals %}
   {% set user = params.user %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set activeSortByField = params.activeSortByField %}
 
-  <table class="govuk-table deals-table" data-cy="deals-table">
-    <thead class="govuk-table__head">
-      <tr>
-        <th class="govuk-table__header" data-cy="deals-table-heading-deal-id">Deal ID</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-product">Product</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-exporter">Exporter</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-buyer">Buyer</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-bank">Bank</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-stage">Stage</th>
-        <th class="govuk-table__header" data-cy="deals-table-heading-date-received">Date received</th>
-      </tr>
-    </thead>
+  <form method="POST" autocomplete="off" novalidate>
 
-    <tbody class="govuk-table__body">
-      {% for deal in deals %}
-        <tr class="govuk-table__row" data-cy="deal-{{ deal._id }}">
-          <td class="govuk-table__cell govuk-body-s">
-            <a
-              class="govuk-link"
-              href="/case/{{ deal._id }}/deal"
-              aria-label="View deal details"
-              data-cy="deal-{{ deal._id }}-ukef-deal-id-link">
-              <span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal.dealSnapshot.details.ukefDealId }}</span>
-            </a>
-          </td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-product">{{ deal.tfm.product | dashIfEmpty }}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-type">{{ deal.dealSnapshot.details.submissionType | dashIfEmpty}}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-exporterName">{{ deal.dealSnapshot.submissionDetails.supplierName | dashIfEmpty}}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-buyerName">{{ deal.dealSnapshot.submissionDetails.buyerName | dashIfEmpty}}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-bank">{{ deal.dealSnapshot.details.owningBank.name | dashIfEmpty }}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-stage">
-            {{govukTag({
-              text: deal.tfm.stage | dashIfEmpty,
-              classes: "govuk-tag--blue"
-            })}}
-          </td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">{{ deal.dealSnapshot.details.submissionDate | localiseTimestamp("D MMM YYYY", user.timezone) }}</td>
+    <table class="govuk-table deals-table" data-cy="deals-table">
+      <thead class="govuk-table__head">
+        <tr>
+
+          {{tableHeading.render({
+            buttonText: 'Deal ID', 
+            buttonValue: 'dealSnapshot.details.ukefDealId',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          <th class="govuk-table__header" data-cy="deals-table-heading-product">Product</th>
+          <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
+          <th class="govuk-table__header" data-cy="deals-table-heading-exporter">Exporter</th>
+          <th class="govuk-table__header" data-cy="deals-table-heading-buyer">Buyer</th>
+          <th class="govuk-table__header" data-cy="deals-table-heading-bank">Bank</th>
+          <th class="govuk-table__header" data-cy="deals-table-heading-stage">Stage</th>
+          <th class="govuk-table__header" data-cy="deals-table-heading-date-received">Date received</th>
         </tr>
-      {% endfor %}
-    </tbody>
+      </thead>
 
-  </table>
+      <tbody class="govuk-table__body">
+        {% for deal in deals %}
+          <tr class="govuk-table__row" data-cy="deal-{{ deal._id }}">
+            <td class="govuk-table__cell govuk-body-s">
+              <a
+                class="govuk-link"
+                href="/case/{{ deal._id }}/deal"
+                aria-label="View deal details"
+                data-cy="deal-{{ deal._id }}-ukef-deal-id-link">
+                <span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal.dealSnapshot.details.ukefDealId }}</span>
+              </a>
+            </td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-product">{{ deal.tfm.product | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-type">{{ deal.dealSnapshot.details.submissionType | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-exporterName">{{ deal.dealSnapshot.submissionDetails.supplierName | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-buyerName">{{ deal.dealSnapshot.submissionDetails.buyerName | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-bank">{{ deal.dealSnapshot.details.owningBank.name | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-stage">
+              {{govukTag({
+                text: deal.tfm.stage | dashIfEmpty,
+                classes: "govuk-tag--blue"
+              })}}
+            </td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">{{ deal.tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </form>
 
 {% endmacro %}
