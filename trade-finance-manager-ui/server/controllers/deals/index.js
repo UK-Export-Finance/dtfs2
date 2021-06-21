@@ -1,8 +1,17 @@
 import api from '../../api';
 import generateHeadingText from './helpers';
 
+const defaultSortBy = {
+  field: 'dealSnapshot.details.submissionDate',
+  order: 'ascending',
+};
+
 const getDeals = async (req, res) => {
-  const apiResponse = await api.getDeals();
+  const queryParams = {
+    sortBy: defaultSortBy,
+  };
+
+  const apiResponse = await api.getDeals(queryParams);
 
   if (apiResponse && apiResponse.deals) {
     return res.render('deals/deals.njk', {
@@ -11,6 +20,8 @@ const getDeals = async (req, res) => {
       activePrimaryNavigation: 'all deals',
       activeSubNavigation: 'deal',
       user: req.session.user,
+      activeSortByField: defaultSortBy.field,
+      activeSortByOrder: defaultSortBy.order,
     });
   }
 
@@ -18,14 +29,33 @@ const getDeals = async (req, res) => {
 };
 
 
-const searchDeals = async (req, res) => {
+const queryDeals = async (req, res) => {
+  let activeSortByOrder = 'ascending';
+  let activeSortByField = '';
   let searchString = '';
 
   if (req.body.search) {
     searchString = req.body.search;
   }
 
-  const { deals, count } = await api.getDeals(searchString);
+  const queryParams = { searchString };
+
+  if (req.body.descending || req.body.ascending) {
+    const sortBy = Object.getOwnPropertyNames(req.body)[0];
+    const sortByField = req.body[sortBy];
+    activeSortByField = sortByField;
+
+    queryParams.sortBy = {
+      field: sortByField,
+      order: sortBy,
+    };
+  }
+
+  const { deals, count } = await api.getDeals(queryParams);
+
+  if (req.body.descending) {
+    activeSortByOrder = 'descending';
+  }
 
   return res.render('deals/deals.njk', {
     heading: generateHeadingText(count, searchString),
@@ -33,11 +63,12 @@ const searchDeals = async (req, res) => {
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',
     user: req.session.user,
+    activeSortByField,
+    activeSortByOrder,
   });
 };
 
 export default {
-  generateHeadingText,
   getDeals,
-  searchDeals,
+  queryDeals,
 };

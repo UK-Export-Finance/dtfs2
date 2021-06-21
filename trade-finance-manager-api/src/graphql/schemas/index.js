@@ -265,6 +265,7 @@ type TFMDealData {
   history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
   facilities: [TFMDealFacility]
+  dateReceived: String
 }
 
 type PremiumScheduleData {
@@ -296,12 +297,6 @@ type TFMFacilityData {
   hasBeenAcknowledged: Boolean
 }
 
-input DashboardFilters {
-  field: String
-  value: String
-  operator: String
-}
-
 input TasksFilters {
   filterType: String
   userId: String
@@ -313,11 +308,23 @@ input DealInput {
   tasksFilters: TasksFilters
 }
 
+input DashboardFilters {
+  field: String
+  value: String
+  operator: String
+}
+
+input DealsSortBy {
+  field: String
+  order: String
+}
+
 input DealsInput {
   start: Int
   pagesize: Int
   filters: [DashboardFilters]
   searchString: String
+  sortBy: DealsSortBy
 }
 
 type DealSnapshot {
