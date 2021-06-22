@@ -267,15 +267,15 @@ describe('/v1/deals', () => {
       });
     });
 
-    // describe('eStore', () => {
-    //   describe('when deal is AIN', () => {
-    //     it('adds estore object to the deal', async () => {
-    //       const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+    describe('eStore', () => {
+      describe('when deal is AIN', () => {
+        it('adds estore object to the deal', async () => {
+          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
 
-    //       expect(status).toEqual(200);
-    //       expect(body.tfm.estore).toBeDefined();
-    //     });
-    //   });
-    // });
+          expect(status).toEqual(200);
+          expect(body.tfm.estore).toBeDefined();
+        });
+      });
+    });
   });
 });
