@@ -14,7 +14,7 @@ const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
-const { createEstoreFolders } = require('./estore.controller');
+// const { createEstoreFolders } = require('./estore.controller');
 const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
@@ -54,11 +54,11 @@ const submitDeal = async (dealId, portalChecker) => {
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithMappedFacilitiesArray);
 
-    const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
+    // const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+      const updatedDealWithTasks = await createDealTasks(updatedDealWithUpdatedFacilities);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
 
@@ -66,7 +66,7 @@ const submitDeal = async (dealId, portalChecker) => {
       return updatedDeal;
     }
 
-    return api.updateDeal(dealId, updatedDealWithCreateEstore);
+    return api.updateDeal(dealId, updatedDealWithUpdatedFacilities);
   }
 
   if (dealHasBeenResubmit) {
