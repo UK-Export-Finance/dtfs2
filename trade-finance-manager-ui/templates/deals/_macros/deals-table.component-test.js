@@ -65,7 +65,7 @@ describe(component, () => {
 
   describe('table headings', () => {
     it('should render `deal id` table heading', () => {
-      wrapper.expectText('[data-cy="deals-table-heading-deal-id"]').toRead('Deal ID');
+      wrapper.expectText('[data-cy="deals-table-heading-ukefDealId"]').toRead('Deal ID');
     });
 
     it('should render `product` table heading', () => {
