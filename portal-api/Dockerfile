@@ -38,3 +38,4 @@ ADD ./bin ./bin
 #USER 1000
 CMD node src/index.js
 
+
