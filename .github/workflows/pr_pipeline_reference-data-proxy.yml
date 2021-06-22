@@ -1,4 +1,4 @@
-name: Reference Data proxy
+name: PR tests - Reference Data proxy
 
 on:
   pull_request:

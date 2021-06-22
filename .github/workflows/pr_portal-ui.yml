@@ -1,4 +1,4 @@
-name: Portal UI
+name: PR tests - Portal UI
 
 on:
   pull_request:
