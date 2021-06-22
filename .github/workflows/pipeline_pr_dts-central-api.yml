@@ -45,7 +45,7 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run API tests in Compose"
+    name: "Run PR tests"
     needs: [set-environment, build]
     environment:
       name: APITEST
