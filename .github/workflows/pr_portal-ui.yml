@@ -1,0 +1,146 @@
+name: Portal UI
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths: 
+    - 'portal/**'
+    - 'e2e-tests/portal/cypress/**'
+  schedule:
+    # A weekly run to roll up any base image patches,
+    # in office hours, avoiding bank holiday Mondays:
+    # "At 12:00 on Tuesday." - https://crontab.guru/
+    - cron: '0 12 * * 2'
+
+env:
+  environment: dev
+  # Credentials for accessing Azure
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+jobs:
+  set-environment:
+    name: Set Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
+
+  build:
+    name: Build and push Portal UI
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: portal-ui
+        path: portal
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+  test:
+    name: "Run PR tests"
+    needs: build
+    environment:
+      name: E2ETEST
+    runs-on: ubuntu-latest
+    env:
+      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}
+      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}
+      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}
+
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+
+      MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
+      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
+      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
+      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+      MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
+      MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
+      MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
+      MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
+
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+
+    steps:
+    - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+    - name: Pull portal-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
+    - name: Pull portal
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }} dtfs/portal
+    - name: Start Docker Compose
+      run: |
+        source secrets/set_jwt_keypair.sh
+        docker-compose up -d
+        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
+        sleep 10
+    - name: Load mock data
+      run: |
+        cd utils/mock-data-loader
+        npm install
+        node ./re-insert-mocks.js
+        pwd
+    - name: Run e2e tests
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      run: |
+        pwd
+        cd $GITHUB_WORKSPACE
+        npm install
+        cd e2e-tests/portal
+        npx cypress run --config video=false # --record
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs2-dev'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
