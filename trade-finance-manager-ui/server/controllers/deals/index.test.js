@@ -41,7 +41,7 @@ describe('controllers - deals', () => {
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
           activeSortByField: 'dealSnapshot.details.submissionDate',
-          activeSortByOrder: 'ascending',
+          activeSortByOrder: 'descending',
         });
       });
     });

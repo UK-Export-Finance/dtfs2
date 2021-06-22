@@ -5,7 +5,7 @@ const TFM_SORT_BY = {
 
 const TFM_SORT_BY_DEFAULT = {
   field: 'dealSnapshot.details.submissionDate',
-  order: TFM_SORT_BY.ASCENDING,
+  order: TFM_SORT_BY.DESCENDING,
 };
 
 module.exports = {
