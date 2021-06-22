@@ -42,7 +42,7 @@ describe('/v1/portal/deals', () => {
   describe('POST /v1/portal/deals', () => {
     it('returns the created deal with correct fields', async () => {
       const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-
+      expect(true).toEqual(false);
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
 
