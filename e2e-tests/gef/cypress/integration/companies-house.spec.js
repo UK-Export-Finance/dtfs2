@@ -6,7 +6,7 @@ import CREDENTIALS from '../fixtures/credentials.json';
 
 let applicationId;
 
-context('Companies House Page', () => {
+context.skip('Companies House Page', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER)
