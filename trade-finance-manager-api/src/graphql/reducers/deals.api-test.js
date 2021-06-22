@@ -45,7 +45,7 @@ const expectedDealShape = (deal, dealTfm) => ({
 });
 
 describe('reducer - deals', () => {
-  it('should return deals without sorting by default', () => {
+  it('should return deals', () => {
     const mockDeals = [
       createMockDeal(),
       createMockDeal(),
@@ -60,99 +60,6 @@ describe('reducer - deals', () => {
         expectedDealShape(mockDeals[0]),
         expectedDealShape(mockDeals[1]),
         expectedDealShape(mockDeals[2]),
-      ],
-    };
-
-    expect(result.count).toEqual(expected.count);
-    expect(result.deals).toEqual(expected.deals);
-  });
-
-  it('should return deals sorted by a given sortBy.field and order - submissionDate, ascending', () => {
-    const mockDeals = [
-      createMockDeal(1606900616651),
-      createMockDeal(1606900616652),
-      createMockDeal(1606900616653),
-      createMockDeal(1606900616654),
-      createMockDeal(1606900616655),
-    ];
-
-    const mockSortBy = {
-      field: 'dealSnapshot.details.submissionDate',
-      order: 'ascending',
-    };
-
-    const result = dealsReducer(mockDeals, mockSortBy);
-
-    const expected = {
-      count: mockDeals.length,
-      deals: [
-        expectedDealShape(createMockDeal(1606900616651)),
-        expectedDealShape(createMockDeal(1606900616652)),
-        expectedDealShape(createMockDeal(1606900616653)),
-        expectedDealShape(createMockDeal(1606900616654)),
-        expectedDealShape(createMockDeal(1606900616655)),
-      ],
-    };
-
-    expect(result.count).toEqual(expected.count);
-    expect(result.deals).toEqual(expected.deals);
-  });
-
-  it('should return deals sorted by a given sortBy.field and order - submissionDate, descending', () => {
-    const mockDeals = [
-      createMockDeal(1606900616651),
-      createMockDeal(1606900616652),
-      createMockDeal(1606900616653),
-      createMockDeal(1606900616654),
-      createMockDeal(1606900616655),
-    ];
-
-    const mockSortBy = {
-      field: 'dealSnapshot.details.submissionDate',
-      order: 'descending',
-    };
-
-    const result = dealsReducer(mockDeals, mockSortBy);
-
-    const expected = {
-      count: mockDeals.length,
-      deals: [
-        expectedDealShape(createMockDeal(1606900616655)),
-        expectedDealShape(createMockDeal(1606900616654)),
-        expectedDealShape(createMockDeal(1606900616653)),
-        expectedDealShape(createMockDeal(1606900616652)),
-        expectedDealShape(createMockDeal(1606900616651)),
-      ],
-    };
-
-    expect(result.count).toEqual(expected.count);
-    expect(result.deals).toEqual(expected.deals);
-  });
-
-  it('should return deals sorted by a given sortBy.field and order - tfm.test, descending', () => {
-    const mockDeals = [
-      createMockDeal('', { test: 1 }),
-      createMockDeal('', { test: 2 }),
-      createMockDeal('', { test: 3 }),
-      createMockDeal('', { test: 4 }),
-      createMockDeal('', { test: 5 }),
-    ];
-
-    const mockSortBy = {
-      field: 'tfm.test',
-      order: 'descending',
-    };
-
-    const result = dealsReducer(mockDeals, mockSortBy);
-
-    const expected = {
-      count: mockDeals.length,
-      deals: [
-        expectedDealShape(createMockDeal('', { test: 5 }), { test: 5 }),
-        expectedDealShape(createMockDeal('', { test: 4 }), { test: 4 }),
-        expectedDealShape(createMockDeal('', { test: 3 }), { test: 3 }),
-        expectedDealShape(createMockDeal('', { test: 2 }), { test: 2 }),
-        expectedDealShape(createMockDeal('', { test: 1 }), { test: 1 }),
       ],
     };
 
