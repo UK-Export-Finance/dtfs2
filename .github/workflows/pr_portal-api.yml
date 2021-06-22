@@ -1,4 +1,4 @@
-name: Portal API
+name: PR tests - Portal API
 
 on:
   pull_request:

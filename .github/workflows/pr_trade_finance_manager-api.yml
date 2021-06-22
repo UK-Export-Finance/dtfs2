@@ -1,4 +1,4 @@
-name: Trade Finance Manager API
+name: PR tests - Trade Finance Manager API
 
 on:
   pull_request:

@@ -1,4 +1,4 @@
-name: PR DTFS Central API
+name: PR tests - DTFS Central API
 
 on:
   pull_request:

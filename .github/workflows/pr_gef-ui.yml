@@ -1,4 +1,4 @@
-name: GEF UI
+name: PR tests - GEF UI
 
 on:
   pull_request:

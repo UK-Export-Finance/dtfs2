@@ -1,4 +1,4 @@
-name: Deploy ACBS Function App
+name: PR tests - ACBS Function App
 
 on:
   pull_request:
