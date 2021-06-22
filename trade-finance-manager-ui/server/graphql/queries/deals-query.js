@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 const dealQuery = gql`
-query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int, $filters:[DashboardFilters]){
-  deals(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize, filters: $filters}) {
+query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
+  deals(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize}) {
     count
     deals{
       _id

@@ -308,12 +308,6 @@ input DealInput {
   tasksFilters: TasksFilters
 }
 
-input DashboardFilters {
-  field: String
-  value: String
-  operator: String
-}
-
 input DealsSortBy {
   field: String
   order: String
@@ -322,7 +316,6 @@ input DealsSortBy {
 input DealsInput {
   start: Int
   pagesize: Int
-  filters: [DashboardFilters]
   searchString: String
   sortBy: DealsSortBy
 }
