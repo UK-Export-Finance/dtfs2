@@ -5,6 +5,7 @@ const {
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
+const { addDealProduct } = require('./deal.add-product');
 const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
@@ -42,7 +43,9 @@ const submitDeal = async (dealId, portalChecker) => {
 
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
-    const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithPartyUrn);
+    const updatedDealWithProduct = await addDealProduct(updatedDealWithPartyUrn);
+
+    const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithProduct);
 
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
 
