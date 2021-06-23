@@ -81,6 +81,9 @@ const assertions = (wrapper, html, params) => ({
     toHaveCount: (expectedCount) => {
       expect(wrapper(selector).length).toEqual(expectedCount);
     },
+    toHaveAttribute: (attr, value) => {
+      expect(wrapper(selector).attr(attr)).toEqual(value);
+    },
   }),
   expectInput: (selector) => ({
     toHaveValue: (value) => {
@@ -98,6 +101,11 @@ const assertions = (wrapper, html, params) => ({
   expectAriaLabel: (selector) => ({
     toEqual: (text) => {
       expect(wrapper(selector).attr('aria-label')).toEqual(text);
+    },
+  }),
+  expectAriaSort: (selector) => ({
+    toEqual: (text) => {
+      expect(wrapper(selector).attr('aria-sort')).toEqual(text);
     },
   }),
 });

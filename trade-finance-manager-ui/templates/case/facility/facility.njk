@@ -18,7 +18,8 @@
   {% set scheduleComponentData = {
     facility: facility,
     premiumSchedule: facilityTfm.premiumSchedule,
-    premiumTotals: facilityTfm.premiumTotals
+    premiumTotals: facilityTfm.premiumTotals,
+    user: user
   } %}
   {{ schedule.render(scheduleComponentData) }}
   {% endset -%}

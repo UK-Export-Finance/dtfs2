@@ -250,7 +250,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
         'Content-Type': 'application/json',
       },
       data: {
-        searchParams: queryParams,
+        queryParams,
         start,
         pagesize,
       },
