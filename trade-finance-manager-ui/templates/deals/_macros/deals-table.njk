@@ -21,7 +21,14 @@
             activeSortByField: activeSortByField
           })}}
 
-          <th class="govuk-table__header" data-cy="deals-table-heading-product">Product</th>
+          {{tableHeading.render({
+            fieldName: 'product',
+            buttonText: 'Product', 
+            buttonValue: 'tfm.product',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
           <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
           <th class="govuk-table__header" data-cy="deals-table-heading-exporter">Exporter</th>
           <th class="govuk-table__header" data-cy="deals-table-heading-buyer">Buyer</th>
