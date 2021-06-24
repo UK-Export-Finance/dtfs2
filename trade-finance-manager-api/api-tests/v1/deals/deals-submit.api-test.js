@@ -4,7 +4,6 @@ const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const { mapDealProduct } = require('../../../src/v1/controllers/deal.add-product');
-const { mapFacilitiesArray } = require('../../../src/v1/controllers/deal.add-facilities-array');
 
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
@@ -255,22 +254,6 @@ describe('/v1/deals', () => {
       const expectedDateReceived = localisedTimestamp.format('DD-MM-YYYY');
 
       expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
-    });
-
-
-    it('adds facilities array of objects to deal.tfm', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
-
-      expect(status).toEqual(200);
-
-      const allFacilities = [
-        ...MOCK_DEAL_AIN_SUBMITTED.bondTransactions.items,
-        ...MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items,
-      ];
-
-      const expected = await mapFacilitiesArray(allFacilities);
-
-      expect(body.tfm.facilities).toEqual(expected);
     });
 
     it('adds empty TFM history to deal', async () => {
