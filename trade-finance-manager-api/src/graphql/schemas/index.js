@@ -247,12 +247,6 @@ type TFMDealDecision  {
   timestamp: String
 }
 
-type TFMDealFacility {
-  _id: String
-  facilityType: String
-  productCode: String
-}
-
 type TFMDealData {
   parties: TFMParties
   product: String
@@ -264,7 +258,6 @@ type TFMDealData {
   probabilityOfDefault: String
   history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
-  facilities: [TFMDealFacility]
   dateReceived: String
 }
 
