@@ -4,8 +4,12 @@ const dealsPage = {
   searchFormSubmitButton: () => cy.get('[data-cy="submit-button"]'),
   dealsTableRows: () => cy.get('[data-cy="deals-table"] tbody tr'),
   dealsTable: {
-    ukefDealIdHeading: () => cy.get('[data-cy="deals-table-heading-ukefDealId"]'),
-    ukefDealIdSortButton: () => cy.get('[data-cy="deals-table-heading-ukefDealId-button"]'),
+    headings: {
+      ukefDealId: () => cy.get('[data-cy="deals-table-heading-ukefDealId"]'),
+      ukefDealIdSortButton: () => cy.get('[data-cy="deals-table-heading-ukefDealId-button"]'),
+      product: () => cy.get('[data-cy="deals-table-heading-product"]'),
+      productSortButton: () => cy.get('[data-cy="deals-table-heading-product-button"]'),
+    },
     row: (dealId) => {
       const row = cy.get(`[data-cy="deal-${dealId}"]`);
       return {
