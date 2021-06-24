@@ -351,7 +351,7 @@ describe('/v1/tfm/deals', () => {
         expect(body.deals).toEqual(expectedDeals);
       });
 
-      describe('deals filtered by tfm.facilities productCode', () => {
+      describe('deals filtered by tfm.product', () => {
         let submittedDeals;
 
         const dealWithBonds = newDeal({
