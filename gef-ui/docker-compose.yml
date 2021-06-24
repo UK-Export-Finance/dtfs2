@@ -120,6 +120,7 @@ services:
       - MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET
       - MULESOFT_API_EXPOSURE_PERIOD_URL
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - GOV_NOTIFY_API_KEY
     entrypoint: npx nodemon src/index.js
 
   redis:
