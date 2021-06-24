@@ -1,6 +1,8 @@
 import express from 'express';
 import api from '../api';
-import { requestParams, generateErrorSummary, errorHref } from '../helpers';
+import {
+  requestParams, generateErrorSummary, errorHref, validationErrorHandler,
+} from '../helpers';
 
 const router = express.Router();
 
@@ -15,22 +17,44 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req, res) => {
   const { email, password } = req.body;
+  const loginErrors = [];
 
-  const tokenResponse = await api.login(email, password);
+  const emailError = {
+    errMsg: 'Enter an email address in the correct format',
+    errRef: 'email',
+  };
+  const passwordError = {
+    errMsg: 'Enter a valid password',
+    errRef: 'password',
+  };
 
-  const {
-    success,
-    token,
-    user,
-  } = tokenResponse;
+  if (!email) loginErrors.push(emailError);
+  if (!password) loginErrors.push(passwordError);
 
-  if (success) {
-    req.session.userToken = token;
-    req.session.user = user;
-    res.redirect('/dashboard/0');
-  } else {
-    res.status(401).render('login.njk');
+  if (email && password) {
+    const tokenResponse = await api.login(email, password);
+
+    const {
+      success,
+      token,
+      user,
+    } = tokenResponse;
+
+    if (success) {
+      req.session.userToken = token;
+      req.session.user = user;
+    } else {
+      loginErrors.push(emailError);
+      loginErrors.push(passwordError);
+    }
   }
+
+  if (loginErrors.length) {
+    return res.render('login.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
+  return res.redirect('/dashboard/0');
 });
 
 router.get('/logout', (req, res) => {

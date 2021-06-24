@@ -1,4 +1,7 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "index.njk" %}
 
@@ -6,6 +9,15 @@
 
 
 {% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
 
   {% if passwordreset %}
 
@@ -25,41 +37,64 @@
 
   {% endif %}
 
-  <h1 class="govuk-heading-l">Log in</h1>
+  <h1 class="govuk-heading-xl">Sign in</h1>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-two-thirds">
       <form method="POST" autocomplete="off">
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="email">
-            Email
-          </label>
-          <input data-cy="email" class="govuk-input" id="email" name="email" type="text">
-        </div>
+          {{ govukInput({
+            label: {
+              text: "Email address"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "email",
+            name: "email",
+            spellcheck: false,
+            errorMessage: errors.fieldErrors.email and {
+              text: errors.fieldErrors.email.text,
+              attributes: {
+                "data-cy": "email-error"
+              }
+            },
+            attributes: {
+              "data-cy": "email"
+            }
+          }) }}
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="password">
-            Password
-          </label>
-          <input data-cy="password" class="govuk-input" id="password" name="password" type="password">
-        </div>
+          {{ govukInput({
+            label: {
+              text: "Password"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "password",
+            name: "password",
+            type: "password",
+            spellcheck: false,
+            errorMessage: errors.fieldErrors.password and {
+              text: errors.fieldErrors.password.text,
+              attributes: {
+                "data-cy": "password-error"
+              }
+            },
+            attributes: {
+              "data-cy": "password"
+            }
+          }) }}
 
-
-        <button data-cy="LogIn" class="govuk-button" data-module="govuk-button">
-          Log in
-        </button>
-
+          {{ govukButton({
+            text: "Sign in",
+            attributes: {
+              "data-cy": "LogIn"
+            }
+          }) }}
       </form>
+
+      <p class="govuk-!-margin-bottom-6"><a class="govuk-link" href="/reset-password" data-cy="reset-password">Problems signing in?</a></p>
+
+      {% include "_partials/before-you-start.njk" %}
+
     </div>
   </div>
-
-  <p class="govuk-body govuk-!-margin-bottom-6"><a class="govuk-link" href="/reset-password" data-cy="reset-password" >Forgot your password?</a></p>
-
-  <h2 class="govuk-heading-m">Having trouble with this page?</h2>
-
-  {% include "_partials/contact-us.njk" %}
-
-  {% include "_partials/before-you-start.njk" %}
 
 {% endblock %}

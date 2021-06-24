@@ -1,5 +1,6 @@
 const {
   login,
+  landingPage,
   header,
   beforeYouStart,
   bankDetails,
@@ -36,6 +37,29 @@ context('Login', () => {
   it('The reset password link takes you to reset password page', () => {
     login.resetPasswordLink().click();
     cy.url().should('eq', relative('/reset-password'));
+  });
+
+  it('Shows an error if email field is empty', () => {
+    landingPage.password().type('mockpass');
+    landingPage.login().click();
+
+    const emailError = 'Enter an email address in the correct format';
+    landingPage.expectError(emailError);
+    landingPage.emailError(emailError);
+
+    cy.url().should('eq', relative('/'));
+  });
+
+  it('Shows an error if password field is empty', () => {
+    landingPage.email().type('mock user');
+    landingPage.login().click();
+
+    const passwordError = 'Enter a valid password';
+
+    landingPage.expectError(passwordError);
+    landingPage.passwordError(passwordError);
+
+    cy.url().should('eq', relative('/'));
   });
 
   it('A failed login leaves the user on the landing page', () => {
