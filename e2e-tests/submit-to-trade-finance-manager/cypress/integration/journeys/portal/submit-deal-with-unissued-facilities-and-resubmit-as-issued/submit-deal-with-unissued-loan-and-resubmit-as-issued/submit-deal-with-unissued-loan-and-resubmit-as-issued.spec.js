@@ -97,7 +97,7 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.equal('-');
     });
 
-    tfmPages.facilityPage.firstDrawdownAmountInExportCurrency().should('not.be.visible');
+    // tfmPages.facilityPage.firstDrawdownAmountInExportCurrency().should('not.be.visible');
 
     tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
       expect(text.trim()).to.equal('-');
