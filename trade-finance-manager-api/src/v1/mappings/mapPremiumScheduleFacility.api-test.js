@@ -1,6 +1,9 @@
 const mapPremiumScheduleFacility = require('./mapPremiumScheduleFacility');
+const { stripCommas } = require('../../utils/string');
 
-const testBond = {
+// TODO: improve test coverage.
+
+const mockBond = {
   _id: '1000533',
   facilityType: 'bond',
   'coverEndDate-day': '14',
@@ -64,7 +67,57 @@ const testBond = {
   status: 'Completed',
   ukefFacilityID: '0030020192',
 };
+
+const mockLoan = {
+  _id: '1001477',
+  ukefGuaranteeInMonths: '24',
+  bankReferenceNumber: 'Default date',
+  facilityValue: '100000.00',
+  currencySameAsSupplyContractCurrency: 'true',
+  createdDate: '1606900241008',
+  facilityStage: 'Unconditional',
+  guaranteeFeePayableByBank: '1.8000',
+  ukefExposure: '80,000.00',
+  lastEdited: '1606914139619',
+  interestMarginFee: '2',
+  coveredPercentage: '80',
+  premiumFrequency: 'Quarterly',
+  premiumType: 'In arrear',
+  dayCountBasis: '365',
+  currency: {
+    text: 'GBP - UK Sterling',
+    id: 'GBP',
+  },
+  ukefFacilityID: '0040004838',
+  'issuedDate-day': '02',
+  'issuedDate-month': '12',
+  'issuedDate-year': '2020',
+  'requestedCoverStartDate-day': '',
+  'requestedCoverStartDate:-month': '',
+  'requestedCoverStartDate-year': '',
+  'coverEndDate-day': '02',
+  'coverEndDate-month': '12',
+  'coverEndDate-year': '2022',
+  disbursementAmount: '50,000.00',
+  issueFacilityDetailsStarted: true,
+  bankReferenceNumberRequiredForIssuance: true,
+  issuedDate: '1606914132468',
+  issueFacilityDetailsProvided: true,
+  previousFacilityStage: 'Conditional',
+  status: 'Completed',
+  requestedCoverStartDate: '1606914132468',
+};
+
 describe('Premium schedule', () => {
+  const mockFacilityExposurePeriod = {
+    exposurePeriodInMonths: 25,
+  };
+
+  const mockFacilityGuaranteeDates = {
+    guaranteeCommencementDate: '2021-05-01',
+    guaranteeExpiryDate: '2023-05-01',
+  };
+
   describe('All facilities', () => {
     it('should return null if facilityExposurePeriod is null', () => {
       const facility = {};
@@ -86,15 +139,10 @@ describe('Premium schedule', () => {
   });
   describe('Bond', () => {
     it('should return valid parameters', () => {
-      const facility = testBond;
-      const facilityExposurePeriod = {
-        exposurePeriodInMonths: 25,
-      };
-      const facilityGuaranteeDates = {
-        guaranteeCommencementDate: '2021-05-01',
-        guaranteeExpiryDate: '2023-05-01',
-      };
-      const result = mapPremiumScheduleFacility(facility, facilityExposurePeriod, facilityGuaranteeDates);
+      const facility = mockBond;
+
+      const result = mapPremiumScheduleFacility(facility, mockFacilityExposurePeriod, mockFacilityGuaranteeDates);
+
       const expected = {
         cumulativeAmount: 0,
         dayBasis: '360',
@@ -112,19 +160,14 @@ describe('Premium schedule', () => {
       expect(result).toEqual(expected);
     });
   });
-  // describe('Loan', () => {
-  //   it('should return native toLocaleString() result with default 2 min & max fraction digits', () => {
-  //     const number = 123456789123.12;
-  //     const result = formattedNumber(number);
-  //     const expected = number.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  //     expect(result).toEqual(expected);
-  //   });
 
-  //   it('should return native toLocaleString() result with given params', () => {
-  //     const number = 123456789123.12;
-  //     const result = formattedNumber(number, 4, 4);
-  //     const expected = number.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-  //     expect(result).toEqual(expected);
-  //   });
-  // });
+  describe('Loan', () => {
+    it('should map cumulativeAmount', () => {
+      const result = mapPremiumScheduleFacility(mockLoan, mockFacilityExposurePeriod, mockFacilityGuaranteeDates);
+
+      const expected = Number(stripCommas(mockLoan.disbursementAmount));
+
+      expect(result.cumulativeAmount).toEqual(expected);
+    });
+  });
 });
