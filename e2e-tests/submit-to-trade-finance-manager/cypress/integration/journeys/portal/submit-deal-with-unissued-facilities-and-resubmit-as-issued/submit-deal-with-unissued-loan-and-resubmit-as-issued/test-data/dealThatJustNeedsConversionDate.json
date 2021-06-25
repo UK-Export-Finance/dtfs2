@@ -128,7 +128,8 @@
       "currency": {
         "text": "GBP - UK Sterling",
         "id": "GBP"
-      }
+      },
+      "disbursementAmount": "10.00"
     }
   ]
 }

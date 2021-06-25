@@ -7,12 +7,14 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
     return null;
   }
   const map = {};
+
   let premiumFrequencyId = 0;
   let premiumTypeId = 0;
-  let cumulativeAmount = null;
+
   premiumFrequencyId = getPremiumFrequencyId(facility);
   premiumTypeId = getPremiumTypeId(facility, premiumTypeId);
-  cumulativeAmount = facility.disbursementAmount ? Number(facility.disbursementAmount) : null;
+
+  const cumulativeAmount = facility.disbursementAmount ? Number(facility.disbursementAmount) : 0;
 
   map.facilityURN = Number(facility.ukefFacilityID);
   map.productGroup = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
