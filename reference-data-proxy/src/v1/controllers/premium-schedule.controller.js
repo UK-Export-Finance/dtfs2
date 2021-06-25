@@ -27,8 +27,8 @@ const postPremiumSchedule = async (premiumScheduleParameters) => {
   };
 
   return axios(config)
-    .catch(() => {
-      console.log(`Error calling Post Premium schedule. facilityURN:${premiumScheduleParameters.facilityURN}`);
+    .catch((catchErr) => {
+      console.log(`Error calling Post Premium schedule with facilityURN: ${premiumScheduleParameters.facilityURN} \n`, catchErr.response);
     }).then((response) => {
       if (response && response.status) {
         return response.status;
@@ -57,12 +57,13 @@ const getScheduleData = async (facilityURN) => {
 
 const getPremiumSchedule = async (req, res) => {
   const premiumScheduleParameters = req.body;
+
   const postPremiumScheduleResponse = await postPremiumSchedule(
     premiumScheduleParameters,
   );
 
   if (!postPremiumScheduleResponse) {
-    console.log('Erorr calling Premium schedule API');
+    console.log('Error calling Premium schedule API');
     return res.status(400).send();
   }
 
