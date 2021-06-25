@@ -1,6 +1,7 @@
 const CONSTANTS = require('../../constants');
 const { getPremiumFrequencyId, getPremiumTypeId } = require('../helpers/get-premium-frequency-values');
 const isFacilityValidForPremiumSchedule = require('../helpers/is-facility-valid-for-premium-schedule');
+const { stripCommas } = require('../../utils/string');
 
 const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
@@ -14,7 +15,7 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   premiumFrequencyId = getPremiumFrequencyId(facility);
   premiumTypeId = getPremiumTypeId(facility, premiumTypeId);
 
-  const cumulativeAmount = facility.disbursementAmount ? Number(facility.disbursementAmount) : 0;
+  const cumulativeAmount = facility.disbursementAmount ? Number(stripCommas(facility.disbursementAmount)) : 0;
 
   map.facilityURN = Number(facility.ukefFacilityID);
   map.productGroup = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND

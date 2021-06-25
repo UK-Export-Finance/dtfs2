@@ -4,7 +4,7 @@ const pages = require('../../../pages');
 export const ISSUED_LOAN_DATE_VALUE = moment();
 export const COVER_START_DATE_VALUE = moment().add(2, 'day');
 export const COVER_END_DATE_VALUE = moment().add(1, 'month');
-export const DISBURSEMENT_AMOUNT_VALUE = '50';
+export const DISBURSEMENT_AMOUNT_VALUE = '50000';
 
 export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = () => {
   pages.loanIssueFacility.issuedDateDayInput().type(ISSUED_LOAN_DATE_VALUE.format('DD'));
