@@ -96,7 +96,7 @@ describe('Premium schedule', () => {
       };
       const result = mapPremiumScheduleFacility(facility, facilityExposurePeriod, facilityGuaranteeDates);
       const expected = {
-        cumulativeAmount: null,
+        cumulativeAmount: 0,
         dayBasis: '360',
         exposurePeriod: 25,
         facilityURN: 30020192,
