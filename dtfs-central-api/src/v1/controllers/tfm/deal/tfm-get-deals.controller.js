@@ -56,7 +56,7 @@ const findDeals = async (searchString, sortBy, callback) => {
         { 'dealSnapshot.details.submissionType': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchString, $options: 'i' } },
         { 'tfm.stage': { $regex: searchString, $options: 'i' } },
-        { 'tfm.facilities': { $elemMatch: { productCode: { $eq: searchString } } } },
+        { 'tfm.product': { $regex: searchString, $options: 'i' } },
       ],
     };
 

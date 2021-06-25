@@ -5,6 +5,8 @@ const postToAPI = async (apiEndpoint, apiData) => {
     return false;
   }
 
+  console.log('Calling eStore API: ', apiEndpoint);
+
   const response = await axios({
     method: 'post',
     url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,

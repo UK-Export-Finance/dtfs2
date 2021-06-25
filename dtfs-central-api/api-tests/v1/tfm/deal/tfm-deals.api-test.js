@@ -18,10 +18,10 @@ const newDeal = (dealOverrides) => ({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    ...dealOverrides,
+    ...dealOverrides.details,
     maker: {
       ...mockUser,
-      ...dealOverrides.maker,
+      ...(dealOverrides.details && dealOverrides.details.maker) ? dealOverrides.details.maker : {},
     },
   },
   submissionDetails: dealOverrides.submissionDetails,
@@ -30,6 +30,8 @@ const newDeal = (dealOverrides) => ({
     status: 'Not started',
     criteria: [{ }],
   },
+  bondTransactions: dealOverrides.bondTransactions,
+  loanTransactions: dealOverrides.loanTransactions,
 });
 
 const createAndSubmitDeals = async (deals) => {
@@ -53,6 +55,22 @@ const createAndSubmitDeals = async (deals) => {
   return result;
 };
 
+
+const updateDealsTfm = async (dealsTfmUpdate) => {
+  const result = await Promise.all(dealsTfmUpdate.map(async (deal) => {
+    const updateResponse = await api.put({
+      dealUpdate: {
+        tfm: deal.tfm,
+      },
+    }).to(`/v1/tfm/deals/${deal._id}`);
+
+    expect(updateResponse.status).toEqual(200);
+    return updateResponse.body;
+  }));
+
+  return result;
+};
+
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
@@ -64,15 +82,21 @@ describe('/v1/tfm/deals', () => {
   describe('GET /v1/tfm/deals', () => {
     it('returns all deals', async () => {
       const miaDeal = newDeal({
-        submissionType: 'Manual Inclusion Application',
+        details: {
+          submissionType: 'Manual Inclusion Application',
+        },
       });
 
       const minDeal = newDeal({
-        submissionType: 'Manual Inclusion Notice',
+        details: {
+          submissionType: 'Manual Inclusion Notice',
+        },
       });
 
       const ainDeal = newDeal({
-        submissionType: 'Automatic Inclusion Notice',
+        details: {
+          submissionType: 'Automatic Inclusion Notice',
+        },
       });
 
       await createAndSubmitDeals([
@@ -91,9 +115,17 @@ describe('/v1/tfm/deals', () => {
 
     describe('filter by search string', () => {
       it('returns deals filtered by ukefDealId', async () => {
-        const miaDeal = newDeal({ ukefDealId: 'test-1' });
+        const miaDeal = newDeal({
+          details: {
+            ukefDealId: 'test-1',
+          },
+        });
 
-        const minDeal = newDeal({ ukefDealId: 'test-2' });
+        const minDeal = newDeal({
+          details: {
+            ukefDealId: 'test-2',
+          },
+        });
 
         const submittedDeals = await createAndSubmitDeals([
           miaDeal,
@@ -120,20 +152,26 @@ describe('/v1/tfm/deals', () => {
 
       it('returns deals filtered by details.owningBank.name', async () => {
         const miaDeal = newDeal({
-          owningBank: {
-            name: 'My Bank',
+          details: {
+            owningBank: {
+              name: 'My Bank',
+            },
           },
         });
 
         const miaDeal2 = newDeal({
-          owningBank: {
-            name: 'My Bank',
+          details: {
+            owningBank: {
+              name: 'My Bank',
+            },
           },
         });
 
         const minDeal = newDeal({
-          owningBank: {
-            name: 'Another Bank',
+          details: {
+            owningBank: {
+              name: 'Another Bank',
+            },
           },
         });
 
@@ -195,15 +233,21 @@ describe('/v1/tfm/deals', () => {
 
       it('returns deals filtered by submissionType', async () => {
         const ainDeal = newDeal({
-          submissionType: 'Automatic Inclusion Notice',
+          details: {
+            submissionType: 'Automatic Inclusion Notice',
+          },
         });
 
         const miaDeal = newDeal({
-          submissionType: 'Manual Inclusion Application',
+          details: {
+            submissionType: 'Manual Inclusion Application',
+          },
         });
 
         const minDeal = newDeal({
-          submissionType: 'Manual Inclusion Notice',
+          details: {
+            submissionType: 'Manual Inclusion Notice',
+          },
         });
 
         const submittedDeals = await createAndSubmitDeals([
@@ -270,14 +314,18 @@ describe('/v1/tfm/deals', () => {
         // NOTE: tfm.stage is generated on deal submission.
 
         const ainDealWithConfirmedStage = newDeal({
-          ukefDealId: 'DEAL-WITH-CONFIRMED-STAGE',
-          status: 'Submitted',
+          details: {
+            ukefDealId: 'DEAL-WITH-CONFIRMED-STAGE',
+            status: 'Submitted',
+          },
         });
 
         const miaDealWithApplicationStage = newDeal({
-          ukefDealId: 'DEAL-WITH-APPLICATION-STAGE',
-          status: 'Submitted',
-          submissionType: 'Manual Inclusion Application',
+          details: {
+            ukefDealId: 'DEAL-WITH-APPLICATION-STAGE',
+            status: 'Submitted',
+            submissionType: 'Manual Inclusion Application',
+          },
         });
 
         const submittedDeals = await createAndSubmitDeals([
@@ -303,12 +351,14 @@ describe('/v1/tfm/deals', () => {
         expect(body.deals).toEqual(expectedDeals);
       });
 
-      describe('deals filtered by tfm.facilities productCode', () => {
+      describe('deals filtered by tfm.product', () => {
         let submittedDeals;
 
         const dealWithBonds = newDeal({
-          ukefDealId: 'DEAL-WITH-BONDS',
-          submissionType: 'Automatic Inclusion Notice',
+          details: {
+            ukefDealId: 'DEAL-WITH-BONDS',
+            submissionType: 'Automatic Inclusion Notice',
+          },
           bondTransactions: {
             items: [
               { _id: '1', facilityType: 'bond' },
@@ -317,8 +367,10 @@ describe('/v1/tfm/deals', () => {
         });
 
         const dealWithLoans = newDeal({
-          ukefDealId: 'DEAL-WITH-LOANS',
-          submissionType: 'Manual Inclusion Application',
+          details: {
+            ukefDealId: 'DEAL-WITH-LOANS',
+            submissionType: 'Manual Inclusion Application',
+          },
           loanTransactions: {
             items: [
               { _id: '1', facilityType: 'loan' },
@@ -373,8 +425,10 @@ describe('/v1/tfm/deals', () => {
 
         it('returns deals filtered by bond and loan productCode', async () => {
           const dealWithBondsAndLoans = newDeal({
-            ukefDealId: 'DEAL-WITH-BONDS-AND-LOANS',
-            submissionType: 'Manual Inclusion Application',
+            details: {
+              ukefDealId: 'DEAL-WITH-BONDS-AND-LOANS',
+              submissionType: 'Manual Inclusion Application',
+            },
             loanTransactions: {
               items: [
                 { _id: '1', facilityType: 'loan' },
@@ -412,15 +466,19 @@ describe('/v1/tfm/deals', () => {
         const yesterdayTimestamp = moment(yesterday).utc().valueOf().toString();
 
         const dealSubmittedYesterday = newDeal({
-          ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
-          status: 'Submitted',
-          submissionDate: yesterdayTimestamp,
+          details: {
+            ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
+            status: 'Submitted',
+            submissionDate: yesterdayTimestamp,
+          },
         });
 
         const dealSubmittedToday = newDeal({
-          ukefDealId: 'DEAL-SUBMITTED-TODAY',
-          status: 'Submitted',
-          submissionDate: now(),
+          details: {
+            ukefDealId: 'DEAL-SUBMITTED-TODAY',
+            status: 'Submitted',
+            submissionDate: now(),
+          },
         });
 
         const submittedDeals = await createAndSubmitDeals([
@@ -478,15 +536,19 @@ describe('/v1/tfm/deals', () => {
         const yesterdayTimestamp = moment(yesterday).utc().valueOf().toString();
 
         const dealSubmittedYesterday = newDeal({
-          ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
-          status: 'Submitted',
-          submissionDate: yesterdayTimestamp,
+          details: {
+            ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
+            status: 'Submitted',
+            submissionDate: yesterdayTimestamp,
+          },
         });
 
         const dealSubmittedToday = newDeal({
-          ukefDealId: 'DEAL-SUBMITTED-TODAY',
-          status: 'Submitted',
-          submissionDate: now(),
+          details: {
+            ukefDealId: 'DEAL-SUBMITTED-TODAY',
+            status: 'Submitted',
+            submissionDate: now(),
+          },
         });
 
         const submittedDeals = await createAndSubmitDeals([
@@ -541,82 +603,220 @@ describe('/v1/tfm/deals', () => {
     });
 
     describe('sorting', () => {
-      it('returns deals sorted by ukefDealId - ascending', async () => {
-        const deal1 = newDeal({ ukefDealId: '1' });
-        const deal2 = newDeal({ ukefDealId: '2' });
-        const deal3 = newDeal({ ukefDealId: '3' });
-
-        const submittedDeals = await createAndSubmitDeals([
-          deal1,
-          deal3,
-          deal2,
-        ]);
-
-        const mockReqBody = {
-          queryParams: {
-            sortBy: {
-              field: 'dealSnapshot.details.ukefDealId',
-              order: 'ascending',
+      describe('ukefDealId', () => {
+        it('returns deals sorted by ukefDealId - ascending', async () => {
+          const deal1 = newDeal({
+            details: {
+              ukefDealId: '1',
             },
-          },
-        };
+          });
 
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+          const deal2 = newDeal({
+            details: {
+              ukefDealId: '2',
+            },
+          });
 
-        expect(status).toEqual(200);
+          const deal3 = newDeal({
+            details: {
+              ukefDealId: '3',
+            },
+          });
 
-        const submittedDeal1 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1');
-        const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
-        const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
+          const submittedDeals = await createAndSubmitDeals([
+            deal1,
+            deal3,
+            deal2,
+          ]);
 
-        const expectedDeals = [
-          submittedDeal1,
-          submittedDeal2,
-          submittedDeal3,
-        ];
+          const mockReqBody = {
+            queryParams: {
+              sortBy: {
+                field: 'dealSnapshot.details.ukefDealId',
+                order: 'ascending',
+              },
+            },
+          };
 
-        expect(body.deals.length).toEqual(expectedDeals.length);
+          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
 
-        expect(body.deals).toEqual(expectedDeals);
+          expect(status).toEqual(200);
+
+          const submittedDeal1 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1');
+          const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
+          const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
+
+          const expectedDeals = [
+            submittedDeal1,
+            submittedDeal2,
+            submittedDeal3,
+          ];
+
+          expect(body.deals.length).toEqual(expectedDeals.length);
+
+          expect(body.deals).toEqual(expectedDeals);
+        });
+
+        it('returns deals sorted by ukefDealId - descending', async () => {
+          const deal1 = newDeal({
+            details: {
+              ukefDealId: '1',
+            },
+          });
+          const deal2 = newDeal({
+            details: {
+              ukefDealId: '2',
+            },
+          });
+          const deal3 = newDeal({
+            details: {
+              ukefDealId: '3',
+            },
+          });
+
+          const submittedDeals = await createAndSubmitDeals([
+            deal1,
+            deal3,
+            deal2,
+          ]);
+
+          const mockReqBody = {
+            queryParams: {
+              sortBy: {
+                field: 'dealSnapshot.details.ukefDealId',
+                order: 'descending',
+              },
+            },
+          };
+
+          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+          expect(status).toEqual(200);
+
+          const submittedDeal1 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1');
+          const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
+          const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
+
+          const expectedDeals = [
+            submittedDeal3,
+            submittedDeal2,
+            submittedDeal1,
+          ];
+
+          expect(body.deals.length).toEqual(expectedDeals.length);
+
+          expect(body.deals).toEqual(expectedDeals);
+        });
       });
 
-      it('returns deals sorted by ukefDealId - descending', async () => {
-        const deal1 = newDeal({ ukefDealId: '1' });
-        const deal2 = newDeal({ ukefDealId: '2' });
-        const deal3 = newDeal({ ukefDealId: '3' });
+      describe('tfm.product', () => {
+        // NOTE: deal.tfm is only generated when we update a deal, after deal submission.
+        // Therefore we need to do the following in order to test sorting on fields inside deal.tfm:
+        // 1) create deals
+        // 2) submit deals
+        // 3) update deals
 
-        const submittedDeals = await createAndSubmitDeals([
-          deal1,
-          deal3,
-          deal2,
-        ]);
+        let submittedDeals;
+        let submittedDealWith1Bond;
+        let submittedDealWith1Loan;
+        let submittedDealWithBondAndLoans;
 
-        const mockReqBody = {
-          queryParams: {
-            sortBy: {
-              field: 'dealSnapshot.details.ukefDealId',
-              order: 'descending',
+        // create mock deal objects
+        const deal1 = newDeal({ details: { ukefDealId: '1-BOND' } });
+        const deal2 = newDeal({ details: { ukefDealId: '1-LOAN' } });
+        const deal3 = newDeal({ details: { ukefDealId: '1-BOND-1-LOAN' } });
+
+        const deal1TfmUpdate = { product: 'BSS' };
+        const deal2TfmUpdate = { product: 'EWCS' };
+        const deal3TfmUpdate = { product: 'BSS & EWCS' };
+
+        beforeEach(async () => {
+          submittedDeals = await createAndSubmitDeals([
+            deal1,
+            deal3,
+            deal2,
+          ]);
+
+          submittedDealWith1Bond = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND');
+          submittedDealWith1Loan = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-LOAN');
+          submittedDealWithBondAndLoans = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN');
+
+          await updateDealsTfm([
+            {
+              _id: submittedDealWith1Bond._id,
+              tfm: deal1TfmUpdate,
             },
-          },
-        };
+            {
+              _id: submittedDealWith1Loan._id,
+              tfm: deal2TfmUpdate,
+            },
+            {
+              _id: submittedDealWithBondAndLoans._id,
+              tfm: deal3TfmUpdate,
+            },
+          ]);
+        });
 
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        it('returns deals sorted by tfm.product - ascending', async () => {
+          const mockReqBody = {
+            queryParams: {
+              sortBy: {
+                field: 'tfm.product',
+                order: 'ascending',
+              },
+            },
+          };
 
-        expect(status).toEqual(200);
+          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
 
-        const submittedDeal1 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1');
-        const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
-        const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
+          expect(status).toEqual(200);
 
-        const expectedDeals = [
-          submittedDeal3,
-          submittedDeal2,
-          submittedDeal1,
-        ];
+          // assert deals ordering based on mock id we create. Simpler than mapping/filtering deals again.
+          const expectedDeals = [
+            { _id: submittedDealWith1Bond._id },
+            { _id: submittedDealWithBondAndLoans._id },
+            { _id: submittedDealWith1Loan._id },
+          ];
 
-        expect(body.deals.length).toEqual(expectedDeals.length);
+          const getDealsOnlyIds = body.deals.map((d) => ({
+            _id: d._id,
+          }));
 
-        expect(body.deals).toEqual(expectedDeals);
+          expect(getDealsOnlyIds.length).toEqual(expectedDeals.length);
+
+          expect(getDealsOnlyIds).toEqual(expectedDeals);
+        });
+
+        it('returns deals sorted by tfm.product - descending', async () => {
+
+          const mockReqBody = {
+            queryParams: {
+              sortBy: {
+                field: 'tfm.product',
+                order: 'descending',
+              },
+            },
+          };
+
+          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+          expect(status).toEqual(200);
+
+          // assert deals ordering based on mock id we create. Simpler than mapping/filtering deals again.
+          const expectedDeals = [
+            { _id: submittedDealWith1Loan._id },
+            { _id: submittedDealWithBondAndLoans._id },
+            { _id: submittedDealWith1Bond._id },
+          ];
+
+          const getDealsOnlyIds = body.deals.map((d) => ({
+            _id: d._id,
+          }));
+
+          expect(getDealsOnlyIds.length).toEqual(expectedDeals.length);
+
+          expect(getDealsOnlyIds).toEqual(expectedDeals);
+        });
       });
     });
   });
