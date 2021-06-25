@@ -4,7 +4,6 @@ const MOCK_DEAL = {
     bank: 'Mock bank',
     bankSupplyContractID: 'Mock supply contract ID',
     bankSupplyContractName: 'Mock supply contract name',
-    ukefDealId: '20010739',
     previousStatus: 'Submitted',
     maker: {
       username: 'JOE',
@@ -165,7 +164,6 @@ const MOCK_DEAL = {
   mockFacilities: [
     {
       facilityType: 'bond',
-      ukefFacilityID: '0040004833',
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
       facilityStage: 'Issued',
@@ -193,7 +191,6 @@ const MOCK_DEAL = {
     },
     {
       facilityType: 'loan',
-      ukefFacilityID: '0040004833',
       createdDate: 1610369832226.0,
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
