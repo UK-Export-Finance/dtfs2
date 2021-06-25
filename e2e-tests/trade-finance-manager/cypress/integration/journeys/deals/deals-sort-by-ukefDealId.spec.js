@@ -5,7 +5,7 @@ import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 
-context('User can view and sort deals', () => {
+context('User can view and sort deals by ukefDealId', () => {
   let ALL_SUBMITTED_DEALS = [];
   let ALL_FACILITIES = [];
   let deal1;
@@ -65,6 +65,8 @@ context('User can view and sort deals', () => {
         cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
+          console.log('ALL_SUBMITTED_DEALS ', ALL_SUBMITTED_DEALS);
+
           deal1 = ALL_SUBMITTED_DEALS.find((deal) =>
             deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_1.details.ukefDealId);
 
@@ -90,7 +92,39 @@ context('User can view and sort deals', () => {
     cy.deleteTfmDeals();
   });
 
-  it('should not be sorted by default and ordered by most recent date received/submissionDate', () => {
+  it('should have correct default button name and table header aria-sort of `ascending`', () => {
+    pages.dealsPage.dealsTable.headings.ukefDealId().invoke('attr', 'aria-sort').should('eq', 'ascending');
+    pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().invoke('attr', 'name').should('eq', 'ascending');
+  });
+
+  it('can sort by ascending order. Sort button and table header aria-sort should have updated values', () => {
+    pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().click();
+
+    pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
+
+    // check first row
+    const row1 = pages.dealsPage.dealsTableRows().eq(0);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
+
+    // check second row
+    const row2 = pages.dealsPage.dealsTableRows().eq(1);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${deal2._id}`);
+
+    // check third row
+    const row3 = pages.dealsPage.dealsTableRows().eq(2);
+    row3.invoke('attr', 'data-cy').should('eq', `deal-${deal3._id}`);
+
+    pages.dealsPage.dealsTable.headings.ukefDealId().invoke('attr', 'aria-sort').should('eq', 'ascending');
+    pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().invoke('attr', 'name').should('eq', 'descending');
+  });
+
+  it('can sort by descending order. Sort button and table header aria-sort should have updated values', () => {
+    // click `ascending` order
+    pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().click();
+
+    // click again for `descending` order
+    pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().click();
+
     pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
 
     // check first row
@@ -104,5 +138,8 @@ context('User can view and sort deals', () => {
     // check third row
     const row3 = pages.dealsPage.dealsTableRows().eq(2);
     row3.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
+
+    pages.dealsPage.dealsTable.headings.ukefDealId().invoke('attr', 'aria-sort').should('eq', 'descending');
+    pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().invoke('attr', 'name').should('eq', 'ascending');
   });
 });

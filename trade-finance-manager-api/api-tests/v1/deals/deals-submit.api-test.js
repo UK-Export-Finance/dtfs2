@@ -3,7 +3,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
-const { mapFacilitiesArray } = require('../../../src/v1/controllers/deal.add-facilities-array');
+const { mapDealProduct } = require('../../../src/v1/controllers/deal.add-product');
 
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
@@ -115,7 +115,7 @@ describe('/v1/deals', () => {
     });
 
     describe('currency NOT GBP', () => {
-      it('should convert supplyContractValue to GBP when currency is NOT GBP', async () => {
+      it('should convert supplyContractValue to GBP', async () => {
         const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE._id }).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
@@ -128,6 +128,21 @@ describe('/v1/deals', () => {
 
         expect(body.tfm.supplyContractValueInGBP).toEqual(expected);
       });
+    });
+
+    it('should add product (facility products)', async () => {
+      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+
+      expect(status).toEqual(200);
+
+      const facilities = [
+        ...MOCK_DEAL_AIN_SUBMITTED.bondTransactions.items,
+        ...MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items,
+      ];
+
+      const expected = mapDealProduct(facilities);
+
+      expect(body.tfm.product).toEqual(expected);
     });
 
     describe('exporter credit rating', () => {
@@ -239,22 +254,6 @@ describe('/v1/deals', () => {
       const expectedDateReceived = localisedTimestamp.format('DD-MM-YYYY');
 
       expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
-    });
-
-
-    it('adds facilities array of objects to deal.tfm', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
-
-      expect(status).toEqual(200);
-
-      const allFacilities = [
-        ...MOCK_DEAL_AIN_SUBMITTED.bondTransactions.items,
-        ...MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items,
-      ];
-
-      const expected = await mapFacilitiesArray(allFacilities);
-
-      expect(body.tfm.facilities).toEqual(expected);
     });
 
     it('adds empty TFM history to deal', async () => {
