@@ -50,7 +50,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
+  it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM with Premium schedule populated, Portal facility status is updated to `Acknowledged`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -197,6 +197,19 @@ context('Portal to TFM deal submission', () => {
       // so safe to assert based on `months` appearing, rather than adding regex assertion.
       expect(text.trim()).not.to.contain(loan.ukefGuaranteeInMonths);
       expect(text.trim()).to.contain('month');
+    });
+
+    //---------------------------------------------------------------
+    // TFM loan should have Premium schedule populated
+    //---------------------------------------------------------------
+    tfmPages.facilityPage.facilityTabPremiumSchedule().click();
+
+    tfmPages.facilityPage.premiumScheduleTable.total().should('be.visible');
+
+    tfmPages.facilityPage.premiumScheduleTable.total().invoke('text').then((text) => {
+      // total is calculated dynamically so we can only assert the `Total` text.
+      // this text is only displayed if a total exists.
+      expect(text.trim()).to.contain('Total');
     });
 
     //---------------------------------------------------------------
