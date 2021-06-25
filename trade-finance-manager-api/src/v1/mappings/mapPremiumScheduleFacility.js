@@ -18,21 +18,27 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   const cumulativeAmount = facility.disbursementAmount ? Number(stripCommas(facility.disbursementAmount)) : 0;
 
   map.facilityURN = Number(facility.ukefFacilityID);
+
   map.productGroup = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
     ? CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.BOND
     : CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.LOAN;
+
   map.premiumTypeId = premiumTypeId;
   map.premiumFrequencyId = premiumFrequencyId;
+
   map.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
   map.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;
   map.guaranteeFeePercentage = Number(facility.guaranteeFeePayableByBank);
   map.guaranteePercentage = Number(facility.coveredPercentage);
 
   map.dayBasis = facility.dayCountBasis;
+
   map.exposurePeriod = facilityExposurePeriod
     ? facilityExposurePeriod.exposurePeriodInMonths
     : 0;
+
   map.cumulativeAmount = cumulativeAmount;
+
   map.maximumLiability = facility.ukefExposure
     ? Number(facility.ukefExposure.split('.')[0].replace(/,/g, ''))
     : 0;
