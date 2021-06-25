@@ -263,5 +263,17 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.contain('month');
     });
 
+    //---------------------------------------------------------------
+    // loan facility - premium schedule should be updated
+    //---------------------------------------------------------------
+    tfmPages.facilityPage.facilityTabPremiumSchedule().click();
+
+    tfmPages.facilityPage.premiumScheduleTable.total().should('be.visible');
+
+    tfmPages.facilityPage.premiumScheduleTable.total().invoke('text').then((text) => {
+      // total is calculated dynamically so we can only assert the `Total` text.
+      // this text is only displayed if a total exists.
+      expect(text.trim()).to.contain('Total');
+    });
   });
 });
