@@ -12,6 +12,7 @@ module.exports = (deals, opts) => {
         const dealWithId = dealToInsert;
 
         dealWithId.details.ukefDealId = numberGeneratorId;
+        dealWithId.submissionDetails['supplier-name'] = `Mock-Supplier-${numberGeneratorId}`;
 
         insertDeal(dealWithId, token).then((deal) => {
           persistedDeals.push(deal);
