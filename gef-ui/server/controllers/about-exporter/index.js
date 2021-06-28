@@ -78,12 +78,10 @@ const validateAboutExporter = async (req, res) => {
       }
     }
 
-    const precisionTwoRegex = /^\d+(\.\d{1,2})?$/;
     const maxPercentage = 14.1;
     const probabilityOfDefault = Number(body.probabilityOfDefault);
     if (
       Number.isNaN(probabilityOfDefault)
-      || !precisionTwoRegex.test(body.probabilityOfDefault)
       || probabilityOfDefault > maxPercentage
     ) {
       aboutExporterErrors.push({
