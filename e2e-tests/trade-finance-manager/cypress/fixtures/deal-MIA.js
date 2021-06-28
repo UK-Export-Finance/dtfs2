@@ -79,7 +79,6 @@ const MOCK_DEAL = {
     'supplier-correspondence-address-line-3': 'Addr 3',
     'supplier-correspondence-address-postcode': 'test',
     'supplier-correspondence-address-town': 'test town',
-    'supplier-name': 'test',
     'supplier-type': 'Exporter',
     'supply-contract-description': 'test',
     'buyer-address-country': {
