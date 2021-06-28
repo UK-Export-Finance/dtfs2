@@ -119,7 +119,7 @@ context('User can view and filter multiple deals', () => {
     });
   });
 
-  it.only('search/filter by ukefDealId', () => {
+  it('search/filter by ukefDealId', () => {
     const aUkefDealId = ALL_SUBMITTED_DEALS[2].dealSnapshot.details.ukefDealId;
 
     const searchString = aUkefDealId;
