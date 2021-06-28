@@ -4,7 +4,6 @@ const api = () => {
 };
 
 module.exports.getIdFromNumberGenerator = (entityType) => {
-  console.log('getIdFromNumberGenerator::');
   return cy.request({
     url: `${api()}/number-generator/${entityType}`,
     method: 'GET',
