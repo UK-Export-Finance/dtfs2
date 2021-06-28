@@ -229,19 +229,6 @@ describe('Validate About Exporter', () => {
         errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
       }),
     }));
-
-    // too many decimal points , should result in error
-    mockRequest.body.probabilityOfDefault = '10.555';
-
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
-    await validateAboutExporter(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
-      }),
-    }));
   });
 
   it('redirects user to `application` page if response from api is successful', async () => {
