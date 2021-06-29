@@ -7,40 +7,36 @@ import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 
 context('User can view and sort deals by ukefDealId', () => {
   let ALL_SUBMITTED_DEALS = [];
+  let ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = [];
+  let ALL_SUBMITTED_DEALS_SORTED_IN_DESCENDING_ORDER = [];
   let ALL_FACILITIES = [];
-  let deal1;
-  let deal2;
-  let deal3;
 
   const twoDaysAgo = moment().subtract(2, 'day');
   const yesterday = moment().subtract(1, 'day');
   const today = moment();
 
-  const DEAL_WITH_UKDEALID_1 = createMockDeal({
+  const DEAL_1 = createMockDeal({
     details: {
-      ukefDealId: 1,
       submissionDate: moment(twoDaysAgo).utc().valueOf().toString(),
     },
   });
 
-  const DEAL_WITH_UKDEALID_2 = createMockDeal({
+  const DEAL_2 = createMockDeal({
     details: {
-      ukefDealId: 2,
       submissionDate: moment(yesterday).utc().valueOf().toString(),
     },
   });
 
-  const DEAL_WITH_UKDEALID_3 = createMockDeal({
+  const DEAL_3 = createMockDeal({
     details: {
-      ukefDealId: 3,
       submissionDate: moment(today).utc().valueOf().toString(),
     },
   });
 
   const MOCK_DEALS = [
-    DEAL_WITH_UKDEALID_3,
-    DEAL_WITH_UKDEALID_2,
-    DEAL_WITH_UKDEALID_1,
+    DEAL_3,
+    DEAL_2,
+    DEAL_1,
   ];
 
   before(() => {
@@ -65,17 +61,8 @@ context('User can view and sort deals by ukefDealId', () => {
         cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
-          console.log('ALL_SUBMITTED_DEALS ', ALL_SUBMITTED_DEALS);
-
-          deal1 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_1.details.ukefDealId);
-
-          deal2 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_2.details.ukefDealId);
-
-          deal3 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_3.details.ukefDealId);
-
+          ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = Array.from(ALL_SUBMITTED_DEALS);
+          ALL_SUBMITTED_DEALS_SORTED_IN_DESCENDING_ORDER = Array.from(ALL_SUBMITTED_DEALS).reverse();
         });
       });
   });
@@ -104,15 +91,15 @@ context('User can view and sort deals by ukefDealId', () => {
 
     // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER[0]._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${deal2._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER[1]._id}`);
 
     // check third row
     const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${deal3._id}`);
+    row3.invoke('attr', 'data-cy').should('eq', `deal-${ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER[2]._id}`);
 
     pages.dealsPage.dealsTable.headings.ukefDealId().invoke('attr', 'aria-sort').should('eq', 'ascending');
     pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().invoke('attr', 'name').should('eq', 'descending');
@@ -129,15 +116,15 @@ context('User can view and sort deals by ukefDealId', () => {
 
     // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${deal3._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${ALL_SUBMITTED_DEALS_SORTED_IN_DESCENDING_ORDER[0]._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${deal2._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${ALL_SUBMITTED_DEALS_SORTED_IN_DESCENDING_ORDER[1]._id}`);
 
     // check third row
     const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
+    row3.invoke('attr', 'data-cy').should('eq', `deal-${ALL_SUBMITTED_DEALS_SORTED_IN_DESCENDING_ORDER[2]._id}`);
 
     pages.dealsPage.dealsTable.headings.ukefDealId().invoke('attr', 'aria-sort').should('eq', 'descending');
     pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().invoke('attr', 'name').should('eq', 'ascending');

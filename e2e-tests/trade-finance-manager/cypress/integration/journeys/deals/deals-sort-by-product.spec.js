@@ -14,7 +14,7 @@ context('User can view and sort deals by product', () => {
 
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     details: {
-      testUkefDealId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
+      testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     },
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'bond'),
@@ -23,7 +23,7 @@ context('User can view and sort deals by product', () => {
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     details: {
-      testUkefDealId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
+      testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     },
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'loan'),
@@ -32,7 +32,7 @@ context('User can view and sort deals by product', () => {
 
   const DEAL_WITH_1_LOAN_AND_BOND_FACILITIES = createMockDeal({
     details: {
-      testUkefDealId: 'DEAL_WITH_1_LOAN_AND_BOND_FACILITIES',
+      testId: 'DEAL_WITH_1_LOAN_AND_BOND_FACILITIES',
     },
     mockFacilities: MOCK_DEAL_AIN.mockFacilities,
   });
@@ -66,13 +66,13 @@ context('User can view and sort deals by product', () => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
           dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testUkefDealId === DEAL_WITH_ONLY_1_FACILITY_BOND.details.testUkefDealId);
+            deal.dealSnapshot.details.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.details.testId);
 
           dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testUkefDealId === DEAL_WITH_ONLY_1_FACILITY_LOAN.details.testUkefDealId);
+            deal.dealSnapshot.details.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.details.testId);
 
           dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testUkefDealId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.details.testUkefDealId);
+            deal.dealSnapshot.details.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.details.testId);
         });
       });
   });
