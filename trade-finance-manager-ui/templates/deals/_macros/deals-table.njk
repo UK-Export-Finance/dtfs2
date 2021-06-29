@@ -30,7 +30,15 @@
           })}}
 
           <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
-          <th class="govuk-table__header" data-cy="deals-table-heading-exporter">Exporter</th>
+
+          {{tableHeading.render({
+            fieldName: 'exporter',
+            buttonText: 'Exporter', 
+            buttonValue: 'dealSnapshot.submissionDetails.supplier-name',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
           <th class="govuk-table__header" data-cy="deals-table-heading-buyer">Buyer</th>
           <th class="govuk-table__header" data-cy="deals-table-heading-bank">Bank</th>
 
