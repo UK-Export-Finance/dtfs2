@@ -13,6 +13,8 @@ import mapIndustryClasses from './mapIndustryClasses';
 import mapIndustrySectors from './mapIndustrySectors';
 import pageSpecificValidationErrors from './pageSpecificValidationErrors';
 import sanitizeCurrency from './sanitizeCurrency';
+import isObject from './isObject';
+import validationErrorHandler from './validationErrorHandler';
 
 export {
   dealFormsCompleted,
@@ -31,4 +33,6 @@ export {
   mapIndustrySectors,
   pageSpecificValidationErrors,
   sanitizeCurrency,
+  isObject,
+  validationErrorHandler,
 };
