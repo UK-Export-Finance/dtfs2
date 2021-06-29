@@ -15,7 +15,7 @@
 
           {{tableHeading.render({
             fieldName: 'ukefDealId',
-            buttonText: 'Deal ID', 
+            buttonText: 'Deal ID',
             buttonValue: 'dealSnapshot.details.ukefDealId',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
@@ -23,20 +23,41 @@
 
           {{tableHeading.render({
             fieldName: 'product',
-            buttonText: 'Product', 
+            buttonText: 'Product',
             buttonValue: 'tfm.product',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
 
           <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
-          <th class="govuk-table__header" data-cy="deals-table-heading-exporter">Exporter</th>
-          <th class="govuk-table__header" data-cy="deals-table-heading-buyer">Buyer</th>
-          <th class="govuk-table__header" data-cy="deals-table-heading-bank">Bank</th>
+
+          {{tableHeading.render({
+            fieldName: 'exporter',
+            buttonText: 'Exporter',
+            buttonValue: 'dealSnapshot.submissionDetails.supplier-name',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            fieldName: 'buyer',
+            buttonText: 'Buyer',
+            buttonValue: 'dealSnapshot.submissionDetails.buyer-name',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            fieldName: 'bank',
+            buttonText: 'Bank',
+            buttonValue: 'dealSnapshot.details.owningBank.name',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
 
           {{tableHeading.render({
             fieldName: 'stage',
-            buttonText: 'Stage', 
+            buttonText: 'Stage',
             buttonValue: 'tfm.stage',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField

@@ -11,6 +11,12 @@ const dealsPage = {
       productSortButton: () => cy.get('[data-cy="deals-table-heading-product-button"]'),
       stage: () => cy.get('[data-cy="deals-table-heading-stage"]'),
       stageSortButton: () => cy.get('[data-cy="deals-table-heading-stage-button"]'),
+      exporter: () => cy.get('[data-cy="deals-table-heading-exporter"]'),
+      exporterSortButton: () => cy.get('[data-cy="deals-table-heading-exporter-button"]'),
+      bank: () => cy.get('[data-cy="deals-table-heading-bank"]'),
+      bankSortButton: () => cy.get('[data-cy="deals-table-heading-bank-button"]'),
+      buyer: () => cy.get('[data-cy="deals-table-heading-buyer"]'),
+      buyerSortButton: () => cy.get('[data-cy="deals-table-heading-buyer-button"]'),
     },
     row: (dealId) => {
       const row = cy.get(`[data-cy="deal-${dealId}"]`);
