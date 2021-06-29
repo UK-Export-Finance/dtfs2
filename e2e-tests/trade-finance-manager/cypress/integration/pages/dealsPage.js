@@ -9,6 +9,8 @@ const dealsPage = {
       ukefDealIdSortButton: () => cy.get('[data-cy="deals-table-heading-ukefDealId-button"]'),
       product: () => cy.get('[data-cy="deals-table-heading-product"]'),
       productSortButton: () => cy.get('[data-cy="deals-table-heading-product-button"]'),
+      stage: () => cy.get('[data-cy="deals-table-heading-stage"]'),
+      stageSortButton: () => cy.get('[data-cy="deals-table-heading-stage-button"]'),
     },
     row: (dealId) => {
       const row = cy.get(`[data-cy="deal-${dealId}"]`);
