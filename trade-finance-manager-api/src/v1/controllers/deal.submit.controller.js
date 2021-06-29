@@ -19,7 +19,7 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgementByDealId } = require('./send-deal-submit-emails');
 
 const submitDeal = async (dealId, portalChecker) => {
   const portalDeal = await findOnePortalDeal(dealId);
@@ -84,6 +84,8 @@ const submitDeal = async (dealId, portalChecker) => {
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+
+      await sendAinMinIssuedFacilitiesAcknowledgementByDealId(dealId);
 
       updatedDeal.dealSnapshot = dealSnapshot;
     }

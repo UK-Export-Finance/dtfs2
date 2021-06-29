@@ -5,6 +5,7 @@ const isIssued = (facility) => {
     CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED,
     CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL,
   ];
+
   return issuedStatuses.includes(facility.facilityStage);
 };
 
