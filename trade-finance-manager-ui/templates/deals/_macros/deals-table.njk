@@ -33,7 +33,15 @@
           <th class="govuk-table__header" data-cy="deals-table-heading-exporter">Exporter</th>
           <th class="govuk-table__header" data-cy="deals-table-heading-buyer">Buyer</th>
           <th class="govuk-table__header" data-cy="deals-table-heading-bank">Bank</th>
-          <th class="govuk-table__header" data-cy="deals-table-heading-stage">Stage</th>
+
+          {{tableHeading.render({
+            fieldName: 'stage',
+            buttonText: 'Stage', 
+            buttonValue: 'tfm.stage',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
           <th class="govuk-table__header" data-cy="deals-table-heading-date-received">Date received</th>
         </tr>
       </thead>
