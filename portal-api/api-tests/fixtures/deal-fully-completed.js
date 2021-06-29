@@ -1,7 +1,5 @@
 const moment = require('moment');
 
-const now = moment();
-
 const deal = {
   details: {
     bankSupplyContractName: 'mock name',
@@ -43,9 +41,9 @@ const deal = {
       facilityStage: 'Issued',
       ukefGuaranteeInMonths: '12',
       requestedCoverStartDate: moment().utc().valueOf(),
-      'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,
+      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
+      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
+      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
       uniqueIdentificationNumber: '1234567890',
       bondBeneficiary: 'test',
       status: 'Completed',
@@ -75,9 +73,9 @@ const deal = {
       facilityStage: 'Issued',
       ukefGuaranteeInMonths: '12',
       requestedCoverStartDate: moment().utc().valueOf(),
-      'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,
+      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
+      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
+      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
       uniqueIdentificationNumber: '1234567890',
       bondBeneficiary: 'test',
       status: 'Completed',
@@ -290,9 +288,9 @@ const deal = {
       facilityType: 'loan',
       facilityStage: 'Unconditional',
       requestedCoverStartDate: moment().utc().valueOf(),
-      'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,
+      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
+      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
+      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
       bankReferenceNumber: '12345678',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '3,703,703.40',

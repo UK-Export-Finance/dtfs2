@@ -1,8 +1,6 @@
 const moment = require('moment');
 const dealFullyCompleted = require('./deal-fully-completed');
 
-const now = moment();
-
 const deal = {
   ...dealFullyCompleted,
   mockFacilities: [
