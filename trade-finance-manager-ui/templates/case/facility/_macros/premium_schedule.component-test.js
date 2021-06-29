@@ -119,6 +119,11 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumSchedule.length);
     });
 
+    it('should format the premium schedule date correctly', () => {
+      const firstPremiumSchedule = params.premiumSchedule[0];
+      wrapper.expectText(`[data-cy="facility-${firstPremiumSchedule.id}-dueDate"]`).toRead('06 May 2021');
+    });
+
     describe('at maturity', () => {
       beforeEach(() => {
         const atMaturityParams = {
