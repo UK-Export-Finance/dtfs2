@@ -6,9 +6,11 @@ const { validationApplicationCreate, validatorStatusCheckEnums } = require('./va
 
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
+const { CoverTerms } = require('../models/coverTerms');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
+const coverTermsCollectionName = 'gef-cover-terms';
 const facilitiesCollectionName = 'gef-facilities';
 
 // const defaultPaginationOpts = {
@@ -36,12 +38,16 @@ const facilitiesCollectionName = 'gef-facilities';
 exports.create = async (req, res) => {
   const applicationCollection = await db.getCollection(applicationCollectionName);
   const exporterCollection = await db.getCollection(exporterCollectionName);
+  const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
   const validateErrs = await validationApplicationCreate(applicationCollection, req.body.bankInternalRefName);
   if (validateErrs) {
     res.status(422).send(validateErrs);
   } else {
     const exporter = await exporterCollection.insertOne(new Exporter());
-    const doc = await applicationCollection.insertOne(new Application(req.body, exporter.ops[0]._id));
+    const coverTerms = await coverTermsCollection.insertOne(new CoverTerms());
+    const doc = await applicationCollection.insertOne(
+      new Application(req.body, exporter.ops[0]._id, coverTerms.ops[0]._id),
+    );
     res.status(201).json(doc.ops[0]);
   }
 };
@@ -123,6 +129,10 @@ exports.delete = async (req, res) => {
     if (applicationResponse.value.exporterId) {
       const exporterCollection = await db.getCollection(exporterCollectionName);
       await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+    }
+    if (applicationResponse.value.coverTermsId) {
+      const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
+      await coverTermsCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.coverTermsId)) });
     }
     // remove facility information related to the application
     const facilitiesCollection = await db.getCollection(facilitiesCollectionName);

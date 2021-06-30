@@ -34,7 +34,7 @@ context('Automatic Cover Page', () => {
       automaticCover.form();
       automaticCover.automaticCoverTerm().its('length').should('be.gt', 0); // contains terms
       automaticCover.continueButton();
-      automaticCover.saveGoBackLink();
+      automaticCover.saveAndReturnButton();
     });
   });
 
@@ -56,9 +56,9 @@ context('Automatic Cover Page', () => {
     it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
       automaticCover.automaticCoverTerm().each(($el, index) => {
         if (index === 0) {
-          $el.find('[data-cy="automatic-cover-false"]').click();
+          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
         } else {
-          $el.find('[data-cy="automatic-cover-true"]').click();
+          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
         }
       });
       automaticCover.continueButton().click();
@@ -73,8 +73,8 @@ context('Automatic Cover Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
     });
 
-    it('takes user to `automatic application details` page if they click on the go back link', () => {
-      automaticCover.saveGoBackLink().click();
+    it('takes user to `automatic application details` page if they click on the save and return button', () => {
+      automaticCover.saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
     });
   });

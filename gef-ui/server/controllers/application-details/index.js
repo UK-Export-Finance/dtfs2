@@ -2,32 +2,43 @@
 import _startCase from 'lodash/startCase';
 import * as api from '../../services/api';
 import { mapSummaryList, status } from '../../utils/helpers';
-import { exporterItems, facilityItems } from '../../utils/display-items';
+import { exporterItems, coverItems, facilityItems } from '../../utils/display-items';
 import { PROGRESS, FACILITY_TYPE } from '../../../constants';
 
 const applicationDetails = async (req, res) => {
-  const { params, query } = req;
+  const { params } = req;
   const { applicationId } = params;
-  const { manual } = query;
 
   try {
-    const { bankInternalRefName, exporterId } = await api.getApplication(applicationId);
+    const {
+      bankInternalRefName,
+      exporterId,
+      coverTermsId,
+    } = await api.getApplication(applicationId);
     const exporter = await api.getExporter(exporterId);
+    const coverTerms = await api.getCoverTerms(coverTermsId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
+    const coverUrl = `/gef/application-details/${applicationId}/automatic-cover`;
     const facilityUrl = `/gef/application-details/${applicationId}/facilities`;
     const exporterStatus = status[exporter.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
+    const coverStatus = status[coverTerms.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
     const facilitiesStatus = status[facilities.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
     const canSubmit = exporterStatus.code === PROGRESS.COMPLETED
-    && facilitiesStatus.code === PROGRESS.COMPLETED; // Both statuses are set to complete
+      && coverStatus.code === PROGRESS.COMPLETED
+      && facilitiesStatus.code === PROGRESS.COMPLETED; // All statuses are set to complete
 
     return res.render('partials/application-details.njk', {
-      isManual: manual,
+      isAutomaticCover: coverTerms.isAutomaticCover,
       exporter: {
         status: exporterStatus,
         rows: mapSummaryList(exporter, exporterItems(exporterUrl, {
           showIndustryChangeLink: exporter.details.industries && exporter.details.industries.length > 1,
         })),
+      },
+      coverTerms: {
+        status: coverStatus,
+        rows: mapSummaryList(coverTerms, coverItems(coverUrl)),
       },
       facilities: {
         status: facilitiesStatus,

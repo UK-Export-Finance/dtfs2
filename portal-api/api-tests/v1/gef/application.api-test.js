@@ -69,6 +69,7 @@ describe(baseUrl, () => {
         items: allItems.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
+          coverTermsId: expect.any(String),
           createdAt: expect.any(Number),
         })),
       };
@@ -96,7 +97,8 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
-        createdAt: expect.any(Number)
+        coverTermsId: expect.any(String),
+        createdAt: expect.any(Number),
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -147,6 +149,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
+        coverTermsId: expect.any(String),
         createdAt: expect.any(Number),
       };
       expect(body).toEqual(expectMongoId(expected));
@@ -216,7 +219,6 @@ describe(baseUrl, () => {
   });
 
   describe(`PUT ${baseUrl}/status/:id`, () => {
-
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put({ status: 'COMPLETED' }).to(`${baseUrl}/status/1`);
       expect(status).toEqual(401);
