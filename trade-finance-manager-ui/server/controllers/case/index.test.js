@@ -2,10 +2,8 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import {
-  getTask,
-  mapAssignToSelectOptions,
-} from './helpers';
+import { getTask } from './helpers';
+import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 const res = mockRes();
 
@@ -324,7 +322,7 @@ describe('controllers - case', () => {
           user: session.user,
           task: expectedTask,
           assignToSelectOptions: mapAssignToSelectOptions(
-            expectedTask,
+            expectedTask.assignedTo.userId,
             session.user,
             mockTeamMembers,
           ),
