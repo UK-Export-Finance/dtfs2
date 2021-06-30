@@ -56,4 +56,7 @@ router.get('/:_id/underwriting/managers-decision/edit', underwritingController.g
 router.post('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
 
 
+router.get('/:_id/documents', caseController.getCaseDocuments);
+
+
 export default router;
