@@ -52,6 +52,8 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
 
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
+
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);

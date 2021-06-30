@@ -48,6 +48,8 @@ router.post('/:_id/underwriting/pricing-and-risk/probability-of-default', underw
 router.get('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
 router.post('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
+router.get('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
+
 router.get('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
 router.get('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
