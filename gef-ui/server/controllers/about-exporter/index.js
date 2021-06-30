@@ -78,12 +78,15 @@ const validateAboutExporter = async (req, res) => {
       }
     }
 
-    // Regex tests to see if value is a number between 0 and 100
-    const zeroToOneHundredRegex = /^([0-9]|[1-9][0-9]|100)$/;
-    if (body.probabilityOfDefault && !zeroToOneHundredRegex.test(body.probabilityOfDefault)) {
+    const maxPercentage = 14.1;
+    const probabilityOfDefault = Number(body.probabilityOfDefault);
+    if (
+      Number.isNaN(probabilityOfDefault)
+      || probabilityOfDefault > maxPercentage
+    ) {
       aboutExporterErrors.push({
         errRef: 'probabilityOfDefault',
-        errMsg: 'You must enter a percentage between 0% to 100%',
+        errMsg: `You must enter a percentage between 0% to ${maxPercentage}%`,
       });
     }
 

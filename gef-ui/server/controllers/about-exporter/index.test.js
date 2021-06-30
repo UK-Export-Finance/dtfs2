@@ -178,7 +178,8 @@ describe('Validate About Exporter', () => {
       applicationId: '123',
     }));
 
-    mockRequest.body.probabilityOfDefault = -10;
+    // value of mock passed, should result in error
+    mockRequest.body.probabilityOfDefault = 'mock';
 
     api.getApplication = () => Promise.resolve(mockRequest);
     api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
@@ -190,7 +191,8 @@ describe('Validate About Exporter', () => {
       }),
     }));
 
-    mockRequest.body.probabilityOfDefault = 10.2;
+    // negative value passed, should result in error
+    mockRequest.body.probabilityOfDefault = '-10';
 
     api.getApplication = () => Promise.resolve(mockRequest);
     api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
@@ -202,7 +204,8 @@ describe('Validate About Exporter', () => {
       }),
     }));
 
-    mockRequest.body.probabilityOfDefault = 20;
+    // value below , should result in error
+    mockRequest.body.probabilityOfDefault = '14.09';
 
     api.getApplication = () => Promise.resolve(mockRequest);
     api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
@@ -211,6 +214,19 @@ describe('Validate About Exporter', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
       errors: expect.objectContaining({
         errorSummary: expect.not.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
+      }),
+    }));
+
+    // value below , should result in error
+    mockRequest.body.probabilityOfDefault = '14.11';
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
       }),
     }));
   });

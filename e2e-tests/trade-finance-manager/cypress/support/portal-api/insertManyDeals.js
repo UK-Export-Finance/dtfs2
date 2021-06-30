@@ -1,4 +1,5 @@
 const { insertDeal, logIn } = require('./api');
+const { getIdFromNumberGenerator } = require('../reference-data-api/api');
 
 module.exports = (deals, opts) => {
   console.log(`createManyDeals::`);
@@ -7,12 +8,19 @@ module.exports = (deals, opts) => {
     const persistedDeals = [];
 
     deals.forEach((dealToInsert) => {
-      insertDeal(dealToInsert, token).then((deal) => {
-        persistedDeals.push(deal);
+      getIdFromNumberGenerator('deal').then(({ id: numberGeneratorId }) => {
+        const dealWithId = dealToInsert;
 
-        if (persistedDeals.length === deals.length) {
-          return persistedDeals;
-        }
+        dealWithId.details.ukefDealId = numberGeneratorId;
+        dealWithId.submissionDetails['supplier-name'] = `Mock-Supplier-${numberGeneratorId}`;
+
+        insertDeal(dealWithId, token).then((deal) => {
+          persistedDeals.push(deal);
+
+          if (persistedDeals.length === deals.length) {
+            return persistedDeals;
+          }
+        });
       });
     });
   });

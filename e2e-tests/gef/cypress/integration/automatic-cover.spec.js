@@ -65,12 +65,12 @@ context('Automatic Cover Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/ineligible-automatic-cover`));
     });
 
-    it('takes user to `automatic application details` page if all true fields have been selected', () => {
+    it('takes user to `eligible for automatic cover` page if all true fields have been selected', () => {
       automaticCover.automaticCoverTerm().each(($el) => {
         $el.find('[data-cy="automatic-cover-true"]').click();
       });
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/eligible-automatic-cover`));
     });
 
     it('takes user to `automatic application details` page if they click on the save and return button', () => {

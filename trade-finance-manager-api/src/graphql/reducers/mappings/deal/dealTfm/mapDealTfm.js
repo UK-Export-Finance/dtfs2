@@ -1,5 +1,4 @@
 const mapSupplyContractValueInGBP = require('./mapSupplyContractValueInGBP');
-const mapDealProduct = require('./mapDealProduct');
 
 const mapDealTfm = (deal) => {
   const {
@@ -11,7 +10,6 @@ const mapDealTfm = (deal) => {
   const result = {
     ...dealTfm,
     supplyContractValueInGBP: mapSupplyContractValueInGBP(supplyContractValueInGBP),
-    product: mapDealProduct(dealTfm),
   };
 
   return result;

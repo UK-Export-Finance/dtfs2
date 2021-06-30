@@ -3,6 +3,7 @@
   {% set schedule = params.premiumSchedule %}
   {% set premiumTotals = params.premiumTotals %}
   {% set premiumFrequency = facility.feeFrequency or facility.premiumFrequency %}
+  {% set user = params.user %}
 
   <div class="govuk-grid-row" data-cy="facility-overview">
     <div class="govuk-grid-column-full">
@@ -69,9 +70,9 @@
         <tbody class="govuk-table__body">
           {% for schedule_item in schedule %}
             <tr class="govuk-table__row" data-cy="schedule_item">
-              <th scope="row" class="govuk-table__cell govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item._id }}-payment">{{ schedule_item.period }}</th>
-              <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item._id }}-dueDate">{{ schedule_item.calculationDate | formatDate('DD MMM YYYY') }}</td>
-              <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item._id }}-amount">{{ schedule_item.income | formatAsCurrency }}</td>
+              <th scope="row" class="govuk-table__cell govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-payment">{{ schedule_item.period }}</th>
+              <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-dueDate">{{ schedule_item.calculationDate | formatDateString('YYYY-MM-DD', 'DD MMM YYYY') }}</td>
+              <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-amount">{{ schedule_item.income | formatAsCurrency }}</td>
               <td class="govuk-table__cell govuk-!-width-one-quarter"></td> 
             </tr>
           {% endfor %}

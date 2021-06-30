@@ -1,32 +1,33 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 
-const mapFacilityProductCode = (facilityType) => {
-  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+const mapDealProduct = (facilities) => {
+  if (!facilities) {
+    return null;
+  }
+
+  const bonds = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+  const loans = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
+  const hasBonds = bonds.length > 0;
+  const hasLoans = loans.length > 0;
+
+  if (hasBonds && hasLoans) {
+    return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND} & ${CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN}`;
+  }
+
+  if (hasBonds) {
     return CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
   }
 
-  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+  if (hasLoans) {
     return CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
   }
 
   return null;
 };
 
-const mapFacilitiesArray = (facilities) => facilities.map((facility) => {
-  const {
-    _id, // eslint-disable-line no-underscore-dangle
-    facilityType,
-  } = facility;
-
-  return {
-    _id,
-    facilityType,
-    productCode: mapFacilityProductCode(facilityType),
-  };
-});
-
-const addFacilitiesArray = async (deal) => {
+const addDealProduct = async (deal) => {
   // Create deep clone
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
@@ -39,17 +40,15 @@ const addFacilitiesArray = async (deal) => {
     _id: dealId, // eslint-disable-line no-underscore-dangle
   } = dealSnapshot;
 
-  const allFacilities = [
+  const facilities = [
     ...modifiedDeal.dealSnapshot.bondTransactions.items,
     ...modifiedDeal.dealSnapshot.loanTransactions.items,
   ];
 
-  const mappedFacilitiesArray = mapFacilitiesArray(allFacilities);
-
   const dealUpdate = {
     tfm: {
       ...tfm,
-      facilities: mappedFacilitiesArray,
+      product: mapDealProduct(facilities),
     },
   };
 
@@ -63,7 +62,6 @@ const addFacilitiesArray = async (deal) => {
 
 
 module.exports = {
-  mapFacilityProductCode,
-  mapFacilitiesArray,
-  addFacilitiesArray,
+  mapDealProduct,
+  addDealProduct,
 };

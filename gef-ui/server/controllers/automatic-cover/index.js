@@ -23,10 +23,12 @@ const automaticCover = async (req, res) => {
   }
 };
 
-const validateAutomaticCover = async (req, res) => {
+const validateAutomaticCover = async (req, res, next) => {
   function AutomaticCoverErrors(fields, items) {
     const receivedFields = Object.keys(fields); // Array of received fields i.e ['coverStart']
-    const errorsToDisplay = items.filter((item) => !receivedFields.includes(item.id));
+    const errorsToDisplay = items.filter(
+      (item) => !receivedFields.includes(item.id),
+    );
 
     return errorsToDisplay.map((error) => ({
       errRef: error.id,
@@ -78,12 +80,15 @@ const validateAutomaticCover = async (req, res) => {
 
     // If form has at least 1 false, then redirect user to not eligible page
     if (fieldContainsAFalseBoolean(body)) {
-      return res.redirect('ineligible-automatic-cover');
+      return res.redirect(
+        `/gef/application-details/${applicationId}/ineligible-automatic-cover`,
+      );
     }
-
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(
+      `/gef/application-details/${applicationId}/eligible-automatic-cover`,
+    );
   } catch (err) {
-    return res.render('partials/problem-with-service.njk');
+    return next(err);
   }
 };
 

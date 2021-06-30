@@ -4,6 +4,12 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
+const SORT_BY = {
+  ASCENDING: 'ascending',
+  DESCENDING: 'descending',
+};
+
 module.exports = {
   SUBMISSION_TYPE,
+  SORT_BY,
 };

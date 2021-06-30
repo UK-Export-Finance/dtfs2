@@ -27,7 +27,9 @@
 
       {% set componentData = {
         deals: deals,
-        user: user
+        user: user,
+        activeSortByOrder: activeSortByOrder,
+        activeSortByField: activeSortByField
       } %}
 
       {{ dealsTable.render(componentData) }}

@@ -1,6 +1,7 @@
 import mandatoryCriteriaRoutes from '../mandatory-criteria';
 import nameApplicationRoutes from '../name-application';
 import ineligibleGefRoutes from '../ineligible-gef';
+import eligibleAutomaticCoverRoutes from '../eligible-automatic-cover';
 import ineligibleAutomaticCoverRoutes from '../ineligible-automatic-cover';
 import automaticCoverRoutes from '../automatic-cover';
 import applicationDetailsRoutes from '../application-details';
@@ -39,6 +40,7 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(mandatoryCriteriaRoutes);
     expect(useSpy).toHaveBeenCalledWith(nameApplicationRoutes);
     expect(useSpy).toHaveBeenCalledWith(ineligibleGefRoutes);
+    expect(useSpy).toHaveBeenCalledWith(eligibleAutomaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(ineligibleAutomaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(automaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(applicationDetailsRoutes);
