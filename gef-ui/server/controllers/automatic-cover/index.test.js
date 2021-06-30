@@ -24,7 +24,8 @@ const MockCoverResponse = () => {
 };
 
 const MockCoverTermsResponse = () => {
-  return {};
+  const res = {};
+  return res;
 };
 
 
