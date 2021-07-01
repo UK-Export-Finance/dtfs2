@@ -52,7 +52,14 @@ const validateExportersAddress = async (req, res) => {
 
     // Only fetch addresses if there are no validation errors
     if (correspondenceError.length === 0) {
-      addresses = await api.getAddressesByPostcode(postcode);
+      try {
+        addresses = await api.getAddressesByPostcode(postcode);
+      } catch (err) {
+        correspondenceError.push({
+          errRef: 'postcode',
+          errMsg: 'Error looking up postcode. Try again.',
+        });
+      }
     }
 
     // Check for validation errors
