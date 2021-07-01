@@ -12,3 +12,10 @@ const findUserGET = async (req, res) => {
   return res.status(status).send({ user });
 };
 exports.findUserGET = findUserGET;
+
+const findUserById = async (userId) => {
+  const user = await api.findUserById(userId);
+
+  return user;
+};
+exports.findUserById = findUserById;

@@ -2,6 +2,7 @@ const queryDeals = require('./query-deals');
 const queryDeal = require('./query-deal');
 const queryFacility = require('./query-facility');
 const queryTeamMembers = require('./query-team-members');
+const queryUser = require('./query-user');
 
 const updateParties = require('./mutation-update-parties');
 const updateFacility = require('./mutation-update-facility');
@@ -20,6 +21,7 @@ const resolvers = {
     deals: (root, args) => queryDeals(args.params),
     facility: (root, args) => queryFacility(args),
     teamMembers: (root, args) => queryTeamMembers(args),
+    user: (root, args) => queryUser(args),
   },
   Mutation: {
     updateParties: (root, args) => updateParties(args),

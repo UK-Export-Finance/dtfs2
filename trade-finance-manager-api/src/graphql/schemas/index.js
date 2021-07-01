@@ -418,11 +418,19 @@ type TeamMember {
   lastName: String
 }
 
+type User {
+  _id: String
+  firstName: String
+  lastName: String
+  email: String
+}
+
 type Query {
   deal(params: DealInput): Deal
   deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
   teamMembers(teamId: String!): [TeamMember]
+  user(userId: String!): User
 }
 
 type Mutation {
