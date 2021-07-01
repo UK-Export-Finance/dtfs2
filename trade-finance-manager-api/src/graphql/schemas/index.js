@@ -253,11 +253,6 @@ type TFMDealDecision  {
   timestamp: String
 }
 
-type TFMLeadUnderwriter {
-  userId: String
-  fullName: String
-}
-
 type TFMDealData {
   parties: TFMParties
   product: String
@@ -271,7 +266,7 @@ type TFMDealData {
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
   estore: TFMEstore
-  leadUnderwriter: TFMLeadUnderwriter
+  leadUnderwriter: String
 }
 
 type PremiumScheduleData {

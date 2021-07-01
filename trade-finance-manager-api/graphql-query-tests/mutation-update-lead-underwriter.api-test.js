@@ -17,10 +17,7 @@ const MOCK_USER = MOCK_USERS[0];
 const UPDATE_LEAD_UNDERWRITER = gql`
   mutation UpdateLeadUnderwriter($dealId: ID!, $leadUnderwriterUpdate: TFMLeadUnderwriterInput) {
     updateLeadUnderwriter(dealId: $dealId, leadUnderwriterUpdate: $leadUnderwriterUpdate) {
-      leadUnderwriter {
-        userId
-        fullName
-      }
+      leadUnderwriter
     }
   }
 `;
@@ -57,10 +54,7 @@ describe('graphql mutation - update lead underwriter', () => {
     });
 
     const expected = {
-      leadUnderwriter: {
-        fullName: `${MOCK_USER.firstName} ${MOCK_USER.lastName}`,
-        userId: leadUnderwriterUpdate.userId,
-      },
+      leadUnderwriter: leadUnderwriterUpdate.userId,
     };
 
     expect(data.updateLeadUnderwriter).toEqual(expected);
