@@ -9,6 +9,12 @@
 
     <div class="govuk-grid-column-three-quarters">
 
+
+      <h5>currentLeadUnderWriter {{currentLeadUnderWriter | dump }}</h5>
+      <p>{{ currentLeadUnderWriter.firstName }} {{ currentLeadUnderWriter.lastName }}</p>
+      <p>email: {{ currentLeadUnderWriter.email }}</p>
+      <p>id: {{ currentLeadUnderWriter._id }}</p>
+
       <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="lead-underwriter-heading">Lead Underwriter</h3>
 
       <p class="govuk-body-l separator-line govuk-!-padding-top-7"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="assign-lead-underwriter-link">Assign a lead underwriter</a></p>
