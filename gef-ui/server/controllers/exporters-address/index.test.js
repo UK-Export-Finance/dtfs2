@@ -1,6 +1,11 @@
 import { exportersAddress, validateExportersAddress } from './index';
 import * as api from '../../services/api';
 
+const postcode = 'EE1 1EE';
+const companyName = 'Test Company';
+const registeredAddress = { addressLine1: 'line 1', addressLine2: 'line 2' };
+
+
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -26,7 +31,10 @@ const MockApplicationResponse = () => {
 
 const MockExporterResponse = () => {
   const res = {};
-  res.details = {};
+  res.details = {
+    companyName,
+    registeredAddress,
+  };
   return res;
 };
 
@@ -90,17 +98,18 @@ describe('Validate Exporters Address', () => {
     const mockResponse = new MockResponse();
 
     mockRequest.body.correspondence = '';
+
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
 
     await validateExportersAddress(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-      companyName: undefined,
+      companyName,
       correspondence: '',
       errors: expect.any(Object),
       postcode: '',
-      registeredAddress: undefined,
+      registeredAddress,
     }));
   });
 
@@ -128,10 +137,10 @@ describe('Validate Exporters Address', () => {
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     await validateExportersAddress(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-      companyName: undefined,
+      companyName,
       errors: expect.any(Object),
       correspondence: 'true',
-      registeredAddress: undefined,
+      registeredAddress,
     }));
   });
 
@@ -175,18 +184,60 @@ describe('Validate Exporters Address', () => {
     const mockRejection = { status: 422, data: [{ errMsg: 'Message', errRef: 'Reference' }] };
 
     mockRequest.body.correspondence = 'true';
-    mockRequest.body.postcode = 'FFFFF';
+    mockRequest.body.postcode = postcode;
 
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     api.getAddressesByPostcode = () => Promise.resolve(mockRejection);
     await validateExportersAddress(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-      companyName: undefined,
+      companyName,
       errors: expect.any(Object),
       correspondence: 'true',
-      registeredAddress: undefined,
+      registeredAddress,
     }));
+  });
+
+  it('shows user an error, allowing retry, if there is an issue with the address api', async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockedRejection = { response: { status: 500, message: 'Whoops' } };
+    const expectedMsg = 'Error looking up postcode. Try again.';
+    const correspondence = 'true';
+
+    mockRequest.body.correspondence = correspondence;
+    mockRequest.body.postcode = postcode;
+    mockExporterResponse.details.companyName = companyName;
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getAddressesByPostcode = () => Promise.reject(mockedRejection);
+
+    await validateExportersAddress(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/exporters-address.njk',
+      {
+        errors: {
+          errorSummary: [
+            {
+              text: expectedMsg,
+              href: '#postcode',
+            },
+          ],
+          fieldErrors: {
+            postcode: {
+              text: expectedMsg,
+            },
+          },
+        },
+        companyName,
+        postcode,
+        registeredAddress,
+        correspondence,
+      },
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
