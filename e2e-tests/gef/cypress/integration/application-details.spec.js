@@ -99,7 +99,7 @@ context('Application Details Page', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'Natwest 123');
+      applicationDetails.bankRefName().should('have.text', 'UKEF Test 123');
     });
 
     it('displays the correct exporter elements', () => {

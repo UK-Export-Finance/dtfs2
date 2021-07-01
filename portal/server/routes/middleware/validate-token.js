@@ -7,7 +7,7 @@ const validateToken = async (req, res, next) => {
     next();
   } else {
     req.session.destroy(() => {
-      res.redirect('/');
+      res.redirect('/login');
     });
   }
 };
