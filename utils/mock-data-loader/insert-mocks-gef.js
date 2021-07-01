@@ -53,6 +53,13 @@ const insertMocks = async () => {
       await api.updateFacilities(facilty.details, subitem, token);
     }
   }
+
+  console.log('updating cover terms information');
+  for (const [index, item] of MOCKS.COVER_TERMS.entries()) {
+    if (index > 0) {
+      await api.updateCoverTerms(application[index].coverTermsId, item, token);
+    }
+  }
 };
 
 module.exports = insertMocks;

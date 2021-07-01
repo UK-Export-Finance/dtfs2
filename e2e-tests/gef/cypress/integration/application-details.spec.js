@@ -50,6 +50,13 @@ context('Application Details Page', () => {
       applicationDetails.exporterSummaryList().should('not.exist');
     });
 
+    it('displays the correct automatic-cover elements', () => {
+      applicationDetails.automaticCoverHeading();
+      applicationDetails.automaticCoverStatus().contains('Not started');
+      applicationDetails.automaticCoverDetailsLink();
+      applicationDetails.automaticCoverSummaryList().should('not.exist');
+    });
+
     it('displays the correct facility elements', () => {
       applicationDetails.facilityHeading();
       applicationDetails.facilityStatus().contains('Not started');
@@ -102,6 +109,20 @@ context('Application Details Page', () => {
       applicationDetails.exporterDetailsLink().should('not.exist');
       applicationDetails.exporterSummaryList();
     });
+
+    it('displays the correct automatic cover elements', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
+      applicationDetails.automaticCoverHeading();
+      applicationDetails.automaticCoverStatus().contains('In progress');
+      applicationDetails.automaticCoverDetailsLink();
+      applicationDetails.automaticCoverSummaryList().should('not.exist');
+    });
+
+    it('displays the correct submit elements', () => {
+      applicationDetails.submitHeading();
+      applicationDetails.submitButton().should('not.exist');
+      applicationDetails.submitValidationText();
+    });
   });
 
   describe('Visiting page when COMPLETED status', () => {
@@ -118,6 +139,21 @@ context('Application Details Page', () => {
       applicationDetails.exporterStatus().contains('Completed');
       applicationDetails.exporterDetailsLink().should('not.exist');
       applicationDetails.exporterSummaryList();
+    });
+
+    it('displays the correct automatic cover elements', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      applicationDetails.automaticCoverHeading();
+      applicationDetails.automaticCoverStatus().contains('Complete');
+      applicationDetails.automaticCoverDetailsLink().should('not.exist');
+      applicationDetails.automaticCoverSummaryList();
+    });
+
+    it('displays the correct submit elements', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      applicationDetails.submitHeading();
+      applicationDetails.submitButton();
+      applicationDetails.submitValidationText().should('not.exist');
     });
   });
 });

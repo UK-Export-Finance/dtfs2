@@ -49,6 +49,14 @@ const exporterItems = (exporterUrl, options = {}) => [
   },
 ];
 
+const coverItems = (coverUrl) => [
+  {
+    label: 'Cover',
+    id: 'cover',
+    href: `${coverUrl}`,
+  },
+];
+
 const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission }) => [
   {
     label: 'Name',
@@ -122,5 +130,6 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSub
 
 export {
   exporterItems,
+  coverItems,
   facilityItems,
 };
