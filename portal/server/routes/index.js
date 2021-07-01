@@ -9,6 +9,7 @@ import adminRoutes from './admin';
 import userRoutes from './user';
 import mgaRoutes from './mga';
 import feedbackRoutes from './feedback';
+import schemeTypeRoutes from './schemeType';
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/', adminRoutes);
 router.use('/', userRoutes);
 router.use('/', mgaRoutes);
 router.use('/', feedbackRoutes);
+router.use('/', schemeTypeRoutes);
 
 export default router;
