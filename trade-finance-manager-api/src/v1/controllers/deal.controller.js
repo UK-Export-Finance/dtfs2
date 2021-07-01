@@ -6,7 +6,6 @@ const CONSTANTS = require('../../constants');
 const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
-const getAssigneeFullName = require('./get-assignee-full-name');
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -173,10 +172,7 @@ const updateTfmLeadUnderwriter = async (
 
   const leadUnderwriterUpdate = {
     tfm: {
-      leadUnderwriter: {
-        userId,
-        fullName: await getAssigneeFullName(userId),
-      },
+      leadUnderwriter: userId,
     },
   };
 
