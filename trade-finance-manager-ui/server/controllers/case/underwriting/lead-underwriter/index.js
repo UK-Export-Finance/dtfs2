@@ -58,7 +58,6 @@ const postAssignLeadUnderwriter = async (req, res) => {
   }
 
   // const { user } = req.session;
-
   // const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
 
   // return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
@@ -79,7 +78,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
     userId: assignedToValue,
   };
 
-  await api.updateUnderwriterManagersDecision(dealId, update);
+  await api.updateLeadUnderwriter(dealId, update);
 
   return res.redirect(`/case/${dealId}/underwriting/lead-underwriter`);
 };

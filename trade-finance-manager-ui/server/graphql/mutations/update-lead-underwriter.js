@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
 
-const updateLeadUnderwriterMutation = gql`
+const updateLeadUnderwriter = gql`
   mutation UpdateLeadUnderwriter($dealId: ID!, $leadUnderwriterUpdate: TFMLeadUnderwriterInput) {
     updateLeadUnderwriter(dealId: $dealId, leadUnderwriterUpdate: $leadUnderwriterUpdate) {
       userId
+      fullName
     }
   }
 `;
 
-export default updateLeadUnderwriterMutation;
+export default updateLeadUnderwriter;

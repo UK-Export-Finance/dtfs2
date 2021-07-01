@@ -253,6 +253,11 @@ type TFMDealDecision  {
   timestamp: String
 }
 
+type TFMLeadUnderwriter {
+  userId: String
+  fullName: String
+}
+
 type TFMDealData {
   parties: TFMParties
   product: String
@@ -266,6 +271,7 @@ type TFMDealData {
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
   estore: TFMEstore
+  leadUnderwriter: TFMLeadUnderwriter
 }
 
 type PremiumScheduleData {
@@ -407,6 +413,10 @@ input TFMUnderwriterManagersDecisionInput {
   userFullName: String
 }
 
+input TFMLeadUnderwriterInput {
+  userId: String
+}
+
 type TeamMember {
   _id: String
   firstName: String
@@ -429,6 +439,7 @@ type Mutation {
   updateProbabilityOfDefault(dealId: ID!, probabilityOfDefaultUpdate: TFMProbabilityOfDefaultInput): TFMDealData
   updateFacilityRiskProfile(_id: ID!, facilityUpdate: TFMFacilityRiskProfileInput): TFMFacilityData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
+  updateLeadUnderwriter(dealId: ID!, leadUnderwriterUpdate: TFMLeadUnderwriterInput): TFMDealData
 }
 `;
 
