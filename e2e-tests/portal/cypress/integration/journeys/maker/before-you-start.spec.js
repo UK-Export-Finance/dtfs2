@@ -3,7 +3,8 @@ const partials = require('../../partials');
 const relative = require('../../relativeURL');
 
 const mockUsers = require('../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Red Line eligibility checking', () => {
   beforeEach(() => {
@@ -16,7 +17,7 @@ context('Red Line eligibility checking', () => {
 
   describe('When the `Mandatory criteria` form is submitted without confirming an answer', () => {
     it('should display validation error', () => {
-      cy.createNewSubmission(MAKER_LOGIN);
+      cy.createBSSSubmission(MAKER_LOGIN);
 
       pages.beforeYouStart.submit().click();
 
@@ -28,7 +29,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that fails red-line checks is rejected and links back to home page', () => {
-    cy.createNewSubmission(MAKER_LOGIN);
+    cy.createBSSSubmission(MAKER_LOGIN);
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -40,7 +41,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('the Unable To Proceed page links back to the home page', () => {
-    cy.createNewSubmission(MAKER_LOGIN);
+    cy.createBSSSubmission(MAKER_LOGIN);
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -50,7 +51,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that passes red-line checks can progress to enter supply detaile', () => {
-    cy.createNewSubmission(MAKER_LOGIN);
+    cy.createBSSSubmission(MAKER_LOGIN);
 
     pages.beforeYouStart.true().click();
     pages.beforeYouStart.submit().click();

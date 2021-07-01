@@ -51,7 +51,7 @@ Cypress.Commands.add('sendTypeB', require('./test-hooks-api/sendTypeB'));
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));
 Cypress.Commands.add('createADeal', require('./portal/createADeal'));
-Cypress.Commands.add('createNewSubmission', require('./portal/createNewSubmission'));
+Cypress.Commands.add('createBSSSubmission', require('./portal/createBSSSubmission'));
 Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
