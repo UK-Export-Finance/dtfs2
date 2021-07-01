@@ -6,7 +6,6 @@ require('dotenv').config();
 const queryUser = async ({ userId }) => {
   const user = await findUserById(userId);
 
-  console.log('------ queryUser - user \n', user);
   return userReducer(user);
 };
 

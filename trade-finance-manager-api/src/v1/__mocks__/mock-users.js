@@ -32,7 +32,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce125',
     username: 'UNDERWRITER_MANAGER_1',
-    email: '',
+    email: 'test@testing.com',
     teams: ['UNDERWRITER_MANAGERS'],
     timezone: 'Europe/London',
     firstName: 'Benjamin',
@@ -42,7 +42,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce126',
     username: 'UNDERWRITER_1',
-    email: '',
+    email: 'test@testing.com',
     teams: ['UNDERWRITERS'],
     timezone: 'Europe/London',
     firstName: 'Olivia',
@@ -52,7 +52,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce127',
     username: 'RISK_MANAGER_1',
-    email: '',
+    email: 'test@testing.com',
     teams: ['RISK_MANAGERS'],
     timezone: 'Europe/London',
     firstName: 'Steven',

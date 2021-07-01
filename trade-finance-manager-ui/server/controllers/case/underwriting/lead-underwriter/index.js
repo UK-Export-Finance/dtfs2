@@ -14,6 +14,14 @@ const getLeadUnderwriter = async (req, res) => {
 
   const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
 
+  let currentLeadUnderWriter;
+
+  const currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
+
+  if (currentLeadUnderWriterUserId) {
+    currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
+  }
+
   return res.render('case/underwriting/lead-underwriter/lead-underwriter.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
@@ -22,7 +30,8 @@ const getLeadUnderwriter = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    assignToSelectOptions: mapAssignToSelectOptions('', user, allTeamMembers),
+    assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, allTeamMembers),
+    currentLeadUnderWriter,
   });
 };
 
