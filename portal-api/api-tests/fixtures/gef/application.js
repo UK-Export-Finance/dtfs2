@@ -1,6 +1,7 @@
 const APPLICATION = [{
   userId: null,
   bankInternalRefName: 'Bank 1',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 1',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -10,6 +11,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 2',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 2',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -19,6 +21,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 3',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 3',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -28,6 +31,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 4',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 4',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -37,6 +41,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 5',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 5',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -46,6 +51,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 6',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 6',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -55,6 +61,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 7',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 7',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -64,6 +71,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 8',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 8',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -73,6 +81,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 9',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 9',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -82,6 +91,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 10',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 10',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -91,6 +101,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 11',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 11',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -100,6 +111,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 12',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 12',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -109,6 +121,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 13',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 13',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -118,6 +131,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 14',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 14',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',
@@ -127,6 +141,7 @@ const APPLICATION = [{
 }, {
   userId: null,
   bankInternalRefName: 'Bank 15',
+  coverTermsId: 'ABC',
   additionalRefName: 'Team 15',
   exporterId: '1234567890',
   createdAt: '2021-01-01T00:00',

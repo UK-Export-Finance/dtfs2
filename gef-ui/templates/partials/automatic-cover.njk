@@ -75,10 +75,14 @@
         }
       }) }}
 
-      <a
-        class="govuk-link"
-        href="/gef/application-details/{{applicationId}}"
-        data-cy="save-go-back-link">Save and go back to application</a>
+      {{ govukButton({
+        text: "Save and return",
+        classes: "govuk-button--secondary",
+        attributes: {
+          formaction: "automatic-cover?saveAndReturn=true",
+          'data-cy': 'save-and-return-button'
+        }
+      }) }}
     </div>
   </form>
 {% endblock %}

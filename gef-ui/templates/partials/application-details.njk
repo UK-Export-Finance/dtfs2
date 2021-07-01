@@ -2,10 +2,12 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block pageTitle %}
-  {% if isManual %}
+  {% if isAutomaticCover === true %}
+    Automatic inclusion notice
+  {% elif (isAutomaticCover === false) %}
     Manual inclusion application
   {% else %}
-    Automatic inclusion notice
+    Application Details
   {% endif %}
 {% endblock %}
 
@@ -30,10 +32,12 @@
       General export facility
     </span>
     <h1 class="govuk-heading-xl" data-cy="main-heading">
-      {% if isManual %}
+      {% if isAutomaticCover === true %}
+        Automatic inclusion notice
+      {% elif (isAutomaticCover === false) %}
         Manual inclusion application
       {% else %}
-        Automatic inclusion notice
+        Application Details
       {% endif %}
     </h1>
   </header>
@@ -41,6 +45,7 @@
   <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
 
   {% include "includes/application-details/about-exporter.njk" %}
+  {% include "includes/application-details/automatic-cover.njk" %}
   {% include "includes/application-details/facilities.njk" %}
   {% include "includes/application-details/submit.njk" %}
 

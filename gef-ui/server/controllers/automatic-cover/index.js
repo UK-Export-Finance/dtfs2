@@ -8,8 +8,10 @@ const automaticCover = async (req, res) => {
 
   try {
     const { terms } = await api.getEligibilityCriteria();
-
+    const { coverTermsId } = await api.getApplication(applicationId);
+    const { details } = await api.getCoverTerms(coverTermsId);
     return res.render('partials/automatic-cover.njk', {
+      selected: details,
       terms: terms.map((term) => ({
         ...term,
         htmlText: decode(term.htmlText),
@@ -39,10 +41,26 @@ const validateAutomaticCover = async (req, res, next) => {
     return receivedFields.some((field) => field === 'false');
   }
 
-  const { body, params } = req;
+  const { body, params, query } = req;
   const { applicationId } = params;
+  const { saveAndReturn } = query;
+  const { coverTermsId } = await api.getApplication(applicationId);
 
   try {
+    if (saveAndReturn) {
+      const payload = {
+        coverStart: body.coverStart,
+        noticeDate: body.noticeDate,
+        facilityLimit: body.facilityLimit,
+        exporterDeclaration: body.exporterDeclaration,
+        dueDiligence: body.dueDiligence,
+        facilityLetter: body.facilityLetter,
+        facilityBaseCurrency: body.facilityBaseCurrency,
+        facilityPaymentCurrency: body.facilityPaymentCurrency,
+      };
+      await api.updateCoverTerms(coverTermsId, payload);
+      return res.redirect(`/gef/application-details/${applicationId}`);
+    }
     const { terms } = await api.getEligibilityCriteria();
     const automaticCoverErrors = new AutomaticCoverErrors(body, terms);
 
@@ -57,6 +75,8 @@ const validateAutomaticCover = async (req, res, next) => {
         applicationId,
       });
     }
+
+    await api.updateCoverTerms(coverTermsId, body);
 
     // If form has at least 1 false, then redirect user to not eligible page
     if (fieldContainsAFalseBoolean(body)) {

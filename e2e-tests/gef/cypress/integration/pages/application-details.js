@@ -1,4 +1,3 @@
-
 /* eslint-disable no-undef */
 const applicationDetails = {
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
@@ -11,6 +10,11 @@ const applicationDetails = {
   exporterStatus: () => cy.get('[data-cy="exporter-status"]'),
   exporterDetailsLink: () => cy.get('[data-cy="exporter-details-link"]'),
   exporterSummaryList: () => cy.get('[data-cy="exporter-summary-list"]'),
+
+  automaticCoverHeading: () => cy.get('[data-cy="automatic-cover-heading"]'),
+  automaticCoverStatus: () => cy.get('[data-cy="automatic-cover-status"]'),
+  automaticCoverDetailsLink: () => cy.get('[data-cy="automatic-cover-details-link"]'),
+  automaticCoverSummaryList: () => cy.get('[data-cy="automatic-cover-summary-list"]'),
 
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilityStatus: () => cy.get('[data-cy="facility-status"]'),
