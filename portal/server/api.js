@@ -2,7 +2,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import apollo from './graphql/apollo';
 
-import { dealsQuery, transactionsQuery } from './graphql/queries';
+import { allDealsQuery, dealsQuery, transactionsQuery } from './graphql/queries';
 
 require('dotenv').config();
 
@@ -72,6 +72,19 @@ const contracts = async (start, pagesize, filters, token) => {
   return response.data.deals;
 };
 
+const allDeals = async (start, pagesize, filters, token, sort) => {
+  const params = {
+    start,
+    pagesize,
+    filters,
+    sort,
+  };
+
+  const response = await apollo('GET', allDealsQuery, params, token);
+
+  return response.data.allDeals;
+};
+
 const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
@@ -120,7 +133,7 @@ const updateDealName = async (id, newName, token) => {
 const updateDealStatus = async (statusUpdate, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${statusUpdate._id}/status`, // eslint-disable-line no-underscore-dangle
+    url: `${urlRoot}/v1/deals/${statusUpdate._id}/status`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -137,7 +150,7 @@ const updateDealStatus = async (statusUpdate, token) => {
 const getSubmissionDetails = async (id, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals/${id}/submission-details`, // eslint-disable-line no-underscore-dangle
+    url: `${urlRoot}/v1/deals/${id}/submission-details`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -154,7 +167,7 @@ const getSubmissionDetails = async (id, token) => {
 const updateSubmissionDetails = async (deal, submissionDetails, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${deal._id}/submission-details`, // eslint-disable-line no-underscore-dangle
+    url: `${urlRoot}/v1/deals/${deal._id}/submission-details`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -172,7 +185,7 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
 const cloneDeal = async (dealId, newDealData, token) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/deals/${dealId}/clone`, // eslint-disable-line no-underscore-dangle
+    url: `${urlRoot}/v1/deals/${dealId}/clone`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -619,8 +632,47 @@ const createFeedback = async (formData, token) => {
   return response.data;
 };
 
+const getGefApplications = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/gef/application/`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data && response.data.items;
+};
+
+const getGefExporter = async (exporterId, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/gef/exporter/${exporterId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data && response.data.details;
+};
+
+const getGefCoverTerms = async (coverTermsId, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/gef/cover-terms/${coverTermsId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
+};
 
 export default {
+  allDeals,
   banks,
   cloneDeal,
   contractBond,
@@ -662,4 +714,7 @@ export default {
   downloadFile,
   mga,
   downloadMga,
+  getGefApplications,
+  getGefExporter,
+  getGefCoverTerms,
 };
