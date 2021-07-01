@@ -31,9 +31,9 @@ const MockApplicationResponse = () => {
 
 const MockExporterResponse = () => {
   const res = {};
-  res.details = { 
+  res.details = {
     companyName,
-    registeredAddress 
+    registeredAddress,
   };
   return res;
 };
@@ -98,7 +98,7 @@ describe('Validate Exporters Address', () => {
     const mockResponse = new MockResponse();
 
     mockRequest.body.correspondence = '';
-    
+
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
 
@@ -226,10 +226,10 @@ describe('Validate Exporters Address', () => {
               href: '#postcode',
             },
           ],
-          fieldErrors: { 
+          fieldErrors: {
             postcode: {
-              text: expectedMsg 
-            }
+              text: expectedMsg,
+            },
           },
         },
         companyName,
