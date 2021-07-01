@@ -1,0 +1,61 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+  <section class="govuk-!-margin-top-9"> 
+
+    {% if validationErrors.count %}
+      {{
+        govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        })  
+      }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <h3 class="govuk-heading-l" data-cy="assign-lead-underwriter-heading">Assign a lead underwriter</h3>
+
+        <form method="POST" autocomplete="off">
+
+          {{ govukSelect({
+            id: "assignedTo",
+            name: "assignedTo",
+            label: {
+              text: "Assigned to",
+              classes: "govuk-heading-s govuk-!-font-weight-bold"
+            },
+            attributes: {
+              'data-cy': 'assigned-to-select-input'
+            },
+            classes: "govuk-!-margin-top-2",
+            items: assignToSelectOptions
+          }) }}
+
+          {{ govukButton({
+            text: "Save",
+            attributes: {
+              'data-cy': 'submit-button'
+            }
+          }) }}
+
+          <a class="govuk-body govuk-link govuk-!-margin-left-3 close-link" href="/case/{{ dealId }}/underwriting/lead-underwriter" data-cy="cancel-link">Cancel</a>
+
+        </form>
+        
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}

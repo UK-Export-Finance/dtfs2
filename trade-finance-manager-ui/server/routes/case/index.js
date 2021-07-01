@@ -49,6 +49,8 @@ router.get('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profil
 router.post('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
 router.get('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
+router.get('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
+router.post('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
 router.get('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
