@@ -16,7 +16,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(21);
+    expect(get).toHaveBeenCalledTimes(22);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -53,6 +53,7 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
@@ -62,7 +63,7 @@ describe('routes - case', () => {
 
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(13);
+    expect(post).toHaveBeenCalledTimes(14);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -87,6 +88,8 @@ describe('routes - case', () => {
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.postUnderWritingProbabilityOfDefault);
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
+
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
   });
