@@ -1,6 +1,7 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const now = require('../../now');
+const getAssigneeFullName = require('./get-assignee-full-name');
 const {
   previousTaskIsComplete,
   isFirstTaskInFirstGroup,
@@ -26,21 +27,6 @@ const updateHistory = ({
   updatedBy,
   timestamp: now(),
 });
-
-const getNewAssigneeFullName = async (assignedUserId) => {
-  let fullName;
-
-  if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
-    fullName = CONSTANTS.TASKS.UNASSIGNED;
-  } else {
-    const user = await api.findUserById(assignedUserId);
-    const { firstName, lastName } = user;
-
-    fullName = `${firstName} ${lastName}`;
-  }
-
-  return fullName;
-};
 
 const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
@@ -196,7 +182,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   if (canUpdateTask(allTasks, group, taskIdToUpdate)) {
     const { userId: assignedUserId } = assignedTo;
 
-    const newAssigneeFullName = await getNewAssigneeFullName(assignedUserId);
+    const newAssigneeFullName = await getAssigneeFullName(assignedUserId);
 
     const updatedTask = {
       id: taskIdToUpdate,
@@ -268,7 +254,6 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 };
 
 module.exports = {
-  getNewAssigneeFullName,
   updateTask,
   generateTaskDates,
   updateTasksCanEdit,

@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
 const {
-  getNewAssigneeFullName,
   updateTask,
   generateTaskDates,
   updateTasksCanEdit,
@@ -28,26 +27,6 @@ describe('tasks controller  / tasks helper functions', () => {
       },
     },
   };
-
-  describe('getNewAssigneeFullName', () => {
-    it('should return user\'s full name', async () => {
-      const mockUser = MOCK_USERS[0];
-      const result = await getNewAssigneeFullName(mockUser._id);
-
-      const { firstName, lastName } = mockUser;
-      const expected = `${firstName} ${lastName}`;
-
-      expect(result).toEqual(expected);
-    });
-
-    describe('when the given user id is `Unassigned`', () => {
-      it('should return `Unassigned`', async () => {
-        const result = await getNewAssigneeFullName('Unassigned');
-
-        expect(result).toEqual('Unassigned');
-      });
-    });
-  });
 
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
