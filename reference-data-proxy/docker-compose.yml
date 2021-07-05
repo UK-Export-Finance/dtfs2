@@ -34,4 +34,3 @@ services:
       - GOV_NOTIFY_API_KEY
 
     entrypoint: npx nodemon src/index.js
-
