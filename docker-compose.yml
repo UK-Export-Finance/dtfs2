@@ -48,6 +48,7 @@ services:
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
+      - ESTORE_URL
     command: node dist/server.js
   
   trade-finance-manager-api:
