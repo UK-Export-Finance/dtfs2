@@ -7,6 +7,7 @@ const userQuery = gql`
       _id
       firstName
       lastName
+      email
     }
   }
 `;

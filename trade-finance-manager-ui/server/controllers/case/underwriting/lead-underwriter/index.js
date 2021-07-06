@@ -1,6 +1,7 @@
 import api from '../../../../api';
 import CONSTANTS from '../../../../constants';
 import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
+import canUserEditLeadUnderwriter from './helpers';
 
 const getLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -22,7 +23,10 @@ const getLeadUnderwriter = async (req, res) => {
     currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
   }
 
+  const userCanEdit = canUserEditLeadUnderwriter(user);
+
   return res.render('case/underwriting/lead-underwriter/lead-underwriter.njk', {
+    userCanEdit,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
     activeSideNavigation: 'lead underwriter',
