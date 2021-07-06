@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
   const loginErrors = [];
 
   const emailError = {
-    errMsg: 'Enter an email address in the correct format',
+    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
     errRef: 'email',
   };
   const passwordError = {
