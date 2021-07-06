@@ -13,8 +13,6 @@ const getLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
-  const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
-
   let currentLeadUnderWriter;
 
   const currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
@@ -34,7 +32,6 @@ const getLeadUnderwriter = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, allTeamMembers),
     currentLeadUnderWriter,
   });
 };
@@ -49,6 +46,12 @@ const getAssignLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
+  const userCanEdit = canUserEditLeadUnderwriter(user);
+
+  if (!userCanEdit) {
+    return res.redirect('/not-found');
+  }
+
   const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
 
   return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
@@ -58,6 +61,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
+    // TODO deal.tfm.leadUnderwriter instead of '';
     assignToSelectOptions: mapAssignToSelectOptions('', user, allTeamMembers),
   });
 };
@@ -70,7 +74,14 @@ const postAssignLeadUnderwriter = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  // const { user } = req.session;
+  const { user } = req.session;
+
+  const userCanEdit = canUserEditLeadUnderwriter(user);
+
+  if (!userCanEdit) {
+    return res.redirect('/not-found');
+  }
+
   // const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
 
   // return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
