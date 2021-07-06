@@ -53,6 +53,11 @@ const dealQuery = gql`
           timestamp
           userFullName
         }
+        estore {
+          siteName
+          buyerName
+          folderName
+        }
       }
       dealSnapshot {
         _id,

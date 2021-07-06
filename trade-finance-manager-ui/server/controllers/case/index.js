@@ -181,6 +181,27 @@ const getCaseFacility = async (req, res) => {
   });
 };
 
+
+const getCaseDocuments = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/documents/documents.njk', {
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    eStoreUrl: process.env.ESTORE_URL,
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'documents',
+    dealId,
+    user: req.session.user,
+  });
+};
+
+
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
@@ -308,7 +329,6 @@ const postTfmFacility = async (req, res) => {
   return res.redirect(`/case/${dealId}/parties`);
 };
 
-
 export default {
   getCaseDeal,
   getCaseTasks,
@@ -316,6 +336,7 @@ export default {
   getCaseTask,
   putCaseTask,
   getCaseFacility,
+  getCaseDocuments,
   getCaseParties,
   getExporterPartyDetails,
   getBuyerPartyDetails,

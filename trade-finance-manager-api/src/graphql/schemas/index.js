@@ -188,6 +188,12 @@ type TFMParties {
   agent: TFMAgent
 }
 
+type TFMEstore {
+  siteName:String
+  buyerName: String
+  folderName: String
+}
+
 type TFMTeam {
   id: String
   name: String
@@ -259,6 +265,7 @@ type TFMDealData {
   history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
+  estore: TFMEstore
 }
 
 type PremiumScheduleData {
