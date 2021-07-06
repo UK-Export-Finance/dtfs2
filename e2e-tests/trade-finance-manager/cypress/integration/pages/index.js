@@ -11,6 +11,7 @@ import bondBeneficiaryPage from './bondBeneficiaryPage';
 import facilityPage from './facilityPage';
 import tasksPage from './tasksPage';
 import taskPage from './taskPage';
+import documentsPage from './documentsPage';
 import underwritingPricingAndRiskPage from './underwriting/pricingAndRiskPage';
 import underwritingPricingAndRiskEditPage from './underwriting/pricingAndRiskEditPage';
 import underwritingLossGivenDefaultPage from './underwriting/lossGivenDefaultPage';
@@ -33,6 +34,7 @@ export default {
   facilityPage,
   tasksPage,
   taskPage,
+  documentsPage,
   underwritingPricingAndRiskPage,
   underwritingPricingAndRiskEditPage,
   underwritingLossGivenDefaultPage,

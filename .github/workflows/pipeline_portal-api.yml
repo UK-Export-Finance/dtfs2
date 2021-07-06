@@ -186,6 +186,7 @@ jobs:
 
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
       
     steps:
     - uses: actions/checkout@v2

@@ -1882,7 +1882,8 @@ jobs:
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}"
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
+              ESTORE_URL="${{ secrets.ESTORE_URL }}"
               
     - name: Secrets
       uses: Azure/cli@v1.0.0
