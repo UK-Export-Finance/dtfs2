@@ -137,7 +137,7 @@ describe('GET underwriting - assign lead underwriter', () => {
       await underwriterLeadUnderwriterController.getAssignLeadUnderwriter(req, res);
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        '',
+        MOCK_DEAL.tfm.leadUnderwriter,
         session.user,
         MOCK_TEAM_UNDERWRITER_MANAGERS,
       );
@@ -199,9 +199,6 @@ describe('POST underwriting - assign lead underwriter', () => {
     api.getDeal = () => Promise.resolve(MOCK_DEAL);
     api.updateLeadUnderwriter = apiUpdateSpy;
   });
-
-  // it('should render template with validationErrors and submittedValues', async () => {
-  // });
 
   it('should call API and redirect to /lead-underwriter', async () => {
     const req = {

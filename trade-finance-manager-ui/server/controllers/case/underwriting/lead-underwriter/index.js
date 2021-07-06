@@ -14,8 +14,11 @@ const getLeadUnderwriter = async (req, res) => {
   const { user } = req.session;
 
   let currentLeadUnderWriter;
+  let currentLeadUnderWriterUserId;
 
-  const currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
+  if (deal.tfm.leadUnderwriter) {
+    currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
+  }
 
   if (currentLeadUnderWriterUserId) {
     currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
@@ -52,6 +55,12 @@ const getAssignLeadUnderwriter = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  let currentLeadUnderWriterUserId;
+
+  if (deal.tfm.leadUnderwriter) {
+    currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
+  }
+
   const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
 
   return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
@@ -61,8 +70,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    // TODO deal.tfm.leadUnderwriter instead of '';
-    assignToSelectOptions: mapAssignToSelectOptions('', user, allTeamMembers),
+    assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, allTeamMembers),
   });
 };
 
@@ -81,18 +89,6 @@ const postAssignLeadUnderwriter = async (req, res) => {
   if (!userCanEdit) {
     return res.redirect('/not-found');
   }
-
-  // const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
-
-  // return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
-  //   activeSubNavigation: 'underwriting',
-  //   activeSideNavigation: 'lead underwriter',
-  //   deal: deal.dealSnapshot,
-  //   tfm: deal.tfm,
-  //   dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
-  //   user,
-  //   assignToSelectOptions: mapAssignToSelectOptions('', user, allTeamMembers),
-  // });
 
   const {
     assignedTo: assignedToValue, // will be user._id or `Unassigned`
