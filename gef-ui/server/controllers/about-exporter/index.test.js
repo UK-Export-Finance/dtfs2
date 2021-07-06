@@ -204,6 +204,19 @@ describe('Validate About Exporter', () => {
       }),
     }));
 
+    // 0 value passed, should result in error
+    mockRequest.body.probabilityOfDefault = '0';
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
+      }),
+    }));
+
     // value below , should result in error
     mockRequest.body.probabilityOfDefault = '14.09';
 
@@ -236,7 +249,7 @@ describe('Validate About Exporter', () => {
     const mockRequest = new MockRequest();
     const mockAboutExporterResponse = new MockAboutExporterResponse();
     mockRequest.body.smeType = 'MICRO';
-    mockRequest.body.probabilityOfDefault = '0';
+    mockRequest.body.probabilityOfDefault = '5';
     mockRequest.body.isFinanceIncreasing = 'true';
 
     api.getApplication = () => Promise.resolve(mockRequest);

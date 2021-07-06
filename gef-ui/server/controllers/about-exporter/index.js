@@ -78,15 +78,17 @@ const validateAboutExporter = async (req, res) => {
       }
     }
 
+    const minPercentage = 0;
     const maxPercentage = 14.1;
     const probabilityOfDefault = Number(body.probabilityOfDefault);
     if (
       Number.isNaN(probabilityOfDefault)
-      || probabilityOfDefault > maxPercentage
+      || probabilityOfDefault >= maxPercentage
+      || probabilityOfDefault <= minPercentage
     ) {
       aboutExporterErrors.push({
         errRef: 'probabilityOfDefault',
-        errMsg: `You must enter a percentage between 0% to ${maxPercentage}%`,
+        errMsg: `You must enter a percentage between ${minPercentage + 0.01}% to ${maxPercentage - 0.01}%`,
       });
     }
 
