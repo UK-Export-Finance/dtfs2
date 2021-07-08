@@ -48,7 +48,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('clicking `underwriting managers decision` nav link should direct to underwriting-managers-decision form', () => {
+  it('clicking `underwriting managers decision` nav link should direct to underwriting-managers-decision page', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
   });
 
