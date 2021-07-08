@@ -30,11 +30,9 @@
 
           </div>
 
-          {% else %}
+          {% elseif userCanEdit %}
 
-          {% if userCanEdit %}
             <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="assign-lead-underwriter-link">Assign a lead underwriter</a></p>
-          {% endif %}
 
         {% endif %}
       </div>
