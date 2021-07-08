@@ -54,10 +54,31 @@ type Deal {
   details: DealDetails
 }
 
+type AllDeal {
+  _id: String!
+  status: String
+  bankRef: String
+  exporter: String
+  product: String
+  type: String
+  lastUpdate: Float
+}
+
 type DealsQuery {
   status: StatusType
-  count: Int,
+  count: Int
   deals: [Deal]
+}
+
+type AllDealsQuery {
+  status: StatusType
+  count: Int
+  deals: [AllDeal]
+}
+
+input DashboardSort {
+  field: String
+  order: Int
 }
 
 input DashboardFilters {
@@ -67,9 +88,10 @@ input DashboardFilters {
 }
 
 input DealsInput {
-  start: Int,
-  pagesize: Int,
+  start: Int
+  pagesize: Int
   filters: [DashboardFilters]
+  sort: [DashboardSort]
 }
 
 type Transaction {
@@ -102,7 +124,7 @@ type Transaction {
 }
 
 type TransactionQuery {
-  count: Int,
+  count: Int
   transactions: [Transaction]
 }
 
@@ -113,20 +135,21 @@ input TransactionFilters {
 }
 
 input TransactionInput {
-  start: Int,
-  pagesize: Int,
+  start: Int
+  pagesize: Int
   filters: [TransactionFilters]
 }
 
 
 type Query {
   currencies: [Currency]
+  allDeals(params: DealsInput): AllDealsQuery
   deals(params: DealsInput): DealsQuery
   transactions(params: TransactionInput): TransactionQuery
 }
 
 type DealStatusErrorItem {
-  comments: ErrorListItem,
+  comments: ErrorListItem
   confirmSubmit: ErrorListItem
 }
 

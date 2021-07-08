@@ -1,5 +1,6 @@
 const APPLICATION = [{
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 1',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 1',
@@ -10,6 +11,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 2',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 2',
@@ -20,6 +22,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 3',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 3',
@@ -30,6 +33,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 4',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 4',
@@ -40,6 +44,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 5',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 5',
@@ -50,6 +55,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 6',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 6',
@@ -60,6 +66,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 7',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 7',
@@ -70,6 +77,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 8',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 8',
@@ -80,6 +88,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 9',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 9',
@@ -90,6 +99,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 10',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 10',
@@ -100,6 +110,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 11',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 11',
@@ -110,6 +121,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 12',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 12',
@@ -120,6 +132,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 13',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 13',
@@ -130,6 +143,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 14',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 14',
@@ -140,6 +154,7 @@ const APPLICATION = [{
   updatedAt: null,
 }, {
   userId: null,
+  bankId: null,
   bankInternalRefName: 'Bank 15',
   coverTermsId: 'ABC',
   additionalRefName: 'Team 15',
