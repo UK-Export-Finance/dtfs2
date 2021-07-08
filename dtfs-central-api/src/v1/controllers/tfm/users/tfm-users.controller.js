@@ -1,15 +1,9 @@
-const $ = require('mongo-dot-notation');
 const { ObjectID } = require('mongodb');
 
 /* eslint-disable no-underscore-dangle */
 const db = require('../../../../drivers/db-client');
 
 const usersCollection = 'tfm-users';
-
-const withoutId = (obj) => {
-  const { _id, ...cleanedObject } = obj;
-  return cleanedObject;
-};
 
 const createUser = async (User) => {
   const collection = await db.getCollection(usersCollection);
@@ -83,41 +77,6 @@ exports.findTeamUsersGET = async (req, res) => {
   const teamUsers = await findTeamUsers(teamId);
 
   return res.status(200).send(teamUsers);
-};
-
-const updateUser = async (userId, update) => {
-  const collection = await db.getCollection(usersCollection);
-
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: userId },
-    $.flatten(withoutId(update)),
-    { returnOriginal: false },
-  );
-
-  return findAndUpdateResponse.value;
-};
-
-exports.updateUserTasksPUT = async (req, res) => {
-  const { id } = req.params;
-
-  const { updatedTasks } = req.body;
-
-  const user = await findOneUserById(id);
-
-  const userUpdate = {
-    ...user,
-    assignedTasks: updatedTasks,
-  };
-
-  if (user) {
-    const updatedUser = await updateUser(
-      user._id,
-      userUpdate,
-    );
-
-    return res.status(200).json(updatedUser);
-  }
-  return res.status(404).send();
 };
 
 const deleteUser = async (username) => {

@@ -6,7 +6,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    assignedTasks: [],
   },
   {
     username: 'T1_USER_2',
@@ -15,7 +14,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    assignedTasks: [],
   },
   {
     username: 'T1_USER_3',
@@ -24,7 +22,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    assignedTasks: [],
   },
   {
     username: 'T2_USER_1',
@@ -33,7 +30,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    assignedTasks: [],
   },
   {
     username: 'T2_USER_2',
@@ -42,7 +38,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    assignedTasks: [],
   },
   {
     username: 'T2_USER_3',
@@ -51,7 +46,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    assignedTasks: [],
   },
   {
     username: 'BUSINESS_SUPPORT_USER_1',
@@ -60,7 +54,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'John',
     lastName: 'Davies',
-    assignedTasks: [],
   },
   {
     username: 'BUSINESS_SUPPORT_USER_2',
@@ -69,7 +62,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Sarah',
     lastName: 'Walker',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITING_SUPPORT_1',
@@ -78,7 +70,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Ben',
     lastName: 'Wilson',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITING_SUPPORT_2',
@@ -87,7 +78,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Rachel',
     lastName: 'Smith',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITER_MANAGER_1',
@@ -96,7 +86,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Benjamin',
     lastName: 'Jones',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITER_MANAGER_2',
@@ -105,7 +94,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Jonathan',
     lastName: 'Roberts',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITER_1',
@@ -114,7 +102,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Olivia',
     lastName: 'Williams',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITER_2',
@@ -123,7 +110,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'James',
     lastName: 'Smith',
-    assignedTasks: [],
   },
   {
     username: 'UNDERWRITER_3',
@@ -132,7 +118,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Rachel',
     lastName: 'Jones',
-    assignedTasks: [],
   },
   {
     username: 'RISK_MANAGER_1',
@@ -141,7 +126,6 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Steven',
     lastName: 'Robinson',
-    assignedTasks: [],
   },
   {
     username: 'QA',
@@ -150,6 +134,5 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'Caroline-Test',
     lastName: 'O’Test Taylor',
-    assignedTasks: [],
   },
 ];

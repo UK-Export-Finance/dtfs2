@@ -4,8 +4,6 @@ const {
   updateTask,
   generateTaskDates,
   updateTasksCanEdit,
-  updateUserTasks,
-  updateOriginalAssigneeTasks,
   isMIAdeal,
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
@@ -306,125 +304,6 @@ describe('tasks controller  / tasks helper functions', () => {
 
         expect(result).toEqual(expected);
       });
-    });
-  });
-
-  describe('updateUserTasks', () => {
-    it('should add a task to users assignedTasks if a task.assignedTo.userI matches given userId', async () => {
-      const mockUser = MOCK_USERS[0];
-      const userId = mockUser._id;
-      const {
-        username,
-        firstName,
-        lastName,
-      } = mockUser;
-
-      const mockGroup1Tasks = [
-        {
-          id: '1',
-          groupId: 1,
-          status: 'In progress',
-          assignedTo: {
-            userFullName: `${firstName} ${lastName}`,
-            userId,
-          },
-        },
-        {
-          id: '2',
-          groupId: 1,
-          status: 'To do',
-        },
-        {
-          id: '3',
-          groupId: 1,
-          status: 'To do',
-        },
-      ];
-
-      const mockTasks = [
-        {
-          groupTitle: 'Group 1 tasks',
-          id: 1,
-          groupTasks: mockGroup1Tasks,
-        },
-        {
-          groupTitle: 'Group 2 tasks',
-          id: 2,
-          groupTasks: [],
-        },
-      ];
-
-
-      // check user initially has no tasks assigned
-      const user = await api.findUser(username);
-
-      expect(user.assignedTasks).toEqual([]);
-
-      // assign a task to user
-      const updatedUserTasks = await updateUserTasks(mockTasks, userId);
-      expect(updatedUserTasks.length).toEqual(1);
-      expect(updatedUserTasks).toEqual([mockGroup1Tasks[0]]);
-    });
-  });
-
-  describe('updateOriginalAssigneeTasks', () => {
-    it('should remove a task from users tasks if user has been assigned and then unassigned', async () => {
-      const mockUser = MOCK_USERS[0];
-      const userId = mockUser._id;
-      const {
-        username,
-        firstName,
-        lastName,
-      } = mockUser;
-
-      const mockGroup1Tasks = [
-        {
-          id: '1',
-          groupId: 1,
-          status: 'In progress',
-          assignedTo: {
-            userFullName: `${firstName} ${lastName}`,
-            userId,
-          },
-        },
-        {
-          id: '2',
-          groupId: 1,
-          status: 'To do',
-        },
-        {
-          id: '3',
-          groupId: 1,
-          status: 'To do',
-        },
-      ];
-
-      const mockTasks = [
-        {
-          groupTitle: 'Group 1 tasks',
-          id: 1,
-          groupTasks: mockGroup1Tasks,
-        },
-        {
-          groupTitle: 'Group 2 tasks',
-          id: 2,
-          groupTasks: [],
-        },
-      ];
-
-
-      // check user initially has no tasks assigned
-      const user = await api.findUser(username);
-
-      expect(user.assignedTasks).toEqual([]);
-
-      // assign a task to user
-      const updatedUserTasks = await updateUserTasks(mockTasks, userId);
-      expect(updatedUserTasks.length).toEqual(1);
-
-      const updatedUserTasksAfterUnassigned = await updateOriginalAssigneeTasks(userId, '1');
-
-      expect(updatedUserTasksAfterUnassigned.length).toEqual(0);
     });
   });
 

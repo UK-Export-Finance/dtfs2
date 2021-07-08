@@ -104,9 +104,4 @@ tfmRouter.route('/users/team/:teamId')
     tfmUsersController.findTeamUsersGET,
   );
 
-tfmRouter.route('/users/:id/tasks')
-  .put(
-    tfmUsersController.updateUserTasksPUT,
-  );
-
 module.exports = tfmRouter;
