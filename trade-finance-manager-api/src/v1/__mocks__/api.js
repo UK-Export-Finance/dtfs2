@@ -265,14 +265,6 @@ module.exports = {
   },
   findUserById: (userId) =>
     MOCK_USERS.find((user) => user._id === userId), // eslint-disable-line no-underscore-dangle
-  updateUserTasks: (userId, updatedTasks) => {
-    const user = MOCK_USERS.find((u) => u._id === userId); // eslint-disable-line no-underscore-dangle
-
-    return {
-      ...user,
-      assignedTasks: updatedTasks,
-    };
-  },
   findTeamMembers: (teamId) =>
     MOCK_USERS.filter((user) => user.teams.includes(teamId)),
   findOneTeam: (teamId) =>
