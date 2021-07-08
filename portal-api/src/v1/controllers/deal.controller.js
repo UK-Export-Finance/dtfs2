@@ -75,6 +75,28 @@ const dealsQuery = (user, filter) => {
   return result;
 };
 
+const allDealsFilters = (user, filters = []) => {
+  const sanitisedFilters = [...filters];
+
+  // add the bank clause if we're not a superuser
+  if (!isSuperUser(user)) {
+    sanitisedFilters.push({ bankId: user.bank && user.bank.id });
+  }
+
+  // TODO: some transformations may be needed for certain filters, such as general keyword filter
+
+  let result = {};
+  if (sanitisedFilters.length === 1) {
+    [result] = sanitisedFilters;
+  } else if (sanitisedFilters.length > 1) {
+    result = {
+      $and: sanitisedFilters,
+    };
+  }
+
+  return result;
+};
+
 const findDeals = async (requestingUser, filter) => {
   const query = dealsQuery(requestingUser, filter);
   return api.queryDeals(query);
@@ -87,6 +109,18 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
   return api.queryDeals(query, start, pagesize);
 };
 exports.findPaginatedDeals = findPaginatedDeals;
+
+const findAllDeals = async (requestingUser, filters, sort) => {
+  const sanitisedFilters = allDealsFilters(requestingUser, filters, sort);
+  return api.queryAllDeals(sanitisedFilters, sort);
+};
+exports.findAllDeals = findAllDeals;
+
+const findAllPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filters, sort) => {
+  const sanitisedFilters = allDealsFilters(requestingUser, filters);
+  return api.queryAllDeals(sanitisedFilters, sort, start, pagesize);
+};
+exports.findAllPaginatedDeals = findAllPaginatedDeals;
 
 const findOneDeal = async (_id, callback) => {
   const deal = await api.findOneDeal(_id);
