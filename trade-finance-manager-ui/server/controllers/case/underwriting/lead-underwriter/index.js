@@ -61,7 +61,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
     currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
   }
 
-  const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
+  const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS);
 
   return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
     activeSubNavigation: 'underwriting',
