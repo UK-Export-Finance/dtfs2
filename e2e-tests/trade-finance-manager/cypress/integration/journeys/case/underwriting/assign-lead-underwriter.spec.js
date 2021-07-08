@@ -168,21 +168,6 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.visit(relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioAllTasks().click();
 
-    // const taskGroup1Task5 = pages.tasksPage.tasks.row(1, 5);
-
-    // taskGroup1Task5.assignedTo().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal(`${underwriterManager1FullName}`);
-    // });
-
-    // const taskGroup2Task1 = pages.tasksPage.tasks.row(2, 1);
-
-    // const taskGroup3Task1 = pages.tasksPage.tasks.row(3, 1);
-    // const taskGroup3Task2 = pages.tasksPage.tasks.row(3, 2);
-    // const taskGroup3Task3 = pages.tasksPage.tasks.row(3, 3);
-
-    // const taskGroup4Task1 = pages.tasksPage.tasks.row(4, 1);
-    // const taskGroup4Task4 = pages.tasksPage.tasks.row(4, 3);
-
     const expectedTasks = [
       { groupId: 1, taskId: 5 },
       { groupId: 2, taskId: 1 },
@@ -194,11 +179,6 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     ];
 
     cy.wrap(expectedTasks).each((row) => {
-      // const taskId = index + 1;
-      // return new Cypress.Promise((resolve) => {
-      //   submitTaskCompleteAndAssertOtherTasks(1, taskId);
-      //   resolve();
-      // });
       const { groupId, taskId } = row;
 
       pages.tasksPage.tasks.row(groupId, taskId).assignedTo().invoke('text').then((text) => {
