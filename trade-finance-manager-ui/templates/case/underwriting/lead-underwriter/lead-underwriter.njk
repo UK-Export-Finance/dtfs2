@@ -18,13 +18,13 @@
           <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-three-quarters">
-              <p class="govuk-!-margin-top-0">{{ currentLeadUnderWriter.firstName }} {{ currentLeadUnderWriter.lastName }}</p>
-              <p><a class="govuk-link" href="mailto:{{ currentLeadUnderWriter.email }}">{{ currentLeadUnderWriter.email }}</a></p>
+              <p class="govuk-!-margin-top-0" data-cy="lead-underwriter-name">{{ currentLeadUnderWriter.firstName }} {{ currentLeadUnderWriter.lastName }}</p>
+              <p><a class="govuk-link" href="mailto:{{ currentLeadUnderWriter.email }}" data-cy="lead-underwriter-email">{{ currentLeadUnderWriter.email }}</a></p>
             </div>
 
             <div class="govuk-grid-column-one-quarter text-align-right">
               {% if userCanEdit %}
-                <p class="govuk-!-margin-top-0"><a class="govuk-link" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign">Change</a></p>
+                <p class="govuk-!-margin-top-0"><a class="govuk-link" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="change-lead-underwriter-link">Change</a></p>
               {% endif %}
             </div>
 
@@ -32,7 +32,9 @@
 
           {% else %}
 
-          <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="assign-lead-underwriter-link">Assign a lead underwriter</a></p>
+          {% if userCanEdit %}
+            <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="assign-lead-underwriter-link">Assign a lead underwriter</a></p>
+          {% endif %}
 
         {% endif %}
       </div>
