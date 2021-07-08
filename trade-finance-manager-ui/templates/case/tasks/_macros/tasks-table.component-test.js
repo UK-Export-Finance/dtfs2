@@ -14,6 +14,7 @@ describe(component, () => {
     tasks: [
       {
         groupTitle: 'Test title',
+        id: 1,
         groupTasks: [
           {
             id: '1',
