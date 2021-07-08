@@ -46,7 +46,6 @@ $govuk-new-link-styles: true;
   .govuk-back-link {
     color: govuk-colour("white");
     margin-bottom: 0;
-    margin-left: 1em;
     line-height: 25px;
     &:focus {
       color: $govuk-focus-text-colour;
