@@ -1,0 +1,19 @@
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Automatic inclusion notice
+{% endblock %}
+
+{% block content %}
+
+  {% include "includes/application-preview/summary.njk" %}
+  {% include "includes/application-preview/task-comments.njk" %}
+
+  <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
+
+  {% include "includes/application-preview/about-exporter.njk" %}
+  {% include "includes/application-preview/automatic-cover.njk" %}
+  {% include "includes/application-preview/facilities.njk" %}
+  {% include "includes/application-preview/submit.njk" %}
+
+{% endblock %}

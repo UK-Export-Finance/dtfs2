@@ -1,6 +1,7 @@
 $govuk-new-link-styles: true;
 
 @import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./helpers.scss";
 
 .govuk-section-break {
@@ -41,16 +42,23 @@ $govuk-new-link-styles: true;
   justify-content: space-between;
 
   .govuk-body,
-  .govuk-link {
+  .govuk-link,
+  .govuk-back-link {
     color: govuk-colour("white");
     margin-bottom: 0;
-  }
-
-  .govuk-link {
+    margin-left: 1em;
     line-height: 25px;
-
     &:focus {
       color: $govuk-focus-text-colour;
     }
   }
+}
+
+.preview-banner {
+  display: block;
+}
+
+.preview-status {
+  color: $govuk-brand-colour;
+  background-color: govuk-colour("white");
 }

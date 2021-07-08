@@ -149,6 +149,21 @@ const getAddressesByPostcode = async (postcode) => {
     return apiErrorHandler(err);
   }
 };
+const getMakerUser = async (id, token) => {
+  if (!token || !id) return false;
+
+  try {
+    const { data } = await Axios.get(`/users/${id}`, {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
 
 export {
   validateToken,
@@ -159,7 +174,6 @@ export {
   getExporter,
   updateExporter,
   getCoverTerms,
-  // createCoverTerms,
   updateCoverTerms,
   getFacilities,
   createFacility,
@@ -168,4 +182,5 @@ export {
   deleteFacility,
   getCompaniesHouseDetails,
   getAddressesByPostcode,
+  getMakerUser,
 };
