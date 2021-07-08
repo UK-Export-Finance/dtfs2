@@ -1,22 +1,22 @@
 import express from 'express';
-import axios from 'axios';
+// import axios from 'axios';
 // import companiesHouseAPI from './companies-house-api';
 
 const healthcheck = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
-const dealApiUrl = process.env.DEAL_API_URL;
+// const dealApiUrl = process.env.DEAL_API_URL;
 
-const apiHealthCheck = async () => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${dealApiUrl}/healthcheck`,
-    });
-    return response.data;
-  } catch (err) {
-    return err;
-  }
-};
+// const apiHealthCheck = async () => {
+//   try {
+//     const response = await axios({
+//       method: 'get',
+//       url: `${dealApiUrl}/healthcheck`,
+//     });
+//     return response.data;
+//   } catch (err) {
+//     return err;
+//   }
+// };
 
 /*
 const companiesHouseHealthCheck = async () => {
@@ -36,7 +36,7 @@ healthcheck.get('/healthcheck', async (req, res) => {
       commit_hash: GITHUB_SHA,
       //      companies_house: await companiesHouseHealthCheck(),
     },
-    api: await apiHealthCheck(),
+    // api: await apiHealthCheck(),
   });
 });
 
