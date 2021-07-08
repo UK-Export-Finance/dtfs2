@@ -17,6 +17,7 @@ import underwritingPricingAndRiskEditPage from './underwriting/pricingAndRiskEdi
 import underwritingLossGivenDefaultPage from './underwriting/lossGivenDefaultPage';
 import underwritingProbabilityOfDefaultPage from './underwriting/probabilityOfDefaultPage';
 import underwritingBankSecurity from './underwriting/bankSecurityPage';
+import leadUnderwriterPage from './underwriting/leadUnderwriterPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
 import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
 
@@ -40,6 +41,7 @@ export default {
   underwritingLossGivenDefaultPage,
   underwritingProbabilityOfDefaultPage,
   underwritingBankSecurity,
+  leadUnderwriterPage,
   managersDecisionPage,
   facilityRiskProfilePage,
 };

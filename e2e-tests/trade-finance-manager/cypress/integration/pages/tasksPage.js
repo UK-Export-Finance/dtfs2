@@ -8,7 +8,7 @@ const tasksPage = {
         row,
         link: () => row.get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-link"]`),
         title: () => row.get(`[data-cy="task-table-row-${taskId}-title"]`),
-        assignedTo: () => row.get(`[data-cy="task-table-row-${taskId}-user-full-name"]`),
+        assignedTo: () => row.get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-user-full-name"]`),
         dateStarted: () => row.get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-date-started"]`),
         dateCompleted: () => row.get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-date-completed"]`),
         status: () => row.get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-status"]`),
