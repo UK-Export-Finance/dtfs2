@@ -6,6 +6,7 @@ const CONSTANTS = require('../../constants');
 const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
+const { assignTeamTasksToOneUser } = require('./tasks.controller');
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -177,6 +178,18 @@ const updateTfmLeadUnderwriter = async (
   };
 
   const updatedDeal = await api.updateDeal(dealId, leadUnderwriterUpdate);
+
+  const teamTasksToUpdate = [
+    CONSTANTS.TEAMS.UNDERWRITERS.id,
+    CONSTANTS.TEAMS.UNDERWRITER_MANAGERS.id,
+  ];
+
+  await assignTeamTasksToOneUser(
+    dealId,
+    teamTasksToUpdate,
+    userId,
+  );
+
 
   return updatedDeal.tfm;
 };
