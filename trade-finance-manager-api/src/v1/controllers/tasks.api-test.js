@@ -8,6 +8,7 @@ const {
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
+  assignTeamTasksToOneUser,
 } = require('./tasks.controller');
 
 const api = require('../api');
@@ -15,8 +16,11 @@ const api = require('../api');
 const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
+const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
+const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
+const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
 
-describe('tasks controller  / tasks helper functions', () => {
+describe('tasks controller', () => {
   const mockDeal = {
     dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
     tfm: {
@@ -393,13 +397,13 @@ describe('tasks controller  / tasks helper functions', () => {
   });
 
   describe('updateTfmTask', () => {
-    const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
-
     const mockUser = MOCK_USERS[0];
     const userId = mockUser._id;
     const { firstName, lastName } = mockUser;
 
     it('should return the updated task', async () => {
+      const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+
       const tfmTaskUpdate = {
         id: '1',
         groupId: 1,
@@ -434,6 +438,8 @@ describe('tasks controller  / tasks helper functions', () => {
         // has task #1 as 'To do'.
         // therefore task #2 cannot be updated.
 
+        const dealId = MOCK_DEAL_AIN_SUBMITTED._id;
+
         const tfmTask2Update = {
           id: '2',
           groupId: 1,
@@ -454,6 +460,8 @@ describe('tasks controller  / tasks helper functions', () => {
 
     describe('when an MIA deal has the first task in the first group completed immediately', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
+        const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+
         const tfmTaskUpdate = {
           id: '1',
           groupId: 1,
@@ -474,6 +482,8 @@ describe('tasks controller  / tasks helper functions', () => {
 
     describe('when an MIA deal has the first task in the first group completed after being `In progress`', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
+        const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+
         // make sure task is in `To do` state.
         const tfmTaskUpdateTodo = {
           id: '1',
@@ -525,6 +535,59 @@ describe('tasks controller  / tasks helper functions', () => {
 
         expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
       });
+    });
+  });
+
+  describe('assignTeamTasksToOneUser', () => {
+    it('should assign all tasks in a team to the given user', async () => {
+      const dealId = MOCK_MIA_SECOND_SUBMIT._id;
+
+      const mockTeamIds = [
+        'UNDERWRITER_MANAGERS',
+        'UNDERWRITERS',
+      ];
+
+      const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+      const userId = mockUser._id;
+
+      const tasksThatShouldBeUpdated = [];
+
+      MOCK_MIA_TASKS.forEach((group) => {
+        group.groupTasks.forEach((task) => {
+          if (mockTeamIds.includes(task.team.id)) {
+            tasksThatShouldBeUpdated.push(task);
+          }
+        });
+      });
+
+      const result = await assignTeamTasksToOneUser(
+        dealId,
+        mockTeamIds,
+        userId,
+      );
+
+      let filteredTasksResult = [];
+
+      result.forEach((group) => {
+        group.groupTasks.forEach((task) => {
+          if (mockTeamIds.includes(task.team.id)) {
+            filteredTasksResult = [
+              ...filteredTasksResult,
+              task,
+            ];
+          }
+        });
+      });
+
+      const expected = tasksThatShouldBeUpdated.map((task) => ({
+        ...task,
+        assignedTo: {
+          userId,
+          userFullName: `${mockUser.firstName} ${mockUser.lastName}`,
+        },
+      }));
+
+      expect(filteredTasksResult).toEqual(expected);
     });
   });
 });

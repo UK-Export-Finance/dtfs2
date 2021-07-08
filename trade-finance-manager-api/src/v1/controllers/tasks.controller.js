@@ -231,12 +231,10 @@ const assignTeamTasksToOneUser = async (dealId, teamIds, userId) => {
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map(async (t) => {
+      groupTasks: group.groupTasks.map((t) => {
         let task = t;
 
         if (teamIds.includes(task.team.id)) {
-          // const originalAssignedUserId = task.assignedTo.userId;
-
           task = {
             ...task,
             assignedTo: {
