@@ -37,7 +37,7 @@ healthcheck.get('/healthcheck', async (req, res) => {
       commit_hash: GITHUB_SHA,
       //      companies_house: await companiesHouseHealthCheck(),
     },
-    api: await apiHealthCheck(),
+    //   api: await apiHealthCheck(),
   });
 });
 
