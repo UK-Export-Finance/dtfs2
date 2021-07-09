@@ -8,7 +8,7 @@ const {
   getTask,
   canUpdateTask,
 } = require('../helpers/tasks');
-const { sendUpdatedTaskEmail } = require('./task-emails');
+const sendUpdatedTaskEmail = require('./task-emails');
 
 const updateHistory = ({
   taskId,

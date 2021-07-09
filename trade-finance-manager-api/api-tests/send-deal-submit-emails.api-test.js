@@ -1,4 +1,3 @@
-const moment = require('moment');
 const {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
@@ -6,8 +5,9 @@ const {
   sendMiaAcknowledgement,
   generateFacilitiesListString,
 } = require('../src/v1/controllers/send-deal-submit-emails');
+const { generateTaskEmailVariables } = require('../src/v1/helpers/generate-task-email-variables');
+
 const CONSTANTS = require('../src/constants');
-const formattedTimestamp = require('../src/v1/formattedTimestamp');
 const MOCK_TEAMS = require('../src/v1/__mocks__/mock-teams');
 const api = require('../src/v1/api');
 
@@ -76,14 +76,16 @@ describe('send-deal-submit-emails', () => {
 
   describe('sendFirstTaskEmail', () => {
     it('should return API response with correct emailVariables', async () => {
+      const mockUrlOrigin = 'test.com';
       const firstTask = mockDeal.tfm.tasks[0].groupTasks[0];
 
-      const expectedEmailVariables = {
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        submissionType: mockDeal.dealSnapshot.details.submissionType,
-        submissionDate: moment(formattedTimestamp(mockDeal.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
-        bank: mockDeal.dealSnapshot.details.owningBank.name,
-      };
+      const expectedEmailVariables = generateTaskEmailVariables(
+        mockUrlOrigin,
+        firstTask,
+        mockDeal._id,
+        mockDeal.dealSnapshot.submissionDetails['supplier-name'],
+        mockDeal.dealSnapshot.details.ukefDealId,
+      );
 
       const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
@@ -92,13 +94,13 @@ describe('send-deal-submit-emails', () => {
         content: {
           body: {},
         },
-        id: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
+        id: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
         email: expectedTeamEmailAddress,
         ...expectedEmailVariables,
         template: {},
       };
 
-      const result = await sendFirstTaskEmail(mockDeal);
+      const result = await sendFirstTaskEmail(mockDeal, mockUrlOrigin);
 
       expect(result).toEqual(expected);
     });
