@@ -1,0 +1,43 @@
+{% extends "index.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block pageTitle %}
+  Application submitted
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {{ govukPanel({
+        html: " Automatic inclusion notice submitted for checking at your bank",
+        classes: "govuk-!-margin-bottom-7",
+        attributes: {
+          'data-cy': 'application-submission-confirmation'
+        }
+      }) }}
+
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-6" data-cy="heading">
+        What happens next
+      </h2>
+
+      <p class="govuk-body govuk-!-margin-bottom-6">
+        Someone at your bank will check what you've submitted.
+      </p>
+
+      <p class="govuk-body">
+        They'll either:
+        <ul class="govuk-body govuk-!-margin-bottom-7">
+          <li>submit it to UKEF</li>
+          <li>send it back to you for changes</li>
+        </ul>
+      </p>
+
+      <p class="govuk-body govuk-!-margin-bottom-6">
+        <a class="govuk-link" href="/dashboard" data-cy="dashboard-link">Return to all applications and notices</a>
+      </p>
+
+    </div>
+  </div>
+
+{% endblock %}

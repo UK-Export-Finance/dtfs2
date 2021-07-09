@@ -1,11 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import _startCase from 'lodash/startCase';
 import * as api from '../../services/api';
-import { mapSummaryList, status } from '../../utils/helpers';
+import { mapSummaryList, status, validationErrorHandler } from '../../utils/helpers';
 import { exporterItems, coverItems, facilityItems } from '../../utils/display-items';
 import { PROGRESS, FACILITY_TYPE } from '../../../constants';
 
-const applicationDetails = async (req, res) => {
+const maxCommentLength = 400;
+
+export const applicationDetails = async (req, res) => {
   const { params } = req;
   const { applicationId } = params;
 
@@ -58,4 +60,50 @@ const applicationDetails = async (req, res) => {
   }
 };
 
-export default applicationDetails;
+export const getApplicationSubmission = (req, res) => {
+  const { params } = req;
+  const { applicationId } = params;
+  return res.render('application-details-comments.njk', { applicationId, maxCommentLength });
+};
+
+export const postApplicationSubmission = async (req, res, next) => {
+  const { params, body } = req;
+  const { userToken } = req.session;
+  const { applicationId } = params;
+  const { comments } = body;
+  const application = await api.getApplication(applicationId);
+  const maker = await api.getMakerUser(application.userId, userToken);
+
+  // TODO : Add some validation here to make sure that the whole application is valid
+  try {
+    if (comments.length > maxCommentLength) {
+      const errors = validationErrorHandler({
+        errRef: 'comments',
+        errMsg: `You have entered more than ${maxCommentLength} characters`,
+      });
+
+      return res.render('application-details-comments.njk', {
+        applicationId, maxCommentLength, errors, comments,
+      });
+    }
+
+    const commentObj = {
+      role: 'maker', userName: maker.username, createdAt: Date.now(), comment: comments,
+    };
+
+    application.comments = application.comments
+      ? application.comments.push(commentObj)
+      : [commentObj];
+
+    application.status = PROGRESS.BANK_CHECK;
+
+    await api.updateApplication(applicationId, application);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.render('application-details-submitted.njk', { applicationId });
+};
+
+
+export default { applicationDetails, getApplicationSubmission, postApplicationSubmission };
