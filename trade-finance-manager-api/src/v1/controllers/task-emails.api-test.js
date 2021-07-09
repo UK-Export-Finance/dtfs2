@@ -33,17 +33,19 @@ describe('task emails functions', () => {
         (t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
       );
 
-      await sendUpdatedTaskEmail(mockTask, mockDeal);
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
       const salesforceTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE),
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
-        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
         salesforceTeam.email,
         expectedEmailVars,
       );
