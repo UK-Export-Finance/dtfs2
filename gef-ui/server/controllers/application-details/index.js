@@ -70,31 +70,30 @@ export const postApplicationSubmission = async (req, res, next) => {
   const { params, body } = req;
   const { userToken } = req.session;
   const { applicationId } = params;
-  const { comments } = body;
+  const { comment } = body;
   const application = await api.getApplication(applicationId);
   const maker = await api.getMakerUser(application.userId, userToken);
 
   // TODO : Add some validation here to make sure that the whole application is valid
   try {
-    if (comments.length > maxCommentLength) {
+    if (comment.length > maxCommentLength) {
       const errors = validationErrorHandler({
         errRef: 'comments',
         errMsg: `You have entered more than ${maxCommentLength} characters`,
       });
 
       return res.render('application-details-comments.njk', {
-        applicationId, maxCommentLength, errors, comments,
+        applicationId, maxCommentLength, errors, comment,
       });
     }
 
     const commentObj = {
-      role: 'maker', userName: maker.username, createdAt: Date.now(), comment: comments,
+      role: 'maker', userName: maker.username, createdAt: Date.now(), comment,
     };
+    const comments = application.comments || [];
+    comments.push(commentObj);
 
-    application.comments = application.comments
-      ? application.comments.push(commentObj)
-      : [commentObj];
-
+    application.comments = comments;
     application.status = PROGRESS.BANK_CHECK;
 
     await api.updateApplication(applicationId, application);

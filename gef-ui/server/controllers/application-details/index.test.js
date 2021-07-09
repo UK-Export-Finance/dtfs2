@@ -22,7 +22,7 @@ const MockSubmissionRequest = () => ({
   },
   query: {},
   body: {
-    comments: 'Some comments here',
+    comment: 'Some comments here',
   },
   session: {
     userToken: '',
@@ -145,13 +145,13 @@ describe('POST Application Submission', () => {
 
   it('renders error where comments are too long', async () => {
     const longComments = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante nec magna fringilla dapibus. Praesent porta nibh at metus venenatis feugiat. Proin vel sollicitudin ligula. Nulla sed massa quis augue bibendum lacinia vitae id leo. Aliquam quis imperdiet felis, et tempus eros. Duis efficitur odio nisl, non finibus urna convallis sit amet. Cras tortor odio, finibus in fermentum vel, posuere quis.';
-    mockRequest.body.comments = longComments;
+    mockRequest.body.comment = longComments;
 
     await postApplicationSubmission(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
       applicationId: expect.any(String),
-      comments: longComments,
+      comment: longComments,
       maxCommentLength: expect.any(Number),
       errors: expect.any(Object),
     }));
