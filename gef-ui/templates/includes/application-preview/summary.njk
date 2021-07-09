@@ -1,0 +1,66 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+<div class="application-banner preview-banner" data-cy="application-banner">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full-from-desktop">
+        {{ govukBackLink({
+          text: "Back",
+          href: "/dashboard",
+          attributes: {
+            'data-cy': 'back-link'
+          }
+        }) }}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        <p class="govuk-body">Deal ID</p>
+        <p class="govuk-body" data-cy="deal-id">{{ dealId }}</p>
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        <p class="govuk-body">Exporter</p>
+        <p class="govuk-body" data-cy="exporter"><b>{{ companyName }}</b></p>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <p class="govuk-body">Bank's reference</p>
+        <p class="govuk-body" data-cy="bank-reference"><b>{{ bankInternalRefName }}</b></p>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-one-quarter">
+        <div class="preview-status">
+          <p><strong>Status</strong>
+            {{ govukTag({
+              text: "BANK CHECK (NOTICE)",
+              attributes: { 'data-cy': 'status' },
+              classes: 'govuk-tag--blue govuk-!-margin-top-2 govuk-!-margin-bottom-2'
+            }) }}
+          </p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter">
+        <p data-cy="date-created"><strong>Date created</strong><br>{{ dateCreated | localiseTimestamp('DD MMM YYYY', timezone) }}</p>
+        <p data-cy="created-by"><strong>Created by</strong><br>{{ createdBy }}</p>
+        <p data-cy="checked-by"><strong>Checked by</strong><br>{{ checkedBy }}</p>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter">
+        <p data-cy="product"><strong>Product</strong><br>General Export Facility</p>
+        <p data-cy="submission-type"><strong>Type</strong><br>{{ applicationType }}</p>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter">
+        <p data-cy="facility-summary">
+          <strong>Bank's facility</strong>
+          <br>Cash Facility ({{ cashFacilitiesCount }})
+          <br>Contingent Facility ({{ contingentFacilitiesCount }})
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
