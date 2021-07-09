@@ -130,13 +130,14 @@ const updateDealName = async (id, newName, token) => {
   };
 };
 
-const updateDealStatus = async (statusUpdate, token) => {
+const updateDealStatus = async (statusUpdate, token, origin = '') => {
   const response = await axios({
     method: 'put',
     url: `${urlRoot}/v1/deals/${statusUpdate._id}/status`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
+      origin,
     },
     data: statusUpdate,
   });
