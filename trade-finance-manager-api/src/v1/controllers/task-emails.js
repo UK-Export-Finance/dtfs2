@@ -1,23 +1,7 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
-const { lowercaseFirstLetter } = require('../../utils/string');
-
-const generateTaskUrl = (urlOrigin, dealId, task) => {
-  const {
-    id: taskId,
-    groupId,
-  } = task;
-
-  return `${urlOrigin}/case/${dealId}/tasks/${groupId}/${taskId}`;
-};
-
-const generateTaskEmailVariables = (urlOrigin, task, dealId, exporterName, ukefDealId) => ({
-  taskTitle: lowercaseFirstLetter(task.title),
-  taskUrl: generateTaskUrl(urlOrigin, dealId, task),
-  exporterName,
-  ukefDealId,
-});
+const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 
 const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   let templateId;
@@ -106,8 +90,4 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   return null;
 };
 
-module.exports = {
-  generateTaskUrl,
-  generateTaskEmailVariables,
-  sendUpdatedTaskEmail,
-};
+module.exports = sendUpdatedTaskEmail;

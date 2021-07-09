@@ -1,11 +1,13 @@
-const moment = require('moment');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const formattedTimestamp = require('../formattedTimestamp');
 const { getFirstTask } = require('../helpers/tasks');
 const { issuedFacilities } = require('../helpers/issued-facilities');
-const { generateFacilitiesListString, generateBSSListString, generateEWCSListString } = require('../helpers/notify-template-formatters');
-
+const {
+  generateFacilitiesListString,
+  generateBSSListString,
+  generateEWCSListString,
+} = require('../helpers/notify-template-formatters');
+const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
 
 // make sure the first task is `Match or Create Parties`
@@ -13,37 +15,34 @@ const sendTfmEmail = require('./send-tfm-email');
 const shouldSendFirstTaskEmail = (firstTask) =>
   (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
 
-const sendFirstTaskEmail = async (deal) => {
+const sendFirstTaskEmail = async (deal, urlOrigin) => {
   const { tfm, dealSnapshot } = deal;
   const { tasks } = tfm;
 
   const firstTask = getFirstTask(tasks);
 
-  const { team } = firstTask;
-
   if (shouldSendFirstTaskEmail(firstTask)) {
-    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES;
+    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
+    const {
+      _id: dealId,
+      submissionDetails,
+      details,
+    } = dealSnapshot;
+
+    const { 'supplier-name': exporterName } = submissionDetails;
+    const { ukefDealId } = details;
+
+    const { team } = firstTask;
     const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
-    const {
-      submissionType,
-      submissionDate,
-      owningBank,
-    } = dealSnapshot.details;
-
-    const {
-      'supplier-name': exporterName,
-    } = dealSnapshot.submissionDetails;
-
-    const formattedSubmissionDate = moment(formattedTimestamp(submissionDate)).format('Do MMMM YYYY');
-
-    const emailVariables = {
+    const emailVariables = generateTaskEmailVariables(
+      urlOrigin,
+      firstTask,
+      dealId,
       exporterName,
-      submissionType,
-      submissionDate: formattedSubmissionDate,
-      bank: owningBank.name,
-    };
+      ukefDealId,
+    );
 
     const emailResponse = await sendTfmEmail(
       templateId,
@@ -172,13 +171,13 @@ const sendAinMinIssuedFacilitiesAcknowledgementByDealId = async (dealId) => {
   return sendAinMinIssuedFacilitiesAcknowledgement(deal);
 };
 
-const sendDealSubmitEmails = async (deal) => {
+const sendDealSubmitEmails = async (deal, urlOrigin) => {
   if (!deal) {
     return false;
   }
 
   // send email for the first task
-  const firstTaskEmail = await sendFirstTaskEmail(deal);
+  const firstTaskEmail = await sendFirstTaskEmail(deal, urlOrigin);
 
   const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
   const emailAcknowledgementAinMinIssued = await sendAinMinIssuedFacilitiesAcknowledgement(deal);
