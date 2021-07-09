@@ -1,0 +1,26 @@
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+
+<header data-cy="application-preview-page">
+  <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType }}</h1>
+
+  {% set bannerHtml %}
+    <h2 class="govuk-heading-m" data-cy="task">
+      Task: check {{ applicationType | lower }}
+    </h2>
+
+    <div data-cy="latest-comment">
+      {% for comment in comments %}
+        <p><strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
+          <br>
+          {{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
+        <p>{{ comment.comment }}</p>
+      {% endfor %}
+    </div>
+  {% endset %}
+
+  {{ mojBanner({
+    type: 'no-icon',
+    html: bannerHtml
+  }) }}
+
+</header>

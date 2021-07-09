@@ -60,7 +60,7 @@ const validationErrorHandler = (errs, href = '') => {
   Object is empty or not. */
 const isEmpty = (value) => _isEmpty(cleanDeep(value));
 
-const mapSummaryList = (data, itemsToShow) => {
+const mapSummaryList = (data, itemsToShow, preview = false) => {
   if (!data || _isEmpty(data)) { return []; }
   const { details, validation } = data;
   const { required } = validation;
@@ -125,6 +125,19 @@ const mapSummaryList = (data, itemsToShow) => {
     // Don't show row if value is undefined
     if (value === undefined || isHidden) { return null; }
 
+    let summaryItems = [];
+    if (!preview) {
+      summaryItems = [
+        ...(href ? [{
+          href,
+          /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
+          properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+          Object is empty or not. */
+          text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
+          visuallyHiddenText: item.label,
+        }] : []),
+      ];
+    }
     return {
       key: {
         text: label,
@@ -133,16 +146,7 @@ const mapSummaryList = (data, itemsToShow) => {
         prefix, suffix, method, isCurrency, isIndustry, isDetails, shouldCoverStartOnSubmission,
       }),
       actions: {
-        items: [
-          ...(href ? [{
-            href,
-            /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
-            properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
-            Object is empty or not. */
-            text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
-            visuallyHiddenText: item.label,
-          }] : []),
-        ],
+        items: summaryItems,
       },
     };
   });
@@ -154,6 +158,16 @@ const isTrueSet = (val) => {
   }
 
   return null;
+};
+
+const getApplicationType = (isAutomaticCover) => {
+  if (isAutomaticCover === true) {
+    return 'Automatic inclusion notice';
+  }
+  if (isAutomaticCover === false) {
+    return 'Manual inclusion notice';
+  }
+  return 'Unknown';
 };
 
 const selectDropdownAddresses = (addresses) => {
@@ -188,13 +202,14 @@ const status = ({
 });
 
 export {
-  userToken,
-  isObject,
   apiErrorHandler,
-  validationErrorHandler,
+  getApplicationType,
   isEmpty,
+  isObject,
+  isTrueSet,
   mapSummaryList,
   selectDropdownAddresses,
   status,
-  isTrueSet,
+  userToken,
+  validationErrorHandler,
 };
