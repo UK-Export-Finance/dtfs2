@@ -84,7 +84,7 @@ export const postApplicationSubmission = async (req, res, next) => {
   try {
     if (comment.length > maxCommentLength) {
       const errors = validationErrorHandler({
-        errRef: 'comments',
+        errRef: 'comment',
         errMsg: `You have entered more than ${maxCommentLength} characters`,
       });
 
