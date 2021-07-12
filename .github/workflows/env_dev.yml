@@ -2447,6 +2447,10 @@ jobs:
             --protocol Http \
             --path "/healthcheck?fd-tfm"
 
+          az network front-door probe update --name DefaultProbeSettings \
+            --front-door-name tfs-${{ env.environment }}-tfm-fd \
+            --enabled Disabled
+
     - name: Redirect to https
       uses: Azure/cli@v1.0.0
       with:
