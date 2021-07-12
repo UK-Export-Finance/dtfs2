@@ -2,6 +2,10 @@ const CONTENT_STRINGS = require('../content-strings');
 const api = require('../api');
 
 const mapDeal = async (deal) => {
+  if (deal.dealType === 'GEF') {
+    return deal;
+  }
+
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
   mappedDeal.eligibility.criteria.map((criterion) => {
