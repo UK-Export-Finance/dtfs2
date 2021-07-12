@@ -11,17 +11,17 @@
     <div>
       <div class="case-summary-deal-id">
         <div class="label">Deal ID</div>
-        <div class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId }}</div>
+        <div class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId | dashIfEmpty }}</div>
       </div>
       <div class="case-summary-exporter">
         <div class="label">
           {{ supplierType.render(deal.submissionDetails.supplierType) }}
         </div>
-        <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName }}</div>
+        <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName | dashIfEmpty }}</div>
       </div>
       <div class="case-summary-buyer">
         <div class="label">Buyer</div>
-        <div class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName }}</div>
+        <div class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName | dashIfEmpty }}</div>
       </div>
     </div>
     <div class="case-summary-overview-container">
@@ -36,36 +36,36 @@
 
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Date received</div>
-          <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", user.timezone) }}</div>
+          <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", user.timezone) | dashIfEmpty }}</div>
         </div>
       </div>
 
       <div class="case-summary-overview-column ukef-grid-column-one-sixth">
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Type</div>
-          <div class="ukef-body-s" data-cy="submission-type">{{ deal.details.submissionType }}</div>
+          <div class="ukef-body-s" data-cy="submission-type">{{ deal.details.submissionType | dashIfEmpty }}</div>
         </div>
 
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Bank</div>
-          <div class="ukef-body-s" data-cy="bank-name">{{deal.details.owningBank.name}}</div>
+          <div class="ukef-body-s" data-cy="bank-name">{{ deal.details.owningBank.name | dashIfEmpty }}</div>
         </div>
       </div>
 
       <div class="case-summary-overview-column govuk-grid-column-one-third">
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Export description</div>
-          <div class="ukef-body-s" data-cy="export-description">{{ deal.submissionDetails.supplyContractDescription }}</div>
+          <div class="ukef-body-s" data-cy="export-description">{{ deal.submissionDetails.supplyContractDescription | dashIfEmpty }}</div>
         </div>
 
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Destination Country</div>
-          <div class="ukef-body-s" data-cy="destination-country">{{ deal.submissionDetails.destinationCountry }}</div>
+          <div class="ukef-body-s" data-cy="destination-country">{{ deal.submissionDetails.destinationCountry | dashIfEmpty }}</div>
         </div>
 
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Agent</div>
-          <div class="ukef-body-s">{{ deal.eligibility.agentName }}</div>
+          <div class="ukef-body-s">{{ deal.eligibility.agentName | dashIfEmpty }}</div>
         </div>
       </div>
 
@@ -73,21 +73,27 @@
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Export contract value</div>
           <div class="ukef-body-s">
-            <span data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}</span>
+            <span data-cy="contract-value">
+              {% if deal.submissionDetails.supplyContractCurrency and deal.submissionDetails.supplyContractValue %}
+                {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}
+                {% else %}
+                -
+              {% endif %}
+            </span>
             {% if tfm.supplyContractValueInGBP %}
-              <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP }}</span>
+              <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP | dashIfEmpty }}</span>
             {% endif %}
           </div>
         </div>
 
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Total facilities in this deal</div>
-          <div class="ukef-body-s" data-cy="total-facilities-in-gbp">{{ deal.totals.facilitiesValueInGBP }}</div>
+          <div class="ukef-body-s" data-cy="total-facilities-in-gbp">{{ deal.totals.facilitiesValueInGBP | dashIfEmpty }}</div>
         </div>
 
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">UKEF exposure for this deal</div>
-          <div class="ukef-body-s" data-cy="total-ukef-exposure">{{ deal.totals.facilitiesUkefExposure }}</div>
+          <div class="ukef-body-s" data-cy="total-ukef-exposure">{{ deal.totals.facilitiesUkefExposure | dashIfEmpty }}</div>
         </div>
 
       </div>
