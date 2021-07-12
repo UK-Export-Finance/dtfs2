@@ -9,6 +9,7 @@
 
 .case-summary-deal-id {
   display: inline-block;
+  vertical-align: top;
   width: 228px;
   margin-right: 30px;
 }
@@ -16,6 +17,7 @@
 .case-summary-exporter {
   position: relative;
   display: inline-block;
+  vertical-align: top;
   padding-right: 45px;
 
   &:after {
@@ -31,6 +33,7 @@
 
 .case-summary-buyer {
   display: inline-block;
+  vertical-align: top;
   margin-left: 30px;
 }
 
