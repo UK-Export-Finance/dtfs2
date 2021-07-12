@@ -60,6 +60,12 @@ export const applicationDetails = async (req, res) => {
   }
 };
 
+export const postApplicationDetails = (req, res) => {
+  const { params } = req;
+  const { applicationId } = params;
+  return res.redirect(`/gef/application-details/${applicationId}/submit`);
+};
+
 export const getApplicationSubmission = (req, res) => {
   const { params } = req;
   const { applicationId } = params;
@@ -105,4 +111,9 @@ export const postApplicationSubmission = async (req, res, next) => {
 };
 
 
-export default { applicationDetails, getApplicationSubmission, postApplicationSubmission };
+export default {
+  applicationDetails,
+  postApplicationDetails,
+  getApplicationSubmission,
+  postApplicationSubmission,
+};

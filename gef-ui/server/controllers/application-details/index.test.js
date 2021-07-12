@@ -1,4 +1,9 @@
-import { applicationDetails, getApplicationSubmission, postApplicationSubmission } from './index';
+import {
+  applicationDetails,
+  postApplicationDetails,
+  getApplicationSubmission,
+  postApplicationSubmission,
+} from './index';
 import * as api from '../../services/api';
 
 const MockResponse = () => {
@@ -109,6 +114,17 @@ describe('GET Application Details', () => {
     api.getApplication = () => Promise.reject();
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
+});
+
+describe('POST Application Details', () => {
+  const mockResponse = new MockResponse();
+  const mockRequest = new MockRequest();
+
+  it('redirects to submission url', async () => {
+    postApplicationDetails(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/submit');
   });
 });
 
