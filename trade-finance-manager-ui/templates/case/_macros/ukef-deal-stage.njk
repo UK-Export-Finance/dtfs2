@@ -7,7 +7,7 @@
     <div class="ukef-heading-xs ukef-deal-stage__title">Deal stage</div>
 
     {{ govukTag({
-      text: stage,
+      text: stage | dashIfEmpty,
       classes: 'govuk-tag--blue ukef-body-s govuk-!-font-weight-bold',
       attributes: {
         'data-cy': 'ukef-deal-stage-value'
