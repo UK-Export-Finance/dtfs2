@@ -17,19 +17,22 @@ const ELIGIBILITY_CRITERIA = [
     terms: [
       {
         id: 'coverStart',
-        htmlText: escape('<p>12. The period between the Cover Start Date and the  Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
+        htmlText: escape('<p>12. The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
         errMsg: '12. Select if the Maximum Cover period has been exceeded',
       },
       {
         id: 'noticeDate',
-        htmlText: escape('<p>13. The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months or such longer period as may be agreed by UKEF.</p>'),
-        errMsg: '13. Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months or any other period agreed by UKEF',
+        htmlText: escape('<p>13. The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).</p>'),
+        errMsg: '13. Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
       },
       {
         id: 'facilityLimit',
         htmlText: escape(`<p>14.  The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:</p>
-                <p>(i) the Available Master Guarantee Limit 
-                (ii) the Available Obligor's limit</p>`),
+                <div class="lower-roman-with-parens">
+                <ol type="i">
+                <li>the Available Master Guarantee Limit; and</li> 
+                <li>the Available Obligor's limit</li>
+                </ol>`),
         errMsg: '14. Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
       },
       {
@@ -54,23 +57,21 @@ Diligence.</p>`),
         htmlText: escape(`<p>17. Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, 
 arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and 
 (in the case of a Contingent Facility) any Risk Margin Fee:
-<ol type="i"> 
-<li>
-has  been  set  in  accordance  with  the  Bank's  normal  pricing  policies  consistently 
-applied;  
-<li>
-has been set in accordance with the overall minimum pricing requirements, if any, 
-most recently notified by UK Export Finance to the Bank; 
-<li> 
-(where  the  Covered  Facility  Limit  in  relation  to  the  Facility  is  more  than  the 
+<div class="lower-roman-with-parens">
+<ol type="i">
+<li>has  been  set  in  accordance  with  the  Bank's  normal  pricing  policies  consistently applied;</li>
+<li>has been set in accordance with the overall minimum pricing requirements, if any, 
+most recently notified by UK Export Finance to the Bank;</li>
+<li>(where  the  Covered  Facility  Limit  in  relation  to  the  Facility  is  more  than  the 
 Available   Obligor(s)   Limit)   has   been   set   in   accordance   with   the   overall   pricing 
 requirements,  if  any,  most  recently  notified  by  UK  Export  Finance  to  the  Bank  for  the 
-relevant Obligor(s); and
-<li>
-(in  the  case  of  a  Cash  Facility)  any  ordinary  interest  rate  and  (in  the  case  of  a 
+relevant Obligor(s); and</li>
+<li>(in  the  case  of  a  Cash  Facility)  any  ordinary  interest  rate  and  (in  the  case  of  a 
 Contingent  Facility)  any  Risk  Margin  Fee  cover  the  whole  Cover  Period  of  the  Covered 
-Facility
+Facility</li>
 </ol>
+
+</div>
 </p>`),
         errMsg: '17. Select if the Facility Letter satisfies the following conditions',
       },

@@ -61,3 +61,21 @@ $govuk-new-link-styles: true;
   color: $govuk-brand-colour;
   background-color: govuk-colour("white");
 }
+
+.lower-roman-with-parens {
+  ol {
+    counter-reset: list;
+  }
+
+  ol > li {
+    list-style: none;
+    position: relative;
+  }
+
+  ol > li:before {
+    counter-increment: list;
+    content: "(" counter(list, lower-roman) ") ";
+    position: absolute;
+    left: -2em;
+  }
+}
