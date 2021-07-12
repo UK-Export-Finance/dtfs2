@@ -13,4 +13,6 @@
     "openMode": 0
   },
   "responseTimeout": 100000
+  "responseTimeout": 100000,
+  "pageLoadTimeout": 100000
 }
