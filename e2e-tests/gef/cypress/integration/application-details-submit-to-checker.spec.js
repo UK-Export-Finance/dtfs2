@@ -32,10 +32,12 @@ context('Application Details Submission', () => {
 
   describe('Submission confirmation and comments', () => {
     const longComment = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt, dui sit amet mollis placerat, nunc nulla blandit augue, gravida luctus erat nisl et libero. Nullam eu ex justo. Nam tristique nec dolor nec tempus. Phasellus pulvinar congue finibus. Vivamus pellentesque, erat et auctor convallis, est purus varius nisl, suscipit sodales magna felis ac nulla. Phasellus rutrum, lorem ac dolor. ';
-    it('give the page as expected', () => {
+    it('gives the page as expected', () => {
+      cy.get('[data-cy="back-link"]');
       cy.get('[data-cy="application-submit-page"]');
       cy.get('[data-cy="application-comments"]');
       cy.get('[data-cy="submit-button"]');
+      cy.get('[data-cy="cancel-link"]');
     });
 
     it('allows submission without comments', () => {
@@ -55,9 +57,15 @@ context('Application Details Submission', () => {
       cy.get('[data-cy="error-summary"]');
     });
 
-    it('takes user back to application details page ic cancel link clicked', () => {
+    it('takes user back to application details page if cancel link clicked', () => {
       cy.get('[data-cy="application-comments"]').type('Some comments here ....');
       cy.get('[data-cy="cancel-link"]').click();
+      cy.get('[data-cy="application-details-page"]');
+    });
+
+    it('takes user back to application details page if back link clicked', () => {
+      cy.get('[data-cy="application-comments"]').type('Some comments here ....');
+      cy.get('[data-cy="back-link"]').click();
       cy.get('[data-cy="application-details-page"]');
     });
 
