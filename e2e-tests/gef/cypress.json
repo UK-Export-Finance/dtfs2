@@ -10,5 +10,6 @@
   "testHookApiHost": "localhost",
   "testHookApiPort": "5069",
   "projectId": "f1ud6y",
-  "testFiles": "**/*.spec.js"
+  "testFiles": "**/*.spec.js",
+  "pageLoadTimeout": 120000
 }
