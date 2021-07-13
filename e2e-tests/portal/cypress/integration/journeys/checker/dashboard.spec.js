@@ -18,9 +18,6 @@ context('Dashboard Deals viewed by a user with role=checker', () => {
       cy.login(CHECKER_LOGIN);
 
       cy.url().should('eq', relative('/dashboard/0'));
-
-      pages.dashboard.filterByStatus().should('be.visible');
-      pages.dashboard.filterByStatus().should('have.value', 'readyForApproval');
     });
   });
 
@@ -37,9 +34,6 @@ context('Dashboard Deals viewed by a user with role=checker', () => {
       pages.header.dashboard().click();
 
       cy.url().should('eq', relative('/dashboard/0'));
-
-      pages.dashboard.filterByStatus().should('be.visible');
-      pages.dashboard.filterByStatus().should('have.value', 'readyForApproval');
     });
   });
 });

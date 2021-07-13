@@ -30,14 +30,14 @@ context('Reset password', () => {
       resetPassword.emailInput().type('test_no_notify@ukexportfinance.gov.uk');
       resetPassword.submit().click();
 
-      cy.url().should('eq', relative('/?passwordreset=1'));
+      cy.url().should('eq', relative('/login?passwordreset=1'));
     });
 
     it('should be case insensitive when accepting email', () => {
       resetPassword.emailInput().type('Test_No_Notify@ukexportfinance.gov.uk');
       resetPassword.submit().click();
 
-      cy.url().should('eq', relative('/?passwordreset=1'));
+      cy.url().should('eq', relative('/login?passwordreset=1'));
     });
   });
 
