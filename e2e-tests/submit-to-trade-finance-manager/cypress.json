@@ -6,6 +6,6 @@
   "projectId": "f1ud6y",
   "testFiles": "**/*.spec.js",
   "chromeWebSecurity": false,
-  "responseTimeout": 100000,
-  "pageLoadTimeout": 100000
+  "responseTimeout": 200000,
+  "pageLoadTimeout": 200000
 }
