@@ -44,9 +44,10 @@
           {{ukefDealStage.render(componentData)}}
         </div>
 
+        <p>test {{ tfm.dateReceived }}</p>
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Date received</div>
-          <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("D MMMM YYYY", user.timezone) | dashIfEmpty }}</div>
+          <div class="ukef-body-s" data-cy="date-received">{{ tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMMM YYYY") | dashIfEmpty }}</div>
         </div>
       </div>
 

@@ -2,6 +2,11 @@ const fs = require('fs');
 const componentRenderer = require('../../../component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/case-summary.njk';
+
+const filterFormatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
+
+const formatDateString = filterFormatDateString.default;
+
 const render = componentRenderer(component);
 
 const rawdata = fs.readFileSync('templates/case/mock_data/deal.json');
@@ -16,6 +21,7 @@ let params = {
   tfm: {
     supplyContractValueInGBP: 'GBP 123,456.78',
     stage: 'Confirmed',
+    dateReceived: '01-02-2021',
   },
   user: {
     timezone: 'Europe/London',
@@ -81,9 +87,10 @@ describe(component, () => {
     wrapper.expectText('[data-cy="total-ukef-exposure"]').toRead(params.deal.totals.facilitiesUkefExposure);
   });
 
-  // it('should render submission date', () => {
-  //   wrapper.expectText('[data-cy="submission-date"]').toRead(params.details.submissionDate);
-  // });
+  it('should render date received', () => {
+    const expected = formatDateString(params.tfm.dateReceived, 'DD-MM-YYYY', 'D MMMM YYYY');
+    wrapper.expectText('[data-cy="date-received"]').toRead(expected);
+  });
 
   describe('when there is no buyerName', () => {
     beforeEach(() => {
