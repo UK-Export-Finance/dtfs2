@@ -80,7 +80,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM bond values should render in an unissued state
     //---------------------------------------------------------------
-    cy.wait(1000); // wait for TFM to do it's thing
+
     cy.forceVisit(tfmRootUrl);
 
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
@@ -220,7 +220,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
-
   });
 });
 
