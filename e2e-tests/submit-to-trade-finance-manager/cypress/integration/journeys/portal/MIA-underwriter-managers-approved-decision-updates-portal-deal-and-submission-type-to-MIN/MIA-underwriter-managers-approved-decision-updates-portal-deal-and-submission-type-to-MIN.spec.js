@@ -71,7 +71,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal deal status should be updated
     //---------------------------------------------------------------
-    cy.wait(1000); // wait for TFM to do it's thing
     portalPages.contract.visit(deal);
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('In progress by UKEF');
@@ -189,7 +188,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal deal status should be updated
     //---------------------------------------------------------------
-    cy.wait(5000); // wait for TFM to do it's thing
+
     portalPages.contract.visit(deal);
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acknowledged by UKEF');
