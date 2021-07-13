@@ -13,7 +13,7 @@ context('Portal to TFM deal submission', () => {
   let dealId;
   const dealFacilities = [];
 
-  beforeEach( () => {
+  beforeEach(() => {
     cy.on('uncaught:exception', (err) => {
       console.log(err.stack);
       return false;
@@ -61,8 +61,6 @@ context('Portal to TFM deal submission', () => {
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-
-    cy.wait(5000); // wait for TFM to do it's thing
 
     //---------------------------------------------------------------
     // user can login to TFM and view the submitted deal

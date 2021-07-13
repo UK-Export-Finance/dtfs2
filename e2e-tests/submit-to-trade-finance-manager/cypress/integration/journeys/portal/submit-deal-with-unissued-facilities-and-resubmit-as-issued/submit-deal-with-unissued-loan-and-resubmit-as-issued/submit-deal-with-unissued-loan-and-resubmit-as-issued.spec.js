@@ -80,7 +80,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM loan values should render in an unissued state
     //---------------------------------------------------------------
-    cy.wait(25000); // wait for TFM to do it's thing
     cy.forceVisit(tfmRootUrl);
 
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
