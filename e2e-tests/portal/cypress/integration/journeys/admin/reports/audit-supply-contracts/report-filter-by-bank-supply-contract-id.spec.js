@@ -1,10 +1,12 @@
 const { reports, defaults } = require('../../../../pages');
+
 const { auditSupplyContracts } = reports;
 
 const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 // test data we want to set up + work with..
 const transactionTestData = require('../../../../../fixtures/transaction-dashboard-data');
@@ -41,6 +43,5 @@ context('Audit - Report', () => {
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');
     });
-
   });
 });

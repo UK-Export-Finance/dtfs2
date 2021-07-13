@@ -27,11 +27,12 @@ context('About Exporter Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
   });
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
+
       aboutExporter.backLink();
       aboutExporter.headingCaption();
       aboutExporter.mainHeading();

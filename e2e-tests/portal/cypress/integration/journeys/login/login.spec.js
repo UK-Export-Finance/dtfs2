@@ -25,13 +25,13 @@ context('Login', () => {
 
   it('When a user that is not logged in navigates to a protected route, they progress to the login page', () => {
     beforeYouStart.visit();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
 
     bankDetails.visit();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
 
     dashboard.visit();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
   });
 
   it('The reset password link takes you to reset password page', () => {
@@ -47,7 +47,7 @@ context('Login', () => {
     landingPage.expectError(emailError);
     landingPage.emailError(emailError);
 
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
   });
 
   it('Shows an error if password field is empty', () => {
@@ -59,7 +59,7 @@ context('Login', () => {
     landingPage.expectError(passwordError);
     landingPage.passwordError(passwordError);
 
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
   });
 
   it('A failed login leaves the user on the landing page', () => {
@@ -67,7 +67,7 @@ context('Login', () => {
 
     cy.login(BAD_LOGIN);
 
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
   });
 
   it('A successful login takes the user to the /dashboard page', () => {

@@ -1,22 +1,12 @@
-const {listAllDeals, logIn, deleteDeal} = require('./api');
+const { listAllDeals, logIn, deleteDeal } = require('./api');
 
-const deleteAllDeals = (token, deals, callback) => {
-  for (const dealToDelete of deals) {
-    deleteDeal(token, dealToDelete);
-  };
-}
+const deleteAllDeals = (token, deals) => {
+  if (!deals || !deals.length) return;
+  deals.forEach(async (deal) => deleteDeal(token, deal));
+};
 
-module.exports =  (opts) => {
-  console.log(`deleteAllDeals::`);
-
-  return logIn(opts).then( (token) => {
-    return listAllDeals(token).then( (deals) => {
-
-      return new Cypress.Promise((resolve, reject) => {
-        deleteAllDeals(token, deals);
-        resolve();
-      })
-
-    });
+module.exports = (opts) => logIn(opts).then((token) => {
+  listAllDeals(token).then(async (deals) => {
+    await deleteAllDeals(token, deals);
   });
-}
+});
