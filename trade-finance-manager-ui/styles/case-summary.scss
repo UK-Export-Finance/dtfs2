@@ -14,20 +14,23 @@
   margin-right: 30px;
 }
 
-.case-summary-exporter {
+.case-summary-supplier {
   position: relative;
   display: inline-block;
   vertical-align: top;
-  padding-right: 45px;
 
-  &:after {
-    content: url('/assets/images/chevron-right.svg');
-    width: 15px;
-    height: 30px;
-    position: absolute;
-    right: 0;
-    top: 20px;
-    opacity: 0.5;
+  &.chevron-right {
+    padding-right: 45px;
+
+    &:after {
+      content: url('/assets/images/chevron-right.svg');
+      width: 15px;
+      height: 30px;
+      position: absolute;
+      right: 0;
+      top: 20px;
+      opacity: 0.5;
+    }
   }
 }
 

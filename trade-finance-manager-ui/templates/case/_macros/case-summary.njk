@@ -13,16 +13,26 @@
         <div class="label">Deal ID</div>
         <div class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId | dashIfEmpty }}</div>
       </div>
-      <div class="case-summary-exporter">
+
+      {% set supplierColumnClassName = 'case-summary-supplier' %}
+
+      {% if deal.submissionDetails.buyerName %}
+        {% set supplierColumnClassName = 'case-summary-supplier chevron-right' %}
+      {% endif %}
+
+      <div class="{{ supplierColumnClassName }}" data-cy="supplier-column">
         <div class="label">
           {{ supplierType.render(deal.submissionDetails.supplierType) }}
         </div>
         <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName | dashIfEmpty }}</div>
       </div>
-      <div class="case-summary-buyer">
-        <div class="label">Buyer</div>
-        <div class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName | dashIfEmpty }}</div>
-      </div>
+
+      {% if deal.submissionDetails.buyerName %}
+        <div class="case-summary-buyer" data-cy="buyer-name-column">
+          <div class="label">Buyer</div>
+          <div class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName }}</div>
+        </div>
+      {% endif %}
     </div>
     <div class="case-summary-overview-container">
       <div class="ukef-grid-column-one-sixth case-summary-overview-column">
