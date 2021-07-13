@@ -63,6 +63,7 @@
           dataCy: 'exporter-unique-ref'
         }) }}
       {% endif %}
+
       {{ keyValueArrayGridRow.render({
         key: 'Address',
         values:  [ deal.submissionDetails.supplierAddressLine1,
@@ -102,20 +103,26 @@
       </div>
       <div class="govuk-grid-column-one-half">
     {% endif %}
-      {{ keyValueArrayGridRow.render({
-        key: 'Correspondence address',
-        values:  [ deal.submissionDetails.supplierCorrespondenceAddressLine1,
-                deal.submissionDetails.supplierCorrespondenceAddressLine2,
-                deal.submissionDetails.supplierCorrespondenceAddressLine3,
-                deal.submissionDetails.supplierCorrespondenceAddressTown,
-                deal.submissionDetails.supplierCorrespondenceAddressPostcode],
-        dataCy: 'exporter-correspondence-address'
-      }) }}
-      {{ keyValueGridRow.render({
-        key: 'Correspondence country',
-        value: deal.submissionDetails.supplierCorrespondenceAddressCountry,
-        dataCy: 'exporter-correspondence-address-country'
-      }) }}
+
+      {% if deal.submissionDetails.supplierCorrespondenceAddressLine1 %}
+
+        {{ keyValueArrayGridRow.render({
+          key: 'Correspondence address',
+          values:  [ deal.submissionDetails.supplierCorrespondenceAddressLine1,
+                  deal.submissionDetails.supplierCorrespondenceAddressLine2,
+                  deal.submissionDetails.supplierCorrespondenceAddressLine3,
+                  deal.submissionDetails.supplierCorrespondenceAddressTown,
+                  deal.submissionDetails.supplierCorrespondenceAddressPostcode],
+          dataCy: 'exporter-correspondence-address'
+        }) }}
+
+        {{ keyValueGridRow.render({
+          key: 'Correspondence country',
+          value: deal.submissionDetails.supplierCorrespondenceAddressCountry,
+          dataCy: 'exporter-correspondence-address-country'
+        }) }}
+
+      {% endif %}
     </div>
   </div>
 
