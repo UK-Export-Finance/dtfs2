@@ -1,4 +1,25 @@
 const mapGefDeal = (deal) => {
+  // fields that need to be in GEF deal:
+  //
+  // submissionType(e.g 'Automatic', 'Manual')
+  // submissionDate(timestamp)
+  // ukefDealId(generated via API call on submission)
+  // bankName
+  // maker {
+  //   firstname
+  //   surname
+  //   email
+  // }
+  // dealCurrency(e.g 'EUR')
+  // dealValue(e.g 1234)
+  // eligibility [
+  //   {
+  //     id: 'exporterDeclaration',
+  //     answer: true,
+  //     htmlText: '&lt;p&gt;15. The  Bank etc etc',
+  //   }
+  // ]
+
   const mapped = {
     _id: deal._id,
     dealSnapshot: {
@@ -7,56 +28,45 @@ const mapGefDeal = (deal) => {
         ukefDealId: 'UKEF-ID-TODO',
         bankSupplyContractID: deal.dealSnapshot.bankInternalRefName,
         bankSupplyContractName: deal.dealSnapshot.additionalRefName,
-        // currently not in GEF data:
-        //
         // submissionType
         // owningBank: {
         //   name
         // }
         // submissionDate
         // ukefDealId
-        // might need to get maker details on submission
-        // so it's not stored in the GEF deal.
         // maker: {
-        //   fistname
+        //   firstname
         //   surname
         //   email
-        // }      
+        // }
       },
       totals: {
+        // TONY TO DO
         // need to look into facilities in GEF deal
         // facilitiesValueInGBP
         // facilitiesUkefExposure
       },
       facilities: [],
       submissionDetails: {
-        // supplierType: 'HELLOOO TONY 123',
         supplierName: deal.dealSnapshot.exporter.companyName,
-        // currently not in GEF data:
-        // supplierType (TFM label is either "Exporter" or "Tier 1 supplier")
-        // buyerName
-        // supplyContractDescription ("Export description")
-        // supplyContractCurrency ("Export contract value")
-
-        // unsure what to use
-        // destinationCountry ("Destination country") < should this be exporter.registeredAddress.country?
+        supplierAddressLine1: deal.dealSnapshot.exporter.registeredAddress.addressLine1,
+        supplierAddressLine2: deal.dealSnapshot.exporter.registeredAddress.addressLine2,
+        supplierAddressLine3: deal.dealSnapshot.exporter.registeredAddress.addressLine3,
+        supplierAddressTown: deal.dealSnapshot.exporter.registeredAddress.locality,
+        supplierAddressPostcode: deal.dealSnapshot.exporter.registeredAddress.postalCode,
+        supplierCountry: deal.dealSnapshot.exporter.registeredAddress.country,
+        industrySector: deal.dealSnapshot.exporter.selectedIndustry.name,
+        industryClass: deal.dealSnapshot.exporter.selectedIndustry.class.name,
+        supplierCompaniesHouseRegistrationNumber: deal.dealSnapshot.exporter.companiesHouseRegistrationNumber,
+        smeType: deal.dealSnapshot.exporter.smeType,
+        // supplyContractCurrency
+        // supplyContractValue
       },
-      // TODO: all eligibility (is this coverTerms in GEF?)
       eligibilityCriteria: [],
-      eligibility: {
-        // currently not in GEF data / unsure what to use:
-        // agentName
-      },
+      eligibility: {},
       dealFiles: {},
     },
-    // tfm object will be created when submitted to TFM
-    tfm: {
-      // stage
-      // dateReceived
-      //
-      // TODO: for all deals -
-      // TFM case summary should use dateReceived, not details.submissionDate
-    },
+    tfm: {},
   };
 
   return mapped;
