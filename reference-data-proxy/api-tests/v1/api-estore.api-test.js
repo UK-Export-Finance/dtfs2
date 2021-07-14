@@ -22,7 +22,7 @@ jest.mock('axios', () => jest.fn(({ data }) => {
   return Promise.resolve(mockResponses['200']);
 }));
 
-describe('api calls', () => {
+describe.skip('api calls', () => {
   describe('mulesoft not configured', () => {
     beforeAll(() => {
       process.env.MULESOFT_API_UKEF_ESTORE_EA_URL = '';
