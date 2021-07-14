@@ -7,5 +7,6 @@
   "testFiles": "**/*.spec.js",
   "chromeWebSecurity": false,
   "responseTimeout": 200000,
-  "pageLoadTimeout": 200000
+  "pageLoadTimeout": 240000,
+  "numTestsKeptInMemory": 5
 }
