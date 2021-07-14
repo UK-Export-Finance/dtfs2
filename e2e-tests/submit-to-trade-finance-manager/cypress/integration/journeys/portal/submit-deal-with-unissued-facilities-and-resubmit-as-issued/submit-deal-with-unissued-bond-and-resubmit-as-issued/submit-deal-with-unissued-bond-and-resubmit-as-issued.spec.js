@@ -76,8 +76,6 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-    cy.wait(5000); // wait for TFM to do it's thing
-
     //---------------------------------------------------------------
     // TFM bond values should render in an unissued state
     //---------------------------------------------------------------
