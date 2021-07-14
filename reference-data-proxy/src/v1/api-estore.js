@@ -1,34 +1,35 @@
-const axios = require('axios');
+const postToAPI = async () => false;
+// const axios = require('axios');
 
-const postToAPI = async (apiEndpoint, apiData) => {
-  if (!process.env.MULESOFT_API_UKEF_ESTORE_EA_URL) {
-    return false;
-  }
+// const postToAPI = async (apiEndpoint, apiData) => {
+//   if (!process.env.MULESOFT_API_UKEF_ESTORE_EA_URL) {
+//     return false;
+//   }
 
-  console.log('Calling eStore API: ', `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`);
+//   console.log('Calling eStore API: ', `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`);
 
-  const response = await axios({
-    method: 'post',
-    url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,
-    auth: {
-      username: process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY,
-      password: process.env.MULESOFT_API_UKEF_ESTORE_EA_SECRET,
-    },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: [apiData],
-  }).catch((catchErr) => {
-    console.error('Error calling eStore API',
-      {
-        url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,
-        data: [apiData],
-        response: catchErr.response,
-      });
-    return catchErr.response;
-  });
-  return response;
-};
+//   const response = await axios({
+//     method: 'post',
+//     url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,
+//     auth: {
+//       username: process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY,
+//       password: process.env.MULESOFT_API_UKEF_ESTORE_EA_SECRET,
+//     },
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     data: [apiData],
+//   }).catch((catchErr) => {
+//     console.error('Error calling eStore API',
+//       {
+//         url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,
+//         data: [apiData],
+//         response: catchErr.response,
+//       });
+//     return catchErr.response;
+//   });
+//   return response;
+// };
 
 const createExporterSite = (exporterName) => postToAPI('site', { exporterName });
 const createBuyerFolder = ({ siteName, ...apiData }) => postToAPI(`site/${siteName}/buyer`, apiData);
