@@ -6,6 +6,10 @@
   "projectId": "f1ud6y",
   "testFiles": "**/*.spec.js",
   "chromeWebSecurity": false,
-  "pageLoadTimeout": 240000,
-  "numTestsKeptInMemory": 5
+  "pageLoadTimeout": 120000,
+  "numTestsKeptInMemory": 1,
+  "retries": {
+    "runMode": 3,
+    "openMode": 0
+  }
 }

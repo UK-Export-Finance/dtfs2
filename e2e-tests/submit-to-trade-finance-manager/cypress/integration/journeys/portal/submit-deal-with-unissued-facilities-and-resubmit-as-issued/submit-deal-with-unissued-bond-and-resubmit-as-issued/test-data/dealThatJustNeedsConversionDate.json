@@ -132,6 +132,6 @@
         "feeType": "test",
         "feeFrequency": "test",
         "dayCountBasis": "test"
-    },
+    }
   ]
 }
