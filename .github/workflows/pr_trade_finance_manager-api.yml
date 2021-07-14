@@ -203,15 +203,9 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
-      - uses: cypress-io/github-action@v2
-        with:
-          working-directory: e2e-tests/submit-to-trade-finance-manager
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
+      uses: cypress-io/github-action@v2
       with:
-        name: screenshots
-        path: './cypress/screenshots'
+        working-directory: e2e-tests/submit-to-trade-finance-manager
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
