@@ -313,6 +313,19 @@ describe('send-deal-submit-emails', () => {
       });
     });
 
+    describe('MIN with no issued facilities', () => {
+      let mockDealMin;
+
+      beforeAll(async () => {
+        mockDealMin = await api.findOneDeal('223456789');
+      });
+
+      it('should not send emailAcknowledgementAinMinIssued', async () => {
+        const result = await sendDealSubmitEmails(mockDealMin);
+        expect(result.emailAcknowledgementAinMinIssued).toBeNull();
+      });
+    });
+
     describe('MIN with issued facilities', () => {
       let mockDealIssued;
 
@@ -370,9 +383,10 @@ describe('send-deal-submit-emails', () => {
       });
     });
 
-    describe('AIN', () => {
+
+    describe('AIN with unissued facilities', () => {
       beforeEach(async () => {
-        const mockDealAin = await api.findOneDeal('123456789');
+        const mockDealAin = await api.findOneDeal('AIN_DEAL_SUBMITTED');
         const mockBonds = mockDealAin.dealSnapshot.bondTransactions.items.map((facility) => ({
           facilitySnapshot: facility,
         }));
@@ -412,7 +426,55 @@ describe('send-deal-submit-emails', () => {
         };
       });
 
-      it('should sends emailAcknowledgementAinMinIssued', async () => {
+      it('should not send emailAcknowledgementAinMinIssued', async () => {
+        const result = await sendDealSubmitEmails(mockDeal);
+        expect(result.emailAcknowledgementAinMinIssued).toBeNull();
+      });
+    });
+
+    describe('AIN with issued facilities', () => {
+      beforeEach(async () => {
+        const mockDealAin = await api.findOneDeal('MOCK_DEAL_ISSUED_FACILITIES');
+        const mockBonds = mockDealAin.dealSnapshot.bondTransactions.items.map((facility) => ({
+          facilitySnapshot: facility,
+        }));
+        const mockLoans = mockDealAin.dealSnapshot.loanTransactions.items.map((facility) => ({
+          facilitySnapshot: facility,
+        }));
+
+        mockDeal = {
+          ...mockDealAin,
+          dealSnapshot: {
+            ...mockDealAin.dealSnapshot,
+            bondTransactions: {
+              items: mockBonds,
+            },
+            loanTransactions: {
+              items: mockLoans,
+            },
+          },
+          tfm: {
+            tasks: [
+              {
+                groupTasks: [
+                  {
+                    title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+                    team: {
+                      id: 'BUSINESS_SUPPORT',
+                    },
+                  },
+                ],
+              },
+            ],
+            history: {
+              tasks: [],
+              emails: [],
+            },
+          },
+        };
+      });
+
+      it('should send emailAcknowledgementAinMinIssued', async () => {
         const result = await sendDealSubmitEmails(mockDeal);
 
         const expected = {
