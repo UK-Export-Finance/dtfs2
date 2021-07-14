@@ -82,7 +82,7 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/underwriting/pricing-and-risk`);
 
     // assert elements/value in `pricing and risk` page
-    tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
+    // tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
 
     tfmPages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acceptable (B+)');
