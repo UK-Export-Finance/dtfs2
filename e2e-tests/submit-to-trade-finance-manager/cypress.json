@@ -8,5 +8,6 @@
   "chromeWebSecurity": false,
   "responseTimeout": 200000,
   "pageLoadTimeout": 240000,
-  "numTestsKeptInMemory": 5
+  "numTestsKeptInMemory": 5,
+  "video": false
 }

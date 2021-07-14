@@ -203,14 +203,9 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install
-        cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false # --record
+      - uses: cypress-io/github-action@v2
+        with:
+          working-directory: e2e-tests/submit-to-trade-finance-manager
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
