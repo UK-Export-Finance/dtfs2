@@ -29,6 +29,18 @@ const FACILITY_FEE_TYPE_PORTAL = {
   AT_MATURITY: 'At maturity',
 };
 
+// NOTE: subject to change
+const FACILITY_FEE_TYPE_GEF = {
+  IN_ARREARS_QUARTLY: 'IN_ARREARS_QUARTLY',
+  IN_ADVANCE_QUARTERLY: 'IN_ADVANCE_QUARTERLY',
+};
+
+// NOTE: subject to change
+const FACILITY_FEE_TYPE = {
+  IN_ADVANCE: 'In advance',
+  IN_ARREARS: 'In arrear',
+};
+
 const FACILITY_FEE_FREQUENCY_PORTAL = {
   MONTHLY: 'Monthly',
   QUARTERLY: 'Quarterly',
@@ -83,4 +95,6 @@ module.exports = {
   FACILITY_PREMIUM_TYPE_ID,
   FACILITY_FEE_TYPE_PORTAL,
   FACILITY_FEE_FREQUENCY_PORTAL,
+  FACILITY_FEE_TYPE_GEF,
+  FACILITY_FEE_TYPE,
 };
