@@ -43,7 +43,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     facilityStage: facility.facilityStage,
     coveredPercentage: `${facility.coveredPercentage}%`,
     facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
-    facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
+    facilityValue: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
     ukefExposure: `${facility.currency.id} ${facility.ukefExposure}`,
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
