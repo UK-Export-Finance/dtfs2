@@ -10,7 +10,11 @@ const mapDates = (facility, facilityTfm, dealDetails) => {
   dates.inclusionNoticeReceived = manualInclusionNoticeSubmissionDate || dealSubmissionDate;
   dates.bankIssueNoticeReceived = facility.issuedFacilitySubmittedToUkefTimestamp;
   dates.coverStartDate = facility.requestedCoverStartDate;
-  dates.coverEndDate = mapCoverEndDate(facility);
+  dates.coverEndDate = mapCoverEndDate(
+    facility['coverEndDate-day'],
+    facility['coverEndDate-month'],
+    facility['coverEndDate-year'],
+  );
 
   dates.tenor = mapTenorDate(facility, facilityTfm);
 

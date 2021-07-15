@@ -5,23 +5,19 @@ const { formatYear } = require('../../../../utils/date');
 describe('mapCoverEndDate', () => {
   it('should return formatted cover end date', () => {
     const mockCoverEndDate = {
-      'coverEndDate-day': '01',
-      'coverEndDate-month': '02',
-      'coverEndDate-year': '2021',
+      day: '01',
+      month: '02',
+      year: '2021',
     };
 
-    const {
-      'coverEndDate-day': coverEndDateDay,
-      'coverEndDate-month': coverEndDateMonth,
-      'coverEndDate-year': coverEndDateYear,
-    } = mockCoverEndDate;
+    const { day, month, year } = mockCoverEndDate;
 
-    const result = mapCoverEndDate({ ...mockCoverEndDate });
+    const result = mapCoverEndDate(day, month, year);
 
     const coverEndDate = moment().set({
-      date: Number(coverEndDateDay),
-      month: Number(coverEndDateMonth) - 1, // months are zero indexed
-      year: Number(coverEndDateYear),
+      date: Number(day),
+      month: Number(month) - 1, // months are zero indexed
+      year: Number(year),
     });
 
     const expected = moment(coverEndDate).format('D MMMM YYYY');
@@ -32,30 +28,26 @@ describe('mapCoverEndDate', () => {
   describe('when cover end date year only has 2 digits', () => {
     it('should return 4 digit year', () => {
       const mockCoverEndDate = {
-        'coverEndDate-day': '01',
-        'coverEndDate-month': '02',
-        'coverEndDate-year': '21',
+        day: '01',
+        month: '02',
+        year: '21',
       };
 
-      const {
-        'coverEndDate-day': coverEndDateDay,
-        'coverEndDate-month': coverEndDateMonth,
-        'coverEndDate-year': coverEndDateYear,
-      } = mockCoverEndDate;
+      const { day, month, year } = mockCoverEndDate;
 
-      const result = mapCoverEndDate({ ...mockCoverEndDate });
+      const result = mapCoverEndDate(day, month, year);
 
       const coverEndDate = moment().set({
-        date: Number(coverEndDateDay),
-        month: Number(coverEndDateMonth) - 1, // months are zero indexed
-        year: formatYear(Number(coverEndDateYear)),
+        date: Number(day),
+        month: Number(month) - 1, // months are zero indexed
+        year: formatYear(Number(year)),
       });
 
       const expected = moment(coverEndDate).format('D MMMM YYYY');
       expect(result).toEqual(expected);
 
-      const year = moment(coverEndDate).format('YYYY');
-      expect(year).toEqual('2021');
+      const yearResult = moment(coverEndDate).format('YYYY');
+      expect(yearResult).toEqual('2021');
     });
   });
 });

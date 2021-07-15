@@ -53,7 +53,13 @@ describe('mapDates', () => {
   it('should return coverEndDate as facility coverEndDate values', () => {
     const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
-    expect(result.coverEndDate).toEqual(mapCoverEndDate(mockFacility));
+    const expected = mapCoverEndDate(
+      mockCoverEndDate['coverEndDate-day'],
+      mockCoverEndDate['coverEndDate-month'],
+      mockCoverEndDate['coverEndDate-year'],
+    );
+
+    expect(result.coverEndDate).toEqual(expected);
   });
 
   it('should return tenor', () => {
