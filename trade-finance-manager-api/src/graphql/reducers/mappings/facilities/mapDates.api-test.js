@@ -65,6 +65,12 @@ describe('mapDates', () => {
   it('should return tenor', () => {
     const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
-    expect(result.tenor).toEqual(mapTenorDate(mockFacility, mockFacilityTfm));
+    const expected = mapTenorDate(
+      mockFacility.facilityStage,
+      mockFacility.ukefGuaranteeInMonths,
+      mockFacilityTfm.exposurePeriodInMonths,
+    );
+
+    expect(result.tenor).toEqual(expected);
   });
 });

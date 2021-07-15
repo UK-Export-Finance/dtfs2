@@ -10,7 +10,10 @@ describe('mapTenorDate', () => {
         ukefGuaranteeInMonths: '11',
       };
 
-      const result = mapTenorDate(mockFacility, mockFacilityTfm);
+      const result = mapTenorDate(
+        mockFacility.facilityStage,
+        mockFacility.ukefGuaranteeInMonths,
+      );
 
       const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
 
@@ -24,7 +27,10 @@ describe('mapTenorDate', () => {
           ukefGuaranteeInMonths: '1',
         };
 
-        const result = mapTenorDate(mockFacility, mockFacilityTfm);
+        const result = mapTenorDate(
+          mockFacility.facilityStage,
+          mockFacility.ukefGuaranteeInMonths,
+        );
 
         const expected = `${mockFacility.ukefGuaranteeInMonths} month`;
 
@@ -42,7 +48,10 @@ describe('mapTenorDate', () => {
         ukefGuaranteeInMonths: '11',
       };
 
-      const result = mapTenorDate(mockFacility, mockFacilityTfm);
+      const result = mapTenorDate(
+        mockFacility.facilityStage,
+        mockFacility.ukefGuaranteeInMonths,
+      );
 
       const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
 
@@ -56,7 +65,10 @@ describe('mapTenorDate', () => {
           ukefGuaranteeInMonths: '1',
         };
 
-        const result = mapTenorDate(mockFacility, mockFacilityTfm);
+        const result = mapTenorDate(
+          mockFacility.facilityStage,
+          mockFacility.ukefGuaranteeInMonths,
+        );
 
         const expected = `${mockFacility.ukefGuaranteeInMonths} month`;
 
@@ -75,7 +87,11 @@ describe('mapTenorDate', () => {
         exposurePeriodInMonths: 3,
       };
 
-      const result = mapTenorDate(mockFacility, mockFacilityTfm);
+      const result = mapTenorDate(
+        mockFacility.facilityStage,
+        mockFacility.ukefGuaranteeInMonths,
+        mockFacilityTfm.exposurePeriodInMonths,
+      );
 
       const expected = `${mockFacilityTfm.exposurePeriodInMonths} months`;
 
@@ -88,7 +104,11 @@ describe('mapTenorDate', () => {
           exposurePeriodInMonths: 1,
         };
 
-        const result = mapTenorDate(mockFacility, mockFacilityTfm);
+        const result = mapTenorDate(
+          mockFacility.facilityStage,
+          mockFacility.ukefGuaranteeInMonths,
+          mockFacilityTfm.exposurePeriodInMonths,
+        );
 
         const expected = `${mockFacilityTfm.exposurePeriodInMonths} month`;
 
@@ -97,14 +117,30 @@ describe('mapTenorDate', () => {
     });
   });
 
-  it('should return null', () => {
+  it('should return null when there is no ukefGuaranteeInMonths', () => {
     const mockFacility = {
-      facilityStage: '',
+      facilityStage: 'Issued',
+      ukefGuaranteeInMonths: '',
     };
 
-    const mockFacilityTfm = {};
+    const result = mapTenorDate(
+      mockFacility.facilityStage,
+      mockFacility.ukefGuaranteeInMonths,
+    );
 
-    const result = mapTenorDate(mockFacility, mockFacilityTfm);
+    expect(result).toEqual(null);
+  });
+
+  it('should return null when there is no facilityStage', () => {
+    const mockFacility = {
+      facilityStage: '',
+      ukefGuaranteeInMonths: '1',
+    };
+
+    const result = mapTenorDate(
+      mockFacility.facilityStage,
+      mockFacility.ukefGuaranteeInMonths,
+    );
 
     expect(result).toEqual(null);
   });

@@ -1,9 +1,15 @@
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
 
-
 const mapDates = (facility, facilityTfm, dealDetails) => {
   const dates = {};
+
+  const {
+    facilityStage,
+    ukefGuaranteeInMonths,
+  } = facility;
+
+  const { exposurePeriodInMonths } = facilityTfm;
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealDetails;
 
@@ -16,7 +22,11 @@ const mapDates = (facility, facilityTfm, dealDetails) => {
     facility['coverEndDate-year'],
   );
 
-  dates.tenor = mapTenorDate(facility, facilityTfm);
+  dates.tenor = mapTenorDate(
+    facilityStage,
+    ukefGuaranteeInMonths,
+    exposurePeriodInMonths,
+  );
 
   return dates;
 };
