@@ -102,42 +102,62 @@ describe(page, () => {
     wrapper = render(params);
   });
 
-  describe('premium schedule table', () => {
-    it('should render fee (premium) type', () => {
-      wrapper.expectText('[data-cy="facility-premium-type"]').toRead(params.facility.feeType);
+  describe('premium schedule', () => {
+    describe('fee (premium) type', () => {
+      it('should render', () => {
+        wrapper.expectText('[data-cy="facility-premium-type"]').toRead(params.facility.feeType);
+      });
+
+      describe('when there is no feeType', () => {
+        it('should render dash', () => {
+          wrapper = render({});
+          wrapper.expectText('[data-cy="facility-premium-type"]').toRead('-');
+        });
+      });
     });
 
     it('should render fee frequency', () => {
       wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(params.facility.feeFrequency);
     });
 
-    it('should render day count basis', () => {
-      wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead(params.facility.dayCountBasis);
-    });
-
-    it('should render correct number of premium schedule rows', () => {
-      wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumSchedule.length);
-    });
-
-    it('should format the premium schedule date correctly', () => {
-      const firstPremiumSchedule = params.premiumSchedule[0];
-      wrapper.expectText(`[data-cy="facility-${firstPremiumSchedule.id}-dueDate"]`).toRead('06 May 2021');
-    });
-
-    describe('at maturity', () => {
-      beforeEach(() => {
-        const atMaturityParams = {
-          facility: {
-            ...params.facility,
-            feeType: 'At maturity',
-            feeFrequency: '',
-          },
-        };
-        wrapper = render(atMaturityParams);
+    describe('day count basis', () => {
+      it('should render', () => {
+        wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead(params.facility.dayCountBasis);
       });
 
-      it('should not render fee frequency', () => {
-        wrapper.expectText('[data-cy="facility-premium-frequency"]').notToExist();
+      describe('when there is no feeType', () => {
+        it('should render dash', () => {
+          wrapper = render({});
+          wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead('-');
+        });
+      });
+    });
+
+    describe('premium schedule table', () => {
+      it('should render correct number of premium schedule rows', () => {
+        wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumSchedule.length);
+      });
+
+      it('should format the premium schedule date correctly', () => {
+        const firstPremiumSchedule = params.premiumSchedule[0];
+        wrapper.expectText(`[data-cy="facility-${firstPremiumSchedule.id}-dueDate"]`).toRead('06 May 2021');
+      });
+
+      describe('at maturity', () => {
+        beforeEach(() => {
+          const atMaturityParams = {
+            facility: {
+              ...params.facility,
+              feeType: 'At maturity',
+              feeFrequency: '',
+            },
+          };
+          wrapper = render(atMaturityParams);
+        });
+
+        it('should not render fee frequency', () => {
+          wrapper.expectText('[data-cy="facility-premium-frequency"]').notToExist();
+        });
       });
     });
   });

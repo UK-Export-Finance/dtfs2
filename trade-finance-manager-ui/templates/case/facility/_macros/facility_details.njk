@@ -119,7 +119,14 @@
               <h4 class="govuk-!-margin-0 govuk-!-font-size-16">Maximum UKEF exposure</h4>
             </div>
             <div class="govuk-grid-column-one-half">
-              <span class="govuk-body-s" data-cy="facility-maximum-ukef-exposure">{{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}</span>
+              <span class="govuk-body-s" data-cy="facility-maximum-ukef-exposure">
+              {% if facilityTfm.ukefExposure.exposure and facilityTfm.ukefExposure.timestamp %}
+                {{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}
+
+                {% else %}
+                -
+              {% endif %}
+              </span>
             </div>
           </div>
         </div>
