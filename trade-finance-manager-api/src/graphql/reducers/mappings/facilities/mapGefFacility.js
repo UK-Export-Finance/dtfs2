@@ -10,6 +10,8 @@ const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityType = require('./mapFacilityType');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 
+const mapTenorDate = require('./mapTenorDate');
+
 const mapGefFacility = (facility) => {
   // fields that need to be in GEF facility
   // these currently need GEF work in design, UI, API:
@@ -33,13 +35,16 @@ const mapGefFacility = (facility) => {
     coverEndDate,
     hasBeenIssued,
     name,
-    monthsOfCover,
+    monthsOfCover: ukefGuaranteeInMonths,
     type: facilityType,
+    issuedFacilitySubmittedToUkefTimestamp,
   } = facilitySnapshot;
 
   const formattedFacilityValue = formattedNumber(value);
 
   const facilityProduct = mapFacilityProduct(facilityType);
+
+  const facilityStage = mapFacilityStage(hasBeenIssued);
 
   facilitySnapshot.facilityProduct = facilityProduct;
 
@@ -51,25 +56,29 @@ const mapGefFacility = (facility) => {
       ukefFacilityID: 'UKEF-ID-TODO',
       facilityProduct,
       facilityType: mapFacilityType(facilitySnapshot),
-      facilityStage: mapFacilityStage(hasBeenIssued),
+      facilityStage,
       coveredPercentage: `${coverPercentage}%`,
       facilityValueExportCurrency: `${currency} ${formattedFacilityValue}`,
       facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
       banksInterestMargin: `${interestPercentage}%`,
       feeType: mapGefFacilityFeeType(paymentType),
       dates: {
-        inclusionNoticeReceived: '', // TODO
-        bankIssueNoticeReceived: '', // TODO
+        inclusionNoticeReceived: '', // TODO manualInclusionNoticeSubmissionDate || deal.submissionDate
+        bankIssueNoticeReceived: issuedFacilitySubmittedToUkefTimestamp,
         coverStartDate: convertDateToTimestamp(coverStartDate),
         coverEndDate: mapCoverEndDate(
           moment(coverEndDate).format('DD'),
           moment(coverEndDate).format('MM'),
           moment(coverEndDate).format('YYYY'),
         ),
-        tenor: '', // TODO
+        tenor: mapTenorDate(
+          facilityStage,
+          ukefGuaranteeInMonths,
+          facilityTfm.exposurePeriodInMonths,
+        ),
       },
       bankFacilityReference: name,
-      ukefGuaranteeInMonths: monthsOfCover,
+      ukefGuaranteeInMonths,
     },
     tfm: facilityTfm,
   };
