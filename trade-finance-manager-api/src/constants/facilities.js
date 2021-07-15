@@ -1,6 +1,8 @@
 const FACILITY_TYPE = {
   BOND: 'bond',
   LOAN: 'loan',
+  CASH: 'CASH',
+  CONTINGENT: 'CONTINGENT',
 };
 
 const FACILITY_PRODUCT_GROUP = {
@@ -11,6 +13,14 @@ const FACILITY_PRODUCT_GROUP = {
 const FACILITY_PRODUCT_CODE = {
   BOND: 'BSS',
   LOAN: 'EWCS',
+  GEF: 'GEF',
+};
+
+const FACILITY_PRODUCT_NAME = {
+  BOND: 'Bond Support Scheme',
+  LOAN: 'Export Working Capital Scheme',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 };
 
 const FACILITY_FEE_TYPE_PORTAL = {
@@ -40,11 +50,6 @@ const FACILITY_PREMIUM_TYPE_ID = {
   AT_MATURITY: 3,
 };
 
-const FACILITY_PRODUCT_NAME = {
-  BOND: 'Bond Support Scheme',
-  LOAN: 'Export Working Capital Scheme',
-};
-
 const FACILITY_STAGE_PORTAL = {
   UNISSUED: 'Unissued',
   ISSUED: 'Issued',
@@ -67,8 +72,8 @@ const FACILITY_STATUS_PORTAL = {
 
 module.exports = {
   FACILITY_TYPE,
-  FACILITY_PRODUCT_CODE,
   FACILITY_PRODUCT_GROUP,
+  FACILITY_PRODUCT_CODE,
   FACILITY_PRODUCT_NAME,
   FACILITY_STAGE_PORTAL,
   FACILITY_STAGE,

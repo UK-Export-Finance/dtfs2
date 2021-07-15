@@ -25,7 +25,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
   const ukefFacilityType = facilityType;
 
-  facility.facilityProduct = mapFacilityProduct(facility);
+  facility.facilityProduct = mapFacilityProduct(facilityType);
 
   facility.facilityType = mapFacilityType(facility);
 

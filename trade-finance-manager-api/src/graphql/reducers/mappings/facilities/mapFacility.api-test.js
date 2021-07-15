@@ -76,7 +76,7 @@ describe('mapFacility', () => {
 
     const facilityStage = mapFacilityStage(mockFacilityStage);
 
-    const expectedFacilityProduct = mapFacilityProduct(mockFacility);
+    const expectedFacilityProduct = mapFacilityProduct(mockFacility.facilityType);
 
     const expectedFacilityType = mapFacilityType({
       ...mockFacility,
