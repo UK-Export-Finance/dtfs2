@@ -2,8 +2,6 @@ const mapTenorDate = require('./mapTenorDate');
 
 describe('mapTenorDate', () => {
   describe('when facilityStage is `Commitment`', () => {
-    const mockFacilityTfm = {};
-
     it('should return facility.ukefGuaranteeInMonths', () => {
       const mockFacility = {
         facilityStage: 'Commitment',
@@ -40,8 +38,6 @@ describe('mapTenorDate', () => {
   });
 
   describe('when facilityStage is `Issued`', () => {
-    const mockFacilityTfm = {};
-
     it('should return facility.ukefGuaranteeInMonths', () => {
       const mockFacility = {
         facilityStage: 'Issued',

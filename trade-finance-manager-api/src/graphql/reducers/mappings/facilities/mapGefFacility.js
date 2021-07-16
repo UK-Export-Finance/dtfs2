@@ -12,7 +12,7 @@ const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 
 const mapTenorDate = require('./mapTenorDate');
 
-const mapGefFacility = (facility) => {
+const mapGefFacility = (facility, dealSnapshot) => {
   // fields that need to be in GEF facility
   // these currently need GEF work in design, UI, API:
   // guaranteeFeePayableToUkef
@@ -40,6 +40,9 @@ const mapGefFacility = (facility) => {
     issuedFacilitySubmittedToUkefTimestamp,
   } = facilitySnapshot;
 
+  const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
+
+
   const formattedFacilityValue = formattedNumber(value);
 
   const facilityProduct = mapFacilityProduct(facilityType);
@@ -63,7 +66,7 @@ const mapGefFacility = (facility) => {
       banksInterestMargin: `${interestPercentage}%`,
       feeType: mapGefFacilityFeeType(paymentType),
       dates: {
-        inclusionNoticeReceived: '', // TODO manualInclusionNoticeSubmissionDate || deal.submissionDate
+        inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
         bankIssueNoticeReceived: issuedFacilitySubmittedToUkefTimestamp,
         coverStartDate: convertDateToTimestamp(coverStartDate),
         coverEndDate: mapCoverEndDate(
