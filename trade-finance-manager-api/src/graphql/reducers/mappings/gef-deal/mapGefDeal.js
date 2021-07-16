@@ -1,4 +1,5 @@
 const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
+const mapTotals = require('../deal/mapTotals');
 
 const mapGefDeal = (deal) => {
   // fields that need to be in GEF deal:
@@ -42,13 +43,6 @@ const mapGefDeal = (deal) => {
         //   email
         // }
       },
-      totals: {
-        // TONY TO DO
-        // need to look into facilities in GEF deal
-        // facilitiesValueInGBP
-        // facilitiesUkefExposure
-      },
-      facilities: mapGefFacilities(deal.dealSnapshot.facilities, deal.dealSnapshot),
       submissionDetails: {
         supplierName: deal.dealSnapshot.exporter.companyName,
         supplierAddressLine1: deal.dealSnapshot.exporter.registeredAddress.addressLine1,
@@ -64,6 +58,8 @@ const mapGefDeal = (deal) => {
         // supplyContractCurrency
         // supplyContractValue
       },
+      facilities: mapGefFacilities(deal.dealSnapshot.facilities, deal.dealSnapshot),
+      totals: mapTotals(deal.dealSnapshot.facilities),
       eligibilityCriteria: [],
       eligibility: {},
       dealFiles: {},
