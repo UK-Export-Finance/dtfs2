@@ -9,7 +9,6 @@ const mapDealSnapshot = (deal) => {
   } = deal;
 
   const {
-    details,
     submissionDetails,
     facilities,
     eligibility,
@@ -18,7 +17,7 @@ const mapDealSnapshot = (deal) => {
   return {
     ...dealSnapshot,
     totals: mapTotals(facilities),
-    facilities: mapFacilities(facilities, details, dealTfm),
+    facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibilityCriteria: eligibility.criteria,
   };

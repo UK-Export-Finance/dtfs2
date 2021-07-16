@@ -3,11 +3,11 @@ const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
 const mapGefFacility = require('./mappings/facilities/mapGefFacility');
 const isGefFacility = require('./helpers/isGefFacility');
 
-const facilityReducer = (facility, dealDetails, dealTfm) => {
+const facilityReducer = (facility, dealSnapshot, dealTfm) => {
   const { facilitySnapshot } = facility;
 
   if (isGefFacility(facilitySnapshot.type)) {
-    return mapGefFacility(facility);
+    return mapGefFacility(facility, dealSnapshot);
   }
 
   const result = {
@@ -15,7 +15,7 @@ const facilityReducer = (facility, dealDetails, dealTfm) => {
     facilitySnapshot: mapFacility(
       facilitySnapshot,
       facility.tfm,
-      dealDetails,
+      dealSnapshot.details,
     ),
     tfm: mapFacilityTfm(facility.tfm, dealTfm),
   };
