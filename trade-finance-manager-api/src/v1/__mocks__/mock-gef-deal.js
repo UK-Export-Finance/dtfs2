@@ -90,8 +90,8 @@ const MOCK_GEF_DEAL = {
       createdAt: 1625482095783,
       userName: 'Sample User',
       comment: 'Sample comment',
-    }
-  ]
+    },
+  ],
 };
 
 module.exports = MOCK_GEF_DEAL;
