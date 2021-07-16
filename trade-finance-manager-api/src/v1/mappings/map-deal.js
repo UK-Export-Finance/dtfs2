@@ -2,11 +2,13 @@ const CONTENT_STRINGS = require('../content-strings');
 const api = require('../api');
 
 const mapDeal = async (deal) => {
-  if (deal.dealType === 'GEF') {
-    return deal;
-  }
-
   const mappedDeal = JSON.parse(JSON.stringify(deal));
+
+  if (deal.dealType === 'GEF') {
+    mappedDeal.facilities = await Promise.all(deal.facilityIds.map(async (facilityId) =>
+      api.findOneFacility(facilityId)));
+    return mappedDeal;
+  }
 
   mappedDeal.eligibility.criteria.map((criterion) => {
     const mappedCriterion = criterion;

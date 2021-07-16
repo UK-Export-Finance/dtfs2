@@ -1,3 +1,5 @@
+const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
+
 const mapGefDeal = (deal) => {
   // fields that need to be in GEF deal:
   //
@@ -46,7 +48,7 @@ const mapGefDeal = (deal) => {
         // facilitiesValueInGBP
         // facilitiesUkefExposure
       },
-      facilities: [],
+      facilities: mapGefFacilities(deal.dealSnapshot.facilities, deal.dealSnapshot),
       submissionDetails: {
         supplierName: deal.dealSnapshot.exporter.companyName,
         supplierAddressLine1: deal.dealSnapshot.exporter.registeredAddress.addressLine1,

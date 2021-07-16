@@ -92,6 +92,7 @@ const dealQuery = gql`
           facilitySnapshot {
             _id,
             ukefFacilityID,
+            associatedDealId,
             facilityProduct {
               code
             },

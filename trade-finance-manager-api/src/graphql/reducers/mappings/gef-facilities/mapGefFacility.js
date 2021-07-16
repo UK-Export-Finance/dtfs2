@@ -1,16 +1,16 @@
 const moment = require('moment');
 const { formattedNumber } = require('../../../../utils/number');
-const mapFacilityStage = require('./mapFacilityStage');
+const mapFacilityStage = require('../facilities/mapFacilityStage');
 
-const mapFacilityValue = require('./mapFacilityValue');
-const mapCoverEndDate = require('./mapCoverEndDate');
+const mapFacilityValue = require('../facilities/mapFacilityValue');
+const mapCoverEndDate = require('../facilities/mapCoverEndDate');
 
 const { convertDateToTimestamp } = require('../../../../utils/date');
-const mapFacilityProduct = require('./mapFacilityProduct');
-const mapFacilityType = require('./mapFacilityType');
+const mapFacilityProduct = require('../facilities/mapFacilityProduct');
+const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 
-const mapTenorDate = require('./mapTenorDate');
+const mapTenorDate = require('../facilities/mapTenorDate');
 
 const mapGefFacility = (facility, dealSnapshot) => {
   // fields that need to be in GEF facility
@@ -57,6 +57,7 @@ const mapGefFacility = (facility, dealSnapshot) => {
       _id: facility._id, // eslint-disable-line no-underscore-dangle
       associatedDealId,
       ukefFacilityID: 'UKEF-ID-TODO',
+      ukefFacilityType: 'TODO',
       facilityProduct,
       facilityType: mapFacilityType(facilitySnapshot),
       facilityStage,
@@ -85,6 +86,8 @@ const mapGefFacility = (facility, dealSnapshot) => {
     },
     tfm: facilityTfm,
   };
+
+  console.log('************** mapGefFacility result \n', result);
 
   return result;
 };
