@@ -1,5 +1,3 @@
-// const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
-// const mapTotals = require('../deal/mapTotals');
 const mapGefDealSnapshot = require('./mapGefDealSnapshot');
 
 const mapGefDeal = (deal) => {

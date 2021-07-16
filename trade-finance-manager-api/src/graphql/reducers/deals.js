@@ -1,5 +1,7 @@
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
+const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 
 const dealsReducer = (deals) => {
   const mapDeal = (deal) => {
@@ -32,11 +34,29 @@ const dealsReducer = (deals) => {
     return mapped;
   };
 
+  const mapGefDeal = (deal) => {
+    const mapped = {
+      _id: deal._id, // eslint-disable-line no-underscore-dangle
+      dealSnapshot: {
+        _id: deal._id, // eslint-disable-line no-underscore-dangle
+        details: mapGefDealDetails(deal.dealSnapshot),
+        submissionDetails: mapGefSubmissionDetails(deal.dealSnapshot),
+      },
+      tfm: {},
+    };
+
+    return mapped;
+  };
+
   const mapDeals = (ds) => {
     const mapped = [];
 
     ds.forEach((d) => {
-      mapped.push(mapDeal(d));
+      if (d.dealSnapshot.dealType && d.dealSnapshot.dealType === 'GEF') {
+        mapped.push(mapGefDeal(d));
+      } else {
+        mapped.push(mapDeal(d));
+      }
     });
 
     return mapped;
