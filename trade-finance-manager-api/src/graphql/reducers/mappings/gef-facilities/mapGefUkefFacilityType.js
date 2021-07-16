@@ -1,4 +1,4 @@
-const mapUkefFacilityType = (facilityType) =>
+const mapGefUkefFacilityType = (facilityType) =>
   facilityType.toLowerCase();
 
-module.exports = mapUkefFacilityType;
+module.exports = mapGefUkefFacilityType;
