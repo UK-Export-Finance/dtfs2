@@ -1,8 +1,8 @@
-const mapUkefFacilityType = require('./mapUkefFacilityType');
+const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 
-describe('mapUkefFacilityType', () => {
+describe('mapGefUkefFacilityType', () => {
   it('should should return lowercase string', () => {
-    const result = mapUkefFacilityType('CASH');
+    const result = mapGefUkefFacilityType('CASH');
 
     expect(result).toEqual('cash');
   });
