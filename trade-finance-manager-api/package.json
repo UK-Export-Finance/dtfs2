@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Trade Finance Manager API",
   "main": "src/index.js",
+  "engineStrict" : true,
+  "engines": {
+    "node": ">=14.0.0 <15.0.0",
+    "npm": ">=6.0.0 <7.0.0"
+  },
   "scripts": {
     "lint": "eslint ./src",
     "start": "node src/index.js",

@@ -30,6 +30,11 @@
     "url": "https://github.com/notbinary/dtfs2/issues"
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "engineStrict" : true,
+  "engines": {
+    "node": ">=14.0.0 <15.0.0",
+    "npm": ">=6.0.0 <7.0.0"
+  },
   "dependencies": {
     "@azure/storage-file-share": "12.1.1",
     "apollo-server-express": "2.18.2",
