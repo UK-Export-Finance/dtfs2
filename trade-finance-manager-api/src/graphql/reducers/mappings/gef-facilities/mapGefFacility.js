@@ -14,8 +14,8 @@ const mapTenorDate = require('../facilities/mapTenorDate');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 
 const mapGefFacility = (facility, dealSnapshot) => {
-  // fields that need to be in GEF facility
-  // these currently need GEF work in design, UI, API:
+  // fields that need to be in GEF facility data
+  // ukefFacilityID
   // guaranteeFeePayableToUkef
   // feeFrequency
   // dayCountBasis

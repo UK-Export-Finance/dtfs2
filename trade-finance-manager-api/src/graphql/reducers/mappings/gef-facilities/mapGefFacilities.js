@@ -1,6 +1,8 @@
 const mapGefFacility = require('./mapGefFacility');
 
-const mapGefFacilities = (facilities, dealSnapshot) => {
+const mapGefFacilities = (dealSnapshot) => {
+  const { facilities } = dealSnapshot;
+
   const mappedFacilities = [];
 
   facilities.forEach((f) => {

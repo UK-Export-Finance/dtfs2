@@ -16,10 +16,10 @@ const mapDealSnapshot = (deal) => {
 
   return {
     ...dealSnapshot,
-    totals: mapTotals(facilities),
-    facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibilityCriteria: eligibility.criteria,
+    facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
+    totals: mapTotals(facilities),
   };
 };
 
