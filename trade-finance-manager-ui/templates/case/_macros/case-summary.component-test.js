@@ -92,6 +92,21 @@ describe(component, () => {
     wrapper.expectText('[data-cy="date-received"]').toRead(expected);
   });
 
+  describe('when there is no date received', () => {
+    beforeEach(() => {
+      params = JSON.parse(JSON.stringify({
+        deal: params.deal,
+        user: params.user,
+      }));
+
+      wrapper = render(params);
+    });
+
+    it('should render dash', () => {
+      wrapper.expectText('[data-cy="date-received"]').toRead('-');
+    });
+  });
+
   describe('when there is no buyerName', () => {
     beforeEach(() => {
       params = JSON.parse(JSON.stringify(params));
