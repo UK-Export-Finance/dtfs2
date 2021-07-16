@@ -38,6 +38,7 @@ The list of variables can be seen in the environment build workdlows under [`.gi
 
  * Clone this repo
  * Add the environment variable scripts noted above to the `secrets` folder
+ * Run `nvm install` to ensure you are using the correct version of node
  * Run `npm run pipeline` in the root directory of the repo to run a full build and test
  * After running the pipeline, you can use `docker-compose up` to start up your local environment
  * To refresh the data in the database, navigate to `utils/mock-data-loader`, run `npm install`and then `node re-insert-mocks.js`
