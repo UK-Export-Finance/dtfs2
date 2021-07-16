@@ -24,7 +24,7 @@ describe(component, () => {
 
     wrapper.expectLink(`[data-cy="facility-${params.facility._id}-ukef-facility-id-link"]`).toLinkTo(
       `/case/${params.caseId}/facility/${params.facility._id}`,
-      params.facility.facilitySnapshot.ukefFacilityID
+      params.facility.facilitySnapshot.ukefFacilityID,
     );
   });
 
@@ -45,7 +45,7 @@ describe(component, () => {
       wrapper = render(params);
 
       wrapper.expectText(`[data-cy="facility-${params.facility._id}-risk-profile-value"]`).toRead(params.facility.tfm.riskProfile);
-    }); 
+    });
 
     it('should NOT render change link', () => {
       wrapper = render(params);
