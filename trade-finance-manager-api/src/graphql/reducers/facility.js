@@ -1,6 +1,6 @@
 const mapFacility = require('./mappings/facilities/mapFacility');
 const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
-const mapGefFacility = require('./mappings/facilities/mapGefFacility');
+const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
 const isGefFacility = require('./helpers/isGefFacility');
 
 const facilityReducer = (facility, dealSnapshot, dealTfm) => {
