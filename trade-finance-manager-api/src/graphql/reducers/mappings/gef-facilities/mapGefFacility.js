@@ -11,6 +11,7 @@ const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 
 const mapTenorDate = require('../facilities/mapTenorDate');
+const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 
 const mapGefFacility = (facility, dealSnapshot) => {
   // fields that need to be in GEF facility
@@ -42,7 +43,6 @@ const mapGefFacility = (facility, dealSnapshot) => {
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
-
   const formattedFacilityValue = formattedNumber(value);
 
   const facilityProduct = mapFacilityProduct(facilityType);
@@ -57,9 +57,10 @@ const mapGefFacility = (facility, dealSnapshot) => {
       _id: facility._id, // eslint-disable-line no-underscore-dangle
       associatedDealId,
       ukefFacilityID: 'UKEF-ID-TODO',
-      ukefFacilityType: 'TODO',
-      facilityProduct,
+      // TODO: we shouldn't need facilityType and ukefFacilityType.
       facilityType: mapFacilityType(facilitySnapshot),
+      ukefFacilityType: mapGefUkefFacilityType(facilityType),
+      facilityProduct,
       facilityStage,
       coveredPercentage: `${coverPercentage}%`,
       facilityValueExportCurrency: `${currency} ${formattedFacilityValue}`,
@@ -86,8 +87,6 @@ const mapGefFacility = (facility, dealSnapshot) => {
     },
     tfm: facilityTfm,
   };
-
-  console.log('************** mapGefFacility result \n', result);
 
   return result;
 };
