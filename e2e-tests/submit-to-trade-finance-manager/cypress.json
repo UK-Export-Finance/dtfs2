@@ -12,8 +12,4 @@
     "runMode": 3,
     "openMode": 0
   }
-  "pageLoadTimeout": 240000,
-  "responseTimeout": 100000,
-  "pageLoadTimeout": 240000,
-  "numTestsKeptInMemory": 5
 }
