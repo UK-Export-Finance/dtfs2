@@ -7,10 +7,4 @@ export const userIsInTeam = (user, teamList) =>
   teamList.some((teamId) => user.teams.includes(teamId));
 
 
-export const isAssignedToUser = (assignedToUserId, userId) => {
-  if (assignedToUserId === userId) {
-    return true;
-  }
-
-  return false;
-};
+export const isAssignedToUser = (assignedToUserId, userId) => (assignedToUserId === userId);
