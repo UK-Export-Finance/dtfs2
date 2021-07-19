@@ -1,8 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
+import applicationSubmission from './pages/application-submission';
 import applicationDetails from './pages/application-details';
-import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applicationIds = [];
@@ -33,49 +32,49 @@ context('Application Details Submission', () => {
   describe('Submission confirmation and comments', () => {
     const longComment = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt, dui sit amet mollis placerat, nunc nulla blandit augue, gravida luctus erat nisl et libero. Nullam eu ex justo. Nam tristique nec dolor nec tempus. Phasellus pulvinar congue finibus. Vivamus pellentesque, erat et auctor convallis, est purus varius nisl, suscipit sodales magna felis ac nulla. Phasellus rutrum, lorem ac dolor. ';
     it('gives the page as expected', () => {
-      cy.get('[data-cy="back-link"]');
-      cy.get('[data-cy="application-submit-page"]');
-      cy.get('[data-cy="application-comments"]');
-      cy.get('[data-cy="submit-button"]');
-      cy.get('[data-cy="cancel-link"]');
+      applicationSubmission.applicationSubmissionPage();
+      applicationSubmission.backLink();
+      applicationSubmission.commentsField();
+      applicationSubmission.submmitButton();
+      applicationSubmission.cancelLink();
     });
 
     it('allows submission without comments', () => {
-      cy.get('[data-cy="submit-button"]').click();
-      cy.get('[data-cy="application-submission-confirmation"]');
+      applicationSubmission.submmitButton().click();
+      applicationSubmission.confirmation();
     });
 
     it('allows submission with comments', () => {
-      cy.get('[data-cy="application-comments"]').type('Some comments here ......');
-      cy.get('[data-cy="submit-button"]').click();
-      cy.get('[data-cy="application-submission-confirmation"]');
+      applicationSubmission.commentsField().type('Some comments here ......');
+      applicationSubmission.submmitButton().click();
+      applicationSubmission.confirmation();
     });
 
     it('shows error when comments are too long', () => {
-      cy.get('[data-cy="application-comments"]').type(longComment);
-      cy.get('[data-cy="submit-button"]').click();
-      cy.get('[data-cy="error-summary"]');
+      applicationSubmission.commentsField().type(longComment);
+      applicationSubmission.submmitButton().click();
+      applicationSubmission.errorSummary();
     });
 
     it('takes user back to application details page if cancel link clicked', () => {
-      cy.get('[data-cy="application-comments"]').type('Some comments here ....');
-      cy.get('[data-cy="cancel-link"]').click();
-      cy.get('[data-cy="application-details-page"]');
+      applicationSubmission.commentsField().type('Some comments here ....');
+      applicationSubmission.cancelLink().click();
+      applicationDetails.applicationDetailsPage();
     });
 
     it('takes user back to application details page if back link clicked', () => {
-      cy.get('[data-cy="application-comments"]').type('Some comments here ....');
-      cy.get('[data-cy="back-link"]').click();
-      cy.get('[data-cy="application-details-page"]');
+      applicationSubmission.commentsField().type('Some comments here ....');
+      applicationSubmission.backLink().click();
+      applicationDetails.applicationDetailsPage();
     });
 
     it('takes user back to dashboard if the click the link in the confirmation page', () => {
-      cy.get('[data-cy="submit-button"]').click();
-      cy.get('[data-cy="application-submission-confirmation"]');
+      applicationSubmission.submmitButton().click();
+      applicationSubmission.confirmation();
       // Just asserting the link is there as the error on dashboard page causes test to fail
-      cy.get('[data-cy="dashboard-link"]');
+      applicationSubmission.backToDashboadLink();
       // TODO: Swap this above for below
-      // cy.get('[data-cy="dashboard-link"]').click();
+      // applicationSubmission.backToDashboadLink().click();
       // cy.url().should('contain', 'dashboard');
     });
   });

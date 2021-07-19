@@ -1,11 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import _startCase from 'lodash/startCase';
 import * as api from '../../services/api';
-import { mapSummaryList, status, validationErrorHandler } from '../../utils/helpers';
+import { mapSummaryList, status } from '../../utils/helpers';
 import { exporterItems, coverItems, facilityItems } from '../../utils/display-items';
 import { PROGRESS, FACILITY_TYPE } from '../../../constants';
-
-const maxCommentLength = 400;
 
 export const applicationDetails = async (req, res) => {
   const { params } = req;
@@ -66,54 +64,7 @@ export const postApplicationDetails = (req, res) => {
   return res.redirect(`/gef/application-details/${applicationId}/submit`);
 };
 
-export const getApplicationSubmission = (req, res) => {
-  const { params } = req;
-  const { applicationId } = params;
-  return res.render('application-details-comments.njk', { applicationId, maxCommentLength });
-};
-
-export const postApplicationSubmission = async (req, res, next) => {
-  const { params, body } = req;
-  const { userToken } = req.session;
-  const { applicationId } = params;
-  const { comment } = body;
-  const application = await api.getApplication(applicationId);
-  const maker = await api.getMakerUser(application.userId, userToken);
-
-  // TODO : Add some validation here to make sure that the whole application is valid
-  try {
-    if (comment.length > maxCommentLength) {
-      const errors = validationErrorHandler({
-        errRef: 'comment',
-        errMsg: `You have entered more than ${maxCommentLength} characters`,
-      });
-
-      return res.render('application-details-comments.njk', {
-        applicationId, maxCommentLength, errors, comment,
-      });
-    }
-
-    const commentObj = {
-      role: 'maker', userName: maker.username, createdAt: Date.now(), comment,
-    };
-    const comments = application.comments || [];
-    comments.push(commentObj);
-
-    application.comments = comments;
-    application.status = PROGRESS.BANK_CHECK;
-
-    await api.updateApplication(applicationId, application);
-  } catch (err) {
-    return next(err);
-  }
-
-  return res.render('application-details-submitted.njk', { applicationId });
-};
-
-
 export default {
   applicationDetails,
   postApplicationDetails,
-  getApplicationSubmission,
-  postApplicationSubmission,
 };

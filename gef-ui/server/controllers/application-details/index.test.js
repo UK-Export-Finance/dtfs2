@@ -1,8 +1,6 @@
 import {
   applicationDetails,
   postApplicationDetails,
-  getApplicationSubmission,
-  postApplicationSubmission,
 } from './index';
 import * as api from '../../services/api';
 
@@ -21,21 +19,9 @@ const MockRequest = () => {
   return req;
 };
 
-const MockSubmissionRequest = () => ({
-  params: {
-    applicationId: '123',
-  },
-  query: {},
-  body: {
-    comment: 'Some comments here',
-  },
-  session: {
-    userToken: '',
-  },
-});
-
 const MockApplicationResponse = () => {
   const res = {};
+  res._id = '1234';
   res.exporterId = '123';
   res.coverTermsId = '123';
   res.bankInternalRefName = 'My test';
@@ -125,51 +111,5 @@ describe('POST Application Details', () => {
     postApplicationDetails(mockRequest, mockResponse);
 
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/submit');
-  });
-});
-
-describe('GET Application Submission', () => {
-  it('renders submission page as expected', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    getApplicationSubmission(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-      applicationId: expect.any(String),
-      maxCommentLength: expect.any(Number),
-    }));
-  });
-});
-
-describe('POST Application Submission', () => {
-  const mockResponse = new MockResponse();
-  const mockRequest = new MockSubmissionRequest();
-  const mockApplicationResponse = new MockApplicationResponse();
-
-
-  it('renders confirmation if successfully submitted', async () => {
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.updateApplication = () => Promise.resolve(mockApplicationResponse);
-
-    await postApplicationSubmission(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
-      applicationId: expect.any(String),
-    }));
-  });
-
-  it('renders error where comments are too long', async () => {
-    const longComments = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante nec magna fringilla dapibus. Praesent porta nibh at metus venenatis feugiat. Proin vel sollicitudin ligula. Nulla sed massa quis augue bibendum lacinia vitae id leo. Aliquam quis imperdiet felis, et tempus eros. Duis efficitur odio nisl, non finibus urna convallis sit amet. Cras tortor odio, finibus in fermentum vel, posuere quis.';
-    mockRequest.body.comment = longComments;
-
-    await postApplicationSubmission(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-      applicationId: expect.any(String),
-      comment: longComments,
-      maxCommentLength: expect.any(Number),
-      errors: expect.any(Object),
-    }));
   });
 });
