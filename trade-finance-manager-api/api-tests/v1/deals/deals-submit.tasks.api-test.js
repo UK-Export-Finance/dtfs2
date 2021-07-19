@@ -6,6 +6,7 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
 const formattedTimestamp = require('../../../src/v1/formattedTimestamp');
+const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
 
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
@@ -47,25 +48,29 @@ describe('/v1/deals', () => {
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
         });
 
-        it('should call externalApis.sendEmail', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+        it('should call externalApis.sendEmail  for first task email', async () => {
+          const dealId = MOCK_DEAL_NO_COMPANIES_HOUSE._id;
+          const { body } = await api.put({ dealId }).to('/v1/deals/submit');
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
+          expect(sendEmailApiSpy).toBeCalledTimes(2);
+
           const expected = {
-            templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
+            templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
             sendToEmailAddress: expectedTeamEmailAddress,
-            emailVariables: {
-              exporterName: body.dealSnapshot.submissionDetails['supplier-name'],
-              submissionType: body.dealSnapshot.details.submissionType,
-              submissionDate: moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
-              bank: body.dealSnapshot.details.owningBank.name,
-            },
+            emailVariables: generateTaskEmailVariables(
+              'mock-origin-url',
+              firstTask,
+              dealId,
+              body.dealSnapshot.submissionDetails['supplier-name'],
+              body.dealSnapshot.detailsukefDealId,
+            ),
           };
 
-          expect(sendEmailApiSpy).toHaveBeenCalledWith(
+          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(
             expected.templateId,
             expected.sendToEmailAddress,
             expected.emailVariables,
@@ -81,7 +86,7 @@ describe('/v1/deals', () => {
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.MIA);
         });
 
-        it('should call externalApis.sendEmail', async () => {
+        it('should call externalApis.sendEmail for first task email', async () => {
           const { body } = await api.put({ dealId: MOCK_DEAL_MIA_SUBMITTED._id }).to('/v1/deals/submit');
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
@@ -89,17 +94,19 @@ describe('/v1/deals', () => {
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
           const expected = {
-            templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMITTED_COMPLETE_TASK_MATCH_OR_CREATE_PARTIES,
+            templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
             sendToEmailAddress: expectedTeamEmailAddress,
-            emailVariables: {
-              exporterName: body.dealSnapshot.submissionDetails['supplier-name'],
-              submissionType: body.dealSnapshot.details.submissionType,
-              submissionDate: moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
-              bank: body.dealSnapshot.details.owningBank.name,
-            },
+            emailVariables: generateTaskEmailVariables(
+              'mock-origin-url',
+              firstTask,
+              body.dealSnapshot.submissionDetails['supplier-name'],
+              body.dealSnapshot.details.submissionType,
+              moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
+              body.dealSnapshot.details.owningBank.name,
+            ),
           };
 
-          expect(sendEmailApiSpy).toHaveBeenCalledWith(
+          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(
             expected.templateId,
             expected.sendToEmailAddress,
             expected.emailVariables,

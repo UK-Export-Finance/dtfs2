@@ -1,10 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
-const {
-  generateTaskUrl,
-  generateTaskEmailVariables,
-  sendUpdatedTaskEmail,
-} = require('./task-emails');
+const sendUpdatedTaskEmail = require('./task-emails');
+const { generateTaskUrl } = require('../helpers/generate-task-email-variables');
 const { lowercaseFirstLetter } = require('../../utils/string');
 
 const api = require('../api');
@@ -24,63 +21,6 @@ describe('task emails functions', () => {
     },
   };
 
-  describe('generateTaskUrl', () => {
-    it('should return url from params', () => {
-      const mockUrlOrigin = 'http://testing.com';
-      const mockDealId = '123456';
-
-      const mockTask = {
-        id: 1,
-        groupId: 2,
-      };
-
-      const result = generateTaskUrl(
-        mockUrlOrigin,
-        mockDealId,
-        mockTask,
-      );
-
-      const { groupId, id } = mockTask;
-
-      const expected = `${mockUrlOrigin}/case/${mockDealId}/tasks/${groupId}/${id}`;
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('generateTaskEmailVariables', () => {
-    it('should return object', () => {
-      const mockUrlOrigin = 'http://testing.com';
-      const mockDealId = '123456';
-
-      const mockTask = {
-        id: 1,
-        groupId: 2,
-        title: 'Test',
-      };
-
-      const mockExporterName = 'test exporter';
-      const mockUkefDealId = '100200';
-
-      const result = generateTaskEmailVariables(
-        mockUrlOrigin,
-        mockTask,
-        mockDealId,
-        mockExporterName,
-        mockUkefDealId,
-      );
-
-      const expected = {
-        taskTitle: lowercaseFirstLetter(mockTask.title),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDealId, mockTask),
-        exporterName: mockExporterName,
-        ukefDealId: mockUkefDealId,
-      };
-
-      expect(result).toEqual(expected);
-    });
-  });
-
   describe('sendUpdatedTaskEmail', () => {
     const mockUrlOrigin = 'http://test.com';
 
@@ -93,17 +33,19 @@ describe('task emails functions', () => {
         (t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
       );
 
-      await sendUpdatedTaskEmail(mockTask, mockDeal);
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
       const salesforceTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE),
+        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
         exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
         ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
-        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL,
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
         salesforceTeam.email,
         expectedEmailVars,
       );
