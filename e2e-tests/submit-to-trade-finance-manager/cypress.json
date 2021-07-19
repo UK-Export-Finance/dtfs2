@@ -18,4 +18,5 @@
   "responseTimeout": 200000,
   "pageLoadTimeout": 240000,
   "numTestsKeptInMemory": 5
+  }
 }
