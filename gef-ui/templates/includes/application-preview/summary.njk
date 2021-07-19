@@ -57,8 +57,8 @@
       <div class="govuk-grid-column-one-quarter">
         <p data-cy="facility-summary">
           <strong>Bank's facility</strong>
-          <br>Cash Facility ({{ cashFacilitiesCount }})
-          <br>Contingent Facility ({{ contingentFacilitiesCount }})
+          <br>Cash {{ "facility" if (cashFacilitiesCount === 1) else "facilities" }} ({{ cashFacilitiesCount }})
+          <br>Contingent {{ "facility" if (contingentFacilitiesCount === 1) else "facilities" }} ({{ contingentFacilitiesCount }})
         </p>
       </div>
     </div>
