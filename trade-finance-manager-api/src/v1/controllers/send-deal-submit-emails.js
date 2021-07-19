@@ -128,6 +128,10 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   const unissuedBondsList = generateBSSListString(unissuedBonds);
   const unissuedLoansList = generateEWCSListString(unissuedLoans);
 
+  if (issuedBondsList.length === 0 && issuedLoansList.length === 0) {
+    return null;
+  }
+
   const {
     'supplier-name': exporterName,
   } = dealSnapshot.submissionDetails;
