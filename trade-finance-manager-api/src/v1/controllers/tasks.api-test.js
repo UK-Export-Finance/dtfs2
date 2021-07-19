@@ -1,16 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 
 const {
-  getNewAssigneeFullName,
   updateTask,
   generateTaskDates,
   updateTasksCanEdit,
-  updateUserTasks,
-  updateOriginalAssigneeTasks,
   isMIAdeal,
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
+  assignTeamTasksToOneUser,
 } = require('./tasks.controller');
 
 const api = require('../api');
@@ -18,8 +16,11 @@ const api = require('../api');
 const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
+const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
+const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
+const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
 
-describe('tasks controller  / tasks helper functions', () => {
+describe('tasks controller', () => {
   const mockDeal = {
     dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
     tfm: {
@@ -28,26 +29,6 @@ describe('tasks controller  / tasks helper functions', () => {
       },
     },
   };
-
-  describe('getNewAssigneeFullName', () => {
-    it('should return user\'s full name', async () => {
-      const mockUser = MOCK_USERS[0];
-      const result = await getNewAssigneeFullName(mockUser._id);
-
-      const { firstName, lastName } = mockUser;
-      const expected = `${firstName} ${lastName}`;
-
-      expect(result).toEqual(expected);
-    });
-
-    describe('when the given user id is `Unassigned`', () => {
-      it('should return `Unassigned`', async () => {
-        const result = await getNewAssigneeFullName('Unassigned');
-
-        expect(result).toEqual('Unassigned');
-      });
-    });
-  });
 
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
@@ -330,125 +311,6 @@ describe('tasks controller  / tasks helper functions', () => {
     });
   });
 
-  describe('updateUserTasks', () => {
-    it('should add a task to users assignedTasks if a task.assignedTo.userI matches given userId', async () => {
-      const mockUser = MOCK_USERS[0];
-      const userId = mockUser._id;
-      const {
-        username,
-        firstName,
-        lastName,
-      } = mockUser;
-
-      const mockGroup1Tasks = [
-        {
-          id: '1',
-          groupId: 1,
-          status: 'In progress',
-          assignedTo: {
-            userFullName: `${firstName} ${lastName}`,
-            userId,
-          },
-        },
-        {
-          id: '2',
-          groupId: 1,
-          status: 'To do',
-        },
-        {
-          id: '3',
-          groupId: 1,
-          status: 'To do',
-        },
-      ];
-
-      const mockTasks = [
-        {
-          groupTitle: 'Group 1 tasks',
-          id: 1,
-          groupTasks: mockGroup1Tasks,
-        },
-        {
-          groupTitle: 'Group 2 tasks',
-          id: 2,
-          groupTasks: [],
-        },
-      ];
-
-
-      // check user initially has no tasks assigned
-      const user = await api.findUser(username);
-
-      expect(user.assignedTasks).toEqual([]);
-
-      // assign a task to user
-      const updatedUserTasks = await updateUserTasks(mockTasks, userId);
-      expect(updatedUserTasks.length).toEqual(1);
-      expect(updatedUserTasks).toEqual([mockGroup1Tasks[0]]);
-    });
-  });
-
-  describe('updateOriginalAssigneeTasks', () => {
-    it('should remove a task from users tasks if user has been assigned and then unassigned', async () => {
-      const mockUser = MOCK_USERS[0];
-      const userId = mockUser._id;
-      const {
-        username,
-        firstName,
-        lastName,
-      } = mockUser;
-
-      const mockGroup1Tasks = [
-        {
-          id: '1',
-          groupId: 1,
-          status: 'In progress',
-          assignedTo: {
-            userFullName: `${firstName} ${lastName}`,
-            userId,
-          },
-        },
-        {
-          id: '2',
-          groupId: 1,
-          status: 'To do',
-        },
-        {
-          id: '3',
-          groupId: 1,
-          status: 'To do',
-        },
-      ];
-
-      const mockTasks = [
-        {
-          groupTitle: 'Group 1 tasks',
-          id: 1,
-          groupTasks: mockGroup1Tasks,
-        },
-        {
-          groupTitle: 'Group 2 tasks',
-          id: 2,
-          groupTasks: [],
-        },
-      ];
-
-
-      // check user initially has no tasks assigned
-      const user = await api.findUser(username);
-
-      expect(user.assignedTasks).toEqual([]);
-
-      // assign a task to user
-      const updatedUserTasks = await updateUserTasks(mockTasks, userId);
-      expect(updatedUserTasks.length).toEqual(1);
-
-      const updatedUserTasksAfterUnassigned = await updateOriginalAssigneeTasks(userId, '1');
-
-      expect(updatedUserTasksAfterUnassigned.length).toEqual(0);
-    });
-  });
-
   describe('isMIAdeal', () => {
     it('should return true when submissionType is MIA', () => {
       const result = isMIAdeal(MOCK_DEAL_MIA_SUBMITTED.details.submissionType);
@@ -535,13 +397,13 @@ describe('tasks controller  / tasks helper functions', () => {
   });
 
   describe('updateTfmTask', () => {
-    const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
-
     const mockUser = MOCK_USERS[0];
     const userId = mockUser._id;
     const { firstName, lastName } = mockUser;
 
     it('should return the updated task', async () => {
+      const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+
       const tfmTaskUpdate = {
         id: '1',
         groupId: 1,
@@ -576,6 +438,8 @@ describe('tasks controller  / tasks helper functions', () => {
         // has task #1 as 'To do'.
         // therefore task #2 cannot be updated.
 
+        const dealId = MOCK_DEAL_AIN_SUBMITTED._id;
+
         const tfmTask2Update = {
           id: '2',
           groupId: 1,
@@ -596,6 +460,8 @@ describe('tasks controller  / tasks helper functions', () => {
 
     describe('when an MIA deal has the first task in the first group completed immediately', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
+        const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+
         const tfmTaskUpdate = {
           id: '1',
           groupId: 1,
@@ -616,6 +482,8 @@ describe('tasks controller  / tasks helper functions', () => {
 
     describe('when an MIA deal has the first task in the first group completed after being `In progress`', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
+        const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+
         // make sure task is in `To do` state.
         const tfmTaskUpdateTodo = {
           id: '1',
@@ -667,6 +535,59 @@ describe('tasks controller  / tasks helper functions', () => {
 
         expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
       });
+    });
+  });
+
+  describe('assignTeamTasksToOneUser', () => {
+    it('should assign all tasks in a team to the given user', async () => {
+      const dealId = MOCK_MIA_SECOND_SUBMIT._id;
+
+      const mockTeamIds = [
+        'UNDERWRITER_MANAGERS',
+        'UNDERWRITERS',
+      ];
+
+      const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+      const userId = mockUser._id;
+
+      const tasksThatShouldBeUpdated = [];
+
+      MOCK_MIA_TASKS.forEach((group) => {
+        group.groupTasks.forEach((task) => {
+          if (mockTeamIds.includes(task.team.id)) {
+            tasksThatShouldBeUpdated.push(task);
+          }
+        });
+      });
+
+      const result = await assignTeamTasksToOneUser(
+        dealId,
+        mockTeamIds,
+        userId,
+      );
+
+      let filteredTasksResult = [];
+
+      result.forEach((group) => {
+        group.groupTasks.forEach((task) => {
+          if (mockTeamIds.includes(task.team.id)) {
+            filteredTasksResult = [
+              ...filteredTasksResult,
+              task,
+            ];
+          }
+        });
+      });
+
+      const expected = tasksThatShouldBeUpdated.map((task) => ({
+        ...task,
+        assignedTo: {
+          userId,
+          userFullName: `${mockUser.firstName} ${mockUser.lastName}`,
+        },
+      }));
+
+      expect(filteredTasksResult).toEqual(expected);
     });
   });
 });

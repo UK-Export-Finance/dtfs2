@@ -14,6 +14,7 @@ describe(component, () => {
     tasks: [
       {
         groupTitle: 'Test title',
+        id: 1,
         groupTasks: [
           {
             id: '1',
@@ -112,7 +113,7 @@ describe(component, () => {
     it('should render assignee\'s full name', () => {
       params.tasks.forEach((group) => {
         group.groupTasks.forEach((task) => {
-          const selector = `[data-cy="task-table-row-${task.id}-user-full-name"]`;
+          const selector = `[data-cy="task-table-row-group-${task.groupId}-task-${task.id}-user-full-name"]`;
           wrapper.expectText(selector).toRead(task.assignedTo.userFullName);
         });
       });

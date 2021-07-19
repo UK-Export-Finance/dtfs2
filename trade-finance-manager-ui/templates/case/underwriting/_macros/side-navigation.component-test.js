@@ -7,12 +7,15 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
 
-  it('should rennder 3 links', () => {
+  it('should render 4 links', () => {
     const params = {
       caseId: '1234',
     };
 
     wrapper = render(params);
+
+    wrapper.expectLink('[data-cy="lead-underwriter"] a')
+      .toLinkTo(`/case/${params.caseId}/underwriting/lead-underwriter`, 'Lead underwriter');
 
     wrapper.expectLink('[data-cy="bank-security"] a')
       .toLinkTo(`/case/${params.caseId}/underwriting/bank-security`, 'Bank security');

@@ -266,6 +266,7 @@ type TFMDealData {
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
   estore: TFMEstore
+  leadUnderwriter: String
 }
 
 type PremiumScheduleData {
@@ -407,10 +408,21 @@ input TFMUnderwriterManagersDecisionInput {
   userFullName: String
 }
 
+input TFMLeadUnderwriterInput {
+  userId: String
+}
+
 type TeamMember {
   _id: String
   firstName: String
   lastName: String
+}
+
+type User {
+  _id: String
+  firstName: String
+  lastName: String
+  email: String
 }
 
 type Query {
@@ -418,6 +430,7 @@ type Query {
   deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
   teamMembers(teamId: String!): [TeamMember]
+  user(userId: String!): User
 }
 
 type Mutation {
@@ -429,6 +442,7 @@ type Mutation {
   updateProbabilityOfDefault(dealId: ID!, probabilityOfDefaultUpdate: TFMProbabilityOfDefaultInput): TFMDealData
   updateFacilityRiskProfile(_id: ID!, facilityUpdate: TFMFacilityRiskProfileInput): TFMFacilityData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
+  updateLeadUnderwriter(dealId: ID!, leadUnderwriterUpdate: TFMLeadUnderwriterInput): TFMDealData
 }
 `;
 

@@ -58,6 +58,7 @@ const dealQuery = gql`
           buyerName
           folderName
         }
+        leadUnderwriter
       }
       dealSnapshot {
         _id,
