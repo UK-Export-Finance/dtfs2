@@ -5,12 +5,13 @@ const nameApplication = async (req, res) => res.render('partials/name-applicatio
 
 const createApplication = async (req, res) => {
   const { body, session } = req;
-  const { _id: userId } = session.user;
+  const { _id: userId, bank: { id: bankId } } = session.user;
 
   try {
     const application = await api.createApplication({
       ...body,
       userId,
+      bankId,
     });
 
     // Validation errors

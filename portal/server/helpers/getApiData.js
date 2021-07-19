@@ -18,7 +18,7 @@ const getApiData = (query, res) => new Promise((resolve) =>
       // redirect to login
       // unauth handling could be middleware
       console.log(err);
-      return res.redirect('/');
+      return res.redirect('/login');
     }));
 
 export default getApiData;

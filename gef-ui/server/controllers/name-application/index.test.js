@@ -11,11 +11,12 @@ const MockResponse = () => {
 
 const MockRequest = () => {
   const req = {};
-  req.body = {};
+  req.body = { bankInternalRefName: '1234' };
   req.session = {};
-  req.session.user = {};
-  req.body.bankInternalRefName = '1234';
-  req.session.user._id = 'abc';
+  req.session.user = {
+    _id: 'abc',
+    bank: { id: 'mock-bank' },
+  };
   return req;
 };
 

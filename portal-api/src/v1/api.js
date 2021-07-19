@@ -42,6 +42,29 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   }
 };
 
+const queryAllDeals = async (filters, sort, start = 0, pagesize = 0) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/v1/portal/deals`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        filters,
+        sort,
+        start,
+        pagesize,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 const createDeal = async (deal, user) => {
   try {
     return await axios({
@@ -226,6 +249,7 @@ const tfmDealSubmit = async (dealId, portalChecker) => {
 module.exports = {
   findOneDeal,
   queryDeals,
+  queryAllDeals,
   createDeal,
   updateDeal,
   deleteDeal,

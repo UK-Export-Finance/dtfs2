@@ -96,3 +96,109 @@ exports.findOneDealGet = async (req, res) => {
 
   return res.status(404).send();
 };
+
+/**
+ * Queries all deals, both BSS and GEF
+ * @param {*} filters any filters for list, uses match spec
+ * @param {*} sort any additional sort fields for list
+ * @param {*} start where list should start - part of pagination.
+ * @param {*} pagesize Size of each page - limits list results
+ * @returns combined and formatted list of deals
+ */
+
+const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
+  const collection = await db.getCollection('deals');
+
+  const deals = await collection.aggregate([
+    // clear the collection
+    { $limit: 1 },
+    { $project: { _id: 1 } },
+    { $project: { _id: 0 } },
+    // add data sets
+    {
+      $lookup: {
+        from: 'deals',
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              bankId: '$details.owningBank.id',
+              bankRef: '$details.bankSupplyContractName',
+              status: '$details.status',
+              product: 'BSS/EWCS',
+              type: '$details.submissionType',
+              exporter: '$submissionDetails.supplier-name',
+              lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
+            },
+          },
+        ],
+        as: 'BSS',
+      },
+    },
+    {
+      $lookup: {
+        from: 'gef-application',
+        pipeline: [
+          {
+            $lookup: {
+              from: 'gef-exporter',
+              localField: 'exporterId',
+              foreignField: '_id',
+              as: 'exporter',
+            },
+          },
+          { $unwind: '$exporter' },
+
+          {
+            $lookup: {
+              from: 'gef-cover-terms',
+              localField: 'coverTermsId',
+              foreignField: '_id',
+              as: 'coverTerms',
+            },
+          },
+          { $unwind: '$coverTerms' },
+          {
+            $project: {
+              _id: 1,
+              bankRef: '$bankInternalRefName',
+              bankId: 1,
+              status: 1,
+              product: 'GEF',
+              type: '-', // TODO: add handling for GEF cover terms once field is available
+              exporter: '$exporter.companyName',
+              lastUpdate: { $ifNull: ['$updatedAt', '$createdAt'] },
+            },
+          },
+        ],
+        as: 'GEF',
+      },
+    },
+    // combine data sets and flatten
+    { $project: { union: { $concatArrays: ['$BSS', '$GEF'] } } },
+    { $unwind: '$union' },
+    { $replaceRoot: { newRoot: '$union' } },
+    { $match: filters },
+    { $sort: { ...sort, lastUpdate: -1 } },
+    {
+      $facet: {
+        count: [{ $count: 'total' }],
+        deals: [{ $skip: start }, ...pagesize ? [{ $limit: pagesize }] : []],
+      },
+    },
+    { $unwind: '$count' },
+    { $project: { count: '$count.total', deals: 1 } },
+  ])
+    .toArray();
+
+  return deals[0];
+};
+
+exports.queryAllDeals = async (req, res) => {
+  try {
+    const deals = await queryAllDeals(req.body.filters, req.body.sort, req.body.start, req.body.pagesize);
+    res.status(200).send(deals);
+  } catch (err) {
+    res.status(500).send(`Error: ${err}`);
+  }
+};

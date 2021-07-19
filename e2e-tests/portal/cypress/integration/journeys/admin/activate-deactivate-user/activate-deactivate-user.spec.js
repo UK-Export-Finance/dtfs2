@@ -1,8 +1,11 @@
-const { header, users, createUser, editUser} = require('../../../pages');
+const {
+  header, users, createUser, editUser,
+} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -12,7 +15,7 @@ context('Admin user updates an existing user', () => {
     surname: 'the builder',
     bank: 'Barclays Bank',
     roles: ['maker'],
-  }
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -52,7 +55,7 @@ context('Admin user updates an existing user', () => {
 
     // prove we can't log in as user
     cy.login(userToUpdate);
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
 
     // go back to admin user and re-activate
     cy.login(ADMIN_LOGIN);
@@ -64,6 +67,5 @@ context('Admin user updates an existing user', () => {
     // prove we can log in again
     cy.login(userToUpdate);
     cy.url().should('eq', relative('/dashboard/0'));
-
   });
 });

@@ -2,8 +2,9 @@ const { dashboard } = require('../../../pages');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Admin dashboard', () => {
   let deal;
@@ -25,6 +26,7 @@ context('Admin dashboard', () => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
+    cy.deleteGefApplications(MAKER_LOGIN);
   });
 
   it('Bank column should appear for admin user', () => {
@@ -32,15 +34,12 @@ context('Admin dashboard', () => {
     cy.login(ADMIN_LOGIN);
     dashboard.visit();
 
-    // get the row that corresponds to our deal
-    const row = dashboard.row(deal);
-
     // check the fields we understand
-    expect(dashboard.tableHeaders.bank().should('exist'));
-    expect(row.bank().should('exist'));
+    expect(dashboard.tableHeader('bankRef').should('exist'));
+    expect(dashboard.row.bankRef(deal._id).should('exist'));
   });
 
-  it("Dashboard screen should pass Lighthouse audit", function () {
+  it('Dashboard screen should pass Lighthouse audit', () => {
     // login and go to dashboard
     cy.login(ADMIN_LOGIN);
     dashboard.visit();
@@ -48,11 +47,10 @@ context('Admin dashboard', () => {
     cy.lighthouse({
       performance: 85,
       accessibility: 100,
-      "best-practices": 85,
+      'best-practices': 85,
       seo: 85,
       pwa: 100,
     });
     cy.pa11y();
   });
-
 });

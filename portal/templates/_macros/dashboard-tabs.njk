@@ -1,43 +1,28 @@
 {% macro nav(selected, id) %}
 
-  <ul class="govuk-tabs__list">
-    <li
-      {% if selected === 'deals' %}
-        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
-      {% else %}
-        class="govuk-tabs__list-item"
-      {% endif %}
-    >
-      <a
-        class="govuk-tabs__tab"
-        {% if selected === 'deals' %}
-          href="#"
-        {% else %}
-          href="/dashboard"
-        {% endif %}
-      >
-        Deals
-      </a>
-    </li>
+  {% set tabs = [
+    {
+      id: 'deals',
+      href: '/dashboard',
+      text: 'Deal view'
+    }, {
+      id: 'transactions',
+      href: '/dashboard/transactions',
+      text: 'Transactions'
+    }
+  ] %}
 
-    <li
-      {% if selected === 'transactions' %}
-        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
-      {% else %}
-        class="govuk-tabs__list-item"
-      {% endif %}
-    >
-      <a
-        class="govuk-tabs__tab"
-        {% if selected === 'transactions' %}
-          href="#"
-        {% else %}
-          href="/dashboard/transactions"
-        {% endif %}
-      >
-        Transactions
-      </a>
-    </li>
+  <ul class="govuk-tabs__list">
+    {% for tab in tabs %}
+      <li class="govuk-tabs__list-item{% if selected === tab.id %} govuk-tabs__list-item--selected{% endif %}">
+        <a
+          class="govuk-tabs__tab"
+          href="{{ tab.href }}"
+        >
+          {{ tab.text }}
+        </a>
+      </li>
+    {% endfor %}
 
   </ul>
 
