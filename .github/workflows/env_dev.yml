@@ -427,7 +427,7 @@ jobs:
             --name tfs-${{ env.environment }}-mongo \
             --kind MongoDB \
             --enable-virtual-network true \
-            --server-version 3.6
+            --server-version 4.0
           
     - name: Add mongo service endpoints
       uses: Azure/cli@v1.0.0
