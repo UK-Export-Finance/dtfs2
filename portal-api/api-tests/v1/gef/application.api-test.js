@@ -71,6 +71,7 @@ describe(baseUrl, () => {
           exporterId: expect.any(String),
           coverTermsId: expect.any(String),
           createdAt: expect.any(Number),
+          status: 'Draft',
         })),
       };
 
@@ -98,6 +99,7 @@ describe(baseUrl, () => {
         ...allItems[0],
         exporterId: expect.any(String),
         coverTermsId: expect.any(String),
+        status: 'Draft',
         createdAt: expect.any(Number),
       };
       expect(body).toEqual(expectMongoId(expected));
@@ -124,7 +126,7 @@ describe(baseUrl, () => {
     it('returns a status', async () => {
       const item = await as(aMaker).post(allItems[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
-      expect(body).toEqual({ status: 'IN_PROGRESS' });
+      expect(body).toEqual({ status: 'Draft' });
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
@@ -150,6 +152,7 @@ describe(baseUrl, () => {
         ...allItems[0],
         exporterId: expect.any(String),
         coverTermsId: expect.any(String),
+        status: 'Draft',
         createdAt: expect.any(Number),
       };
       expect(body).toEqual(expectMongoId(expected));
