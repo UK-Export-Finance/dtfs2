@@ -5,7 +5,7 @@ class Application {
     if (exporterId) {
       // New Application
       this.userId = req.userId ? String(req.userId) : null;
-      this.status = STATUS.IN_PROGRESS;
+      this.status = STATUS.DRAFT;
       this.bankId = req.bankId ? String(req.bankId) : null;
       this.exporterId = exporterId;
       this.coverTermsId = coverTermsId;
