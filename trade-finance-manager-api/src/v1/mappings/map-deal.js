@@ -1,10 +1,11 @@
+const CONSTANTS = require('../../constants');
 const CONTENT_STRINGS = require('../content-strings');
 const api = require('../api');
 
 const mapDeal = async (deal) => {
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
-  if (deal.dealType === 'GEF') {
+  if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     mappedDeal.facilities = await Promise.all(deal.facilityIds.map(async (facilityId) =>
       api.findOneFacility(facilityId)));
     return mappedDeal;
