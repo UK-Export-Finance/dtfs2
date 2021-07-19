@@ -1,0 +1,44 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "case/underwriting/layout.njk" %}
+
+{% block underwriting_content %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-three-quarters">
+
+      <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="lead-underwriter-heading">Lead Underwriter</h3>
+
+      <div class="separator-line govuk-!-padding-top-7">
+
+        {% if currentLeadUnderWriter %}
+
+          <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-!-margin-top-0" data-cy="lead-underwriter-name">{{ currentLeadUnderWriter.firstName }} {{ currentLeadUnderWriter.lastName }}</p>
+              <p><a class="govuk-link" href="mailto:{{ currentLeadUnderWriter.email }}" data-cy="lead-underwriter-email">{{ currentLeadUnderWriter.email }}</a></p>
+            </div>
+
+            <div class="govuk-grid-column-one-quarter text-align-right">
+              {% if userCanEdit %}
+                <p class="govuk-!-margin-top-0"><a class="govuk-link" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="change-lead-underwriter-link">Change</a></p>
+              {% endif %}
+            </div>
+
+          </div>
+
+          {% elseif userCanEdit %}
+
+            <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/lead-underwriter/assign" data-cy="assign-lead-underwriter-link">Assign a lead underwriter</a></p>
+
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

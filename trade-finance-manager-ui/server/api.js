@@ -4,6 +4,7 @@ import dealQuery from './graphql/queries/deal-query';
 import dealsQuery from './graphql/queries/deals-query';
 import facilityQuery from './graphql/queries/facility-query';
 import teamMembersQuery from './graphql/queries/team-members-query';
+import userQuery from './graphql/queries/user-query';
 import updatePartiesMutation from './graphql/mutations/update-parties';
 import updateFacilityMutation from './graphql/mutations/update-facilities';
 import updateFacilityRiskProfileMutation from './graphql/mutations/update-facility-risk-profile';
@@ -12,6 +13,7 @@ import updateCreditRatingMutation from './graphql/mutations/update-credit-rating
 import updateLossGivenDefaultMutation from './graphql/mutations/update-loss-given-default';
 import updateProbabilityOfDefaultMutation from './graphql/mutations/update-probability-of-default';
 import postUnderwriterManagersDecision from './graphql/mutations/update-underwriter-managers-decision';
+import updateLeadUnderwriterMutation from './graphql/mutations/update-lead-underwriter';
 
 require('dotenv').config();
 
@@ -48,6 +50,12 @@ const getTeamMembers = async (teamId) => {
   const response = await apollo('GET', teamMembersQuery, { teamId });
 
   return response.data.teamMembers;
+};
+
+const getUser = async (userId) => {
+  const response = await apollo('GET', userQuery, { userId });
+
+  return response.data.user;
 };
 
 const updateParty = async (id, partyUpdate) => {
@@ -130,6 +138,17 @@ const updateUnderwriterManagersDecision = async (dealId, update) => {
   return response;
 };
 
+const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
+  const updateVariables = {
+    dealId,
+    leadUnderwriterUpdate,
+  };
+
+  const response = await apollo('PUT', updateLeadUnderwriterMutation, updateVariables);
+
+  return response;
+};
+
 // Temp login for mock users. Active Directory will proabably replace this
 // Just get the user, not really concerned about logging in with passwords for mock users
 const login = async (username) => {
@@ -153,6 +172,7 @@ export default {
   getFacility,
   updateFacilityRiskProfile,
   getTeamMembers,
+  getUser,
   updateParty,
   updateFacility,
   updateTask,
@@ -160,5 +180,6 @@ export default {
   updateLossGivenDefault,
   updateProbabilityOfDefault,
   updateUnderwriterManagersDecision,
+  updateLeadUnderwriter,
   login,
 };

@@ -75,6 +75,7 @@ const GET_DEAL = gql`
           timestamp
           userFullName
         }
+        leadUnderwriter
       }
       dealSnapshot {
         _id,

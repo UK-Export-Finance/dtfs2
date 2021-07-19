@@ -5,3 +5,6 @@ export const userFullName = (user) => {
 
 export const userIsInTeam = (user, teamList) =>
   teamList.some((teamId) => user.teams.includes(teamId));
+
+
+export const isAssignedToUser = (assignedToUserId, userId) => (assignedToUserId === userId);

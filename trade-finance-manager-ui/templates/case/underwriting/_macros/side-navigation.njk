@@ -9,28 +9,40 @@
     {{ mojSideNavigation({
       label: 'Side navigation',
       classes: 'ukef-underwriting-side-nav',
-      items: [{
-        text: 'Bank security',
-        href: '/case/' + caseId + '/underwriting/bank-security',
-        active: activeSideNavigation === 'bank security',
-        attributes: {
-          'data-cy': 'bank-security'
+      items: [
+        {
+          text: 'Lead underwriter',
+          href: '/case/' + caseId + '/underwriting/lead-underwriter',
+          active: activeSideNavigation === 'lead underwriter',
+          attributes: {
+            'data-cy': 'lead-underwriter'
+          }
+        },
+        {
+          text: 'Bank security',
+          href: '/case/' + caseId + '/underwriting/bank-security',
+          active: activeSideNavigation === 'bank security',
+          attributes: {
+            'data-cy': 'bank-security'
+          }
+        },
+        {
+          text: 'Pricing and risk',
+          href: '/case/' + caseId + '/underwriting/pricing-and-risk',
+          active: activeSideNavigation === 'pricing and risk',
+          attributes: {
+            'data-cy': 'pricing-and-risk'
+          }
+        },
+        {
+          text: 'Underwriter manager’s decision',
+          href: '/case/' + caseId + '/underwriting/managers-decision',
+          active: activeSideNavigation === 'underwriter managers decision',
+          attributes: {
+            'data-cy': 'underwriter-managers-decision'
+          }
         }
-      }, {
-        text: 'Pricing and risk',
-        href: '/case/' + caseId + '/underwriting/pricing-and-risk',
-        active: activeSideNavigation === 'pricing and risk',
-        attributes: {
-          'data-cy': 'pricing-and-risk'
-        }
-      }, {
-        text: 'Underwriter manager’s decision',
-        href: '/case/' + caseId + '/underwriting/managers-decision',
-        active: activeSideNavigation === 'underwriter managers decision',
-        attributes: {
-          'data-cy': 'underwriter-managers-decision'
-        }
-      }]
+      ]
     }) }}
 
   </div>

@@ -1,8 +1,6 @@
 import api from '../../api';
-import {
-  getTask,
-  mapAssignToSelectOptions,
-} from './helpers';
+import { getTask } from './helpers';
+import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 import CONSTANTS from '../../constants';
 
 const getCaseDeal = async (req, res) => {
@@ -113,6 +111,12 @@ const getCaseTask = async (req, res) => {
 
   const allTeamMembers = await api.getTeamMembers(task.team.id);
 
+  const assignToSelectOptions = mapAssignToSelectOptions(
+    task.assignedTo.userId,
+    user,
+    allTeamMembers,
+  );
+
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -121,7 +125,7 @@ const getCaseTask = async (req, res) => {
     dealId,
     user,
     task,
-    assignToSelectOptions: mapAssignToSelectOptions(task, user, allTeamMembers),
+    assignToSelectOptions,
   });
 };
 

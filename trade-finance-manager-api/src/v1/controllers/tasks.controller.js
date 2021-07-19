@@ -1,6 +1,7 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const now = require('../../now');
+const getAssigneeFullName = require('./get-assignee-full-name');
 const {
   previousTaskIsComplete,
   isFirstTaskInFirstGroup,
@@ -26,21 +27,6 @@ const updateHistory = ({
   updatedBy,
   timestamp: now(),
 });
-
-const getNewAssigneeFullName = async (assignedUserId) => {
-  let fullName;
-
-  if (assignedUserId === CONSTANTS.TASKS.UNASSIGNED) {
-    fullName = CONSTANTS.TASKS.UNASSIGNED;
-  } else {
-    const user = await api.findUserById(assignedUserId);
-    const { firstName, lastName } = user;
-
-    fullName = `${firstName} ${lastName}`;
-  }
-
-  return fullName;
-};
 
 const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
@@ -121,31 +107,6 @@ const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, 
   return taskGroups;
 };
 
-const updateUserTasks = async (allTasks, userId) => {
-  const tasksAssignedToUser = [];
-
-  allTasks.map((taskGroup) =>
-    taskGroup.groupTasks.map((task) => {
-      if (task.assignedTo && task.assignedTo.userId === userId) {
-        tasksAssignedToUser.push(task);
-      }
-      return task;
-    }));
-
-  const updatedUser = await api.updateUserTasks(userId, tasksAssignedToUser);
-  return updatedUser.assignedTasks;
-};
-
-const updateOriginalAssigneeTasks = async (originalAssigneeUserId, updatedTaskId) => {
-  const { assignedTasks: originalTaskAssigneeTasks } = await api.findUserById(originalAssigneeUserId);
-
-  const modifiedOriginalTaskAssigneeTasks = originalTaskAssigneeTasks.filter((task) => task.id !== updatedTaskId);
-
-  const updatedUser = await api.updateUserTasks(originalAssigneeUserId, modifiedOriginalTaskAssigneeTasks);
-
-  return updatedUser.assignedTasks;
-};
-
 const isMIAdeal = (submissionType) =>
   submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
 
@@ -191,12 +152,10 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
   const statusFrom = originalTask.status;
 
-  const originalTaskAssignedUserId = originalTask.assignedTo.userId;
-
   if (canUpdateTask(allTasks, group, taskIdToUpdate)) {
     const { userId: assignedUserId } = assignedTo;
 
-    const newAssigneeFullName = await getNewAssigneeFullName(assignedUserId);
+    const newAssigneeFullName = await getAssigneeFullName(assignedUserId);
 
     const updatedTask = {
       id: taskIdToUpdate,
@@ -253,29 +212,63 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
 
     await api.updateDeal(dealId, tfmDealUpdate);
 
-    if (originalTaskAssignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-      await updateOriginalAssigneeTasks(originalTaskAssignedUserId, taskIdToUpdate);
-    }
-
-    if (assignedUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-      await updateUserTasks(modifiedTasks, assignedUserId);
-    }
-
     return updatedTask;
   }
 
   return originalTask;
 };
 
+const assignTeamTasksToOneUser = async (dealId, teamIds, userId) => {
+  const deal = await api.findOneDeal(dealId);
+  const allTaskGroups = deal.tfm.tasks;
+
+  const newAssigneeFullName = await getAssigneeFullName(userId);
+
+  let modifiedTasks = allTaskGroups;
+
+  modifiedTasks = modifiedTasks.map((tGroup) => {
+    let group = tGroup;
+
+    group = {
+      ...group,
+      groupTasks: group.groupTasks.map((t) => {
+        let task = t;
+
+        if (teamIds.includes(task.team.id)) {
+          task = {
+            ...task,
+            assignedTo: {
+              userFullName: newAssigneeFullName,
+              userId,
+            },
+          };
+        }
+
+        return task;
+      }),
+    };
+
+    return group;
+  });
+
+  const tfmDealUpdate = {
+    tfm: {
+      tasks: modifiedTasks,
+    },
+  };
+
+  await api.updateDeal(dealId, tfmDealUpdate);
+
+  return modifiedTasks;
+};
+
 module.exports = {
-  getNewAssigneeFullName,
   updateTask,
   generateTaskDates,
   updateTasksCanEdit,
-  updateUserTasks,
-  updateOriginalAssigneeTasks,
   isMIAdeal,
   taskIsCompletedImmediately,
   shouldUpdateDealStage,
   updateTfmTask,
+  assignTeamTasksToOneUser,
 };
