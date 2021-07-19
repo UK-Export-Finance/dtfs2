@@ -8,7 +8,12 @@ describe('mapGefDeal', () => {
       _id: MOCK_GEF_DEAL._id,
       dealSnapshot: {
         ...MOCK_GEF_DEAL,
-        facilities: [],
+        facilities: [
+          {
+            facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+            tfm: {},
+          },
+        ],
       },
       tfm: {},
     };

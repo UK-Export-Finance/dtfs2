@@ -20,7 +20,6 @@ const mapFacilityType = (facility) => {
     return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 
-  // TODO gef versions with facility at the end
   return null;
 };
 
