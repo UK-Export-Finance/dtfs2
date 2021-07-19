@@ -1,23 +1,7 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
-const { lowercaseFirstLetter } = require('../../utils/string');
-
-const generateTaskUrl = (urlOrigin, dealId, task) => {
-  const {
-    id: taskId,
-    groupId,
-  } = task;
-
-  return `${urlOrigin}/case/${dealId}/tasks/${groupId}/${taskId}`;
-};
-
-const generateTaskEmailVariables = (urlOrigin, task, dealId, exporterName, ukefDealId) => ({
-  taskTitle: lowercaseFirstLetter(task.title),
-  taskUrl: generateTaskUrl(urlOrigin, dealId, task),
-  exporterName,
-  ukefDealId,
-});
+const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 
 const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   let templateId;
@@ -34,7 +18,7 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   const { 'supplier-name': exporterName } = submissionDetails;
   const { ukefDealId } = details;
 
-  let emailVariables = generateTaskEmailVariables(
+  const emailVariables = generateTaskEmailVariables(
     urlOrigin,
     task,
     dealId,
@@ -44,12 +28,7 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
 
   switch (task.title) {
     case CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE:
-      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_SALEFORCE_NEW_DEAL;
-
-      emailVariables = {
-        exporterName,
-        ukefDealId,
-      };
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
       break;
 
     case CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS:
@@ -106,8 +85,4 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   return null;
 };
 
-module.exports = {
-  generateTaskUrl,
-  generateTaskEmailVariables,
-  sendUpdatedTaskEmail,
-};
+module.exports = sendUpdatedTaskEmail;

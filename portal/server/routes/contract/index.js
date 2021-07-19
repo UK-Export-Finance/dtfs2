@@ -278,7 +278,7 @@ router.post('/contract/:_id/confirm-submission', provide([DEAL]), async (req, re
     status: 'Submitted',
   };
 
-  const { data } = await api.updateDealStatus(updateToSend, userToken);
+  const { data } = await api.updateDealStatus(updateToSend, userToken, req.headers.origin);
 
   let validationErrors;
   if (data.errorList) {
