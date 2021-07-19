@@ -39,7 +39,14 @@ const callNumberGeneratorApi = async (numberType) => {
         requestingSystem: 'Portal v2/TFM',
       },
     ],
-  }).catch((catchErr) => catchErr);
+  }).catch((catchErr) => {
+    console.log('Number Generator Error', { catchErr });
+    return {
+      data: {
+        maskedId: 'NUM_GEN_ERROR',
+      },
+    };
+  });
 
   const { maskedId: id } = response.data;
 

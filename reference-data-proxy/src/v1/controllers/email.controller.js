@@ -24,8 +24,8 @@ exports.sendEmail = async (req, res) => {
     })
     .catch((err) => {
       console.log('Error calling Notify API');
-      console.log(err.stack);
-      return false;
+      console.log(err.response);
+      return err.response;
     });
 
   const { status, data } = notifyResponse;

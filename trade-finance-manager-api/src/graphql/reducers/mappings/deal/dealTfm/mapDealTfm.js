@@ -5,6 +5,10 @@ const mapDealTfm = (deal) => {
     tfm: dealTfm,
   } = deal;
 
+  if (!dealTfm) {
+    return false;
+  }
+
   const { supplyContractValueInGBP } = dealTfm;
 
   const result = {
