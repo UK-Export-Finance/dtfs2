@@ -37,6 +37,11 @@ Cypress.Commands.add('updateDeal', require('./portal-api/updateDeal'));
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
 Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 
+// commands used to interact with GEF (via portal-api)
+Cypress.Commands.add('deleteGefApplications', require('./portal-api/deleteGefApplications'));
+Cypress.Commands.add('insertOneGefApplication', require('./portal-api/insertOneGefApplication'));
+Cypress.Commands.add('insertManyGefApplications', require('./portal-api/insertManyGefApplications'));
+
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));
 

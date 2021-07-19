@@ -6,6 +6,7 @@ class Application {
       // New Application
       this.userId = req.userId ? String(req.userId) : null;
       this.status = STATUS.IN_PROGRESS;
+      this.bankId = req.bankId ? String(req.bankId) : null;
       this.exporterId = exporterId;
       this.coverTermsId = coverTermsId;
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;

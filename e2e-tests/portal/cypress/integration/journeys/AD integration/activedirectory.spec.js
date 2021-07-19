@@ -7,8 +7,9 @@ const {
 const relative = require('../../relativeURL');
 
 const mockUsers = require('../../../fixtures/mockUsers');
-const BAD_LOGIN = {username: 'doesntExist', password: 'whatever'};
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const BAD_LOGIN = { username: 'doesntExist', password: 'whatever' };
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Login', () => {
   beforeEach(() => {
@@ -21,13 +22,13 @@ context('Login', () => {
 
   it('When a user that is not logged in navigates to a protected route, they are sent to the homepage', () => {
     beforeYouStart.visit();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
 
     bankDetails.visit();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
 
     dashboard.visit();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
   });
 
   it('A failed login leaves the user on the landing page', () => {
@@ -35,7 +36,7 @@ context('Login', () => {
 
     cy.login(BAD_LOGIN);
 
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative('/login'));
   });
 
   it('A successful login takes the user to the /dashboard page', () => {

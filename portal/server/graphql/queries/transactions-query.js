@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const transactionsQuery = `
+const transactionsQuery = gql`
 query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
   transactions(params: {start: $start, pagesize: $pagesize, filters: $filters}) {
     count
@@ -38,4 +38,4 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
   }
 }`;
 
-export default gql(transactionsQuery);
+export default transactionsQuery;

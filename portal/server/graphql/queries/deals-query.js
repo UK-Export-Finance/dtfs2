@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
 
-//   deals(params: {start:0, pagesize: $pagesize, filter: [{field: "details.status", value: "Draft"}]}) {
-const dealsQuery = `
+const dealsQuery = gql`
 query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
   deals(params: {start: $start, pagesize: $pagesize, filters: $filters}) {
     count
@@ -41,4 +40,4 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
   }
 }`;
 
-export default gql(dealsQuery);
+export default dealsQuery;

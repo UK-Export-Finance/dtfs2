@@ -8,9 +8,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 // Webpack doesn't support glob paths. For the nunjucks-html-loader,
 // we need each path to be specified for it to work (even subdirectories)
 function returnEntries(globPath) {
-  let entries = globEntries(globPath, true);
-  let folderList = new Array();
-  for (let folder in entries) {
+  const entries = globEntries(globPath, true);
+  const folderList = new Array();
+  for (const folder in entries) {
     folderList.push(path.join(__dirname, entries[folder]));
   }
   return folderList;
@@ -20,6 +20,7 @@ module.exports = {
   entry: {
     main: './scripts/main.js',
     govukFrontend: './scripts/govuk-frontend.js',
+    mojFrontend: './scripts/moj-frontend.js',
     maskedInputs: './scripts/masked-inputs.js',
   },
   output: {

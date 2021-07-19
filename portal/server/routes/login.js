@@ -6,7 +6,7 @@ import {
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
   return res.render('login.njk', {
     passwordreset,
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const loginErrors = [];
 
@@ -76,7 +76,7 @@ router.post('/reset-password', async (req, res) => {
   const { success } = await api.resetPassword(email);
 
   if (success) {
-    res.redirect('/?passwordreset=1');
+    res.redirect('/login?passwordreset=1');
   } else {
     res.redirect('?passwordreseterror=1');
   }

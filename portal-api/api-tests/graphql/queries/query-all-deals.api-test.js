@@ -8,35 +8,38 @@ const { as } = require('../../api')(app);
 
 const dealsQuery = `
 query {
-  deals {
+  allDeals {
     status {
       code
     }
-    deals{
+    count
+    deals {
       _id
-      details {
-        bankSupplyContractName
-        bankSupplyContractID
-        dateOfLastAction
-      }
+      status
+      bankRef
+      exporter
+      product
+      type
+      lastUpdate
     }
   }
 }`;
 
 const dealsPaginationQuery1 = `
 query {
-  deals(params: { start:2, pagesize: 2}) {
+  allDeals(params: { start:2, pagesize: 2}) {
     status {
       code
     }
     count
-    deals{
+    deals {
       _id
-      details {
-        bankSupplyContractName
-        bankSupplyContractID
-        dateOfLastAction
-      }
+      status
+      bankRef
+      exporter
+      product
+      type
+      lastUpdate
     }
   }
 }`;
@@ -44,75 +47,63 @@ query {
 
 const dealsPaginationQuery2 = `
 query {
-  deals(params: { start:5, pagesize: 3}) {
+  allDeals(params: { start:5, pagesize: 3}) {
     status {
       code
     }
     count
-    deals{
+    deals {
       _id
-      details {
-        bankSupplyContractName
-        bankSupplyContractID
-        dateOfLastAction
-      }
+      status
+      bankRef
+      exporter
+      product
+      type
+      lastUpdate
     }
   }
 }`;
 
 const dealsFilterStatusQuery = `
 query {
-  deals(params: { filters: [{ field: "details.status", value: "Draft"}]}) {
+  allDeals(params: { filters: [{ field: "status", value: "Draft"}]}) {
     status {
       code
     }
     count
-    deals{
-      _id
-      details {
-        status
-        bankSupplyContractName
-        bankSupplyContractID
-        dateOfLastAction
-      }
+    deals {
+      status
+      bankRef
     }
   }
 }`;
 
 const dealsFilterStatusPaginatedQuery = `
 query {
-  deals(params: {  start:1, pagesize: 2, filters: [{ field: "details.status", value: "Draft"}]}) {
+  allDeals(params: {  start:1, pagesize: 2, filters: [{ field: "status", value: "Draft"}]}) {
     status {
       code
     }
     count
-    deals{
+    deals {
       _id
-      details {
-        status
-        bankSupplyContractName
-        bankSupplyContractID
-        dateOfLastAction
-      }
+      status
+      bankRef
     }
   }
 }`;
 
 const dealsFilterNotStatusQuery = `
 query {
-  deals(params: { filters: [{ field: "details.status", value: "Draft", operator: "ne"}]}) {
+  allDeals(params: { filters: [{ field: "status", value: "Draft", operator: "ne"}]}) {
     status {
       code
     }
     count
-    deals{
+    deals {
       _id
-      details {
-        status
-        bankSupplyContractName
-        bankSupplyContractID
-        dateOfLastAction
-      }
+      status
+      bankRef
     }
   }
 }`;
@@ -140,9 +131,10 @@ describe('/graphql query deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['gef-application']);
   });
 
-  describe('/graphql list deals', () => {
+  describe('/graphql list all deals', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(queryBody).to('/graphql');
 
@@ -151,18 +143,19 @@ describe('/graphql query deals', () => {
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
       const { body } = await as(noRoles).post(queryBody).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(401);
+      console.log(JSON.stringify(body.data));
+      expect(body.data.allDeals.status.code).toEqual(401);
     });
 
     it('accepts requests that come from a user with role=maker', async () => {
       const { body } = await as(anHSBCMaker).post(queryBody).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
     });
 
 
     it('accepts requests that come from a user with role=checker', async () => {
       const { body } = await as(aBarclaysChecker).post(queryBody).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
     });
 
     it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
@@ -180,13 +173,14 @@ describe('/graphql query deals', () => {
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
       await as(aBarclaysMaker).post(deals[3]).to('/v1/deals');
 
+      // const { status, body } = await as(anHSBCMaker).get('/v1/deals', anHSBCMaker.token);
       const { body } = await as(anHSBCMaker).post(queryBody).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect to see deals in reverse order; most recent on top..
-      expect(body.data.deals.deals.length).toEqual(3);
-      body.data.deals.deals.forEach((deal, index) => {
-        expect(deal.details.bankSupplyContractName).toEqual(deals[index].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals.length).toEqual(3);
+      body.data.allDeals.deals.forEach((deal, index) => {
+        expect(deal.bankRef).toEqual(deals[index].details.bankSupplyContractName);
       });
     });
 
@@ -208,12 +202,12 @@ describe('/graphql query deals', () => {
       await as(aBarclaysMaker).post(deals[submitOrder[4]]).to('/v1/deals');
 
       const { body } = await as(aSuperuser).post(queryBody).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals in reverse order;  most recent should be first..
       submitOrder.reverse();
-      body.data.deals.deals.forEach((deal, index) => {
-        expect(deal.details.bankSupplyContractName).toEqual(deals[submitOrder[index]].details.bankSupplyContractName);
+      body.data.allDeals.deals.forEach((deal, index) => {
+        expect(deal.bankRef).toEqual(deals[submitOrder[index]].details.bankSupplyContractName);
       });
     });
   });
@@ -243,14 +237,14 @@ describe('/graphql query deals', () => {
 
       //      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
       const { body } = await as(anHSBCMaker).post({ query: dealsPaginationQuery1 }).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals in reverse order; most recent first..
 
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[3].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[2].details);
+      expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[3].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[2].details.bankSupplyContractName);
 
-      expect(body.data.deals.count).toEqual(6);
+      expect(body.data.allDeals.count).toEqual(6);
     });
 
 
@@ -278,15 +272,15 @@ describe('/graphql query deals', () => {
 
       //      const { status, body } = await as(aSuperuser).get('/v1/deals/5/3');
       const { body } = await as(aSuperuser).post({ query: dealsPaginationQuery2 }).to('/graphql');
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals in reverse order - when we slice the last 3 deals we should get 2/1/0
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[2].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[1].details);
-      expect(body.data.deals.deals[2].details).toMatchObject(deals[0].details);
+      expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[2].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[1].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[2].bankRef).toEqual(deals[0].details.bankSupplyContractName);
 
 
-      expect(body.data.deals.count).toEqual(8);
+      expect(body.data.allDeals.count).toEqual(8);
     });
   });
 
@@ -315,16 +309,18 @@ describe('/graphql query deals', () => {
       //      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
       const { body } = await as(anHSBCMaker).post({ query: dealsFilterStatusQuery }).to('/graphql');
 
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals in reverse order; most recent first..
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[5].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[3].details);
-      expect(body.data.deals.deals[2].details).toMatchObject(deals[2].details);
-      expect(body.data.deals.deals[3].details).toMatchObject(deals[1].details);
-      expect(body.data.deals.deals[4].details).toMatchObject(deals[0].details);
+      expect(body.data.allDeals.deals.every((deal) => deal.status === 'Draft')).toBe(true);
 
-      expect(body.data.deals.count).toEqual(5);
+      expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[5].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[3].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[2].bankRef).toEqual(deals[2].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[3].bankRef).toEqual(deals[1].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[4].bankRef).toEqual(deals[0].details.bankSupplyContractName);
+
+      expect(body.data.allDeals.count).toEqual(5);
     });
 
     it('returns a list of deals, ordered by "updated", paginated and filtered by equal filters', async () => {
@@ -351,13 +347,14 @@ describe('/graphql query deals', () => {
       //      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
       const { body } = await as(anHSBCMaker).post({ query: dealsFilterStatusPaginatedQuery }).to('/graphql');
 
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals of 2nd page in reverse order; most recent first..
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[3].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[2].details);
+      expect(body.data.allDeals.deals.every((deal) => deal.status === 'Draft')).toBe(true);
+      expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[3].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[2].details.bankSupplyContractName);
 
-      expect(body.data.deals.count).toEqual(5);
+      expect(body.data.allDeals.count).toEqual(5);
     });
 
     it('returns a list of deals, ordered by "updated", filtered by not equal filter', async () => {
@@ -381,16 +378,17 @@ describe('/graphql query deals', () => {
       await as(anHSBCMaker).post(deals[6]).to('/v1/deals');
       await as(anHSBCMaker).post(deals[7]).to('/v1/deals');
 
+      //      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
       const { body } = await as(anHSBCMaker).post({ query: dealsFilterNotStatusQuery }).to('/graphql');
 
-      expect(body.data.deals.status.code).toEqual(200);
+      expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals in reverse order; most recent first..
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[7].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[6].details);
-      expect(body.data.deals.deals[2].details).toMatchObject(deals[4].details);
+      expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[7].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[6].details.bankSupplyContractName);
+      expect(body.data.allDeals.deals[2].bankRef).toEqual(deals[4].details.bankSupplyContractName);
 
-      expect(body.data.deals.count).toEqual(3);
+      expect(body.data.allDeals.count).toEqual(3);
     });
   });
 });

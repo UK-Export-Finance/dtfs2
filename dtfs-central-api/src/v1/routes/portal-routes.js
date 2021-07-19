@@ -24,6 +24,9 @@ portalRouter.use((req, res, next) => {
 });
 
 portalRouter.route('/deals')
+  .get(
+    getDealController.queryAllDeals,
+  )
   .post(
     createDealController.createDealPost,
   );
