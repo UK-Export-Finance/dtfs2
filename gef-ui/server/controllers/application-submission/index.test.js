@@ -3,6 +3,7 @@ import {
   postApplicationSubmission,
 } from './index';
 import * as api from '../../services/api';
+import { PROGRESS } from '../../../constants';
 
 const MockResponse = () => {
   const res = {};
@@ -77,6 +78,7 @@ describe('POST Application Submission', () => {
 
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.updateApplication = () => Promise.resolve({});
+    api.setApplicationStatus = () => Promise.resolve({});
 
     await postApplicationSubmission(mockRequest, mockResponse);
 
@@ -104,6 +106,7 @@ describe('POST Application Submission', () => {
     api.updateApplication = jest.fn();
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getMakerUser = () => Promise.resolve(mockUserResponse);
+    api.setApplicationStatus = () => Promise.resolve({});
     mockRequest.body.comment = 'Some comments here';
 
     const expected = {
@@ -112,7 +115,6 @@ describe('POST Application Submission', () => {
         comments: [{
           role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
         }],
-        status: 'BANK_CHECK',
       },
     };
 
@@ -128,30 +130,21 @@ describe('POST Application Submission', () => {
     api.getMakerUser = () => Promise.resolve(mockUserResponse);
     mockRequest.body.comment = '';
 
-    const expected = {
-      ...mockApplicationResponse,
-      ...{ status: 'BANK_CHECK' },
-    };
-
     await postApplicationSubmission(mockRequest, mockResponse);
 
-    expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, expected);
+    expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, mockApplicationResponse);
   });
 
   it('updates the application status to `BANK_CHECK`', async () => {
     const mockApplicationResponse = new MockApplicationResponse();
-    api.updateApplication = jest.fn();
+    api.updateApplication = () => Promise.resolve({});
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getMakerUser = () => Promise.resolve(mockUserResponse);
+    api.setApplicationStatus = jest.fn();
     mockRequest.body.comment = '';
-
-    const expected = {
-      ...mockApplicationResponse,
-      ...{ status: 'BANK_CHECK' },
-    };
 
     await postApplicationSubmission(mockRequest, mockResponse);
 
-    expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, expected);
+    expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, PROGRESS.BANK_CHECK);
   });
 });

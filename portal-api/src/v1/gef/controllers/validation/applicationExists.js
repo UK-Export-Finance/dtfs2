@@ -38,6 +38,7 @@ const validatorStatusCheckEnums = (doc) => {
     case STATUS.NOT_STARTED:
     case STATUS.IN_PROGRESS:
     case STATUS.COMPLETED:
+    case STATUS.BANK_CHECK:
     case null:
     case undefined:
       break;

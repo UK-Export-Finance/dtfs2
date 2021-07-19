@@ -40,9 +40,8 @@ export const postApplicationSubmission = async (req, res, next) => {
       application.comments = comments;
     }
 
-    application.status = PROGRESS.BANK_CHECK;
-
     await api.updateApplication(applicationId, application);
+    await api.setApplicationStatus(applicationId, PROGRESS.BANK_CHECK);
   } catch (err) {
     return next(err);
   }
