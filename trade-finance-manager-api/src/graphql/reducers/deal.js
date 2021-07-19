@@ -1,3 +1,4 @@
+const CONSTANTS = require('../../constants');
 const mapDealSnapshot = require('./mappings/deal/mapDealSnapshot');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
@@ -5,7 +6,7 @@ const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 // TODO: add unit test
 // so that when this is changed, tests fail.
 const dealReducer = (deal) => {
-  if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === 'GEF') {
+  if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     return mapGefDeal(deal);
   }
 
