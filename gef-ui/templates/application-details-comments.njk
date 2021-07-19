@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
@@ -21,9 +22,13 @@
 
   <div class="govuk-grid-row" data-cy="application-submit-page">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-      <p class="govuk-!-margin-bottom-6">
-        <a class="govuk-link" href="/gef/application-details/{{applicationId}}" data-cy="back-link">Back to application</a>
-      </p>
+      {{ govukBackLink({
+        text: "Back to application",
+        href: "/gef/application-details/"+applicationId,
+        classes: "govuk-!-margin-bottom-6",
+        attributes: {"data-cy": "back-link"}
+      }) }}
+
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
         Submit to be checked at your bank
       </h1>
