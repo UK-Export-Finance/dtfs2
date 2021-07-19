@@ -28,6 +28,10 @@ exports.getExchangeRate = async (req, res) => {
 
   const { status, data } = response;
 
+  if (status !== 200) {
+    return res.status(status).send(data);
+  }
+
   const { midPrice } = data[0];
 
   const responseObj = { midPrice };
