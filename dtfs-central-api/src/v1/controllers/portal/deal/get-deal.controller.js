@@ -110,74 +110,75 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   const collection = await db.getCollection('deals');
 
   const deals = await collection.aggregate([
-    // clear the collection
-    { $limit: 1 },
-    { $project: { _id: 1 } },
-    { $project: { _id: 0 } },
-    // add data sets
+    // commented out as causing issues with cosmos db
+    // // clear the collection
+    // { $limit: 1 },
+    // { $project: { _id: 1 } },
+    // { $project: { _id: 0 } },
+    // // add data sets
+    // {
+    //   $lookup: {
+    //     from: 'deals',
+    //     pipeline: [
     {
-      $lookup: {
-        from: 'deals',
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              bankId: '$details.owningBank.id',
-              bankRef: '$details.bankSupplyContractName',
-              status: '$details.status',
-              product: 'BSS/EWCS',
-              type: '$details.submissionType',
-              exporter: '$submissionDetails.supplier-name',
-              lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
-            },
-          },
-        ],
-        as: 'BSS',
+      $project: {
+        _id: 1,
+        bankId: '$details.owningBank.id',
+        bankRef: '$details.bankSupplyContractName',
+        status: '$details.status',
+        product: 'BSS/EWCS',
+        type: '$details.submissionType',
+        exporter: '$submissionDetails.supplier-name',
+        lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
       },
     },
-    {
-      $lookup: {
-        from: 'gef-application',
-        pipeline: [
-          {
-            $lookup: {
-              from: 'gef-exporter',
-              localField: 'exporterId',
-              foreignField: '_id',
-              as: 'exporter',
-            },
-          },
-          { $unwind: '$exporter' },
+    //     ],
+    //     as: 'BSS',
+    //   },
+    // },
+    // {
+    //   $lookup: {
+    //     from: 'gef-application',
+    //     pipeline: [
+    //       {
+    //         $lookup: {
+    //           from: 'gef-exporter',
+    //           localField: 'exporterId',
+    //           foreignField: '_id',
+    //           as: 'exporter',
+    //         },
+    //       },
+    //       { $unwind: '$exporter' },
 
-          {
-            $lookup: {
-              from: 'gef-cover-terms',
-              localField: 'coverTermsId',
-              foreignField: '_id',
-              as: 'coverTerms',
-            },
-          },
-          { $unwind: '$coverTerms' },
-          {
-            $project: {
-              _id: 1,
-              bankRef: '$bankInternalRefName',
-              bankId: 1,
-              status: 1,
-              product: 'GEF',
-              type: '-', // TODO: add handling for GEF cover terms once field is available
-              exporter: '$exporter.companyName',
-              lastUpdate: { $ifNull: ['$updatedAt', '$createdAt'] },
-            },
-          },
-        ],
-        as: 'GEF',
-      },
-    },
-    // combine data sets and flatten
-    { $project: { union: { $concatArrays: ['$BSS', '$GEF'] } } },
-    { $unwind: '$union' },
-    { $replaceRoot: { newRoot: '$union' } },
+    //       {
+    //         $lookup: {
+    //           from: 'gef-cover-terms',
+    //           localField: 'coverTermsId',
+    //           foreignField: '_id',
+    //           as: 'coverTerms',
+    //         },
+    //       },
+    //       { $unwind: '$coverTerms' },
+    //       {
+    //         $project: {
+    //           _id: 1,
+    //           bankRef: '$bankInternalRefName',
+    //           bankId: 1,
+    //           status: 1,
+    //           product: 'GEF',
+    //           type: '-', // TODO: add handling for GEF cover terms once field is available
+    //           exporter: '$exporter.companyName',
+    //           lastUpdate: { $ifNull: ['$updatedAt', '$createdAt'] },
+    //         },
+    //       },
+    //     ],
+    //     as: 'GEF',
+    //   },
+    // },
+    // // combine data sets and flatten
+    // { $project: { union: { $concatArrays: ['$BSS', '$GEF'] } } },
+    // { $unwind: '$union' },
+    // { $replaceRoot: { newRoot: '$union' } },
     { $match: filters },
     { $sort: { ...sort, lastUpdate: -1 } },
     {
