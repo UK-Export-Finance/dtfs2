@@ -38,6 +38,26 @@ const getApplication = async (applicationId) => {
   }
 };
 
+const updateApplication = async (applicationId, application) => {
+  try {
+    const { data } = await Axios.put(`/gef/application/${applicationId}`, application);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const setApplicationStatus = async (applicationId, status) => {
+  try {
+    const { data } = await Axios.put(`/gef/application/status/${applicationId}`, {
+      status,
+    });
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getExporter = async (exporterId) => {
   try {
     const { data } = await Axios.get(`/gef/exporter/${exporterId}`);
@@ -169,6 +189,7 @@ export {
   validateToken,
   getMandatoryCriteria,
   createApplication,
+  updateApplication,
   getEligibilityCriteria,
   getApplication,
   getExporter,
@@ -183,4 +204,5 @@ export {
   getCompaniesHouseDetails,
   getAddressesByPostcode,
   getMakerUser,
+  setApplicationStatus,
 };
