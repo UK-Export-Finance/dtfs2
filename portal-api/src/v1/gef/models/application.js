@@ -16,6 +16,7 @@ class Application {
     } else {
       // Update
       this.updatedAt = Date.now();
+      this.comments = req.comments;
     }
     this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
   }

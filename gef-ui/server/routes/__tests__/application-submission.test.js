@@ -14,7 +14,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('../application-details');
+    require('../application-submission');
   });
 
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/submit', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/submit', validateToken, expect.any(Function));
   });
 });

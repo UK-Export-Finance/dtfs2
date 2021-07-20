@@ -5,7 +5,7 @@ import { mapSummaryList, status } from '../../utils/helpers';
 import { exporterItems, coverItems, facilityItems } from '../../utils/display-items';
 import { PROGRESS, FACILITY_TYPE } from '../../../constants';
 
-const applicationDetails = async (req, res) => {
+export const applicationDetails = async (req, res) => {
   const { params } = req;
   const { applicationId } = params;
 
@@ -58,4 +58,13 @@ const applicationDetails = async (req, res) => {
   }
 };
 
-export default applicationDetails;
+export const postApplicationDetails = (req, res) => {
+  const { params } = req;
+  const { applicationId } = params;
+  return res.redirect(`/gef/application-details/${applicationId}/submit`);
+};
+
+export default {
+  applicationDetails,
+  postApplicationDetails,
+};

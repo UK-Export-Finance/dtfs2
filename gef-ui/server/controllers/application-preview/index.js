@@ -19,17 +19,12 @@ const applicationPreview = async (req, res) => {
   }
 
   try {
-    // TODO: Uncomment when DTFS2-3962 is ready
-    const applicationComments = [{
-      role: 'maker', userName: 'Tamil Rahani', createdAt: '1625482095783', comment: 'The client needs this asap.',
-    }];
     const {
       bankInternalRefName,
       exporterId,
       coverTermsId,
       createdAt,
-      // TODO: Uncomment when DTFS2-3962 is ready
-      // applicationComments,
+      comments,
       userId,
     } = await api.getApplication(applicationId);
     // TODO DTFS2-???? api.getApplicationPreviewDetails(applicationId) to combine the multiple calls.
@@ -48,7 +43,7 @@ const applicationPreview = async (req, res) => {
       dateCreated: createdAt,
       timezone: maker.timezone || 'UTC',
       createdBy: `${maker.firstname} ${maker.surname}`,
-      comments: applicationComments,
+      comments,
       checkedBy: 'DTFS2-????',
       isAutomaticCover: coverTerms.isAutomaticCover,
       applicationType: getApplicationType(coverTerms.isAutomaticCover),
