@@ -2,6 +2,11 @@
   "name": "dtfs2",
   "version": "1.0.0",
   "description": "DTFS2",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=14.0.0 <15.0.0",
+    "npm": ">=6.0.0 <7.0.0"
+  },
   "dependencies": {
     "axios": "0.19.2",
     "express": "^4.17.1",

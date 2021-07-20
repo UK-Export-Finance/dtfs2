@@ -4,6 +4,11 @@
   "description": "Trade Finance Manager UI",
   "private": true,
   "main": "index.js",
+  "engineStrict" : true,
+  "engines": {
+    "node": ">=14.0.0 <15.0.0",
+    "npm": ">=6.0.0 <7.0.0"
+  },
   "scripts": {
     "lint": "eslint ./server ./scripts",
     "buildDev": "rm -rf dist && webpack --mode development --config webpack.server.config.js && webpack --mode development --config webpack.dev.config.js",
