@@ -50,6 +50,7 @@ describe('create submission to UKEF', () => {
   api.getApplication = () => Promise.resolve(mockApplicationResponse);
   api.getUserDetails = () => Promise.resolve(mockMakerUserResponse);
   api.updateApplication = () => Promise.resolve(mockApplicationResponse);
+  api.setApplicationStatus = () => Promise.resolve(mockApplicationResponse);
 
   it('redirects to submission url', async () => {
     await createSubmissionToUkef(mockRequest, mockResponse);
