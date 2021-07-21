@@ -76,11 +76,10 @@ describe('send-deal-submit-emails', () => {
 
   describe('sendFirstTaskEmail', () => {
     it('should return API response with correct emailVariables', async () => {
-      const mockUrlOrigin = 'test.com';
       const firstTask = mockDeal.tfm.tasks[0].groupTasks[0];
 
       const expectedEmailVariables = generateTaskEmailVariables(
-        mockUrlOrigin,
+        process.env.TFM_URI,
         firstTask,
         mockDeal._id,
         mockDeal.dealSnapshot.submissionDetails['supplier-name'],
@@ -100,7 +99,7 @@ describe('send-deal-submit-emails', () => {
         template: {},
       };
 
-      const result = await sendFirstTaskEmail(mockDeal, mockUrlOrigin);
+      const result = await sendFirstTaskEmail(mockDeal);
 
       expect(result).toEqual(expected);
     });
