@@ -1,13 +1,21 @@
 const mapFacility = require('./mappings/facilities/mapFacility');
 const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
+const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
+const isGefFacility = require('./helpers/isGefFacility');
 
-const facilityReducer = (facility, dealDetails, dealTfm) => {
+const facilityReducer = (facility, dealSnapshot, dealTfm) => {
+  const { facilitySnapshot } = facility;
+
+  if (isGefFacility(facilitySnapshot.type)) {
+    return mapGefFacility(facility, dealSnapshot);
+  }
+
   const result = {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     facilitySnapshot: mapFacility(
-      facility.facilitySnapshot,
+      facilitySnapshot,
       facility.tfm,
-      dealDetails,
+      dealSnapshot.details,
     ),
     tfm: mapFacilityTfm(facility.tfm, dealTfm),
   };

@@ -1,13 +1,13 @@
 const { formattedNumber } = require('../../../../utils/number');
 
-const mapFacilityValue = (currency, facilityValue, facilityTfm) => {
+const mapFacilityValue = (currencyId, facilityValue, facilityTfm) => {
   const { facilityValueInGBP } = facilityTfm;
 
-  if (currency.id !== 'GBP') {
+  if (currencyId !== 'GBP') {
     return `GBP ${formattedNumber(facilityValueInGBP)}`;
   }
 
-  return `${currency.id} ${facilityValue}`;
+  return `${currencyId} ${facilityValue}`;
 };
 
 module.exports = mapFacilityValue;

@@ -1,3 +1,7 @@
+const DEAL_TYPE = {
+  GEF: 'GEF',
+};
+
 const DEAL_PRODUCT_CODE = {
   BOND: 'BSS',
   LOAN: 'EWCS',
@@ -52,6 +56,7 @@ const TFM_SORT_BY = {
 };
 
 module.exports = {
+  DEAL_TYPE,
   DEAL_PRODUCT_CODE,
   SUBMISSION_TYPE,
   DEAL_STAGE_TFM,

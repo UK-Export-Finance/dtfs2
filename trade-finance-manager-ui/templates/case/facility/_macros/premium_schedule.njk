@@ -15,7 +15,7 @@
       <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How bank will pay</span>
     </div>
     <div class="ukef-grid-column-one-sixth">
-        <span class="govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType }}</span>
+        <span class="govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType | dashIfEmpty }}</span>
     </div>
   </div>
 
@@ -38,7 +38,7 @@
     </div>
     <div class="ukef-grid-column-one-sixth">
       <span class="govuk-body-s" data-cy="facility-premium-daycountbasis">
-        {{ facility.dayCountBasis }}
+        {{ facility.dayCountBasis | dashIfEmpty }}
       </span>
     </div>
   </div>
@@ -52,7 +52,11 @@
           <div class="ukef-grey-bg-row-column-left-text">
             <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF</span>
             <span class="govuk-!-font-size-16" data-cy="premiumTotals">
-            GBP {{ premiumTotals | formatAsCurrency }}
+            {% if premiumTotals %}
+              GBP {{ premiumTotals | formatAsCurrency  }}
+              {% else %}
+              -
+            {% endif %}
             </span>
           </div>
         </div>

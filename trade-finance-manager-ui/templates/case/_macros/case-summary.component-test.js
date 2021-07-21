@@ -2,10 +2,15 @@ const fs = require('fs');
 const componentRenderer = require('../../../component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/case-summary.njk';
+
+const filterFormatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
+
+const formatDateString = filterFormatDateString.default;
+
 const render = componentRenderer(component);
 
 const rawdata = fs.readFileSync('templates/case/mock_data/deal.json');
-const params = {
+let params = {
   deal: {
     ...JSON.parse(rawdata),
     totals: {
@@ -16,6 +21,7 @@ const params = {
   tfm: {
     supplyContractValueInGBP: 'GBP 123,456.78',
     stage: 'Confirmed',
+    dateReceived: '01-02-2021',
   },
   user: {
     timezone: 'Europe/London',
@@ -39,6 +45,10 @@ describe(component, () => {
 
   it('should render supplier name', () => {
     wrapper.expectText('[data-cy="supplier-name"]').toRead(params.deal.submissionDetails.supplierName);
+  });
+
+  it('should add `chevron-right` class to supplier column', () => {
+    wrapper.expectElement('[data-cy="supplier-column"]').hasClass('case-summary-supplier chevron-right');
   });
 
   it('should render buyer name', () => {
@@ -73,20 +83,54 @@ describe(component, () => {
     wrapper.expectText('[data-cy="total-facilities-in-gbp"]').toRead(params.deal.totals.facilitiesValueInGBP);
   });
 
-  it('should render total facilities in GBP', () => {
+  it('should render total ukef exposure', () => {
     wrapper.expectText('[data-cy="total-ukef-exposure"]').toRead(params.deal.totals.facilitiesUkefExposure);
   });
 
-  // it('should render submission date', () => {
-  //   wrapper.expectText('[data-cy="submission-date"]').toRead(params.details.submissionDate);
-  // });
+  it('should render date received', () => {
+    const expected = formatDateString(params.tfm.dateReceived, 'DD-MM-YYYY', 'D MMMM YYYY');
+    wrapper.expectText('[data-cy="date-received"]').toRead(expected);
+  });
+
+  describe('when there is no date received', () => {
+    beforeEach(() => {
+      params = JSON.parse(JSON.stringify({
+        deal: params.deal,
+        user: params.user,
+      }));
+
+      wrapper = render(params);
+    });
+
+    it('should render dash', () => {
+      wrapper.expectText('[data-cy="date-received"]').toRead('-');
+    });
+  });
+
+  describe('when there is no buyerName', () => {
+    beforeEach(() => {
+      params = JSON.parse(JSON.stringify(params));
+      delete params.deal.submissionDetails.buyerName;
+
+      wrapper = render(params);
+    });
+
+    it('should NOT render buyerName column', () => {
+      wrapper.expectElement('[data-cy="buyer-name-column"]').notToExist();
+      wrapper.expectElement('[data-cy="buyer-name"]').notToExist();
+    });
+
+    it('should NOT add `chevron-right` class to supplier column', () => {
+      wrapper.expectElement('[data-cy="supplier-column"]').hasClass('case-summary-supplier');
+    });
+  });
 
   describe('tier 1 exporter', () => {
     beforeEach(() => {
-      const tier1Params = JSON.parse(JSON.stringify(params));
-      tier1Params.deal.submissionDetails.supplierType = 'UK Supplier';
+      params = JSON.parse(JSON.stringify(params));
+      params.deal.submissionDetails.supplierType = 'UK Supplier';
 
-      wrapper = render(tier1Params);
+      wrapper = render(params);
     });
 
     it('should render correct supplier type', () => {

@@ -9,28 +9,34 @@
 
 .case-summary-deal-id {
   display: inline-block;
+  vertical-align: top;
   width: 228px;
   margin-right: 30px;
 }
 
-.case-summary-exporter {
+.case-summary-supplier {
   position: relative;
   display: inline-block;
-  padding-right: 45px;
+  vertical-align: top;
 
-  &:after {
-    content: url('/assets/images/chevron-right.svg');
-    width: 15px;
-    height: 30px;
-    position: absolute;
-    right: 0;
-    top: 20px;
-    opacity: 0.5;
+  &.chevron-right {
+    padding-right: 45px;
+
+    &:after {
+      content: url('/assets/images/chevron-right.svg');
+      width: 15px;
+      height: 30px;
+      position: absolute;
+      right: 0;
+      top: 20px;
+      opacity: 0.5;
+    }
   }
 }
 
 .case-summary-buyer {
   display: inline-block;
+  vertical-align: top;
   margin-left: 30px;
 }
 

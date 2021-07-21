@@ -18,12 +18,12 @@
       <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank</div>
-          <div class="ukef-body-s" data-cy="deal-bank">{{ deal.details.owningBank.name }}</div>
+          <div class="ukef-body-s" data-cy="deal-bank">{{ deal.details.owningBank.name | dashIfEmpty }}</div>
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Contact name</div>
           <div class="ukef-body-s" data-cy="contact-name">
-            {{ deal.details.maker.firstname }} {{ deal.details.maker.surname }}</div>
+            {{ deal.details.maker.firstname }} {{ deal.details.maker.surname | dashIfEmpty }}</div>
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Telephone</div>
@@ -31,7 +31,7 @@
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Email</div>
-          <div class="ukef-body-s" data-cy="email">{{ deal.details.maker.email }}</div>
+          <div class="ukef-body-s" data-cy="email">{{ deal.details.maker.email | dashIfEmpty }}</div>
         </div>
       </div>
       <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
@@ -41,11 +41,11 @@
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank reference</div>
-          <div class="ukef-body-s" data-cy="bank-reference">{{ deal.details.bankSupplyContractID }}</div>
+          <div class="ukef-body-s" data-cy="bank-reference">{{ deal.details.bankSupplyContractID | dashIfEmpty }}</div>
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank's additional reference</div>
-          <div class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.details.bankSupplyContractName }}</div>
+          <div class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.details.bankSupplyContractName | dashIfEmpty }}</div>
         </div>
       </div>
 

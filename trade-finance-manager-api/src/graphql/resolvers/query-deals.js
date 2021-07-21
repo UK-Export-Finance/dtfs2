@@ -1,4 +1,4 @@
-const dealsReducer = require('../reducers/deals');
+const { dealsReducer } = require('../reducers/deals');
 const { queryDeals } = require('../../v1/api');
 
 require('dotenv').config();

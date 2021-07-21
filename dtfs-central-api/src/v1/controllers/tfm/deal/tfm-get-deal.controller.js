@@ -5,71 +5,72 @@ const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
   const facilitiesCollection = await db.getCollection('tfm-facilities');
 
-  const dealItem = await dealsCollection.findOne({ _id });
+  const deal = await dealsCollection.findOne({ _id });
+  let returnDeal = deal;
 
-  const deal = dealItem && dealItem.dealSnapshot;
+  if (deal) {
+    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === 'GEF') {
+      returnDeal = {
+        ...deal,
+        dealSnapshot: deal.dealSnapshot,
+      };
+    } else {
+      const facilityIds = deal.facilities;
 
-  if (dealItem) {
-    const facilityIds = deal.facilities;
+      if (facilityIds && facilityIds.length > 0) {
+        const mappedDeal = deal.dealSnapshot;
+        const mappedBonds = [];
+        const mappedLoans = [];
 
-    if (facilityIds && facilityIds.length > 0) {
-      const mappedDeal = deal;
-      const mappedBonds = [];
-      const mappedLoans = [];
+        const facilities = await facilitiesCollection.find({
+          _id: {
+            $in: facilityIds,
+          },
+        }).toArray();
 
-      const facilities = await facilitiesCollection.find({
-        _id: {
-          $in: facilityIds,
-        },
-      }).toArray();
+        facilityIds.forEach((id) => {
+          const { facilitySnapshot } = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
 
-      facilityIds.forEach((id) => {
-        const { facilitySnapshot } = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
+          if (facilitySnapshot) {
+            const { facilityType } = facilitySnapshot;
 
-        if (facilitySnapshot) {
-          const { facilityType } = facilitySnapshot;
+            if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+              mappedBonds.push(facilitySnapshot);
+            }
 
-          if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
-            mappedBonds.push(facilitySnapshot);
+            if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+              mappedLoans.push(facilitySnapshot);
+            }
           }
+        });
 
-          if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
-            mappedLoans.push(facilitySnapshot);
-          }
-        }
-      });
+        mappedDeal.bondTransactions = {
+          items: mappedBonds,
+        };
 
-      mappedDeal.bondTransactions = {
-        items: mappedBonds,
-      };
+        mappedDeal.loanTransactions = {
+          items: mappedLoans,
+        };
 
-      mappedDeal.loanTransactions = {
-        items: mappedLoans,
-      };
-
-      const returnDeal = {
-        ...dealItem,
-        dealSnapshot: mappedDeal,
-      };
-
-      if (callback) {
-        callback(returnDeal);
+        returnDeal = {
+          ...deal,
+          dealSnapshot: mappedDeal,
+        };
       }
-
-      return returnDeal;
     }
   }
 
   if (callback) {
-    callback(dealItem);
+    callback(returnDeal);
   }
 
-  return dealItem;
+  return returnDeal;
 };
 exports.findOneDeal = findOneDeal;
 
 exports.findOneDealGet = async (req, res) => {
   const deal = await findOneDeal(req.params.id);
+
   if (deal) {
     return res.status(200).send({
       deal,
