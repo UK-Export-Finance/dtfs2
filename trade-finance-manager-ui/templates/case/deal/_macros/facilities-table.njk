@@ -28,7 +28,7 @@
               href="/case/{{ caseId }}/facility/{{ facility._id }}"
               aria-label="View Facility details"
               data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
-              <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityID }}</span>
+              <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityID | dashIfEmpty }}</span>
             </a>
           </td>
 
@@ -52,9 +52,9 @@
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">{{ facility.facilitySnapshot.facilityValue | dashIfEmpty}}</td>
           <td class="govuk-table__cell govuk-body-s">
-            <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.tfm.ukefExposure.exposure}}</span>
+            <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.tfm.ukefExposure.exposure | dashIfEmpty }}</span>
             <span data-cy="facility-{{ facility._id }}-covered-percentage" class="govuk-!-padding-right-4" style="float:right;">
-            ({{ facility.facilitySnapshot.coveredPercentage }})
+            ({{ facility.facilitySnapshot.coveredPercentage | dashIfEmpty }})
             </span>
           </td>
         </tr>

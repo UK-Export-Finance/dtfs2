@@ -30,7 +30,7 @@
 
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header govuk-body-s width-half" data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</th>
-        <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile }}</td>
+        <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</td>
 
         {% if userCanEdit %}
           <td class="govuk-table__cell text-align-right">

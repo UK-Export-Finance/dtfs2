@@ -25,7 +25,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
   const ukefFacilityType = facilityType;
 
-  facility.facilityProduct = mapFacilityProduct(facility);
+  facility.facilityProduct = mapFacilityProduct(facilityType);
 
   facility.facilityType = mapFacilityType(facility);
 
@@ -37,13 +37,15 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     associatedDealId: facility.associatedDealId,
     ukefFacilityID: facility.ukefFacilityID,
+
+    // TODO: we shouldn't need facilityType and ukefFacilityType.
     facilityType: facility.facilityType,
     ukefFacilityType,
     facilityProduct: facility.facilityProduct,
     facilityStage: facility.facilityStage,
     coveredPercentage: `${facility.coveredPercentage}%`,
     facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
-    facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
+    facilityValue: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
     ukefExposure: `${facility.currency.id} ${facility.ukefExposure}`,
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),

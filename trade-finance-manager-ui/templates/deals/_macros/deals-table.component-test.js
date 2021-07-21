@@ -1,9 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 const componentRenderer = require('../../../component-tests/componentRenderer');
+const filterFormatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const component = '../templates/deals/_macros/deals-table.njk';
-
 const render = componentRenderer(component);
+
+const formatDateString = filterFormatDateString.default;
 
 describe(component, () => {
   let wrapper;
@@ -25,6 +27,7 @@ describe(component, () => {
           },
         },
         tfm: {
+          dateReceived: '13-07-2021',
           product: 'EWCS',
           stage: 'Confirmed',
         },
@@ -45,6 +48,7 @@ describe(component, () => {
           },
         },
         tfm: {
+          dateReceived: '13-07-2021',
           product: 'EWCS',
           stage: 'Confirmed',
         },
@@ -132,7 +136,7 @@ describe(component, () => {
     it('should render exporter name table cell', () => {
       params.deals.forEach((deal) => {
         const cellSelector = `[data-cy="deal-${deal._id}-exporterName"]`;
-          wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.submissionDetails.supplierName);
+        wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.submissionDetails.supplierName);
       });
     });
 
@@ -154,6 +158,39 @@ describe(component, () => {
       params.deals.forEach((deal) => {
         const cellSelector = `[data-cy="deal-${deal._id}-stage"]`;
         wrapper.expectText(cellSelector).toRead(deal.tfm.stage);
+      });
+    });
+
+    describe('dateReceived table cell', () => {
+      it('should render', () => {
+        params.deals.forEach((deal) => {
+          const cellSelector = `[data-cy="deal-${deal._id}-date-received"]`;
+          const expected = formatDateString(deal.tfm.dateReceived, 'DD-MM-YYYY', 'D MMM YYYY');
+          wrapper.expectText(cellSelector).toRead(expected);
+        });
+      });
+
+      describe('when there is no dateReceived', () => {
+        const dealWithNoDateReceived = {
+          ...params.deals[0],
+          tfm: {},
+        };
+
+        const paramsNoDate = {
+          deals: [dealWithNoDateReceived],
+          user: params.user,
+        };
+
+        beforeEach(() => {
+          wrapper = render(paramsNoDate);
+        });
+
+        it('should render dash', () => {
+          paramsNoDate.deals.forEach((deal) => {
+            const cellSelector = `[data-cy="deal-${deal._id}-date-received"]`;
+            wrapper.expectText(cellSelector).toRead('-');
+          });
+        });
       });
     });
   });

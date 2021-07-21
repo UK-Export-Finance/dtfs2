@@ -189,4 +189,21 @@ describe(page, () => {
       wrapper.expectText('[data-cy="parties-exporter"] [data-cy="supplier-type"]').toRead('Tier 1 supplier');
     });
   });
+
+  describe('when correspondence address line 1 does not exist', () => {
+    beforeEach(() => {
+      const paramsWithoutCorrespondenceAddressLine1 = JSON.parse(JSON.stringify(params));
+      delete paramsWithoutCorrespondenceAddressLine1.deal.submissionDetails.supplierCorrespondenceAddressLine1;
+
+      wrapper = render(paramsWithoutCorrespondenceAddressLine1);
+    });
+
+    it('should NOT render correspondence address', () => {
+      wrapper.expectElement('[data-cy="exporter-correspondence-address"]').notToExist();
+    });
+
+    it('should NOT render correspondence address country', () => {
+      wrapper.expectElement('[data-cy="exporter-correspondence-address-country"]').notToExist();
+    });
+  });
 });

@@ -1,8 +1,10 @@
 const dealReducer = require('./deal');
 const mapDealSnapshot = require('./mappings/deal/mapDealSnapshot');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../../v1/__mocks__/mock-deal-AIN-submitted');
+const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
 
 describe('reducer - deal', () => {
   it('should return mapped object', () => {
@@ -39,5 +41,29 @@ describe('reducer - deal', () => {
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when dealType is `GEF`', () => {
+    it('should return mapGefDeal', () => {
+      const mockGefDeal = {
+        _id: MOCK_GEF_DEAL._id,
+        dealSnapshot: {
+          ...MOCK_GEF_DEAL,
+          facilities: [
+            {
+              facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+              tfm: {},
+            },
+          ],
+        },
+        tfm: {},
+      };
+
+      const result = dealReducer(mockGefDeal);
+
+      const expected = mapGefDeal(mockGefDeal);
+
+      expect(result).toEqual(expected);
+    });
   });
 });
