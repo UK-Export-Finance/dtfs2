@@ -59,10 +59,6 @@ describe('create submission to UKEF', () => {
   });
 
   it('renders an error when the comment is over the maximum length', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockMakerUserResponse = new MockMakerUserResponse();
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getUserDetails = () => Promise.resolve(mockMakerUserResponse);
     api.updateApplication = () => Promise.resolve(mockApplicationResponse);
