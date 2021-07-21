@@ -15,13 +15,14 @@ const sendTfmEmail = require('./send-tfm-email');
 const shouldSendFirstTaskEmail = (firstTask) =>
   (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
 
-const sendFirstTaskEmail = async (deal, urlOrigin) => {
+const sendFirstTaskEmail = async (deal) => {
   const { tfm, dealSnapshot } = deal;
   const { tasks } = tfm;
 
   const firstTask = getFirstTask(tasks);
 
   if (shouldSendFirstTaskEmail(firstTask)) {
+    const urlOrigin = process.env.TFM_URI;
     const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
     const {
@@ -175,13 +176,13 @@ const sendAinMinIssuedFacilitiesAcknowledgementByDealId = async (dealId) => {
   return sendAinMinIssuedFacilitiesAcknowledgement(deal);
 };
 
-const sendDealSubmitEmails = async (deal, urlOrigin) => {
+const sendDealSubmitEmails = async (deal) => {
   if (!deal) {
     return false;
   }
 
   // send email for the first task
-  const firstTaskEmail = await sendFirstTaskEmail(deal, urlOrigin);
+  const firstTaskEmail = await sendFirstTaskEmail(deal);
 
   const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
   const emailAcknowledgementAinMinIssued = await sendAinMinIssuedFacilitiesAcknowledgement(deal);

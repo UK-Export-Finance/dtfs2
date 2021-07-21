@@ -225,14 +225,13 @@ const deleteFacility = async (facilityId, user) => {
   }
 };
 
-const tfmDealSubmit = async (dealId, portalChecker, origin = '') => {
+const tfmDealSubmit = async (dealId, portalChecker) => {
   try {
     const response = await axios({
       method: 'put',
       url: `${tfmUrl}/v1/deals/submit`,
       headers: {
         'Content-Type': 'application/json',
-        origin,
       },
       data: {
         dealId,
