@@ -108,6 +108,16 @@ GEF is hosted on the same URL as Portal v2. To access GEF:
 - Manually navigate to this GEF URL, to create a new GEF application: https://tfs-test-fd.azurefd.net/gef/mandatory-criteria
 - Alternatively, visit an existing GEF deal by ID: http://tfs-test-fd.azurefd.net/gef/deals/1
 
+### Deploying to test
+After merging to master, dev environment will be updated.
+
+To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
+
+This will take the latest code in the development environment and deploy to test.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
+
+
 ### Git workflow
 
 Github actions will run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment. If testing is successful, images will be promoted to the test environment.
