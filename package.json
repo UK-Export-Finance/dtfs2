@@ -8,14 +8,11 @@
     "npm": ">=6.0.0 <7.0.0"
   },
   "dependencies": {
-    "axios": "0.19.2",
-    "express": "^4.17.1",
-    "graphql-tools": "^5.0.0",
     "moment": "^2.27.0"
   },
   "devDependencies": {
     "cypress": "^4.11.0",
-    "cypress-audit": "^0.2.3",
+    "cypress-audit": "^1.0.0",
     "cypress-file-upload": "^4.0.7",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-xpath": "1.4.0",
