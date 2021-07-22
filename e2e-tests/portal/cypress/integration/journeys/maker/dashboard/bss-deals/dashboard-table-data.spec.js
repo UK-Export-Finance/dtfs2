@@ -10,7 +10,6 @@ const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/;
 context('View a deal', () => {
   context('no checker', () => {
     let deal;
-    let gefDeal;
     const dummyDeal = {
       details: {
         bankSupplyContractID: 'abc-1-def',
@@ -34,11 +33,6 @@ context('View a deal', () => {
       cy.deleteDeals(MAKER_LOGIN);
       cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
         .then((insertedDeal) => { deal = insertedDeal; });
-
-      // same or gef
-      cy.deleteGefApplications(MAKER_LOGIN);
-      cy.insertOneGefApplication(dummyApplication, MAKER_LOGIN)
-        .then((insertedDeal) => { gefDeal = insertedDeal; });
     });
 
     it('A created BSS deal appears on the dashboard', () => {
@@ -72,35 +66,5 @@ context('View a deal', () => {
 
       cy.url().should('eq', relative(`/contract/${id}`));
     });
-
-    // it('A created GEF deal appears on the dashboard', () => {
-    //   // login and go to dashboard
-    //   cy.login(MAKER_LOGIN);
-    //   dashboard.visit();
-
-    //   const id = gefDeal._id;
-
-    //   const {
-    //     bankRef, product, updated, link,
-    //   } = dashboard.row;
-
-    //   bankRef(id).invoke('text').then((text) => {
-    //     expect(text.trim()).equal('Mock GEF exporter');
-    //   });
-
-    //   product(id).invoke('text').then((text) => {
-    //     expect(text.trim()).equal('GEF');
-    //   });
-
-    //   // TODO: add check for status when statuses for GEF are finalised
-
-    //   updated(id).invoke('text').then((text) => {
-    //     expect(text.trim()).to.match(regexDateTime);
-    //   });
-
-    //   link(id).click();
-
-    //   cy.url().should('eq', relative(`/gef/application-details/${gefDeal._id}`));
-    // });
   });
 });
