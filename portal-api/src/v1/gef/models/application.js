@@ -1,9 +1,10 @@
-const { STATUS } = require('../enums');
+const { DEAL_TYPE, STATUS } = require('../enums');
 
 class Application {
   constructor(req, exporterId, coverTermsId) {
     if (exporterId) {
       // New Application
+      this.dealType = DEAL_TYPE;
       this.userId = req.userId ? String(req.userId) : null;
       this.status = STATUS.DRAFT;
       this.bankId = req.bankId ? String(req.bankId) : null;
@@ -13,6 +14,7 @@ class Application {
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;
       this.createdAt = Date.now();
       this.updatedAt = null;
+      this.submissionCount = 0;
     } else {
       // Update
       this.updatedAt = Date.now();

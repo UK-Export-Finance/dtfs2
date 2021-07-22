@@ -70,8 +70,10 @@ describe(baseUrl, () => {
           ...expectMongoId(item),
           exporterId: expect.any(String),
           coverTermsId: expect.any(String),
-          createdAt: expect.any(Number),
+          createdAt: expect.any(Number),  
           status: 'Draft',
+          dealType: 'GEF',
+          submissionCount: 0,
         })),
       };
 
@@ -101,6 +103,8 @@ describe(baseUrl, () => {
         coverTermsId: expect.any(String),
         status: 'Draft',
         createdAt: expect.any(Number),
+        dealType: 'GEF',
+        submissionCount: 0,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -154,6 +158,8 @@ describe(baseUrl, () => {
         coverTermsId: expect.any(String),
         status: 'Draft',
         createdAt: expect.any(Number),
+        dealType: 'GEF',
+        submissionCount: 0,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
