@@ -32,7 +32,7 @@
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">Contents</h2>
 
-    {{ dashboardTabs.nav(selected = 'deals', id = id ) }}
+    {{ dashboardTabs.nav(selected = tab) }}
 
     <section class="govuk-tabs__panel">
 
@@ -131,7 +131,7 @@
         rows: items
       }) }}
 
-      {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard') }}
+      {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard' if tab === 'bssDeals' else '/dashboard/gef' ) }}
 
     </section>
 
