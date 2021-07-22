@@ -32,7 +32,21 @@ Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set
  * `set_mulesoft_api_key.sh`
  * `set_session_secrets.sh`
 
-The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows)
+These scripts are not and should not be stored in the repo. All of these scripts need to be shared privately when a new engineer starts on the codebase.
+
+The list of variables can be seen in the environment build workflows under [`.github/workflows`](.github/workflows)
+
+### Updating secrets
+
+All secrets are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
+
+To update secrets in the environments - i.e dev, test etc:
+
+* Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
+* Run this script `/secrets/github/set_secrets.js`
+
+This will update all github secrets.
+
 
 ### Steps
 
