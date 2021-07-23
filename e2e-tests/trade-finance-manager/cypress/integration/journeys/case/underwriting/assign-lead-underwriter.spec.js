@@ -10,10 +10,8 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   let dealId;
   let underwriterManager1UserId;
   let underwriterManager2UserId;
+  let underwriterUserId;
   const dealFacilities = [];
-
-  const underwriter = MOCK_USERS.find((user) =>
-    user.teams.includes('UNDERWRITERS'));
 
   const underwriterManager1 = MOCK_USERS.find((user) =>
     user.username === 'UNDERWRITER_MANAGER_1');
@@ -21,9 +19,12 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   const underwriterManager2 = MOCK_USERS.find((user) =>
     user.username === 'UNDERWRITER_MANAGER_2');
 
+  const underwriter = MOCK_USERS.find((user) =>
+    user.teams.includes('UNDERWRITERS'));
+
   const underwriterManager1FullName = `${underwriterManager1.firstName} ${underwriterManager1.lastName}`;
   const underwriterManager2FullName = `${underwriterManager2.firstName} ${underwriterManager2.lastName}`;
-
+  const underwriterFullName = `${underwriter.firstName} ${underwriter.lastName}`;
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
@@ -34,6 +35,10 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
 
     cy.getUser(underwriterManager2.username).then((userObj) => {
       underwriterManager2UserId = userObj._id;
+    });
+
+    cy.getUser(underwriter.username).then((userObj) => {
+      underwriterUserId = userObj._id;
     });
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
@@ -68,32 +73,27 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
   });
 
-  it('a user that is NOT in UNDERWRITER_MANAGERS team cannot manually navigate to assign-lead-underwriter page', () => {
+  it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team cannot manually navigate to assign-lead-underwriter page', () => {
     cy.login(underwriter);
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
     cy.url().should('eq', relative('/not-found'));
   });
 
-  it('a user that is NOT in UNDERWRITER_MANAGERS team should NOT see `Assign lead underwriter` link', () => {
+  it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team should NOT see `Assign lead underwriter` link', () => {
     cy.login(underwriter);
-    cy.visit(relative(`/case/${dealId}/deal`));
-
-    // go to lead underwriter page
-    partials.caseSubNavigation.underwritingLink().click();
-    partials.underwritingSubNav.leadUnderwriterLink().click();
+    cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
 
     pages.leadUnderwriterPage.assignLeadUnderwriterLink().should('not.be.visible');
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.be.visible');
   });
 
-  it('underwriter manager can assign a lead underwriter. Submitted underwriter details are displayed after submit', () => {
+  it('underwriter manager can assign an underwriter as the lead underwriter. Submitted lead underwriter details are displayed after submit', () => {
     cy.login(underwriterManager1);
-    cy.visit(relative(`/case/${dealId}/deal`));
-
-    // go to lead underwriter page
-    partials.caseSubNavigation.underwritingLink().click();
-    partials.underwritingSubNav.leadUnderwriterLink().click();
+    cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter`));
 
     pages.leadUnderwriterPage.assignLeadUnderwriterLink().should('be.visible');
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.be.visible');
 
     // go to lead underwriter assign page/form
     pages.leadUnderwriterPage.assignLeadUnderwriterLink().click();
@@ -103,29 +103,47 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     const assignToMeSelectOptionText = `${underwriterManager1FullName} (Assign to me)`;
     pages.leadUnderwriterPage.assignedToSelectInputSelectedOption().should('have.text', assignToMeSelectOptionText);
 
+    // assign a different underwriter
+    pages.taskPage.assignedToSelectInput().select(underwriterUserId);
+
+    pages.leadUnderwriterPage.submitButton().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
+
+    // lead underwriter details should now be displayed
+    pages.leadUnderwriterPage.leadUnderwriterEmail().invoke('text').then((text) => {
+      expect(text.trim()).equal(underwriter.email);
+    });
+
+    pages.leadUnderwriterPage.leadUnderwriterName().invoke('text').then((text) => {
+      expect(text.trim()).equal(`${underwriterFullName}`);
+    });
+
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('be.visible');
+  });
+
+  it('underwriter manager can assign an underwriter manager as the lead underwriter', () => {
+    cy.login(underwriterManager1);
+    cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter`));
+
+    // go to lead underwriter assign page/form
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('be.visible');
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
+
     // assign a different underwriter manager
     pages.taskPage.assignedToSelectInput().select(underwriterManager2UserId);
 
     pages.leadUnderwriterPage.submitButton().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
-
-    // underwriter details should now be displayed
-    pages.leadUnderwriterPage.leadUnderwriterEmail().invoke('text').then((text) => {
-      expect(text.trim()).equal(underwriterManager2.email);
-    });
-
-    pages.leadUnderwriterPage.leadUnderwriterName().invoke('text').then((text) => {
-      expect(text.trim()).equal(`${underwriterManager2FullName}`);
-    });
-
-    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('be.visible');
   });
 
   it('underwriter manager can assign to themsleves/someone else after already submitting', () => {
     cy.login(underwriterManager1);
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter`));
 
+    // go to lead underwriter assign page/form
     pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('be.visible');
     pages.leadUnderwriterPage.changeLeadUnderwriterLink().click();
 
@@ -141,15 +159,6 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     pages.leadUnderwriterPage.submitButton().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
-
-    // underwriter details should now be displayed
-    pages.leadUnderwriterPage.leadUnderwriterEmail().invoke('text').then((text) => {
-      expect(text.trim()).equal(underwriterManager1.email);
-    });
-
-    pages.leadUnderwriterPage.leadUnderwriterName().invoke('text').then((text) => {
-      expect(text.trim()).equal(`${underwriterManager1FullName}`);
-    });
 
     pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('be.visible');
   });
