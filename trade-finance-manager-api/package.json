@@ -33,8 +33,9 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
+    "@graphql-tools/schema": "^7.1.5",
     "apollo-server-express": "2.18.2",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
@@ -42,7 +43,6 @@
     "graphql": "^15.0.0",
     "graphql-middleware": "^4.0.2",
     "graphql-shield": "^7.5.0",
-    "graphql-tools": "^6.2.5",
     "is-port-reachable": "^3.0.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
