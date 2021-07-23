@@ -1,3 +1,5 @@
+const DEAL_TYPE = 'GEF';
+
 const SME_TYPE = {
   MICRO: 'MICRO',
   SMALL: 'SMALL',
@@ -48,6 +50,7 @@ const CURRENCY = {
 };
 
 module.exports = {
+  DEAL_TYPE,
   SME_TYPE,
   FACILITY_TYPE,
   PAYMENT_TYPE,
