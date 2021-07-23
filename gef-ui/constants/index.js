@@ -1,5 +1,5 @@
 export const PROGRESS = {
-  DRAFT: 'Draft',
+  DRAFT: 'DRAFT',
   NOT_STARTED: 'NOT_STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
   BANK_CHECK: 'BANK CHECK',
