@@ -6,7 +6,7 @@ import {
   requestParams,
   getFlashSuccessMessage,
 } from '../helpers';
-import dealsDashboard from '../controllers/dashboard';
+import { gefDeals, bssDeals } from '../controllers/dashboard';
 
 import validateToken from './middleware/validate-token';
 
@@ -22,6 +22,13 @@ router.get('/dashboard', async (req, res) => {
   req.session.dashboardFilters = null;
   res.redirect('/dashboard/0');
 });
+
+router.get('/dashboard/gef', async (req, res) => {
+  req.session.gefFilters = null;
+  return res.redirect('/dashboard/gef/0');
+});
+
+router.get('/dashboard/gef/:page', gefDeals);
 
 router.get('/dashboard/transactions', async (req, res) => {
   req.session.transactionFilters = null;
@@ -98,6 +105,6 @@ router.post('/dashboard/transactions/:page', async (req, res) => {
 });
 
 // needs to be ordered last to avoid issues with taking priority over transaction routes
-router.get('/dashboard/:page', dealsDashboard);
+router.get('/dashboard/:page', bssDeals);
 
 export default router;

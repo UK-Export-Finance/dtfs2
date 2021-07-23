@@ -1,11 +1,17 @@
-{% macro nav(selected, id) %}
+{% macro nav(selected) %}
 
   {% set tabs = [
     {
-      id: 'deals',
+      id: 'bssDeals',
       href: '/dashboard',
-      text: 'Deal view'
-    }, {
+      text: 'BSS / EWCS Deal view'
+    },
+    {
+      id: 'gefDeals',
+      href: '/dashboard/gef',
+      text: 'GEF Deal view'
+    },
+    {
       id: 'transactions',
       href: '/dashboard/transactions',
       text: 'Transactions'
