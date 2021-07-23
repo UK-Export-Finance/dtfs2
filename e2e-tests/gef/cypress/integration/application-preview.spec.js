@@ -31,16 +31,13 @@ context('Application Checker Preview Page', () => {
 
   describe('Visiting checker preview page', () => {
     it('displays the application summary section', () => {
-      applicationPreview.dealId();
       applicationPreview.status();
-      applicationPreview.exporter();
-      applicationPreview.bankReference();
-      applicationPreview.dateCreated();
-      applicationPreview.createdBy();
-      applicationPreview.checkedBy();
       applicationPreview.product();
+      applicationPreview.dateCreated();
       applicationPreview.submissionType();
-      applicationPreview.facilitySummary();
+      applicationPreview.createdBy();
+      applicationPreview.exporter();
+      applicationPreview.checkedBy();
     });
 
     it('displays the Task and comment entries', () => {
@@ -48,7 +45,7 @@ context('Application Checker Preview Page', () => {
       applicationPreview.comments();
     });
 
-    it('displays the application banner', () => {
+    it('displays the application banner elements', () => {
       applicationPreview.applicationBanner();
       applicationPreview.backLink();
       applicationPreview.bankReference()

@@ -12,16 +12,19 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.session = { userToken: 'dummy-token' };
+  req.session = { userToken: 'dummy-token', user: { _id: 'checker', bank: { id: 9 }, roles: ['checker'] } };
   req.params.applicationId = '123';
   return req;
 };
 
 const MockApplicationResponse = () => {
   const res = {};
+  res.userId = 'maker';
   res.exporterId = '123';
   res.coverTermsId = '123';
   res.bankInternalRefName = 'My test';
+  res.status = 'BANK_CHECK';
+  res.bankId = 9;
   res.comments = [{
     role: 'maker',
     userName: 'Test User',
