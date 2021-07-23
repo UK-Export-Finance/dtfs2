@@ -126,7 +126,7 @@ describe('Validate Automatic Cover', () => {
       }));
   });
 
-  describe('when user selects at least 1 false', () => {
+  describe('when user selects at least 1 false answer', () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     const mockCoverResponse = new MockCoverResponse();
@@ -162,7 +162,7 @@ describe('Validate Automatic Cover', () => {
     });
   });
 
-  describe('user selects all true values', () => {
+  describe('when user selects all true values', () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     const mockCoverResponse = new MockCoverResponse();
