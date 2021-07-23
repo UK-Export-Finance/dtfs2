@@ -6,7 +6,7 @@ const passport = require('passport');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
