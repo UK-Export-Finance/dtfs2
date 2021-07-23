@@ -20,7 +20,7 @@ class Application {
       // Update
       this.updatedAt = Date.now();
       this.comments = req.comments;
-      this.submissionType = req.submissionType ? String(req.submissionType) : null;
+      this.submissionType = req.submissionType;
     }
     this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
   }
