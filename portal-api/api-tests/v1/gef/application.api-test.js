@@ -74,6 +74,7 @@ describe(baseUrl, () => {
           status: 'Draft',
           dealType: 'GEF',
           submissionCount: 0,
+          submissionType: null,
         })),
       };
 
@@ -105,6 +106,7 @@ describe(baseUrl, () => {
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionCount: 0,
+        submissionType: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -160,6 +162,7 @@ describe(baseUrl, () => {
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionCount: 0,
+        submissionType: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -208,6 +211,7 @@ describe(baseUrl, () => {
     const updated = {
       ...allItems[0],
       bankInternalRefName: 'Updated Ref Name (Unit Test)',
+      submissionType: 'Automatic Inclusion Notice',
     };
 
     it('rejects requests that do not present a valid Authorization token', async () => {

@@ -1,5 +1,6 @@
 import { automaticCover, validateAutomaticCover } from './index';
 import * as api from '../../services/api';
+import { DEAL_SUBMISSION_TYPE } from '../../../constants';
 
 const MockRequest = () => {
   const req = {};
@@ -28,6 +29,7 @@ const MockCoverTermsResponse = () => {
   return res;
 };
 
+const mockUpdateApplication = jest.fn(() => Promise.resolve());
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -73,20 +75,34 @@ describe('GET Automatic Cover', () => {
 });
 
 describe('Validate Automatic Cover', () => {
-  it('returns no validation errors if `save and return` is set to true', async () => {
+  describe('when `save and return` is set to true', () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockCoverResponse = new MockCoverResponse();
-    // const mockCoverTermsResponse = new MockCoverTermsResponse();
-    mockRequest.query.saveAndReturn = 'true';
+    const mockApplicationId = '123';
 
-    api.getApplication = () => Promise.resolve(mockRequest);
-    api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
-    // api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.updateCoverTerms = () => Promise.resolve();
-    await validateAutomaticCover(mockRequest, mockResponse);
+    beforeEach(async () => {
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body = { coverStart: 'true', value: 'true' };
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+      api.getApplication = () => Promise.resolve(mockRequest);
+      api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
+      api.updateCoverTerms = () => Promise.resolve();
+      api.updateApplication = mockUpdateApplication;
+      await validateAutomaticCover(mockRequest, mockResponse);
+    });
+
+    it('returns no validation errors', async () => {
+      expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockApplicationId}`);
+    });
+
+    it('calls api.updateApplication with AIN submissionType', () => {
+      const expected = {
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      };
+
+      expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
+    });
   });
 
   it('renders the correct data if validation fails', async () => {
@@ -110,38 +126,69 @@ describe('Validate Automatic Cover', () => {
       }));
   });
 
-  it('redirects user to `ineligible-automatic-cover` page if user selects at least 1 false`', async () => {
+  describe('when user selects at least 1 false', () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     const mockCoverResponse = new MockCoverResponse();
+    const mockApplicationId = '123';
 
-    mockRequest.body = { coverStart: 'false' };
-    api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
-    await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith(
-      '/gef/application-details/123/ineligible-automatic-cover',
-    );
+    beforeEach(async () => {
+      api.updateApplication = mockUpdateApplication;
 
-    mockRequest.body = { coverStart: 'false', value: 'true' };
-    api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
-    await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith(
-      '/gef/application-details/123/ineligible-automatic-cover',
-    );
+      mockRequest.body = { coverStart: 'false' };
+      api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
+      await validateAutomaticCover(mockRequest, mockResponse);
+    });
+
+    it('redirects user to `ineligible-automatic-cover` page', async () => {
+      expect(mockResponse.redirect).toHaveBeenCalledWith(
+        `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
+      );
+
+      mockRequest.body = { coverStart: 'false', value: 'true' };
+      api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
+      await validateAutomaticCover(mockRequest, mockResponse);
+      expect(mockResponse.redirect).toHaveBeenCalledWith(
+        `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
+      );
+    });
+
+    it('calls api.updateApplication with MIA submissionType', () => {
+      const expected = {
+        submissionType: DEAL_SUBMISSION_TYPE.MIA,
+      };
+
+      expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
+    });
   });
 
-  it('redirects user to `application details` page if user selects all true values`', async () => {
+  describe('user selects all true values', () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse();
     const mockCoverResponse = new MockCoverResponse();
+    const mockApplicationId = '123';
 
-    mockRequest.body = { coverStart: 'true', value: 'true' };
-    api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
-    await validateAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith(
-      '/gef/application-details/123/eligible-automatic-cover',
-    );
+    beforeEach(async () => {
+      mockRequest.body = { coverStart: 'true', value: 'true' };
+      api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
+      await validateAutomaticCover(mockRequest, mockResponse);
+    });
+
+    it('redirects user to `application details` page', async () => {
+      expect(mockResponse.redirect).toHaveBeenCalledWith(
+        `/gef/application-details/${mockApplicationId}/eligible-automatic-cover`,
+      );
+    });
+
+    it('calls api.updateApplication with AIN submissionType', () => {
+      const expected = {
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      };
+
+      expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
+    });
   });
+
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
     const mockRequest = new MockRequest();
