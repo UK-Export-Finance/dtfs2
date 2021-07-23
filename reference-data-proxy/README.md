@@ -1,19 +1,25 @@
 # reference-data-proxy
  
-## to execute api tests:
+This service integrates with many external APIs such as:
+- Companies House
+- Ordanance Survey
+- Many UKEF APIs via Mulesoft
 
-in one terminal, launch our dependencies:
+The service also hosts some reference data for countries, currencies and industry sectors. These need to be removed and obtained through Mulesoft API call.
+
+This service initially started purely as a reference data api (i.e, no external API). Service should be renamed to external-apis.
+
+## To execute api tests:
+
+In one terminal, launch our dependencies:
 ```
 docker-compose up --build
 ```
  
-in a second terminal, execute our api tests:
+In a second terminal, execute our api tests:
 ```
 npm run api-test
 ```
  
-test coverage will be generated and can be viewed with (on a mac, anyway..)
-```
-open ./reports/coverage/api-test/lcov-report/index.html
-``` 
+Test coverage will be generated.
 
