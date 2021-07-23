@@ -2,7 +2,9 @@ import axios from 'axios';
 import FormData from 'form-data';
 import apollo from './graphql/apollo';
 
-import { allDealsQuery, dealsQuery, transactionsQuery } from './graphql/queries';
+import {
+  allDealsQuery, dealsQuery, transactionsQuery, gefDealsQuery,
+} from './graphql/queries';
 
 require('dotenv').config();
 
@@ -633,43 +635,16 @@ const createFeedback = async (formData, token) => {
   return response.data;
 };
 
-const getGefApplications = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/gef/application/`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
+const gefDeals = async (start, pagesize, filters, token) => {
+  const params = {
+    start,
+    pagesize,
+    filters,
+  };
 
-  return response.data && response.data.items;
-};
+  const response = await apollo('GET', gefDealsQuery, params, token);
 
-const getGefExporter = async (exporterId, token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/gef/exporter/${exporterId}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data && response.data.details;
-};
-
-const getGefCoverTerms = async (coverTermsId, token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/gef/cover-terms/${coverTermsId}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data;
+  return response.data.gefDeals || { count: 0, deals: [] };
 };
 
 export default {
@@ -715,7 +690,5 @@ export default {
   downloadFile,
   mga,
   downloadMga,
-  getGefApplications,
-  getGefExporter,
-  getGefCoverTerms,
+  gefDeals,
 };

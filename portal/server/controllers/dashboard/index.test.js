@@ -1,5 +1,6 @@
-import dealsDashboard from '.';
+import { bssDeals, gefDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
+import { getApiData } from '../../helpers';
 
 jest.mock('../../api');
 jest.mock('../../helpers', () => ({
@@ -12,7 +13,7 @@ jest.mock('../../helpers', () => ({
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
 }));
 
-describe('dealsDashboard', () => {
+describe('controllers/dashboard', () => {
   let req;
   let res;
   beforeEach(() => {
@@ -28,18 +29,52 @@ describe('dealsDashboard', () => {
     res = mockResponse();
   });
 
-  it('renders the correct template', async () => {
-    await dealsDashboard(req, res);
+  describe('bssDeals', () => {
+    it('renders the correct template', async () => {
+      await bssDeals(req, res);
 
-    expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-      deals: ['mock deal 1', 'mock deal 2'],
-      pages: {
-        totalPages: 1,
-        currentPage: 1,
-        totalItems: 2,
-      },
-      primaryNav: 'home',
-      user: 'mock-user',
+      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
+        deals: ['mock deal 1', 'mock deal 2'],
+        pages: {
+          totalPages: 1,
+          currentPage: 1,
+          totalItems: 2,
+        },
+        primaryNav: 'home',
+        tab: 'bssDeals',
+        user: 'mock-user',
+      });
+    });
+  });
+
+  describe('gefDeals', () => {
+    it('renders the correct template', async () => {
+      getApiData.mockResolvedValue({
+        count: 1,
+        deals: [{
+          _id: 'mockDeal',
+          exporter: { companyName: 'mock company' },
+        }],
+      });
+
+      await gefDeals(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
+        deals: [{
+          _id: 'mockDeal',
+          exporter: 'mock company',
+          product: 'GEF',
+          type: '-',
+        }],
+        pages: {
+          totalPages: 1,
+          currentPage: 1,
+          totalItems: 1,
+        },
+        primaryNav: 'home',
+        tab: 'gefDeals',
+        user: 'mock-user',
+      });
     });
   });
 });
