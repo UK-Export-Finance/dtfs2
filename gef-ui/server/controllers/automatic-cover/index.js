@@ -1,6 +1,19 @@
 import { decode } from 'html-entities';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
+import { DEAL_SUBMISSION_TYPE } from '../../../constants';
+
+const updateSubmissionType = async (applicationId, isAutomaticCover) => {
+  const applicationUpdate = {};
+
+  if (isAutomaticCover) {
+    applicationUpdate.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+  } else {
+    applicationUpdate.submissionType = DEAL_SUBMISSION_TYPE.MIA;
+  }
+
+  await api.updateApplication(applicationId, applicationUpdate);
+};
 
 const automaticCover = async (req, res) => {
   const { params } = req;
@@ -58,7 +71,12 @@ const validateAutomaticCover = async (req, res, next) => {
         facilityBaseCurrency: body.facilityBaseCurrency,
         facilityPaymentCurrency: body.facilityPaymentCurrency,
       };
+
       await api.updateCoverTerms(coverTermsId, payload);
+
+      const isAutomaticCover = !fieldContainsAFalseBoolean(body);
+      await updateSubmissionType(applicationId, isAutomaticCover);
+
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
     const { terms } = await api.getEligibilityCriteria();
@@ -78,12 +96,16 @@ const validateAutomaticCover = async (req, res, next) => {
 
     await api.updateCoverTerms(coverTermsId, body);
 
-    // If form has at least 1 false, then redirect user to not eligible page
-    if (fieldContainsAFalseBoolean(body)) {
+    const isAutomaticCover = !fieldContainsAFalseBoolean(body);
+
+    await updateSubmissionType(applicationId, isAutomaticCover);
+
+    if (!isAutomaticCover) {
       return res.redirect(
         `/gef/application-details/${applicationId}/ineligible-automatic-cover`,
       );
     }
+
     return res.redirect(
       `/gef/application-details/${applicationId}/eligible-automatic-cover`,
     );

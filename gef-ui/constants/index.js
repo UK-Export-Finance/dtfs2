@@ -6,6 +6,11 @@ export const PROGRESS = {
   COMPLETED: 'COMPLETED',
 };
 
+export const DEAL_SUBMISSION_TYPE = {
+  AIN: 'Automatic Inclusion Notice',
+  MIA: 'Manual Inclusion Application',
+};
+
 export const FACILITY_TYPE = {
   CASH: 'CASH',
   CONTINGENT: 'CONTINGENT',

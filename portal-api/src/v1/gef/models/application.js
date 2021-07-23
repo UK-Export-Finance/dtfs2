@@ -15,10 +15,12 @@ class Application {
       this.createdAt = Date.now();
       this.updatedAt = null;
       this.submissionCount = 0;
+      this.submissionType = null;
     } else {
       // Update
       this.updatedAt = Date.now();
       this.comments = req.comments;
+      this.submissionType = req.submissionType ? String(req.submissionType) : null;
     }
     this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
   }
