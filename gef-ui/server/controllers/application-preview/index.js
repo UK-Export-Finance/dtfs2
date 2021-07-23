@@ -21,10 +21,11 @@ const applicationPreview = async (req, res) => {
   try {
     const {
       bankInternalRefName,
-      exporterId,
-      coverTermsId,
       createdAt,
       comments,
+      coverTermsId,
+      exporterId,
+      status: applicationStatus,
       userId,
     } = await api.getApplication(applicationId);
     // TODO DTFS2-???? api.getApplicationPreviewDetails(applicationId) to combine the multiple calls.
@@ -33,18 +34,19 @@ const applicationPreview = async (req, res) => {
     const facilities = await api.getFacilities(applicationId);
 
     if (!isApplicationComplete(exporter, coverTerms, facilities)) {
-      return res.redirect('/dashboard/0');
+      return res.redirect('/dashboard');
     }
 
     const maker = await api.getMakerUser(userId, userToken);
     return res.render('partials/application-preview.njk', {
       dealId: '-',
       companyName: exporter.details.companyName,
+      applicationStatus: PROGRESS[applicationStatus],
       dateCreated: createdAt,
       timezone: maker.timezone || 'UTC',
       createdBy: `${maker.firstname} ${maker.surname}`,
       comments,
-      checkedBy: 'DTFS2-????',
+      checkedBy: '-',
       isAutomaticCover: coverTerms.isAutomaticCover,
       applicationType: getApplicationType(coverTerms.isAutomaticCover),
       cashFacilitiesCount: facilities.items.filter((item) => item.details.type === 'CASH').length,
