@@ -2,16 +2,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "func",
-			"command": "host start",
-			"problemMatcher": "$func-node-watch",
-			"isBackground": true,
-			"dependsOn": "npm install",
-			"options": {
-				"cwd": "${workspaceFolder}/azure-functions/test2"
-			}
-		},
-		{
 			"type": "shell",
 			"label": "npm install",
 			"command": "npm install",
@@ -26,6 +16,33 @@
 			"problemMatcher": [],
 			"options": {
 				"cwd": "${workspaceFolder}/azure-functions/test2"
+			}
+		},
+		{
+			"type": "func",
+			"command": "host start",
+			"problemMatcher": "$func-node-watch",
+			"isBackground": true,
+			"dependsOn": "npm install (functions)",
+			"options": {
+				"cwd": "${workspaceFolder}/azure-functions/number-generator-function"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "npm install (functions)",
+			"command": "npm install",
+			"options": {
+				"cwd": "${workspaceFolder}/azure-functions/number-generator-function"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "npm prune (functions)",
+			"command": "npm prune --production",
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/azure-functions/number-generator-function"
 			}
 		}
 	]

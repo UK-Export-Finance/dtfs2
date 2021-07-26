@@ -1,4 +1,4 @@
-FROM node:lts AS image
+FROM node:lts-alpine AS image
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ RUN npm install
 
 ADD ./src ./src
 
-FROM node:lts AS lint
+FROM node:lts-alpine AS lint
 
 WORKDIR /app
 COPY --from=image /app /app
@@ -16,7 +16,7 @@ COPY --from=image /app /app
 ADD ./.eslintrc.js ./.eslintrc.js
 RUN npm run lint
 
-FROM node:lts AS test
+FROM node:lts-alpine AS test
 
 # Identifies the code in the running container
 ARG GITHUB_SHA
