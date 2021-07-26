@@ -368,7 +368,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     });
     return response.data;
   } catch (err) {
-    return err;
+    return { err };
   }
 };
 
