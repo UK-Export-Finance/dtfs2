@@ -84,35 +84,41 @@ const calculateUkefExposure = (requestedUpdate, existingFacility) => {
 };
 exports.calculateUkefExposure = calculateUkefExposure;
 
-exports.update = async (req, res) => {
+const update = async (id, updateBody) => {
+  const collection = await db.getCollection(collectionName);
+  const facilityId = ObjectId(String(id));
+
+  const existingFacility = await collection.findOne({ _id: facilityId });
+
+  const facilityUpdate = new Facility({
+    ...updateBody,
+    ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+  });
+
+  const result = await collection.findOneAndUpdate(
+    { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnOriginal: false },
+  );
+
+  return result;
+};
+
+exports.updatePUT = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (enumValidationErr) {
     res.status(422).send(enumValidationErr);
   } else {
-    const collection = await db.getCollection(collectionName);
-    const facilityId = ObjectId(String(req.params.id));
-
-    const existingFacility = await collection.findOne({ _id: facilityId });
-
-    const updateBody = {
-      ...req.body,
-      ukefExposure: calculateUkefExposure(req.body, existingFacility),
-    };
-
-    const update = new Facility(updateBody);
-
-    const result = await collection.findOneAndUpdate(
-      { _id: { $eq: facilityId } }, { $set: update }, { returnOriginal: false },
-    );
     let response;
-    if (result.value) {
+    const updatedFacility = await update(req.params.id, req.body);
+
+    if (updatedFacility.value) {
       response = {
-        status: facilitiesStatus(result.value),
-        details: result.value,
-        validation: facilitiesValidation(result.value),
+        status: facilitiesStatus(updatedFacility.value),
+        details: updatedFacility.value,
+        validation: facilitiesValidation(updatedFacility.value),
       };
     }
-    res.status(utils.mongoStatus(result)).send(response);
+
+    res.status(utils.mongoStatus(updatedFacility)).send(response);
   }
 };
 

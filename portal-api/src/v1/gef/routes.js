@@ -43,7 +43,7 @@ router.route('/facilities')
 
 router.route('/facilities/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getById)
-  .put(validate({ role: ['maker', 'data-admin'] }), facilities.update)
+  .put(validate({ role: ['maker', 'data-admin'] }), facilities.updatePUT)
   .delete(validate({ role: ['maker', 'data-admin'] }), facilities.delete);
 
 // Eligibility Criteria
