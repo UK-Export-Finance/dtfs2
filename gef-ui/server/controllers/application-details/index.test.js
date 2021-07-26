@@ -16,6 +16,11 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.params.applicationId = '123';
+  req.session = {
+    user: {
+      roles: ['MAKER'],
+    },
+  };
   return req;
 };
 
@@ -25,6 +30,7 @@ const MockApplicationResponse = () => {
   res.exporterId = '123';
   res.coverTermsId = '123';
   res.bankInternalRefName = 'My test';
+  res.status = 'IN_PROGRESS';
   return res;
 };
 
@@ -96,10 +102,12 @@ describe('GET Application Details', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
+    const mockNext = jest.fn();
+    const error = new Error('error');
 
-    api.getApplication = () => Promise.reject();
-    await applicationDetails(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    api.getApplication = () => Promise.reject(error);
+    await applicationDetails(mockRequest, mockResponse, mockNext);
+    expect(mockNext).toHaveBeenCalledWith(error);
   });
 });
 

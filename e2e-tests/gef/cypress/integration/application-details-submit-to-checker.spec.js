@@ -68,7 +68,7 @@ context('Application Details Submission', () => {
       applicationDetails.applicationDetailsPage();
     });
 
-    it('takes user back to dashboard if the click the link in the confirmation page', () => {
+    it('takes user back to dashboard if they click the link in the confirmation page', () => {
       applicationSubmission.submmitButton().click();
       applicationSubmission.confirmation();
       // Just asserting the link is there as the error on dashboard page causes test to fail
@@ -76,6 +76,21 @@ context('Application Details Submission', () => {
       // TODO: Swap this above for below
       // applicationSubmission.backToDashboadLink().click();
       // cy.url().should('contain', 'dashboard');
+    });
+  });
+
+  describe('maker no longer sees editable content in details screen', () => {
+    it('no longer shows the "edit" links on the application details page', () => {
+      cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
+
+      applicationDetails.submitHeading().should('not.exist');
+      applicationDetails.submitButton().should('not.exist');
+      applicationDetails.abandonLink().should('not.exist');
+      applicationDetails.exporterDetailsLink().should('not.exist');
+      applicationDetails.automaticCoverDetailsLink().should('not.exist');
+      applicationDetails.addCashFacilityButton().should('not.exist');
+      applicationDetails.addContingentFacilityButton().should('not.exist');
+      applicationDetails.deleteFacilityLink().should('not.exist');
     });
   });
 });
