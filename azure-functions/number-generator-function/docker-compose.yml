@@ -1,0 +1,15 @@
+version: "3" 
+services:
+
+  number-generator-function:
+    build: .
+    image: dtfs/azure-function-acbs
+    restart: always
+    ports:
+      - "7072:80"
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - WEBSITE_HOSTNAME=localhost:7072
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+      - MULESOFT_API_NUMBER_GENERATOR_URL
