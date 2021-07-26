@@ -70,6 +70,7 @@ services:
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://host.docker.internal:7072
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
@@ -168,7 +169,10 @@ services:
       - MULESOFT_API_UKEF_ESTORE_EA_KEY
       - MULESOFT_API_UKEF_ESTORE_EA_SECRET
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://host.docker.internal:7072
       - GOV_NOTIFY_API_KEY
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
 
   gef-ui:
@@ -210,6 +214,29 @@ services:
   #     - MULESOFT_API_UKEF_MDM_EA_URL
   #     - MULESOFT_API_UKEF_MDM_EA_KEY
   #     - MULESOFT_API_UKEF_MDM_EA_SECRET
+
+  number-generator-function:
+    build: ./azure-functions/number-generator-function
+    image: dtfs/azure-function-number-generator
+    restart: always
+    ports:
+      - "7072:80"
+    volumes:
+      - ./azure-functions/number-generator-function:/home/site/wwwroot
+    deploy:
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 150M
+        reservations:
+          cpus: '0.001'
+          memory: 60M
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - WEBSITE_HOSTNAME=localhost:7072
+      - MULESOFT_API_UKEF_TF_EA_URL
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
 
   redis:
     image: "redis:alpine"
