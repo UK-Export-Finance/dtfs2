@@ -1,10 +1,4 @@
-import { PROGRESS } from '../../constants';
-
-const authorisationLevel = {
-  READ: 'READ',
-  COMMENT: 'COMMENT',
-  EDIT: 'EDIT',
-};
+import { PROGRESS, AUTHORISATION_LEVEL } from '../../constants';
 
 const statesWhereMakerHasEditAccess = [PROGRESS.DRAFT, PROGRESS.NOT_STARTED, PROGRESS.IN_PROGRESS];
 const statesWhereMakerHasReadAccess = [PROGRESS.BANK_CHECK];
@@ -23,22 +17,22 @@ Object.values(PROGRESS).forEach((state) => {
 });
 
 statesWhereMakerHasReadAccess.forEach((state) => {
-  authorisationMap.MAKER[state].push(authorisationLevel.READ);
+  authorisationMap.MAKER[state].push(AUTHORISATION_LEVEL.READ);
 });
 statesWhereMakerHasEditAccess.forEach((state) => {
-  authorisationMap.MAKER[state].push(authorisationLevel.EDIT);
+  authorisationMap.MAKER[state].push(AUTHORISATION_LEVEL.EDIT);
 });
 statesWhereMakerHasCommentAccess.forEach((state) => {
-  authorisationMap.MAKER[state].push(authorisationLevel.COMMENT);
+  authorisationMap.MAKER[state].push(AUTHORISATION_LEVEL.COMMENT);
 });
 statesWhereCheckerHasReadAccess.forEach((state) => {
-  authorisationMap.CHECKER[state].push(authorisationLevel.READ);
+  authorisationMap.CHECKER[state].push(AUTHORISATION_LEVEL.READ);
 });
 statesWhereCheckerHasEditAccess.forEach((state) => {
-  authorisationMap.CHECKER[state].push(authorisationLevel.EDIT);
+  authorisationMap.CHECKER[state].push(AUTHORISATION_LEVEL.EDIT);
 });
 statesWhereCheckerHasCommentAccess.forEach((state) => {
-  authorisationMap.CHECKER[state].push(authorisationLevel.COMMENT);
+  authorisationMap.CHECKER[state].push(AUTHORISATION_LEVEL.COMMENT);
 });
 
 export const getUserAuthorisationLevelsToApplication = (user, application) => {
@@ -59,4 +53,4 @@ export const getUserAuthorisationLevelsToApplication = (user, application) => {
   return [];
 };
 
-export default { authorisationLevel, getUserAuthorisationLevelsToApplication };
+export default { getUserAuthorisationLevelsToApplication };

@@ -42,3 +42,10 @@ export const FACILITY_PROVIDED_DETAILS = {
   FACTORING: 'Factoring on a  with-recourse basis',
   OTHER: 'Other',
 };
+
+export const AUTHORISATION_LEVEL = {
+  READ: 'READ',
+  COMMENT: 'COMMENT',
+  EDIT: 'EDIT',
+  CHANGE_STATUS: 'CHANGE_STATUS',
+};

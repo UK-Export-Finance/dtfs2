@@ -4,7 +4,7 @@ import * as api from '../../services/api';
 import { mapSummaryList, status } from '../../utils/helpers';
 import { exporterItems, coverItems, facilityItems } from '../../utils/display-items';
 import { getUserAuthorisationLevelsToApplication } from '../../utils/user-authorisation-level';
-import { PROGRESS, FACILITY_TYPE } from '../../../constants';
+import { PROGRESS, FACILITY_TYPE, AUTHORISATION_LEVEL } from '../../../constants';
 
 export const applicationDetails = async (req, res, next) => {
   const { params, session } = req;
@@ -25,7 +25,7 @@ export const applicationDetails = async (req, res, next) => {
       && coverStatus.code === PROGRESS.COMPLETED
       && facilitiesStatus.code === PROGRESS.COMPLETED; // All statuses are set to complete
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
-    const previewMode = !userAuthorisationLevels.includes('EDIT');
+    const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
     return res.render('partials/application-details.njk', {
       isAutomaticCover: coverTerms.isAutomaticCover,
       exporter: {
