@@ -65,15 +65,44 @@ exports.getById = async (req, res) => {
   }
 };
 
+const calculateUkefExposure = (requestedUpdate, existingFacility) => {
+  let latestValue = (existingFacility && existingFacility.value);
+  let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
+
+  // make sure we calculate with the latest values.
+  if (requestedUpdate.value) {
+    latestValue = requestedUpdate.value;
+  }
+
+  if (requestedUpdate.coverPercentage) {
+    latestCoverPercentage = requestedUpdate.coverPercentage;
+  }
+
+  const calculation = (latestValue * latestCoverPercentage);
+
+  return calculation;
+};
+exports.calculateUkefExposure = calculateUkefExposure;
+
 exports.update = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (enumValidationErr) {
     res.status(422).send(enumValidationErr);
   } else {
     const collection = await db.getCollection(collectionName);
-    const update = new Facility(req.body);
+    const facilityId = ObjectId(String(req.params.id));
+
+    const existingFacility = await collection.findOne({ _id: facilityId });
+
+    const updateBody = {
+      ...req.body,
+      ukefExposure: calculateUkefExposure(req.body, existingFacility),
+    };
+
+    const update = new Facility(updateBody);
+
     const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: update }, { returnOriginal: false },
+      { _id: { $eq: facilityId } }, { $set: update }, { returnOriginal: false },
     );
     let response;
     if (result.value) {

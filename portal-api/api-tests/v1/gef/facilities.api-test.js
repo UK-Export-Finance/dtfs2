@@ -16,6 +16,7 @@ const allItems = require('../../fixtures/gef/facilities');
 const applicationCollectionName = 'gef-application';
 const applicationBaseUrl = '/v1/gef/application';
 const applicationAllItems = require('../../fixtures/gef/application');
+const { calculateUkefExposure } = require('../../../src/v1/gef/controllers/facilities.controller');
 
 describe(baseUrl, () => {
   // let noRoles;
@@ -54,6 +55,7 @@ describe(baseUrl, () => {
         paymentType: null,
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
+        ukefExposure: 0,
       },
       validation: {
         required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
@@ -269,6 +271,7 @@ describe(baseUrl, () => {
           ...update,
           updatedAt: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
+          ukefExposure: calculateUkefExposure(update, {}),
         },
         validation: {
           required: [],
@@ -314,6 +317,7 @@ describe(baseUrl, () => {
           coverStartDate: null,
           coverEndDate: null,
           updatedAt: expect.any(Number),
+          ukefExposure: calculateUkefExposure(completeUpdate, {}),
         },
         validation: {
           required: [],
@@ -453,6 +457,38 @@ describe(baseUrl, () => {
         errCode: ERROR.MANDATORY_FIELD,
         errMsg: 'No Application ID and/or facility type sent with request',
       }]);
+    });
+  });
+  
+  describe('calculateUkefExposure', () => {
+    describe('when value and coverPercentage is present in the requested update', () => {
+      it('should calculate based on the provided values', () => {
+        const update = {
+          value: 1234,
+          coverPercentage: 25,
+        };
+        const existingFacility = {};
+
+        const result = calculateUkefExposure(update, existingFacility);
+
+        const expected = (update.value * update.coverPercentage);
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when value and coverPercentage is NOT present in the requested update', () => {
+      it('should calculate with existing values', () => {
+        const update = {};
+        const existingFacility = {
+          value: 1234,
+          coverPercentage: 25,
+        };
+
+        const result = calculateUkefExposure(update, existingFacility);
+
+        const expected = (existingFacility.value * existingFacility.coverPercentage);
+        expect(result).toEqual(expected);
+      });
     });
   });
 });

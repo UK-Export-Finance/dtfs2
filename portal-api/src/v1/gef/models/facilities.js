@@ -50,6 +50,7 @@ class Facility {
       this.paymentType = null;
       this.createdAt = Date.now();
       this.updatedAt = Date.now();
+      this.ukefExposure = 0;
     } else {
       // update application
       if (req.hasBeenIssued != null) {
@@ -104,6 +105,10 @@ class Facility {
 
       if (req.paymentType != null) {
         this.paymentType = checkPaymentType(req.paymentType);
+      }
+
+      if (req.ukefExposure != null) {
+        this.ukefExposure = req.ukefExposure;
       }
 
       // nullify values based on previous questions
