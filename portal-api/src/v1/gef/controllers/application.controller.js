@@ -9,7 +9,7 @@ const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
 const { CoverTerms } = require('../models/coverTerms');
 const { STATUS } = require('../enums');
-const now = require('../../../now');
+const addSubmissionData = require('./application-submit');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
@@ -99,21 +99,6 @@ exports.update = async (req, res) => {
   res.status(utils.mongoStatus(result)).send(response);
 };
 
-
-const addSubmissionData = async (existingApplication) => {
-  const submissionData = {
-    date: existingApplication.submissionDate,
-  };
-
-  submissionData.count = existingApplication.submissionCount + 1;
-
-  if (!existingApplication.submissionDate) {
-    submissionData.date = now();
-  }
-
-  return submissionData;
-};
-
 exports.changeStatus = async (req, res) => {
   const applicationId = req.params.id;
 
@@ -131,16 +116,16 @@ exports.changeStatus = async (req, res) => {
 
   const { status } = req.body;
 
-  const applicationUpdate = { status };
+  let applicationUpdate = { status };
 
   // TODO: protect so that only a user with checker role can submit to UKEF.
   if (status === STATUS.SUBMITTED_TO_UKEF) {
-    const { count, date } = await addSubmissionData(existingApplication);
+    const submissionData = await addSubmissionData(applicationId, existingApplication);
 
-    applicationUpdate.submissionCount = count;
-    applicationUpdate.submissionDate = date;
-
-    // TODO: update facilities with issuedFacilitySubmittedToUkefTimestamp
+    applicationUpdate = {
+      ...applicationUpdate,
+      ...submissionData,
+    };
   }
 
   const result = await collection.findOneAndUpdate(

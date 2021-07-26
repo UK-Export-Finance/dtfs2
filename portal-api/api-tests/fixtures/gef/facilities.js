@@ -1,6 +1,5 @@
 const FACILITIES = [
-  [{
-    applicationId: 'IGNORE_POST-POPULATED',
+  {
     type: 'CASH',
     hasBeenIssued: true,
     name: null,
@@ -16,7 +15,6 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
   }, {
-    applicationId: 'IGNORE_POST-POPULATED',
     type: 'CASH',
     hasBeenIssued: false,
     name: null,
@@ -32,7 +30,6 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
   }, {
-    applicationId: 'IGNORE_POST-POPULATED',
     type: 'CONTINGENT',
     hasBeenIssued: true,
     name: null,
@@ -47,7 +44,7 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
-  }],
+  },
 ];
 
 module.exports = FACILITIES;

@@ -10,8 +10,10 @@ const { expectMongoId } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef/application';
 const collectionName = 'gef-application';
+const mockApplications = require('../../fixtures/gef/application');
 
-const allItems = require('../../fixtures/gef/application');
+const facilitiesUrl = '/v1/gef/facilities';
+const mockFacilities = require('../../fixtures/gef/facilities');
 
 describe(baseUrl, () => {
   // let noRoles;
@@ -38,26 +40,26 @@ describe(baseUrl, () => {
     });
 
     it('returns list of all items', async () => {
-      await as(aMaker).post(allItems[0]).to(baseUrl);
-      await as(aMaker).post(allItems[1]).to(baseUrl);
-      await as(aMaker).post(allItems[2]).to(baseUrl);
-      await as(aMaker).post(allItems[3]).to(baseUrl);
-      await as(aMaker).post(allItems[4]).to(baseUrl);
-      await as(aMaker).post(allItems[5]).to(baseUrl);
-      await as(aMaker).post(allItems[6]).to(baseUrl);
-      await as(aMaker).post(allItems[7]).to(baseUrl);
-      await as(aMaker).post(allItems[8]).to(baseUrl);
-      await as(aMaker).post(allItems[9]).to(baseUrl);
-      await as(aMaker).post(allItems[10]).to(baseUrl);
-      await as(aMaker).post(allItems[11]).to(baseUrl);
-      await as(aMaker).post(allItems[12]).to(baseUrl);
-      await as(aMaker).post(allItems[13]).to(baseUrl);
-      await as(aMaker).post(allItems[14]).to(baseUrl);
-      await as(aMaker).post(allItems[15]).to(baseUrl);
+      await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      await as(aMaker).post(mockApplications[1]).to(baseUrl);
+      await as(aMaker).post(mockApplications[2]).to(baseUrl);
+      await as(aMaker).post(mockApplications[3]).to(baseUrl);
+      await as(aMaker).post(mockApplications[4]).to(baseUrl);
+      await as(aMaker).post(mockApplications[5]).to(baseUrl);
+      await as(aMaker).post(mockApplications[6]).to(baseUrl);
+      await as(aMaker).post(mockApplications[7]).to(baseUrl);
+      await as(aMaker).post(mockApplications[8]).to(baseUrl);
+      await as(aMaker).post(mockApplications[9]).to(baseUrl);
+      await as(aMaker).post(mockApplications[10]).to(baseUrl);
+      await as(aMaker).post(mockApplications[11]).to(baseUrl);
+      await as(aMaker).post(mockApplications[12]).to(baseUrl);
+      await as(aMaker).post(mockApplications[13]).to(baseUrl);
+      await as(aMaker).post(mockApplications[14]).to(baseUrl);
+      await as(aMaker).post(mockApplications[15]).to(baseUrl);
 
 
       // MW: couldn't get the promise.all running in sequential order
-      // await allItems.map(async (item) => {
+      // await mockApplications.map(async (item) => {
       //   return as(aMaker).post(item).to(baseUrl);
       // })
 
@@ -66,7 +68,7 @@ describe(baseUrl, () => {
       const { body, status } = await as(aChecker).get(baseUrl);
 
       const expected = {
-        items: allItems.map((item) => ({
+        items: mockApplications.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
           coverTermsId: expect.any(String),
@@ -91,16 +93,16 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     it('returns an individual item', async () => {
-      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
-        ...allItems[0],
+        ...mockApplications[0],
         exporterId: expect.any(String),
         coverTermsId: expect.any(String),
         status: 'Draft',
@@ -126,13 +128,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     it('returns a status', async () => {
-      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
       expect(body).toEqual({ status: 'Draft' });
     });
@@ -145,19 +147,19 @@ describe(baseUrl, () => {
 
   describe(`POST ${baseUrl}`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(allItems[0]).to(baseUrl);
+      const { status } = await as().post(mockApplications[0]).to(baseUrl);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { status } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       expect(status).toEqual(201);
     });
 
     it('returns a new application upon creation', async () => {
-      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const expected = {
-        ...allItems[0],
+        ...mockApplications[0],
         exporterId: expect.any(String),
         coverTermsId: expect.any(String),
         status: 'Draft',
@@ -171,8 +173,8 @@ describe(baseUrl, () => {
     });
 
     it('it returns a duplicate error in the system the item I created an application of the same reference', async () => {
-      await as(aMaker).post(allItems[0]).to(baseUrl); // 1st instance
-      const { status, body } = await as(aMaker).post(allItems[0]).to(baseUrl); // 2nd instance
+      await as(aMaker).post(mockApplications[0]).to(baseUrl); // 1st instance
+      const { status, body } = await as(aMaker).post(mockApplications[0]).to(baseUrl); // 2nd instance
       expect(body).toEqual([{
         errCode: 'ALREADY_EXISTS',
         errRef: 'bankInternalRefName',
@@ -183,7 +185,7 @@ describe(baseUrl, () => {
 
     it('it tells me the Bank Internal Ref Name is null', async () => {
       const removeName = {
-        ...allItems[0],
+        ...mockApplications[0],
         bankInternalRefName: null,
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
@@ -197,7 +199,7 @@ describe(baseUrl, () => {
 
     it('it tells me the Bank Internal Ref Name is an empty string', async () => {
       const removeName = {
-        ...allItems[0],
+        ...mockApplications[0],
         bankInternalRefName: '',
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
@@ -212,7 +214,7 @@ describe(baseUrl, () => {
 
   describe(`PUT ${baseUrl}/:id`, () => {
     const updated = {
-      ...allItems[0],
+      ...mockApplications[0],
       bankInternalRefName: 'Updated Ref Name (Unit Test)',
       submissionType: 'Automatic Inclusion Notice',
     };
@@ -223,7 +225,7 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/${body._id}`);
       expect(status).toEqual(200);
     });
@@ -241,13 +243,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/${body._id}`);
       expect(status).toEqual(200);
     });
 
     it('returns a enum error if an incorrect status is sent', async () => {
-      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
       expect(res.body).toEqual([{
@@ -259,7 +261,7 @@ describe(baseUrl, () => {
 
     describe('when new status is `SUBMITTED_TO_UKEF`', () => {
       it('increases submissionCount', async () => {
-        const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+        const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
         expect(body.submissionCount).toEqual(0);
 
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
@@ -268,7 +270,7 @@ describe(baseUrl, () => {
       });
 
       it('adds submissionDate', async () => {
-        const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+        const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
 
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
@@ -276,7 +278,7 @@ describe(baseUrl, () => {
       });
 
       it('does NOT add submissionDate if already exists', async () => {
-        const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+        const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
 
         const firstPutResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(firstPutResponse.status).toEqual(200);
@@ -284,10 +286,36 @@ describe(baseUrl, () => {
         const initialSubmissionDate = firstPutResponse.body.submissionDate;
         expect(firstPutResponse.body.submissionDate).toEqual(expect.any(String));
 
+        // submit again, check that the submissionDate has not changed.
         const secondPutResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(secondPutResponse.status).toEqual(200);
 
         expect(secondPutResponse.body.submissionDate).toEqual(initialSubmissionDate);
+      });
+
+      it('adds submittedAsIssuedDate to each issued facility associated with the application', async () => {
+        // create deal
+        const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+        const applicationId = body._id;
+
+        // create issued facility that's associated with the deal
+        const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
+        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        expect(createFacilityResponse.status).toEqual(201);
+
+        const facilityId = createFacilityResponse.body.details._id;
+
+        // check that the facility does not already have submittedAsIssuedDate
+        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
+
+        // change deal status to submitted
+        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        expect(putResponse.status).toEqual(200);
+
+        // check that the facility has updated submittedAsIssuedDate
+        const getFacilityResponse = await as(aMaker).get(`${facilitiesUrl}/${facilityId}`);
+        expect(getFacilityResponse.status).toEqual(200);
+        expect(getFacilityResponse.body.details.submittedAsIssuedDate).toEqual(expect.any(String));
       });
     });
 
@@ -304,7 +332,7 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post(allItems[0]).to(`${baseUrl}`);
+      const { body } = await as(aMaker).post(mockApplications[0]).to(`${baseUrl}`);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
