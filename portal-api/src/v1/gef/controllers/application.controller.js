@@ -99,6 +99,21 @@ exports.update = async (req, res) => {
   res.status(utils.mongoStatus(result)).send(response);
 };
 
+
+const addSubmissionData = async (existingApplication) => {
+  const submissionData = {
+    date: existingApplication.submissionDate,
+  };
+
+  submissionData.count = existingApplication.submissionCount + 1;
+
+  if (!existingApplication.submissionDate) {
+    submissionData.date = now();
+  }
+
+  return submissionData;
+};
+
 exports.changeStatus = async (req, res) => {
   const applicationId = req.params.id;
 
@@ -116,28 +131,30 @@ exports.changeStatus = async (req, res) => {
 
   const { status } = req.body;
 
-  const update = {
-    status,
-  };
+  const applicationUpdate = { status };
 
   // TODO: protect so that only a user with checker role can submit to UKEF.
   if (status === STATUS.SUBMITTED_TO_UKEF) {
-    update.submissionCount = existingApplication.submissionCount + 1;
+    const { count, date } = await addSubmissionData(existingApplication);
 
-    if (!existingApplication.submissionDate) {
-      update.submissionDate = now();
-    }
+    applicationUpdate.submissionCount = count;
+    applicationUpdate.submissionDate = date;
+
+    // TODO: update facilities with issuedFacilitySubmittedToUkefTimestamp
   }
 
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(applicationId)) } }, {
-      $set: update,
+      $set: applicationUpdate,
     }, { returnOriginal: false },
   );
+
   let response;
+
   if (result.value) {
     response = result.value;
   }
+
   return res.status(utils.mongoStatus(result)).send(response);
 };
 
