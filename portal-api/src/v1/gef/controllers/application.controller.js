@@ -9,6 +9,7 @@ const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
 const { CoverTerms } = require('../models/coverTerms');
 const { STATUS } = require('../enums');
+const now = require('../../../now');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
@@ -122,6 +123,10 @@ exports.changeStatus = async (req, res) => {
   // TODO: protect so that only a user with checker role can submit to UKEF.
   if (status === STATUS.SUBMITTED_TO_UKEF) {
     update.submissionCount = existingApplication.submissionCount + 1;
+
+    if (!existingApplication.submissionDate) {
+      update.submissionDate = now();
+    }
   }
 
   const result = await collection.findOneAndUpdate(

@@ -73,8 +73,9 @@ describe(baseUrl, () => {
           createdAt: expect.any(Number),  
           status: 'Draft',
           dealType: 'GEF',
-          submissionCount: 0,
           submissionType: null,
+          submissionCount: 0,
+          submissionDate: null,
         })),
       };
 
@@ -105,8 +106,9 @@ describe(baseUrl, () => {
         status: 'Draft',
         createdAt: expect.any(Number),
         dealType: 'GEF',
-        submissionCount: 0,
         submissionType: null,
+        submissionCount: 0,
+        submissionDate: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -152,7 +154,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(201);
     });
 
-    it('returns me a new application upon creation', async () => {
+    it('returns a new application upon creation', async () => {
       const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
       const expected = {
         ...allItems[0],
@@ -161,8 +163,9 @@ describe(baseUrl, () => {
         status: 'Draft',
         createdAt: expect.any(Number),
         dealType: 'GEF',
-        submissionCount: 0,
         submissionType: null,
+        submissionCount: 0,
+        submissionDate: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -262,6 +265,29 @@ describe(baseUrl, () => {
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
         expect(putResponse.body.submissionCount).toEqual(1);
+      });
+
+      it('adds submissionDate', async () => {
+        const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+
+        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        expect(putResponse.status).toEqual(200);
+        expect(putResponse.body.submissionDate).toEqual(expect.any(String));
+      });
+
+      it('does NOT add submissionDate if already exists', async () => {
+        const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+
+        const firstPutResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        expect(firstPutResponse.status).toEqual(200);
+
+        const initialSubmissionDate = firstPutResponse.body.submissionDate;
+        expect(firstPutResponse.body.submissionDate).toEqual(expect.any(String));
+
+        const secondPutResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        expect(secondPutResponse.status).toEqual(200);
+
+        expect(secondPutResponse.body.submissionDate).toEqual(initialSubmissionDate);
       });
     });
 

@@ -14,13 +14,16 @@ class Application {
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;
       this.createdAt = Date.now();
       this.updatedAt = null;
-      this.submissionCount = 0;
       this.submissionType = null;
+      this.submissionCount = 0;
+      this.submissionDate = null;
     } else {
       // Update
       this.updatedAt = Date.now();
       this.comments = req.comments;
       this.submissionType = req.submissionType;
+      this.submissionCount = req.submissionCount;
+      this.submissionDate = req.submissionDate;
     }
     this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
   }
