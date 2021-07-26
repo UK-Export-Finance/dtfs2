@@ -194,7 +194,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    it('partially update a facility ', async () => {
+    it('partially updates a facility ', async () => {
       const { details } = newFacility;
       const update = {
         hasBeenIssued: false,
