@@ -95,6 +95,14 @@ describe(component, () => {
 
       wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead(`${defaultParams.lossGivenDefault}%`);
     });
+
+    describe('when there is no loss given default', () => {
+      it('should render a dash', () => {
+        wrapper = render({});
+
+        wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead('-');
+      });
+    });
   });
 
   describe('probability of default', () => {
@@ -109,6 +117,14 @@ describe(component, () => {
 
       wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]')
         .toRead(`Less than ${defaultParams.probabilityOfDefault}%`);
+    });
+
+    describe('when there is no probability of default', () => {
+      it('should render a dash', () => {
+        wrapper = render({});
+
+        wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead('-');
+      });
     });
   });
 });

@@ -1,22 +1,20 @@
 /* eslint-disable no-undef */
 const applicationPreview = {
-  dealId: () => cy.get('[data-cy="deal-id"]'),
-  status: () => cy.get('[data-cy="status"]'),
-  exporter: () => cy.get('[data-cy="exporter"]'),
+  backLink: () => cy.get('[data-cy="back-link"]'),
   bankReference: () => cy.get('[data-cy="bank-reference"]'),
-  dateCreated: () => cy.get('[data-cy="date-created"]'),
-  createdBy: () => cy.get('[data-cy="created-by"]'),
-  checkedBy: () => cy.get('[data-cy="checked-by"]'),
+  applicationBanner: () => cy.get('[data-cy="application-banner"]'),
+  status: () => cy.get('[data-cy="status"]'),
   product: () => cy.get('[data-cy="product"]'),
+  dateCreated: () => cy.get('[data-cy="date-created"]'),
   submissionType: () => cy.get('[data-cy="submission-type"]'),
-  facilitySummary: () => cy.get('[data-cy="facility-summary"]'),
+  createdBy: () => cy.get('[data-cy="created-by"]'),
+  exporter: () => cy.get('[data-cy="exporter"]'),
+  checkedBy: () => cy.get('[data-cy="checked-by"]'),
 
   task: () => cy.get('[data-cy="task"]'),
   comments: () => cy.get('[data-cy="latest-comment"]'),
 
   applicationPreviewPage: () => cy.get('[data-cy="application-preview-page"]'),
-  applicationBanner: () => cy.get('[data-cy="application-banner"]'),
-  backLink: () => cy.get('[data-cy="back-link"]'),
   captionHeading: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
 

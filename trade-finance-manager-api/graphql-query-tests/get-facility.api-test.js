@@ -25,8 +25,6 @@ const mockFacility = {
   tfm: mockFacilityTfm,
 };
 
-const mockDealDetails = MOCK_DEAL.details;
-
 const mockDealTfm = {
   exporterCreditRating: 'Good (BB-)',
 };
@@ -126,7 +124,7 @@ describe('graphql query - get facility', () => {
       variables: { id: '12345678' },
     });
 
-    const reducerResult = facilityReducer(initFacilityShape, mockDealDetails, mockDealTfm);
+    const reducerResult = facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
 
     expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
     expect(data.facility.facilitySnapshot).toEqual(reducerResult.facilitySnapshot);

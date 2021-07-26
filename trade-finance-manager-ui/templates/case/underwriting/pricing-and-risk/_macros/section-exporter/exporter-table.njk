@@ -48,7 +48,11 @@
         </td>
 
         <td class="govuk-table__cell" data-cy="exporter-table-loss-given-default-value">
-          {{ lossGivenDefault }}%
+          {% if lossGivenDefault %}
+            {{ lossGivenDefault }}%
+          {% else %}
+            -
+          {% endif %}
         </td>
 
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
@@ -66,7 +70,13 @@
         </td>
 
         <td class="govuk-table__cell" data-cy="exporter-table-probability-of-default-value">
-          Less than {{ probabilityOfDefault }}%
+
+          {% if probabilityOfDefault %}
+            Less than {{ probabilityOfDefault }}%
+
+            {% else %}
+            -
+          {% endif %}
         </td>
         
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">

@@ -1573,7 +1573,8 @@ jobs:
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
-              UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}"
+              UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
+              TFM_URI="${{ secrets.TFM_URI }}"
               
   # END API setup
  

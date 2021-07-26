@@ -5,6 +5,7 @@ const dealQuery = gql`
     deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
       _id
       tfm {
+        dateReceived
         parties {
           exporter {
             partyUrn
@@ -91,6 +92,7 @@ const dealQuery = gql`
           facilitySnapshot {
             _id,
             ukefFacilityID,
+            associatedDealId,
             facilityProduct {
               code
             },

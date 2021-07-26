@@ -2,6 +2,7 @@ import api from '../../../../api';
 import CONSTANTS from '../../../../constants';
 import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
 import canUserEditLeadUnderwriter from './helpers';
+import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
 
 const getLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -20,7 +21,7 @@ const getLeadUnderwriter = async (req, res) => {
     currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
   }
 
-  if (currentLeadUnderWriterUserId) {
+  if (currentLeadUnderWriterUserId && currentLeadUnderWriterUserId !== CONSTANTS.TASKS.UNASSIGNED) {
     currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
   }
 
@@ -61,7 +62,15 @@ const getAssignLeadUnderwriter = async (req, res) => {
     currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
   }
 
-  const allTeamMembers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS);
+  const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS);
+  const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
+
+  const allTeamMembers = [
+    ...allUnderwriterManagers,
+    ...allUnderwriters,
+  ];
+
+  const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(allTeamMembers, 'firstName');
 
   return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
     activeSubNavigation: 'underwriting',
@@ -70,7 +79,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, allTeamMembers),
+    assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, alphabeticalTeamMembers),
   });
 };
 

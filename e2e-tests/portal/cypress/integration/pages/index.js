@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 module.exports = {
   login: require('./login'),
   header: require('./header'),
@@ -19,12 +21,12 @@ module.exports = {
   contractSubmissionDetails: require('./contractSubmissionDetails'),
   editDealName: require('./contract/contract-edit-name'),
   dashboard: require('./dashboard'),
+  gefDashboard: require('./gefDashboard'),
   transactionDashboard: require('./transactionDashboard'),
   cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
   eligibilityDocumentation: require('./eligibilityDocumentation'),
   eligibilityPreview: require('./eligibilityPreview'),
-  header: require('./header'),
   bondDetails: require('./bondDetails'),
   bondFinancialDetails: require('./bondFinancialDetails'),
   bondFeeDetails: require('./bondFeeDetails'),

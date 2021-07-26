@@ -2,9 +2,14 @@ export const PROGRESS = {
   DRAFT: 'Draft',
   NOT_STARTED: 'NOT_STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
-  BANK_CHECK: 'BANK_CHECK',
+  BANK_CHECK: 'BANK CHECK',
   COMPLETED: 'COMPLETED',
   SUBMITTED_TO_UKEF: 'Submitted to UKEF',
+};
+
+export const DEAL_SUBMISSION_TYPE = {
+  AIN: 'Automatic Inclusion Notice',
+  MIA: 'Manual Inclusion Application',
 };
 
 export const FACILITY_TYPE = {

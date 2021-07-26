@@ -32,7 +32,21 @@ Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set
  * `set_mulesoft_api_key.sh`
  * `set_session_secrets.sh`
 
-The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows)
+These scripts are not and should not be stored in the repo. All of these scripts need to be shared privately when a new engineer starts on the codebase.
+
+The list of variables can be seen in the environment build workflows under [`.github/workflows`](.github/workflows)
+
+### Updating secrets
+
+All secrets are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
+
+To update secrets in the environments - i.e dev, test etc:
+
+* Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
+* Run this script `/secrets/github/set_secrets.js`
+
+This will update all github secrets.
+
 
 ### Steps
 
@@ -107,6 +121,16 @@ GEF is hosted on the same URL as Portal v2. To access GEF:
 - Login to Portal v2: https://tfs-test-fd.azurefd.net
 - Manually navigate to this GEF URL, to create a new GEF application: https://tfs-test-fd.azurefd.net/gef/mandatory-criteria
 - Alternatively, visit an existing GEF deal by ID: http://tfs-test-fd.azurefd.net/gef/deals/1
+
+### Deploying to test
+After merging to master, dev environment will be updated.
+
+To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
+
+This will take the latest code in the development environment and deploy to test.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
+
 
 ### Git workflow
 

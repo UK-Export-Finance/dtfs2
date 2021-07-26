@@ -10,7 +10,7 @@ describe('mapFacilityValue', () => {
       };
 
       const result = mapFacilityValue(
-        mockFacility.currency,
+        mockFacility.currency.id,
         mockFacility.facilityValue,
         {},
       );
@@ -32,7 +32,7 @@ describe('mapFacilityValue', () => {
       };
 
       const result = mapFacilityValue(
-        mockFacility.currency,
+        mockFacility.currency.id,
         mockFacility.facilityValue,
         mockTfmFacility,
       );

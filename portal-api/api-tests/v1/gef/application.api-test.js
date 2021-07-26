@@ -70,8 +70,11 @@ describe(baseUrl, () => {
           ...expectMongoId(item),
           exporterId: expect.any(String),
           coverTermsId: expect.any(String),
-          createdAt: expect.any(Number),
+          createdAt: expect.any(Number),  
           status: 'Draft',
+          dealType: 'GEF',
+          submissionCount: 0,
+          submissionType: null,
         })),
       };
 
@@ -101,6 +104,9 @@ describe(baseUrl, () => {
         coverTermsId: expect.any(String),
         status: 'Draft',
         createdAt: expect.any(Number),
+        dealType: 'GEF',
+        submissionCount: 0,
+        submissionType: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -154,6 +160,9 @@ describe(baseUrl, () => {
         coverTermsId: expect.any(String),
         status: 'Draft',
         createdAt: expect.any(Number),
+        dealType: 'GEF',
+        submissionCount: 0,
+        submissionType: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -202,6 +211,7 @@ describe(baseUrl, () => {
     const updated = {
       ...allItems[0],
       bankInternalRefName: 'Updated Ref Name (Unit Test)',
+      submissionType: 'Automatic Inclusion Notice',
     };
 
     it('rejects requests that do not present a valid Authorization token', async () => {

@@ -21,7 +21,7 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgementByDealId } = require('./send-deal-submit-emails');
 
-const submitDeal = async (dealId, portalChecker, urlOrigin) => {
+const submitDeal = async (dealId, portalChecker) => {
   const portalDeal = await findOnePortalDeal(dealId);
 
   if (!portalDeal) {
@@ -60,7 +60,7 @@ const submitDeal = async (dealId, portalChecker, urlOrigin) => {
       || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
-      await sendDealSubmitEmails(updatedDealWithTasks, urlOrigin);
+      await sendDealSubmitEmails(updatedDealWithTasks);
 
       const updatedDeal = api.updateDeal(dealId, updatedDealWithTasks);
       return updatedDeal;
@@ -106,9 +106,7 @@ const submitDealPUT = async (req, res) => {
     portalChecker,
   } = req.body;
 
-  const { origin: urlOrigin } = req.headers;
-
-  const dealInit = await submitDeal(dealId, portalChecker, urlOrigin);
+  const dealInit = await submitDeal(dealId, portalChecker);
 
   if (!dealInit) {
     return res.status(404).send();

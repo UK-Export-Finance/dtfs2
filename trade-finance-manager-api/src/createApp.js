@@ -5,7 +5,7 @@ const express = require('express');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const graphqlKeyAuthentication = require('./graphql/key-authentication');
 const graphqlPermissions = require('./graphql/middleware/graphql-permissions');
 

@@ -90,6 +90,21 @@ describe(component, () => {
       const expected = `${params.facilityTfm.ukefExposure.exposure} as at ${expectedTimestamp}`;
       wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(expected);
     });
+
+    describe('when there is no exposure and ukefExposure.timestamp', () => {
+      const paramsNoExposure = {
+        ...params,
+        facilityTfm: {},
+      };
+
+      beforeEach(() => {
+        wrapper = render(paramsNoExposure);
+      });
+
+      it('should render a dash', () => {
+        wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead('-');
+      });
+    });
   });
 
   describe('`dates` section', () => {
