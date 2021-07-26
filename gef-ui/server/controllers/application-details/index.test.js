@@ -103,10 +103,11 @@ describe('GET Application Details', () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockNext = jest.fn();
+    const error = new Error('error');
 
-    api.getApplication = () => Promise.reject('error');
+    api.getApplication = () => Promise.reject(error);
     await applicationDetails(mockRequest, mockResponse, mockNext);
-    expect(mockNext).toHaveBeenCalledWith('error');
+    expect(mockNext).toHaveBeenCalledWith(error);
   });
 });
 
