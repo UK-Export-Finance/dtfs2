@@ -37,11 +37,12 @@ const applicationPreview = async (req, res) => {
       return res.redirect('/dashboard');
     }
 
-    const maker = await api.getMakerUser(userId, userToken);
+    const maker = await api.getUserDetails(userId, userToken);
+    const progressStatusKey = applicationStatus.toUpperCase().replace(/\s/g, '_');
     return res.render('partials/application-preview.njk', {
       dealId: '-',
       companyName: exporter.details.companyName,
-      applicationStatus: PROGRESS[applicationStatus],
+      applicationStatus: PROGRESS[progressStatusKey],
       dateCreated: createdAt,
       timezone: maker.timezone || 'UTC',
       createdBy: `${maker.firstname} ${maker.surname}`,
@@ -49,8 +50,6 @@ const applicationPreview = async (req, res) => {
       checkedBy: '-',
       isAutomaticCover: coverTerms.isAutomaticCover,
       applicationType: getApplicationType(coverTerms.isAutomaticCover),
-      cashFacilitiesCount: facilities.items.filter((item) => item.details.type === 'CASH').length,
-      contingentFacilitiesCount: facilities.items.filter((item) => item.details.type === 'CONTINGENT').length,
       exporter: {
         rows: mapSummaryList(exporter, exporterItems('#', {
           showIndustryChangeLink: exporter.details.industries && exporter.details.industries.length > 1,
