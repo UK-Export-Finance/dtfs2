@@ -56,6 +56,7 @@ describe(baseUrl, () => {
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
         ukefExposure: 0,
+        submittedAsIssuedDate: null,
       },
       validation: {
         required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
@@ -102,7 +103,9 @@ describe(baseUrl, () => {
         hasBeenIssued: false,
       }).to(baseUrl);
 
-      const { body, status } = await as(aChecker).get(baseUrl);
+      const mockQuery = { applicationId: applicationItem.body._id };
+
+      const { body, status } = await as(aChecker).get(baseUrl, mockQuery);
 
       expect(body).toEqual({ status: STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
@@ -365,7 +368,10 @@ describe(baseUrl, () => {
       await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { body, status } = await as(aMaker).get(baseUrl);
+
+      const mockQuery = { applicationId: applicationItem.body._id };
+      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.IN_PROGRESS);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
@@ -376,7 +382,10 @@ describe(baseUrl, () => {
       const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put({ name: 'test' }).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
-      const { body, status } = await as(aMaker).get(baseUrl);
+
+      const mockQuery = { applicationId: applicationItem.body._id };
+      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.IN_PROGRESS);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
@@ -389,7 +398,10 @@ describe(baseUrl, () => {
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item2.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
-      const { body, status } = await as(aMaker).get(baseUrl);
+
+      const mockQuery = { applicationId: applicationItem.body._id };
+      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.COMPLETED);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
