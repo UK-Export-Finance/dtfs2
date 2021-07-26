@@ -53,11 +53,7 @@ context('Submit to UKEF', () => {
     });
 
     it('display an error when the comment is greater than 400 characters', () => {
-      const longComment = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan diam eu elit 
-                           pellentesque, ac tempor lorem luctus. Sed ornare elit non tortor bibendum, quis tincidunt lectus dictum. 
-                           Quisque enim augue, viverra eget finibus eget, lacinia sit amet tortor. 
-                           Aenean nisl lectus, placerat vel arcu eu, pharetra imperdiet velit. Vestibulum et dolor et magna bibendum mattis. 
-                           Aenean egestas pharetra.`;
+      const longComment = 'a'.repeat(401);
 
       submitToUkef.comment().type(longComment);
       submitToUkef.submitButton().click();

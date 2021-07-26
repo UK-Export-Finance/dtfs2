@@ -64,10 +64,7 @@ describe('create submission to UKEF', () => {
     api.getUserDetails = () => Promise.resolve(mockMakerUserResponse);
     api.updateApplication = () => Promise.resolve(mockApplicationResponse);
 
-    const longComments = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante nec magna fringilla 
-    dapibus. Praesent porta nibh at metus venenatis feugiat. Proin vel sollicitudin ligula. Nulla sed massa quis 
-    augue bibendum lacinia vitae id leo. Aliquam quis imperdiet felis, et tempus eros. Duis efficitur odio nisl, 
-    non finibus urna convallis sit amet. Cras tortor odio, finibus in fermentum vel, posuere quis.`;
+    const longComments = 'a'.repeat(401);
     mockRequest.body.comment = longComments;
 
     await createSubmissionToUkef(mockRequest, mockResponse);
