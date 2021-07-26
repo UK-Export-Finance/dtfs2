@@ -29,15 +29,29 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.getAll = async (req, res) => {
+const getAllFacilitiesByApplicationId = async (applicationId) => {
   const collection = await db.getCollection(collectionName);
   let find = {};
-  if (req.query && req.query.applicationId) {
-    find = { applicationId: String(req.query.applicationId) };
+
+  if (applicationId) {
+    find = { applicationId: String(applicationId) };
   }
+
   const doc = await collection.find(find).toArray();
 
+  return doc;
+};
+exports.getAllFacilitiesByApplicationId = getAllFacilitiesByApplicationId;
+
+exports.getAllGET = async (req, res) => {
+  let doc;
+
+  if (req.query && req.query.applicationId) {
+    doc = await getAllFacilitiesByApplicationId(req.query.applicationId);
+  }
+
   const facilities = [];
+
   doc.forEach((item) => {
     facilities.push({
       status: facilitiesStatus(item),
@@ -45,6 +59,7 @@ exports.getAll = async (req, res) => {
       validation: facilitiesValidation(item),
     });
   });
+
   res.status(200).send({
     status: facilitiesOverallStatus(facilities),
     items: facilities,
@@ -101,6 +116,7 @@ const update = async (id, updateBody) => {
 
   return result;
 };
+exports.update = update;
 
 exports.updatePUT = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
