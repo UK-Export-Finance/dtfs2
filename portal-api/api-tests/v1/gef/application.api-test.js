@@ -243,7 +243,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a enum error if I send an incorrect status', async () => {
+    it('returns a enum error if an incorrect status is sent', async () => {
       const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
@@ -254,9 +254,20 @@ describe(baseUrl, () => {
       }]);
     });
 
-    it('returns a 204 - "No Content" if there are no records', async () => {
+    describe('when new status is `SUBMITTED_TO_UKEF`', () => {
+      it('increases submissionCount', async () => {
+        const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+        expect(body.submissionCount).toEqual(0);
+
+        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        expect(putResponse.status).toEqual(200);
+        expect(putResponse.body.submissionCount).toEqual(1);
+      });
+    });
+
+    it('returns a 404 when application does not exist', async () => {
       const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/doesnotexist`);
-      expect(status).toEqual(204);
+      expect(status).toEqual(404);
     });
   });
 
