@@ -37,7 +37,7 @@ router.route('/cover-terms/:id')
 
 // Facilities
 router.route('/facilities')
-  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getAll)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getAllGET)
   .post(validate({ role: ['maker', 'data-admin'] }), facilities.create)
   .delete(validate({ role: ['maker', 'data-admin'] }), facilities.deleteByApplicationId);
 

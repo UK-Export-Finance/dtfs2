@@ -54,9 +54,10 @@ module.exports = (app) => ({
         },
       }),
 
-      get: async (url) => request(app)
+      get: async (url, query = {}) => request(app)
         .get(url)
-        .set({ Authorization: token || '' }),
+        .set({ Authorization: token || '' })
+        .query(query),
 
       remove: async (url) => request(app)
         .delete(url)

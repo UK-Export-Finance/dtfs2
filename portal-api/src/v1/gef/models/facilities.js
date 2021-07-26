@@ -51,6 +51,7 @@ class Facility {
       this.createdAt = Date.now();
       this.updatedAt = Date.now();
       this.ukefExposure = 0;
+      this.submittedAsIssuedDate = null;
     } else {
       // update application
       if (req.hasBeenIssued != null) {
@@ -109,6 +110,10 @@ class Facility {
 
       if (req.ukefExposure != null) {
         this.ukefExposure = req.ukefExposure;
+      }
+
+      if (req.submittedAsIssuedDate != null) {
+        this.submittedAsIssuedDate = req.submittedAsIssuedDate;
       }
 
       // nullify values based on previous questions
