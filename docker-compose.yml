@@ -51,29 +51,29 @@ services:
   #     - ESTORE_URL
   #   command: node dist/server.js
   
-  # trade-finance-manager-api:
-  #   build: ./trade-finance-manager-api
-  #   image: dtfs/trade-finance-manager-api
-  #   restart: always
-  #   depends_on:
-  #     - portal-api
-  #     - dtfs-central-api
-  #     - reference-data-proxy
-  #   ports:
-  #     - "5004:5004"
-  #   volumes:
-  #     - ./trade-finance-manager-api/src:/app/src:ro
-  #   environment:
-  #     - PORT=5004
-  #     - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-  #     - MONGO_INITDB_DATABASE=dtfs-submissions
-  #     - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-  #     - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-  #     - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-  #     - UKEF_TFM_API_SYSTEM_KEY
-  #     - UKEF_TFM_API_REPORTS_KEY
-  #     - TFM_URI=http://localhost:5003
-  #   entrypoint: npx nodemon src/index.js
+  trade-finance-manager-api:
+    build: ./trade-finance-manager-api
+    image: dtfs/trade-finance-manager-api
+    restart: always
+    depends_on:
+      - portal-api
+      - dtfs-central-api
+      - reference-data-proxy
+    ports:
+      - "5004:5004"
+    volumes:
+      - ./trade-finance-manager-api/src:/app/src:ro
+    environment:
+      - PORT=5004
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - UKEF_TFM_API_SYSTEM_KEY
+      - UKEF_TFM_API_REPORTS_KEY
+      - TFM_URI=http://localhost:5003
+    entrypoint: npx nodemon src/index.js
   
   # portal:
   #   build: ./portal
@@ -98,43 +98,43 @@ services:
   #     - REDIS_HOSTNAME=redis
   #   command: node dist/server.js
 
-  # portal-api:
-  #   build: ./portal-api
-  #   image: dtfs/portal-api
-  #   restart: always
-  #   depends_on:
-  #     - dtfs-central-api
-  #     - reference-data-proxy
-  #   ports:
-  #     - "5001:5001"
-  #   volumes:
-  #     - ./portal-api/src:/app/src:ro
-  #   environment:
-  #     - PORT=5001
-  #     - CORS_ORIGIN=http://localhost:5000
-  #     - JWT_SIGNING_KEY
-  #     - JWT_VALIDATING_KEY
-  #     - MONGO_INITDB_DATABASE=dtfs-submissions
-  #     - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-  #     - AZURE_WORKFLOW_STORAGE_ACCOUNT
-  #     - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
-  #     - AZURE_WORKFLOW_FILESHARE_NAME
-  #     - AZURE_WORKFLOW_EXPORT_FOLDER
-  #     - AZURE_WORKFLOW_IMPORT_FOLDER
-  #     - AZURE_PORTAL_STORAGE_ACCOUNT
-  #     - AZURE_PORTAL_STORAGE_ACCESS_KEY
-  #     - AZURE_PORTAL_FILESHARE_NAME
-  #     - AZURE_PORTAL_EXPORT_FOLDER
-  #     - DTFS_PORTAL_SCHEDULER
-  #     - GOV_NOTIFY_API_KEY
-  #     - GOV_NOTIFY_EMAIL_RECIPIENT
-  #     - DTFS_PORTAL_SCHEDULER=true
-  #     - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
-  #     - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-  #     - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-  #     - TFM_API=http://trade-finance-manager-api:5004
+  portal-api:
+    build: ./portal-api
+    image: dtfs/portal-api
+    restart: always
+    depends_on:
+      - dtfs-central-api
+      - reference-data-proxy
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./portal-api/src:/app/src:ro
+    environment:
+      - PORT=5001
+      - CORS_ORIGIN=http://localhost:5000
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - AZURE_WORKFLOW_STORAGE_ACCOUNT
+      - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
+      - AZURE_WORKFLOW_FILESHARE_NAME
+      - AZURE_WORKFLOW_EXPORT_FOLDER
+      - AZURE_WORKFLOW_IMPORT_FOLDER
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - AZURE_PORTAL_FILESHARE_NAME
+      - AZURE_PORTAL_EXPORT_FOLDER
+      - DTFS_PORTAL_SCHEDULER
+      - GOV_NOTIFY_API_KEY
+      - GOV_NOTIFY_EMAIL_RECIPIENT
+      - DTFS_PORTAL_SCHEDULER=true
+      - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - TFM_API=http://trade-finance-manager-api:5004
 
-  #   entrypoint: npx nodemon src/index.js
+    entrypoint: npx nodemon src/index.js
   
   reference-data-proxy:
     build: ./reference-data-proxy
