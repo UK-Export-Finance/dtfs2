@@ -5,10 +5,12 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
-const api = require('../../../src/v1/api')
+const api = require('../../../src/v1/api');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
+
+const CONSTANTS = require('../../../src/constants');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -26,6 +28,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aSuperuser;
   let tfmMaker;
   let tfmChecker;
+  const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
   const originalFacilities = completedDeal.mockFacilities;
 
   beforeAll(async () => {
@@ -47,8 +50,8 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);      
-    api.tfmDealSubmit = () => Promise.resolve();
+    await wipeDB.wipe(['facilities']);
+    api.tfmDealSubmit = tfmDealSubmitSpy;
   });
 
   describe('when the status changes to `Submitted`', () => {
@@ -252,8 +255,27 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
           expect(loan.ukefFacilityID).toEqual(loanInFirstSubmission.ukefFacilityID);
         });
-
       });
+    });
+
+    it('should call api.tfmDealSubmitSpy', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+      const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
+      const dealId = postResult.body._id;
+
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+
+      expect(tfmDealSubmitSpy).toHaveBeenCalledWith(
+        dealId,
+        CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
+        tfmChecker,
+      );
     });
   });
 

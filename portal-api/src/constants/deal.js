@@ -1,3 +1,7 @@
+const DEAL_TYPE = {
+  BSS_EWCS: 'BSS/EWCS',
+};
+
 const SME_TYPE = {
   MICRO: 'Micro',
   SMALL: 'Small',
@@ -46,6 +50,7 @@ const STATUS = {
 };
 
 module.exports = {
+  DEAL_TYPE,
   SME_TYPE,
   SUPPLIER_TYPE,
   APPLICATION_GROUP,

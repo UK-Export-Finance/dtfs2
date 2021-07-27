@@ -15,11 +15,12 @@ const mockApplications = require('../../fixtures/gef/application');
 const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
+const api = require('../../../src/v1/api');
+
 describe(baseUrl, () => {
-  // let noRoles;
   let aMaker;
   let aChecker;
-  // let anEditor;
+  const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -31,6 +32,7 @@ describe(baseUrl, () => {
 
   beforeEach(async () => {
     await wipeDB.wipe([collectionName]);
+    api.tfmDealSubmit = tfmDealSubmitSpy;
   });
 
   describe(`GET ${baseUrl}`, () => {
@@ -365,6 +367,23 @@ describe(baseUrl, () => {
         const getFacilityResponse = await as(aMaker).get(`${facilitiesUrl}/${facilityId}`);
         expect(getFacilityResponse.status).toEqual(200);
         expect(getFacilityResponse.body.details.submittedAsIssuedDate).toEqual(expect.any(String));
+      });
+
+      it('calls api.tfmDealSubmit', async () => {
+        const mockApplication = mockApplications[0];
+
+        const { body } = await as(aMaker).post(mockApplication).to(baseUrl);
+        expect(body.submissionCount).toEqual(0);
+
+        const applicationId = body._id;
+
+        await as(aChecker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${applicationId}`);
+
+        expect(tfmDealSubmitSpy).toHaveBeenCalledWith(
+          applicationId,
+          mockApplication.dealType,
+          aChecker,
+        );
       });
     });
 
