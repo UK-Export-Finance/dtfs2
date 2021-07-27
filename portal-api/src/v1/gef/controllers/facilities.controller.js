@@ -29,22 +29,39 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.getAll = async (req, res) => {
+const getAllFacilitiesByApplicationId = async (applicationId) => {
   const collection = await db.getCollection(collectionName);
   let find = {};
-  if (req.query && req.query.applicationId) {
-    find = { applicationId: String(req.query.applicationId) };
+
+  if (applicationId) {
+    find = { applicationId: String(applicationId) };
   }
+
   const doc = await collection.find(find).toArray();
 
+  return doc;
+};
+exports.getAllFacilitiesByApplicationId = getAllFacilitiesByApplicationId;
+
+exports.getAllGET = async (req, res) => {
+  let doc;
+
+  if (req.query && req.query.applicationId) {
+    doc = await getAllFacilitiesByApplicationId(req.query.applicationId);
+  }
+
   const facilities = [];
-  doc.forEach((item) => {
-    facilities.push({
-      status: facilitiesStatus(item),
-      details: item,
-      validation: facilitiesValidation(item),
+
+  if (doc && doc.length) {
+    doc.forEach((item) => {
+      facilities.push({
+        status: facilitiesStatus(item),
+        details: item,
+        validation: facilitiesValidation(item),
+      });
     });
-  });
+  }
+
   res.status(200).send({
     status: facilitiesOverallStatus(facilities),
     items: facilities,
@@ -65,25 +82,61 @@ exports.getById = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+const calculateUkefExposure = (requestedUpdate, existingFacility) => {
+  let latestValue = (existingFacility && existingFacility.value);
+  let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
+
+  // make sure we calculate with the latest values.
+  if (requestedUpdate.value) {
+    latestValue = requestedUpdate.value;
+  }
+
+  if (requestedUpdate.coverPercentage) {
+    latestCoverPercentage = requestedUpdate.coverPercentage;
+  }
+
+  const calculation = (latestValue * latestCoverPercentage);
+
+  return calculation;
+};
+exports.calculateUkefExposure = calculateUkefExposure;
+
+const update = async (id, updateBody) => {
+  const collection = await db.getCollection(collectionName);
+  const facilityId = ObjectId(String(id));
+
+  const existingFacility = await collection.findOne({ _id: facilityId });
+
+  const facilityUpdate = new Facility({
+    ...updateBody,
+    ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+  });
+
+  const result = await collection.findOneAndUpdate(
+    { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnOriginal: false },
+  );
+
+  return result;
+};
+exports.update = update;
+
+exports.updatePUT = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (enumValidationErr) {
     res.status(422).send(enumValidationErr);
   } else {
-    const collection = await db.getCollection(collectionName);
-    const update = new Facility(req.body);
-    const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: update }, { returnOriginal: false },
-    );
     let response;
-    if (result.value) {
+    const updatedFacility = await update(req.params.id, req.body);
+
+    if (updatedFacility.value) {
       response = {
-        status: facilitiesStatus(result.value),
-        details: result.value,
-        validation: facilitiesValidation(result.value),
+        status: facilitiesStatus(updatedFacility.value),
+        details: updatedFacility.value,
+        validation: facilitiesValidation(updatedFacility.value),
       };
     }
-    res.status(utils.mongoStatus(result)).send(response);
+
+    res.status(utils.mongoStatus(updatedFacility)).send(response);
   }
 };
 

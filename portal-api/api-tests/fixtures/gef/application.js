@@ -9,6 +9,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -20,6 +21,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -31,6 +33,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -42,6 +45,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -53,6 +57,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -64,6 +69,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -75,6 +81,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -86,6 +93,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -97,6 +105,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -108,6 +117,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -119,6 +129,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -130,6 +141,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -141,6 +153,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -152,6 +165,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }, {
   userId: null,
   bankId: null,
@@ -163,6 +177,7 @@ const APPLICATION = [{
   mandatoryVersionId: '123',
   status: 'IN_PROGRESS',
   updatedAt: null,
+  submissionCount: 0,
 }];
 
 module.exports = APPLICATION;
