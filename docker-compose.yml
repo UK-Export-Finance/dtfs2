@@ -214,7 +214,7 @@ services:
 
   number-generator-function:
     build: ./azure-functions/number-generator-function
-    image: dtfs/azure-function-acbs
+    image: dtfs/azure-function-number-generator
     restart: always
     ports:
       - "7072:80"
