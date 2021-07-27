@@ -14,7 +14,9 @@
 {% block content %}
   <div class="application-banner" data-cy="application-banner">
     <p class="govuk-body" data-cy="bank-ref-name">{{ bankInternalRefName }}</p>
-    <a class="govuk-link" href="/gef/application-details/{{applicationId}}" data-cy="abandon-link"><strong>Abandon</strong></a>
+    {%if not previewMode %}
+      <a class="govuk-link" href="/gef/application-details/{{applicationId}}" data-cy="abandon-link"><strong>Abandon</strong></a>
+    {% endif %}
   </div>
 
   {% if errors %}
@@ -47,8 +49,10 @@
   {% include "includes/application-details/about-exporter.njk" %}
   {% include "includes/application-details/automatic-cover.njk" %}
   {% include "includes/application-details/facilities.njk" %}
-  <form method="post" data-cy="form">
-  {% include "includes/application-details/submit.njk" %}
-  </form>
+  {%if not previewMode %}
+    <form method="post" data-cy="form">
+      {% include "includes/application-details/submit.njk" %}
+    </form>
+  {% endif %}
 
 {% endblock %}

@@ -1,5 +1,5 @@
 export const PROGRESS = {
-  DRAFT: 'Draft',
+  DRAFT: 'DRAFT',
   NOT_STARTED: 'NOT_STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
   BANK_CHECK: 'BANK_CHECK',
@@ -42,4 +42,11 @@ export const FACILITY_PROVIDED_DETAILS = {
   ON_DEMAND: 'On demand or overdraft basis',
   FACTORING: 'Factoring on a  with-recourse basis',
   OTHER: 'Other',
+};
+
+export const AUTHORISATION_LEVEL = {
+  READ: 'READ',
+  COMMENT: 'COMMENT',
+  EDIT: 'EDIT',
+  CHANGE_STATUS: 'CHANGE_STATUS',
 };

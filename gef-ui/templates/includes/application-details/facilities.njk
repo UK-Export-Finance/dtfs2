@@ -19,25 +19,26 @@
     }) }}
   </div>
 </div>
-
-<div class="govuk-button-group">
-  {{ govukButton({
-    text: "Add a cash facility",
-    classes: "govuk-button--secondary",
-    href: applicationId + "/facilities",
-    attributes: {
-      'data-cy': 'add-cash-facility-button'
-    }
-  }) }}
-  {{ govukButton({
-    text: "Add a contingent facility",
-    classes: "govuk-button--secondary",
-    href: applicationId + "/facilities?facilityType=CONTINGENT",
-    attributes: {
-      'data-cy': 'add-contingent-facility-button'
-    }
-  }) }}
-</div>
+{% if not previewMode %}
+  <div class="govuk-button-group">
+    {{ govukButton({
+      text: "Add a cash facility",
+      classes: "govuk-button--secondary",
+      href: applicationId + "/facilities",
+      attributes: {
+        'data-cy': 'add-cash-facility-button'
+      }
+    }) }}
+    {{ govukButton({
+      text: "Add a contingent facility",
+      classes: "govuk-button--secondary",
+      href: applicationId + "/facilities?facilityType=CONTINGENT",
+      attributes: {
+        'data-cy': 'add-contingent-facility-button'
+      }
+    }) }}
+  </div>
+{% endif %}
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
@@ -45,10 +46,12 @@
       <h3 class="govuk-heading-m" data-cy="facility-type-heading">
         {{item.heading}} facility
       </h3>
-      <a
-        class="govuk-link"
-        href="/gef/application-details/{{applicationId}}/facilities/{{item.facilityId}}/confirm-deletion"
-        data-cy="delete-facility">Delete facility</a>
+      {% if not previewMode %}
+        <a
+          class="govuk-link"
+          href="/gef/application-details/{{applicationId}}/facilities/{{item.facilityId}}/confirm-deletion"
+          data-cy="delete-facility">Delete facility</a>
+      {% endif %}
     </header>
     {{ govukSummaryList({
       rows: item.rows,
