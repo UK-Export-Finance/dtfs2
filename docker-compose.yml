@@ -13,90 +13,90 @@ services:
     ports:
       - "27017-27019:27017-27019"
       
-  # dtfs-central-api:
-  #   build: ./dtfs-central-api
-  #   image: dtfs/dtfs-central-api
-  #   restart: always
-  #   depends_on:
-  #     - dtfs-submissions-data
-  #     - reference-data-proxy
-  #   ports:
-  #     - "5005:5005"
-  #   volumes:
-  #     - ./dtfs-central-api/src:/app/src:ro
-  #   environment:
-  #     - PORT=5005
-  #     - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-  #     - MONGO_INITDB_DATABASE=dtfs-submissions
-  #     - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-  #   entrypoint: npx nodemon src/index.js
+  dtfs-central-api:
+    build: ./dtfs-central-api
+    image: dtfs/dtfs-central-api
+    restart: always
+    depends_on:
+      - dtfs-submissions-data
+      - reference-data-proxy
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./dtfs-central-api/src:/app/src:ro
+    environment:
+      - PORT=5005
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+    entrypoint: npx nodemon src/index.js
 
-  # trade-finance-manager-ui:
-  #   build: ./trade-finance-manager-ui
-  #   image: dtfs/trade-finance-manager-ui
-  #   depends_on:
-  #     - trade-finance-manager-api
-  #   ports:
-  #     - "5003:5003"
-  #   volumes:
-  #     - ./trade-finance-manager-ui/scripts:/app/scripts:ro
-  #     - ./trade-finance-manager-ui/styles:/app/styles:ro
-  #     - ./trade-finance-manager-ui/templates:/app/templates:ro
-  #     - ./trade-finance-manager-ui/server:/app/server:ro
-  #   environment:
-  #     - PORT=5003
-  #     - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
-  #     - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-  #     - UKEF_TFM_API_SYSTEM_KEY
-  #     - ESTORE_URL
-  #   command: node dist/server.js
+  trade-finance-manager-ui:
+    build: ./trade-finance-manager-ui
+    image: dtfs/trade-finance-manager-ui
+    depends_on:
+      - trade-finance-manager-api
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./trade-finance-manager-ui/scripts:/app/scripts:ro
+      - ./trade-finance-manager-ui/styles:/app/styles:ro
+      - ./trade-finance-manager-ui/templates:/app/templates:ro
+      - ./trade-finance-manager-ui/server:/app/server:ro
+    environment:
+      - PORT=5003
+      - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - UKEF_TFM_API_SYSTEM_KEY
+      - ESTORE_URL
+    command: node dist/server.js
   
-  # trade-finance-manager-api:
-  #   build: ./trade-finance-manager-api
-  #   image: dtfs/trade-finance-manager-api
-  #   restart: always
-  #   depends_on:
-  #     - portal-api
-  #     - dtfs-central-api
-  #     - reference-data-proxy
-  #   ports:
-  #     - "5004:5004"
-  #   volumes:
-  #     - ./trade-finance-manager-api/src:/app/src:ro
-  #   environment:
-  #     - PORT=5004
-  #     - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-  #     - MONGO_INITDB_DATABASE=dtfs-submissions
-  #     - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-  #     - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-  #     - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-  #     - UKEF_TFM_API_SYSTEM_KEY
-  #     - UKEF_TFM_API_REPORTS_KEY
-  #     - TFM_URI=http://localhost:5003
-  #   entrypoint: npx nodemon src/index.js
+  trade-finance-manager-api:
+    build: ./trade-finance-manager-api
+    image: dtfs/trade-finance-manager-api
+    restart: always
+    depends_on:
+      - portal-api
+      - dtfs-central-api
+      - reference-data-proxy
+    ports:
+      - "5004:5004"
+    volumes:
+      - ./trade-finance-manager-api/src:/app/src:ro
+    environment:
+      - PORT=5004
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - UKEF_TFM_API_SYSTEM_KEY
+      - UKEF_TFM_API_REPORTS_KEY
+      - TFM_URI=http://localhost:5003
+    entrypoint: npx nodemon src/index.js
   
-  # portal:
-  #   build: ./portal
-  #   image: dtfs/portal
-  #   restart: always
-  #   depends_on:
-  #     - redis
-  #     - portal-api
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./portal/scripts:/app/scripts:ro
-  #     - ./portal/styles:/app/styles:ro
-  #     - ./portal/templates:/app/templates:ro
-  #     - ./portal/server:/app/server:ro
-  #   environment:
-  #     - DEAL_API_URL=http://portal-api:5001
-  #     - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-  #     - COMPANIES_HOUSE_API_KEY
-  #     - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-  #     - SESSION_SECRET
-  #     - REDIS_HOSTNAME=redis
-  #   command: node dist/server.js
+  portal:
+    build: ./portal
+    image: dtfs/portal
+    restart: always
+    depends_on:
+      - redis
+      - portal-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./portal/scripts:/app/scripts:ro
+      - ./portal/styles:/app/styles:ro
+      - ./portal/templates:/app/templates:ro
+      - ./portal/server:/app/server:ro
+    environment:
+      - DEAL_API_URL=http://portal-api:5001
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - SESSION_SECRET
+      - REDIS_HOSTNAME=redis
+    command: node dist/server.js
 
   # portal-api:
   #   build: ./portal-api
