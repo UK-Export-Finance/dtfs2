@@ -8,6 +8,8 @@ const { isSuperUser } = require('../../users/checks');
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
 const { CoverTerms } = require('../models/coverTerms');
+const { STATUS } = require('../enums');
+const addSubmissionData = require('./application-submit');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
@@ -98,24 +100,47 @@ exports.update = async (req, res) => {
 };
 
 exports.changeStatus = async (req, res) => {
+  const applicationId = req.params.id;
+
   const enumValidationErr = validatorStatusCheckEnums(req.body);
   if (enumValidationErr) {
-    res.status(422).send(enumValidationErr);
-  } else {
-    const collection = await db.getCollection(applicationCollectionName);
-    const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(req.params.id)) } }, {
-        $set: {
-          status: req.body.status,
-        },
-      }, { returnOriginal: false },
-    );
-    let response;
-    if (result.value) {
-      response = result.value;
-    }
-    res.status(utils.mongoStatus(result)).send(response);
+    return res.status(422).send(enumValidationErr);
   }
+
+  const collection = await db.getCollection(applicationCollectionName);
+  const existingApplication = await collection.findOne({ _id: ObjectId(String(applicationId)) });
+
+  if (!existingApplication) {
+    return res.status(404).send();
+  }
+
+  const { status } = req.body;
+
+  let applicationUpdate = { status };
+
+  // TODO: protect so that only a user with checker role can submit to UKEF.
+  if (status === STATUS.SUBMITTED_TO_UKEF) {
+    const submissionData = await addSubmissionData(applicationId, existingApplication);
+
+    applicationUpdate = {
+      ...applicationUpdate,
+      ...submissionData,
+    };
+  }
+
+  const result = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(String(applicationId)) } }, {
+      $set: applicationUpdate,
+    }, { returnOriginal: false },
+  );
+
+  let response;
+
+  if (result.value) {
+    response = result.value;
+  }
+
+  return res.status(utils.mongoStatus(result)).send(response);
 };
 
 exports.delete = async (req, res) => {
