@@ -119,12 +119,12 @@ const submitDealPUT = async (req, res) => {
     checker,
   } = req.body;
 
-  const dealInit = await submitDeal(dealId, dealType, checker);
+  const deal = await submitDeal(dealId, dealType, checker);
 
-  if (!dealInit) {
+  if (!deal) {
     return res.status(404).send();
   }
 
-  return res.status(200).send(dealInit);
+  return res.status(200).send(deal);
 };
 exports.submitDealPUT = submitDealPUT;
