@@ -171,20 +171,17 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
   });
 
-  it('all tasks in the UNDERWRITERS and UNDERWRITER_MANAGERS teams should be assigned to the lead underwriter', () => {
+  it('assigns all MIA tasks in group 2 and 3 to the lead underwriter', () => {
     cy.login(underwriter);
 
     cy.visit(relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioAllTasks().click();
 
     const expectedTasks = [
-      { groupId: 1, taskId: 5 },
       { groupId: 2, taskId: 1 },
       { groupId: 3, taskId: 1 },
       { groupId: 3, taskId: 2 },
       { groupId: 3, taskId: 3 },
-      { groupId: 4, taskId: 1 },
-      { groupId: 4, taskId: 3 },
     ];
 
     cy.wrap(expectedTasks).each((row) => {
