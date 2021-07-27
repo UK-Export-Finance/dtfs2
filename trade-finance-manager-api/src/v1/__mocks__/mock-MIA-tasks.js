@@ -38,7 +38,7 @@ const MOCK_MIA_TASKS = [
     ],
   },
   {
-    groupTitle: 'Adverse history check',
+    groupTitle: CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
     id: 2,
     groupTasks: [
       {
@@ -50,7 +50,7 @@ const MOCK_MIA_TASKS = [
     ],
   },
   {
-    groupTitle: 'Underwriting',
+    groupTitle: CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
     id: 3,
     groupTasks: [
       {
@@ -74,7 +74,7 @@ const MOCK_MIA_TASKS = [
     ],
   },
   {
-    groupTitle: 'Approvals',
+    groupTitle: CONSTANTS.TASKS.MIA.GROUP_4.GROUP_TITLE,
     id: 4,
     groupTasks: [
       {
