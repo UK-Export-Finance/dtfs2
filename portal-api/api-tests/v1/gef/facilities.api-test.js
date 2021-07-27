@@ -11,18 +11,19 @@ const { as } = require('../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
 const collectionName = 'gef-facilities';
-const allItems = require('../../fixtures/gef/facilities');
+const mockFacilities = require('../../fixtures/gef/facilities');
 
 const applicationCollectionName = 'gef-application';
 const applicationBaseUrl = '/v1/gef/application';
-const applicationAllItems = require('../../fixtures/gef/application');
+const mockApplications = require('../../fixtures/gef/application');
+const { calculateUkefExposure } = require('../../../src/v1/gef/controllers/facilities.controller');
 
 describe(baseUrl, () => {
   // let noRoles;
   let aMaker;
   let aChecker;
   // let anEditor;
-  let applicationItem;
+  let mockApplication;
   let newFacility;
   let completeUpdate;
 
@@ -32,12 +33,12 @@ describe(baseUrl, () => {
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
     // anEditor = testUsers().withRole('editor').one();
-    applicationItem = await as(aMaker).post(applicationAllItems[0]).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
     newFacility = {
       status: STATUS.IN_PROGRESS,
       details: {
         _id: expect.any(String),
-        applicationId: applicationItem.body._id,
+        applicationId: mockApplication.body._id,
         type: expect.any(String),
         hasBeenIssued: false,
         name: null,
@@ -54,6 +55,8 @@ describe(baseUrl, () => {
         paymentType: null,
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
+        ukefExposure: 0,
+        submittedAsIssuedDate: null,
       },
       validation: {
         required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
@@ -89,18 +92,20 @@ describe(baseUrl, () => {
 
     it('returns list of all items', async () => {
       await as(aMaker).post({
-        applicationId: applicationItem.body._id,
+        applicationId: mockApplication.body._id,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
       }).to(baseUrl);
 
       await as(aMaker).post({
-        applicationId: applicationItem.body._id,
+        applicationId: mockApplication.body._id,
         type: FACILITY_TYPE.CONTINGENT,
         hasBeenIssued: false,
       }).to(baseUrl);
 
-      const { body, status } = await as(aChecker).get(baseUrl);
+      const mockQuery = { applicationId: mockApplication.body._id };
+
+      const { body, status } = await as(aChecker).get(baseUrl, mockQuery);
 
       expect(body).toEqual({ status: STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
@@ -108,13 +113,13 @@ describe(baseUrl, () => {
 
     it('returns list of item from the given application ID', async () => {
       await as(aMaker).post({
-        applicationId: applicationItem.body._id,
+        applicationId: mockApplication.body._id,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
       }).to(baseUrl);
 
       await as(aMaker).post({
-        applicationId: applicationItem.body._id,
+        applicationId: mockApplication.body._id,
         type: FACILITY_TYPE.CONTINGENT,
         hasBeenIssued: false,
       }).to(baseUrl);
@@ -125,7 +130,7 @@ describe(baseUrl, () => {
         hasBeenIssued: false,
       }).to(baseUrl);
 
-      const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${applicationItem.body._id}`);
+      const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${mockApplication.body._id}`);
 
       expect(body).toEqual({ status: STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
@@ -147,13 +152,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${item.body.details._id}`);
       expect(status).toEqual(200);
     });
 
     it('returns an individual item', async () => {
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body.details._id}`);
       expect(body).toEqual(newFacility);
     });
@@ -166,17 +171,17 @@ describe(baseUrl, () => {
 
   describe(`POST ${baseUrl}`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(allItems[0]).to(baseUrl);
+      const { status } = await as().post(mockFacilities[0]).to(baseUrl);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { status } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(status).toEqual(201);
     });
 
     it('returns me a new application upon creation', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
   });
@@ -192,15 +197,17 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    it('partially update a facility ', async () => {
+    it('partially updates a facility', async () => {
       const { details } = newFacility;
       const update = {
         hasBeenIssued: false,
         name: 'Matt',
         currency: 'GBP',
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
+
       const expected = {
         status: STATUS.IN_PROGRESS,
         details: {
@@ -226,7 +233,7 @@ describe(baseUrl, () => {
       const secondUpdate = {
         shouldCoverStartOnSubmission: true,
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       // first update - insert start date
       const res1 = await as(aMaker).put(firstUpdate).to(`${baseUrl}/${item.body.details._id}`);
@@ -260,7 +267,7 @@ describe(baseUrl, () => {
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.COMPLETED,
@@ -269,6 +276,7 @@ describe(baseUrl, () => {
           ...update,
           updatedAt: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
+          ukefExposure: calculateUkefExposure(update, {}),
         },
         validation: {
           required: [],
@@ -284,7 +292,7 @@ describe(baseUrl, () => {
       const update = {
         details: ['other'],
       };
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.IN_PROGRESS,
@@ -304,7 +312,7 @@ describe(baseUrl, () => {
 
     it('completely update a facility ', async () => {
       const { details } = newFacility;
-      const item = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: STATUS.COMPLETED,
@@ -314,6 +322,7 @@ describe(baseUrl, () => {
           coverStartDate: null,
           coverEndDate: null,
           updatedAt: expect.any(Number),
+          ukefExposure: calculateUkefExposure(completeUpdate, {}),
         },
         validation: {
           required: [],
@@ -337,15 +346,15 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body.details._id)}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it('removes all items by application ID', async () => {
-      const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { status } = await as(aMaker).remove(`${baseUrl}?applicationId=${applicationItem.body._id}`);
+      const { body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { status } = await as(aMaker).remove(`${baseUrl}?applicationId=${mockApplication.body._id}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
@@ -358,34 +367,43 @@ describe(baseUrl, () => {
 
   describe(`Overall Status: ${baseUrl}`, () => {
     it(`overall status shows as "${STATUS.NOT_STARTED}" if all status is marked as "${STATUS.NOT_STARTED}"`, async () => {
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { body, status } = await as(aMaker).get(baseUrl);
+      await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+      const mockQuery = { applicationId: mockApplication.body._id };
+      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.IN_PROGRESS);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it(`overall status shows as "${STATUS.IN_PROGRESS}" if some status is marked as "${STATUS.IN_PROGRESS}"`, async () => {
-      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item1 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item3 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put({ name: 'test' }).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
-      const { body, status } = await as(aMaker).get(baseUrl);
+
+      const mockQuery = { applicationId: mockApplication.body._id };
+      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.IN_PROGRESS);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it(`overall status shows as "${STATUS.COMPLETED}" if all status is marked as "${STATUS.COMPLETED}"`, async () => {
-      const item1 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const item2 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const item3 = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item1 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item2 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item3 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item2.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
-      const { body, status } = await as(aMaker).get(baseUrl);
+
+      const mockQuery = { applicationId: mockApplication.body._id };
+      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+
       expect(status).toEqual(200);
       expect(body.status).toEqual(STATUS.COMPLETED);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
@@ -395,7 +413,7 @@ describe(baseUrl, () => {
   describe('ENUM errors', () => {
     describe('POST', () => {
       it('returns an enum error when putting the wrong type', async () => {
-        const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'TEST' }).to(baseUrl);
+        const { status, body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([{
           errCode: ERROR.ENUM_ERROR,
@@ -404,7 +422,7 @@ describe(baseUrl, () => {
         }]);
       });
       it('returns an enum error when putting the payment type', async () => {
-        const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: 'CASH', paymentType: 'TEST' }).to(baseUrl);
+        const { status, body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: 'CASH', paymentType: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([{
           errCode: ERROR.ENUM_ERROR,
@@ -415,7 +433,7 @@ describe(baseUrl, () => {
     });
     describe('PUT', () => {
       it('returns an enum error when putting the wrong type', async () => {
-        const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const { body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
         expect(res.body).toEqual([{
@@ -425,7 +443,7 @@ describe(baseUrl, () => {
         }]);
       });
       it('returns an enum error when putting the payment type', async () => {
-        const { body } = await as(aMaker).post({ applicationId: applicationItem.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const { body } = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
         expect(res.body).toEqual([{
@@ -447,12 +465,44 @@ describe(baseUrl, () => {
       }]);
     });
     it('returns an mandator error when facilty type is missing', async () => {
-      const { status, body } = await as(aMaker).post({ applicationId: applicationItem.body._id }).to(baseUrl);
+      const { status, body } = await as(aMaker).post({ applicationId: mockApplication.body._id }).to(baseUrl);
       expect(status).toEqual(422);
       expect(body).toEqual([{
         errCode: ERROR.MANDATORY_FIELD,
         errMsg: 'No Application ID and/or facility type sent with request',
       }]);
+    });
+  });
+  
+  describe('calculateUkefExposure', () => {
+    describe('when value and coverPercentage is present in the requested update', () => {
+      it('should calculate based on the provided values', () => {
+        const update = {
+          value: 1234,
+          coverPercentage: 25,
+        };
+        const existingFacility = {};
+
+        const result = calculateUkefExposure(update, existingFacility);
+
+        const expected = (update.value * update.coverPercentage);
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when value and coverPercentage is NOT present in the requested update', () => {
+      it('should calculate with existing values', () => {
+        const update = {};
+        const existingFacility = {
+          value: 1234,
+          coverPercentage: 25,
+        };
+
+        const result = calculateUkefExposure(update, existingFacility);
+
+        const expected = (existingFacility.value * existingFacility.coverPercentage);
+        expect(result).toEqual(expected);
+      });
     });
   });
 });
