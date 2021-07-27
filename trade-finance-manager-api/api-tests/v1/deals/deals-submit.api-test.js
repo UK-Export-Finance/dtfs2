@@ -19,6 +19,8 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 
+const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
+
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
 ));
@@ -274,6 +276,14 @@ describe('/v1/deals', () => {
           expect(status).toEqual(200);
           expect(body.tfm.estore).toBeDefined();
         });
+      });
+    });
+
+    describe('when dealType is `GEF`', () => {
+      it('should return 404', async () => {
+        const { status } = await api.put({ dealId: MOCK_GEF_DEAL._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(404);
       });
     });
   });
