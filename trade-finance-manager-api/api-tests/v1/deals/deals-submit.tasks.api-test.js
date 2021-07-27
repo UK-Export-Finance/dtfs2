@@ -28,6 +28,11 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+const createSubmitBody = (mockDeal) => ({
+  dealId: mockDeal._id,
+  dealType: 'BSS/EWCS',
+});
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -42,15 +47,15 @@ describe('/v1/deals', () => {
     describe('deal/case tasks', () => {
       describe('when deal is AIN', () => {
         it('adds default AIN tasks to the deal', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.AIN);
         });
 
-        it('should call externalApis.sendEmail  for first task email', async () => {
+        it('should call externalApis.sendEmail for first task email', async () => {
           const dealId = MOCK_DEAL_NO_COMPANIES_HOUSE._id;
-          const { body } = await api.put({ dealId }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE)).to('/v1/deals/submit');
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
@@ -66,7 +71,7 @@ describe('/v1/deals', () => {
               firstTask,
               dealId,
               body.dealSnapshot.submissionDetails['supplier-name'],
-              body.dealSnapshot.detailsukefDealId,
+              body.dealSnapshot.details.ukefDealId,
             ),
           };
 
@@ -80,14 +85,14 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIA', () => {
         it('adds default MIA tasks to the deal', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SUBMITTED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toEqual(DEFAULTS.TASKS.MIA);
         });
 
         it('should call externalApis.sendEmail for first task email', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_MIA_SUBMITTED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
@@ -116,14 +121,14 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIN', () => {
         it('adds NOT add tasks to the deal', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toBeUndefined();
         });
 
         it('should NOT call externalApis.sendEmail', async () => {
-          await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+          await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
           expect(sendEmailApiSpy).not.toHaveBeenCalled();
         });
       });
