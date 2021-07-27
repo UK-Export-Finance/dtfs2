@@ -23,21 +23,31 @@ const convertDealCurrencies = async (deal) => {
   if (contractCurrency && contractCurrency.id !== 'GBP') {
     const currencyExchange = await api.getCurrencyExchangeRate(contractCurrency.id, 'GBP');
 
-    const {
-      midPrice: exchangeRate,
-    } = currencyExchange;
+    let dealUpdate = {};
 
-    const strippedContractValue = Number(contractValue.replace(/,/g, ''));
+    if (currencyExchange.err) {
+      dealUpdate = {
+        tfm: {
+          ...tfm,
+          supplyContractValueInGBP: 'ERR_CURRENCY_EXCHANGE',
+        },
+      };
+    } else {
+      const {
+        midPrice: exchangeRate,
+      } = currencyExchange;
 
-    const supplyContractValueInGBP = strippedContractValue * exchangeRate;
+      const strippedContractValue = Number(contractValue.replace(/,/g, ''));
 
-    const dealUpdate = {
-      tfm: {
-        ...tfm,
-        supplyContractValueInGBP,
-      },
-    };
+      const supplyContractValueInGBP = strippedContractValue * exchangeRate;
 
+      dealUpdate = {
+        tfm: {
+          ...tfm,
+          supplyContractValueInGBP,
+        },
+      };
+    }
 
     const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
