@@ -17,5 +17,11 @@ describe('utils - number', () => {
       const expected = number.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
       expect(result).toEqual(expected);
     });
+
+    it('should return unchanged value if a number is not given', () => {
+      const notNumber = 'abcde';
+      const result = formattedNumber(notNumber);
+      expect(result).toEqual(notNumber);
+    });
   });
 });
