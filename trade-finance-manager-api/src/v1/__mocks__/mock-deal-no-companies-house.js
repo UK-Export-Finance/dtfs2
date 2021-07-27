@@ -1,5 +1,6 @@
 const MOCK_DEAL_NO_COMPANIES_HOUSE = {
   _id: 'NO_COMPANIES_HOUSE',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',

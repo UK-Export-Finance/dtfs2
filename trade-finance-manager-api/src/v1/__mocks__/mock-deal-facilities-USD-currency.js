@@ -2,6 +2,7 @@ const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 
 const MOCK_DEAL = {
   _id: '234567891',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
