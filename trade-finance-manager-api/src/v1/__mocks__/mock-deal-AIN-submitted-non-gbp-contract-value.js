@@ -1,5 +1,6 @@
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   _id: 'AIN_DEAL_SUBMITTED_NON_GBP_CONTRACT_VALUE',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
