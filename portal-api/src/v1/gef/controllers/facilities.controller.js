@@ -52,13 +52,15 @@ exports.getAllGET = async (req, res) => {
 
   const facilities = [];
 
-  doc.forEach((item) => {
-    facilities.push({
-      status: facilitiesStatus(item),
-      details: item,
-      validation: facilitiesValidation(item),
+  if (doc && doc.length) {
+    doc.forEach((item) => {
+      facilities.push({
+        status: facilitiesStatus(item),
+        details: item,
+        validation: facilitiesValidation(item),
+      });
     });
-  });
+  }
 
   res.status(200).send({
     status: facilitiesOverallStatus(facilities),
