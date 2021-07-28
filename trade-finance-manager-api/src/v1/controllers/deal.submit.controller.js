@@ -1,5 +1,5 @@
 const {
-  findOneDeal,
+  findOneTfmDeal,
   findOnePortalDeal,
   findOneGefDeal,
 } = require('./deal.controller');
@@ -39,8 +39,6 @@ const submitDeal = async (dealId, dealType, checker) => {
   if (!deal) {
     return false;
   }
-
-  const { tfm: tfmDeal } = await findOneDeal(dealId);
 
   const { submissionCount } = deal.details;
 
@@ -82,6 +80,8 @@ const submitDeal = async (dealId, dealType, checker) => {
   }
 
   if (dealHasBeenResubmit) {
+    const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
+
     const updatedDeal = await updatedIssuedFacilities(submittedDeal);
 
     if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
