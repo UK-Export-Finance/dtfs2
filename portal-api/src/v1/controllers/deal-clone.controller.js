@@ -86,9 +86,9 @@ exports.clone = async (req, res) => {
       comments: [],
       ukefComments: [],
       specialConditions: [],
-      bondTransactions: DEFAULTS.DEALS.bondTransactions,
-      loanTransactions: DEFAULTS.DEALS.loanTransactions,
-      facilities: DEFAULTS.DEALS.facilities,
+      bondTransactions: DEFAULTS.DEAL.bondTransactions,
+      loanTransactions: DEFAULTS.DEAL.loanTransactions,
+      facilities: DEFAULTS.DEAL.facilities,
     };
 
     if (modifiedDeal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {

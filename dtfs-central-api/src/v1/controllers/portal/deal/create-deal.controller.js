@@ -13,17 +13,17 @@ const createDeal = async (deal, maker) => {
 
   const newDeal = {
     _id: dealId,
-    ...DEFAULTS.DEALS,
+    ...DEFAULTS.DEAL,
     ...deal,
     details: {
-      ...DEFAULTS.DEALS.details,
+      ...DEFAULTS.DEAL.details,
       ...details,
       created: time,
       dateOfLastAction: time,
       maker,
       owningBank: maker && maker.bank,
     },
-    facilities: DEFAULTS.DEALS.facilities,
+    facilities: DEFAULTS.DEAL.facilities,
   };
 
   const validationErrors = getDealErrors(newDeal);
