@@ -15,6 +15,12 @@ const DEFAULTS = {
     editedBy: [],
     facilities: [],
   },
+  DEAL_TFM: {
+    history: {
+      tasks: [],
+      emails: [],
+    },
+  },
 };
 
 module.exports = DEFAULTS;

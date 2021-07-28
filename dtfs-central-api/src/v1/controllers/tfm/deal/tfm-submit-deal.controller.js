@@ -5,6 +5,8 @@ const tfmController = require('./tfm-get-deal.controller');
 
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 
+const DEFAULTS = require('../../../defaults');
+
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
   return cleanedObject;
@@ -12,14 +14,10 @@ const withoutId = (obj) => {
 
 const createDealSnapshot = async (deal) => {
   const collection = await db.getCollection('tfm-deals');
+
   const tfmInit = deal.details.submissionCount === 1
     ? {
-      tfm: {
-        history: {
-          tasks: [],
-          emails: [],
-        },
-      },
+      tfm: DEFAULTS.DEAL_TFM,
     }
     : null;
 
@@ -29,7 +27,6 @@ const createDealSnapshot = async (deal) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    // eslint-disable-next-line no-underscore-dangle
     { _id: deal._id },
     $.flatten(withoutId(update)),
     { returnOriginal: false, upsert: true },
@@ -39,7 +36,6 @@ const createDealSnapshot = async (deal) => {
 };
 
 const createFacilitiesSnapshot = async (deal) => {
-  // eslint-disable-next-line no-underscore-dangle
   const dealFacilities = await findAllFacilitiesByDealId(deal._id);
   const collection = await db.getCollection('tfm-facilities');
 
@@ -51,7 +47,6 @@ const createFacilitiesSnapshot = async (deal) => {
 
   const updatedFacilties = Promise.all(
     dealFacilities.map(async (facility) => collection.findOneAndUpdate(
-    // eslint-disable-next-line no-underscore-dangle
       { _id: facility._id },
       $.flatten({ facilitySnapshot: facility, ...tfmInit }),
       { returnOriginal: false, upsert: true },
@@ -63,10 +58,8 @@ const createFacilitiesSnapshot = async (deal) => {
 
 const submitDeal = async (deal) => {
   await createDealSnapshot(deal);
-  // eslint-disable-next-line no-underscore-dangle
   await createFacilitiesSnapshot(deal);
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await tfmController.findOneDeal(deal._id);
   return updatedDeal;
 };
