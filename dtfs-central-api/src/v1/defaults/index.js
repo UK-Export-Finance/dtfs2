@@ -21,6 +21,7 @@ const DEFAULTS = {
       emails: [],
     },
   },
+  FACILITY_TFM: {},
 };
 
 module.exports = DEFAULTS;
