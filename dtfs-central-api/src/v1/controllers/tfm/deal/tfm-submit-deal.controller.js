@@ -6,16 +6,33 @@ const tfmController = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 
 const DEFAULTS = require('../../../defaults');
+const CONSTANTS = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
   return cleanedObject;
 };
 
+const getSubmissionCount = (deal) => {
+  const { dealType } = deal;
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    return deal.submissionCount;
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    return deal.details.submissionCount;
+  }
+
+  return null;
+};
+
 const createDealSnapshot = async (deal) => {
   const collection = await db.getCollection('tfm-deals');
 
-  const tfmInit = deal.details.submissionCount === 1
+  const submissionCount = getSubmissionCount(deal);
+
+  const tfmInit = submissionCount === 1
     ? {
       tfm: DEFAULTS.DEAL_TFM,
     }
@@ -39,9 +56,11 @@ const createFacilitiesSnapshot = async (deal) => {
   const dealFacilities = await findAllFacilitiesByDealId(deal._id);
   const collection = await db.getCollection('tfm-facilities');
 
-  const tfmInit = deal.details.submissionCount === 1
+  const submissionCount = getSubmissionCount(deal);
+
+  const tfmInit = submissionCount === 1
     ? {
-      tfm: {},
+      tfm: DEFAULTS.FACILITY_TFM,
     }
     : null;
 
