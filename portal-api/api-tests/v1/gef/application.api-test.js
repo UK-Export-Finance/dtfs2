@@ -317,7 +317,7 @@ describe(baseUrl, () => {
         expect(secondPutResponse.body.submissionDate).toEqual(initialSubmissionDate);
       });
 
-      it('adds a ukefFacilityId to each issues facility associated with the application', async () => {
+      it('adds a ukefFacilityId to each issued facility associated with the application', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
         const applicationId = body._id;
@@ -329,14 +329,14 @@ describe(baseUrl, () => {
 
         const facilityId = createFacilityResponse.body.details._id;
 
-        // check that the facility does not already have submittedAsIssuedDate
+        // check that the facility does not already have ukefFacilityId
         expect(createFacilityResponse.body.details.ukefFacilityId).toEqual(null);
 
         // change deal status to submitted
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
 
-        // check that the facility has updated submittedAsIssuedDate
+        // check that the facility has updated ukefFacilityId
         const getFacilityResponse = await as(aMaker).get(`${facilitiesUrl}/${facilityId}`);
         expect(getFacilityResponse.status).toEqual(200);
         expect(getFacilityResponse.body.details.ukefFacilityId).toEqual(expect.any(String));
