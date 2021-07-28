@@ -57,6 +57,7 @@ describe(baseUrl, () => {
         updatedAt: expect.any(Number),
         ukefExposure: 0,
         submittedAsIssuedDate: null,
+        ukefFacilityId: null,
       },
       validation: {
         required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
@@ -473,7 +474,7 @@ describe(baseUrl, () => {
       }]);
     });
   });
-  
+
   describe('calculateUkefExposure', () => {
     describe('when value and coverPercentage is present in the requested update', () => {
       it('should calculate based on the provided values', () => {
