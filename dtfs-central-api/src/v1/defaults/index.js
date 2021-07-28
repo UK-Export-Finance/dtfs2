@@ -1,5 +1,5 @@
 const DEFAULTS = {
-  DEALS: {
+  DEAL: {
     details: {
       status: 'Draft',
     },
