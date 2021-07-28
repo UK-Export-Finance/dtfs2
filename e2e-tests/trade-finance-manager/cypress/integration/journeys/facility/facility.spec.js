@@ -16,6 +16,7 @@ context('Facility page', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        const { dealType } = deal;
 
         const { mockFacilities } = MOCK_DEAL_AIN;
 
@@ -23,7 +24,7 @@ context('Facility page', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId);
+        cy.submitDeal(dealId, dealType);
       });
   });
 

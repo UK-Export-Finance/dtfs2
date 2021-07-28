@@ -3,10 +3,10 @@ const api = () => {
   return url;
 };
 
-module.exports.submitDeal = (dealId) => cy.request({
+module.exports.submitDeal = (dealId, dealType) => cy.request({
   url: `${api()}/v1/deals/submit`,
   method: 'PUT',
-  body: { dealId },
+  body: { dealId, dealType },
   headers: {
     'Content-Type': 'application/json',
   },
