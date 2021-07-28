@@ -54,7 +54,7 @@ jobs:
     needs: build
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
