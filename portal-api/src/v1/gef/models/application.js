@@ -17,6 +17,7 @@ class Application {
       this.submissionType = null;
       this.submissionCount = 0;
       this.submissionDate = null;
+      this.ukefDealId = null;
     } else {
       // Update
       this.updatedAt = Date.now();
@@ -24,6 +25,7 @@ class Application {
       this.submissionType = req.submissionType;
       this.submissionCount = req.submissionCount;
       this.submissionDate = req.submissionDate;
+      this.ukefDealId = req.ukefDealId;
     }
     this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
   }
