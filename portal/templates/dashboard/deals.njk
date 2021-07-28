@@ -7,6 +7,7 @@
 {% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
 {% import '_macros/pagination.njk' as pagination %}
 {% import './_macros/deal-filters.njk' as dashboardFilters %}
+{% import '_macros/status-label.njk' as status %}
 
 {% block pageTitle %}Deals{% endblock %}
 
@@ -67,7 +68,7 @@
             attributes: { "data-cy": "deal__type--" + deal._id }
           },
           {
-            text: deal.status or "-",
+            text: status.getLabel(deal.status),
             attributes: { "data-cy": "deal__status--" + deal._id }
           },
           {
