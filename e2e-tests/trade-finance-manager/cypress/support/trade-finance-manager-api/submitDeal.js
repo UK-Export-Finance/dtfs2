@@ -1,6 +1,6 @@
 const { submitDeal } = require('./api');
 
-module.exports = (dealId) => {
+module.exports = (dealId, dealType) => {
   console.log('submitDeal::');
-  submitDeal(dealId);
+  submitDeal(dealId, dealType);
 };
