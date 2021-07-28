@@ -163,7 +163,6 @@ exports.update = (req, res) => {
           );
         }
 
-
         await api.tfmDealSubmit(
           deal._id, // eslint-disable-line no-underscore-dangle
           CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,

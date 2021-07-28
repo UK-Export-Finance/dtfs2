@@ -51,7 +51,12 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
+
     api.tfmDealSubmit = tfmDealSubmitSpy;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('when the status changes to `Submitted`', () => {
@@ -264,6 +269,8 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
+      await createFacilities(tfmMaker, dealId, completedDeal.mockFacilities);
+
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
@@ -271,11 +278,22 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
-      expect(tfmDealSubmitSpy).toHaveBeenCalledWith(
-        dealId,
-        CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
-        tfmChecker,
-      );
+      const expectedChecker = {
+        _id: expect.any(Object),
+        bank: tfmChecker.bank,
+        email: tfmChecker.email,
+        username: tfmChecker.username,
+        roles: tfmChecker.roles,
+        firstname: tfmChecker.firstname,
+        surname: tfmChecker.surname,
+        timezone: tfmChecker.timezone,
+        lastLogin: expect.any(String),
+        'user-status': 'active',
+      };
+
+      expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);
+      expect(tfmDealSubmitSpy.mock.calls[0][1]).toEqual(CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS);
+      expect(tfmDealSubmitSpy.mock.calls[0][2]).toEqual(expectedChecker);
     });
   });
 

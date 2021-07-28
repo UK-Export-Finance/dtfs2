@@ -32,7 +32,12 @@ describe(baseUrl, () => {
 
   beforeEach(async () => {
     await wipeDB.wipe([collectionName]);
+
     api.tfmDealSubmit = tfmDealSubmitSpy;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe(`GET ${baseUrl}`, () => {
@@ -379,11 +384,22 @@ describe(baseUrl, () => {
 
         await as(aChecker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${applicationId}`);
 
-        expect(tfmDealSubmitSpy).toHaveBeenCalledWith(
-          applicationId,
-          mockApplication.dealType,
-          aChecker,
-        );
+        const expectedChecker = {
+          _id: expect.any(Object),
+          bank: aChecker.bank,
+          email: aChecker.email,
+          username: aChecker.username,
+          roles: aChecker.roles,
+          firstname: aChecker.firstname,
+          surname: aChecker.surname,
+          timezone: aChecker.timezone,
+          lastLogin: expect.any(String),
+          'user-status': 'active',
+        };
+
+        expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(applicationId);
+        expect(tfmDealSubmitSpy.mock.calls[0][1]).toEqual(mockApplication.dealType);
+        expect(tfmDealSubmitSpy.mock.calls[0][2]).toEqual(expectedChecker);
       });
     });
 
