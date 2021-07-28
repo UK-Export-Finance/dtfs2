@@ -28,7 +28,12 @@ const generateUkefDealId = async (application) => {
   };
 };
 
-const generateUkefFacilityId = (facility) => (facility.ukefFacilityId !== null ? facility.ukefFacilityId : generateId('facility'));
+const generateUkefFacilityId = async (facility) => {
+  const ukefFacilityId = facility.ukefFacilityId !== null ? facility.ukefFacilityId : await generateId('facility');
+  return {
+    ukefFacilityId,
+  };
+};
 
 const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
