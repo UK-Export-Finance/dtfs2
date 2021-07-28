@@ -52,6 +52,7 @@ class Facility {
       this.updatedAt = Date.now();
       this.ukefExposure = 0;
       this.submittedAsIssuedDate = null;
+      this.ukefFacilityId = null;
     } else {
       // update application
       if (req.hasBeenIssued != null) {
@@ -110,6 +111,10 @@ class Facility {
 
       if (req.ukefExposure != null) {
         this.ukefExposure = req.ukefExposure;
+      }
+
+      if (req.ukefFacilityId !== null) {
+        this.ukefFacilityId = req.ukefFacilityId;
       }
 
       if (req.submittedAsIssuedDate != null) {
