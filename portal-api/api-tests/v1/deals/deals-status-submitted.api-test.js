@@ -282,27 +282,27 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     it('should call api.tfmDealSubmitSpy', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-      const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      await createFacilities(tfmMaker, dealId, completedDeal.mockFacilities);
+      await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+      await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       const expectedChecker = {
         _id: expect.any(Object),
-        bank: tfmChecker.bank,
-        email: tfmChecker.email,
-        username: tfmChecker.username,
-        roles: tfmChecker.roles,
-        firstname: tfmChecker.firstname,
-        surname: tfmChecker.surname,
-        timezone: tfmChecker.timezone,
+        bank: aBarclaysChecker.bank,
+        email: aBarclaysChecker.email,
+        username: aBarclaysChecker.username,
+        roles: aBarclaysChecker.roles,
+        firstname: aBarclaysChecker.firstname,
+        surname: aBarclaysChecker.surname,
+        timezone: aBarclaysChecker.timezone,
         lastLogin: expect.any(String),
         'user-status': 'active',
       };
