@@ -18,6 +18,16 @@ const generateSubmissionData = async (existingApplication) => {
   return result;
 };
 
+const generateUkefDealId = (application) => {
+  const ukefDealId = application.ukefDealId || 'DEAL001';
+  return ukefDealId;
+};
+
+const generateUkefFacilityId = (facility) => {
+  const ukefFacilityId = facility.ukefFacilityId || 'FACILITY001';
+  return ukefFacilityId;
+};
+
 const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
 
@@ -36,14 +46,35 @@ const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   return facilities;
 };
 
+const addUkefFacilityIdToFacilities = async (applicationId) => {
+  const facilities = await getAllFacilitiesByApplicationId(applicationId);
+
+  facilities.forEach(async (facility) => {
+    const ukefFacilityId = generateUkefFacilityId(facility);
+
+    if (ukefFacilityId !== facility.ukefFacilityId) {
+      const update = {
+        ukefFacilityId,
+      };
+      updateFacility(facility._id, update);
+    }
+  });
+
+  return facilities;
+};
+
+
 const addSubmissionData = async (applicationId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
+  const ukefDealId = generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(applicationId);
+  await addUkefFacilityIdToFacilities(applicationId);
 
   return {
     submissionCount: count,
     submissionDate: date,
+    ukefDealId,
   };
 };
 
