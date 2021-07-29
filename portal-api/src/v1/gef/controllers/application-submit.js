@@ -3,7 +3,6 @@ const {
   getAllFacilitiesByApplicationId,
   update: updateFacility,
 } = require('./facilities.controller');
-const refDataApi = require('../../../reference-data/api');
 
 const generateSubmissionData = async (existingApplication) => {
   const result = {
@@ -19,16 +18,15 @@ const generateSubmissionData = async (existingApplication) => {
   return result;
 };
 
-const generateId = async (entityType) => refDataApi.numberGenerator.create(entityType);
-
-const generateUkefDealId = async (application) => {
-  const ukefDealId = application.ukefDealId !== null ? application.ukefDealId : await generateId('deal');
-  return {
-    ukefDealId,
-  };
+const generateUkefDealId = (application) => {
+  const ukefDealId = application.ukefDealId || 'DEAL001';
+  return ukefDealId;
 };
 
-const generateUkefFacilityId = (facility) => (facility.ukefFacilityId !== null ? facility.ukefFacilityId : generateId('facility'));
+const generateUkefFacilityId = (facility) => {
+  const ukefFacilityId = facility.ukefFacilityId || 'FACILITY001';
+  return ukefFacilityId;
+};
 
 const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
@@ -52,7 +50,7 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
 
   facilities.forEach(async (facility) => {
-    const ukefFacilityId = await generateUkefFacilityId(facility);
+    const ukefFacilityId = generateUkefFacilityId(facility);
 
     if (ukefFacilityId !== facility.ukefFacilityId) {
       const update = {
@@ -68,7 +66,7 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
 
 const addSubmissionData = async (applicationId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
-  const { ukefDealId } = await generateUkefDealId(existingApplication);
+  const ukefDealId = generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(applicationId);
   await addUkefFacilityIdToFacilities(applicationId);
