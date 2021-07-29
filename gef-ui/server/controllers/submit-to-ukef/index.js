@@ -17,7 +17,7 @@ const submitToUkef = async (req, res) => {
   }
 };
 
-const createSubmissionToUkef = async (req, res, next) => {
+const createSubmissionToUkef = async (req, res) => {
   const { params, body } = req;
   const { userToken } = req.session;
   const { applicationId } = params;
@@ -60,7 +60,7 @@ const createSubmissionToUkef = async (req, res, next) => {
     // TODO: Add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk');
   } catch (err) {
-    return next(err);
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
