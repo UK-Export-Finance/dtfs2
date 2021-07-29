@@ -1,5 +1,5 @@
 const dealReducer = require('../reducers/deal');
-const { findOneDeal } = require('../../v1/controllers/deal.controller');
+const { findOneTfmDeal } = require('../../v1/controllers/deal.controller');
 const { filterTasks } = require('./filters/filterTasks');
 
 require('dotenv').config();
@@ -7,7 +7,7 @@ require('dotenv').config();
 const queryDeal = async ({ params }) => {
   const { _id, tasksFilters } = params;
 
-  const deal = await findOneDeal(_id);
+  const deal = await findOneTfmDeal(_id);
 
   const filtered = {
     ...deal,
