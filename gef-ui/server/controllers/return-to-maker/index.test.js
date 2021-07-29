@@ -3,20 +3,15 @@ import {
   postReturnToMaker,
   MAX_COMMENT_LENGTH,
 } from './index';
-import { updateApplication, setApplicationStatus } from '../../services/api';
+import {
+  getApplication, updateApplication, setApplicationStatus, getUserDetails,
+} from '../../services/api';
 import { PROGRESS } from '../../../constants';
 
 jest.mock('../../services/api', () => ({
   __esModule: true,
-  getApplication: jest.fn(() => ({
-    _id: '1234',
-    exporterId: '123',
-    coverTermsId: '123',
-    bankInternalRefName: 'My test',
-  })),
-  getUserDetails: jest.fn(() => ({
-    username: 'checker',
-  })),
+  getApplication: jest.fn(),
+  getUserDetails: jest.fn(),
   setApplicationStatus: jest.fn(),
   updateApplication: jest.fn(),
 }));
@@ -31,6 +26,20 @@ const MockResponse = () => {
 describe('controllers/return-to-maker', () => {
   const mockResponse = new MockResponse();
   let mockRequest;
+
+  beforeEach(() => {
+    getApplication.mockResolvedValue({
+      _id: '1234',
+      status: PROGRESS.BANK_CHECK,
+      exporterId: '123',
+      coverTermsId: '123',
+      bankInternalRefName: 'My test',
+    });
+
+    getUserDetails.mockResolvedValue({
+      username: 'checker',
+    });
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -47,12 +56,22 @@ describe('controllers/return-to-maker', () => {
     });
 
     it('renders submission page as expected', async () => {
-      getReturnToMaker(mockRequest, mockResponse);
+      await getReturnToMaker(mockRequest, mockResponse);
 
+      expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
         applicationId: 'mock-id',
         maxCommentLength: MAX_COMMENT_LENGTH,
       }));
+    });
+
+    it('redirects to dashboard if application is not in correct status', async () => {
+      getApplication.mockResolvedValue({ status: PROGRESS.DRAFT });
+
+      await getReturnToMaker(mockRequest, mockResponse);
+
+      expect(mockResponse.render).not.toHaveBeenCalled();
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard/gef/');
     });
   });
 

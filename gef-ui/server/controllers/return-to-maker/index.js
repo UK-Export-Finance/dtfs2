@@ -6,9 +6,13 @@ import { PROGRESS } from '../../../constants';
 
 export const MAX_COMMENT_LENGTH = 400;
 
-export const getReturnToMaker = (req, res) => {
+export const getReturnToMaker = async (req, res) => {
   const { params } = req;
   const { applicationId } = params;
+  const { status } = await getApplication(applicationId);
+
+  if (status !== PROGRESS.BANK_CHECK) return res.redirect('/dashboard/gef/');
+
   return res.render('partials/return-to-maker.njk', { applicationId, maxCommentLength: MAX_COMMENT_LENGTH });
 };
 
