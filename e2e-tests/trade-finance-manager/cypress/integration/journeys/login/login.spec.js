@@ -14,12 +14,13 @@ context('User can login', () => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        const { dealType } = insertedDeal;
 
         const { mockFacilities } = MOCK_DEAL_AIN;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM);
 
-        cy.submitDeal(dealId);
+        cy.submitDeal(dealId, dealType);
       });
   });
 

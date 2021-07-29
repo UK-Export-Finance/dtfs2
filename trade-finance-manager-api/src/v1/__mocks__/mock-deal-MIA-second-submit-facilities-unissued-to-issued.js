@@ -1,5 +1,6 @@
 const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',

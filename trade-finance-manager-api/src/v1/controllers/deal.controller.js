@@ -33,6 +33,17 @@ const findOnePortalDeal = async (dealId) => {
 };
 exports.findOnePortalDeal = findOnePortalDeal;
 
+const findOneGefDeal = async (dealId) => {
+  const deal = await api.findOneGefDeal(dealId).catch(() => false);
+
+  if (!deal) {
+    return false;
+  }
+
+  return deal;
+};
+exports.findOneGefDeal = findOneGefDeal;
+
 const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   const deal = await findOneDeal(dealId);
 

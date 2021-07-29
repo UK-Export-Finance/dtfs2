@@ -1,5 +1,6 @@
 const MOCK_DEAL_AIN_SUBMITTED = {
   _id: 'AIN_DEAL_SUBMITTED',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',

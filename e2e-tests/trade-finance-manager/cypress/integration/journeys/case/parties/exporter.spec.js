@@ -16,6 +16,7 @@ context('User can view party details', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        const { dealType } = deal;
 
         const { mockFacilities } = MOCK_DEAL_AIN;
 
@@ -23,7 +24,7 @@ context('User can view party details', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId);
+        cy.submitDeal(dealId, dealType);
       });
   });
 

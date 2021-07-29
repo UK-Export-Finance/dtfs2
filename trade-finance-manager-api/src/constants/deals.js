@@ -1,5 +1,6 @@
 const DEAL_TYPE = {
   GEF: 'GEF',
+  BSS_EWCS: 'BSS/EWCS',
 };
 
 const DEAL_PRODUCT_CODE = {

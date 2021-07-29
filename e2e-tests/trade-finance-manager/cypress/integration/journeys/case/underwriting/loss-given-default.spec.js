@@ -17,6 +17,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        const { dealType } = deal;
 
         const { mockFacilities } = MOCK_DEAL_MIA;
 
@@ -24,7 +25,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId);
+        cy.submitDeal(dealId, dealType);
       });
   });
 

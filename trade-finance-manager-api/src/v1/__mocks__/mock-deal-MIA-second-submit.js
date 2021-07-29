@@ -1,5 +1,6 @@
 const MOCK_DEAL = {
   _id: 'MOCK_MIA_SECOND_SUBMIT',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
