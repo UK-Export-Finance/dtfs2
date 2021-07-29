@@ -1,5 +1,6 @@
 const MOCK_DEAL = {
   _id: 'MOCK_MIA_NOT_SUBMITTED',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Ready for Checker\'s approval',
     bank: 'Mock bank',
