@@ -16,6 +16,8 @@ const updateFacilityController = require('../controllers/portal/facility/update-
 const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
 const updateFacilityStatusController = require('../controllers/portal/facility/update-facility-status.controller');
 
+const getGefDealController = require('../controllers/portal/gef-deal/get-deal.controller');
+
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
 portalRouter.use((req, res, next) => {
@@ -84,6 +86,11 @@ portalRouter.route('/facilities/:id')
 portalRouter.route('/facilities/:id/status')
   .put(
     updateFacilityStatusController.updateFacilityStatusPut,
+  );
+
+portalRouter.route('/gef/deals/:id')
+  .get(
+    getGefDealController.findOneDealGet,
   );
 
 module.exports = portalRouter;

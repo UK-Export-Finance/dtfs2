@@ -45,6 +45,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        const { dealType } = deal;
 
         const { mockFacilities } = MOCK_DEAL_MIA;
 
@@ -52,7 +53,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId);
+        cy.submitDeal(dealId, dealType);
       });
   });
 
