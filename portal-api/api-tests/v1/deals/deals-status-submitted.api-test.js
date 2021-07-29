@@ -6,6 +6,7 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
+const externalApis = require('../../../src/reference-data/api');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
@@ -30,6 +31,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let tfmChecker;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
   const originalFacilities = completedDeal.mockFacilities;
+  const MOCK_NUMBER_GENERATOR_ID = 'MOCK_NUMBER_GENERATOR_ID';
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -43,9 +45,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     const barclaysMakerChecker = testUsers().withMultipleRoles('maker', 'checker').withBankName('Barclays Bank').one();
     aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
-
-    tfmMaker = testUsers().withRole('maker').withBankName('UKEF test bank (Delegated)').one();
-    tfmChecker = testUsers().withRole('checker').withBankName('UKEF test bank (Delegated)').one();
   });
 
   beforeEach(async () => {
@@ -53,6 +52,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     await wipeDB.wipe(['facilities']);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
+    externalApis.numberGenerator = {
+      create: () => Promise.resolve(MOCK_NUMBER_GENERATOR_ID),
+    };
   });
 
   afterEach(() => {
@@ -64,9 +66,11 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
-      const dealId = postResult.body._id;
-
       const createdDeal = postResult.body;
+      const dealId = createdDeal._id;
+
+      await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
@@ -95,17 +99,21 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
       const createdDeal = postResult.body;
+      const dealId = createdDeal._id;
+
+      await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(updatedDeal.status).toEqual(200);
       expect(updatedDeal.body).toBeDefined();
 
-      const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+      const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
       expect(body.deal.details.submissionDate).toEqual(mockSubmissionDate);
     });
@@ -114,9 +122,12 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
-      const dealId = postResult.body._id;
 
       const createdDeal = postResult.body;
+      const dealId = createdDeal._id;
+
+      await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
@@ -128,21 +139,24 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       expect(submitDealCall.status).toEqual(200);
       expect(submitDealCall.body).toBeDefined();
 
-      const dealAfterFirstSubmission = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+      const dealAfterFirstSubmission = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
       expect(dealAfterFirstSubmission.body.deal.details.submissionCount).toEqual(1);
 
-      // second submit 
+      // second submit
       const submitDealCallAgain = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(submitDealCallAgain.status).toEqual(200);
       expect(submitDealCallAgain.body).toBeDefined();
 
-      const dealAfterSecondSubmission = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+      const dealAfterSecondSubmission = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
       expect(dealAfterSecondSubmission.body.deal.details.submissionCount).toEqual(2);
     });
 
+    // NOTE: Workflow integration has been disabled and replaced with TFM integration.
+    // Leaving this code here just incase we need to re-enable.
+    /*
     it('creates type_a xml if deal successfully submitted', async () => {
       const files = [
         {
@@ -183,24 +197,26 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       expect(body).toBeDefined();
     });
+    */
   });
 
-  describe('when the status changes to `Submitted` by a TFM enabled checker/bank', () => {
+  describe('when the status changes to `Submitted`', () => {
     it('should add UKEF ids to deal and facilities', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-      const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
      
-      await createFacilities(tfmMaker, dealId, completedDeal.mockFacilities);
-
       const createdDeal = postResult.body;
+
+      await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
+
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      const updatedDeal = await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(updatedDeal.status).toEqual(200);
       expect(updatedDeal.body).toBeDefined();
@@ -208,16 +224,16 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
       expect(body.deal.details.ukefDealId).toBeDefined();
-      expect(typeof body.deal.details.ukefDealId).toEqual('string');
+      expect(body.deal.details.ukefDealId).toEqual(MOCK_NUMBER_GENERATOR_ID);
 
       body.deal.bondTransactions.items.forEach((bond) => {
         expect(bond.ukefFacilityID).toBeDefined();
-        expect(typeof bond.ukefFacilityID).toEqual('string');
+        expect(bond.ukefFacilityID).toEqual(MOCK_NUMBER_GENERATOR_ID);
       });
 
       body.deal.loanTransactions.items.forEach((loan) => {
         expect(loan.ukefFacilityID).toBeDefined();
-        expect(typeof loan.ukefFacilityID).toEqual('string');
+        expect(loan.ukefFacilityID).toEqual(MOCK_NUMBER_GENERATOR_ID);
       });
     });
 
@@ -225,10 +241,10 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       it('should NOT add/change the deal and facilities UKEF ids', async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-        const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
         const dealId = postResult.body._id;
 
-        await createFacilities(tfmMaker, dealId, completedDeal.mockFacilities);
+        await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
         const createdDeal = postResult.body;
 
@@ -238,10 +254,10 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
           confirmSubmit: true,
         };
 
-        const dealAfterFirstSubmission = await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+        const dealAfterFirstSubmission = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
         // second submit
-        await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+        await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
         const dealAfterSecondSubmission = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -297,28 +313,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     });
   });
 
-  describe('when the status changes to `Submitted` on invalid deal', () => {
-    it('return validation errors', async () => {
-      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-
-      submittedDeal.details.previousWorkflowStatus = 'invalid status';
-
-      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
-
-      const createdDeal = postResult.body;
-
-      const statusUpdate = {
-        status: 'Submitted',
-        confirmSubmit: true,
-      };
-
-      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-      expect(updatedDeal.status).toEqual(200);
-      expect(updatedDeal.body.errorCount).toBeGreaterThan(0);
-      expect(updatedDeal.body.errorCount).toEqual(updatedDeal.body.errorList.length);
-    });
-  });
-
   describe('when the status changes to `Submitted` on a deal that has bond facilities with `ready for check` status and cover start dates that are in the past', () => {
     it('return validation errors', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -334,7 +328,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       firstBond.status = 'Ready for check';
       firstBond.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
 
-      await createFacilities(tfmMaker, dealId, [firstBond]);
+      await createFacilities(aBarclaysMaker, dealId, [firstBond]);
 
       const statusUpdate = {
         status: 'Submitted',
@@ -362,7 +356,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       firstLoan.status = 'Ready for check';
       firstLoan.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
 
-      await createFacilities(tfmMaker, dealId, [firstLoan]);
+      await createFacilities(aBarclaysMaker, dealId, [firstLoan]);
 
       const statusUpdate = {
         status: 'Submitted',
@@ -391,7 +385,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         },
       ];
 
-      await createFacilities(tfmMaker, dealId, mockFacilites);
+      await createFacilities(aBarclaysMaker, dealId, mockFacilites);
 
       const statusUpdate = {
         status: 'Submitted',
@@ -427,7 +421,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      await createFacilities(tfmMaker, dealId, completedDeal.mockFacilities);
+      await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
       const statusUpdate = {
         status: 'Ready for Checker\'s approval',
@@ -446,13 +440,13 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         ...completedDeal,
         details: {
           ...completedDeal.details,
-          maker: tfmMaker,
+          maker: aBarclaysMaker,
           submissionType: 'Manual Inclusion Application',
           previousWorkflowStatus: 'approved',
         },
       }));
 
-      const postResult = await as(tfmMaker).post(dealCreatedByMaker).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
       const dealId = postResult.body._id;
 
       const mockFacilites = [
@@ -462,19 +456,19 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         },
       ];
 
-      await createFacilities(tfmMaker, dealId, mockFacilites);
+      await createFacilities(aBarclaysMaker, dealId, mockFacilites);
 
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      const { body, status } = await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+      const { body, status } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(status).toEqual(200);
 
       expect(body.details.manualInclusionNoticeSubmissionDate).toBeDefined();
-      expect(body.details.checkerMIN.username).toEqual(tfmChecker.username);
+      expect(body.details.checkerMIN.username).toEqual(aBarclaysChecker.username);
     });
   });
 });

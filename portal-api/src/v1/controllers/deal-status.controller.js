@@ -1,11 +1,9 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
-const { isTFMBank } = require('./banks.controller');
 
 const { addComment } = require('./deal-comments.controller');
 
 const { userHasAccessTo } = require('../users/checks');
 
-const { createTypeA } = require('./integration/k2-messages');
 const validateStateChange = require('../validation/deal-status');
 
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
@@ -152,36 +150,37 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
-      const useTFM = await (isTFMBank(user.bank && user.bank.id));
-
-      if (useTFM) {
-        if (dealAfterAllUpdates.details.submissionCount === 1) {
-          dealAfterAllUpdates = await createUkefIds(
-            req.params.id,
-            dealAfterAllUpdates,
-            user,
-          );
-        }
-
-        await api.tfmDealSubmit(
-          deal._id, // eslint-disable-line no-underscore-dangle
-          CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
-          req.user,
+      if (dealAfterAllUpdates.details.submissionCount === 1) {
+        dealAfterAllUpdates = await createUkefIds(
+          req.params.id,
+          dealAfterAllUpdates,
+          user,
         );
-      } else {
-        // Integrate with workflow
-        const { previousWorkflowStatus } = deal.details;
-
-        // make sure we have the latest deal in DB with bonds and loans populated
-        const dealLatest = await findOneDeal(deal._id); // eslint-disable-line no-underscore-dangle
-        const typeA = await createTypeA(dealLatest, previousWorkflowStatus);
-
-        if (typeA.errorCount) {
-          // Revert status
-          await updateStatus(req.params.id, toStatus, fromStatus);
-          return res.status(200).send(typeA);
-        }
       }
+
+      await api.tfmDealSubmit(
+        deal._id, // eslint-disable-line no-underscore-dangle
+        CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
+        req.user,
+      );
+
+      /*
+      // NOTE: Workflow integration has been disabled and replaced with TFM integration.
+      // Leaving this code here just incase we need to re-enable.
+      //
+      // Integrate with workflow
+      const { previousWorkflowStatus } = deal.details;
+
+      // make sure we have the latest deal in DB with facilities populated
+      const dealLatest = await findOneDeal(deal._id); // eslint-disable-line no-underscore-dangle
+      const typeA = await createTypeA(dealLatest, previousWorkflowStatus);
+
+      if (typeA.errorCount) {
+        // Revert status
+        await updateStatus(req.params.id, toStatus, fromStatus);
+        return res.status(200).send(typeA);
+      }
+      */
 
       if (
         ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
