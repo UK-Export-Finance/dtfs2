@@ -22,13 +22,17 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgementByDealId } = require('./send-deal-submit-emails');
 
-const submitDeal = async (dealId, dealType, checker) => {
+// TODO: move mappings outside of graphql directory
+// const mapDealSnapshot = require('../../graphql/reducers/mappings/deal/mapDealSnapshot');
+// const mapGefDealSnapshot = require('../../graphql/reducers/mappings/gef-deal/mapGefDealSnapshot');
+
+const getDeal = async (dealId, dealType) => {
   let deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
 
-    // temporarily return false until we map fields for the below api calls.
+    // temporarily return false for dev.
     return false;
   }
 
@@ -36,16 +40,52 @@ const submitDeal = async (dealId, dealType, checker) => {
     deal = await findOnePortalDeal(dealId);
   }
 
+  return deal;
+};
+
+/*
+const mapDeal = (deal) => {
+  let mappedDeal;
+
+  const { dealType } = deal.dealSnapshot;
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    mappedDeal = mapGefDealSnapshot(deal);
+
+    // temporarily return false for dev.
+    return false;
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    mappedDeal = mapDealSnapshot(deal);
+  }
+
+  return mappedDeal;
+};
+*/
+
+const submitDeal = async (dealId, dealType, checker) => {
+  const deal = await getDeal(dealId, dealType);
+
   if (!deal) {
     return false;
   }
+
+
+  // TODO:
+  // 1) use mapDeal (and maybe dealReducer functionality??) to bring both deal types into nice data shape.
+  // 2) update variable names in functions below. Simpler, cleaner. One step closer to unified structure.
+  // 3) extract 'mappings' so it's outside of graphql as it won't be GQL specific
+
+  const submittedDeal = await api.submitDeal(dealId);
+
+  // const mappedDeal = mapDeal(submittedDeal);
 
   const { submissionCount } = deal.details;
 
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
 
-  const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
     await updatePortalDealStatus(deal);
