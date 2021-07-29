@@ -1,5 +1,6 @@
 const DEAL_TYPE = {
   BSS_EWCS: 'BSS/EWCS',
+  GEF: 'GEF',
 };
 
 const SME_TYPE = {
