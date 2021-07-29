@@ -67,7 +67,7 @@
             attributes: { "data-cy": "deal__type--" + deal._id }
           },
           {
-            text: deal.status or "-",
+            text: deal.status | getStatusLabel,
             attributes: { "data-cy": "deal__status--" + deal._id }
           },
           {
