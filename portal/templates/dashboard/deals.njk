@@ -71,7 +71,7 @@
             attributes: { "data-cy": "deal__status--" + deal._id }
           },
           {
-            text: deal.lastUpdate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone),
+            text: deal.lastUpdate | localiseTimestamp("DD/MM/YYYY", user.timezone),
             attributes: { 
               "data-sort-value": deal.lastUpdate,
               'data-cy': 'deal__updated--' + deal._id
@@ -96,7 +96,7 @@
             }
           },
           {
-            text: "BankRef",
+            text: "Bank ref",
             attributes: {
               "data-cy": "deal__header--bankRef"
             }
@@ -124,8 +124,7 @@
             attributes: {
               "aria-sort": "descending",
               "data-cy": "deal__header--updated"
-            },
-            format: "numeric"
+            }
           }
         ],
         rows: items
