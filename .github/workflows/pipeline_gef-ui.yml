@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths: 
     - 'gef-ui/**'
+    - 'portal-api/**'
     - 'e2e-tests/gef/cypress/**'
   schedule:
     # A weekly run to roll up any base image patches, 
