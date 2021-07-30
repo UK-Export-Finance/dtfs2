@@ -4,8 +4,8 @@ import portalPages from '../../../../../../portal/cypress/integration/pages';
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
-const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
-const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
+const MAKER = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
+const CHECKER = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -22,14 +22,14 @@ context('Portal to TFM deal submission', () => {
   before(() => {
     cy.insertManyDeals([
       MOCK_MIA_DEAL_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
+    ], MAKER)
       .then((insertedDeals) => {
         deal = insertedDeals[0];
         dealId = insertedDeals[0]._id;
 
         const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, MAKER).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
       });
@@ -39,7 +39,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(MAKER_LOGIN);
+    cy.login(MAKER);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
@@ -51,7 +51,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.login(CHECKER_LOGIN);
+    cy.login(CHECKER);
     portalPages.contract.visit(deal);
 
     portalPages.contract.status().invoke('text').then((text) => {

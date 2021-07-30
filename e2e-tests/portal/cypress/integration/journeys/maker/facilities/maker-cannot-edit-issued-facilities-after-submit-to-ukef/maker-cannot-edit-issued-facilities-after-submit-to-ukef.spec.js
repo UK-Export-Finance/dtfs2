@@ -8,6 +8,11 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Checker submits a deal with all facility types to UKEF', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
+
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -22,6 +27,16 @@ context('Checker submits a deal with all facility types to UKEF', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const facilitiesToCreate = [
+          ...deal.bondTransactions.items,
+          ...deal.loanTransactions.items,
+        ];
+
+        cy.createFacilities(dealId, facilitiesToCreate, MAKER_LOGIN).then((createdFacilities) => {
+          dealFacilities.bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          dealFacilities.loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+        });
       });
   });
 
@@ -42,8 +57,8 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    deal.bondTransactions.items.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+    dealFacilities.bonds.forEach((bond) => {
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.uniqueNumberLink().should('not.be.visible');
@@ -53,7 +68,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
       bondRow.issueFacilityLink().should('not.be.visible');
     });
 
-    deal.loanTransactions.items.forEach((loan) => {
+    dealFacilities.loans.forEach((loan) => {
       const loanId = loan._id; // eslint-disable-line no-underscore-dangle
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
