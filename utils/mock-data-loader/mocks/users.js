@@ -109,6 +109,18 @@ const USERS = [
       id: '*',
     },
   },
+  {
+    username: 'TEST_EMAIL_NO_GOV_NOTIFY',
+    password: 'AbC!2345',
+    firstname: 'Wolfgang',
+    surname: 'Weisen',
+    email: 'test_no_notify@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: {
+      id: '*',
+    },
+  },
 ];
 
 module.exports = USERS;
