@@ -14,14 +14,7 @@ const insertMocks = async () => {
     bank: MOCKS.BANKS.find((bank) => bank.id === '956'),
   });
 
-  const token2 = await tokenFor({
-    username: 're-insert-mocks-2',
-    password: 'AbC!2345',
-    roles: ['maker', 'editor'],
-    bank: MOCKS.BANKS.find((bank) => bank.id === '964'),
-  });
-
-  const tfmMaker = MOCKS.USERS.find((user) => user.username === 'MAKER-TFM');
+  const tfmMaker = MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER1');
   const tfmMakerToken = await tokenFor({
     ...tfmMaker,
   });
