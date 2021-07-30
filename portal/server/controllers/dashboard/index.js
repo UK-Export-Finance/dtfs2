@@ -51,7 +51,8 @@ export const gefDeals = async (req, res) => {
     product: 'GEF',
     type: '-', // TODO: when types are established this needs to be added into dashboard
     lastUpdate: deal.updatedAt || deal.createdAt,
-  }));
+  }))
+    .sort((a, b) => b.lastUpdate - a.lastUpdate);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
