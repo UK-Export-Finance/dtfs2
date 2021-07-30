@@ -9,6 +9,8 @@ const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
+const api = require('../../../src/v1/api');
+const externalApis = require('../../../src/reference-data/api');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -16,6 +18,7 @@ jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let aBarclaysMaker;
+  let aBarclaysChecker;
   let aSuperuser;
   let updatedDeal;
   let completedDealWithFacilities;
@@ -29,7 +32,6 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
   });
 
   describe('when a deal status changes to `Submitted`', () => {
-    let updatedDeal;
     let dealId;
     let originalFacilities;
 
@@ -91,7 +93,6 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
       'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
       'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
-      uniqueIdentificationNumber: '1234567890',
     });
 
     const unsubmittedIssuedBondWithIssueFacilityDetails = () => ({
@@ -119,6 +120,11 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
       dealId = postResult.body._id;
 
+      api.tfmDealSubmit = () => Promise.resolve();
+      externalApis.numberGenerator = {
+        create: () => Promise.resolve(),
+      };
+
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 
       if (createdFacilities.length) {
@@ -141,7 +147,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(updatedDeal.body).toBeDefined();
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
-        const deal = body.deal;
+        const { deal } = body;
 
         // NOTE: aka - unconditional loans created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
