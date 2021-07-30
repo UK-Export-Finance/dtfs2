@@ -168,6 +168,9 @@ exports.update = (req, res) => {
       // NOTE: Workflow integration has been disabled and replaced with TFM integration.
       // Leaving this code here just incase we need to re-enable.
       //
+      // const useTFM = await (isTFMBank(user.bank && user.bank.id));
+      // if (useTFM) { ... }
+      //
       // Integrate with workflow
       const { previousWorkflowStatus } = deal.details;
 
