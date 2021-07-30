@@ -18,7 +18,7 @@ context('Dashboard Deals pagination controls', () => {
 
     const dummyDeals = new Array(21).fill('').map((_, i) => ({
       bankInternalRefName: `abc-${i + 1}-def`,
-      bankId: '956',
+      bankId: '9',
     }));
 
     cy.insertManyGefApplications(dummyDeals, MAKER_LOGIN)
