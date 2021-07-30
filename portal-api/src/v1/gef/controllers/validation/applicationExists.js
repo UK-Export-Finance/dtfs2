@@ -37,6 +37,7 @@ const validatorStatusCheckEnums = (doc) => {
   switch (doc.status) {
     case STATUS.NOT_STARTED:
     case STATUS.IN_PROGRESS:
+    case STATUS.CHANGES_REQUIRED:
     case STATUS.COMPLETED:
     case STATUS.BANK_CHECK:
     case STATUS.SUBMITTED_TO_UKEF:

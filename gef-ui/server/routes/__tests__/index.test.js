@@ -19,6 +19,7 @@ import providedFacility from '../provided-facility';
 import facilityCurrency from '../facility-currency';
 import facilityValue from '../facility-value';
 import facilityConfirmDeletion from '../facility-confirm-deletion';
+import returnToMaker from '../return-to-maker';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -61,5 +62,6 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(facilityCurrency);
     expect(useSpy).toHaveBeenCalledWith(facilityValue);
     expect(useSpy).toHaveBeenCalledWith(facilityConfirmDeletion);
+    expect(useSpy).toHaveBeenCalledWith(returnToMaker);
   });
 });
