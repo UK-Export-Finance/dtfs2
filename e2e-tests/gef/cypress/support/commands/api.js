@@ -47,9 +47,20 @@ const fetchAllFacilities = (applicationId, token) => cy.request({
   },
 }).then((res) => res);
 
+const setApplicationStatus = (applicationId, token, status) => cy.request({
+  url: `${BASE_URL}/gef/application/status/${applicationId}`,
+  method: 'PUT',
+  body: { status },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
+
 export {
   login,
   fetchAllApplications,
   updateExporter,
   fetchAllFacilities,
+  setApplicationStatus,
 };
