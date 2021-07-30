@@ -20,7 +20,6 @@ module.exports = {
           "maker@ukexportfinance.gov.uk",
           "checker@ukexportfinance.gov.uk"
         ],
-        "useTFM": true
       },
       "lastLogin": "1610710442797",
       "firstname": "Hugo",
@@ -36,7 +35,6 @@ module.exports = {
         "maker@ukexportfinance.gov.uk",
         "checker@ukexportfinance.gov.uk"
       ],
-      "useTFM": true
     },
     "created": "1610719516272",
     "previousStatus": "Ready for Checker's approval",
