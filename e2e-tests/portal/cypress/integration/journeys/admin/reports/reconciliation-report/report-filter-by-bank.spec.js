@@ -124,20 +124,20 @@ context('reconciliation report', () => {
     });
 
     // filter by barclays
-    reconciliationReport.filterByBank().select('956'); //Barclays
+    reconciliationReport.filterByBank().select('9'); // UKEF test bank id
     reconciliationReport.applyFilters().click();
     reconciliationReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');
     });
 
-    reconciliationReport.bank().should( (bank) => { expect(bank).to.contain("Barclays Bank")});
+    reconciliationReport.bank().should((bank) => { expect(bank).to.contain('UKEF test bank (Delegated)')});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("HSBC")});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("LLOYDS")});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("RBS")});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("Santander")});
-    reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("UKEF test bank (Delegated)")});
+    reconciliationReport.bank().should((bank) => { expect(bank).not.to.contain('UKEF test bank (Delegated) 2')});
 
-    reconciliationReport.filterByBank().should('have.value', '956');
+    reconciliationReport.filterByBank().should('have.value', '9'); // UKEF test bank id
 
     // can repeat this for other filters but not obvious how much value that brings
     //  i guess it proves we have all the right options as per the ACs... but not obvious it brings that much value..
