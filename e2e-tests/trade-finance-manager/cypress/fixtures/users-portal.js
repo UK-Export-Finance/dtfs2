@@ -1,5 +1,5 @@
 const MOCK_MAKER_TFM = {
-  username: 'MAKER-TFM',
+  username: 'BANK1_MAKER1',
   password: 'AbC!2345',
   firstname: 'Tamil',
   surname: 'Rahani',

@@ -5,8 +5,8 @@ const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
-const HSBC_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+const BANK2_MAKER = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
 
 // test data we want to set up + work with..
 let {
@@ -19,7 +19,7 @@ let {
  } = require('../../../../../fixtures/transaction-dashboard-data');
 
 context('Audit - Report', () => {
-  let barclaysDeals, hsbcDeals;
+  let bank1Deals, bank2Deals;
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -31,14 +31,14 @@ context('Audit - Report', () => {
 
   before(() => {
     cy.deleteDeals(ADMIN_LOGIN);
-    cy.deleteDeals(BARCLAYS_LOGIN);
-    cy.deleteDeals(HSBC_LOGIN);
+    cy.deleteDeals(BANK1_MAKER);
+    cy.deleteDeals(BANK2_MAKER);
 
-    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BARCLAYS_LOGIN)
-      .then((insertedDeals) => barclaysDeals = insertedDeals);
+    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BANK1_MAKER)
+      .then((insertedDeals) => bank1Deals = insertedDeals);
 
-    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], HSBC_LOGIN)
-      .then((insertedDeals) => hsbcDeals = insertedDeals);
+    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], BANK2_MAKER)
+      .then((insertedDeals) => bank2Deals = insertedDeals);
   });
 
   it('can be filtered by bank', () => {
@@ -52,8 +52,8 @@ context('Audit - Report', () => {
       expect(text.trim()).equal('(6 items)');
     });
 
-    // filter by barclays
-    auditSupplyContracts.filterByBank().select('956'); //Barclays
+    // filter by TFM Bank 1
+    auditSupplyContracts.filterByBank().select('9'); // TFM Bank 1 id
     auditSupplyContracts.applyFilters().click();
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');

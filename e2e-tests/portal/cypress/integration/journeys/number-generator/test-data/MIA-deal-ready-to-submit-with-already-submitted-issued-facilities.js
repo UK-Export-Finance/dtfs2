@@ -14,11 +14,11 @@ const deal = {
         "maker"
       ],
       "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
         "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
+          "maker@ukexportfinance.gov.uk",
+          "checker@ukexportfinance.gov.uk"
         ]
       },
       "lastLogin": "1600768753486",
@@ -29,13 +29,13 @@ const deal = {
       "user-status": "active",
     },
     "owningBank": {
-      "id": "956",
-      "name": "Barclays Bank",
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
       "emails": [
-        "maker4@ukexportfinance.gov.uk",
-        "checker4@ukexportfinance.gov.uk"
+        "maker@ukexportfinance.gov.uk",
+        "checker@ukexportfinance.gov.uk"
       ]
-    },
+    }
     "submissionType": "Manual Inclusion Application",
     "previousStatus": "Draft"
   },
@@ -262,11 +262,11 @@ const deal = {
           "maker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank",
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
           "emails": [
-            "maker4@ukexportfinance.gov.uk",
-            "checker4@ukexportfinance.gov.uk"
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
           ]
         },
         "lastLogin": "1600768753486",
@@ -280,203 +280,7 @@ const deal = {
       "text": "test"
     }
   ],
-  "editedBy": [
-    {
-      "date": "1600769151437",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769160763",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769166593",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769166636",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769173143",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769176510",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769191058",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769207376",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769216103",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769222568",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769229788",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769233650",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    },
-    {
-      "date": "1600769366595",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-    }
-  ],
+  "editedBy": [],
   "mandatoryCriteria": [
     {
       "id": "1",

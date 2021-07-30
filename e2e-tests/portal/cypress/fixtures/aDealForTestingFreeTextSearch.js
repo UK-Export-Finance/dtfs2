@@ -5,11 +5,11 @@ module.exports = {
     submissionType: 'Automatic Inclusion Notice',
     status: 'Draft',
     owningBank: {
-      id: '956',
-      name: 'Barclays Bank',
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
       emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
       ],
     },
     ukefDealId: 'A-deal-id-FROM_UKEF',

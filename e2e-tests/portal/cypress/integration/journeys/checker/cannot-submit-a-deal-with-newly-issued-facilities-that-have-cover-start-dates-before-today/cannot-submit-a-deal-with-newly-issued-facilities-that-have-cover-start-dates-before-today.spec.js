@@ -3,8 +3,8 @@ const relative = require('../../../relativeURL');
 const theDeal = require('./deal');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 // DTFS2-2839
 context('Checker tries to submit a deal that has changed/newly issued facilities (in `Ready for check` status) with cover start dates that are not `today`', () => {

@@ -4,7 +4,7 @@ const { auditSupplyContracts } = reports;
 const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const BARCLAYS_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const BARCLAYS_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 const hsbc_makers = mockUsers.filter(user => (user.roles.includes('maker') && user.bank.name === 'HSBC'));
 const HSBC_MAKER_1 = hsbc_makers[0];
 const HSBC_MAKER_2 = hsbc_makers[1];

@@ -12,8 +12,8 @@ import {
 import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT from './test-data/dealWithUnissuedBondReadyToSubmit';
 
-const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
-const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
+const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
 // Cypress.config('tfmUrl') returns incorrect url...
 const tfmRootUrl = 'http://localhost:5003';

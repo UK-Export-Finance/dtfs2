@@ -8,8 +8,8 @@ import MOCK_PORTAL_USERS from '../../../../../../portal/cypress/fixtures/mockUse
 import MOCK_TFM_USERS from '../../../../../../trade-finance-manager/cypress/fixtures/users';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
-const MAKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
-const CHECKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
+const MAKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const CHECKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
 
 context('Portal to TFM deal submission', () => {

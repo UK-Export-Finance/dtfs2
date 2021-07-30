@@ -280,7 +280,7 @@ describe('/v1/deals', () => {
           surname: 'User',
           roles: ['checker'],
           timezone: 'Europe/London',
-          username: 'CHECKER-TFM',
+          username: 'BANK1_CHECKER1',
         };
 
         const { status, body } = await api.put({
