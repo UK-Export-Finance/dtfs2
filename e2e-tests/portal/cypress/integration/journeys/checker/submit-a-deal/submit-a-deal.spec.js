@@ -18,8 +18,8 @@ context('A checker selects to submit a contract from the view-contract page', ()
   let goodDeal;
   let badDealInvalidLoanCoverStartDate;
   let badDealInvalidBondCoverStartDate;
-  let submittedDealBondCoverStartDateInThePast;
-  let submittedDealLoanCoverStartDateInThePast;
+  let dealBondCoverStartDateInThePast;
+  let dealLoanCoverStartDateInThePast;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -41,8 +41,37 @@ context('A checker selects to submit a contract from the view-contract page', ()
         goodDeal=insertedDeals[0];
         badDealInvalidLoanCoverStartDate=insertedDeals[1];
         badDealInvalidBondCoverStartDate = insertedDeals[2];
-        submittedDealBondCoverStartDateInThePast = insertedDeals[3];
-        submittedDealLoanCoverStartDateInThePast = insertedDeals[4];
+        dealBondCoverStartDateInThePast = insertedDeals[3];
+        dealLoanCoverStartDateInThePast = insertedDeals[4];
+
+        const goodDealFacilities = [
+          ...goodDeal.bondTransactions.items,
+          ...goodDeal.loanTransactions.items,
+        ];
+
+        cy.createFacilities(goodDeal._id, goodDealFacilities, MAKER_LOGIN);
+
+        const dealBondCoverStartDateInThePastFacilities = [
+          ...dealBondCoverStartDateInThePast.bondTransactions.items,
+          ...dealBondCoverStartDateInThePast.loanTransactions.items,
+        ];
+
+        cy.createFacilities(
+          dealBondCoverStartDateInThePast._id,
+          dealBondCoverStartDateInThePastFacilities,
+          MAKER_LOGIN,
+        );
+
+        const dealLoanCoverStartDateInThePastFacilities = [
+          ...dealLoanCoverStartDateInThePast.bondTransactions.items,
+          ...dealLoanCoverStartDateInThePast.loanTransactions.items,
+        ];
+
+        cy.createFacilities(
+          dealLoanCoverStartDateInThePast._id,
+          dealLoanCoverStartDateInThePastFacilities,
+          MAKER_LOGIN,
+        );
       });
   });
 
@@ -57,7 +86,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // check we've gone to the right page
     cy.url().should('eq', relative(`/contract/${goodDeal._id}`));
-  });
+  }); 
 
   it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     // log in, visit a deal, select abandon
@@ -125,7 +154,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
       cy.login(CHECKER_LOGIN);
-      contract.visit(submittedDealBondCoverStartDateInThePast);
+      contract.visit(dealBondCoverStartDateInThePast);
       contract.proceedToSubmit().click();
 
       // submit with checkbox checked
@@ -144,7 +173,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
       cy.login(CHECKER_LOGIN);
-      contract.visit(submittedDealLoanCoverStartDateInThePast);
+      contract.visit(dealLoanCoverStartDateInThePast);
       contract.proceedToSubmit().click();
 
       // submit with checkbox checked
@@ -179,16 +208,10 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);
     contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
     contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Ready for Checker's approval");
+      expect(text.trim()).to.equal('Submitted');
     });
-
-    // cy.downloadFile( deal, {...checker}).then( (typeA) =>{
-    //   expect(typeA).not.to.equal('');
-    // });
-
   });
-
 });
