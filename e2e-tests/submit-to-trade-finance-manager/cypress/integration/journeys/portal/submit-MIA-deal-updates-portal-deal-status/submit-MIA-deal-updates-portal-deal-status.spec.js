@@ -6,7 +6,6 @@ import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubm
 
 const MAKER = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
 const CHECKER = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
-const UNDERWRITER_MANAGER = MOCK_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
 
 context('Portal to TFM deal submission', () => {
   let deal;
