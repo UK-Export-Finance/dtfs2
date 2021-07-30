@@ -1,5 +1,6 @@
 const MOCK_DEAL_NO_PARTY_DB = {
   _id: 'NO_PARTY_DB',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',

@@ -1,4 +1,5 @@
 const APPLICATION = [{
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 1',
@@ -11,6 +12,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 2',
@@ -23,6 +25,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 3',
@@ -35,6 +38,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 4',
@@ -47,6 +51,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 5',
@@ -59,6 +64,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 6',
@@ -71,6 +77,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 7',
@@ -83,6 +90,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 8',
@@ -95,6 +103,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 9',
@@ -107,6 +116,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 10',
@@ -119,6 +129,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 11',
@@ -131,6 +142,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 12',
@@ -143,6 +155,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 13',
@@ -155,6 +168,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 14',
@@ -167,6 +181,7 @@ const APPLICATION = [{
   updatedAt: null,
   submissionCount: 0,
 }, {
+  dealType: 'GEF',
   userId: null,
   bankId: null,
   bankInternalRefName: 'Bank 15',

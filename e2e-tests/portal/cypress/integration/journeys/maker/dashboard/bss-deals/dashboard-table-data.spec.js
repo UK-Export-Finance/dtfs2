@@ -5,7 +5,7 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 // slight oddity- this test seems to need a straight 'maker'; so filtering slightly more than in other tests..
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.roles.length === 1));
 
-const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/;
+const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d]/;
 
 context('View a deal', () => {
   context('no checker', () => {

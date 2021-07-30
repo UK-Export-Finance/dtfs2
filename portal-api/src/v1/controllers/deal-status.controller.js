@@ -163,9 +163,9 @@ exports.update = (req, res) => {
           );
         }
 
-        // Integrate with TFM
         await api.tfmDealSubmit(
           deal._id, // eslint-disable-line no-underscore-dangle
+          CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
           req.user,
         );
       } else {

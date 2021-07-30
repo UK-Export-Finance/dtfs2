@@ -37,7 +37,7 @@ const updateExporter = (exporterId, token, address) => cy.request({
 
 const fetchAllFacilities = (applicationId, token) => cy.request({
   url: `${BASE_URL}/gef/facilities`,
-  params: {
+  qs: {
     applicationId,
   },
   method: 'GET',

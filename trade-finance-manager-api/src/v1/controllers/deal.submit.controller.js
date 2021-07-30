@@ -1,6 +1,7 @@
 const {
   findOneDeal,
   findOnePortalDeal,
+  findOneGefDeal,
 } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -21,16 +22,27 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgementByDealId } = require('./send-deal-submit-emails');
 
-const submitDeal = async (dealId, portalChecker) => {
-  const portalDeal = await findOnePortalDeal(dealId);
+const submitDeal = async (dealId, dealType, checker) => {
+  let deal;
 
-  if (!portalDeal) {
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    deal = await findOneGefDeal(dealId);
+
+    // temporarily return false until we map fields for the below api calls.
+    return false;
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    deal = await findOnePortalDeal(dealId);
+  }
+
+  if (!deal) {
     return false;
   }
 
   const { tfm: tfmDeal } = await findOneDeal(dealId);
 
-  const { submissionCount } = portalDeal.details;
+  const { submissionCount } = deal.details;
 
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
@@ -38,7 +50,7 @@ const submitDeal = async (dealId, portalChecker) => {
   const submittedDeal = await api.submitDeal(dealId);
 
   if (firstDealSubmission) {
-    await updatePortalDealStatus(portalDeal);
+    await updatePortalDealStatus(deal);
 
     const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
@@ -56,8 +68,8 @@ const submitDeal = async (dealId, portalChecker) => {
 
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
@@ -72,14 +84,14 @@ const submitDeal = async (dealId, portalChecker) => {
   if (dealHasBeenResubmit) {
     const updatedDeal = await updatedIssuedFacilities(submittedDeal);
 
-    if (portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || portalDeal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
     ) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
-    if (shouldUpdateDealFromMIAtoMIN(portalDeal, tfmDeal)) {
-      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, portalChecker);
+    if (shouldUpdateDealFromMIAtoMIN(deal, tfmDeal)) {
+      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, checker);
 
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
@@ -103,15 +115,16 @@ exports.submitDeal = submitDeal;
 const submitDealPUT = async (req, res) => {
   const {
     dealId,
-    portalChecker,
+    dealType,
+    checker,
   } = req.body;
 
-  const dealInit = await submitDeal(dealId, portalChecker);
+  const deal = await submitDeal(dealId, dealType, checker);
 
-  if (!dealInit) {
+  if (!deal) {
     return res.status(404).send();
   }
 
-  return res.status(200).send(dealInit);
+  return res.status(200).send(deal);
 };
 exports.submitDealPUT = submitDealPUT;
