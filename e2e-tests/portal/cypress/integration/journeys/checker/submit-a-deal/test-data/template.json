@@ -108,6 +108,7 @@
     "bondTransactions": {
       "items": [
       {
+        "facilityType": "bond",
         "bondIssuer": "Issuer",
         "bondType": "Advance payment guarantee",
         "facilityStage": "Unissued",
@@ -132,6 +133,7 @@
   "loanTransactions": {
     "items": [
       {
+        "facilityType": "loan",
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "8888888",
         "guaranteeFeePayableByBank": "18.0000",

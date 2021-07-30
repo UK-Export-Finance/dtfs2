@@ -114,13 +114,17 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
     //---------------------------------------------------------------
-    // deal and facility status should be updated to `Submitted`
+    // deal status should be updated to `Acknowledged by UKEF`
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
+
+    //---------------------------------------------------------------
+    // facility statuses should be updated to `Submitted`
+    //---------------------------------------------------------------
 
     bondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');

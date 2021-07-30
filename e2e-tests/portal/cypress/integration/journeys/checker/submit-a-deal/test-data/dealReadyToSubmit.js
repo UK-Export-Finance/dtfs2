@@ -9,6 +9,8 @@ module.exports = () => {
   // between my bits of test data, so updating 1 deal would cause the other to update..
   const deal = JSON.parse(JSON.stringify(dealThatJustNeedsConversionDate()));
 
+  deal.details.submissionCount = 0;
+
   deal.submissionDetails['supplyContractConversionDate-day'] = `${now.format('DD')}`;
   deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
   deal.submissionDetails['supplyContractConversionDate-year'] = `${now.format('YYYY')}`;
