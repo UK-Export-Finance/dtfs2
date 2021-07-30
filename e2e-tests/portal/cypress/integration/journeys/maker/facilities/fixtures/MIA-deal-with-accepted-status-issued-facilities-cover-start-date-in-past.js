@@ -34,7 +34,7 @@ const deal = {
         "maker@ukexportfinance.gov.uk",
         "checker@ukexportfinance.gov.uk"
       ]
-    }
+    },
     "submissionType": "Manual Inclusion Application",
     "previousStatus": "Ready for Checker's approval",
     "checker": {

@@ -34,7 +34,7 @@ const deal = {
         "maker@ukexportfinance.gov.uk",
         "checker@ukexportfinance.gov.uk"
       ]
-    }
+    },
     "submissionType": "Automatic Inclusion Notice",
     "previousStatus": "Draft"
   },

@@ -35,7 +35,7 @@ const deal = {
         "maker@ukexportfinance.gov.uk",
         "checker@ukexportfinance.gov.uk"
       ]
-    }
+    },
     "created": "1599048723110",
     "previousStatus": "Ready for Checker's approval",
     "checker": {
