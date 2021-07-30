@@ -12,7 +12,7 @@ const {
   ISSUED_LOAN_DATE_VALUE,
 } = require('../../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('Maker fills in bond & loan issue facility forms without requested cover start date and submits the deal for checker review', () => {
   let deal;

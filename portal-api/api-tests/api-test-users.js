@@ -36,7 +36,6 @@ const banks = {
       'maker1@ukexportfinance.gov.uk',
       'checker1@ukexportfinance.gov.uk',
     ],
-    useTFM: true,
   },
   any: {
     id: '*',

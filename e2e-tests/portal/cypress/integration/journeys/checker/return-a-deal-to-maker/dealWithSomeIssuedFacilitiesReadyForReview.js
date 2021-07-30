@@ -12,8 +12,8 @@ const deal = {
     submissionDate: moment().utc().valueOf(),
     "previousStatus": "Acknowledged by UKEF",
     owningBank: {
-      id: '956',
-      name: 'Barclays Bank',
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
     },
   },
   "eligibility": {

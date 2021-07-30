@@ -2,10 +2,10 @@ const { reports } = require('../../../../pages');
 const { auditSupplyContracts } = reports;
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
-const hsbc_makers = mockUsers.filter( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
-const HSBC_MAKER_1 = hsbc_makers[0];
-const HSBC_MAKER_2 = hsbc_makers[1];
+const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+const BANK2_MAKERS = mockUsers.filter(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
+const BANK2_MAKER_1 = BANK2_MAKERS[0];
+const BANK2_MAKER_2 = BANK2_MAKERS[1];
 
 // test data we want to set up + work with..
 let {
@@ -29,22 +29,22 @@ context('Audit - Report', () => {
   });
 
   before(() => {
-    cy.deleteDeals(BARCLAYS_LOGIN);
-    cy.deleteDeals(HSBC_MAKER_1);
-    cy.deleteDeals(HSBC_MAKER_2);
+    cy.deleteDeals(BANK1_MAKER);
+    cy.deleteDeals(BANK2_MAKER_1);
+    cy.deleteDeals(BANK2_MAKER_2);
 
-    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans], BARCLAYS_LOGIN)
+    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans], BANK1_MAKER)
       .then((insertedDeals) => barclaysDeals = insertedDeals);
 
-    cy.insertManyDeals([aDealWithTenLoansAndTenBonds, aDealWithOneLoan], HSBC_MAKER_1)
+    cy.insertManyDeals([aDealWithTenLoansAndTenBonds, aDealWithOneLoan], BANK2_MAKER_1)
       .then((insertedDeals) => hsbcDeals.push(insertedDeals));
 
-    cy.insertManyDeals([aDealWithOneLoanAndOneBond, aDealWithTenLoans], HSBC_MAKER_2)
+    cy.insertManyDeals([aDealWithOneLoanAndOneBond, aDealWithTenLoans], BANK2_MAKER_2)
       .then((insertedDeals) => hsbcDeals.push(insertedDeals));
   });
 
   it('can be filtered by bank', () => {
-    cy.login(HSBC_MAKER_1);
+    cy.login(BANK2_MAKER_1);
     auditSupplyContracts.visit();
 
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
