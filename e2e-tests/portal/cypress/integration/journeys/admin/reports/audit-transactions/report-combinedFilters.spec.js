@@ -18,6 +18,9 @@ let {
   aDealWithTenLoansAndTenBonds,
  } = require('../../../../../fixtures/transaction-dashboard-data');
 
+
+ // ??????????????????????????
+
 context('Audit - Transactions Report (viewed by an admin user)', () => {
   let barclaysDeals, hsbcDeals;
 
@@ -30,23 +33,22 @@ context('Audit - Transactions Report (viewed by an admin user)', () => {
   });
 
   before(() => {
+    cy.deleteDeals(ADMIN_LOGIN);
     cy.deleteDeals(BANK1_MAKER);
     cy.deleteDeals(BANK2_MAKER);
+    // cy.deleteDeals();
 
-    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BANK1_MAKER)
-      .then((insertedDeals) => barclaysDeals = insertedDeals);
+    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BANK1_MAKER);
 
-    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], BANK2_MAKER)
-      .then((insertedDeals) => hsbcDeals = insertedDeals);
-
+    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], BANK2_MAKER);
   });
 
   it('works with multiple filters', () => {
     cy.login(ADMIN_LOGIN);
     auditTransactionsReport.visit();
 
-    // filter -> hsbc
-    auditTransactionsReport.filterByBank().select('961'); // HSBC. for some reason.
+    // filter -> UKEF test bank
+    auditTransactionsReport.filterByBank().select('9'); // UKEF test bank id
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(13 items)');

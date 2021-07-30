@@ -53,20 +53,20 @@ context('Audit - Report', () => {
     });
 
     // filter by TFM Bank 1
-    auditSupplyContracts.filterByBank().select('9'); // TFM Bank 1 id
+    auditSupplyContracts.filterByBank().select('9'); // UKEF test bank id
     auditSupplyContracts.applyFilters().click();
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');
     });
 
-    auditSupplyContracts.bank().should( (bank) => { expect(bank).to.contain("Barclays Bank")});
+    auditSupplyContracts.bank().should((bank) => { expect(bank).to.contain('UKEF test bank (Delegated)')});
     auditSupplyContracts.bank().should( (bank) => { expect(bank).not.to.contain("HSBC")});
     auditSupplyContracts.bank().should( (bank) => { expect(bank).not.to.contain("LLOYDS")});
     auditSupplyContracts.bank().should( (bank) => { expect(bank).not.to.contain("RBS")});
     auditSupplyContracts.bank().should( (bank) => { expect(bank).not.to.contain("Santander")});
-    auditSupplyContracts.bank().should( (bank) => { expect(bank).not.to.contain("UKEF test bank (Delegated)")});
+    auditSupplyContracts.bank().should( (bank) => { expect(bank).not.to.contain("UKEF test bank (Delegated) 2")});
 
-    auditSupplyContracts.filterByBank().should('have.value', '956');
+    auditSupplyContracts.filterByBank().should('have.value', '9'); // UKEF test bank id
 
     // can repeat this for other filters but not obvious how much value that brings
     //  i guess it proves we have all the right options as per the ACs... but not obvious it brings that much value..
