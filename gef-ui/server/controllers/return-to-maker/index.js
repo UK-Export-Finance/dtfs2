@@ -11,7 +11,10 @@ export const getReturnToMaker = async (req, res) => {
   const { applicationId } = params;
   const { status } = await getApplication(applicationId);
 
-  if (status !== PROGRESS.BANK_CHECK) return res.redirect('/dashboard/gef/');
+  if (status !== PROGRESS.BANK_CHECK) {
+    console.log('Incorrect status or permissions, redirecting to dashboard');
+    return res.redirect('/dashboard/gef/');
+  }
 
   return res.render('partials/return-to-maker.njk', { applicationId, maxCommentLength: MAX_COMMENT_LENGTH });
 };

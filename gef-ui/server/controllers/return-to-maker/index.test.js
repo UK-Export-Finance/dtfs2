@@ -52,6 +52,9 @@ describe('controllers/return-to-maker', () => {
           applicationId: 'mock-id',
         },
         query: {},
+        session: {
+          user: { roles: ['CHECKER'] },
+        },
       };
     });
 
