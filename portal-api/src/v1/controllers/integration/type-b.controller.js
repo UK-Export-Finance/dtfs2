@@ -1,4 +1,8 @@
-const xml2js = require('xml2js');
+// NOTE: Workflow integration has been disabled and replaced with TFM integration.
+// Leaving this code here just incase we need to re-enable.
+// const xml2js = require('xml2js');
+const xml2js = { parseStringPromise: () => {} };
+
 const dealController = require('../deal.controller');
 const dealCommentsController = require('../deal-comments.controller');
 const logController = require('../log-controller');

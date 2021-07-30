@@ -30,7 +30,7 @@
     "url": "https://github.com/notbinary/dtfs2/issues"
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
@@ -48,9 +48,7 @@
     "graphql-middleware": "^4.0.2",
     "graphql-tools": "^6.2.5",
     "is-port-reachable": "^3.0.0",
-    "js2xmlparser": "4.0.1",
     "jsonwebtoken": "8.5.1",
-    "libxmljs": "^0.19.7",
     "moment": "2.24.0",
     "moment-timezone": "0.5.31",
     "mongo-dot-notation": "2.0.0",
@@ -62,7 +60,6 @@
     "notifications-node-client": "^4.8.0",
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
-    "xml2js": "^0.4.23",
     "xss": "^1.0.8"
   },
   "devDependencies": {
