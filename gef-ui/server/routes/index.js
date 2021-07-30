@@ -20,6 +20,7 @@ import providedFacilityRoutes from './provided-facility';
 import facilityCurrencyRoutes from './facility-currency';
 import facilityValueRoutes from './facility-value';
 import facilityConfirmDeletionRoutes from './facility-confirm-deletion';
+import returnToMaker from './return-to-maker';
 
 const router = express.Router();
 
@@ -44,5 +45,6 @@ router.use(providedFacilityRoutes);
 router.use(facilityCurrencyRoutes);
 router.use(facilityValueRoutes);
 router.use(facilityConfirmDeletionRoutes);
+router.use(returnToMaker);
 
 export default router;
