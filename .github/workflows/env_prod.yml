@@ -27,9 +27,6 @@ env:
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
-  # Scheduler switched off until LIVE
-  DTFS_PORTAL_SCHEDULER: false
-  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
 # Below this line should be the same for all environments
 
@@ -427,7 +424,7 @@ jobs:
             --name tfs-${{ env.environment }}-mongo \
             --kind MongoDB \
             --enable-virtual-network true \
-            --server-version 3.6
+            --server-version 4.0
           
     - name: Add mongo service endpoints
       uses: Azure/cli@v1.0.0
@@ -1408,8 +1405,8 @@ jobs:
               JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
-              DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
-              FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
+              DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
+              FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ secrets.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               TFM_API="http://$tfm_api_url" \
@@ -2463,6 +2460,7 @@ jobs:
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
+  
   
   
   
