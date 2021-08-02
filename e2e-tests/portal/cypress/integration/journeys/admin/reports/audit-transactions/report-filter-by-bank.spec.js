@@ -5,8 +5,8 @@ const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
-const HSBC_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+const BANK2_MAKER = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
 
 // test data we want to set up + work with..
 let {aDealWithOneBond, aDealWithOneLoan, aDealWithOneLoanAndOneBond} = require('../../../../../fixtures/transaction-dashboard-data');
@@ -23,16 +23,16 @@ context('Audit - Transactions Report (viewed by an admin user)', () => {
   });
 
   before(() => {
-    cy.deleteDeals(BARCLAYS_LOGIN);
-    cy.deleteDeals(HSBC_LOGIN);
+    cy.deleteDeals(BANK1_MAKER);
+    cy.deleteDeals(BANK2_MAKER);
 
-    cy.insertOneDeal(aDealWithOneBond, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneBond, BANK1_MAKER)
       .then( (inserted) => {aDealWithOneBond = inserted});
 
-    cy.insertOneDeal(aDealWithOneLoan, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneLoan, BANK1_MAKER)
       .then( (inserted) => {aDealWithOneLoan = inserted});
 
-    cy.insertOneDeal(aDealWithOneLoanAndOneBond, HSBC_LOGIN)
+    cy.insertOneDeal(aDealWithOneLoanAndOneBond, BANK2_MAKER)
       .then( (inserted) => {aDealWithOneLoanAndOneBond = inserted});
 
   });
@@ -41,13 +41,13 @@ context('Audit - Transactions Report (viewed by an admin user)', () => {
     cy.login(ADMIN_LOGIN);
     auditTransactionsReport.visit();
 
-    auditTransactionsReport.filterByBank().select('956'); // Barclays. for some reason.
+    auditTransactionsReport.filterByBank().select('9'); // TFM Bank 1 id
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(2 items)');
     });
 
-    auditTransactionsReport.filterByBank().select('961'); // HSBC. for some reason.
+    auditTransactionsReport.filterByBank().select('10'); // TFM Bank 2 id
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(2 items)');

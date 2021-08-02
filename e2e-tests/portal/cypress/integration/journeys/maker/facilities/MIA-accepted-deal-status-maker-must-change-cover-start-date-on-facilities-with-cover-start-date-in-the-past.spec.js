@@ -6,7 +6,7 @@ const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('.
 const mockUsers = require('../../../../fixtures/mockUsers');
 const { formattedTimestamp } = require('../../../../../../../portal-api/src/v1/facility-dates/timestamp');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;

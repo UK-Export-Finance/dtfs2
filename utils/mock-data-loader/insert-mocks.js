@@ -14,11 +14,9 @@ const insertMocks = async () => {
     bank: MOCKS.BANKS.find((bank) => bank.id === '956'),
   });
 
-  const token2 = await tokenFor({
-    username: 're-insert-mocks-2',
-    password: 'AbC!2345',
-    roles: ['maker', 'editor'],
-    bank: MOCKS.BANKS.find((bank) => bank.id === '964'),
+  const tfmMaker = MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER1');
+  const tfmMakerToken = await tokenFor({
+    ...tfmMaker,
   });
 
   console.log('inserting users');
@@ -43,30 +41,21 @@ const insertMocks = async () => {
   }
 
   console.log('inserting deals');
-  let tfmBankDeal;
 
-  for (contract of MOCKS.CONTRACTS) {
-    const createdDeal = await api.createDeal(contract, token);
-    if (contract.details.owningBank.useTFM) {
-      tfmBankDeal = createdDeal;
+  for (contract of MOCKS.DEALS) {
+    const createdDeal = await api.createDeal(contract, tfmMakerToken);
+
+    console.log('inserting deal facilites into central');
+
+    for (facility of MOCKS.FACILITIES) {
+      const createdFacility = await centralApi.createFacility(facility, createdDeal._id, tfmMakerToken);
+      const facilityWithDealId = {
+        ...facility,
+        associatedDealId: createdDeal._id
+      };
+      await centralApi.updateFacility(createdFacility._id, facilityWithDealId, tfmMakerToken);
     }
   }
-
-  console.log('inserting facilites into central');
-  const tfmMaker = MOCKS.USERS.find((user) => user.username === 'MAKER-TFM');
-
-  for (facility of MOCKS.FACILITIES) {
-    const createdFacility = await centralApi.createFacility(facility, tfmBankDeal._id, tfmMaker);
-    const facilityWithDealId = {
-      ...facility,
-      associatedDealId: tfmBankDeal._id
-    };
-    await centralApi.updateFacility(createdFacility._id, facilityWithDealId, tfmMaker);
-  }
-
-  // Add a deal from a different bank for testing
-  console.log('inserting a deal from a different bank for testing');
-  await api.createDeal(MOCKS.CONTRACTS[0], token2);
 };
 
 module.exports = insertMocks;

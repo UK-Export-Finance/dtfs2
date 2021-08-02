@@ -9,8 +9,8 @@ const deal = {
     "dateOfLastAction": "1596805840467",
     "submissionType": "Automatic Inclusion Notice",
     owningBank: {
-      id: '956',
-      name: 'Barclays Bank',
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
     },
   },
   "eligibility": {

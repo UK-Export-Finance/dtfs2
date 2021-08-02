@@ -14,11 +14,11 @@ const deal = {
         "maker"
       ],
       "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
         "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
+          "maker@ukexportfinance.gov.uk",
+          "checker@ukexportfinance.gov.uk"
         ]
       },
       "lastLogin": moment().utc().valueOf(),
@@ -29,19 +29,23 @@ const deal = {
       "user-status": "active",
     },
     "owningBank": {
-      "id": "956",
-      "name": "Barclays Bank",
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
       "emails": [
-        "maker4@ukexportfinance.gov.uk",
-        "checker4@ukexportfinance.gov.uk"
+        "maker@ukexportfinance.gov.uk",
+        "checker@ukexportfinance.gov.uk"
       ]
     },
     "created": "1599048723110",
     "previousStatus": "Ready for Checker's approval",
     "checker": {
       "bank": {
-        "id": "956",
-        "name": "Barclays Bank"
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
+        "emails": [
+          "maker@ukexportfinance.gov.uk",
+          "checker@ukexportfinance.gov.uk"
+        ]
       },
       "email": "checker@ukexportfinance.gov.uk",
       "firstname": "Emilio",
@@ -274,11 +278,11 @@ const deal = {
           "maker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank",
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
           "emails": [
-            "maker4@ukexportfinance.gov.uk",
-            "checker4@ukexportfinance.gov.uk"
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
           ]
         },
         "lastLogin": "1599049060901",
@@ -298,8 +302,12 @@ const deal = {
           "checker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank"
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
+          "emails": [
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
+          ]
         },
         "lastLogin": "1599048724584",
         "firstname": "Emilio",
@@ -318,11 +326,11 @@ const deal = {
           "maker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank",
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
           "emails": [
-            "maker4@ukexportfinance.gov.uk",
-            "checker4@ukexportfinance.gov.uk"
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
           ]
         },
         "lastLogin": "1599048728874",
@@ -342,11 +350,11 @@ const deal = {
           "maker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank",
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
           "emails": [
-            "maker4@ukexportfinance.gov.uk",
-            "checker4@ukexportfinance.gov.uk"
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
           ]
         },
         "lastLogin": "1597782864959",
