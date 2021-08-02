@@ -1,7 +1,7 @@
 .config
 .npm
 .idea
-gef-ui/.env
+.env
 pipeline.log
 dist
 node_modules

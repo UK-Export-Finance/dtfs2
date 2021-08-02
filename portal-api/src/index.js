@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 require('./azure-env');
 
 const app = require('./createApp');
