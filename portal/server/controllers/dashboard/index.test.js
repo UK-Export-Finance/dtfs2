@@ -1,8 +1,12 @@
 import { bssDeals, gefDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
+import api from '../../api';
 
-jest.mock('../../api');
+jest.mock('../../api', () => ({
+  allDeals: jest.fn(),
+  gefDeals: jest.fn(),
+}));
 jest.mock('../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
@@ -22,7 +26,10 @@ describe('controllers/dashboard', () => {
       params: { page: 1 },
       session: {
         dashboardFilters: 'mock-filters',
-        user: 'mock-user',
+        user: {
+          id: 'mock-user',
+          roles: ['maker', 'checker'],
+        },
       },
     };
 
@@ -42,39 +49,84 @@ describe('controllers/dashboard', () => {
         },
         primaryNav: 'home',
         tab: 'bssDeals',
-        user: 'mock-user',
+        user: {
+          id: 'mock-user',
+          roles: ['maker', 'checker'],
+        },
       });
+    });
+
+    it('adds filter if user is a checker', async () => {
+      req.session.user.roles = ['checker'];
+
+      await bssDeals(req, res);
+
+      expect(api.allDeals).toHaveBeenCalledWith(20, 20, [{
+        field: 'status',
+        value: "Ready for Checker's approval",
+      }], 'mock-token');
     });
   });
 
   describe('gefDeals', () => {
     it('renders the correct template', async () => {
       getApiData.mockResolvedValue({
-        count: 1,
-        deals: [{
-          _id: 'mockDeal',
-          exporter: { companyName: 'mock company' },
-        }],
+        count: 2,
+        deals: [
+          {
+            _id: 'mockDeal',
+            exporter: { companyName: 'mock company' },
+            createdAt: 1234,
+          },
+          {
+            _id: 'mockDeal2',
+            exporter: { companyName: 'mock company' },
+            createdAt: 5678,
+          },
+        ],
       });
 
       await gefDeals(req, res);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-        deals: [{
-          _id: 'mockDeal',
-          exporter: 'mock company',
-          product: 'GEF',
-          type: '-',
-        }],
+        deals: [
+          {
+            _id: 'mockDeal2',
+            exporter: 'mock company',
+            product: 'GEF',
+            type: '-',
+            lastUpdate: 5678,
+          },
+          {
+            _id: 'mockDeal',
+            exporter: 'mock company',
+            product: 'GEF',
+            type: '-',
+            lastUpdate: 1234,
+          }],
         pages: {
           totalPages: 1,
           currentPage: 1,
-          totalItems: 1,
+          totalItems: 2,
         },
         primaryNav: 'home',
         tab: 'gefDeals',
-        user: 'mock-user',
+        user: {
+          id: 'mock-user',
+          roles: ['maker', 'checker'],
+        },
       });
+    });
+
+    it('adds filter if user is a checker', async () => {
+      req.session.user.roles = ['checker'];
+
+      await gefDeals(req, res);
+
+      expect(api.gefDeals).toHaveBeenCalledWith(20, 20, [{
+        field: 'status',
+        value: 'BANK_CHECK',
+      }], 'mock-token');
     });
   });
 });
