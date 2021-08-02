@@ -14,9 +14,9 @@ const getPartyUrn = async ({ companyRegNo }) => {
 };
 
 const identifyDealParties = (deal) => ({
-  hasExporter: Boolean(deal.submissionDetails['supplier-name']),
-  hasBuyer: Boolean(deal.submissionDetails['buyer-name']),
-  hasIndemnifier: Boolean(deal.submissionDetails['indemnifier-name']),
+  hasExporter: Boolean(deal.exporter.companyName),
+  hasBuyer: Boolean(deal.buyer.name),
+  hasIndemnifier: Boolean(deal.indemnifier.name),
   hasAgent: Boolean(deal.eligibility.agentName),
 });
 
@@ -34,7 +34,7 @@ const addPartyUrns = async (deal) => {
 
   const {
     hasExporter, hasIndemnifier, hasAgent, hasBuyer,
-  } = identifyDealParties(deal.dealSnapshot);
+  } = identifyDealParties(deal);
 
   const dealUpdate = {
     tfm: {
@@ -43,7 +43,7 @@ const addPartyUrns = async (deal) => {
         ...parties,
         exporter: {
           ...exporter,
-          partyUrn: await getPartyUrn({ companyRegNo: deal.dealSnapshot.submissionDetails['supplier-companies-house-registration-number'] }),
+          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber }),
           partyUrnRequired: hasExporter,
         },
         buyer: {
@@ -64,6 +64,10 @@ const addPartyUrns = async (deal) => {
 
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(deal._id, dealUpdate);
-  return updatedDeal;
+
+  return {
+    ...deal,
+    tfm: updatedDeal.tfm,
+  };
 };
 exports.addPartyUrns = addPartyUrns;
