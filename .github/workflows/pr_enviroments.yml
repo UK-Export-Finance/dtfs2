@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: No
+    name: Run PR tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
