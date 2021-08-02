@@ -7,8 +7,8 @@ const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
-const HSBC_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+const BANK2_MAKER = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
 
 // test data we want to set up + work with..
 let {aDealWithOneBond, aDealWithOneLoan, aDealWithOneLoanAndOneBond} = require('../../../../../fixtures/transaction-dashboard-data');
@@ -29,39 +29,39 @@ context('reconciliation report', () => {
   });
 
   before(() => {
-    cy.deleteDeals(BARCLAYS_LOGIN); // getting ugly but this report will pick up -anything- lying around
-    cy.deleteDeals(HSBC_LOGIN);     //   so have to clean out any data created by the users in previous tests...
+    cy.deleteDeals(BANK1_MAKER); // getting ugly but this report will pick up -anything- lying around
+    cy.deleteDeals(BANK2_MAKER);     //   so have to clean out any data created by the users in previous tests...
 
-    cy.insertOneDeal(aDealWithOneBond, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneBond, BANK1_MAKER)
       .then( (inserted) => {
         cy.updateDeal(inserted._id, {
           details: {
             submissionDate: toBigNumber("2020-01-01"),
             status: "Submitted"
           }
-        }, BARCLAYS_LOGIN)
+        }, BANK1_MAKER)
           .then( (updated) => {aDealWithOneBond = updated});
       });
 
-    cy.insertOneDeal(aDealWithOneLoan, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneLoan, BANK1_MAKER)
       .then( (inserted) => {
         cy.updateDeal(inserted._id, {
           details: {
             submissionDate: toBigNumber("2020-01-03"),
             status: "Submitted"
           }
-        }, BARCLAYS_LOGIN)
+        }, BANK1_MAKER)
           .then( (updated) => {aDealWithOneLoan = updated});
       });
 
-    cy.insertOneDeal(aDealWithOneLoanAndOneBond, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneLoanAndOneBond, BANK1_MAKER)
       .then( (inserted) => {
         cy.updateDeal(inserted._id, {
           details: {
             submissionDate: toBigNumber("2020-01-05"),
             status: "Submitted"
           }
-        }, BARCLAYS_LOGIN)
+        }, BANK1_MAKER)
           .then( (updated) => {aDealWithOneLoanAndOneBond = updated});
       });
 

@@ -1,8 +1,8 @@
 const pages = require('../../pages');
 const mockUsers = require('../../../fixtures/mockUsers');
 
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 

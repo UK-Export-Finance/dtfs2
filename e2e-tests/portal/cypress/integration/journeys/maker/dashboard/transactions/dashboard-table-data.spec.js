@@ -48,7 +48,8 @@ context('View a deal', () => {
     transactionDashboard.facilityIssuedDateResults().should('contain', '17/09/2020');
     transactionDashboard.facilityIssuedDateResults().should('contain', '-');
 
-    transactionDashboard.makerResults().should('contain', 'Hugo Drax');
+    const makeFullName = `${MAKER_LOGIN.firstname} ${MAKER_LOGIN.surname}`;
+    transactionDashboard.makerResults().should('contain', makeFullName);
 
     // not sure what should go here right now; checker who submitted the deal? checker who submitted a facility? don't know..
     // transactionDashboard.checkerResults().should('contain', '-');

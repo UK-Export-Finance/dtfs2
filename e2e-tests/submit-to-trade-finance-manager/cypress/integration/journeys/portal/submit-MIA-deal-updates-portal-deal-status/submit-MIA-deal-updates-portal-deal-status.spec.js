@@ -4,8 +4,8 @@ import portalPages from '../../../../../../portal/cypress/integration/pages';
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
-const MAKER = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
-const CHECKER = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
+const MAKER = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const CHECKER = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
 context('Portal to TFM deal submission', () => {
   let deal;

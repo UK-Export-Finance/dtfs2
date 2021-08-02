@@ -13,11 +13,11 @@ const deal = {
         "maker"
       ],
       "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
         "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
+          "maker@ukexportfinance.gov.uk",
+          "checker@ukexportfinance.gov.uk"
         ]
       },
       "lastLogin": moment().utc().valueOf(),
@@ -28,11 +28,11 @@ const deal = {
       "user-status": "active",
     },
     "owningBank": {
-      "id": "956",
-      "name": "Barclays Bank",
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
       "emails": [
-        "maker4@ukexportfinance.gov.uk",
-        "checker4@ukexportfinance.gov.uk"
+        "maker@ukexportfinance.gov.uk",
+        "checker@ukexportfinance.gov.uk"
       ]
     },
     "submissionType": "Automatic Inclusion Notice",
@@ -262,11 +262,11 @@ const deal = {
           "maker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank",
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
           "emails": [
-            "maker4@ukexportfinance.gov.uk",
-            "checker4@ukexportfinance.gov.uk"
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
           ]
         },
         "lastLogin": "1598021249183",

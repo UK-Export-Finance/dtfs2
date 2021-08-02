@@ -140,18 +140,13 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by bank name', () => {
-    // in this e2e test, all deals have the same bank name. When deal is created,
-    // deal.details.owningBank is generated from the maker/user profile.
-    const makerTfmBankName = MOCK_MAKER_TFM.bank.name;
-    const bankNamePartialString = 'UKEF test bank';
-
-    const searchString = bankNamePartialString;
+    const searchString = 'UKEF test bank';
 
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();
 
     const dealsWithMakerTfmBank = ALL_SUBMITTED_DEALS.filter((deal) =>
-      deal.dealSnapshot.details.owningBank.name === makerTfmBankName);
+      deal.dealSnapshot.details.owningBank.name.includes(searchString));
 
     pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerTfmBank.length);
 

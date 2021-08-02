@@ -2,7 +2,7 @@ const USERS = require('./users');
 const BANKS = require('./banks');
 const MANDATORY_CRITERIA = require('./mandatoryCriteria');
 const ELIGIBILITY_CRITERIA = require('./eligibilityCriteria');
-const CONTRACTS = require('./contracts');
+const DEALS = require('./deals');
 const FACILITIES = require('./facilities');
 
 const MOCKS = {
@@ -10,7 +10,7 @@ const MOCKS = {
   BANKS,
   ELIGIBILITY_CRITERIA,
   MANDATORY_CRITERIA,
-  CONTRACTS,
+  DEALS,
   FACILITIES,
 };
 

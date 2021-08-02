@@ -5,8 +5,8 @@ const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
-const HSBC_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+const BANK2_MAKER = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
 
 // test data we want to set up + work with..
 let {
@@ -17,6 +17,7 @@ let {
   aDealWithTenLoans,
   aDealWithTenLoansAndTenBonds,
  } = require('../../../../../fixtures/transaction-dashboard-data');
+
 
 context('Audit - Transactions Report (viewed by an admin user)', () => {
   let barclaysDeals, hsbcDeals;
@@ -30,40 +31,39 @@ context('Audit - Transactions Report (viewed by an admin user)', () => {
   });
 
   before(() => {
-    cy.deleteDeals(BARCLAYS_LOGIN);
-    cy.deleteDeals(HSBC_LOGIN);
+    cy.deleteDeals(ADMIN_LOGIN);
+    cy.deleteDeals(BANK1_MAKER);
+    cy.deleteDeals(BANK2_MAKER);
+    // cy.deleteDeals();
 
-    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BARCLAYS_LOGIN)
-      .then((insertedDeals) => barclaysDeals = insertedDeals);
+    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BANK1_MAKER);
 
-    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], HSBC_LOGIN)
-      .then((insertedDeals) => hsbcDeals = insertedDeals);
-
+    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], BANK2_MAKER);
   });
 
   it('works with multiple filters', () => {
     cy.login(ADMIN_LOGIN);
     auditTransactionsReport.visit();
 
-    // filter -> hsbc
-    auditTransactionsReport.filterByBank().select('961'); // HSBC. for some reason.
+    // filter -> UKEF test bank
+    auditTransactionsReport.filterByBank().select('9'); // UKEF test bank id
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(13 items)');
+      expect(text.trim()).equal('(31 items)');
     });
 
     // select a stage
     auditTransactionsReport.filterByFacilityStage().select('unissued_conditional');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(7 items)');
+      expect(text.trim()).equal('(15 items)');
     });
 
     // filter by ukef id
     auditTransactionsReport.filterByUKEFSupplyContractId().type('{selectall}{backspace}ukef:adealwithten');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(5 items)');
+      expect(text.trim()).equal('(15 items)');
     });
 
     // -> created before the industrial revolution
