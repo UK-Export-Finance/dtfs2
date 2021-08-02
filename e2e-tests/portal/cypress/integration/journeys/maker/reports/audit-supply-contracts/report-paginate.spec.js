@@ -4,18 +4,12 @@ const { auditSupplyContracts } = reports;
 const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const BARCLAYS_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const hsbc_makers = mockUsers.filter(user => (user.roles.includes('maker') && user.bank.name === 'HSBC'));
-const HSBC_MAKER_1 = hsbc_makers[0];
-const HSBC_MAKER_2 = hsbc_makers[1];
+const BANK_MAKER_1 = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 const { aDealWithOneLoan } = require('../../../../../fixtures/transaction-dashboard-data');
 
 context('Audit - Report', () => {
-  // let barclaysDeals, hsbcDeals = [];
-  let hsbcDeals = [
-
-  ];
+  const submittedDeals = [];
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -26,19 +20,17 @@ context('Audit - Report', () => {
   });
 
   before(() => {
-    cy.deleteDeals(BARCLAYS_LOGIN);
-    cy.deleteDeals(HSBC_MAKER_1);
-    cy.deleteDeals(HSBC_MAKER_2);
+    cy.deleteDeals(BANK_MAKER_1);
 
-    const twentyTwoHsbcDeals = Array.from({ length: 21 }, () => (aDealWithOneLoan));
+    const twentyTwoDeals = Array.from({ length: 21 }, () => (aDealWithOneLoan));
 
-    cy.insertManyDeals(twentyTwoHsbcDeals, HSBC_MAKER_1)
-      .then((insertedDeals) => hsbcDeals.push(insertedDeals));
+    cy.insertManyDeals(twentyTwoDeals, BANK_MAKER_1)
+      .then((insertedDeals) => submittedDeals.push(insertedDeals));
   });
 
   describe('when applying a filter on a results page that is not the first page', () => {
     it('should redirect to the first page', () => {
-      cy.login(HSBC_MAKER_1);
+      cy.login(BANK_MAKER_1);
       auditSupplyContracts.visit();
 
       cy.url().should('eq', relative('/reports/audit-supply-contracts/0'));
