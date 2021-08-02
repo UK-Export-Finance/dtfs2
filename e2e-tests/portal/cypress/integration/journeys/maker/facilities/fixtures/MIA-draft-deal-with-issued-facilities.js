@@ -13,11 +13,11 @@ const deal = {
         "maker"
       ],
       "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
         "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
+          "maker@ukexportfinance.gov.uk",
+          "checker@ukexportfinance.gov.uk"
         ]
       },
       "lastLogin": moment().utc().valueOf(),
@@ -28,11 +28,11 @@ const deal = {
       "user-status": "active",
     },
     "owningBank": {
-      "id": "956",
-      "name": "Barclays Bank",
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
       "emails": [
-        "maker4@ukexportfinance.gov.uk",
-        "checker4@ukexportfinance.gov.uk"
+        "maker@ukexportfinance.gov.uk",
+        "checker@ukexportfinance.gov.uk"
       ]
     },
     "submissionType": "Manual Inclusion Application"
@@ -235,232 +235,7 @@ const deal = {
   ],
   "summary": {},
   "comments": [],
-  "editedBy": [
-    {
-      "date": "1603803284319",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803294956",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803302571",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803313387",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803321677",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803326979",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803343590",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803352336",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803357884",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803362237",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803364201",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803385718",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803393941",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    },
-    {
-      "date": "1603803396804",
-      "username": "MAKER",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
-        "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
-        ]
-      },
-      "userId": "5f9800d8d02e15023b8012f4"
-    }
-  ],
+  "editedBy": [],
   "mandatoryCriteria": [
     {
       "id": "1",

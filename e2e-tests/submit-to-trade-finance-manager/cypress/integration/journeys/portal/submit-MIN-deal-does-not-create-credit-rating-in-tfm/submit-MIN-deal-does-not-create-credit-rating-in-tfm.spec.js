@@ -6,8 +6,8 @@ import tfmPages from '../../../../../../trade-finance-manager/cypress/integratio
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
-const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'MAKER-TFM'));
-const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'CHECKER-TFM'));
+const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
 context('Portal to TFM deal submission', () => {
   let deal;

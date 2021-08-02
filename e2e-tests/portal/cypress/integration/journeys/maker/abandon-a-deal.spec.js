@@ -3,7 +3,7 @@ const { successMessage } = require('../../partials');
 const relative = require('../../relativeURL');
 const mockUsers = require('../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');

@@ -7,6 +7,8 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const incompleteDeal = require('../../fixtures/deal-with-incomplete-about-section.json');
 const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
 const createFacilities = require('../../createFacilities');
+const api = require('../../../src/v1/api');
+const externalApis = require('../../../src/reference-data/api');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
@@ -45,6 +47,11 @@ describe('/v1/deals/:id/status', () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
     sendStatusUpdateEmails.mockClear();
+
+    api.tfmDealSubmit = () => Promise.resolve();
+    externalApis.numberGenerator = {
+      create: () => Promise.resolve(),
+    };
   });
 
   describe('GET /v1/deals/:id/status', () => {

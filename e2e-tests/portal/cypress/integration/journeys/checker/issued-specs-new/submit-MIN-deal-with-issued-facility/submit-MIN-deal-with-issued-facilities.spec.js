@@ -9,8 +9,8 @@ const {
   fillAndSubmitIssueLoanFacilityForm,
 } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('A maker issues facilities, submits to checker; checker submits deal to UKEF', () => {
   let deal;
@@ -114,13 +114,17 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
     //---------------------------------------------------------------
-    // deal and facility status should be updated to `Submitted`
+    // deal status should be updated to `Acknowledged by UKEF`
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
+
+    //---------------------------------------------------------------
+    // facility statuses should be updated to `Submitted`
+    //---------------------------------------------------------------
 
     bondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');

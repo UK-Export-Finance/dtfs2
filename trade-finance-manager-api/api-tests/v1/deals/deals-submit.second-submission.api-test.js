@@ -41,6 +41,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+const createSubmitBody = (mockDeal) => ({
+  dealId: mockDeal._id,
+  dealType: 'BSS/EWCS',
+});
 
 describe('/v1/deals', () => {
   beforeEach(() => {
@@ -67,7 +71,7 @@ describe('/v1/deals', () => {
 
           expect(initialBond.status).toEqual('Submitted');
 
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -76,7 +80,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
 
@@ -87,7 +91,7 @@ describe('/v1/deals', () => {
         });
 
         it('should update bond.exposurePeriodInMonths', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -101,7 +105,7 @@ describe('/v1/deals', () => {
           const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
           const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -112,7 +116,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add bond.premiumSchedule', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -123,7 +127,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacility', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
 
@@ -134,7 +138,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add bond.hasBeenAcknowledged', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           const updatedBond = body.dealSnapshot.bondTransactions.items[0];
 
@@ -148,7 +152,7 @@ describe('/v1/deals', () => {
           const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
           expect(initialLoan.status).toEqual('Submitted');
 
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -157,7 +161,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           const loanId = body.dealSnapshot.loanTransactions.items[0]._id;
 
@@ -168,7 +172,7 @@ describe('/v1/deals', () => {
         });
 
         it('should update loan.exposurePeriodInMonths', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -182,7 +186,7 @@ describe('/v1/deals', () => {
           const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
           const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -193,7 +197,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add loan.premiumSchedule', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -204,7 +208,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacility', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           const loanId = body.dealSnapshot.loanTransactions.items[0]._id;
 
@@ -215,7 +219,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {
-          const { body } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+          const { body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
           const updatedLoan = body.dealSnapshot.loanTransactions.items[0];
 
@@ -225,7 +229,7 @@ describe('/v1/deals', () => {
 
       it('should send an email for newly issued facilities', async () => {
         const mockDeal = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
-        await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
+        await api.put(createSubmitBody(mockDeal)).to('/v1/deals/submit');
 
         expect(sendEmailApiSpy).toBeCalledTimes(1);
 
@@ -254,7 +258,7 @@ describe('/v1/deals', () => {
       });
 
       it('should update ACBS for AIN`', async () => {
-        const { status } = await api.put({ dealId: MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
         expect(status).toEqual(200);
 
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalled();
@@ -266,7 +270,7 @@ describe('/v1/deals', () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.details.submissionType).toEqual('Manual Inclusion Application');
 
-        const mockPortalChecker = {
+        const mockChecker = {
           bank: {
             id: '9',
             name: 'UKEF test bank (Delegated) (TFM)',
@@ -276,19 +280,19 @@ describe('/v1/deals', () => {
           surname: 'User',
           roles: ['checker'],
           timezone: 'Europe/London',
-          username: 'CHECKER-TFM',
+          username: 'BANK1_CHECKER1',
         };
 
         const { status, body } = await api.put({
-          dealId: MOCK_MIA_SECOND_SUBMIT._id,
-          portalChecker: mockPortalChecker,
+          ...createSubmitBody(MOCK_MIA_SECOND_SUBMIT),
+          checker: mockChecker,
         }).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
         expect(body.dealSnapshot.details.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.dealSnapshot.details.manualInclusionNoticeSubmissionDate).toEqual('string');
-        expect(body.dealSnapshot.details.checkerMIN).toEqual(mockPortalChecker);
+        expect(body.dealSnapshot.details.checkerMIN).toEqual(mockChecker);
         expect(dealController.submitACBSIfAllPartiesHaveUrn).toHaveBeenCalled();
       });
 
@@ -298,7 +302,7 @@ describe('/v1/deals', () => {
 
         expect(initialBond.status).toEqual('Submitted');
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -311,7 +315,7 @@ describe('/v1/deals', () => {
         const initialLoan = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
         expect(initialLoan.status).toEqual('Submitted');
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -320,7 +324,7 @@ describe('/v1/deals', () => {
       });
 
       it('should NOT update ACBS for MIA`', async () => {
-        const { status } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
         expect(status).toEqual(200);
 
         expect(acbsController.issueAcbsFacilities).not.toHaveBeenCalled();
@@ -330,7 +334,7 @@ describe('/v1/deals', () => {
         const initialBond = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -341,7 +345,7 @@ describe('/v1/deals', () => {
       });
 
       it('should add bond.premiumSchedule', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -355,7 +359,7 @@ describe('/v1/deals', () => {
         const initialLoan = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -366,7 +370,7 @@ describe('/v1/deals', () => {
       });
 
       it('should add loan.premiumSchedule', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -378,7 +382,7 @@ describe('/v1/deals', () => {
 
       it('should NOT send an email for each newly issued facility', async () => {
         const mockDeal = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
-        await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
+        await api.put(createSubmitBody(mockDeal)).to('/v1/deals/submit');
 
         expect(sendEmailApiSpy).toBeCalledTimes(0);
       });
@@ -389,7 +393,7 @@ describe('/v1/deals', () => {
         const initialBond = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -400,7 +404,7 @@ describe('/v1/deals', () => {
       });
 
       it('should add bond.premiumSchedule', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -414,7 +418,7 @@ describe('/v1/deals', () => {
         const initialLoan = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -425,7 +429,7 @@ describe('/v1/deals', () => {
       });
 
       it('should add loan.premiumSchedule', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -436,7 +440,7 @@ describe('/v1/deals', () => {
       });
 
       it('should update ACBS for MIN`', async () => {
-        const { status } = await api.put({ dealId: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED._id }).to('/v1/deals/submit');
+        const { status } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
         expect(status).toEqual(200);
 
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalled();
@@ -444,7 +448,7 @@ describe('/v1/deals', () => {
 
       it('should send an email for newly issued facility', async () => {
         const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
-        await api.put({ dealId: mockDeal._id }).to('/v1/deals/submit');
+        await api.put(createSubmitBody(mockDeal)).to('/v1/deals/submit');
 
         expect(sendEmailApiSpy).toBeCalledTimes(1);
 

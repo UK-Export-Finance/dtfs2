@@ -4,6 +4,10 @@ const generateTypeBXML = require('./generateTypeBXML');
 const upload = require('./upload');
 const fileToBeGone = require('./fileToBeGone');
 
+/*
+// NOTE: Workflow integration has been disabled and replaced with TFM integration.
+// Leaving this code here just incase we need to re-enable.
+*/
 const sendTypeB =  async (req, res, next) => {
   const fileshare = AZURE_WORKFLOW_FILESHARE_CONFIG.FILESHARE_NAME;
   const folder = AZURE_WORKFLOW_FILESHARE_CONFIG.IMPORT_FOLDER;

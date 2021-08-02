@@ -1,4 +1,9 @@
-const js2xmlparser = require('js2xmlparser');
+// NOTE: Workflow integration has been disabled and replaced with TFM integration.
+// Leaving this code here just incase we need to re-enable.
+
+// const js2xmlparser = require('js2xmlparser');
+const js2xmlparser = { parse: () => {} };
+
 const typeABSSBuilder = require('./type-a-bss-builder');
 const typeAEWCSBuilder = require('./type-a-ewcs-builder');
 

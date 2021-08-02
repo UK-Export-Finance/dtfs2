@@ -6,6 +6,11 @@ const { findOneDeal } = require('../src/v1/controllers/deal.controller');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../src/v1/__mocks__/mock-notify-email-response');
 
+const createSubmitBody = (mockDeal) => ({
+  dealId: mockDeal._id,
+  dealType: 'BSS/EWCS',
+});
+
 describe('sendTfmEmail', () => {
   const templateId = 'MOCK-NOTIFY-TEMPLATE-ID';
   const sendToEmailAddress = 'test@testing.com';
@@ -22,7 +27,7 @@ describe('sendTfmEmail', () => {
   });
 
   it('should call api.sendEmail', async () => {
-    const { body: submittedDeal } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+    const { body: submittedDeal } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
     await sendTfmEmail(
       templateId,
@@ -39,7 +44,7 @@ describe('sendTfmEmail', () => {
   });
 
   it('should return response from api.sendEmail', async () => {
-    const { body: submittedDeal } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+    const { body: submittedDeal } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
     const result = await sendTfmEmail(
       templateId,
@@ -52,7 +57,7 @@ describe('sendTfmEmail', () => {
   });
 
   it('should update deal emails history', async () => {
-    const { body: submittedDeal } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+    const { body: submittedDeal } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
     // check initial email history is empty
     expect(submittedDeal.tfm.history.emails).toEqual([]);

@@ -10,6 +10,7 @@ const { Exporter } = require('../models/exporter');
 const { CoverTerms } = require('../models/coverTerms');
 const { STATUS } = require('../enums');
 const addSubmissionData = require('./application-submit');
+const api = require('../../api');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
@@ -128,7 +129,7 @@ exports.changeStatus = async (req, res) => {
     };
   }
 
-  const result = await collection.findOneAndUpdate(
+  const updatedDocument = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(applicationId)) } }, {
       $set: applicationUpdate,
     }, { returnOriginal: false },
@@ -136,11 +137,20 @@ exports.changeStatus = async (req, res) => {
 
   let response;
 
-  if (result.value) {
-    response = result.value;
+  if (updatedDocument.value) {
+    response = updatedDocument.value;
+
+    // TODO: protect so that only a user with checker role can submit to UKEF.
+    if (status === STATUS.SUBMITTED_TO_UKEF) {
+      await api.tfmDealSubmit(
+        applicationId,
+        existingApplication.dealType,
+        req.user,
+      );
+    }
   }
 
-  return res.status(utils.mongoStatus(result)).send(response);
+  return res.status(utils.mongoStatus(updatedDocument)).send(response);
 };
 
 exports.delete = async (req, res) => {

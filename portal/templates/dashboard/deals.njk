@@ -71,11 +71,8 @@
             attributes: { "data-cy": "deal__status--" + deal._id }
           },
           {
-            text: deal.lastUpdate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone),
-            attributes: { 
-              "data-sort-value": deal.lastUpdate,
-              'data-cy': 'deal__updated--' + deal._id
-            }
+            text: deal.lastUpdate | localiseTimestamp("D MMM YYYY", user.timezone),
+            attributes: { 'data-cy': 'deal__updated--' + deal._id }
           }
         ] %}
 
@@ -83,20 +80,16 @@
       {% endfor %}
 
       {{ govukTable({
-        attributes: {
-          'data-module': 'moj-sortable-table'
-        },
         classes: "govuk-table govuk-!-margin-bottom-0",
         head: [
           {
             text: "Exporter",
             attributes: {
-              "aria-sort": "none",
               "data-cy": "deal__header--exporter"
             }
           },
           {
-            text: "BankRef",
+            text: "Bank ref",
             attributes: {
               "data-cy": "deal__header--bankRef"
             }
@@ -122,10 +115,8 @@
           {
             text: "Last updated",
             attributes: {
-              "aria-sort": "descending",
               "data-cy": "deal__header--updated"
-            },
-            format: "numeric"
+            }
           }
         ],
         rows: items

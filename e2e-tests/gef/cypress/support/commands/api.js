@@ -37,10 +37,20 @@ const updateExporter = (exporterId, token, address) => cy.request({
 
 const fetchAllFacilities = (applicationId, token) => cy.request({
   url: `${BASE_URL}/gef/facilities`,
-  params: {
+  qs: {
     applicationId,
   },
   method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
+
+const setApplicationStatus = (applicationId, token, status) => cy.request({
+  url: `${BASE_URL}/gef/application/status/${applicationId}`,
+  method: 'PUT',
+  body: { status },
   headers: {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -52,4 +62,5 @@ export {
   fetchAllApplications,
   updateExporter,
   fetchAllFacilities,
+  setApplicationStatus,
 };

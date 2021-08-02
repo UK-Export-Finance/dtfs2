@@ -9,6 +9,8 @@ const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
+const api = require('../../../src/v1/api');
+const externalApis = require('../../../src/reference-data/api');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -617,6 +619,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let createdDeal;
       let updatedDeal;
       let expectedFacilitiesSubmittedBy;
+      let dealId;
 
       beforeEach(async (done) => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -626,6 +629,11 @@ describe('/v1/deals/:id/status - facilities', () => {
         createdDeal = postResult.body;
 
         dealId = createdDeal._id;
+
+        api.tfmDealSubmit = () => Promise.resolve();
+        externalApis.numberGenerator = {
+          create: () => Promise.resolve(),
+        };
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 

@@ -1,5 +1,6 @@
 const MOCK_DEAL_ISSUED_FACILITIES = {
   _id: 'MOCK_DEAL_ISSUED_FACILITIES',
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',

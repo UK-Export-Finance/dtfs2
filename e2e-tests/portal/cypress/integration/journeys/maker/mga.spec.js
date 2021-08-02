@@ -22,7 +22,7 @@ context('MGA', () => {
       footer.mgaPageLink().click();
       cy.url().should('include', '/mga');
 
-      mga.mgaLink().should('have.length', 1);
+      mga.mgaLink().should('have.length', 2);
     });
   });
 });

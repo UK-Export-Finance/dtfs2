@@ -1,4 +1,9 @@
-const libxml = require('libxmljs');
+// NOTE: Workflow integration has been disabled and replaced with TFM integration.
+// Leaving this code here just incase we need to re-enable.
+
+// const libxml = require('libxmljs');
+const libxml = { parseXml: () => {} };
+
 const fs = require('fs');
 const path = require('path');
 

@@ -2,8 +2,8 @@ const pages = require('../../../pages');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const dealReadyToSubmitToChecker = require('./dealReadyToSubmitToChecker');
 
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('A maker and checker can submit and re-submit a deal to each other multiple times', () => {
   let deal;

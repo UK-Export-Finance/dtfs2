@@ -7,8 +7,8 @@ const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
-const HSBC_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+const BANK2_MAKER = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
 
 const toBigNumber = (date) => {
   return moment(date, "YYYY-MM-DD").utc().valueOf().toString();
@@ -36,10 +36,10 @@ context('reconciliation report', () => {
 
   before(() => {
     cy.deleteDeals(ADMIN_LOGIN);
-    cy.deleteDeals(BARCLAYS_LOGIN);
-    cy.deleteDeals(HSBC_LOGIN);
+    cy.deleteDeals(BANK1_MAKER);
+    cy.deleteDeals(BANK2_MAKER);
 
-    cy.insertOneDeal(aDealWithOneBond, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneBond, BANK1_MAKER)
       .then( (inserted) => {
         const update = {
           details: {
@@ -47,10 +47,10 @@ context('reconciliation report', () => {
             status: "Submitted"
           }
         };
-        cy.updateDeal(inserted._id, update, BARCLAYS_LOGIN);
+        cy.updateDeal(inserted._id, update, BANK1_MAKER);
       });
 
-    cy.insertOneDeal(aDealWithOneLoan, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneLoan, BANK1_MAKER)
       .then( (inserted) => {
         const update = {
           details: {
@@ -59,10 +59,10 @@ context('reconciliation report', () => {
           }
         };
 
-        cy.updateDeal(inserted._id, update, BARCLAYS_LOGIN);
+        cy.updateDeal(inserted._id, update, BANK1_MAKER);
       });
 
-    cy.insertOneDeal(aDealWithOneLoanAndOneBond, BARCLAYS_LOGIN)
+    cy.insertOneDeal(aDealWithOneLoanAndOneBond, BANK1_MAKER)
       .then( (inserted) => {
         const update = {
           details: {
@@ -71,10 +71,10 @@ context('reconciliation report', () => {
           }
         };
 
-        cy.updateDeal(inserted._id, update, BARCLAYS_LOGIN);
+        cy.updateDeal(inserted._id, update, BANK1_MAKER);
       });
 
-    cy.insertOneDeal(aDealWithTenBonds, HSBC_LOGIN)
+    cy.insertOneDeal(aDealWithTenBonds, BANK2_MAKER)
       .then( (inserted) => {
         const update = {
           details: {
@@ -83,10 +83,10 @@ context('reconciliation report', () => {
           }
         };
 
-        cy.updateDeal(inserted._id, update, HSBC_LOGIN);
+        cy.updateDeal(inserted._id, update, BANK2_MAKER);
       });
 
-    cy.insertOneDeal(aDealWithTenLoans, HSBC_LOGIN)
+    cy.insertOneDeal(aDealWithTenLoans, BANK2_MAKER)
       .then( (inserted) => {
         const update = {
           details: {
@@ -95,10 +95,10 @@ context('reconciliation report', () => {
           }
         };
 
-        cy.updateDeal(inserted._id, update, HSBC_LOGIN);
+        cy.updateDeal(inserted._id, update, BANK2_MAKER);
       });
 
-    cy.insertOneDeal(aDealWithTenLoansAndTenBonds, HSBC_LOGIN)
+    cy.insertOneDeal(aDealWithTenLoansAndTenBonds, BANK2_MAKER)
       .then( (inserted) => {
         const update = {
           details: {
@@ -107,7 +107,7 @@ context('reconciliation report', () => {
           }
         };
 
-        cy.updateDeal(inserted._id, update, HSBC_LOGIN);
+        cy.updateDeal(inserted._id, update, BANK2_MAKER);
       });
 
   });
@@ -124,20 +124,20 @@ context('reconciliation report', () => {
     });
 
     // filter by barclays
-    reconciliationReport.filterByBank().select('956'); //Barclays
+    reconciliationReport.filterByBank().select('9'); // UKEF test bank id
     reconciliationReport.applyFilters().click();
     reconciliationReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');
     });
 
-    reconciliationReport.bank().should( (bank) => { expect(bank).to.contain("Barclays Bank")});
+    reconciliationReport.bank().should((bank) => { expect(bank).to.contain('UKEF test bank (Delegated)')});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("HSBC")});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("LLOYDS")});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("RBS")});
     reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("Santander")});
-    reconciliationReport.bank().should( (bank) => { expect(bank).not.to.contain("UKEF test bank (Delegated)")});
+    reconciliationReport.bank().should((bank) => { expect(bank).not.to.contain('UKEF test bank (Delegated) 2')});
 
-    reconciliationReport.filterByBank().should('have.value', '956');
+    reconciliationReport.filterByBank().should('have.value', '9'); // UKEF test bank id
 
     // can repeat this for other filters but not obvious how much value that brings
     //  i guess it proves we have all the right options as per the ACs... but not obvious it brings that much value..

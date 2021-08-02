@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { dashboard } = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 
@@ -5,7 +6,7 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 // slight oddity- this test seems to need a straight 'maker'; so filtering slightly more than in other tests..
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.roles.length === 1));
 
-const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/;
+const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
 context('View a deal', () => {
   context('no checker', () => {
@@ -17,14 +18,9 @@ context('View a deal', () => {
       },
     };
 
-    const dummyApplication = {
-      bankId: MAKER_LOGIN.bank.id,
-      bankInternalRefName: 'Mock GEF exporter',
-    };
-
     beforeEach(() => {
       // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-      cy.on('uncaught:exception', (err, runnable) => {
+      cy.on('uncaught:exception', (err) => {
         console.log(err.stack);
         return false;
       });

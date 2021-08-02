@@ -13,11 +13,11 @@ const deal = {
         "maker"
       ],
       "bank": {
-        "id": "956",
-        "name": "Barclays Bank",
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
         "emails": [
-          "maker4@ukexportfinance.gov.uk",
-          "checker4@ukexportfinance.gov.uk"
+          "maker@ukexportfinance.gov.uk",
+          "checker@ukexportfinance.gov.uk"
         ]
       },
       "lastLogin": moment().utc().valueOf(),
@@ -28,11 +28,11 @@ const deal = {
       "user-status": "active",
     },
     "owningBank": {
-      "id": "956",
-      "name": "Barclays Bank",
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
       "emails": [
-        "maker4@ukexportfinance.gov.uk",
-        "checker4@ukexportfinance.gov.uk"
+        "maker@ukexportfinance.gov.uk",
+        "checker@ukexportfinance.gov.uk"
       ]
     },
     "submissionType": "Automatic Inclusion Notice",
@@ -190,30 +190,7 @@ const deal = {
   "bondTransactions": {
     "items": [
       {
-        "_id": "1000001",
-        "createdDate": moment().utc().valueOf(),
-        "bondIssuer": "",
-        "bondType": "Advance payment guarantee",
-        "facilityStage": "Unissued",
-        "ukefGuaranteeInMonths": "12",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "18.0000",
-        "lastEdited": moment().utc().valueOf(),
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "20",
-        "coveredPercentage": "40",
-        "minimumRiskMarginFee": "",
-        "ukefExposure": "493.60",
-        "feeType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
-      },
-      {
-        "_id": "1000002",
+        "facilityType": "bond",
         "createdDate": moment().utc().valueOf(),
         "bondIssuer": "",
         "bondType": "Advance payment guarantee",
@@ -247,28 +224,7 @@ const deal = {
   "loanTransactions": {
     "items": [
       {
-        "_id": "1000003",
-        "createdDate": moment().utc().valueOf(),
-        "facilityStage": "Conditional",
-        "ukefGuaranteeInMonths": "12",
-        "bankReferenceNumber": "",
-        "guaranteeFeePayableByBank": "9.0000",
-        "lastEdited": moment().utc().valueOf(),
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "10",
-        "coveredPercentage": "20",
-        "minimumQuarterlyFee": "",
-        "ukefExposure": "246.80",
-        "premiumType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
-      },
-      {
-        "_id": "1000004",
+        "facilityType": "loan",
         "createdDate": moment().utc().valueOf(),
         "facilityStage": "Unconditional",
         "requestedCoverStartDate-day": "",
@@ -306,11 +262,11 @@ const deal = {
           "maker"
         ],
         "bank": {
-          "id": "956",
-          "name": "Barclays Bank",
+          "id": "9",
+          "name": "UKEF test bank (Delegated)",
           "emails": [
-            "maker4@ukexportfinance.gov.uk",
-            "checker4@ukexportfinance.gov.uk"
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
           ]
         },
         "lastLogin": "1598021249183",

@@ -19,6 +19,8 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 
+const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
+
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
 ));
@@ -32,6 +34,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+const createSubmitBody = (mockDeal) => ({
+  dealId: mockDeal._id,
+  dealType: 'BSS/EWCS',
+});
 
 describe('/v1/deals', () => {
   beforeEach(() => {
@@ -51,7 +57,7 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource if no companies house no given', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+      const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE)).to('/v1/deals/submit');
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_COMPANIES_HOUSE;
 
@@ -72,7 +78,7 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource without partyUrn if not matched', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_PARTY_DB._id }).to('/v1/deals/submit');
+      const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_NO_PARTY_DB)).to('/v1/deals/submit');
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
 
@@ -94,7 +100,7 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource with partyUrn if matched', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+      const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL;
 
@@ -116,7 +122,7 @@ describe('/v1/deals', () => {
 
     describe('currency NOT GBP', () => {
       it('should convert supplyContractValue to GBP', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -131,7 +137,7 @@ describe('/v1/deals', () => {
     });
 
     it('should add product (facility products)', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+      const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
       expect(status).toEqual(200);
 
@@ -148,7 +154,7 @@ describe('/v1/deals', () => {
     describe('exporter credit rating', () => {
       describe('when deal is AIN', () => {
         it('should add exporterCreditRating to the deal', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toEqual(DEFAULTS.CREDIT_RATING.AIN);
@@ -157,7 +163,7 @@ describe('/v1/deals', () => {
 
       describe('when deal is NOT AIN', () => {
         it('should add exporterCreditRating to the deal', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toBeUndefined();
@@ -167,7 +173,7 @@ describe('/v1/deals', () => {
 
     describe('lossGivenDefault and probabilityOfDefault', () => {
       it('should be added to AIN deals', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -175,7 +181,7 @@ describe('/v1/deals', () => {
       });
 
       it('should be added to MIA deals', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SUBMITTED._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -183,7 +189,7 @@ describe('/v1/deals', () => {
       });
 
       it('should be added to MIN deals', async () => {
-        const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -195,7 +201,7 @@ describe('/v1/deals', () => {
       describe('when deal is AIN', () => {
         describe('when portal deal status is `Submitted`', () => {
           it('should add `Confirmed` tfm stage', async () => {
-            const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+            const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
             expect(status).toEqual(200);
 
@@ -205,7 +211,7 @@ describe('/v1/deals', () => {
 
         describe('when deal status is NOT `Submitted`', () => {
           it('should NOT add tfm stage', async () => {
-            const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
+            const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE)).to('/v1/deals/submit');
 
             expect(status).toEqual(200);
             expect(body.tfm.stage).toBeUndefined();
@@ -216,7 +222,7 @@ describe('/v1/deals', () => {
       describe('when deal is MIA', () => {
         describe('when portal deal status is `Submitted`', () => {
           it('should add `Application` tfm stage', async () => {
-            const { status, body } = await api.put({ dealId: MOCK_DEAL_MIA_SUBMITTED._id }).to('/v1/deals/submit');
+            const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
 
             expect(status).toEqual(200);
             expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
@@ -225,7 +231,7 @@ describe('/v1/deals', () => {
 
         describe('when deal status is NOT `Submitted` ', () => {
           it('should NOT add tfm stage', async () => {
-            const { status, body } = await api.put({ dealId: MOCK_MIA_NOT_SUBMITTED._id }).to('/v1/deals/submit');
+            const { status, body } = await api.put(createSubmitBody(MOCK_MIA_NOT_SUBMITTED)).to('/v1/deals/submit');
 
             expect(status).toEqual(200);
             expect(body.tfm.stage).toBeUndefined();
@@ -235,7 +241,7 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIN', () => {
         it('should NOT add tfm stage', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_MIN._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.stage).toBeUndefined();
@@ -244,7 +250,7 @@ describe('/v1/deals', () => {
     });
 
     it('adds dateReceived to deal.tfm from deal submissionDate', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+      const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
       expect(status).toEqual(200);
 
@@ -257,7 +263,7 @@ describe('/v1/deals', () => {
     });
 
     it('adds empty TFM history to deal', async () => {
-      const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+      const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
       expect(status).toEqual(200);
       expect(body.tfm.history).toEqual({
@@ -269,11 +275,19 @@ describe('/v1/deals', () => {
     describe('eStore', () => {
       describe('when deal is AIN', () => {
         it('adds estore object to the deal', async () => {
-          const { status, body } = await api.put({ dealId: MOCK_DEAL_AIN_SUBMITTED._id }).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.estore).toBeDefined();
         });
+      });
+    });
+
+    describe('when dealType is `GEF`', () => {
+      it('should return 404', async () => {
+        const { status } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+
+        expect(status).toEqual(404);
       });
     });
   });

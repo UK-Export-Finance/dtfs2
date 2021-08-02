@@ -1,4 +1,5 @@
 const MOCK_DEAL = {
+  dealType: 'BSS/EWCS',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
