@@ -1,0 +1,14 @@
+name: PR tests - Empty tests for github action config
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths: 
+    - '.github/workflows/**'
+
+jobs:
+  test:
+    name: No
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
