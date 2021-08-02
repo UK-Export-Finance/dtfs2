@@ -19,8 +19,6 @@ let {
  } = require('../../../../../fixtures/transaction-dashboard-data');
 
 
- // ??????????????????????????
-
 context('Audit - Transactions Report (viewed by an admin user)', () => {
   let barclaysDeals, hsbcDeals;
 
@@ -51,21 +49,21 @@ context('Audit - Transactions Report (viewed by an admin user)', () => {
     auditTransactionsReport.filterByBank().select('9'); // UKEF test bank id
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(13 items)');
+      expect(text.trim()).equal('(31 items)');
     });
 
     // select a stage
     auditTransactionsReport.filterByFacilityStage().select('unissued_conditional');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(7 items)');
+      expect(text.trim()).equal('(15 items)');
     });
 
     // filter by ukef id
     auditTransactionsReport.filterByUKEFSupplyContractId().type('{selectall}{backspace}ukef:adealwithten');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(5 items)');
+      expect(text.trim()).equal('(15 items)');
     });
 
     // -> created before the industrial revolution
