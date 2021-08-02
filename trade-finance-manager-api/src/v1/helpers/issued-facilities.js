@@ -1,15 +1,17 @@
 const isIssued = require('./is-issued');
-
-const mapFacility = (facility) => facility.facilitySnapshot || facility;
+const CONSTANTS = require('../../constants');
 
 const issuedFacilities = (dealSnapshot) => {
-  const { bondTransactions, loanTransactions } = dealSnapshot;
+  const { facilities } = dealSnapshot;
+
+  const issuedFacilitiesList = facilities.map((f) => f.facilitySnapshot).filter((f) => isIssued(f));
+  const unissuedFacilitiesList = facilities.map((f) => f.facilitySnapshot).filter((f) => !isIssued(f));
 
   return {
-    issuedBonds: bondTransactions.items.map(mapFacility).filter((bond) => isIssued(bond)),
-    unissuedBonds: bondTransactions.items.map(mapFacility).filter((bond) => !isIssued(bond)),
-    issuedLoans: loanTransactions.items.map(mapFacility).filter((loan) => isIssued(loan)),
-    unissuedLoans: loanTransactions.items.map(mapFacility).filter((loan) => !isIssued(loan)),
+    issuedBonds: issuedFacilitiesList.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND),
+    unissuedBonds: unissuedFacilitiesList.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND),
+    issuedLoans: issuedFacilitiesList.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN),
+    unissuedLoans: unissuedFacilitiesList.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN),
   };
 };
 
