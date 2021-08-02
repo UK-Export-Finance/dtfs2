@@ -3,7 +3,7 @@ const { capitalizeFirstLetter } = require('../../utils/string');
 const generateFacilitiesListString = (facilities) => facilities.reduce((acc, facility) => {
   const {
     facilityType, ukefFacilityID, bankReferenceNumber, uniqueIdentificationNumber,
-  } = facility.facilitySnapshot;
+  } = facility;
   const fType = capitalizeFirstLetter(facilityType);
   const bankReference = uniqueIdentificationNumber || bankReferenceNumber;
   const bankRefString = bankReference

@@ -8,16 +8,10 @@ const addDealPricingAndRisk = async (deal) => {
   }
 
   const {
-    tfm,
-    dealSnapshot,
-  } = deal;
-
-  const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-    details,
-  } = dealSnapshot;
-
-  const { submissionType } = details;
+    submissionType,
+    tfm,
+  } = deal;
 
   // TODO:
   // lossGivenDefault and probabilityOfDefault should be integers without text/percentage symbol.
@@ -41,7 +35,10 @@ const addDealPricingAndRisk = async (deal) => {
 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
-  return updatedDeal;
+  return {
+    ...deal,
+    tfm: updatedDeal.tfm,
+  };
 };
 
 exports.addDealPricingAndRisk = addDealPricingAndRisk;

@@ -8,16 +8,10 @@ const createDealTasks = async (deal) => {
   }
 
   const {
-    tfm,
-    dealSnapshot,
-  } = deal;
-
-  const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-    details,
-  } = dealSnapshot;
-
-  const { submissionType } = details;
+    submissionType,
+    tfm,
+  } = deal;
 
   let tasks;
 
@@ -39,7 +33,7 @@ const createDealTasks = async (deal) => {
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
   return {
-    dealSnapshot,
+    ...deal,
     tfm: updatedDeal.tfm,
   };
 };

@@ -17,7 +17,13 @@ const shouldSendFirstTaskEmail = (firstTask) =>
   (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
 
 const sendFirstTaskEmail = async (deal) => {
-  const { tfm, dealSnapshot } = deal;
+  const {
+    _id: dealId,
+    ukefDealId,
+    exporter,
+    tfm,
+  } = deal;
+
   const { tasks } = tfm;
 
   const firstTask = getFirstTask(tasks);
@@ -26,15 +32,6 @@ const sendFirstTaskEmail = async (deal) => {
     const urlOrigin = process.env.TFM_URI;
     const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
-    const {
-      _id: dealId,
-      submissionDetails,
-      details,
-    } = dealSnapshot;
-
-    const { 'supplier-name': exporterName } = submissionDetails;
-    const { ukefDealId } = details;
-
     const { team } = firstTask;
     const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
@@ -42,7 +39,7 @@ const sendFirstTaskEmail = async (deal) => {
       urlOrigin,
       firstTask,
       dealId,
-      exporterName,
+      exporter.companyName,
       ukefDealId,
     );
 
@@ -59,22 +56,18 @@ const sendFirstTaskEmail = async (deal) => {
 };
 
 const sendMiaAcknowledgement = async (deal) => {
-  const { dealSnapshot } = deal;
-
   const {
-    bankSupplyContractID: bankReferenceNumber,
     ukefDealId,
-    maker,
     submissionType,
-  } = dealSnapshot.details;
+    bankReferenceNumber,
+    maker,
+    exporter,
+    facilities,
+  } = deal;
 
   if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
     return null;
   }
-
-  const {
-    'supplier-name': exporterName,
-  } = dealSnapshot.submissionDetails;
 
   const {
     firstname: recipientName,
@@ -83,20 +76,15 @@ const sendMiaAcknowledgement = async (deal) => {
 
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_RECEIVED;
 
-  const bonds = dealSnapshot.facilities.filter(
-    ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-  );
-
-  const loans = dealSnapshot.facilities.filter(
-    ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-  );
+  const bonds = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+  const loans = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
   const bssList = generateFacilitiesListString(bonds);
   const ewcsList = generateFacilitiesListString(loans);
 
   const emailVariables = {
     recipientName,
-    exporterName,
+    exporterName: exporter.companyName,
     bankReferenceNumber,
     ukefDealId,
     bssList,
@@ -115,14 +103,14 @@ const sendMiaAcknowledgement = async (deal) => {
 };
 
 const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
-  const { dealSnapshot } = deal;
-
   const {
-    bankSupplyContractID: bankReferenceNumber,
     ukefDealId,
-    maker,
+    bankReferenceNumber,
     submissionType,
-  } = dealSnapshot.details;
+    maker,
+    facilities,
+    exporter,
+  } = deal;
 
   if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
     && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
@@ -130,7 +118,7 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   }
   const {
     issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
-  } = issuedFacilities(deal.dealSnapshot);
+  } = issuedFacilities(facilities);
 
   const issuedBondsList = generateBSSListString(issuedBonds);
   const issuedLoansList = generateEWCSListString(issuedLoans);
@@ -141,10 +129,6 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   if (issuedBondsList.length === 0 && issuedLoansList.length === 0) {
     return null;
   }
-
-  const {
-    'supplier-name': exporterName,
-  } = dealSnapshot.submissionDetails;
 
   const {
     firstname,
@@ -160,7 +144,7 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   const emailVariables = {
     firstname,
     surname,
-    exporterName,
+    exporterName: exporter.companyName,
     bankReferenceNumber,
     ukefDealId,
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
@@ -180,6 +164,7 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   return emailResponse;
 };
 
+// TODO
 const sendAinMinIssuedFacilitiesAcknowledgementByDealId = async (dealId) => {
   const deal = await dealController.findOneDeal(dealId);
   const result = await sendAinMinIssuedFacilitiesAcknowledgement(deal);

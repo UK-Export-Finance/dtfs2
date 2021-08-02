@@ -2,10 +2,8 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 
 const updatePortalDealStatus = async (deal) => {
-  const updatedDeal = deal;
-
-  const { _id: dealId } = updatedDeal;
-  const { submissionType } = deal.details;
+  const { _id: dealId } = deal;
+  const { submissionType } = deal;
 
   let newStatus;
 
@@ -36,7 +34,7 @@ const updatePortalDealStatus = async (deal) => {
     );
   }
 
-  return updatedDeal;
+  return deal;
 };
 
 exports.updatePortalDealStatus = updatePortalDealStatus;
