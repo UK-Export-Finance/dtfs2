@@ -102,16 +102,12 @@ const issueAcbsFacilities = async (deal) => {
     // Hasn't been submitted to acbs yet so no need to do anything
     return false;
   }
-  const tfmFacilities = await Promise.all(
-    // eslint-disable-next-line no-underscore-dangle
-    deal.dealSnapshot.facilities.map((facilityId) => api.findOneFacility(facilityId)),
-  );
 
-  const acbsIssuedFacilitiesPromises = tfmFacilities.filter((facility) => {
+  const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => {
     // Only concerned with issued facilities on Portal that aren't issued on ACBS
     const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
     return !isIssued({ facilityStage: facilityStageInAcbs }) && isIssued(facility.facilitySnapshot);
-  }).map((facility) => api.updateACBSfacility(facility, deal.dealSnapshot.submissionDetails['supplier-name']));
+  }).map((facility) => api.updateACBSfacility(facility, deal.exporter.companyName));
 
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 

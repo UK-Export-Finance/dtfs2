@@ -164,16 +164,7 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   return emailResponse;
 };
 
-// TODO
-const sendAinMinIssuedFacilitiesAcknowledgementByDealId = async (dealId) => {
-  const deal = await dealController.findOneDeal(dealId);
-  const result = await sendAinMinIssuedFacilitiesAcknowledgement(deal);
-  return result;
-};
-
-const sendDealSubmitEmails = async (dealId) => {
-  const deal = await dealController.findOneDeal(dealId);
-
+const sendDealSubmitEmails = async (deal) => {
   if (!deal) {
     return false;
   }
@@ -197,5 +188,5 @@ module.exports = {
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
   generateFacilitiesListString,
-  sendAinMinIssuedFacilitiesAcknowledgementByDealId,
+  sendAinMinIssuedFacilitiesAcknowledgement,
 };

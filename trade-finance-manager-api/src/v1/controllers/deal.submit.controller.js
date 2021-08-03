@@ -20,7 +20,7 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgementByDealId } = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgement } = require('./send-deal-submit-emails');
 
 const getDeal = async (dealId, dealType) => {
   let deal;
@@ -126,6 +126,7 @@ const mapBssEwcsDeal = (deal) => {
         'coverEndDate-year': facility['coverEndDate-year'],
         ukefGuaranteeInMonths: facility.ukefGuaranteeInMonths,
         facilityStage: facility.facilityStage,
+        previousFacilityStage: facility.previousFacilityStage,
         currency: facility.currency,
         facilityValue: facility.facilityValue,
         coveredPercentage: facility.coveredPercentage,
@@ -135,9 +136,6 @@ const mapBssEwcsDeal = (deal) => {
         dayCountBasis: facility.dayCountBasis,
         feeFrequency: facility.feeFrequency,
         feeType: facility.feeType,
-        premiumType: facility.premiumType,
-        premiumFrequency: facility.premiumFrequency,
-        bankReferenceNumber: facility.bankReferenceNumber,
         uniqueIdentificationNumber: facility.uniqueIdentificationNumber,
         tfm: facility.tfm,
       })),
@@ -151,6 +149,7 @@ const mapBssEwcsDeal = (deal) => {
         'coverEndDate-year': facility['coverEndDate-year'],
         ukefGuaranteeInMonths: facility.ukefGuaranteeInMonths,
         facilityStage: facility.facilityStage,
+        previousFacilityStage: facility.previousFacilityStage,
         currency: facility.currency,
         facilityValue: facility.facilityValue,
         coveredPercentage: facility.coveredPercentage,
@@ -160,9 +159,6 @@ const mapBssEwcsDeal = (deal) => {
         dayCountBasis: facility.dayCountBasis,
         feeFrequency: facility.feeFrequency,
         feeType: facility.feeType,
-        premiumType: facility.premiumType,
-        premiumFrequency: facility.premiumFrequency,
-        bankReferenceNumber: facility.bankReferenceNumber,
         uniqueIdentificationNumber: facility.uniqueIdentificationNumber,
         tfm: facility.tfm,
       })),
@@ -199,7 +195,6 @@ const submitDeal = async (dealId, dealType, checker) => {
     return false;
   }
 
-
   // TODO:
   // 1) use mapDeal (and maybe dealReducer functionality??) to bring both deal types into nice data shape.
   // 2) update variable names in functions below. Simpler, cleaner. One step closer to unified structure.
@@ -207,7 +202,6 @@ const submitDeal = async (dealId, dealType, checker) => {
 
   const submittedDeal = await api.submitDeal(dealId);
 
-  // const mappedDeal = mapDeal(submittedDeal);
   const mappedDeal = unifiedDealStructure(submittedDeal);
 
   const { submissionCount } = mappedDeal;
@@ -234,12 +228,12 @@ const submitDeal = async (dealId, dealType, checker) => {
 
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-      await sendDealSubmitEmails(dealId);
+      await sendDealSubmitEmails(updatedDealWithTasks);
 
       return updatedDeal;
     }
@@ -251,28 +245,27 @@ const submitDeal = async (dealId, dealType, checker) => {
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
-    const updatedDeal = await updatedIssuedFacilities(submittedDeal);
+    const updatedDeal = await updatedIssuedFacilities(mappedDeal);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
     ) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
-    if (shouldUpdateDealFromMIAtoMIN(deal, tfmDeal)) {
+    if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, checker);
 
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
+      updatedDeal.submissionType = dealSnapshot.details.submissionType;
+
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
-      // TODO
-      await sendAinMinIssuedFacilitiesAcknowledgementByDealId(dealId);
-
-      updatedDeal.dealSnapshot = dealSnapshot;
+      await sendAinMinIssuedFacilitiesAcknowledgement(updatedDeal);
     }
 
-    await updatePortalDealStatus(updatedDeal.dealSnapshot);
+    await updatePortalDealStatus(updatedDeal);
 
     return api.updateDeal(dealId, updatedDeal);
   }
