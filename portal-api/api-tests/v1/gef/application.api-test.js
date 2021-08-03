@@ -86,6 +86,7 @@ describe(baseUrl, () => {
           submissionCount: 0,
           submissionDate: null,
           ukefDealId: null,
+          checkerId: null,
         })),
       };
 
@@ -120,6 +121,7 @@ describe(baseUrl, () => {
         submissionCount: 0,
         submissionDate: null,
         ukefDealId: null,
+        checkerId: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -178,6 +180,7 @@ describe(baseUrl, () => {
         submissionCount: 0,
         submissionDate: null,
         ukefDealId: null,
+        checkerId: null,
       };
       expect(body).toEqual(expectMongoId(expected));
     });
