@@ -1,6 +1,6 @@
 const facilityReducer = require('../reducers/facility');
 const { findOneFacility } = require('../../v1/controllers/facility.controller');
-const { findOneDeal } = require('../../v1/controllers/deal.controller');
+const { findOneTfmDeal } = require('../../v1/controllers/deal.controller');
 
 require('dotenv').config();
 
@@ -9,7 +9,7 @@ const queryFacility = async ({ _id }) => {
 
   const { associatedDealId } = facility.facilitySnapshot;
 
-  const deal = await findOneDeal(associatedDealId);
+  const deal = await findOneTfmDeal(associatedDealId);
 
   const { dealSnapshot, tfm: dealTfm } = deal;
 
