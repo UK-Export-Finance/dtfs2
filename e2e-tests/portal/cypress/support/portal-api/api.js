@@ -181,3 +181,13 @@ module.exports.insertGefApplication = (deal, token) => cy.request({
   expect(resp.status).to.equal(201);
   return resp.body;
 });
+
+module.exports.setGefApplicationStatus = (applicationId, token, status) => cy.request({
+  url: `${api()}/v1/gef/application/status/${applicationId}`,
+  method: 'PUT',
+  body: { status },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
