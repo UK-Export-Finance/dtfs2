@@ -11,7 +11,6 @@ import {
   decimalsCount as decimalsCountFunc,
   roundNumber as roundNumberFunc,
 } from './number';
-import '../styles/styles.scss';
 
 export const showHideElement = showHideElementFunc;
 export const changeScreenVisibilityOfElement = changeScreenVisibilityOfElementFunc;

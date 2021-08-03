@@ -85,10 +85,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./portal/scripts:/app/scripts:ro
-      - ./portal/styles:/app/styles:ro
-      - ./portal/templates:/app/templates:ro
-      - ./portal/server:/app/server:ro
+      - ./portal:/app:ro
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -96,7 +93,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
-    command: node dist/server.js
+    command: npm start
 
   portal-api:
     build: ./portal-api

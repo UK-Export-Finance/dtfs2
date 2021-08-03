@@ -87,9 +87,7 @@ app.use(uploadTest);
 
 app.use('/', routes);
 
-app.use(express.static('dist'));
-
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets', express.static(path.join(__dirname, 'public')));
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 

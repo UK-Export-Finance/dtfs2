@@ -1,3 +1,4 @@
+import path from 'path';
 import nunjucks from 'nunjucks';
 import filterLocaliseTimestamp from './filter-localiseTimestamp';
 import dashIfEmpty from './filter-dashIfEmpty';
@@ -7,11 +8,12 @@ import countriesWithEmptyInitialOption from './filter-countriesWithEmptyInitialO
 import replaceWhiteSpaceWithDash from './filter-replaceWhiteSpaceWithDash';
 import getStatusLabel from './filter-getStatusLabel';
 
+
 const configureNunjucks = (opts) => {
   const appViews = [
-    'node_modules/govuk-frontend',
-    'node_modules/@ministryofjustice/frontend',
-    'templates',
+    path.join(__dirname, '..', '..', 'node_modules/govuk-frontend'),
+    path.join(__dirname, '..', '..', 'node_modules/@ministryofjustice/frontend'),
+    path.join(__dirname, '..', 'templates'),
   ];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);

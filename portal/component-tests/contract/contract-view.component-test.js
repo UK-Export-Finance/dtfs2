@@ -1,4 +1,4 @@
-import STATUS from '../../server/constants';
+import STATUS from '../../src/constants';
 
 const pageRenderer = require('../pageRenderer');
 
@@ -110,7 +110,6 @@ describe(page, () => {
 
     it('renders loan transactions table', () =>
       wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').toExist()));
-
   });
 
 
@@ -203,5 +202,4 @@ describe(page, () => {
     it('should NOT render loan transactions table', () =>
       wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').notToExist()));
   });
-
 });
