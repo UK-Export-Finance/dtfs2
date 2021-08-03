@@ -9,6 +9,7 @@ const {
 } = require('../helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
+const dealController = require('./deal.controller');
 
 // make sure the first task is `Match or Create Parties`
 // if the first task changes in the future, we might not want to send an email.
@@ -82,8 +83,16 @@ const sendMiaAcknowledgement = async (deal) => {
 
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_RECEIVED;
 
-  const bssList = generateFacilitiesListString(dealSnapshot.bondTransactions.items);
-  const ewcsList = generateFacilitiesListString(dealSnapshot.loanTransactions.items);
+  const bonds = dealSnapshot.facilities.filter(
+    ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  );
+
+  const loans = dealSnapshot.facilities.filter(
+    ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  );
+
+  const bssList = generateFacilitiesListString(bonds);
+  const ewcsList = generateFacilitiesListString(loans);
 
   const emailVariables = {
     recipientName,
@@ -145,8 +154,8 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
 
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
 
-  const issuedFacilitiesList = issuedBondsList + issuedLoansList;
-  const unissuedFacilitiesList = unissuedBondsList + unissuedLoansList;
+  const issuedFacilitiesList = `${issuedBondsList}\n${issuedLoansList}`;
+  const unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
 
   const emailVariables = {
     firstname,
@@ -172,11 +181,14 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
 };
 
 const sendAinMinIssuedFacilitiesAcknowledgementByDealId = async (dealId) => {
-  const deal = await api.findOneDeal(dealId);
-  return sendAinMinIssuedFacilitiesAcknowledgement(deal);
+  const deal = await dealController.findOneDeal(dealId);
+  const result = await sendAinMinIssuedFacilitiesAcknowledgement(deal);
+  return result;
 };
 
-const sendDealSubmitEmails = async (deal) => {
+const sendDealSubmitEmails = async (dealId) => {
+  const deal = await dealController.findOneDeal(dealId);
+
   if (!deal) {
     return false;
   }

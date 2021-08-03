@@ -163,7 +163,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
-  facilities: ['12345678', '23456789'],
+  facilities: ['MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND', 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND'],
   bondTransactions: {
     items: [
       {

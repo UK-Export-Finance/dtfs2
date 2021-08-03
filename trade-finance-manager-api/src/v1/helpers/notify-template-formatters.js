@@ -21,10 +21,10 @@ const generateBSSListString = (facilities) => {
 
     const bankReference = uniqueIdentificationNumber || bankReferenceNumber;
     const bankRefString = bankReference
-      ? `* Your bank ref: ${bankReference}\n`
+      ? `*Your bank ref: ${bankReference}\n`
       : '';
 
-    return `${acc}*${bondType}\n${bankRefString}* UKEF facility ID: ${ukefFacilityID} \n\n`;
+    return `${acc}*${bondType}\n${bankRefString}*UKEF facility ID: ${ukefFacilityID} \n\n`;
   }, '');
   const bssHeading = bssList ? '#Bond Support Scheme\n\n' : '';
   return `${bssHeading}${bssList}`;
@@ -38,10 +38,10 @@ const generateEWCSListString = (facilities) => {
 
     const bankReference = uniqueIdentificationNumber || bankReferenceNumber;
     const bankRefString = bankReference
-      ? `* Your bank ref: ${bankReference}\n`
+      ? `*Your bank ref: ${bankReference}\n`
       : '';
 
-    return `${acc}${bankRefString}* UKEF facility ID: ${ukefFacilityID} \n\n`;
+    return `${acc}${bankRefString}*UKEF facility ID: ${ukefFacilityID}\n\n`;
   }, '');
   const bssHeading = ewcsList ? '#Export Working Capital Scheme\n\n' : '';
   return `${bssHeading}${ewcsList}`;
