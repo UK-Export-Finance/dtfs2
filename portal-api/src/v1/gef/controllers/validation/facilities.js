@@ -6,7 +6,7 @@ const hasRequiredItems = (doc) => {
   if (!doc.type) {
     required.push('type');
   }
-  if (!doc.hasBeenIssued) {
+  if (doc.hasBeenIssued === null) {
     required.push('hasBeenIssued');
   }
   if (!doc.name) {
