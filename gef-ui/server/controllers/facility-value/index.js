@@ -81,9 +81,8 @@ const updateFacilityValue = async (req, res) => {
     await api.updateFacility(facilityId, {
       coverPercentage: coverPercentage || null,
       interestPercentage: interestPercentage || null,
-      value: value ? value.replace(',', '') : null,
+      value: value ? value.replace(/,/g, '') : null,
     });
-
     return res.redirect(`/gef/application-details/${applicationId}`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');

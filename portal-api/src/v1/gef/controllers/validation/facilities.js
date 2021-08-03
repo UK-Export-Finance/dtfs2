@@ -3,40 +3,40 @@ const { STATUS, PAYMENT_TYPE, FACILITY_TYPE } = require('../../enums');
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
   const required = [];
-  if (doc.type === null) {
+  if (!doc.type) {
     required.push('type');
   }
   if (doc.hasBeenIssued === null) {
     required.push('hasBeenIssued');
   }
-  if (doc.name === null) {
+  if (!doc.name) {
     required.push('name');
   }
-  if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && doc.coverStartDate === null)) {
+  if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && !doc.coverStartDate)) {
     required.push('coverStartDate');
   }
-  if (doc.hasBeenIssued === true && doc.coverEndDate === null) {
+  if (doc.hasBeenIssued === true && !doc.coverEndDate) {
     required.push('coverEndDate');
   }
-  if (doc.hasBeenIssued === false && doc.monthsOfCover === null) {
+  if (doc.hasBeenIssued === false && !doc.monthsOfCover) {
     required.push('monthsOfCover');
   }
-  if (doc.details === null) {
+  if (!doc.details) {
     required.push('details');
   }
-  if (doc.details && doc.details.length > 0 && doc.details.includes('other') && doc.detailsOther === null) {
+  if (doc.details && doc.details.length > 0 && doc.details.includes('other') && !doc.detailsOther) {
     required.push('detailsOther');
   }
-  if (doc.currency === null) {
+  if (!doc.currency) {
     required.push('currency');
   }
-  if (doc.value === null) {
+  if (!doc.value) {
     required.push('value');
   }
-  if (doc.coverPercentage === null) {
+  if (!doc.coverPercentage) {
     required.push('coverPercentage');
   }
-  if (doc.interestPercentage === null) {
+  if (!doc.interestPercentage) {
     required.push('interestPercentage');
   }
   // if (doc.paymentType === null) {
