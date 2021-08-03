@@ -10,12 +10,25 @@
  */
 
 const df = require('durable-functions');
+const retryOptions = require('../helpers/retryOptions');
 
 module.exports = df.orchestrator(function* numbergenerator(context) {
-  console.log('NUM GEN');
   // Replace "Hello" with the name of your Durable Activity Function.
-  const num = yield context.df.callActivity('activity-get-number-from-generator');
+  try {
+    const deal = yield context.df.callActivityWithRetry('activity-get-number-from-generator', retryOptions);
+    return { deal };
+  } catch (error) {
+    let errorMessageJson = error.message.replace('Activity function \'activity-get-number-from-generator\' failed:  Error:', '');
+
+    try {
+      errorMessageJson = JSON.parse(errorMessageJson);
+    } catch (err) { return err; }
+
+    return {
+      num: 'ERROR_NUM_GENERATOR',
+      error: errorMessageJson,
+    };
+  }
 
   // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
-  return { num };
 });
