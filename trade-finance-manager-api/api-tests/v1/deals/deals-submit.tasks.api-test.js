@@ -55,6 +55,7 @@ describe('/v1/deals', () => {
 
         it('should call externalApis.sendEmail for first task email', async () => {
           const dealId = MOCK_DEAL_NO_COMPANIES_HOUSE._id;
+
           const { body } = await api.put(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE)).to('/v1/deals/submit');
 
           const firstTask = body.tfm.tasks[0].groupTasks[0];

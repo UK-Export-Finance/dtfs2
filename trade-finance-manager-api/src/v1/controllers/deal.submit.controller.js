@@ -72,9 +72,9 @@ const submitDeal = async (dealId, dealType, checker) => {
       || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
-      await sendDealSubmitEmails(updatedDealWithTasks);
+      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
+      await sendDealSubmitEmails(dealId);
 
-      const updatedDeal = api.updateDeal(dealId, updatedDealWithTasks);
       return updatedDeal;
     }
 
