@@ -169,8 +169,16 @@ describe('send-deal-submit-emails', () => {
 
     describe('send MIA acknowledgement', () => {
       it('should return API response with correct emailVariables', async () => {
-        const bssList = generateFacilitiesListString(mockDeal.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND));
-        const ewcsList = generateFacilitiesListString(mockDeal.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN));
+        const bssList = generateFacilitiesListString(
+          mockDeal.dealSnapshot.facilities.filter(
+            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          ),
+        );
+        const ewcsList = generateFacilitiesListString(
+          mockDeal.dealSnapshot.facilities.filter(
+            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          ),
+        );
 
         const expectedEmailVariables = {
           recipientName: mockDeal.dealSnapshot.details.maker.firstname,
@@ -202,16 +210,28 @@ describe('send-deal-submit-emails', () => {
       });
 
       it('should not show BSS header if no bonds', async () => {
+        const facilities = mockDeal.dealSnapshot.facilities.filter(
+          ({ facilitySnapshot }) => facilitySnapshot.facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+        );
+
         const mockDealNoBss = {
           ...mockDeal,
           dealSnapshot: {
             ...mockDeal.dealSnapshot,
-            facilities: mockDeal.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.BOND),
+            facilities,
           },
         };
 
-        const bssList = generateFacilitiesListString(mockDealNoBss.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND));
-        const ewcsList = generateFacilitiesListString(mockDealNoBss.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN));
+        const bssList = generateFacilitiesListString(
+          mockDealNoBss.dealSnapshot.facilities.filter(
+            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          ),
+        );
+        const ewcsList = generateFacilitiesListString(
+          mockDealNoBss.dealSnapshot.facilities.filter(
+            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          ),
+        );
 
         const expectedEmailVariables = {
           recipientName: mockDeal.dealSnapshot.details.maker.firstname,
@@ -242,16 +262,27 @@ describe('send-deal-submit-emails', () => {
       });
 
       it('should not show EWCS header if no loans', async () => {
+        const facilities = mockDeal.dealSnapshot.facilities.filter(
+          ({ facilitySnapshot }) => facilitySnapshot.facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+        );
         const mockDealNoEwcs = {
           ...mockDeal,
           dealSnapshot: {
             ...mockDeal.dealSnapshot,
-            facilities: mockDeal.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN),
+            facilities,
           },
         };
 
-        const bssList = generateFacilitiesListString(mockDealNoEwcs.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND));
-        const ewcsList = generateFacilitiesListString(mockDealNoEwcs.dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN));
+        const bssList = generateFacilitiesListString(
+          mockDealNoEwcs.dealSnapshot.facilities.filter(
+            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          ),
+        );
+        const ewcsList = generateFacilitiesListString(
+          mockDealNoEwcs.dealSnapshot.facilities.filter(
+            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          ),
+        );
 
         const expectedEmailVariables = {
           recipientName: mockDeal.dealSnapshot.details.maker.firstname,

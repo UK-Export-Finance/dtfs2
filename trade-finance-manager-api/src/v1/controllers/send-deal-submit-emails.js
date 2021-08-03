@@ -83,8 +83,16 @@ const sendMiaAcknowledgement = async (deal) => {
 
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_RECEIVED;
 
-  const bssList = generateFacilitiesListString(dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND));
-  const ewcsList = generateFacilitiesListString(dealSnapshot.facilities.filter(({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN));
+  const bonds = dealSnapshot.facilities.filter(
+    ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  );
+
+  const loans = dealSnapshot.facilities.filter(
+    ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  );
+
+  const bssList = generateFacilitiesListString(bonds);
+  const ewcsList = generateFacilitiesListString(loans);
 
   const emailVariables = {
     recipientName,
