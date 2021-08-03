@@ -20,12 +20,13 @@ export const getReturnToMaker = async (req, res) => {
 };
 
 export const postReturnToMaker = async (req, res, next) => {
-  const { params, body } = req;
-  const { userToken } = req.session;
+  const { params, body, session } = req;
+  console.log(session);
+  const { user, userToken } = session;
   const { applicationId } = params;
   const { comment } = body;
   const application = await getApplication(applicationId);
-  const checker = await getUserDetails(application.userId, userToken);
+  const checker = await getUserDetails(user._id, userToken);
 
   try {
     if (comment.length > MAX_COMMENT_LENGTH) {
@@ -39,18 +40,18 @@ export const postReturnToMaker = async (req, res, next) => {
       });
     }
 
-    const comments = [
-      ...(application.comments || []),
-      {
+    if (comment.length > 0) {
+      const commentObj = {
         role: 'checker',
         userName: checker.username,
         createdAt: Date.now(),
         comment,
-      },
-    ];
-
-    application.comments = comments;
-
+      };
+      const comments = application.comments || [];
+      comments.push(commentObj);
+      application.comments = comments;
+    }
+    application.checkerId = user._id;
     await updateApplication(applicationId, application);
     await setApplicationStatus(applicationId, PROGRESS.CHANGES_REQUIRED);
   } catch (err) {

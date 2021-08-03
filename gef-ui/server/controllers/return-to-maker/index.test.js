@@ -89,6 +89,7 @@ describe('controllers/return-to-maker', () => {
           comment: 'Some comments here',
         },
         session: {
+          user: { _id: '007' },
           userToken: '',
         },
       };

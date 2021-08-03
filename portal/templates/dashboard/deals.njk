@@ -41,7 +41,7 @@
         {% set path = '/gef/application-details/' if deal.product === "GEF" else "/contract/" %}
         {% set linkHtml %}
           <a
-            href="{{ path }}{{ deal._id }}"
+            href="{{ path }}{{ deal._id }}/"
             class="govuk-link"
             data-cy="deal__link--{{ deal._id }}"
           >
@@ -71,8 +71,9 @@
             attributes: { "data-cy": "deal__status--" + deal._id }
           },
           {
-            text: deal.lastUpdate | localiseTimestamp("D MMM YYYY", user.timezone),
-            attributes: { 'data-cy': 'deal__updated--' + deal._id }
+            text: deal.lastUpdate | localiseTimestamp("D MMMYYYY", user.timezone),
+            attributes: {
+               'data-cy': 'deal__updated--' + deal._id }
           }
         ] %}
 

@@ -1,57 +1,119 @@
 /* eslint-disable no-underscore-dangle */
 import _startCase from 'lodash/startCase';
-import * as api from '../../services/api';
-import { mapSummaryList, status } from '../../utils/helpers';
-import { exporterItems, coverItems, facilityItems } from '../../utils/display-items';
+import { mapSummaryList } from '../../utils/helpers';
+import {
+  exporterItems, coverItems, facilityItems,
+} from '../../utils/display-items';
 import { getUserAuthorisationLevelsToApplication } from '../../utils/user-authorisation-level';
-import { PROGRESS, FACILITY_TYPE, AUTHORISATION_LEVEL } from '../../../constants';
+import { FACILITY_TYPE, AUTHORISATION_LEVEL } from '../../../constants';
+
+import Application from '../../models/application';
+
+function buildHeader(app) {
+  if (!['Draft'].includes(app.status)) {
+    const main = {
+      ukefDealId: app.ukefDealId || '-',
+      submissionDate: app.submissionDate || '-',
+      companyName: app.exporter.details.companyName,
+      applicationShowSummary: ['SUBMITTED_TO_UKEF', 'CHANGES_REQUIRED', 'BANK_CHECK'].includes(app.status),
+      applicationStatus: app.status,
+      dateCreated: app.createdAt,
+      timezone: app.maker.timezone || 'UTC',
+      createdBy: `${app.maker.firstname} ${app.maker.surname}`,
+      comments: app.comments,
+      applicationType: app.submissionType,
+    };
+    let checker = {};
+    if (app.checker) {
+      checker = {
+        checkedBy: `${app.checker.firstname} ${app.checker.surname}`,
+      };
+    }
+    return { ...main, ...checker };
+  }
+  return {};
+}
+
+function buildBody(app, previewMode) {
+  const exporterUrl = `/gef/application-details/${app.id}`;
+  const coverUrl = `/gef/application-details/${app.id}/automatic-cover`;
+  const facilityUrl = `/gef/application-details/${app.id}/facilities`;
+
+  return {
+    isAutomaticCover: app.coverTerms.isAutomaticCover,
+    exporter: {
+      status: app.exporterStatus,
+      rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
+        showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
+      }), previewMode),
+    },
+    coverTerms: {
+      status: app.coverStatus,
+      rows: mapSummaryList(app.coverTerms, coverItems(coverUrl), previewMode),
+    },
+    facilities: {
+      status: app.facilitiesStatus,
+      data: app.facilities.items.map((item) => ({
+        heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
+        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), previewMode),
+        createdAt: item.details.createdAt,
+        facilityId: item.details._id,
+      }))
+        .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
+    },
+    bankInternalRefName: app.bankInternalRefName,
+    applicationId: app.id,
+    makerCanSubmit: app.canSubmit,
+    checkerCanSubmit: app.checkerCanSubmit,
+    previewMode,
+  };
+}
+
+function buildActions(app) {
+  return {
+    submit: app.canSubmit,
+  };
+}
+
+function buildView(app, previewMode) {
+  const header = buildHeader(app);
+  const body = buildBody(app, previewMode);
+  const actions = buildActions(app);
+  return { ...header, ...body, ...actions };
+}
 
 export const applicationDetails = async (req, res, next) => {
-  const { params, session } = req;
+  const {
+    params,
+    session,
+  } = req;
   const { applicationId } = params;
-  const { user } = session;
+  const { user, userToken } = session;
   try {
-    const application = await api.getApplication(applicationId);
-    const exporter = await api.getExporter(application.exporterId);
-    const coverTerms = await api.getCoverTerms(application.coverTermsId);
-    const facilities = await api.getFacilities(applicationId);
-    const exporterUrl = `/gef/application-details/${applicationId}`;
-    const coverUrl = `/gef/application-details/${applicationId}/automatic-cover`;
-    const facilityUrl = `/gef/application-details/${applicationId}/facilities`;
-    const exporterStatus = status[exporter.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
-    const coverStatus = status[coverTerms.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
-    const facilitiesStatus = status[facilities.status || PROGRESS.NOT_STARTED]; // if null, set status to Not started
-    const canSubmit = exporterStatus.code === PROGRESS.COMPLETED
-      && coverStatus.code === PROGRESS.COMPLETED
-      && facilitiesStatus.code === PROGRESS.COMPLETED; // All statuses are set to complete
+    const application = await Application.findById(applicationId, user, userToken);
+    if (!application) {
+      // 404 not found or unauthorised
+      return res.redirect('/dashboard');
+    }
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
-    return res.render('partials/application-details.njk', {
-      isAutomaticCover: coverTerms.isAutomaticCover,
-      exporter: {
-        status: exporterStatus,
-        rows: mapSummaryList(exporter, exporterItems(exporterUrl, {
-          showIndustryChangeLink: exporter.details.industries && exporter.details.industries.length > 1,
-        }), previewMode),
-      },
-      coverTerms: {
-        status: coverStatus,
-        rows: mapSummaryList(coverTerms, coverItems(coverUrl), previewMode),
-      },
-      facilities: {
-        status: facilitiesStatus,
-        data: facilities.items.map((item) => ({
-          heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), previewMode),
-          createdAt: item.details.createdAt,
-          facilityId: item.details._id,
-        })).sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
-      },
-      submit: canSubmit,
-      bankInternalRefName: application.bankInternalRefName,
-      applicationId,
-      previewMode,
-    });
+    // Behaviour depending on application state
+    const stateToPartial = {
+      CHANGES_REQUIRED: 'application-details',
+      Draft: 'application-details',
+      BANK_CHECK: 'application-preview',
+      SUBMITTED_TO_UKEF: 'application-preview',
+      ABANDONED: '',
+      UKEF_ACKNOWLEDGED: '',
+      UKEF_IN_PROGRESS: '',
+      UKEF_ACCEPTED_CONDITIONAL: '',
+      UKEF_ACCEPTED_UNCONDITIONAL: '',
+      UKEF_DECLINED: '',
+      EXPIRED: '',
+      WITHDRAWN: '',
+    };
+    const partial = stateToPartial[application.status];
+    return res.render(`partials/${partial}.njk`, { user, ...buildView(application, previewMode) });
   } catch (err) {
     return next(err);
   }
