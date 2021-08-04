@@ -71,7 +71,7 @@
             attributes: { "data-cy": "deal__status--" + deal._id }
           },
           {
-            text: deal.lastUpdate | localiseTimestamp("D MMMYYYY", user.timezone),
+            text: deal.lastUpdate | localiseTimestamp("D MMM YYYY", user.timezone),
             attributes: {
                'data-cy': 'deal__updated--' + deal._id }
           }

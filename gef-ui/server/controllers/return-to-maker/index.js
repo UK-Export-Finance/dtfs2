@@ -21,7 +21,6 @@ export const getReturnToMaker = async (req, res) => {
 
 export const postReturnToMaker = async (req, res, next) => {
   const { params, body, session } = req;
-  console.log(session);
   const { user, userToken } = session;
   const { applicationId } = params;
   const { comment } = body;
@@ -41,15 +40,15 @@ export const postReturnToMaker = async (req, res, next) => {
     }
 
     if (comment.length > 0) {
-      const commentObj = {
-        role: 'checker',
-        userName: checker.username,
-        createdAt: Date.now(),
-        comment,
-      };
-      const comments = application.comments || [];
-      comments.push(commentObj);
-      application.comments = comments;
+      application.comments = [
+        ...(application.comments || []),
+        {
+          role: 'checker',
+          userName: checker.username,
+          createdAt: Date.now(),
+          comment,
+        },
+      ];
     }
     application.checkerId = user._id;
     await updateApplication(applicationId, application);
