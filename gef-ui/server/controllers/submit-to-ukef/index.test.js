@@ -13,7 +13,7 @@ const MockRequest = () => {
   req.params = {};
   req.body = { comment: '' };
   req.query = {};
-  req.session = { userToken: 'dummy-token' };
+  req.session = { user: { _id: '007' }, userToken: 'dummy-token' };
   req.params.applicationId = '123';
   return req;
 };

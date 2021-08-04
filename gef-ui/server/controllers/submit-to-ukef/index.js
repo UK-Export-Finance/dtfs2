@@ -19,16 +19,12 @@ const submitToUkef = async (req, res) => {
 
 const createSubmissionToUkef = async (req, res) => {
   const { params, body } = req;
-  const { userToken } = req.session;
+  const { user, userToken } = req.session;
   const { applicationId } = params;
   const { comment } = body;
   const application = await api.getApplication(applicationId);
-  const checker = await api.getUserDetails(application.userId, userToken);
+  const checker = await api.getUserDetails(user._id, userToken);
 
-  // TODO : Add some validation here to make sure that the whole application is valid
-  //    Cross check things like user allowed to access, bank it correct, etc
-  //    If it is in an appropriate status to be submitted.
-  //    Consider using an application model so that we have centralised place for reuse.
   try {
     if (comment.length > MAX_COMMENT_LENGTH) {
       const errors = validationErrorHandler({
@@ -54,8 +50,10 @@ const createSubmissionToUkef = async (req, res) => {
       const comments = application.comments || [];
       comments.push(commentObj);
       application.comments = comments;
-      await api.updateApplication(applicationId, application);
     }
+    // Always update with the latest checkers details.
+    application.checkerId = user._id;
+    await api.updateApplication(applicationId, application);
     await api.setApplicationStatus(applicationId, PROGRESS.SUBMITTED_TO_UKEF);
     // TODO: Add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk');

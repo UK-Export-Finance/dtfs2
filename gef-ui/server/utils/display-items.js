@@ -57,11 +57,22 @@ const coverItems = (coverUrl) => [
   },
 ];
 
-const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission }) => [
+const facilityItems = (facilityUrl, {
+  type,
+  hasBeenIssued,
+  shouldCoverStartOnSubmission,
+  ukefFacilityId,
+}) => [
   {
     label: 'Name',
     id: 'name',
     href: `${facilityUrl}/about-facility?status=change`,
+  },
+  {
+    label: 'UKEF facility ID',
+    id: 'ukefFacilityId',
+    href: '#',
+    isHidden: !ukefFacilityId,
   },
   {
     label: 'Stage',
@@ -72,7 +83,8 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSub
     label: 'Cover start date',
     id: 'coverStartDate',
     href: `${facilityUrl}/about-facility?status=change`,
-    method: (callback) => moment(callback).format('D MMMM YYYY'),
+    method: (callback) => moment(callback)
+      .format('D MMMM YYYY'),
     isHidden: !hasBeenIssued,
     shouldCoverStartOnSubmission,
   },
@@ -80,7 +92,8 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSub
     label: 'Cover end date',
     id: 'coverEndDate',
     href: `${facilityUrl}/about-facility?status=change`,
-    method: (callback) => moment(callback).format('D MMMM YYYY'),
+    method: (callback) => moment(callback)
+      .format('D MMMM YYYY'),
     isHidden: !hasBeenIssued,
   },
   {

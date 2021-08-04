@@ -60,7 +60,7 @@ context('View a deal', () => {
 
       link(id).click();
 
-      cy.url().should('eq', relative(`/contract/${id}`));
+      cy.url().should('eq', relative(`/contract/${id}/`));
     });
   });
 });

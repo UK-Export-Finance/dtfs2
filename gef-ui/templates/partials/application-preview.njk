@@ -1,11 +1,18 @@
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-  Automatic inclusion notice
+{{ applicationType }}
 {% endblock %}
 
-{% block content %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{{ govukPhaseBanner({
+  tag: {
+    text: "beta"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
 
+{% block content %}
   {% include "includes/application-preview/summary.njk" %}
   {% include "includes/application-preview/task-comments.njk" %}
 
@@ -14,6 +21,8 @@
   {% include "includes/application-preview/about-exporter.njk" %}
   {% include "includes/application-preview/automatic-cover.njk" %}
   {% include "includes/application-preview/facilities.njk" %}
-  {% include "includes/application-preview/submit.njk" %}
+  {% if checkerCanSubmit %}
+    {% include "includes/application-preview/submit.njk" %}
+  {% endif %}
 
 {% endblock %}

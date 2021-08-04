@@ -66,6 +66,6 @@ context('View a deal with checker role', () => {
 
     link(id).click();
 
-    cy.url().should('eq', relative(`/gef/application-details/${id}`));
+    cy.url().should('eq', relative(`/gef/application-details/${id}/`));
   });
 });
