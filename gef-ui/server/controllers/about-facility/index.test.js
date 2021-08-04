@@ -107,7 +107,7 @@ describe('Validate About Facility', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
-    console.log('=======================', format(tomorrow, 'd M yyyy'));
+
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
       coverStartDate: format(tomorrow, 'MMMM d, yyyy'),

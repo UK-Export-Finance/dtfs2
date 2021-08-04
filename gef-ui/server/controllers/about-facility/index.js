@@ -155,7 +155,6 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
-    console.log('coverStartDate ======================================', coverStartDate);
     const dateFormat = 'MMMM d, yyyy';
     await api.updateFacility(facilityId, {
       name: body.facilityName,
