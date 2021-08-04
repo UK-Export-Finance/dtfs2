@@ -18,6 +18,7 @@ const MockRequest = () => {
   req.params.applicationId = '123';
   req.session = {
     user: {
+      bank: { id: 'BANKID' },
       roles: ['MAKER'],
     },
   };
@@ -29,8 +30,9 @@ const MockApplicationResponse = () => {
   res._id = '1234';
   res.exporterId = '123';
   res.coverTermsId = '123';
+  res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.status = 'IN_PROGRESS';
+  res.status = 'Draft';
   return res;
 };
 

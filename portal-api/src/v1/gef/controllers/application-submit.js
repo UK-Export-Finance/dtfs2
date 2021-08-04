@@ -18,15 +18,9 @@ const generateSubmissionData = async (existingApplication) => {
   return result;
 };
 
-const generateUkefDealId = (application) => {
-  const ukefDealId = application.ukefDealId || 'DEAL001';
-  return ukefDealId;
-};
+const generateUkefDealId = (application) => application.ukefDealId || 'PENDING UKEF ID';
 
-const generateUkefFacilityId = (facility) => {
-  const ukefFacilityId = facility.ukefFacilityId || 'FACILITY001';
-  return ukefFacilityId;
-};
+const generateUkefFacilityId = (facility) => facility.ukefFacilityId || 'PENDING UKEF ID';
 
 const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);

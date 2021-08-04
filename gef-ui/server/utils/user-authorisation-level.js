@@ -1,6 +1,11 @@
 import { PROGRESS, AUTHORISATION_LEVEL } from '../../constants';
 
-const statesWhereMakerHasEditAccess = [PROGRESS.DRAFT, PROGRESS.NOT_STARTED, PROGRESS.IN_PROGRESS];
+const statesWhereMakerHasEditAccess = [
+  PROGRESS.DRAFT,
+  PROGRESS.NOT_STARTED,
+  PROGRESS.IN_PROGRESS,
+  PROGRESS.CHANGES_REQUIRED,
+];
 const statesWhereMakerHasReadAccess = [PROGRESS.BANK_CHECK];
 const statesWhereMakerHasCommentAccess = [PROGRESS.BANK_CHECK];
 const statesWhereCheckerHasEditAccess = [];

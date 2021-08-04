@@ -15,7 +15,7 @@
   <div class="application-banner" data-cy="application-banner">
     <p class="govuk-body" data-cy="bank-ref-name">{{ bankInternalRefName }}</p>
     {%if not previewMode %}
-      <a class="govuk-link" href="/gef/application-details/{{applicationId}}" data-cy="abandon-link"><strong>Abandon</strong></a>
+      <a class="govuk-link" href="/gef/application-details/{{applicationId}}/" data-cy="abandon-link"><strong>Abandon</strong></a>
     {% endif %}
   </div>
 
@@ -27,6 +27,10 @@
         'data-cy': 'error-summary'
       }
     }) }}
+  {% endif %}
+
+  {% if applicationShowSummary %}
+    {% include "includes/application-preview/summary.njk" %}
   {% endif %}
 
   <header data-cy="application-details-page">
