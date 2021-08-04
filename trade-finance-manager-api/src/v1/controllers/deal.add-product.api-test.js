@@ -34,7 +34,6 @@ describe('deal submit - add-product', () => {
 
     describe('when there is only one loan facility', () => {
       it('should return loan product code', () => {
-
         const result = mapDealProduct([mockLoan]);
 
         expect(result).toEqual(CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN);

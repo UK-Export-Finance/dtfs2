@@ -9,7 +9,6 @@ const {
 } = require('../helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
-const dealController = require('./deal.controller');
 
 // make sure the first task is `Match or Create Parties`
 // if the first task changes in the future, we might not want to send an email.
