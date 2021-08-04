@@ -32,7 +32,7 @@ const MockApplicationResponse = () => {
   res.coverTermsId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.status = 'Draft';
+  res.status = 'DRAFT';
   return res;
 };
 

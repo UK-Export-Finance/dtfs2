@@ -75,7 +75,7 @@ describe(component, () => {
         const facilityTableIndex = 1;
 
         const deals = [
-          { _id: '1', details: { status: 'Draft' } },
+          { _id: '1', details: { status: 'DRAFT' } },
           { _id: '2', details: { status: 'Further Maker\'s input required' } },
         ];
 

@@ -287,12 +287,12 @@ describe('/graphql query deals', () => {
   describe('/graphql list deals filters', () => {
     it('returns a list of deals, ordered by "updated", filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
@@ -312,7 +312,7 @@ describe('/graphql query deals', () => {
       expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals in reverse order; most recent first..
-      expect(body.data.allDeals.deals.every((deal) => deal.status === 'Draft')).toBe(true);
+      expect(body.data.allDeals.deals.every((deal) => deal.status === 'DRAFT')).toBe(true);
 
       expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[5].details.bankSupplyContractName);
       expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[3].details.bankSupplyContractName);
@@ -325,12 +325,12 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated and filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
@@ -350,7 +350,7 @@ describe('/graphql query deals', () => {
       expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect deals of 2nd page in reverse order; most recent first..
-      expect(body.data.allDeals.deals.every((deal) => deal.status === 'Draft')).toBe(true);
+      expect(body.data.allDeals.deals.every((deal) => deal.status === 'DRAFT')).toBe(true);
       expect(body.data.allDeals.deals[0].bankRef).toEqual(deals[3].details.bankSupplyContractName);
       expect(body.data.allDeals.deals[1].bankRef).toEqual(deals[2].details.bankSupplyContractName);
 
@@ -359,12 +359,12 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", filtered by not equal filter', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];

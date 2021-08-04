@@ -513,7 +513,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       beforeEach(async (done) => {
         const dealInDraftStatus = completedDeal;
-        dealInDraftStatus.details.status = 'Draft';
+        dealInDraftStatus.details.status = 'DRAFT';
 
         const deal = JSON.parse(JSON.stringify(dealInDraftStatus));
 

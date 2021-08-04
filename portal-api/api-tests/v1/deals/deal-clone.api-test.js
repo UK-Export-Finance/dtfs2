@@ -122,7 +122,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.details.maker._id).toEqual(aBarclaysMaker._id);
 
         expect(body.details.owningBank).toEqual(aBarclaysMaker.bank);
-        expect(body.details.status).toEqual('Draft');
+        expect(body.details.status).toEqual('DRAFT');
         expect(body.editedBy).toEqual([]);
         expect(body.comments).toEqual([]);
         expect(body.ukefComments).toEqual([]);

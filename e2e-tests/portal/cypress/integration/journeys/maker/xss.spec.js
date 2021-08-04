@@ -22,7 +22,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     const aDealInStatus = (status) => twentyOneDeals.filter((deal) => status === deal.details.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)
+    cy.insertOneDeal(aDealInStatus('DRAFT'), MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 

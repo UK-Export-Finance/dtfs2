@@ -11,7 +11,7 @@ const MOCK_DEAL = {
   details: {
     bankSupplyContractID: 'someDealId',
     bankSupplyContractName: 'someDealName',
-    status: 'Draft',
+    status: 'DRAFT',
   },
   submissionDetails: {
     supplyContractCurrency: {

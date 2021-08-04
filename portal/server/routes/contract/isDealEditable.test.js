@@ -35,7 +35,7 @@ describe('isDealEditable', () => {
     it('should return false', () => {
       const mockDeal = {
         details: {
-          status: 'Draft',
+          status: 'DRAFT',
           submissionDate: 12345678,
         },
       };
@@ -49,7 +49,7 @@ describe('isDealEditable', () => {
     it('should return true', () => {
       const mockDeal = {
         details: {
-          status: 'Draft',
+          status: 'DRAFT',
         },
       };
 

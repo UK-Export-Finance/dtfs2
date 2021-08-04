@@ -67,7 +67,7 @@ exports.update = (req, res) => {
 
     const updatedDealStatus = updatedDeal.details.status;
 
-    const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
+    const shouldCheckFacilityDates = (fromStatus === 'DRAFT' && updatedDealStatus === 'Ready for Checker\'s approval');
 
     if (shouldCheckFacilityDates) {
       await updateFacilityCoverStartDates(req.user, updatedDeal);

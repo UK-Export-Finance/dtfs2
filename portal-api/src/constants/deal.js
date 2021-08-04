@@ -36,7 +36,7 @@ const ACTION_NAME = {
 };
 
 const STATUS = {
-  DRAFT: 'Draft',
+  DRAFT: 'DRAFT',
   READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
   INPUT_REQUIRED: 'Further Maker\'s input required',
   ABANDONED: 'Abandoned Deal',

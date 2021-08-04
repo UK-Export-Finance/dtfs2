@@ -23,7 +23,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     const aDealInStatus = (status) => twentyOneDeals.filter((deal) => status === deal.details.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)
+    cy.insertOneDeal(aDealInStatus('DRAFT'), MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
@@ -84,7 +84,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       expect(text.trim()).to.equal('Abandoned Deal');
     });
     contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Draft');
+      expect(text.trim()).to.equal('DRAFT');
     });
   });
 });

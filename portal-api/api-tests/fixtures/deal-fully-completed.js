@@ -5,9 +5,9 @@ const deal = {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: 'Ready for Checker\'s approval',
-    previousStatus: 'Draft',
+    previousStatus: 'DRAFT',
     dateOfLastAction: '1985/11/04 21:00:00:000',
-    previousWorkflowStatus: 'Draft',
+    previousWorkflowStatus: 'DRAFT',
     submissionType: 'Manual Inclusion Notice',
     checker: {
       username: 'test1',

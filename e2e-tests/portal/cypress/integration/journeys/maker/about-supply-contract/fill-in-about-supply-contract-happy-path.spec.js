@@ -24,7 +24,7 @@ context('about-supply-contract', () => {
     const aDealWith_AboutSupplyContract_InStatus = (status) => {
       const candidates = twentyOneDeals
         .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
-        .filter((deal) => (deal.details && deal.details.status === 'Draft'))
+        .filter((deal) => (deal.details && deal.details.status === 'DRAFT'))
         .filter((deal) => (deal.details && !deal.details.submissionDate));
 
       const deal = candidates[0];

@@ -17,7 +17,7 @@ context('View a deal with checker role', () => {
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Manual Inclusion Notice',
       status: "Ready for Checker's approval",
-      previousStatus: 'Draft',
+      previousStatus: 'DRAFT',
     },
   };
   const draftDealData = {

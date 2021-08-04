@@ -3,7 +3,7 @@ module.exports = {
     bankSupplyContractID: 'abc-1-def',
     bankSupplyContractName: 'Tibettan submarine acquisition scheme',
     submissionType: 'Automatic Inclusion Notice',
-    status: 'Draft',
+    status: 'DRAFT',
     owningBank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',

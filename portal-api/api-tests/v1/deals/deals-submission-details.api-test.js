@@ -11,7 +11,7 @@ const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    status: 'Draft',
+    status: 'DRAFT',
     dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{

@@ -51,7 +51,7 @@ context('View a deal', () => {
       });
 
       status(id).invoke('text').then((text) => {
-        expect(text.trim()).equal('Draft');
+        expect(text.trim()).equal('DRAFT');
       });
 
       updated(id).invoke('text').then((text) => {

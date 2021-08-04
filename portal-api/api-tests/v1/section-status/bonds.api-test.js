@@ -65,7 +65,7 @@ describe('section-status - bond', () => {
     it('should return false when previous deal status is `Draft`', () => {
       const mockDeal = {
         status: 'Acknowledged by UKEF',
-        previousStatus: 'Draft',
+        previousStatus: 'DRAFT',
       };
 
       const result = bondHasIncompleteIssueFacilityDetails(mockDeal.status, mockDeal.previousStatus, validMockBond);
@@ -74,7 +74,7 @@ describe('section-status - bond', () => {
 
     it('should return false when deal status is not allowed', () => {
       const mockDeal = {
-        status: 'Draft',
+        status: 'DRAFT',
       };
 
       const result = bondHasIncompleteIssueFacilityDetails(mockDeal.status, mockDeal.previousStatus, validMockBond);

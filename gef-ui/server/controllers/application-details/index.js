@@ -10,7 +10,7 @@ import { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } from '../../../constants
 import Application from '../../models/application';
 
 function buildHeader(app) {
-  if (!['Draft'].includes(app.status)) {
+  if (![PROGRESS.DRAFT].includes(app.status)) {
     const main = {
       ukefDealId: app.ukefDealId || '-',
       submissionDate: app.submissionDate || '-',

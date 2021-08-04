@@ -80,7 +80,7 @@ describe(baseUrl, () => {
           exporterId: expect.any(String),
           coverTermsId: expect.any(String),
           createdAt: expect.any(Number),
-          status: 'Draft',
+          status: 'DRAFT',
           dealType: 'GEF',
           submissionType: null,
           submissionCount: 0,
@@ -114,7 +114,7 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         exporterId: expect.any(String),
         coverTermsId: expect.any(String),
-        status: 'Draft',
+        status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
@@ -147,7 +147,7 @@ describe(baseUrl, () => {
     it('returns a status', async () => {
       const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
-      expect(body).toEqual({ status: 'Draft' });
+      expect(body).toEqual({ status: 'DRAFT' });
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
@@ -173,7 +173,7 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         exporterId: expect.any(String),
         coverTermsId: expect.any(String),
-        status: 'Draft',
+        status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,

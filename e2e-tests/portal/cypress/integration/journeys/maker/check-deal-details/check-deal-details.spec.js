@@ -10,7 +10,7 @@ const dealInDraft = {
   ...fullyCompletedDeal,
   details: {
     ...fullyCompletedDeal.details,
-    status: 'Draft',
+    status: 'DRAFT',
   },
 };
 

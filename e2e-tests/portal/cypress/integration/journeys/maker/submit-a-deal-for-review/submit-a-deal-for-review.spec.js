@@ -247,7 +247,7 @@ context('A maker selects to submit a contract for review from the view-contract 
         expect(text.trim()).to.equal("Ready for Checker's approval");
       });
       contract.previousStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Draft');
+        expect(text.trim()).to.equal('DRAFT');
       });
 
       // while on the deal page: confirm that the various edit features have been

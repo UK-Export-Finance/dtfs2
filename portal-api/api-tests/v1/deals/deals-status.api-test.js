@@ -223,7 +223,7 @@ describe('/v1/deals/:id/status', () => {
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(body.deal.details.previousWorkflowStatus).toEqual('Draft');
+      expect(body.deal.details.previousWorkflowStatus).toEqual('DRAFT');
     });
 
     it('does NOT update previousStatus if the `from` and `to` status matches', async () => {
@@ -378,7 +378,7 @@ describe('/v1/deals/:id/status', () => {
         ...completedDeal,
         details: {
           ...completedDeal.details,
-          status: 'Draft',
+          status: 'DRAFT',
         },
       };
 

@@ -74,7 +74,7 @@ describe(component, () => {
     it('should NOT render when deal status is `Draft`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
+        { _id: 1, details: { status: 'DRAFT' } },
       ];
       const userCanSubmit = true;
 
@@ -158,7 +158,7 @@ describe(component, () => {
         { _id: 1, details: { status: 'Ready for Checker\'s approval' } },
         { _id: 2, details: { status: 'Submitted' } },
         { _id: 3, details: { status: 'Rejected by UKEF' } },
-        { _id: 4, details: { status: 'Draft' } },
+        { _id: 4, details: { status: 'DRAFT' } },
         { _id: 5, details: { status: 'Further Maker\'s input required' } },
         { _id: 6, details: { status: 'Abandoned Deal' } },
         { _id: 7, details: { status: 'Acknowledged by UKEF' } },

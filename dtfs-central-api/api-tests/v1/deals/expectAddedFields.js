@@ -18,7 +18,7 @@ const expectAddedFields = (obj) => {
       dateOfLastAction: expect.any(String),
       maker: expect.any(Object),
       owningBank: expect.any(Object),
-      status: 'Draft',
+      status: 'DRAFT',
     },
     facilities: [],
     editedBy: [],

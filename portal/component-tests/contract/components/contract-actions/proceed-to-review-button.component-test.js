@@ -8,7 +8,7 @@ describe(component, () => {
     it("should be enabled for deals in status=Draft and status=Further Maker's input required and when dealFormsCompleted flag is true", () => {
       const user = { roles: ['maker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
+        { _id: 1, details: { status: 'DRAFT' } },
         { _id: 2, details: { status: "Further Maker's input required" } },
       ];
 
@@ -105,7 +105,7 @@ describe(component, () => {
     it('should be disabled when dealFormsCompleted and dealHasIssuedFacilitiesToSubmit flags are false', () => {
       const user = { roles: ['maker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
+        { _id: 1, details: { status: 'DRAFT' } },
         { _id: 2, details: { status: "Further Maker's input required" } },
         { _id: 3, details: { status: 'Abandoned Deal' } },
         { _id: 4, details: { status: 'Acknowledged by UKEF' } },
@@ -126,7 +126,7 @@ describe(component, () => {
     it('should be disabled for deals in all other states', () => {
       const user = { roles: ['maker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
+        { _id: 1, details: { status: 'DRAFT' } },
         { _id: 2, details: { status: 'Further Maker\'s input required' } },
         { _id: 3, details: { status: 'Abandoned Deal' } },
         { _id: 4, details: { status: 'Acknowledged by UKEF' } },
@@ -144,7 +144,7 @@ describe(component, () => {
     it('should not render at all', () => {
       const user = { roles: ['checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
+        { _id: 1, details: { status: 'DRAFT' } },
         { _id: 2, details: { status: "Further Maker's input required" } },
         { _id: 3, details: { status: 'Submitted' } },
         { _id: 4, details: { status: 'Rejected by UKEF' } },

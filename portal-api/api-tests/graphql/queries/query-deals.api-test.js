@@ -293,12 +293,12 @@ describe('/graphql query deals', () => {
   describe('/graphql list deals filters', () => {
     it('returns a list of deals, ordered by "updated", filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
@@ -329,12 +329,12 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated and filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
@@ -362,12 +362,12 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", filtered by not equal filter', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'DRAFT', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
         aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];

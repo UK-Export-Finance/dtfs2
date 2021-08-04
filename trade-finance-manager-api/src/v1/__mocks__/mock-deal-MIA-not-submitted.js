@@ -7,7 +7,7 @@ const MOCK_DEAL = {
     bankSupplyContractID: 'Mock supply contract ID',
     bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
-    previousStatus: 'Draft',
+    previousStatus: 'DRAFT',
     maker: {
       username: 'JOE',
       firstname: 'Joe',

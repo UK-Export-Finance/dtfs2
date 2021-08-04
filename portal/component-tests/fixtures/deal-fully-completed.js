@@ -9,7 +9,7 @@ const deal = {
     bankSupplyContractID: 'mock id',
     status: 'Ready for Checker\'s approval',
     dateOfLastAction: '02/02/2020 12:12',
-    previousStatus: 'Draft',
+    previousStatus: 'DRAFT',
     maker: { username: 'some.user@client.com' },
     submissionDate: 1594296776916.0,
   },

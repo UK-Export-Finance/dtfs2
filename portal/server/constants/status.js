@@ -1,5 +1,5 @@
 const STATUS = {
-  draft: 'Draft',
+  draft: 'DRAFT',
   readyForApproval: 'Ready for Checker\'s approval',
   inputRequired: 'Further Maker\'s input required',
   abandoned: 'Abandoned Deal',

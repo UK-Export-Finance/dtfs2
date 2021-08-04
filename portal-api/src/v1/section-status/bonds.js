@@ -31,7 +31,7 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, b
                             || dealStatus === 'Accepted by UKEF (without conditions)'
                             || dealStatus === 'Ready for Checker\'s approval'
                             || dealStatus === 'Submitted')
-                            && previousDealStatus !== 'Draft');
+                            && previousDealStatus !== 'DRAFT');
 
   const allowedFacilityStage = bond.facilityStage === 'Unissued';
 
