@@ -1,18 +1,56 @@
+/* eslint-disable no-await-in-loop */
 /*
  * This function is not intended to be invoked directly. Instead it will be
  * triggered by an orchestrator function.
  *
  */
 const numberGeneratorController = require('../controllers/number-generator.controller');
+const api = require('../api');
+
 const CONSTANTS = require('../constants');
 
-const getNumberFromGenerator = async () => {
-  const numberFromGenerator = await numberGeneratorController.callNumberGenerator(CONSTANTS.NUMBER_GENERATOR.NUMBER_TYPE.DEAL);
+const MAX_NUMBER_OF_TRIES = 5;
 
-  if (numberFromGenerator.error) {
-    throw new Error(JSON.stringify(numberFromGenerator.error));
+const getNumberFromGenerator = async (context) => {
+  const { id, entityType } = context.bindingData;
+
+  let numberIsAvailable = false;
+  let numberFromGenerator;
+  let loopCount = 0;
+
+  let numberType;
+  let checkAcbs;
+
+  switch (entityType) {
+    case CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL:
+      numberType = CONSTANTS.NUMBER_GENERATOR.NUMBER_TYPE.DEAL;
+      checkAcbs = api.checkDealId;
+      break;
+    case CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY:
+      numberType = CONSTANTS.NUMBER_GENERATOR.NUMBER_TYPE.FACILITY;
+      checkAcbs = api.checkFacilityId;
+      break;
+    default:
+      throw new Error(JSON.stringify(`Invalid entityType: ${entityType}`));
   }
-  return numberFromGenerator;
+
+  // Set the maximum number of tries in case acbsCheck is unavailable and it gets stuck in an infinite loop
+  while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
+    numberFromGenerator = await numberGeneratorController.callNumberGenerator(numberType);
+
+    if (numberFromGenerator.error) {
+      throw new Error(JSON.stringify(numberFromGenerator.error));
+    }
+
+    const { status } = await checkAcbs(numberFromGenerator.id);
+    numberIsAvailable = (status === 404);
+    loopCount += 1;
+  }
+
+  return {
+    id,
+    ukefId: numberFromGenerator,
+  };
 };
 
 

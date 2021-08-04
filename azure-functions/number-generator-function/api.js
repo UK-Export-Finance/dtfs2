@@ -7,17 +7,14 @@ const getAPI = async (type) => {
     method: 'get',
     url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${type}`,
     auth: {
-      username: process.env.MULESOFT_API_UKEF_TF_EA_KEY,
-      password: process.env.MULESOFT_API_UKEF_TF_EA_SECRET,
+      username: process.env.MULESOFT_API_KEY,
+      password: process.env.MULESOFT_API_SECRET,
     },
     headers: {
       'Content-Type': 'application/json',
     },
   }).catch((err) => ({
     status: err.response.status,
-    data: {
-      error: err.response.data.error.errorDescription,
-    },
   }));
 
   return response;
@@ -60,7 +57,11 @@ const postToAPI = async (apiEndpoint, apiData) => {
 const checkDealId = (dealId) => getAPI(`deal/${dealId}`);
 const checkFacilityId = (facilityId) => getAPI(`facility/${facilityId}`);
 
-const callNumberGenerator = (apiData) => postToAPI('numbers', apiData);
+const callNumberGenerator = (numberType) => postToAPI('numbers', {
+  numberTypeId: numberType,
+  createdBy: 'Portal v2/TFM',
+  requestingSystem: 'Portal v2/TFM',
+});
 
 module.exports = {
   checkDealId,
