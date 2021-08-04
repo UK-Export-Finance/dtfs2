@@ -2,6 +2,7 @@
 import relative from './relativeURL';
 import applicationSubmission from './pages/application-submission';
 import applicationDetails from './pages/application-details';
+import applicationPreview from './pages/application-preview';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applicationIds = [];
@@ -59,13 +60,13 @@ context('Application Details Submission', () => {
     it('takes user back to application details page if cancel link clicked', () => {
       applicationSubmission.commentsField().type('Some comments here ....');
       applicationSubmission.cancelLink().click();
-      applicationDetails.applicationDetailsPage();
+      applicationPreview.applicationPreviewPage();
     });
 
     it('takes user back to application details page if back link clicked', () => {
       applicationSubmission.commentsField().type('Some comments here ....');
       applicationSubmission.backLink().click();
-      applicationDetails.applicationDetailsPage();
+      applicationPreview.applicationPreviewPage();
     });
 
     it('takes user back to dashboard if they click the link in the confirmation page', () => {
