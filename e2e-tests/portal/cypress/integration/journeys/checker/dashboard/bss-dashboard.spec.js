@@ -72,6 +72,6 @@ context('View a deal with checker role', () => {
 
     link(id).click();
 
-    cy.url().should('eq', relative(`/contract/${id}`));
+    cy.url().should('eq', relative(`/contract/${id}/`));
   });
 });
