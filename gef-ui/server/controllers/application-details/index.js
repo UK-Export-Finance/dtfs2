@@ -5,7 +5,7 @@ import {
   exporterItems, coverItems, facilityItems,
 } from '../../utils/display-items';
 import { getUserAuthorisationLevelsToApplication } from '../../utils/user-authorisation-level';
-import { FACILITY_TYPE, AUTHORISATION_LEVEL } from '../../../constants';
+import { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } from '../../../constants';
 
 import Application from '../../models/application';
 
@@ -15,10 +15,13 @@ function buildHeader(app) {
       ukefDealId: app.ukefDealId || '-',
       submissionDate: app.submissionDate || '-',
       companyName: app.exporter.details.companyName,
-      applicationShowSummary: ['SUBMITTED_TO_UKEF', 'CHANGES_REQUIRED', 'BANK_CHECK'].includes(app.status),
+      applicationShowSummary: [
+        PROGRESS.SUBMITTED_TO_UKEF,
+        PROGRESS.CHANGES_REQUIRED,
+        PROGRESS.BANK_CHECK].includes(app.status),
       applicationStatus: app.status,
       dateCreated: app.createdAt,
-      timezone: app.maker.timezone || 'UTC',
+      timezone: app.maker.timezone || 'Europe/London',
       createdBy: `${app.maker.firstname} ${app.maker.surname}`,
       comments: app.comments,
       applicationType: app.submissionType,
