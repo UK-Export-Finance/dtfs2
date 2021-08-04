@@ -1,9 +1,7 @@
 const isIssued = require('./is-issued');
 const CONSTANTS = require('../../constants');
 
-const issuedFacilities = (dealSnapshot) => {
-  const { facilities } = dealSnapshot;
-
+const issuedFacilities = (facilities) => {
   const issuedFacilitiesList = facilities.filter((f) => isIssued(f));
   const unissuedFacilitiesList = facilities.filter((f) => !isIssued(f));
 

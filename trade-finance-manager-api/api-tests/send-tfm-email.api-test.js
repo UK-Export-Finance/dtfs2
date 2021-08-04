@@ -2,7 +2,7 @@ const sendTfmEmail = require('../src/v1/controllers/send-tfm-email');
 const app = require('../src/createApp');
 const api = require('./api')(app);
 const externalApis = require('../src/v1/api');
-const { findOneDeal } = require('../src/v1/controllers/deal.controller');
+const { findOneTfmDeal } = require('../src/v1/controllers/deal.controller');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../src/v1/__mocks__/mock-notify-email-response');
 
@@ -69,7 +69,7 @@ describe('sendTfmEmail', () => {
       submittedDeal,
     );
 
-    const deal = await findOneDeal(MOCK_DEAL._id);
+    const deal = await findOneTfmDeal(MOCK_DEAL._id);
 
     expect(deal.tfm.history.emails[0].recipient).toEqual(sendToEmailAddress);
     expect(deal.tfm.history.emails[0].templateId).toEqual(templateId);

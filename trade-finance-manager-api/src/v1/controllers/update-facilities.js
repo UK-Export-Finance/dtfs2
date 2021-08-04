@@ -11,10 +11,9 @@ const updateFacilities = async (deal) => {
 
   const {
     submissionDate: dealSubmissionDate,
-    facilities,
   } = modifiedDeal;
 
-  modifiedDeal.facilities = facilities.map(async (facility) => {
+  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (facility) => {
     const {
       _id: facilityId,
     } = facility;
@@ -38,14 +37,21 @@ const updateFacilities = async (deal) => {
       riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
       premiumSchedule: facilityPremiumSchedule,
     };
-    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+
+    const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
+
+    const updatedFacility = {
+      ...facility,
+      tfm: {
+        ...facility.tfm,
+        ...updateFacilityResponse.tfm,
+      },
+    };
 
     return updatedFacility;
-  });
+  }));
 
-  await Promise.all(modifiedDeal.facilities);
-
-  return deal;
+  return modifiedDeal;
 };
 
 exports.updateFacilities = updateFacilities;

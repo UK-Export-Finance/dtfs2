@@ -1,5 +1,5 @@
 const MOCK_DEAL = {
-  _id: '223456789',
+  _id: 'MOCK_DEAL_MIN',
   dealType: 'BSS/EWCS',
   details: {
     status: 'Acknowledged by UKEF',

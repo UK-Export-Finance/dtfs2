@@ -11,18 +11,19 @@ const updatedIssuedFacilities = async (deal) => {
 
   const {
     submissionDate: dealSubmissionDate,
-    facilities,
   } = deal;
 
   const updatedFacilities = [];
 
-  modifiedDeal.facilities = facilities.map(async (facility) => {
+  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (facility) => {
+    let modifiedFacility = facility;
+
     const {
       _id: facilityId,
       facilityStage,
       previousFacilityStage,
       hasBeenAcknowledged,
-    } = facility;
+    } = modifiedFacility;
 
     // we only need to update issued facilities if:
     // - a facility has changed from `Unissued` to `Issued` (`Conditional` to `Unconditional` for a loan)
@@ -68,11 +69,20 @@ const updatedIssuedFacilities = async (deal) => {
 
       await api.updateFacility(facilityId, facilityUpdate);
 
-      // update object to return in response
       const updatedFacilityResponseObj = {
         ...updatedFacilityStatus,
         ...updatedPortalFacility,
         tfm: {
+          ...facilityUpdate,
+        },
+      };
+
+      modifiedFacility = {
+        ...modifiedFacility,
+        ...portalFacilityUpdate,
+        status: facilityStatusUpdate,
+        tfm: {
+          ...modifiedFacility.tfm,
           ...facilityUpdate,
         },
       };
@@ -82,10 +92,9 @@ const updatedIssuedFacilities = async (deal) => {
         ...updatedFacilityResponseObj,
       });
     }
-    return facility;
-  });
 
-  await Promise.all(modifiedDeal.facilities);
+    return modifiedFacility;
+  }));
 
   await sendIssuedFacilitiesReceivedEmail(
     modifiedDeal,

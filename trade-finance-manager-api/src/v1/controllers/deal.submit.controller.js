@@ -241,7 +241,6 @@ const submitDeal = async (dealId, dealType, checker) => {
     return api.updateDeal(dealId, updatedDealWithCreateEstore);
   }
 
-  // TODO
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
@@ -259,6 +258,8 @@ const submitDeal = async (dealId, dealType, checker) => {
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
       updatedDeal.submissionType = dealSnapshot.details.submissionType;
+      updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+      updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
 
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 

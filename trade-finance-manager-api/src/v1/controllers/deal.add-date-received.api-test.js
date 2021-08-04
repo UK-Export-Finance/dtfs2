@@ -27,11 +27,7 @@ describe('deal.add-date-received', () => {
   describe('addDealDateReceived', () => {
     it('should add dateReceived to deal.tfm', async () => {
       const mockDeal = {
-        dealSnapshot: {
-          details: {
-            submissionDate: mockSubmissionDate,
-          },
-        },
+        submissionDate: mockSubmissionDate,
         tfm: {
           test: true,
         },
