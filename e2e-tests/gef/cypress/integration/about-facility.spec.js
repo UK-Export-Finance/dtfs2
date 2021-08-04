@@ -1,11 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
+import moment from 'moment';
 import relative from './relativeURL';
 import aboutFacility from './pages/about-facility';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applications = [];
 let token;
+
+const now = moment();
 
 context('About Facility Page', () => {
   before(() => {
@@ -97,12 +100,12 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().type('10');
-      aboutFacility.coverStartDateMonth().type('10');
-      aboutFacility.coverStartDateYear().type('2022');
-      aboutFacility.coverEndDateDay().type('12');
-      aboutFacility.coverEndDateMonth().type('12');
-      aboutFacility.coverEndDateYear().type('2024');
+      aboutFacility.coverStartDateDay().type(now.date());
+      aboutFacility.coverStartDateMonth().type(now.month() + 1);
+      aboutFacility.coverStartDateYear().type(now.year());
+      aboutFacility.coverEndDateDay().type(now.date());
+      aboutFacility.coverEndDateMonth().type(now.month());
+      aboutFacility.coverEndDateYear().type(now.year() + 1);
       aboutFacility.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/provided-facility`));
     });

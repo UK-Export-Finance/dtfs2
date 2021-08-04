@@ -55,30 +55,53 @@ const validateAboutFacility = async (req, res) => {
   let coverEndDate = null;
 
   if (!saveAndReturn) {
+    if (isTrueSet(body.hasBeenIssued)) {
     // Only validate facility name if hasBeenIssued is set to Yes
-    if (isTrueSet(body.hasBeenIssued) && !body.facilityName) {
-      aboutFacilityErrors.push({
-        errRef: 'facilityName',
-        errMsg: `Enter a name for this ${facilityTypeString} facility`,
-      });
-    }
-    if (isTrueSet(body.hasBeenIssued) && !body.shouldCoverStartOnSubmission) {
-      aboutFacilityErrors.push({
-        errRef: 'shouldCoverStartOnSubmission',
-        errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
-      });
-    }
-    if ((isTrueSet(body.hasBeenIssued) && body.shouldCoverStartOnSubmission === 'false') && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
-      aboutFacilityErrors.push({
-        errRef: 'coverStartDate',
-        errMsg: 'Enter a cover start date',
-      });
-    }
-    if (isTrueSet(body.hasBeenIssued) && (!coverEndDateDay || !coverEndDateMonth || !coverEndDateYear)) {
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'Enter a cover end date',
-      });
+      if (!body.facilityName) {
+        aboutFacilityErrors.push({
+          errRef: 'facilityName',
+          errMsg: `Enter a name for this ${facilityTypeString} facility`,
+        });
+      }
+      if (!body.shouldCoverStartOnSubmission) {
+        aboutFacilityErrors.push({
+          errRef: 'shouldCoverStartOnSubmission',
+          errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
+        });
+      }
+      if (body.shouldCoverStartOnSubmission === 'false' && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'Enter a cover start date',
+        });
+      }
+
+      if (body.shouldCoverStartOnSubmission === 'false' && coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
+        const startOfToday = moment().hour(0).minute(0).second(0);
+        const threeMonthsFromNow = moment().add(3, 'M');
+        const startDate = moment().set('date', Number(coverStartDateDay)).set('month', Number(coverStartDateMonth) - 1).set('year', Number(coverStartDateYear));
+
+        if (startDate.isBefore(startOfToday)) {
+          aboutFacilityErrors.push({
+            errRef: 'coverStartDate',
+            errMsg: 'Cover start date cannot be before today',
+          });
+        }
+
+        if (startDate.isAfter(threeMonthsFromNow)) {
+          aboutFacilityErrors.push({
+            errRef: 'coverStartDate',
+            errMsg: 'Cover start date cannot be more than 3 months from now',
+          });
+        }
+      }
+
+      if (!coverEndDateDay || !coverEndDateMonth || !coverEndDateYear) {
+        aboutFacilityErrors.push({
+          errRef: 'coverEndDate',
+          errMsg: 'Enter a cover end date',
+        });
+      }
     }
     // Only validate months of cover if hasBeenIssued is set to No
     if (!isTrueSet(body.hasBeenIssued) && !body.monthsOfCover) {

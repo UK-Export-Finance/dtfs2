@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { aboutFacility, validateAboutFacility } from './index';
 import * as api from '../../services/api';
 
@@ -75,6 +76,8 @@ describe('GET About Facility', () => {
 });
 
 describe('Validate About Facility', () => {
+  const tomorrow = moment().add(1, 'd');
+  const threeMonthsAndOneDayFromNow = moment().add(3, 'M').add(1, 'd');
   it('redirects user to application page if save and return is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -186,9 +189,9 @@ describe('Validate About Facility', () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
-    mockRequest.body['cover-start-date-day'] = '10';
-    mockRequest.body['cover-start-date-month'] = '11';
-    mockRequest.body['cover-start-date-year'] = '2022';
+    mockRequest.body['cover-start-date-day'] = tomorrow.date();
+    mockRequest.body['cover-start-date-month'] = tomorrow.month() + 1;
+    mockRequest.body['cover-start-date-year'] = tomorrow.year();
 
     await validateAboutFacility(mockRequest, mockResponse);
 
@@ -208,8 +211,28 @@ describe('Validate About Facility', () => {
       }),
     }));
 
-    mockRequest.body['cover-start-date-day'] = '10';
+    mockRequest.body['cover-start-date-day'] = tomorrow.date();
     mockRequest.body['cover-start-date-month'] = '';
+
+    await validateAboutFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
+  it('shows error message if coverStartDate is more than 3 months away', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.hasBeenIssued = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.body['cover-start-date-day'] = threeMonthsAndOneDayFromNow.date();
+    mockRequest.body['cover-start-date-month'] = threeMonthsAndOneDayFromNow.month() + 1;
+    mockRequest.body['cover-start-date-year'] = threeMonthsAndOneDayFromNow.year();
 
     await validateAboutFacility(mockRequest, mockResponse);
 
