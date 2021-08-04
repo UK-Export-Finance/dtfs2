@@ -6,7 +6,6 @@ const {
   generateFacilitiesListString,
 } = require('../src/v1/controllers/send-deal-submit-emails');
 const { generateTaskEmailVariables } = require('../src/v1/helpers/generate-task-email-variables');
-const dealController = require('../src/v1/controllers/deal.controller');
 
 const CONSTANTS = require('../src/constants');
 const MOCK_TEAMS = require('../src/v1/__mocks__/mock-teams');
@@ -17,24 +16,20 @@ describe('send-deal-submit-emails', () => {
   describe('before TFM update', () => {
     beforeEach(async () => {
       const mockDealMia = await api.findOneDeal('MOCK_MIA_NOT_SUBMITTED');
-      const mockBonds = mockDealMia.dealSnapshot.bondTransactions.items.map((facility) => ({
-        facilitySnapshot: facility,
-      }));
-      const mockLoans = mockDealMia.dealSnapshot.loanTransactions.items.map((facility) => ({
-        facilitySnapshot: facility,
-      }));
 
       mockDeal = {
-        ...mockDealMia,
-        dealSnapshot: {
-          ...mockDealMia.dealSnapshot,
-          bondTransactions: {
-            items: mockBonds,
-          },
-          loanTransactions: {
-            items: mockLoans,
-          },
+        _id: mockDealMia._id,
+        ukefDealId: mockDealMia.dealSnapshot.details.ukefDealId,
+        submissionType: mockDealMia.dealSnapshot.details.submissionType,
+        bankReferenceNumber: mockDealMia.dealSnapshot.details.bankSupplyContractID,
+        maker: mockDealMia.dealSnapshot.details.maker,
+        exporter: {
+          companyName: mockDealMia.dealSnapshot.submissionDetails['supplier-name'],
         },
+        facilities: [
+          ...mockDealMia.dealSnapshot.bondTransactions.items,
+          ...mockDealMia.dealSnapshot.loanTransactions.items,
+        ],
         tfm: {
           tasks: [
             {
@@ -55,6 +50,7 @@ describe('send-deal-submit-emails', () => {
         },
       };
     });
+
 
     describe('shouldSendFirstTaskEmail', () => {
       it('should return true when task title is `match or create parties`', () => {
@@ -84,8 +80,8 @@ describe('send-deal-submit-emails', () => {
           process.env.TFM_URI,
           firstTask,
           mockDeal._id,
-          mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-          mockDeal.dealSnapshot.details.ukefDealId,
+          mockDeal.exporter.companyName,
+          mockDeal.ukefDealId,
         );
 
         const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
@@ -133,19 +129,20 @@ describe('send-deal-submit-emails', () => {
   describe('after TFM update', () => {
     beforeEach(async () => {
       const mockDealMia = await api.findOneDeal('MOCK_MIA_NOT_SUBMITTED');
-      const mockBonds = mockDealMia.dealSnapshot.bondTransactions.items.map((facility) => ({
-        facilitySnapshot: facility,
-      }));
-      const mockLoans = mockDealMia.dealSnapshot.loanTransactions.items.map((facility) => ({
-        facilitySnapshot: facility,
-      }));
 
       mockDeal = {
-        ...mockDealMia,
-        dealSnapshot: {
-          ...mockDealMia.dealSnapshot,
-          facilities: [...mockBonds, ...mockLoans],
+        _id: mockDealMia._id,
+        ukefDealId: mockDealMia.dealSnapshot.details.ukefDealId,
+        submissionType: mockDealMia.dealSnapshot.details.submissionType,
+        bankReferenceNumber: mockDealMia.dealSnapshot.details.bankSupplyContractID,
+        maker: mockDealMia.dealSnapshot.details.maker,
+        exporter: {
+          companyName: mockDealMia.dealSnapshot.submissionDetails['supplier-name'],
         },
+        facilities: [
+          ...mockDealMia.dealSnapshot.bondTransactions.items,
+          ...mockDealMia.dealSnapshot.loanTransactions.items,
+        ],
         tfm: {
           tasks: [
             {
@@ -170,28 +167,28 @@ describe('send-deal-submit-emails', () => {
     describe('send MIA acknowledgement', () => {
       it('should return API response with correct emailVariables', async () => {
         const bssList = generateFacilitiesListString(
-          mockDeal.dealSnapshot.facilities.filter(
-            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          mockDeal.facilities.filter(
+            ({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ),
         );
         const ewcsList = generateFacilitiesListString(
-          mockDeal.dealSnapshot.facilities.filter(
-            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          mockDeal.facilities.filter(
+            ({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
           ),
         );
 
         const expectedEmailVariables = {
-          recipientName: mockDeal.dealSnapshot.details.maker.firstname,
-          exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-          bankReferenceNumber: mockDeal.dealSnapshot.details.bankSupplyContractID,
-          ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+          recipientName: mockDeal.maker.firstname,
+          exporterName: mockDeal.exporter.companyName,
+          bankReferenceNumber: mockDeal.bankReferenceNumber,
+          ukefDealId: mockDeal.ukefDealId,
           bssList,
           showBssHeader: 'yes',
           ewcsList,
           showEwcsHeader: 'yes',
         };
 
-        const { email: expectedTeamEmailAddress } = mockDeal.dealSnapshot.details.maker;
+        const { email: expectedTeamEmailAddress } = mockDeal.maker;
 
         // api response is mocked/stubbed
         const expected = {
@@ -210,41 +207,38 @@ describe('send-deal-submit-emails', () => {
       });
 
       it('should not show BSS header if no bonds', async () => {
-        const facilities = mockDeal.dealSnapshot.facilities.filter(
-          ({ facilitySnapshot }) => facilitySnapshot.facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+        const facilities = mockDeal.facilities.filter(
+          ({ facilityType }) => facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
         );
 
         const mockDealNoBss = {
           ...mockDeal,
-          dealSnapshot: {
-            ...mockDeal.dealSnapshot,
-            facilities,
-          },
+          facilities,
         };
 
         const bssList = generateFacilitiesListString(
-          mockDealNoBss.dealSnapshot.facilities.filter(
-            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          mockDealNoBss.facilities.filter(
+            ({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ),
         );
         const ewcsList = generateFacilitiesListString(
-          mockDealNoBss.dealSnapshot.facilities.filter(
-            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          mockDealNoBss.facilities.filter(
+            ({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
           ),
         );
 
         const expectedEmailVariables = {
-          recipientName: mockDeal.dealSnapshot.details.maker.firstname,
-          exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-          bankReferenceNumber: mockDeal.dealSnapshot.details.bankSupplyContractID,
-          ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+          recipientName: mockDeal.maker.firstname,
+          exporterName: mockDeal.exporter.companyName,
+          bankReferenceNumber: mockDeal.bankReferenceNumber,
+          ukefDealId: mockDeal.ukefDealId,
           bssList,
           showBssHeader: 'no',
           ewcsList,
           showEwcsHeader: 'yes',
         };
 
-        const { email: expectedTeamEmailAddress } = mockDeal.dealSnapshot.details.maker;
+        const { email: expectedTeamEmailAddress } = mockDeal.maker;
 
         // api response is mocked/stubbed
         const expected = {
@@ -262,40 +256,37 @@ describe('send-deal-submit-emails', () => {
       });
 
       it('should not show EWCS header if no loans', async () => {
-        const facilities = mockDeal.dealSnapshot.facilities.filter(
-          ({ facilitySnapshot }) => facilitySnapshot.facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+        const facilities = mockDeal.facilities.filter(
+          ({ facilityType }) => facilityType !== CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
         );
         const mockDealNoEwcs = {
           ...mockDeal,
-          dealSnapshot: {
-            ...mockDeal.dealSnapshot,
-            facilities,
-          },
+          facilities,
         };
 
         const bssList = generateFacilitiesListString(
-          mockDealNoEwcs.dealSnapshot.facilities.filter(
-            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          mockDealNoEwcs.facilities.filter(
+            ({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ),
         );
         const ewcsList = generateFacilitiesListString(
-          mockDealNoEwcs.dealSnapshot.facilities.filter(
-            ({ facilitySnapshot }) => facilitySnapshot.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          mockDealNoEwcs.facilities.filter(
+            ({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
           ),
         );
 
         const expectedEmailVariables = {
-          recipientName: mockDeal.dealSnapshot.details.maker.firstname,
-          exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-          bankReferenceNumber: mockDeal.dealSnapshot.details.bankSupplyContractID,
-          ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+          recipientName: mockDeal.maker.firstname,
+          exporterName: mockDeal.exporter.companyName,
+          bankReferenceNumber: mockDeal.bankReferenceNumber,
+          ukefDealId: mockDeal.ukefDealId,
           bssList,
           showBssHeader: 'yes',
           ewcsList,
           showEwcsHeader: 'no',
         };
 
-        const { email: expectedTeamEmailAddress } = mockDeal.dealSnapshot.details.maker;
+        const { email: expectedTeamEmailAddress } = mockDeal.maker;
 
         // api response is mocked/stubbed
         const expected = {
@@ -314,19 +305,14 @@ describe('send-deal-submit-emails', () => {
 
       it('should generate the correct Bond string depending on uniqueIdentificationNumber', async () => {
         const facilityBankRef = {
-          facilitySnapshot: {
-            facilityType: 'bond',
-            uniqueIdentificationNumber: 'mockBankRef',
-            ukefFacilityID: 'ukefId1',
-          },
+          facilityType: 'bond',
+          uniqueIdentificationNumber: 'mockBankRef',
+          ukefFacilityID: 'ukefId1',
         };
         const facilityNoBankRef = {
-          facilitySnapshot: {
-            facilityType: 'bond',
-            uniqueIdentificationNumber: '',
-            ukefFacilityID: 'ukefId2',
-
-          },
+          facilityType: 'bond',
+          uniqueIdentificationNumber: '',
+          ukefFacilityID: 'ukefId2',
         };
 
         const expected = '- Bond facility with your reference mockBankRef has been given the UKEF reference: ukefId1 \n- Bond facility has been given the UKEF reference: ukefId2 \n';
@@ -337,19 +323,14 @@ describe('send-deal-submit-emails', () => {
 
       it('should generate the correct Loan string depending on bankReferenceNumber', async () => {
         const facilityBankRef = {
-          facilitySnapshot: {
-            facilityType: 'loan',
-            bankReferenceNumber: 'mockBankRef',
-            ukefFacilityID: 'ukefId1',
-          },
+          facilityType: 'loan',
+          bankReferenceNumber: 'mockBankRef',
+          ukefFacilityID: 'ukefId1',
         };
         const facilityNoBankRef = {
-          facilitySnapshot: {
-            facilityType: 'loan',
-            bankReferenceNumber: '',
-            ukefFacilityID: 'ukefId2',
-
-          },
+          facilityType: 'loan',
+          bankReferenceNumber: '',
+          ukefFacilityID: 'ukefId2',
         };
 
         const expected = '- Loan facility with your reference mockBankRef has been given the UKEF reference: ukefId1 \n- Loan facility has been given the UKEF reference: ukefId2 \n';
@@ -366,12 +347,11 @@ describe('send-deal-submit-emails', () => {
 
         describe('MIA with no issued facilities', () => {
           it('should return sendDealSubmitEmails response', async () => {
-            const result = await sendDealSubmitEmails(mockDeal._id);
-            const tfmMockDeal = await dealController.findOneDeal(mockDeal._id);
+            const result = await sendDealSubmitEmails(mockDeal);
 
             const expected = {
-              firstTaskEmail: await sendFirstTaskEmail(tfmMockDeal),
-              emailAcknowledgementMIA: await sendMiaAcknowledgement(tfmMockDeal),
+              firstTaskEmail: await sendFirstTaskEmail(mockDeal),
+              emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDeal),
               emailAcknowledgementAinMinIssued: null,
             };
 
@@ -379,15 +359,31 @@ describe('send-deal-submit-emails', () => {
           });
         });
 
-        describe('MIN with no issued facilities', () => {
+        describe('MIN with unissued facilities', () => {
           let mockDealMin;
 
           beforeAll(async () => {
-            mockDealMin = await api.findOneDeal('223456789');
+            mockDealMin = await api.findOneDeal('MOCK_DEAL_MIN');
+
+            mockDeal = {
+              _id: mockDealMin._id,
+              ukefDealId: mockDealMin.dealSnapshot.details.ukefDealId,
+              submissionType: mockDealMin.dealSnapshot.details.submissionType,
+              bankReferenceNumber: mockDealMin.dealSnapshot.details.bankSupplyContractID,
+              maker: mockDealMin.dealSnapshot.details.maker,
+              exporter: {
+                companyName: mockDealMin.dealSnapshot.submissionDetails['supplier-name'],
+              },
+              facilities: [
+                ...mockDealMin.dealSnapshot.bondTransactions.items,
+                ...mockDealMin.dealSnapshot.loanTransactions.items,
+              ],
+              tfm: {},
+            };
           });
 
           it('should not send emailAcknowledgementAinMinIssued', async () => {
-            const result = await sendDealSubmitEmails(mockDealMin._id);
+            const result = await sendDealSubmitEmails(mockDeal);
             expect(result.emailAcknowledgementAinMinIssued).toBeNull();
           });
         });
@@ -397,19 +393,20 @@ describe('send-deal-submit-emails', () => {
 
           beforeAll(async () => {
             const mockDealMin = await api.findOneDeal('MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED');
-            const mockBonds = mockDealMin.dealSnapshot.bondTransactions.items.map((facility) => ({
-              facilitySnapshot: facility,
-            }));
-            const mockLoans = mockDealMin.dealSnapshot.loanTransactions.items.map((facility) => ({
-              facilitySnapshot: facility,
-            }));
 
             mockDealIssued = {
-              ...mockDealMin,
-              dealSnapshot: {
-                ...mockDealMin.dealSnapshot,
-                facilities: [...mockBonds, ...mockLoans],
+              _id: mockDealMin._id,
+              ukefDealId: mockDealMin.dealSnapshot.details.ukefDealId,
+              submissionType: mockDealMin.dealSnapshot.details.submissionType,
+              bankReferenceNumber: mockDealMin.dealSnapshot.details.bankSupplyContractID,
+              maker: mockDealMin.dealSnapshot.details.maker,
+              exporter: {
+                companyName: mockDealMin.dealSnapshot.submissionDetails['supplier-name'],
               },
+              facilities: [
+                ...mockDealMin.dealSnapshot.bondTransactions.items,
+                ...mockDealMin.dealSnapshot.loanTransactions.items,
+              ],
               tfm: {
                 tasks: [
                   {
@@ -432,7 +429,7 @@ describe('send-deal-submit-emails', () => {
           });
 
           it('should return sendDealSubmitEmails response', async () => {
-            const result = await sendDealSubmitEmails(mockDealIssued._id);
+            const result = await sendDealSubmitEmails(mockDealIssued);
 
             const expected = {
               bankReferenceNumber: 'Mock supply contract ID',
@@ -448,24 +445,20 @@ describe('send-deal-submit-emails', () => {
         describe('AIN with unissued facilities', () => {
           beforeEach(async () => {
             const mockDealAin = await api.findOneDeal('AIN_DEAL_SUBMITTED');
-            const mockBonds = mockDealAin.dealSnapshot.bondTransactions.items.map((facility) => ({
-              facilitySnapshot: facility,
-            }));
-            const mockLoans = mockDealAin.dealSnapshot.loanTransactions.items.map((facility) => ({
-              facilitySnapshot: facility,
-            }));
 
             mockDeal = {
-              ...mockDealAin,
-              dealSnapshot: {
-                ...mockDealAin.dealSnapshot,
-                bondTransactions: {
-                  items: mockBonds,
-                },
-                loanTransactions: {
-                  items: mockLoans,
-                },
+              _id: mockDealAin._id,
+              ukefDealId: mockDealAin.dealSnapshot.details.ukefDealId,
+              submissionType: mockDealAin.dealSnapshot.details.submissionType,
+              bankReferenceNumber: mockDealAin.dealSnapshot.details.bankSupplyContractID,
+              maker: mockDealAin.dealSnapshot.details.maker,
+              exporter: {
+                companyName: mockDealAin.dealSnapshot.submissionDetails['supplier-name'],
               },
+              facilities: [
+                ...mockDealAin.dealSnapshot.bondTransactions.items,
+                ...mockDealAin.dealSnapshot.loanTransactions.items,
+              ],
               tfm: {
                 tasks: [
                   {
@@ -488,7 +481,7 @@ describe('send-deal-submit-emails', () => {
           });
 
           it('should not send emailAcknowledgementAinMinIssued', async () => {
-            const result = await sendDealSubmitEmails(mockDeal._id);
+            const result = await sendDealSubmitEmails(mockDeal);
             expect(result.emailAcknowledgementAinMinIssued).toBeNull();
           });
         });
@@ -496,24 +489,20 @@ describe('send-deal-submit-emails', () => {
         describe('AIN with issued facilities', () => {
           beforeEach(async () => {
             const mockDealAin = await api.findOneDeal('MOCK_DEAL_ISSUED_FACILITIES');
-            const mockBonds = mockDealAin.dealSnapshot.bondTransactions.items.map((facility) => ({
-              facilitySnapshot: facility,
-            }));
-            const mockLoans = mockDealAin.dealSnapshot.loanTransactions.items.map((facility) => ({
-              facilitySnapshot: facility,
-            }));
 
             mockDeal = {
-              ...mockDealAin,
-              dealSnapshot: {
-                ...mockDealAin.dealSnapshot,
-                bondTransactions: {
-                  items: mockBonds,
-                },
-                loanTransactions: {
-                  items: mockLoans,
-                },
+              _id: mockDealAin._id,
+              ukefDealId: mockDealAin.dealSnapshot.details.ukefDealId,
+              submissionType: mockDealAin.dealSnapshot.details.submissionType,
+              bankReferenceNumber: mockDealAin.dealSnapshot.details.bankSupplyContractID,
+              maker: mockDealAin.dealSnapshot.details.maker,
+              exporter: {
+                companyName: mockDealAin.dealSnapshot.submissionDetails['supplier-name'],
               },
+              facilities: [
+                ...mockDealAin.dealSnapshot.bondTransactions.items,
+                ...mockDealAin.dealSnapshot.loanTransactions.items,
+              ],
               tfm: {
                 tasks: [
                   {
@@ -536,10 +525,10 @@ describe('send-deal-submit-emails', () => {
           });
 
           it('should send emailAcknowledgementAinMinIssued', async () => {
-            const result = await sendDealSubmitEmails(mockDeal._id);
+            const result = await sendDealSubmitEmails(mockDeal);
 
             const expected = {
-              bankReferenceNumber: 'Mock supply contract ID',
+              bankReferenceNumber: mockDeal.bankReferenceNumber,
               isAin: 'yes',
               isMin: 'no',
             };

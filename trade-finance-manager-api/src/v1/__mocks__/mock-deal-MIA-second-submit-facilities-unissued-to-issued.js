@@ -194,6 +194,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         'coverEndDate-year': '2020',
         status: 'Submitted',
         ukefFacilityID: '65431',
+        requestedCoverStartDate: 1610369832226.0,
       },
     ],
   },

@@ -35,24 +35,23 @@ const unissuedLoan = {
 
 describe('return list of issued & unissued facilities', () => {
   describe('with facilitySnapshot', () => {
-    let dealSnapshot;
+    let facilities;
     beforeAll(() => {
-      dealSnapshot = {
-        facilities: [
-          { facilitySnapshot: issuedBond },
-          { facilitySnapshot: unissuedBond },
-          { facilitySnapshot: issuedLoan },
-          { facilitySnapshot: unissuedLoan }],
-      };
+      facilities = [
+        issuedBond,
+        unissuedBond,
+        issuedLoan,
+        unissuedLoan,
+      ];
     });
 
-    it('should return correct issued/unissued facilities', () => {
+    it.only('should return correct issued/unissued facilities', () => {
       const {
         issuedBonds,
         unissuedBonds,
         issuedLoans,
         unissuedLoans,
-      } = issuedFacilities(dealSnapshot);
+      } = issuedFacilities(facilities);
 
       expect(issuedBonds).toEqual([issuedBond]);
       expect(unissuedBonds).toEqual([unissuedBond]);
@@ -62,13 +61,12 @@ describe('return list of issued & unissued facilities', () => {
   });
 
   describe('empty list when necessary', () => {
-    let dealSnapshot;
+    let facilities;
     beforeAll(() => {
-      dealSnapshot = {
-        facilities: [
-          { facilitySnapshot: issuedBond },
-          { facilitySnapshot: unissuedLoan }],
-      };
+      facilities = [
+        issuedBond,
+        unissuedLoan,
+      ];
     });
 
     it('should return correct issued/unissued facilities', () => {
@@ -77,7 +75,7 @@ describe('return list of issued & unissued facilities', () => {
         unissuedBonds,
         issuedLoans,
         unissuedLoans,
-      } = issuedFacilities(dealSnapshot);
+      } = issuedFacilities(facilities);
 
       expect(issuedBonds).toEqual([issuedBond]);
       expect(unissuedBonds).toEqual([]);
