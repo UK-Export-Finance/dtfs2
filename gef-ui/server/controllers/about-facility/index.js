@@ -1,4 +1,6 @@
-import moment from 'moment';
+import {
+  add, format, isAfter, isPast, set,
+} from 'date-fns';
 import * as api from '../../services/api';
 import { FACILITY_TYPE } from '../../../constants';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
@@ -12,8 +14,8 @@ const aboutFacility = async (req, res) => {
     const { details } = await api.getFacility(facilityId);
     const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
     const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
-    const coverStartDate = details.coverStartDate ? moment(details.coverStartDate) : null;
-    const coverEndDate = details.coverEndDate ? moment(details.coverEndDate) : null;
+    const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
+    const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
     return res.render('partials/about-facility.njk', {
@@ -22,12 +24,12 @@ const aboutFacility = async (req, res) => {
       hasBeenIssued: details.hasBeenIssued,
       monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,
       shouldCoverStartOnSubmission: shouldCoverStartOnSubmission !== 'null' ? shouldCoverStartOnSubmission : null,
-      coverStartDateDay: coverStartDate ? coverStartDate.format('D') : null,
-      coverStartDateMonth: coverStartDate ? coverStartDate.format('M') : null,
-      coverStartDateYear: coverStartDate ? coverStartDate.format('YYYY') : null,
-      coverEndDateDay: coverEndDate ? coverEndDate.format('D') : null,
-      coverEndDateMonth: coverEndDate ? coverEndDate.format('M') : null,
-      coverEndDateYear: coverEndDate ? coverEndDate.format('YYYY') : null,
+      coverStartDateDay: coverStartDate ? format(coverStartDate, 'd') : null,
+      coverStartDateMonth: coverStartDate ? format(coverStartDate, 'M') : null,
+      coverStartDateYear: coverStartDate ? format(coverStartDate, 'yyyy') : null,
+      coverEndDateDay: coverEndDate ? format(coverEndDate, 'd') : null,
+      coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
+      coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
       facilityTypeString,
       applicationId,
       facilityId,
@@ -77,18 +79,18 @@ const validateAboutFacility = async (req, res) => {
       }
 
       if (body.shouldCoverStartOnSubmission === 'false' && coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
-        const startOfToday = moment().hour(0).minute(0).second(0);
-        const threeMonthsFromNow = moment().add(3, 'M');
-        const startDate = moment().set('date', Number(coverStartDateDay)).set('month', Number(coverStartDateMonth) - 1).set('year', Number(coverStartDateYear));
+        const threeMonthsFromNow = add(new Date(), { months: 3 });
+        const startDate = set(new Date(),
+          { year: coverStartDateYear, month: coverStartDateMonth, date: coverStartDateDay });
 
-        if (startDate.isBefore(startOfToday)) {
+        if (isPast(startDate)) {
           aboutFacilityErrors.push({
             errRef: 'coverStartDate',
             errMsg: 'Cover start date cannot be before today',
           });
         }
 
-        if (startDate.isAfter(threeMonthsFromNow)) {
+        if (isAfter(startDate, threeMonthsFromNow)) {
           aboutFacilityErrors.push({
             errRef: 'coverStartDate',
             errMsg: 'Cover start date cannot be more than 3 months from now',
@@ -113,17 +115,13 @@ const validateAboutFacility = async (req, res) => {
   }
 
   if (coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
-    coverStartDate = moment();
-    coverStartDate.set('date', Number(coverStartDateDay));
-    coverStartDate.set('month', Number(coverStartDateMonth) - 1);
-    coverStartDate.set('year', Number(coverStartDateYear));
+    coverStartDate = set(new Date(),
+      { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
   }
 
   if (coverEndDateDay && coverEndDateMonth && coverEndDateYear) {
-    coverEndDate = moment();
-    coverEndDate.set('date', Number(coverEndDateDay));
-    coverEndDate.set('month', Number(coverEndDateMonth) - 1);
-    coverEndDate.set('year', Number(coverEndDateYear));
+    coverEndDate = set(new Date(),
+      { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
   }
 
   // Regex tests to see if value is a number only
@@ -157,12 +155,14 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
+    console.log('coverStartDate ======================================', coverStartDate);
+    const dateFormat = 'MMMM d, yyyy';
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
       monthsOfCover: body.monthsOfCover || null,
-      coverStartDate: coverStartDate ? coverStartDate.format('LL') : null,
-      coverEndDate: coverEndDate ? coverEndDate.format('LL') : null,
+      coverStartDate: coverStartDate ? format(coverStartDate, dateFormat) : null,
+      coverEndDate: coverEndDate ? format(coverEndDate, dateFormat) : null,
     });
 
     if (isTrueSet(saveAndReturn) || status === 'change') {
