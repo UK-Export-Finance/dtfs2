@@ -4,6 +4,8 @@ const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
+const wasPreviouslyUnissued = require('../helpers/was-previously-unissued');
+const isIssued = require('../helpers/is-issued');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
@@ -20,22 +22,13 @@ const updatedIssuedFacilities = async (deal) => {
 
     const {
       _id: facilityId,
-      facilityStage,
-      previousFacilityStage,
       hasBeenAcknowledged,
     } = modifiedFacility;
 
-    // we only need to update issued facilities if:
-    // - a facility has changed from `Unissued` to `Issued` (`Conditional` to `Unconditional` for a loan)
-    // - and the facility changing from `Unissued` to `Issued` has NOT been previously acknowledged
-
-    const bondIsIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED)
-      && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED));
-
-    const loanIsIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL)
-      && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL));
-
-    const shouldUpdateFacility = ((bondIsIssued || loanIsIssued) && !hasBeenAcknowledged);
+    // we only need to update issued facilities if the facility has
+    // - changed from unissued to issued
+    // facility has not be acknowledged by TFM.
+    const shouldUpdateFacility = (wasPreviouslyUnissued(facility) && isIssued(facility) && !hasBeenAcknowledged);
 
     if (shouldUpdateFacility) {
       // update portal facility status
