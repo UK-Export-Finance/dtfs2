@@ -1,5 +1,4 @@
-// temporarily map facilities as they are for initial dev
-// TODO: generic facility structure for all facilities (cash, contingent, bonds, loans)
+const isIssued = require('../../helpers/is-issued');
 
 const mapBssEwcsFacility = (facility) => {
   const {
@@ -11,9 +10,7 @@ const mapBssEwcsFacility = (facility) => {
     coveredPercentage,
     ukefExposure,
     ukefGuaranteeInMonths,
-    previousFacilityStage,
     hasBeenAcknowledged,
-    facilityStage,
     requestedCoverStartDate,
     // TODO are these in gef facility?
     dayCountBasis,
@@ -35,8 +32,9 @@ const mapBssEwcsFacility = (facility) => {
     coverStartDate: requestedCoverStartDate,
     ukefGuaranteeInMonths,
 
-    facilityStage, // change to hasBeenIssued
-    previousFacilityStage, // maybe dont need this and check can just be "is issued and not acknowledge"
+    // TODO simplify isIssued to just take 1 param, not object
+    hasBeenIssued: isIssued(facility),
+    // previousFacilityStage, // maybe dont need this and check can just be "is issued and not acknowledge"
     hasBeenAcknowledged,
 
     'coverEndDate-year': facility['coverEndDate-year'],

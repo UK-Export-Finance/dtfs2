@@ -1,4 +1,5 @@
 const mapBssEwcsFacility = require('./map-bss-ewcs-facility');
+const isIssued = require('../../helpers/is-issued');
 const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
 
 describe('mappings - map submitted deal - mapSubmittedDeal', () => {
@@ -19,9 +20,7 @@ describe('mappings - map submitted deal - mapSubmittedDeal', () => {
       coveredPercentage,
       ukefExposure,
       ukefGuaranteeInMonths,
-      previousFacilityStage,
       hasBeenAcknowledged,
-      facilityStage,
       requestedCoverStartDate,
       dayCountBasis,
       guaranteeFeePayableByBank,
@@ -41,8 +40,7 @@ describe('mappings - map submitted deal - mapSubmittedDeal', () => {
       ukefExposure,
       coverStartDate: requestedCoverStartDate,
       ukefGuaranteeInMonths,
-      facilityStage,
-      previousFacilityStage,
+      hasBeenIssued: isIssued(mockFacility),
       hasBeenAcknowledged,
       'coverEndDate-year': mockFacility['coverEndDate-year'],
       'coverEndDate-month': mockFacility['coverEndDate-month'],
