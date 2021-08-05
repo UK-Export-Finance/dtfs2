@@ -17,13 +17,13 @@ const updatedIssuedFacilities = async (deal) => {
 
   const updatedFacilities = [];
 
-  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (facility) => {
-    let modifiedFacility = facility;
+  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
+    const facility = f;
 
     const {
       _id: facilityId,
       hasBeenAcknowledged,
-    } = modifiedFacility;
+    } = facility;
 
     // we only need to update issued facilities if the facility has
     // - changed from unissued to issued
@@ -33,9 +33,9 @@ const updatedIssuedFacilities = async (deal) => {
     if (shouldUpdateFacility) {
       // update portal facility status
       const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
-      const updatedFacilityStatus = await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+      await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
-      // add acknowledged flag, update Portal facility
+      // add acknowledged flag to Portal facility
       const portalFacilityUpdate = {
         hasBeenAcknowledged: true,
       };
@@ -60,33 +60,18 @@ const updatedIssuedFacilities = async (deal) => {
         premiumSchedule: facilityPremiumSchedule,
       };
 
-      await api.updateFacility(facilityId, facilityUpdate);
+      const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
 
-      const updatedFacilityResponseObj = {
-        ...updatedFacilityStatus,
-        ...updatedPortalFacility,
-        tfm: {
-          ...facilityUpdate,
-        },
-      };
+      // add the updated properties to the returned facility
+      // to retain flat, generic facility mapping used in deal submission calls.
+      facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+      facility.status = facilityStatusUpdate;
+      facility.tfm = updateFacilityResponse.tfm;
 
-      modifiedFacility = {
-        ...modifiedFacility,
-        ...portalFacilityUpdate,
-        status: facilityStatusUpdate,
-        tfm: {
-          ...modifiedFacility.tfm,
-          ...facilityUpdate,
-        },
-      };
-
-      updatedFacilities.push({
-        ...facility,
-        ...updatedFacilityResponseObj,
-      });
+      updatedFacilities.push(facility);
     }
 
-    return modifiedFacility;
+    return facility;
   }));
 
   await sendIssuedFacilitiesReceivedEmail(

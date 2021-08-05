@@ -13,10 +13,10 @@ const updateFacilities = async (deal) => {
     submissionDate: dealSubmissionDate,
   } = modifiedDeal;
 
-  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (facility) => {
-    const {
-      _id: facilityId,
-    } = facility;
+  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
+    const facility = f;
+
+    const { _id: facilityId } = facility;
 
     const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
 
@@ -40,15 +40,12 @@ const updateFacilities = async (deal) => {
 
     const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
 
-    const updatedFacility = {
-      ...facility,
-      tfm: {
-        ...facility.tfm,
-        ...updateFacilityResponse.tfm,
-      },
-    };
+    // add the updated tfm object to returned facility.
+    // if we return updateFacilityResponse, we'll get facilitySnapshot
+    // - therefore losing the flat, generic facility mapping used in deal submission calls.
+    facility.tfm = updateFacilityResponse.tfm;
 
-    return updatedFacility;
+    return facility;
   }));
 
   return modifiedDeal;
