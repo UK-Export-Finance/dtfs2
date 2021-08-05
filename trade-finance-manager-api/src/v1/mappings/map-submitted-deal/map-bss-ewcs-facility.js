@@ -1,3 +1,4 @@
+const moment = require('moment');
 const isIssued = require('../../helpers/is-issued');
 
 const mapBssEwcsFacility = (facility) => {
@@ -19,6 +20,9 @@ const mapBssEwcsFacility = (facility) => {
     premiumType,
     feeFrequency,
     premiumFrequency,
+    'coverEndDate-day': coverEndDateDay,
+    'coverEndDate-month': coverEndDateMonth,
+    'coverEndDate-year': coverEndDateYear,
   } = facility;
 
   return {
@@ -31,19 +35,14 @@ const mapBssEwcsFacility = (facility) => {
     ukefExposure,
     coverStartDate: requestedCoverStartDate,
     ukefGuaranteeInMonths,
-
     // TODO simplify isIssued to just take 1 param, not object
     hasBeenIssued: isIssued(facility),
-    // previousFacilityStage, // maybe dont need this and check can just be "is issued and not acknowledge"
     hasBeenAcknowledged,
-
-    'coverEndDate-year': facility['coverEndDate-year'],
-    'coverEndDate-month': facility['coverEndDate-month'],
-    'coverEndDate-day': facility['coverEndDate-day'],
-    // ^ used in:
-    // - getGuaranteeDates
-    // - getFacilityExposurePeriod
-
+    coverEndDate: moment().set({
+      date: Number(coverEndDateDay),
+      month: Number(coverEndDateMonth) - 1, // months are zero indexed
+      year: Number(coverEndDateYear),
+    }),
     guaranteeFeePayableByBank,
     dayCountBasis,
     feeFrequency,
