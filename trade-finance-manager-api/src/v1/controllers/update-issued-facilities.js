@@ -4,8 +4,6 @@ const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
-const wasPreviouslyUnissued = require('../helpers/was-previously-unissued');
-const isIssued = require('../helpers/is-issued');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
