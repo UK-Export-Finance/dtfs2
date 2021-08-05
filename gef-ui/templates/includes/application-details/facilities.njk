@@ -24,7 +24,7 @@
     {{ govukButton({
       text: "Add a cash facility",
       classes: "govuk-button--secondary",
-      href: applicationId + "/facilities",
+      href: "facilities",
       attributes: {
         'data-cy': 'add-cash-facility-button'
       }
@@ -32,7 +32,7 @@
     {{ govukButton({
       text: "Add a contingent facility",
       classes: "govuk-button--secondary",
-      href: applicationId + "/facilities?facilityType=CONTINGENT",
+      href: "facilities?facilityType=CONTINGENT",
       attributes: {
         'data-cy': 'add-contingent-facility-button'
       }
