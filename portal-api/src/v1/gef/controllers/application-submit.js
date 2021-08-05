@@ -21,19 +21,9 @@ const generateSubmissionData = async (existingApplication) => {
 
 const generateId = async (entityType) => refDataApi.numberGenerator.create(entityType);
 
-const generateUkefDealId = async (application) => {
-  const ukefDealId = application.ukefDealId || await generateId('deal');
-  return {
-    ukefDealId,
-  };
-};
+const generateUkefDealId = async (application) => application.ukefDealId || generateId('deal');
 
-const generateUkefFacilityId = async (facility) => {
-  const ukefFacilityId = facility.ukefFacilityId || await generateId('facility');
-  return {
-    ukefFacilityId,
-  };
-};
+const generateUkefFacilityId = async (facility) => facility.ukefFacilityId || generateId('facility');
 
 const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
@@ -72,7 +62,7 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
 
 const addSubmissionData = async (applicationId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
-  const { ukefDealId } = await generateUkefDealId(existingApplication);
+  const ukefDealId = await generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(applicationId);
   await addUkefFacilityIdToFacilities(applicationId);
