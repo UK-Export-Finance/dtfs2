@@ -1,11 +1,9 @@
 const api = require('../api');
 const mapPremiumScheduleFacility = require('../mappings/mapPremiumScheduleFacility');
-
-const facilityIsIssued = (facilityStage) => (facilityStage === 'Issued' || facilityStage === 'Unconditional');
+const isIssued = require('../helpers/is-issued');
 
 const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
-  const isIssued = facilityIsIssued(facility.facilityStage);
-  if (isIssued && facilityExposurePeriod) {
+  if (isIssued(facility) && facilityExposurePeriod) {
     const parameters = mapPremiumScheduleFacility(
       facility,
       facilityExposurePeriod,
