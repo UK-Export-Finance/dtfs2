@@ -3,13 +3,14 @@ const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
+const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
-
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
+
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -46,12 +47,12 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const bond = body.facilities.find(({ facilityType }) => facilityType === 'bond');
+        const bond = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
         expect(bond.tfm.facilityValueInGBP).toEqual(
           Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
 
-        const loan = body.facilities.find(({ facilityType }) => facilityType === 'loan');
+        const loan = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
         expect(loan.tfm.facilityValueInGBP).toEqual(
           Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
@@ -63,7 +64,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.facilities.find(({ facilityType }) => facilityType === 'bond');
+          const bond = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
           const facilityValueInGBP = Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
@@ -81,7 +82,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const loan = body.facilities.find(({ facilityType }) => facilityType === 'loan');
+          const loan = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
           const facilityValueInGBP = Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
@@ -99,7 +100,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.facilities.find(({ facilityType }) => facilityType === 'bond');
+          const bond = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
           expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
           expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
@@ -112,7 +113,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const loan = body.facilities.find(({ facilityType }) => facilityType === 'loan');
+          const loan = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
           expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
@@ -163,8 +164,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const bond = body.facilities.find(({ facilityType }) => facilityType === 'bond');
-        const loan = body.facilities.find(({ facilityType }) => facilityType === 'loan');
+        const bond = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const loan = body.facilities.find(({ facilityType }) => facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
         expect(loan.tfm.riskProfile).toEqual('Flat');
         expect(bond.tfm.riskProfile).toEqual('Flat');
