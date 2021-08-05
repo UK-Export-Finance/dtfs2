@@ -29,7 +29,7 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   map.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
   map.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;
   map.guaranteeFeePercentage = Number(facility.guaranteeFeePayableByBank);
-  map.guaranteePercentage = Number(facility.coveredPercentage);
+  map.guaranteePercentage = Number(facility.coverPercentage);
 
   map.dayBasis = facility.dayCountBasis;
 

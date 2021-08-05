@@ -51,14 +51,14 @@ describe('/v1/deals', () => {
           facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
         expect(bond.tfm.facilityValueInGBP).toEqual(
-          Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
+          Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
 
         const loan = body.facilities.find(({ facilityType }) =>
           facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
         expect(loan.tfm.facilityValueInGBP).toEqual(
-          Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
+          Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
       });
 
@@ -71,10 +71,10 @@ describe('/v1/deals', () => {
           const bond = body.facilities.find(({ facilityType }) =>
             facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-          const facilityValueInGBP = Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const facilityValueInGBP = Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP, bond.coveredPercentage,
+            facilityValueInGBP, bond.coverPercentage,
           );
 
           expect(bond.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
@@ -91,10 +91,10 @@ describe('/v1/deals', () => {
           const loan = body.facilities.find(({ facilityType }) =>
             facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-          const facilityValueInGBP = Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const facilityValueInGBP = Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP, loan.coveredPercentage,
+            facilityValueInGBP, loan.coverPercentage,
           );
 
           expect(loan.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
@@ -133,7 +133,7 @@ describe('/v1/deals', () => {
       });
 
       describe('exposure period', () => {
-        it('gets the exposure period  for issued facility', async () => {
+        it('gets the exposure period for issued facility', async () => {
           const { status } = await api.put(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
@@ -144,7 +144,7 @@ describe('/v1/deals', () => {
           ]);
         });
 
-        it('does not gets the exposure period info for unissued facility', async () => {
+        it('does not get the exposure period info for unissued facility', async () => {
           const { status } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
