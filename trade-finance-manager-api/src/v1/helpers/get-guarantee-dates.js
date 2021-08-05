@@ -27,7 +27,7 @@ const getGuaranteeDates = (facility, submissionDate) => {
 
   if (isIssued(facility)) {
     guaranteeCommencementDate = dateHelpers.formatTimestamp(facility.coverStartDate);
-    guaranteeExpiryDate = dateHelpers.formatDate(`${facility['coverEndDate-year']}-${facility['coverEndDate-month']}-${facility['coverEndDate-day']}`);
+    guaranteeExpiryDate = dateHelpers.formatDate(`${facility['coverEndDate-year']}-${facility['coverEndDate-month']}-${facility['coverEndDate-day']}`, 'YYYY-MM-DD');
   } else {
     guaranteeCommencementDate = dateHelpers.formatTimestamp(
       moment.utc(Number(submissionDate)).add(3, 'months').valueOf(),
