@@ -1,10 +1,9 @@
 const getGuaranteeDates = require('./get-guarantee-dates');
-const CONSTANTS = require('../../constants');
 
 const submissionDate = '2021-04-24';
 
 const issuedFacility = {
-  facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED,
+  hasBeenIssued: true,
   coverStartDate: new Date(submissionDate).valueOf(),
   'coverEndDate-year': '2024',
   'coverEndDate-month': '05',
@@ -12,7 +11,7 @@ const issuedFacility = {
 };
 
 const unissuedFacility = {
-  facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED,
+  hasBeenIssued: false,
   ukefGuaranteeInMonths: 24,
 };
 

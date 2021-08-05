@@ -2,12 +2,10 @@ const moment = require('moment');
 const api = require('../api');
 const formattedTimestamp = require('../formattedTimestamp');
 
-const facilityIsIssued = (facilityStage) => (facilityStage === 'Issued' || facilityStage === 'Unconditional');
-
 const getFacilityExposurePeriod = async (facility) => {
   const {
     facilityType,
-    facilityStage,
+    hasBeenIssued,
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
@@ -16,7 +14,7 @@ const getFacilityExposurePeriod = async (facility) => {
 
   let facilityUpdate;
 
-  if (facilityIsIssued(facilityStage)) {
+  if (hasBeenIssued) {
     const startDate = formattedTimestamp(coverStartDate);
 
     const formattedStartDate = moment.utc(startDate).format('YYYY-MM-DD');
