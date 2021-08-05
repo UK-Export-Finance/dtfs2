@@ -23,8 +23,8 @@ describe('utils - date', () => {
   });
 
   describe('formatDate', () => {
-    it('should return a date in YYYY-MM-DD format', () => {
-      const result = formatDate('20210419');
+    it('should return a date in the given format', () => {
+      const result = formatDate('20210419', 'YYYY-MM-DD');
       expect(result).toEqual('2021-04-19');
     });
   });
