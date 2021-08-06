@@ -1,5 +1,5 @@
 const mapBssEwcsDeal = require('./map-bss-ewcs-deal');
-const mapBssEwcsFacility = require('./map-bss-ewcs-facility');
+const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 const MOCK_BSS_EWCS_DEAL = require('../../__mocks__/mock-deal');
 
 describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
@@ -59,8 +59,14 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       destinationOfGoodsAndServices: submissionDetails.destinationOfGoodsAndServices,
       eligibility,
       facilities: [
-        ...bondTransactions.items.map((facility) => mapBssEwcsFacility(facility)),
-        ...loanTransactions.items.map((facility) => mapBssEwcsFacility(facility)),
+        ...bondTransactions.items.map((facility) => ({
+          ...mapBssEwcsFacility(facility),
+          coverEndDate: expect.any(Object), // date object
+        })),
+        ...loanTransactions.items.map((facility) => ({
+          ...mapBssEwcsFacility(facility),
+          coverEndDate: expect.any(Object), // date object
+        })),
       ],
       tfm: mockDeal.tfm,
     };

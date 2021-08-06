@@ -1,6 +1,32 @@
 const moment = require('moment');
 const isIssued = require('../../helpers/is-issued');
 
+const hasCoverEndDate = (day, month, year) => {
+  if (day && month && year) {
+    return true;
+  }
+
+  return false;
+};
+
+const mapCoverEndDate = (facility) => {
+  const {
+    'coverEndDate-day': day,
+    'coverEndDate-month': month,
+    'coverEndDate-year': year,
+  } = facility;
+
+  if (hasCoverEndDate(day, month, year)) {
+    return moment().set({
+      date: Number(day),
+      month: Number(month) - 1, // months are zero indexed
+      year: Number(year),
+    });
+  }
+
+  return null;
+};
+
 const mapBssEwcsFacility = (facility) => {
   const {
     _id,
@@ -20,9 +46,6 @@ const mapBssEwcsFacility = (facility) => {
     premiumType,
     feeFrequency,
     premiumFrequency,
-    'coverEndDate-day': coverEndDateDay,
-    'coverEndDate-month': coverEndDateMonth,
-    'coverEndDate-year': coverEndDateYear,
   } = facility;
 
   return {
@@ -38,11 +61,7 @@ const mapBssEwcsFacility = (facility) => {
     // TODO simplify isIssued to just take 1 param, not object
     hasBeenIssued: isIssued(facility),
     hasBeenAcknowledged,
-    coverEndDate: moment().set({
-      date: Number(coverEndDateDay),
-      month: Number(coverEndDateMonth) - 1, // months are zero indexed
-      year: Number(coverEndDateYear),
-    }),
+    coverEndDate: mapCoverEndDate(facility),
     guaranteeFeePayableByBank,
     dayCountBasis,
     feeFrequency,
@@ -54,4 +73,8 @@ const mapBssEwcsFacility = (facility) => {
 };
 
 
-module.exports = mapBssEwcsFacility;
+module.exports = {
+  hasCoverEndDate,
+  mapCoverEndDate,
+  mapBssEwcsFacility,
+};
