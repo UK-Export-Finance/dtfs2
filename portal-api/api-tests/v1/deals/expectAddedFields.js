@@ -1,7 +1,9 @@
+const CONSTANTS = require('../../../src/constants');
 const { expectMongoId } = require('../../expectMongoIds');
 
 const expectAddedFields = (obj) => {
   const expectation = expectMongoId({
+    dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     eligibility: {
       status: 'Not started',
       criteria: expect.any(Array),
@@ -28,7 +30,6 @@ const expectAddedFields = (obj) => {
       status: 'Draft',
     },
     editedBy: [],
-
   });
 
   return expectation;
