@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
-  const isMIA = deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+  const isMIA = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
 
   const hasApprovedDecision = (tfmDeal.underwriterManagersDecision
     && (tfmDeal.underwriterManagersDecision.decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.APPROVED_WITH_CONDITIONS

@@ -1,5 +1,5 @@
 const {
-  findOneDeal,
+  findOneTfmDeal,
   findOnePortalDeal,
   findOneGefDeal,
 } = require('./deal.controller');
@@ -20,15 +20,16 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgementByDealId } = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgement } = require('./send-deal-submit-emails');
+const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
-const submitDeal = async (dealId, dealType, checker) => {
+const getDeal = async (dealId, dealType) => {
   let deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
 
-    // temporarily return false until we map fields for the below api calls.
+    // temporarily return false for dev.
     return false;
   }
 
@@ -36,23 +37,29 @@ const submitDeal = async (dealId, dealType, checker) => {
     deal = await findOnePortalDeal(dealId);
   }
 
+  return deal;
+};
+
+const submitDeal = async (dealId, dealType, checker) => {
+  const deal = await getDeal(dealId, dealType);
+
   if (!deal) {
     return false;
   }
 
-  const { tfm: tfmDeal } = await findOneDeal(dealId);
+  const submittedDeal = await api.submitDeal(dealId);
 
-  const { submissionCount } = deal.details;
+  const mappedDeal = mapSubmittedDeal(submittedDeal);
+
+  const { submissionCount } = mappedDeal;
 
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
 
-  const submittedDeal = await api.submitDeal(dealId);
-
   if (firstDealSubmission) {
-    await updatePortalDealStatus(deal);
+    await updatePortalDealStatus(mappedDeal);
 
-    const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
+    const updatedDealWithPartyUrn = await addPartyUrns(mappedDeal);
 
     const updatedDealWithProduct = await addDealProduct(updatedDealWithPartyUrn);
 
@@ -68,12 +75,12 @@ const submitDeal = async (dealId, dealType, checker) => {
 
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-      await sendDealSubmitEmails(dealId);
+      await sendDealSubmitEmails(updatedDealWithTasks);
 
       return updatedDeal;
     }
@@ -82,27 +89,31 @@ const submitDeal = async (dealId, dealType, checker) => {
   }
 
   if (dealHasBeenResubmit) {
-    const updatedDeal = await updatedIssuedFacilities(submittedDeal);
+    const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
-    if (deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || deal.details.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+
+    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
     ) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
-    if (shouldUpdateDealFromMIAtoMIN(deal, tfmDeal)) {
+    if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, checker);
 
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
+      updatedDeal.submissionType = dealSnapshot.details.submissionType;
+      updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+      updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
+
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
-      await sendAinMinIssuedFacilitiesAcknowledgementByDealId(dealId);
-
-      updatedDeal.dealSnapshot = dealSnapshot;
+      await sendAinMinIssuedFacilitiesAcknowledgement(updatedDeal);
     }
 
-    await updatePortalDealStatus(updatedDeal.dealSnapshot);
+    await updatePortalDealStatus(updatedDeal);
 
     return api.updateDeal(dealId, updatedDeal);
   }

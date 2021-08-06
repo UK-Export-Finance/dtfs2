@@ -4,6 +4,8 @@ const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
+const wasPreviouslyUnissued = require('../helpers/was-previously-unissued');
+const isIssued = require('../helpers/is-issued');
 
 const updatedIssuedFacilities = async (deal) => {
   // Create deep clone
@@ -11,115 +13,73 @@ const updatedIssuedFacilities = async (deal) => {
 
   const {
     submissionDate: dealSubmissionDate,
-  } = deal.dealSnapshot.details;
+  } = deal;
 
-  const facilities = [
-    ...modifiedDeal.dealSnapshot.bondTransactions.items,
-    ...modifiedDeal.dealSnapshot.loanTransactions.items,
-  ];
+  const updatedFacilities = [];
 
-  const bonds = [];
-  const loans = [];
+  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
+    const facility = f;
 
-  const allUpdatedFacilities = [];
+    const {
+      _id: facilityId,
+      hasBeenAcknowledged,
+    } = facility;
 
-  let updatedCount = 0;
-  let shouldUpdateCount = 0;
+    // we only need to update issued facilities if the facility has
+    // - changed from unissued to issued
+    // facility has not be acknowledged by TFM.
+    const shouldUpdateFacility = (wasPreviouslyUnissued(facility) && isIssued(facility) && !hasBeenAcknowledged);
 
-  return new Promise((resolve) => {
-    facilities.forEach(async (facility) => {
-      const {
-        _id: facilityId,
-        facilityType,
-        facilityStage,
-        previousFacilityStage,
-        hasBeenAcknowledged,
-      } = facility;
+    if (shouldUpdateFacility) {
+      // update portal facility status
+      const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
+      await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
-      // we only need to update issued facilities if:
-      // - a facility has changed from `Unissued` to `Issued` (`Conditional` to `Unconditional` for a loan)
-      // - and the facility changing from `Unissued` to `Issued` has NOT been previously acknowledged
+      // add acknowledged flag to Portal facility
+      const portalFacilityUpdate = {
+        hasBeenAcknowledged: true,
+      };
 
-      const bondIsIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED)
-        && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED));
+      const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
 
-      const loanIsIssued = ((previousFacilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL)
-        && (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL));
+      // update TFM facility
+      const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
 
-      const shouldUpdateFacility = ((bondIsIssued || loanIsIssued) && !hasBeenAcknowledged);
+      const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
 
-      if (shouldUpdateFacility) {
-        shouldUpdateCount += 1;
+      const facilityPremiumSchedule = await getFacilityPremiumSchedule(
+        facility,
+        facilityExposurePeriod,
+        facilityGuaranteeDates,
+      );
 
-        // update portal facility status
-        const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
-        const updatedFacilityStatus = await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+      const facilityUpdate = {
+        ...portalFacilityUpdate,
+        ...facilityExposurePeriod,
+        facilityGuaranteeDates,
+        premiumSchedule: facilityPremiumSchedule,
+      };
 
-        // add acknowledged flag, update Portal facility
-        const portalFacilityUpdate = {
-          hasBeenAcknowledged: true,
-        };
+      const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
 
-        const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+      // add the updated properties to the returned facility
+      // to retain flat, generic facility mapping used in deal submission calls.
+      facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+      facility.status = facilityStatusUpdate;
+      facility.tfm = updateFacilityResponse.tfm;
 
-        // update TFM facility
-        const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
+      updatedFacilities.push(facility);
+    }
 
-        const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+    return facility;
+  }));
 
-        const facilityPremiumSchedule = await getFacilityPremiumSchedule(
-          facility,
-          facilityExposurePeriod,
-          facilityGuaranteeDates,
-        );
+  await sendIssuedFacilitiesReceivedEmail(
+    modifiedDeal,
+    updatedFacilities,
+  );
 
-        const facilityUpdate = {
-          ...portalFacilityUpdate,
-          ...facilityExposurePeriod,
-          facilityGuaranteeDates,
-          premiumSchedule: facilityPremiumSchedule,
-        };
-
-        await api.updateFacility(facilityId, facilityUpdate);
-
-        // update object to return in response
-        const updatedFacilityResponseObj = {
-          ...updatedFacilityStatus,
-          ...updatedPortalFacility,
-          tfm: {
-            ...facilityUpdate,
-          },
-        };
-
-        if (facilityType === 'bond') {
-          bonds.push(updatedFacilityResponseObj);
-        } else if (facilityType === 'loan') {
-          loans.push(updatedFacilityResponseObj);
-        }
-
-        allUpdatedFacilities.push(updatedFacilityResponseObj);
-        updatedCount += 1;
-      } else if (facilityType === 'bond') {
-        // update deal object to return in response
-        bonds.push(facility);
-      } else if (facilityType === 'loan') {
-        loans.push(facility);
-      }
-
-      if (shouldUpdateCount === updatedCount) {
-        modifiedDeal.dealSnapshot.bondTransactions.items = bonds;
-        modifiedDeal.dealSnapshot.loanTransactions.items = loans;
-
-        await sendIssuedFacilitiesReceivedEmail(
-          modifiedDeal,
-          allUpdatedFacilities,
-        );
-
-        return resolve(modifiedDeal);
-      }
-      return modifiedDeal;
-    });
-  });
+  return modifiedDeal;
 };
 
 

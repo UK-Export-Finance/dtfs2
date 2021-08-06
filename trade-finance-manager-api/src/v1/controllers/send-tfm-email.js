@@ -14,7 +14,7 @@ const sendTfmEmail = async (
   );
 
   // update deal history
-  const dealId = deal.dealSnapshot._id; // eslint-disable-line no-underscore-dangle
+  const dealId = deal._id; // eslint-disable-line no-underscore-dangle
   const newHistoryObject = {
     recipient: sendToEmailAddress,
     templateId,

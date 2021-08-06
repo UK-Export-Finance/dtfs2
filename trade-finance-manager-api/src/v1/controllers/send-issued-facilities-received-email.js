@@ -22,25 +22,19 @@ const generateFacilitiesListString = (facilities) => {
 };
 
 const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
-  const { dealSnapshot } = deal;
-  const { details, submissionDetails } = dealSnapshot;
-
   const {
-    bankSupplyContractID: bankReferenceNumber,
+    bankReferenceNumber,
     ukefDealId: ukefDealID,
-    maker,
+    exporter,
     submissionType,
-  } = details;
+    maker,
+  } = deal;
 
   const shouldSendEmail = (
     submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
     || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
 
   if (shouldSendEmail) {
-    const {
-      'supplier-name': exporterName,
-    } = submissionDetails;
-
     const {
       firstname: recipientName,
       email: sendToEmailAddress,
@@ -50,7 +44,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
 
     const emailVariables = {
       recipientName,
-      exporterName,
+      exporterName: exporter.companyName,
       bankReferenceNumber,
       ukefDealID,
       facilitiesList: generateFacilitiesListString(updatedFacilities),

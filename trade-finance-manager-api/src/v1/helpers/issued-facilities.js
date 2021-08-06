@@ -1,11 +1,9 @@
 const isIssued = require('./is-issued');
 const CONSTANTS = require('../../constants');
 
-const issuedFacilities = (dealSnapshot) => {
-  const { facilities } = dealSnapshot;
-
-  const issuedFacilitiesList = facilities.map((f) => f.facilitySnapshot).filter((f) => isIssued(f));
-  const unissuedFacilitiesList = facilities.map((f) => f.facilitySnapshot).filter((f) => !isIssued(f));
+const issuedFacilities = (facilities) => {
+  const issuedFacilitiesList = facilities.filter((f) => isIssued(f));
+  const unissuedFacilitiesList = facilities.filter((f) => !isIssued(f));
 
   return {
     issuedBonds: issuedFacilitiesList.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND),

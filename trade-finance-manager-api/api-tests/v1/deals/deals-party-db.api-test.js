@@ -1,18 +1,22 @@
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 
 describe('add partyUrn to deal', () => {
+  const mockDeal = {
+    buyer: { name: 'test' },
+    indemnifier: { name: 'test' },
+    eligibility: {},
+  };
+
   it('should return false when no deal passed as parameter', async () => {
     const noDeal = await addPartyUrns();
     expect(noDeal).toEqual(false);
   });
 
-  it('should return false when companies house no not given', async () => {
+  it('should return false when companies house no is not given', async () => {
     const deal = {
-      dealSnapshot: {
-        submissionDetails: {
-          'supplier-companies-house-registration-number': '',
-        },
-        eligibility: {},
+      ...mockDeal,
+      exporter: {
+        companiesHouseRegistrationNumber: '',
       },
     };
     const noCompaniesHouse = await addPartyUrns(deal);
@@ -21,11 +25,9 @@ describe('add partyUrn to deal', () => {
 
   it('should return false when companies house no is not matched', async () => {
     const deal = {
-      dealSnapshot: {
-        submissionDetails: {
-          'supplier-companies-house-registration-number': 'NO_MATCH',
-        },
-        eligibility: {},
+      ...mockDeal,
+      exporter: {
+        companiesHouseRegistrationNumber: 'NO_MATCH',
       },
     };
     const noMatch = await addPartyUrns(deal);
@@ -34,11 +36,9 @@ describe('add partyUrn to deal', () => {
 
   it('should return the deal with partyUrn is successfully matched', async () => {
     const deal = {
-      dealSnapshot: {
-        submissionDetails: {
-          'supplier-companies-house-registration-number': 'MATCH',
-        },
-        eligibility: {},
+      ...mockDeal,
+      exporter: {
+        companiesHouseRegistrationNumber: 'MATCH',
       },
     };
     const match = await addPartyUrns(deal);
@@ -47,11 +47,9 @@ describe('add partyUrn to deal', () => {
 
   it('should retain existing tfm data', async () => {
     const deal = {
-      dealSnapshot: {
-        submissionDetails: {
-          'supplier-companies-house-registration-number': 'MATCH',
-        },
-        eligibility: {},
+      ...mockDeal,
+      exporter: {
+        companiesHouseRegistrationNumber: 'MATCH',
       },
       tfm: {
         mockField: 'mock data',

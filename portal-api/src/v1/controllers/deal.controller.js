@@ -157,7 +157,7 @@ const createDealEligibility = async (eligibility) => {
 
   const eligibilityStatus = eligibility && eligibility.status
     ? eligibility.status
-    : DEFAULTS.DEALS.eligibility.status;
+    : DEFAULTS.DEAL.eligibility.status;
 
   const eligibilityCriteria11AgentDetails = () => {
     if (beingGivenEligibility) {
@@ -176,10 +176,10 @@ const createDealEligibility = async (eligibility) => {
 
 const createNewDealData = async (deal, maker) => {
   const newDeal = {
-    ...DEFAULTS.DEALS,
+    ...DEFAULTS.DEAL,
     ...deal,
     details: {
-      ...DEFAULTS.DEALS.details,
+      ...DEFAULTS.DEAL.details,
       ...deal.details,
       maker,
       owningBank: maker.bank,

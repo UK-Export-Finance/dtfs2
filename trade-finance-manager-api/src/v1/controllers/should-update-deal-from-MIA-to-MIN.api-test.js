@@ -3,9 +3,7 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 
 describe('deal submit - shouldUpdateDealFromMIAtoMIN', () => {
   const mockMIADeal = {
-    details: {
-      submissionType: 'Manual Inclusion Application',
-    },
+    submissionType: 'Manual Inclusion Application',
   };
 
   it('should return true when deal is MIA with `Approved (with conditions)` TFM decision', () => {
@@ -42,9 +40,7 @@ describe('deal submit - shouldUpdateDealFromMIAtoMIN', () => {
 
   it('should return false when deal is MIN', () => {
     const mockMINDeal = {
-      details: {
-        submissionType: 'Manual Inclusion Notice',
-      },
+      submissionType: 'Manual Inclusion Notice',
     };
 
     const result = shouldUpdateDealFromMIAtoMIN(mockMINDeal, {});
@@ -54,9 +50,7 @@ describe('deal submit - shouldUpdateDealFromMIAtoMIN', () => {
 
   it('should return false when deal is AIN', () => {
     const mockAINDeal = {
-      details: {
-        submissionType: 'Automatic Inclusion Notice',
-      },
+      submissionType: 'Automatic Inclusion Notice',
     };
 
     const result = shouldUpdateDealFromMIAtoMIN(mockAINDeal, {});
