@@ -1,5 +1,5 @@
 const DEFAULTS = {
-  DEALS: {
+  DEAL: {
     details: {
       status: 'Draft',
     },
@@ -15,6 +15,13 @@ const DEFAULTS = {
     editedBy: [],
     facilities: [],
   },
+  DEAL_TFM: {
+    history: {
+      tasks: [],
+      emails: [],
+    },
+  },
+  FACILITY_TFM: {},
 };
 
 module.exports = DEFAULTS;

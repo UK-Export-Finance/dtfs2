@@ -68,7 +68,19 @@ describe('acbs controller', () => {
     });
 
     it('should call updateACBSfacility ACBS function', async () => {
-      await acbsController.issueAcbsFacilities(MOCK_TFM_DEAL_ACBS);
+      const mockDeal = {
+        exporter: { companyName: 'test' },
+        facilities: [
+          {
+            facilityStage: 'Issued',
+            tfm: {},
+          },
+        ],
+        tfm: {
+          acbs: {},
+        },
+      };
+      await acbsController.issueAcbsFacilities(mockDeal);
       expect(api.updateACBSfacility).toHaveBeenCalled();
     });
   });

@@ -5,7 +5,7 @@ const submissionDate = '2021-04-24';
 
 const issuedFacility = {
   facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED,
-  requestedCoverStartDate: new Date(submissionDate).valueOf(),
+  coverStartDate: new Date(submissionDate).valueOf(),
   'coverEndDate-year': '2024',
   'coverEndDate-month': '05',
   'coverEndDate-day': '21',

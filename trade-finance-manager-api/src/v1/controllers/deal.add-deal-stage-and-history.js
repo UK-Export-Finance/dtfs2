@@ -8,19 +8,11 @@ const addDealStageAndHistory = async (deal) => {
   }
 
   const {
-    tfm,
-    dealSnapshot,
-  } = deal;
-
-  const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-    details,
-  } = dealSnapshot;
-
-  const {
     submissionType,
     status,
-  } = details;
+    tfm,
+  } = deal;
 
   let dealUpdate = {
     tfm: {
@@ -51,7 +43,10 @@ const addDealStageAndHistory = async (deal) => {
 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
-  return updatedDeal;
+  return {
+    ...deal,
+    tfm: updatedDeal.tfm,
+  };
 };
 
 exports.addDealStageAndHistory = addDealStageAndHistory;

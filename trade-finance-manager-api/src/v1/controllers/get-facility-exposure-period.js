@@ -11,13 +11,13 @@ const getFacilityExposurePeriod = async (facility) => {
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
-    requestedCoverStartDate,
+    coverStartDate,
   } = facility;
 
   let facilityUpdate;
 
   if (facilityIsIssued(facilityStage)) {
-    const startDate = formattedTimestamp(requestedCoverStartDate);
+    const startDate = formattedTimestamp(coverStartDate);
 
     const formattedStartDate = moment.utc(startDate).format('YYYY-MM-DD');
 

@@ -28,34 +28,22 @@ const mapDealProduct = (facilities) => {
 };
 
 const addDealProduct = async (deal) => {
-  // Create deep clone
-  const modifiedDeal = JSON.parse(JSON.stringify(deal));
-
-  const {
-    tfm,
-    dealSnapshot,
-  } = deal;
-
   const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-  } = dealSnapshot;
-
-  const facilities = [
-    ...modifiedDeal.dealSnapshot.bondTransactions.items,
-    ...modifiedDeal.dealSnapshot.loanTransactions.items,
-  ];
+    tfm,
+  } = deal;
 
   const dealUpdate = {
     tfm: {
       ...tfm,
-      product: mapDealProduct(facilities),
+      product: mapDealProduct(deal.facilities),
     },
   };
 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
   return {
-    dealSnapshot,
+    ...deal,
     tfm: updatedDeal.tfm,
   };
 };
