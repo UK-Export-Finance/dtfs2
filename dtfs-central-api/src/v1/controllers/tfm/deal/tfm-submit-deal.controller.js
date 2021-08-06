@@ -1,6 +1,9 @@
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
-const { findOneDeal } = require('../../portal/deal/get-deal.controller');
+const {
+  findOneDeal,
+  findOneGefDeal,
+} = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
 
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -44,7 +47,7 @@ const createDealSnapshot = async (deal) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: deal._id },
+    { _id: String(deal._id) },
     $.flatten(withoutId(update)),
     { returnOriginal: false, upsert: true },
   );
@@ -77,20 +80,41 @@ const createFacilitiesSnapshot = async (deal) => {
 
 const submitDeal = async (deal) => {
   await createDealSnapshot(deal);
-  await createFacilitiesSnapshot(deal);
 
-  const updatedDeal = await tfmController.findOneDeal(deal._id);
+  if (deal.dealType !== 'GEF') {
+    await createFacilitiesSnapshot(deal);
+  }
+
+  const updatedDeal = await tfmController.findOneDeal(String(deal._id));
+
   return updatedDeal;
 };
 
 exports.submitDealPut = async (req, res) => {
-  const { id } = req.params;
+  const {
+    type: dealType,
+    id,
+  } = req.params;
 
-  await findOneDeal(id, async (deal) => {
-    if (deal) {
-      const updatedDeal = await submitDeal(deal);
-      return res.status(200).json(updatedDeal);
-    }
-    return res.status(404).send();
-  });
+  if (dealType === 'GEF') {
+    await findOneGefDeal(id, async (deal) => {
+      if (deal) {
+        const updatedDeal = await submitDeal(deal);
+        return res.status(200).json(updatedDeal);
+      }
+
+      return res.status(404).send();
+    });
+  }
+
+  if (dealType === 'BSS/EWCS') {
+    await findOneDeal(id, async (deal) => {
+      if (deal) {
+        const updatedDeal = await submitDeal(deal);
+        return res.status(200).json(updatedDeal);
+      }
+
+      return res.status(404).send();
+    });
+  }
 };

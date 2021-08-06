@@ -1,3 +1,4 @@
+const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 
@@ -84,6 +85,27 @@ const findOneDeal = async (_id, callback) => {
   return deal;
 };
 exports.findOneDeal = findOneDeal;
+
+const findOneGefDeal = async (_id, callback) => {
+  const dealsCollection = await db.getCollection('gef-application');
+  // const facilitiesCollection = await db.getCollection('gef-facilities');
+
+  const deal = await dealsCollection.findOne({ _id: new ObjectID(_id) });
+
+
+  // if (deal) {
+    // const facilityIds = deal.facilities;
+
+    // if (facilityIds) { ... }
+  // }
+
+  if (callback) {
+    callback(deal);
+  }
+
+  return deal;
+};
+exports.findOneGefDeal = findOneGefDeal;
 
 exports.findOneDealGet = async (req, res) => {
   const deal = await findOneDeal(req.params.id);

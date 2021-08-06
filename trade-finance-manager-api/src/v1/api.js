@@ -189,11 +189,11 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
 };
 
 
-const submitDeal = async (dealId) => {
+const submitDeal = async (dealType, dealId) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/submit`,
+      url: `${centralApiUrl}/v1/tfm/deals/${dealType}/${dealId}/submit`,
       headers: {
         'Content-Type': 'application/json',
       },

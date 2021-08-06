@@ -28,9 +28,6 @@ const getDeal = async (dealId, dealType) => {
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
-
-    // temporarily return false for dev.
-    return false;
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
@@ -47,9 +44,13 @@ const submitDeal = async (dealId, dealType, checker) => {
     return false;
   }
 
-  const submittedDeal = await api.submitDeal(dealId);
+  const submittedDeal = await api.submitDeal(dealType, dealId);
+
+  console.log('tfm submitDeal - submittedDeal \n', submittedDeal);
 
   const mappedDeal = mapSubmittedDeal(submittedDeal);
+
+  console.log('tfm submitDeal - mappedDeal \n', mappedDeal);
 
   const { submissionCount } = mappedDeal;
 
