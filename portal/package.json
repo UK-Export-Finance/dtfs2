@@ -4,15 +4,15 @@
   "description": "DTFS2 Portal",
   "private": true,
   "main": "index.js",
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
   },
   "scripts": {
     "lint": "eslint ./server ./scripts",
-    "buildDev": "rm -rf dist && webpack --mode development --config webpack.server.config.js && webpack --mode development --config webpack.dev.config.js",
-    "buildProd": "rm -rf dist && webpack --mode production --config webpack.server.config.js && webpack --mode production --config webpack.prod.config.js",
+    "buildDev": "rimraf dist && webpack --mode development --config webpack.server.config.js && webpack --mode development --config webpack.dev.config.js",
+    "buildProd": "rimraf dist && webpack --mode production --config webpack.server.config.js && webpack --mode production --config webpack.prod.config.js",
     "start": "npm run buildProd && node ./dist/server.js",
     "dev": "npm run buildDev && node ./dist/server.js",
     "test": "jest --notify --coverage --verbose --config=jest.config.js --detectOpenHandles",
@@ -65,7 +65,8 @@
     "node-fetch": "^2.6.1",
     "nunjucks": "3.2.1",
     "path": "0.12.7",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "7.10.1",
