@@ -63,7 +63,7 @@ context('Submit to UKEF', () => {
     it('takes checker back to application review page when cancelled', () => {
       submitToUkef.comment().type('Some comments here ....');
       submitToUkef.cancelLink().click();
-      cy.location('pathname').should('eq', `/gef/application-details/${applicationIds[2]}/`);
+      cy.location('pathname').should('eq', `/gef/application-details/${applicationIds[2]}`);
     });
 
     it('takes checker to dashboard from the confirmation page', () => {

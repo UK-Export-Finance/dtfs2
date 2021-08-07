@@ -56,7 +56,7 @@ describe('Create Application', () => {
 
     api.createApplication = () => Promise.resolve(mockApplication);
     await createApplication(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456/');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {

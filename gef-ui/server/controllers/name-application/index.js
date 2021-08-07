@@ -22,7 +22,7 @@ const createApplication = async (req, res) => {
     }
 
     // eslint-disable-next-line no-underscore-dangle
-    return res.redirect(`application-details/${application._id}/`);
+    return res.redirect(`application-details/${application._id}`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
