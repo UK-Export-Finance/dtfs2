@@ -46,11 +46,7 @@ const submitDeal = async (dealId, dealType, checker) => {
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
 
-  console.log('tfm submitDeal - submittedDeal \n', submittedDeal);
-
   const mappedDeal = mapSubmittedDeal(submittedDeal);
-
-  console.log('tfm submitDeal - mappedDeal \n', mappedDeal);
 
   const { submissionCount } = mappedDeal;
 

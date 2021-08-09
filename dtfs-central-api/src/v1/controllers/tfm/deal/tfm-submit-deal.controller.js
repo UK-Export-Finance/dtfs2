@@ -103,11 +103,10 @@ const submitDeal = async (deal) => {
 };
 
 exports.submitDealPut = async (req, res) => {
-  const { id } = req.params;
-  const { dealType } = req.body;
+  const { dealId, dealType } = req.body;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await findOneGefDeal(id, async (deal) => {
+    await findOneGefDeal(dealId, async (deal) => {
       if (deal) {
         const updatedDeal = await submitDeal(deal);
         return res.status(200).json(updatedDeal);
@@ -118,7 +117,7 @@ exports.submitDealPut = async (req, res) => {
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await findOneDeal(id, async (deal) => {
+    await findOneDeal(dealId, async (deal) => {
       if (deal) {
         const updatedDeal = await submitDeal(deal);
         return res.status(200).json(updatedDeal);
