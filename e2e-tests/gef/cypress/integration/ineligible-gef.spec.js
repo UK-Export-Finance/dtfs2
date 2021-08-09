@@ -10,6 +10,7 @@ context('Ineligible GEF Page', () => {
   });
 
   beforeEach(() => {
+    cy.on('uncaught:exception', () => false);
     Cypress.Cookies.preserveOnce('connect.sid');
     cy.visit(relative('/gef/ineligible-gef'));
   });
@@ -23,9 +24,9 @@ context('Ineligible GEF Page', () => {
   });
 
   describe('Clicking on Back Button', () => {
-    it('redirects user to ** page', () => {
+    it('redirects user to the applications and notices page', () => {
       ineligibleGef.backLink().click();
-      cy.url().should('eq', relative('/gef/ineligible-gef'));
+      cy.url().should('eq', relative('/dashboard/0'));
     });
   });
 });
