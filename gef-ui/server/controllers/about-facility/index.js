@@ -72,9 +72,28 @@ const validateAboutFacility = async (req, res) => {
         });
       }
       if (body.shouldCoverStartOnSubmission === 'false' && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
+        let msg = 'Cover start date must include a ';
+        const dateFieldsInError = [];
+        if (!coverStartDateDay) {
+          msg += 'day ';
+          dateFieldsInError.push('coverStartDate-day');
+        }
+        if (!coverStartDateMonth) {
+          msg += !coverStartDateDay ? ' and month ' : 'month ';
+          dateFieldsInError.push('coverStartDate-month');
+        }
+        if (!coverStartDateYear) {
+          msg += !coverStartDateDay || !coverStartDateMonth ? 'and year' : 'year';
+          dateFieldsInError.push('coverStartDate-year');
+        }
+        if (!coverStartDateDay && !coverStartDateMonth && !coverStartDateYear) {
+          msg = 'Enter a cover start date';
+        }
+
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
-          errMsg: 'Enter a cover start date',
+          errMsg: msg,
+          subFieldErrorRefs: dateFieldsInError,
         });
       }
 

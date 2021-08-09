@@ -106,7 +106,7 @@
               items: [
                 {
                   label: "Day",
-                  classes: errors.fieldErrors.coverStartDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+                  classes: errors and errors.fieldErrors['coverStartDate-day'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
                   name: "day",
                   value: coverStartDateDay,
                   attributes: {
@@ -115,7 +115,7 @@
                 },
                 {
                   label: "Month",
-                  classes: errors.fieldErrors.coverStartDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+                  classes: errors and errors.fieldErrors['coverStartDate-month'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
                   name: "month",
                   value: coverStartDateMonth,
                   attributes: {
@@ -124,7 +124,7 @@
                 },
                 {
                   label: "Year",
-                  classes: errors.fieldErrors.coverStartDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+                  classes: errors and errors.fieldErrors['coverStartDate-year'] and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
                   name: "year",
                   value: coverStartDateYear,
                   attributes: {
