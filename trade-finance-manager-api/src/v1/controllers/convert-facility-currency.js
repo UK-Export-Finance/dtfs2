@@ -4,8 +4,8 @@ const calculateUkefExposure = require('../helpers/calculateUkefExposure');
 const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
   const {
     currency,
-    facilityValue,
-    coveredPercentage,
+    value,
+    coverPercentage,
     ukefExposure,
   } = facility;
 
@@ -18,13 +18,14 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
       midPrice: exchangeRate,
     } = currencyExchange;
 
-    const strippedFacilityValue = Number(facilityValue.replace(/,/g, ''));
+    const strippedValue = Number(value.replace(/,/g, ''));
 
-    const facilityValueInGBP = strippedFacilityValue * exchangeRate;
+    // TODO: rename to valueInGBP
+    const facilityValueInGBP = strippedValue * exchangeRate;
 
     facilityUpdate = {
       facilityValueInGBP,
-      ...calculateUkefExposure(facilityValueInGBP, coveredPercentage),
+      ...calculateUkefExposure(facilityValueInGBP, coverPercentage),
     };
   } else {
     facilityUpdate = {

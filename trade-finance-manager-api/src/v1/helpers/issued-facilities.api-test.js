@@ -2,35 +2,23 @@ const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
 const issuedBond = {
-  facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED,
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-  'coverEndDate-year': '2024',
-  'coverEndDate-month': '05',
-  'coverEndDate-day': '21',
+  hasBeenIssued: true,
 };
 
 const issuedLoan = {
-  facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL,
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-  'coverEndDate-year': '2024',
-  'coverEndDate-month': '05',
-  'coverEndDate-day': '21',
+  hasBeenIssued: true,
 };
 
 const unissuedBond = {
-  facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED,
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-  'coverEndDate-year': '2024',
-  'coverEndDate-month': '05',
-  'coverEndDate-day': '21',
+  hasBeenIssued: false,
 };
 
 const unissuedLoan = {
-  facilityStage: CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL,
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-  'coverEndDate-year': '2024',
-  'coverEndDate-month': '05',
-  'coverEndDate-day': '21',
+  hasBeenIssued: false,
 };
 
 describe('return list of issued & unissued facilities', () => {
@@ -45,7 +33,7 @@ describe('return list of issued & unissued facilities', () => {
       ];
     });
 
-    it.only('should return correct issued/unissued facilities', () => {
+    it('should return correct issued/unissued facilities', () => {
       const {
         issuedBonds,
         unissuedBonds,

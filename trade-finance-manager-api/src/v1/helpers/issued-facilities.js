@@ -1,9 +1,8 @@
-const isIssued = require('./is-issued');
 const CONSTANTS = require('../../constants');
 
 const issuedFacilities = (facilities) => {
-  const issuedFacilitiesList = facilities.filter((f) => isIssued(f));
-  const unissuedFacilitiesList = facilities.filter((f) => !isIssued(f));
+  const issuedFacilitiesList = facilities.filter((f) => f.hasBeenIssued === true);
+  const unissuedFacilitiesList = facilities.filter((f) => f.hasBeenIssued === false);
 
   return {
     issuedBonds: issuedFacilitiesList.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND),

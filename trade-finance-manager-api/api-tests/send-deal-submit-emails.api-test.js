@@ -404,8 +404,14 @@ describe('send-deal-submit-emails', () => {
                 companyName: mockDealMin.dealSnapshot.submissionDetails['supplier-name'],
               },
               facilities: [
-                ...mockDealMin.dealSnapshot.bondTransactions.items,
-                ...mockDealMin.dealSnapshot.loanTransactions.items,
+                {
+                  ...mockDealMin.dealSnapshot.bondTransactions.items[0],
+                  hasBeenIssued: true, // field is added during deal.submit mapping
+                },
+                {
+                  ...mockDealMin.dealSnapshot.loanTransactions.items[0],
+                  hasBeenIssued: true, // field is added during deal.submit mapping
+                },
               ],
               tfm: {
                 tasks: [
@@ -500,8 +506,14 @@ describe('send-deal-submit-emails', () => {
                 companyName: mockDealAin.dealSnapshot.submissionDetails['supplier-name'],
               },
               facilities: [
-                ...mockDealAin.dealSnapshot.bondTransactions.items,
-                ...mockDealAin.dealSnapshot.loanTransactions.items,
+                {
+                  ...mockDealAin.dealSnapshot.bondTransactions.items[0],
+                  hasBeenIssued: true, // field is added during deal.submit mapping
+                },
+                {
+                  ...mockDealAin.dealSnapshot.loanTransactions.items[0],
+                  hasBeenIssued: true, // field is added during deal.submit mapping
+                },
               ],
               tfm: {
                 tasks: [

@@ -1,4 +1,4 @@
-const mapBssEwcsFacility = require('./map-bss-ewcs-facility');
+const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 
 const mapBssEwcsDeal = (deal) => {
   const { dealSnapshot, tfm } = deal;

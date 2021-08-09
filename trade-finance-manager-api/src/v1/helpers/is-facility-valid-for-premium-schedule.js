@@ -27,7 +27,7 @@ const isFacilityValidForPremiumSchedule = (
   if (!facility.guaranteeFeePayableByBank) {
     return false;
   }
-  if (!facility.coveredPercentage) {
+  if (!facility.coverPercentage) {
     return false;
   }
 

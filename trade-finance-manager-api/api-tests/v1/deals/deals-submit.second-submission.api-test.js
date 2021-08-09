@@ -1,3 +1,4 @@
+const moment = require('moment');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
@@ -46,6 +47,13 @@ const createSubmitBody = (mockDeal) => ({
   dealType: 'BSS/EWCS',
 });
 
+const createFacilityCoverEndDate = (facility) =>
+  moment().set({
+    date: Number(facility['coverEndDate-day']),
+    month: Number(facility['coverEndDate-month']) - 1, // months are zero indexed
+    year: Number(facility['coverEndDate-year']),
+  });
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -64,7 +72,7 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('AIN deal - on second submission', () => {
-      describe('when a facilityStage changes from `Unissued` to `Issued`', () => {
+      describe('when a bond facility is issued and NOT Acknowledged', () => {
         it('should update bond status to `Acknowledged`', async () => {
           // check status before calling submit endpoint
           const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
@@ -105,8 +113,10 @@ describe('/v1/deals', () => {
           const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
           const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-          // add field that is mapped in deal.submit
+          // add fields that are mapped in deal.submit
           initialBond.coverStartDate = initialBond.requestedCoverStartDate;
+          initialBond.coverEndDate = createFacilityCoverEndDate(initialBond);
+          initialBond.hasBeenIssued = true;
 
           const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
@@ -149,7 +159,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when a facilityStage changes from `Conditional` to `Unconditional`', () => {
+      describe('when a loan faciliy is issued (`Unconditional`)', () => {
         it('should update loan status to `Acknowledged`', async () => {
           // check status before calling submit endpoint
           const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
@@ -190,8 +200,10 @@ describe('/v1/deals', () => {
           const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
           const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-          // add field that is mapped in deal.submit
+          // add fields that are mapped in deal.submit
           initialLoan.coverStartDate = initialLoan.requestedCoverStartDate;
+          initialLoan.coverEndDate = createFacilityCoverEndDate(initialLoan);
+          initialLoan.hasBeenIssued = true;
 
           const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
@@ -341,8 +353,10 @@ describe('/v1/deals', () => {
         const initialBond = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        // add field that is mapped in deal.submit
+        // add fields that are mapped in deal.submit
         initialBond.coverStartDate = initialBond.requestedCoverStartDate;
+        initialBond.coverEndDate = createFacilityCoverEndDate(initialBond);
+        initialBond.hasBeenIssued = true;
 
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
@@ -369,8 +383,10 @@ describe('/v1/deals', () => {
         const initialLoan = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        // add field that is mapped in deal.submit
+        // add fields that are mapped in deal.submit
         initialLoan.coverStartDate = initialLoan.requestedCoverStartDate;
+        initialLoan.coverEndDate = createFacilityCoverEndDate(initialLoan);
+        initialLoan.hasBeenIssued = true;
 
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
@@ -406,6 +422,11 @@ describe('/v1/deals', () => {
         const initialBond = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
+        // add fields that are mapped in deal.submit
+        initialBond.coverStartDate = initialBond.requestedCoverStartDate;
+        initialBond.coverEndDate = createFacilityCoverEndDate(initialBond);
+        initialBond.hasBeenIssued = true;
+
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
@@ -417,6 +438,11 @@ describe('/v1/deals', () => {
       });
 
       it('should add bond.premiumSchedule', async () => {
+        const initialBond = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+
+        // add fields that are mapped in deal.submit
+        initialBond.hasBeenIssued = true;
+
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
@@ -431,8 +457,10 @@ describe('/v1/deals', () => {
         const initialLoan = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
-        // add field that is mapped in deal.submit
+        // add fields that are mapped in deal.submit
         initialLoan.coverStartDate = initialLoan.requestedCoverStartDate;
+        initialLoan.coverEndDate = createFacilityCoverEndDate(initialLoan);
+        initialLoan.hasBeenIssued = true;
 
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED)).to('/v1/deals/submit');
 
