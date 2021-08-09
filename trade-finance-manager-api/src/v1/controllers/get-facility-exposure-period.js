@@ -15,9 +15,9 @@ const getFacilityExposurePeriod = async (facility) => {
   if (hasBeenIssued) {
     const startDate = formattedTimestamp(coverStartDate);
 
-    const formattedStartDate = dateHelpers.formatDate(startDate, 'YYYY-MM-DD');
+    const formattedStartDate = dateHelpers.formatDate(startDate);
 
-    const formattedEndDate = dateHelpers.formatDate(coverEndDate, 'YYYY-MM-DD');
+    const formattedEndDate = dateHelpers.formatDate(coverEndDate);
 
     const exposurePeriodResponse = await api.getFacilityExposurePeriod(
       formattedStartDate,
