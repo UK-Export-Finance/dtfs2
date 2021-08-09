@@ -32,7 +32,7 @@ tfmRouter.route('/deals/:id')
     tfmDeleteDealController.deleteDeal,
   );
 
-tfmRouter.route('/deals/:type/:id/submit')
+tfmRouter.route('/deals/:id/submit')
   .put(
     tfmSubmitDealController.submitDealPut,
   );
