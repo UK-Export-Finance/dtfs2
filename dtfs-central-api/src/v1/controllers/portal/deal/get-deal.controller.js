@@ -26,7 +26,6 @@ exports.queryDealsPost = async (req, res) => {
   res.status(200).send(deals);
 };
 
-// TODO: do we need to get the facilities in here?
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
   const facilitiesCollection = await db.getCollection('facilities');
