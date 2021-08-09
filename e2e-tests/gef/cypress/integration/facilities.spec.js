@@ -63,7 +63,7 @@ context('Facilities Page', () => {
     it('redirects user back to application details page when clicking on `Cancel` Link', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
       facilities.cancelLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}/`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
     });
   });
 

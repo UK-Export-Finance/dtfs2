@@ -27,7 +27,7 @@ context('Application Details Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationIds[0]}/`));
+    cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
   });
 
   describe('Visiting page for the first time - NOT STARTED', () => {

@@ -57,7 +57,7 @@ context('View a deal', () => {
 
       link(id).click();
 
-      cy.url().should('eq', relative(`/gef/application-details/${id}/`));
+      cy.url().should('eq', relative(`/gef/application-details/${id}`));
     });
   });
 });
