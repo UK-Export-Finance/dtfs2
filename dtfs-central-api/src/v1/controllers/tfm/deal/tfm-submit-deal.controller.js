@@ -68,7 +68,7 @@ const createFacilitiesSnapshot = async (deal) => {
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    dealFacilities = await findAllGefFacilitiesByDealId(dealId);
+    dealFacilities = await findAllGefFacilitiesByDealId(String(dealId));
   }
 
   const collection = await db.getCollection('tfm-facilities');
@@ -83,7 +83,7 @@ const createFacilitiesSnapshot = async (deal) => {
 
   const updatedFacilties = Promise.all(
     dealFacilities.map(async (facility) => collection.findOneAndUpdate(
-      { _id: facility._id },
+      { _id: String(facility._id) },
       $.flatten({ facilitySnapshot: facility, ...tfmInit }),
       { returnOriginal: false, upsert: true },
     )),
