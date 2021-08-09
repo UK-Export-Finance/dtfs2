@@ -11,66 +11,44 @@ const updateFacilities = async (deal) => {
 
   const {
     submissionDate: dealSubmissionDate,
-  } = deal.dealSnapshot.details;
+  } = modifiedDeal;
 
-  const facilities = [
-    ...modifiedDeal.dealSnapshot.bondTransactions.items,
-    ...modifiedDeal.dealSnapshot.loanTransactions.items,
-  ];
+  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
+    const facility = f;
 
-  const bonds = [];
-  const loans = [];
+    const { _id: facilityId } = facility;
 
-  let updatedCount = 0;
+    const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
 
-  return new Promise((resolve) => {
-    facilities.forEach(async (facility) => {
-      const {
-        _id: facilityId,
-        facilityType,
-      } = facility;
+    const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
+    const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
+    const facilityPremiumSchedule = await getFacilityPremiumSchedule(
+      facility,
+      facilityExposurePeriod,
+      facilityGuaranteeDates,
+    );
 
-      const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+    // TODO
+    // exposure period is not in unit test
+    const facilityUpdate = {
+      ...facilityCurrencyConversion,
+      ...facilityExposurePeriod,
+      facilityGuaranteeDates,
+      riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
+      premiumSchedule: facilityPremiumSchedule,
+    };
 
-      const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
-      const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-      const facilityPremiumSchedule = await getFacilityPremiumSchedule(
-        facility,
-        facilityExposurePeriod,
-        facilityGuaranteeDates,
-      );
+    const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
 
+    // add the updated tfm object to returned facility.
+    // if we return updateFacilityResponse, we'll get facilitySnapshot
+    // - therefore losing the flat, generic facility mapping used in deal submission calls.
+    facility.tfm = updateFacilityResponse.tfm;
 
-      // TODO
-      // exposure period is not in unit test
-      const facilityUpdate = {
-        ...facilityCurrencyConversion,
-        ...facilityExposurePeriod,
-        facilityGuaranteeDates,
-        riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-        premiumSchedule: facilityPremiumSchedule,
-      };
-      const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+    return facility;
+  }));
 
-      updatedCount += 1;
-
-      // update deal object to return in response
-      if (facilityType === 'bond') {
-        bonds.push(updatedFacility);
-      } else if (facilityType === 'loan') {
-        loans.push(updatedFacility);
-      }
-
-      if (updatedCount === facilities.length) {
-        modifiedDeal.dealSnapshot.bondTransactions.items = bonds;
-        modifiedDeal.dealSnapshot.loanTransactions.items = loans;
-
-        return resolve(modifiedDeal);
-      }
-      return modifiedDeal;
-    });
-  });
+  return modifiedDeal;
 };
-
 
 exports.updateFacilities = updateFacilities;

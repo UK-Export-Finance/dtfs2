@@ -194,6 +194,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         'coverEndDate-year': '2020',
         status: 'Submitted',
         ukefFacilityID: '65431',
+        requestedCoverStartDate: Date.now(),
       },
     ],
   },
@@ -224,7 +225,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         disbursementAmount: '1,234.00',
         issueFacilityDetailsStarted: true,
         bankReferenceNumberRequiredForIssuance: true,
-        requestedCoverStartDate: 1610369832226.0,
+        requestedCoverStartDate: Date.now(),
         status: 'Submitted',
         ukefFacilityID: '65432',
         currency: {

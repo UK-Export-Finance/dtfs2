@@ -8,7 +8,7 @@ const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const { assignGroupTasksToOneUser } = require('./tasks.controller');
 
-const findOneDeal = async (dealId) => {
+const findOneTfmDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
 
   if (!deal) {
@@ -20,7 +20,7 @@ const findOneDeal = async (dealId) => {
     dealSnapshot: await mapDeal(deal.dealSnapshot),
   };
 };
-exports.findOneDeal = findOneDeal;
+exports.findOneTfmDeal = findOneTfmDeal;
 
 const findOnePortalDeal = async (dealId) => {
   const deal = await api.findOnePortalDeal(dealId).catch(() => false);
@@ -45,7 +45,7 @@ const findOneGefDeal = async (dealId) => {
 exports.findOneGefDeal = findOneGefDeal;
 
 const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
-  const deal = await findOneDeal(dealId);
+  const deal = await findOneTfmDeal(dealId);
 
   if (!deal) {
     return;

@@ -3,13 +3,14 @@ const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
+const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
-
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
+
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -46,14 +47,18 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const bond = body.dealSnapshot.bondTransactions.items[0];
+        const bond = body.facilities.find(({ facilityType }) =>
+          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+
         expect(bond.tfm.facilityValueInGBP).toEqual(
-          Number(bond.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
+          Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
 
-        const loan = body.dealSnapshot.loanTransactions.items[0];
+        const loan = body.facilities.find(({ facilityType }) =>
+          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
         expect(loan.tfm.facilityValueInGBP).toEqual(
-          Number(loan.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
+          Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
       });
 
@@ -63,11 +68,13 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.dealSnapshot.bondTransactions.items[0];
-          const facilityValueInGBP = Number(bond.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const bond = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+
+          const facilityValueInGBP = Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP, bond.facilitySnapshot.coveredPercentage,
+            facilityValueInGBP, bond.coveredPercentage,
           );
 
           expect(bond.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
@@ -81,11 +88,13 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const loan = body.dealSnapshot.loanTransactions.items[0];
-          const facilityValueInGBP = Number(loan.facilitySnapshot.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const loan = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
+          const facilityValueInGBP = Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP, loan.facilitySnapshot.coveredPercentage,
+            facilityValueInGBP, loan.coveredPercentage,
           );
 
           expect(loan.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
@@ -99,7 +108,9 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.dealSnapshot.bondTransactions.items[0];
+          const bond = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+
 
           expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
           expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
@@ -112,7 +123,9 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const loan = body.dealSnapshot.loanTransactions.items[0];
+          const loan = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
           expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
@@ -163,8 +176,12 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const bond = body.dealSnapshot.loanTransactions.items[0];
-        const loan = body.dealSnapshot.bondTransactions.items[0];
+        const bond = body.facilities.find(({ facilityType }) =>
+          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+
+        const loan = body.facilities.find(({ facilityType }) =>
+          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
 
         expect(loan.tfm.riskProfile).toEqual('Flat');
         expect(bond.tfm.riskProfile).toEqual('Flat');

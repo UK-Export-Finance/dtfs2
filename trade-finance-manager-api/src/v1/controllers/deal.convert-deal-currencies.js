@@ -6,22 +6,15 @@ const convertDealCurrencies = async (deal) => {
   }
 
   const {
+    _id: dealId, // eslint-disable-line no-underscore-dangle
+    dealCurrency,
+    dealValue,
     tfm,
-    dealSnapshot,
   } = deal;
 
-  const {
-    _id: dealId, // eslint-disable-line no-underscore-dangle
-    submissionDetails,
-  } = dealSnapshot;
 
-  const {
-    supplyContractCurrency: contractCurrency,
-    supplyContractValue: contractValue,
-  } = submissionDetails;
-
-  if (contractCurrency && contractCurrency.id !== 'GBP') {
-    const currencyExchange = await api.getCurrencyExchangeRate(contractCurrency.id, 'GBP');
+  if (dealCurrency && dealCurrency.id !== 'GBP') {
+    const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP');
 
     let dealUpdate = {};
 
@@ -37,9 +30,10 @@ const convertDealCurrencies = async (deal) => {
         midPrice: exchangeRate,
       } = currencyExchange;
 
-      const strippedContractValue = Number(contractValue.replace(/,/g, ''));
+      const strippedDealValue = Number(dealValue.replace(/,/g, ''));
 
-      const supplyContractValueInGBP = strippedContractValue * exchangeRate;
+      // TODO rename supplyContractValueInGBP to dealValueInGBP
+      const supplyContractValueInGBP = strippedDealValue * exchangeRate;
 
       dealUpdate = {
         tfm: {
@@ -51,7 +45,10 @@ const convertDealCurrencies = async (deal) => {
 
     const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
-    return updatedDeal;
+    return {
+      ...deal,
+      tfm: updatedDeal.tfm,
+    };
   }
 
   return deal;

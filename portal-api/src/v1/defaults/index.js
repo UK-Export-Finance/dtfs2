@@ -1,5 +1,8 @@
+const CONSTANTS = require('../../constants');
+
 const DEFAULTS = {
-  DEALS: {
+  DEAL: {
+    dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     details: {
       status: 'Draft',
     },

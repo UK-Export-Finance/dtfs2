@@ -51,7 +51,7 @@ const setApplicationStatus = async (applicationId, status) => {
   try {
     const { data } = await Axios.put(`/gef/application/status/${applicationId}`, {
       status,
-    });
+    }, { timeout: 5000 }); // Application status has multiple api calls in portal api
     return data;
   } catch (err) {
     return apiErrorHandler(err);
