@@ -28,8 +28,6 @@ const updateFacilities = async (deal) => {
       facilityGuaranteeDates,
     );
 
-    // TODO
-    // exposure period is not in unit test
     const facilityUpdate = {
       ...facilityCurrencyConversion,
       ...facilityExposurePeriod,

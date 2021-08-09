@@ -1,33 +1,23 @@
-const moment = require('moment');
 const api = require('../api');
 const formattedTimestamp = require('../formattedTimestamp');
-
-const facilityIsIssued = (facilityStage) => (facilityStage === 'Issued' || facilityStage === 'Unconditional');
+const dateHelpers = require('../../utils/date');
 
 const getFacilityExposurePeriod = async (facility) => {
   const {
     facilityType,
-    facilityStage,
-    'coverEndDate-day': coverEndDateDay,
-    'coverEndDate-month': coverEndDateMonth,
-    'coverEndDate-year': coverEndDateYear,
+    hasBeenIssued,
     coverStartDate,
+    coverEndDate,
   } = facility;
 
   let facilityUpdate;
 
-  if (facilityIsIssued(facilityStage)) {
+  if (hasBeenIssued) {
     const startDate = formattedTimestamp(coverStartDate);
 
-    const formattedStartDate = moment.utc(startDate).format('YYYY-MM-DD');
+    const formattedStartDate = dateHelpers.formatDate(startDate);
 
-    const endDate = moment().set({
-      date: Number(coverEndDateDay),
-      month: Number(coverEndDateMonth) - 1, // months are zero indexed
-      year: Number(coverEndDateYear),
-    });
-
-    const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
+    const formattedEndDate = dateHelpers.formatDate(coverEndDate);
 
     const exposurePeriodResponse = await api.getFacilityExposurePeriod(
       formattedStartDate,

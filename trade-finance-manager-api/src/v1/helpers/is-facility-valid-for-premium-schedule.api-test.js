@@ -6,7 +6,7 @@ const facility = {
   premiumType: '2',
   ukefFacilityID: '0001',
   guaranteeFeePayableByBank: '10',
-  coveredPercentage: '80',
+  coverPercentage: '80',
   dayCountBasis: '2',
   ukefExposure: '60',
 };
@@ -115,11 +115,11 @@ describe('is valid for premium schedule?', () => {
       });
     });
 
-    describe('coveredPercentage', () => {
-      it('should be invalid if no coveredPercentage', () => {
+    describe('coverPercentage', () => {
+      it('should be invalid if no coverPercentage', () => {
         const invalidFacility = {
           ...facility,
-          coveredPercentage: '',
+          coverPercentage: '',
         };
         const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
