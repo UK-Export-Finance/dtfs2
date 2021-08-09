@@ -11,7 +11,8 @@ const mapGefDeal = (deal) => {
     submissionDate,
     status,
     ukefDealId,
-    exporter,
+    // exporter,
+    facilities,
   } = dealSnapshot;
 
   const mapped = {
@@ -24,10 +25,15 @@ const mapGefDeal = (deal) => {
     submissionDate,
     status,
     ukefDealId,
+    // exporter: {
+    //   companyName: exporter.companyName,
+    //   companiesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
+    // },
     exporter: {
-      companyName: exporter.companyName,
-      companiesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
+      companyName: 'TEMP',
+      companiesHouseRegistrationNumber: 'TEMP',
     },
+    facilities,
     tfm,
   };
 
