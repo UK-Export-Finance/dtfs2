@@ -134,6 +134,45 @@ describe('validationErrorHandler()', () => {
       },
     });
   });
+  it('adds subField errors for things like dates', () => {
+    const mockedError = [
+      {
+        errRef: 'abc',
+        errMsg: 'message',
+        subFieldErrorRefs: ['ref1', 'ref2'],
+      },
+      {
+        errRef: 'xyz',
+        errMsg: 'message two',
+      },
+    ];
+    expect(validationErrorHandler(mockedError)).toEqual({
+      errorSummary: [
+        {
+          text: 'message',
+          href: '#abc',
+        },
+        {
+          text: 'message two',
+          href: '#xyz',
+        },
+      ],
+      fieldErrors: {
+        abc: {
+          text: 'message',
+        },
+        xyz: {
+          text: 'message two',
+        },
+        ref1: {
+          text: 'message',
+        },
+        ref2: {
+          text: 'message',
+        },
+      },
+    });
+  });
 });
 
 describe('isEmpty()', () => {

@@ -1,3 +1,4 @@
+import { add, format } from 'date-fns';
 import { aboutFacility, validateAboutFacility } from './index';
 import * as api from '../../services/api';
 
@@ -75,6 +76,9 @@ describe('GET About Facility', () => {
 });
 
 describe('Validate About Facility', () => {
+  const now = new Date();
+  const tomorrow = add(now, { days: 1 });
+  const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
   it('redirects user to application page if save and return is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -94,19 +98,19 @@ describe('Validate About Facility', () => {
     const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
     mockRequest.body.facilityType = 'CASH';
     mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body['cover-start-date-day'] = '3';
-    mockRequest.body['cover-start-date-month'] = '12';
-    mockRequest.body['cover-start-date-year'] = '2022';
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
 
-    mockRequest.body['cover-end-date-day'] = '01';
-    mockRequest.body['cover-end-date-month'] = '02';
-    mockRequest.body['cover-end-date-year'] = '2022';
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
 
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      coverEndDate: 'February 1, 2022',
-      coverStartDate: 'December 3, 2022',
+      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+      coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
       name: undefined,
@@ -186,9 +190,9 @@ describe('Validate About Facility', () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
-    mockRequest.body['cover-start-date-day'] = '10';
-    mockRequest.body['cover-start-date-month'] = '11';
-    mockRequest.body['cover-start-date-year'] = '2022';
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
 
@@ -208,8 +212,28 @@ describe('Validate About Facility', () => {
       }),
     }));
 
-    mockRequest.body['cover-start-date-day'] = '10';
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-start-date-month'] = '';
+
+    await validateAboutFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
+  it('shows error message if coverStartDate is more than 3 months away', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.hasBeenIssued = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.body['cover-start-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
 

@@ -47,6 +47,13 @@ const validationErrorHandler = (errs, href = '') => {
     fieldErrors[el.errRef] = {
       text: el.errMsg,
     };
+    if (el.subFieldErrorRefs) {
+      el.subFieldErrorRefs.forEach((subFieldRef) => {
+        fieldErrors[subFieldRef] = {
+          text: el.errMsg,
+        };
+      });
+    }
   });
 
   return {
