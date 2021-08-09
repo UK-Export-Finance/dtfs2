@@ -7,6 +7,7 @@ const {
 const tfmController = require('./tfm-get-deal.controller');
 
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
+const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-facilities.controller');
 
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
@@ -56,7 +57,20 @@ const createDealSnapshot = async (deal) => {
 };
 
 const createFacilitiesSnapshot = async (deal) => {
-  const dealFacilities = await findAllFacilitiesByDealId(deal._id);
+  const {
+    dealType,
+    _id: dealId,
+  } = deal;
+
+  let dealFacilities;
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    dealFacilities = await findAllFacilitiesByDealId(dealId);
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    dealFacilities = await findAllGefFacilitiesByDealId(dealId);
+  }
+
   const collection = await db.getCollection('tfm-facilities');
 
   const submissionCount = getSubmissionCount(deal);
@@ -81,9 +95,7 @@ const createFacilitiesSnapshot = async (deal) => {
 const submitDeal = async (deal) => {
   await createDealSnapshot(deal);
 
-  if (deal.dealType !== 'GEF') {
-    await createFacilitiesSnapshot(deal);
-  }
+  await createFacilitiesSnapshot(deal);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
 
@@ -91,12 +103,10 @@ const submitDeal = async (deal) => {
 };
 
 exports.submitDealPut = async (req, res) => {
-  const {
-    type: dealType,
-    id,
-  } = req.params;
+  const { id } = req.params;
+  const { dealType } = req.body;
 
-  if (dealType === 'GEF') {
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     await findOneGefDeal(id, async (deal) => {
       if (deal) {
         const updatedDeal = await submitDeal(deal);
@@ -107,7 +117,7 @@ exports.submitDealPut = async (req, res) => {
     });
   }
 
-  if (dealType === 'BSS/EWCS') {
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     await findOneDeal(id, async (deal) => {
       if (deal) {
         const updatedDeal = await submitDeal(deal);

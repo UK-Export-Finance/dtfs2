@@ -3,6 +3,7 @@ const aDeal = require('../../deal-builder');
 
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
+const CONSTANTS = require('../../../../src/constants')
 
 const mockUser = {
   _id: '123456789',
@@ -40,16 +41,11 @@ describe('/v1/tfm/deal/:id', () => {
       expect(status).toEqual(404);
     });
 
-    it('404s if submitting an unknown id', async () => {
-      const { status } = await api.put({}).to('/v1/tfm/deals/12345678/submit');
-      expect(status).toEqual(404);
-    });
-
     it('returns the requested resource', async () => {
       const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = postResult.body._id;
 
-      const submitDeal = await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS }).to(`/v1/tfm/deals/${dealId}/submit`);
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
 
@@ -84,7 +80,7 @@ describe('/v1/tfm/deal/:id', () => {
         const createdLoan1 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
         const createdLoan2 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
 
-        await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+        await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS }).to(`/v1/tfm/deals/${dealId}/submit`);
 
         const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
 
@@ -121,7 +117,7 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS }).to(`/v1/tfm/deals/${dealId}/submit`);
 
       const { status, body } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
@@ -134,7 +130,7 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS }).to(`/v1/tfm/deals/${dealId}/submit`);
 
       const firstHistoryUpdate = {
         tfm: {
@@ -203,7 +199,7 @@ describe('/v1/tfm/deal/:id', () => {
           },
         },
       };
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS }).to(`/v1/tfm/deals/${dealId}/submit`);
 
       // add some dummy data to deal.tfm
       await api.put({
@@ -248,7 +244,7 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS }).to(`/v1/tfm/deals/${dealId}/submit`);
 
       // add some dummy data to deal.tfm
       await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
