@@ -2,7 +2,10 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { validationApplicationCreate, validatorStatusCheckEnums } = require('./validation/applicationExists');
+const {
+  validationApplicationCreate,
+  validatorStatusCheckEnums,
+} = require('./validation/applicationExists');
 const { isSuperUser } = require('../../users/checks');
 
 const { Application } = require('../models/application');
@@ -11,11 +14,14 @@ const { CoverTerms } = require('../models/coverTerms');
 const { STATUS } = require('../enums');
 const addSubmissionData = require('./application-submit');
 const api = require('../../api');
+const { sendEmail } = require('../../../reference-data/api');
+const { EMAIL_TEMPLATE_IDS, DEAL: { GEF_STATUS } } = require('../../../constants');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
 const coverTermsCollectionName = 'gef-cover-terms';
 const facilitiesCollectionName = 'gef-facilities';
+const userCollectionName = 'users';
 
 // const defaultPaginationOpts = {
 //   sortBy: null,
@@ -40,10 +46,15 @@ const facilitiesCollectionName = 'gef-facilities';
 // };
 
 exports.create = async (req, res) => {
-  const applicationCollection = await db.getCollection(applicationCollectionName);
+  const applicationCollection = await db.getCollection(
+    applicationCollectionName,
+  );
   const exporterCollection = await db.getCollection(exporterCollectionName);
   const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
-  const validateErrs = await validationApplicationCreate(applicationCollection, req.body.bankInternalRefName);
+  const validateErrs = await validationApplicationCreate(
+    applicationCollection,
+    req.body.bankInternalRefName,
+  );
   if (validateErrs) {
     res.status(422).send(validateErrs);
   } else {
@@ -59,9 +70,7 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
 
-  const doc = await collection
-    .find({})
-    .toArray();
+  const doc = await collection.find({}).toArray();
   res.status(200).send({
     items: doc,
   });
@@ -69,7 +78,9 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({
+    _id: ObjectId(String(req.params.id)),
+  });
   if (doc) {
     res.status(200).send(doc);
   } else {
@@ -79,7 +90,9 @@ exports.getById = async (req, res) => {
 
 exports.getStatus = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({
+    _id: ObjectId(String(req.params.id)),
+  });
   if (doc) {
     res.status(200).send({ status: doc.status });
   } else {
@@ -91,13 +104,50 @@ exports.update = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const update = new Application(req.body);
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: update }, { returnOriginal: false },
+    { _id: { $eq: ObjectId(String(req.params.id)) } },
+    { $set: update },
+    { returnOriginal: false },
   );
   let response;
   if (result.value) {
     response = result.value;
   }
   res.status(utils.mongoStatus(result)).send(response);
+};
+
+const sendStatusUpdateEmail = async (user, existingApplication, status) => {
+  const {
+    userId,
+    status: previousStatus,
+    bankInternalRefName,
+  } = existingApplication;
+
+  // get maker user details
+  const userCollection = await db.getCollection(userCollectionName);
+  const { firstname: firstName = '', surname = '' } = userId
+    ? await userCollection.findOne({ _id: new ObjectId(String(userId)) })
+    : {};
+
+  const exporterCollection = await db
+    .getCollection(exporterCollectionName);
+  // get exporter name
+  const { companyName = '' } = await exporterCollection.findOne({
+    _id: ObjectId(String(existingApplication.exporterId)),
+  });
+
+  user.bank.emails.forEach(async (email) => {
+    await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
+      firstName,
+      surname,
+      submissionType: existingApplication.submissionType || '',
+      supplierName: companyName,
+      'supply-contract:bank-id': bankInternalRefName,
+      currentStatus: GEF_STATUS[status],
+      previousStatus: GEF_STATUS[previousStatus],
+      updatedByName: `${user.firstname} ${user.surname}`,
+      updatedByEmail: user.email,
+    });
+  });
 };
 
 exports.changeStatus = async (req, res) => {
@@ -109,7 +159,9 @@ exports.changeStatus = async (req, res) => {
   }
 
   const collection = await db.getCollection(applicationCollectionName);
-  const existingApplication = await collection.findOne({ _id: ObjectId(String(applicationId)) });
+  const existingApplication = await collection.findOne({
+    _id: ObjectId(String(applicationId)),
+  });
 
   if (!existingApplication) {
     return res.status(404).send();
@@ -121,7 +173,10 @@ exports.changeStatus = async (req, res) => {
 
   // TODO: protect so that only a user with checker role can submit to UKEF.
   if (status === STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(applicationId, existingApplication);
+    const submissionData = await addSubmissionData(
+      applicationId,
+      existingApplication,
+    );
 
     applicationUpdate = {
       ...applicationUpdate,
@@ -130,9 +185,11 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(applicationId)) } }, {
+    { _id: { $eq: ObjectId(String(applicationId)) } },
+    {
       $set: applicationUpdate,
-    }, { returnOriginal: false },
+    },
+    { returnOriginal: false },
   );
 
   let response;
@@ -150,34 +207,60 @@ exports.changeStatus = async (req, res) => {
     }
   }
 
+  // If status of correct type, send update email
+  if (
+    [
+      STATUS.BANK_CHECK,
+      STATUS.CHANGES_REQUIRED,
+      STATUS.SUBMITTED_TO_UKEF,
+    ].includes(status)
+  ) {
+    const { user } = req;
+    await sendStatusUpdateEmail(user, existingApplication, status);
+  }
+
   return res.status(utils.mongoStatus(updatedDocument)).send(response);
 };
 
 exports.delete = async (req, res) => {
-  const applicationCollection = await db.getCollection(applicationCollectionName);
-  const applicationResponse = await applicationCollection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
+  const applicationCollection = await db.getCollection(
+    applicationCollectionName,
+  );
+  const applicationResponse = await applicationCollection.findOneAndDelete({
+    _id: ObjectId(String(req.params.id)),
+  });
   if (applicationResponse.value) {
     // remove exporter information related to the application
     if (applicationResponse.value.exporterId) {
       const exporterCollection = await db.getCollection(exporterCollectionName);
-      await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+      await exporterCollection.findOneAndDelete({
+        _id: ObjectId(String(applicationResponse.value.exporterId)),
+      });
     }
     if (applicationResponse.value.coverTermsId) {
-      const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
-      await coverTermsCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.coverTermsId)) });
+      const coverTermsCollection = await db.getCollection(
+        coverTermsCollectionName,
+      );
+      await coverTermsCollection.findOneAndDelete({
+        _id: ObjectId(String(applicationResponse.value.coverTermsId)),
+      });
     }
     // remove facility information related to the application
-    const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
+    const facilitiesCollection = await db.getCollection(
+      facilitiesCollectionName,
+    );
     await facilitiesCollection.deleteMany({ applicationId: req.params.id });
   }
-  res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+  res
+    .status(utils.mongoStatus(applicationResponse))
+    .send(applicationResponse.value ? applicationResponse.value : null);
 };
 
 const dealsFilters = (user, filters = []) => {
   const amendedFilters = [...filters];
 
   // add the bank clause if we're not a superuser
-  if (!isSuperUser(user)) amendedFilters.push({ bankId: { $eq: user.bank.id } });
+  if (!isSuperUser(user)) { amendedFilters.push({ bankId: { $eq: user.bank.id } }); }
 
   let result = {};
   if (amendedFilters.length === 1) {
@@ -191,7 +274,12 @@ const dealsFilters = (user, filters = []) => {
   return result;
 };
 
-exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => {
+exports.findDeals = async (
+  requestingUser,
+  filters,
+  start = 0,
+  pagesize = 0,
+) => {
   const sanitisedFilters = dealsFilters(requestingUser, filters);
 
   const collection = await db.getCollection(applicationCollectionName);
@@ -221,7 +309,10 @@ exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => 
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [{ $skip: start }, ...pagesize ? [{ $limit: pagesize }] : []],
+          deals: [
+            { $skip: start },
+            ...(pagesize ? [{ $limit: pagesize }] : []),
+          ],
         },
       },
       { $unwind: '$count' },

@@ -15,9 +15,9 @@ const getPartyUrn = async ({ companyRegNo }) => {
 
 const identifyDealParties = (deal) => ({
   hasExporter: Boolean(deal.exporter.companyName),
-  hasBuyer: Boolean(deal.buyer.name),
-  hasIndemnifier: Boolean(deal.indemnifier.name),
-  hasAgent: Boolean(deal.eligibility.agentName),
+  hasBuyer: Boolean(deal.buyer && deal.buyer.name),
+  hasIndemnifier: Boolean(deal.indemnifier && deal.indemnifier.name),
+  hasAgent: Boolean(deal.eligibility && deal.eligibility.agentName),
 });
 
 const addPartyUrns = async (deal) => {
