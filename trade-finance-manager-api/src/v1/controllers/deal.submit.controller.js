@@ -47,7 +47,7 @@ const submitDeal = async (dealId, dealType, checker) => {
     return false;
   }
 
-  const submittedDeal = await api.submitDeal(dealId);
+  const submittedDeal = await api.submitDeal(dealType, dealId);
 
   const mappedDeal = mapSubmittedDeal(submittedDeal);
 
