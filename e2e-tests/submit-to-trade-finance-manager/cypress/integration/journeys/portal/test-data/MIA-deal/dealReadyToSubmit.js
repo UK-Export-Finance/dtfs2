@@ -6,6 +6,7 @@ module.exports = () => {
 
   const deal = JSON.parse(JSON.stringify(dealThatJustNeedsDates));
 
+  deal.dealType = 'BSS/EWCS';
   deal.submissionDetails['supplyContractConversionDate-day'] = `${now.format('DD')}`;
   deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
   deal.submissionDetails['supplyContractConversionDate-year'] = `${now.format('YYYY')}`;

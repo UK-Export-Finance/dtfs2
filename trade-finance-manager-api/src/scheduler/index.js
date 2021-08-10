@@ -5,7 +5,9 @@ const initScheduler = () => {
   Object.values(jobs).forEach((job) => {
     const { schedule, task, message } = job.init();
     console.log(`Added schedule: ${message} on schedule ${schedule}`);
-    cron.schedule(schedule, task);
+    if (schedule) {
+      cron.schedule(schedule, task);
+    }
   });
 };
 

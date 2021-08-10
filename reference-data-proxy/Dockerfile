@@ -16,3 +16,4 @@ WORKDIR /app
 COPY --from=image /app /app
 
 CMD node src/index.js
+
