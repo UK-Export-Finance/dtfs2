@@ -81,15 +81,19 @@ const createFacilitiesSnapshot = async (deal) => {
     }
     : null;
 
-  const updatedFacilties = Promise.all(
-    dealFacilities.map(async (facility) => collection.findOneAndUpdate(
-      { _id: String(facility._id) },
-      $.flatten({ facilitySnapshot: facility, ...tfmInit }),
-      { returnOriginal: false, upsert: true },
-    )),
-  );
+  if (dealFacilities) {
+    const updatedFacilties = Promise.all(
+      dealFacilities.map(async (facility) => collection.findOneAndUpdate(
+        { _id: String(facility._id) },
+        $.flatten({ facilitySnapshot: facility, ...tfmInit }),
+        { returnOriginal: false, upsert: true },
+      )),
+    );
 
-  return updatedFacilties;
+    return updatedFacilties;
+  }
+
+  return dealFacilities;
 };
 
 const submitDeal = async (deal) => {
