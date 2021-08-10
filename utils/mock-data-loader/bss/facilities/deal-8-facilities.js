@@ -1,0 +1,40 @@
+module.exports = [
+	{
+		"mockDealId": 8,
+		"facilityType" : "loan",
+		"ukefGuaranteeInMonths" : "24",
+		"coverEndDate-day" : null,
+		"coverEndDate-month" : null,
+		"coverEndDate-year" : null,
+		"bankReferenceNumber" : "Test Loan",
+		"requestedCoverStartDate" : null,
+		"disbursementAmount" : null,
+		"facilityValue" : "100000.00",
+		"currencySameAsSupplyContractCurrency" : "true",
+		"currency" : {
+			"text" : "GBP - UK Sterling",
+			"id" : "GBP",
+			"currencyId" : 12
+		},
+		"conversionRate" : null,
+		"conversionRateDate-day" : null,
+		"conversionRateDate-month" : null,
+		"conversionRateDate-year" : null,
+		"createdDate" : "1626972086903",
+	
+		"facilityStage" : "Conditional",
+		"requestedCoverStartDate-day" : null,
+		"requestedCoverStartDate-month" : null,
+		"requestedCoverStartDate-year" : null,
+		"ukefExposure" : "60,000.00",
+		"lastEdited" : "1626972898312",
+		"interestMarginFee" : "2",
+		"coveredPercentage" : "60",
+		"minimumQuarterlyFee" : "",
+		"guaranteeFeePayableByBank" : "1.8000",
+		"premiumFrequency" : "Monthly",
+		"premiumType" : "In advance",
+		"dayCountBasis" : "365",
+		"viewedPreviewPage" : true
+	}
+];
