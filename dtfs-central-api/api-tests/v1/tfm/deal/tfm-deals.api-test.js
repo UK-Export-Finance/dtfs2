@@ -3,6 +3,7 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const now = require('../../../../src/now');
+const CONSTANTS = require('../../../../src/constants');
 
 const mockUser = {
   _id: '123456789',
@@ -45,7 +46,10 @@ const createAndSubmitDeals = async (deals) => {
     expect(createResponse.status).toEqual(200);
 
     // submit deal
-    const submitResponse = await api.put({}).to(`/v1/tfm/deals/${createResponse.body._id}/submit`);
+    const submitResponse = await api.put({
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+      dealId: createResponse.body._id,
+    }).to('/v1/tfm/deals/submit');
 
     expect(submitResponse.status).toEqual(200);
 
