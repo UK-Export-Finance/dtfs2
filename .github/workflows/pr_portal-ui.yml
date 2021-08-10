@@ -52,17 +52,6 @@ jobs:
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
-    - name: Build and push Portal-api
-      uses: docker/build-push-action@v1
-      with:
-        registry: ${{ secrets.ACR_REGISTRY_DEV }}
-        username: ${{ secrets.ACR_USERNAME_DEV }}
-        password: ${{ secrets.ACR_PASSWORD_DEV }}
-        repository: portal-api
-        path: portal-api
-        tags: ${{ github.sha }}
-        build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true
 
   e2e:
     name: "E2E tests"
@@ -115,10 +104,6 @@ jobs:
         login-server: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
-    - name: Pull portal-api
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
     - name: Pull portal
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }}
