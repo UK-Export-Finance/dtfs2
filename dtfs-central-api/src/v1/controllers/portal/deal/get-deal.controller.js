@@ -32,7 +32,7 @@ const findOneDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id });
 
-  if (deal) {
+  if (deal && deal.facilities) {
     const facilityIds = deal.facilities;
 
     if (facilityIds && facilityIds.length > 0) {
@@ -91,7 +91,9 @@ const findOneGefDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 
-  deal.facilities = await findAllGefFacilitiesByDealId(_id);
+  if (deal) {
+    deal.facilities = await findAllGefFacilitiesByDealId(_id);
+  }
 
   if (callback) {
     callback(deal);
