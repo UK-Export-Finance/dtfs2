@@ -105,4 +105,5 @@ const checkAzureNumberGeneratorFunction = async () => {
 
 module.exports = {
   checkAzureNumberGeneratorFunction,
+  updatePortalDeal,
 };

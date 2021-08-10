@@ -47,7 +47,7 @@ const submitDealBeforeUkefIds = async (dealId, dealType) => {
     return false;
   }
 
-  return api.submitDeal(dealId);
+  return api.submitDeal(dealType, dealId);
 };
 exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 
@@ -99,7 +99,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
-
       return updatedDeal;
     }
 
@@ -156,4 +155,23 @@ const submitDealPUT = async (req, res) => {
 
   return res.status(200).send(deal);
 };
+
 exports.submitDealPUT = submitDealPUT;
+
+const submitDealAfterUkefIdsPUT = async (req, res) => {
+  const {
+    dealId,
+    dealType,
+    checker,
+  } = req.body;
+
+  const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  return res.status(200).send(deal);
+};
+
+exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;

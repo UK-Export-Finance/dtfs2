@@ -10,7 +10,6 @@ const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields
 const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
-const externalApis = require('../../../src/reference-data/api');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -118,7 +117,6 @@ describe('/v1/deals/:id/status - facilities', () => {
             expect(loan.previousFacilityStage).toEqual('Conditional');
             expect(typeof loan.lastEdited).toEqual('string');
           });
-
         });
       });
 
@@ -156,7 +154,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           ainDeal = postResult;
         });
-        
+
         describe('any issued bonds that have details provided, but not yet been submitted', () => {
           it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
             expect(ainDeal.status).toEqual(200);
@@ -237,7 +235,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
               f.facilityType === 'loan'
-              &&  isUnsubmittedIssuedFacility(f)
+              && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
             // make sure we have some loans to test against
@@ -631,9 +629,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         dealId = createdDeal._id;
 
         api.tfmDealSubmit = () => Promise.resolve();
-        externalApis.numberGenerator = {
-          create: () => Promise.resolve(),
-        };
+
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 
@@ -676,7 +672,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             f.facilityType === 'loan'
             && f.facilityStage === 'Unconditional');
 
-            // make sure we have some loans to test against
+          // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
           unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
@@ -762,7 +758,6 @@ describe('/v1/deals/:id/status - facilities', () => {
           });
         });
       });
-
     });
   });
 });

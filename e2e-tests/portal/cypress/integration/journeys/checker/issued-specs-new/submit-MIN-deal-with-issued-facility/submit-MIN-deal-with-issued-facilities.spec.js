@@ -9,8 +9,8 @@ const {
   fillAndSubmitIssueLoanFacilityForm,
 } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('A maker issues facilities, submits to checker; checker submits deal to UKEF', () => {
   let deal;
@@ -114,12 +114,13 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
     //---------------------------------------------------------------
-    // deal status should be updated to `Acknowledged by UKEF`
+    // deal status should be updated to `Submitted`
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      // Status is submitted until TFM background process has created UKEF IDs
+      expect(text.trim()).to.equal('Submitted');
     });
 
     //---------------------------------------------------------------

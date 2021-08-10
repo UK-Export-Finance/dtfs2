@@ -8,6 +8,10 @@
 
 
 const axios = require('axios');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const durableFunctionsLogController = require('./durable-functions-log.controller');
 
 const numberGeneratorFunctionUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
@@ -28,12 +32,18 @@ const callNumberGenerator = async ({
   }).catch((err) => ({ err }));
 
   if (response.err) {
-    return durableFunctionsLogController.addDurableFunctionLog({
+    await durableFunctionsLogController.addDurableFunctionLog({
       type: 'NUMBER_GENERATOR',
       data: {
+        dealType,
+        entityType,
+        entityId,
+        dealId,
+        user,
         error: response.err,
       },
     });
+    return response;
   }
 
   const { id: instanceId, ...numberGeneratorFunctionUrls } = response.data;
@@ -63,113 +73,7 @@ exports.callNumberGeneratorPOST = async (req, res) => {
     dealType, entityType, entityId, dealId, user,
   });
 
-  return res.status(status).send({ ukefId: 'PENDING' });
+  // Azure function returns 202 status but 200 is more relevant here as we're returning data
+  const returnStatus = status === 202 ? 200 : status;
+  return res.status(returnStatus).send({ ukefId: 'PENDING' });
 };
-
-
-// const callNumberGeneratorApi = async (numberType) => {
-//   console.log('Calling Number Generator API');
-//   const response = await axios({
-//     method: 'post',
-//     url: process.env.MULESOFT_API_NUMBER_GENERATOR_URL,
-//     auth: {
-//       username: process.env.MULESOFT_API_KEY,
-//       password: process.env.MULESOFT_API_SECRET,
-//     },
-//     data: [
-//       {
-//         numberTypeId: numberType,
-//         createdBy: 'Portal v2/TFM',
-//         requestingSystem: 'Portal v2/TFM',
-//       },
-//     ],
-//   }).catch((catchErr) => {
-//     console.log('Number Generator Error', { catchErr });
-//     return {
-//       data: {
-//         maskedId: 'NUM_GEN_ERROR',
-//       },
-//     };
-//   });
-
-//   const { maskedId: id } = response.data;
-
-//   return id;
-// };
-
-// const checkId = async (entityType, id) => {
-//   if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL) {
-//     const dealIdStatus = await checkDealId(id);
-//     console.log(`Checked dealId ${id} with ACBS API: ${dealIdStatus}`);
-//     return dealIdStatus;
-//   }
-
-//   if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
-//     const facilityIdStatus = await checkFacilityId(id);
-//     console.log(`Checked facilityId ${id} with ACBS API: ${facilityIdStatus}`);
-//     return facilityIdStatus;
-//   }
-
-//   return null;
-// };
-
-// exports.create = async (req, res) => {
-//   const { entityType } = req.params;
-
-//   console.log(`Creating UKEF ID for ${entityType}`);
-
-//   let numberType;
-
-//   if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
-//     || entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
-//     numberType = 1;
-//   }
-
-//   if (!numberTypeIsValid(numberType)) {
-//     const message = `must be ${CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL}
-//        or ${CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY}`;
-//     return res.status(400).send(`Invalid entity type - ${message}`);
-//   }
-
-//   const createAndValidateId = () => new Promise((resolve) => {
-//     let numberGeneratorId;
-//     let completed = true;
-//     let pending = false;
-//     let totalCalls = 0;
-
-//     const interval = setInterval(async () => {
-//       totalCalls += 1;
-//       if (totalCalls === 1) {
-//         completed = false;
-//       }
-
-//       if (!pending && !completed && !numberGeneratorId) {
-//         pending = true;
-//         numberGeneratorId = await callNumberGeneratorApi(numberType);
-
-//         const statusCode = await checkId(entityType, numberGeneratorId);
-
-//         if (statusCode === 404) {
-//           // deal id is not being used, so we can use it.
-//           completed = true;
-//           clearInterval(interval);
-//           return resolve(numberGeneratorId);
-//         }
-
-//         // wipe the state so that API's are called again.
-//         pending = false;
-//         completed = false;
-//         numberGeneratorId = null;
-//         return numberGeneratorId;
-//       }
-
-//       return null;
-//     }, 10);
-//   });
-
-//   const validId = await createAndValidateId();
-
-//   return res.status(200).send({
-//     id: validId,
-//   });
-// };

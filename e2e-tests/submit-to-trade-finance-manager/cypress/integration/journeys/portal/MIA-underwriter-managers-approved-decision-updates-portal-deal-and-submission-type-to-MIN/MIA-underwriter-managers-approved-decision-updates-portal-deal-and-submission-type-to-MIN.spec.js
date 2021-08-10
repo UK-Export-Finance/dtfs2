@@ -63,7 +63,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToSubmit().click();
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
-    portalPages.contractConfirmSubmission.acceptAndSubmit().click();
+    portalPages.contractConfirmSubmission.acceptAndSubmit().click(deal);
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
@@ -179,11 +179,11 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToSubmit().click();
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
-    portalPages.contractConfirmSubmission.acceptAndSubmit().click();
+    portalPages.contractConfirmSubmission.acceptAndSubmit().click(deal);
+
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-
 
     //---------------------------------------------------------------
     // portal deal status should be updated
