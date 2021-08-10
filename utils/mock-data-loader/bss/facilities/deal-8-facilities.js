@@ -1,3 +1,7 @@
+const {
+  nowTimestamp,
+} = require('../dates');
+
 module.exports = [
 	{
 		"mockDealId": 8,
@@ -20,14 +24,14 @@ module.exports = [
 		"conversionRateDate-day" : null,
 		"conversionRateDate-month" : null,
 		"conversionRateDate-year" : null,
-		"createdDate" : "1626972086903",
+		"createdDate": nowTimestamp,
 	
 		"facilityStage" : "Conditional",
 		"requestedCoverStartDate-day" : null,
 		"requestedCoverStartDate-month" : null,
 		"requestedCoverStartDate-year" : null,
 		"ukefExposure" : "60,000.00",
-		"lastEdited" : "1626972898312",
+		"lastEdited": nowTimestamp,
 		"interestMarginFee" : "2",
 		"coveredPercentage" : "60",
 		"minimumQuarterlyFee" : "",

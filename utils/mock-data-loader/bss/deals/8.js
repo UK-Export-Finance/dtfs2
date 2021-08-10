@@ -1,10 +1,11 @@
+const { nowTimestamp } = require('../dates');
+
 module.exports = {
 	"mockId": 8,
 	"details" : {
 		"status" : "Draft",
 		"bankSupplyContractID" : "Manual Test 6",
 		"bankSupplyContractName" : "Manual Test 6",
-		"dateOfLastAction" : "1626972086958",
 		"submissionType" : "Manual Inclusion Application",
 		"maker" : {
 			"_id" : "60f7d72654f99900074c0a6d",
@@ -33,7 +34,8 @@ module.exports = {
 				"checker@ukexportfinance.gov.uk"
 			]
 		},
-		"created" : "1626972086870"
+		"created": nowTimestamp,
+		"dateOfLastAction": nowTimestamp,
 	},
 	"eligibility" : {
 		"status" : "Incomplete",
@@ -311,16 +313,6 @@ module.exports = {
 			"userId" : "60f7d72654f99900074c0a6d"
 		}
 	],
-	"facilities" : [
-		"1000458",
-		"1000457"
-	],
-	"bondTransactions" : {
-		"items" : [ ]
-	},
-	"loanTransactions" : {
-		"items" : [ ]
-	},
 	"mandatoryCriteria" : [
 		{
 			"_id" : "60f7d72854f99900074c0a8c",

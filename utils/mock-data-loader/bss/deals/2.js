@@ -1,10 +1,11 @@
+const { nowTimestamp } = require('../dates');
+
 module.exports = {
 	"mockId": 2,
 	"details" : {
 		"status" : "Draft",
 		"bankSupplyContractID" : "Auto2 Test",
 		"bankSupplyContractName" : "Auto Test 2",
-		"dateOfLastAction" : "1626971386352",
 		"submissionType" : "Automatic Inclusion Notice",
 		"maker" : {
 			"_id" : "60f7d72654f99900074c0a6d",
@@ -33,7 +34,8 @@ module.exports = {
 				"checker@ukexportfinance.gov.uk"
 			]
 		},
-		"created" : "1626969656704"
+		"created": nowTimestamp,
+		"dateOfLastAction": nowTimestamp,
 	},
 	"eligibility" : {
 		"status" : "Completed",
@@ -582,95 +584,6 @@ module.exports = {
 			"userId" : "60f7d72654f99900074c0a6d"
 		}
 	],
-	"facilities" : [
-		"1000445",
-		"1000446"
-	],
-	"bondTransactions" : {
-		"items" : [
-			{
-				"_id" : "1000445",
-				"facilityType" : "bond",
-				"ukefGuaranteeInMonths" : null,
-				"facilityStage" : "Issued",
-				"coverEndDate-day" : "20",
-				"coverEndDate-month" : "08",
-				"coverEndDate-year" : "2023",
-				"uniqueIdentificationNumber" : "Test Bond",
-				"requestedCoverStartDate" : "1629476795501",
-				"facilityValue" : "500000.00",
-				"currencySameAsSupplyContractCurrency" : "true",
-				"currency" : {
-					"text" : "GBP - UK Sterling",
-					"id" : "GBP",
-					"currencyId" : 12
-				},
-				"conversionRate" : null,
-				"conversionRateDate-day" : null,
-				"conversionRateDate-month" : null,
-				"conversionRateDate-year" : null,
-				"createdDate" : "1626969656740",
-				"associatedDealId" : "1000340",
-				"bondIssuer" : "",
-				"bondType" : "Performance bond",
-				"requestedCoverStartDate-day" : "20",
-				"requestedCoverStartDate-month" : "08",
-				"requestedCoverStartDate-year" : "2021",
-				"bondBeneficiary" : "",
-				"ukefExposure" : "400,000.00",
-				"lastEdited" : "1626971195517",
-				"riskMarginFee" : "2",
-				"coveredPercentage" : "80",
-				"minimumRiskMarginFee" : "",
-				"guaranteeFeePayableByBank" : "1.8000",
-				"feeFrequency" : "Monthly",
-				"feeType" : "In arrear",
-				"dayCountBasis" : "365",
-				"viewedPreviewPage" : true
-			}
-		]
-	},
-	"loanTransactions" : {
-		"items" : [
-			{
-				"_id" : "1000446",
-				"facilityType" : "loan",
-				"ukefGuaranteeInMonths" : "12",
-				"coverEndDate-day" : null,
-				"coverEndDate-month" : null,
-				"coverEndDate-year" : null,
-				"bankReferenceNumber" : "Test Loan",
-				"requestedCoverStartDate" : null,
-				"disbursementAmount" : null,
-				"facilityValue" : "250000.00",
-				"currencySameAsSupplyContractCurrency" : "true",
-				"currency" : {
-					"text" : "GBP - UK Sterling",
-					"id" : "GBP",
-					"currencyId" : 12
-				},
-				"conversionRate" : null,
-				"conversionRateDate-day" : null,
-				"conversionRateDate-month" : null,
-				"conversionRateDate-year" : null,
-				"createdDate" : "1626969656740",
-				"associatedDealId" : "1000340",
-				"facilityStage" : "Conditional",
-				"requestedCoverStartDate-day" : null,
-				"requestedCoverStartDate-month" : null,
-				"requestedCoverStartDate-year" : null,
-				"ukefExposure" : "200,000.00",
-				"lastEdited" : "1626971207474",
-				"interestMarginFee" : "2",
-				"coveredPercentage" : "80",
-				"minimumQuarterlyFee" : "",
-				"guaranteeFeePayableByBank" : "1.8000",
-				"premiumFrequency" : "Monthly",
-				"premiumType" : "In advance",
-				"dayCountBasis" : "365"
-			}
-		]
-	},
 	"mandatoryCriteria" : [
 		{
 			"_id" : "60f7d72854f99900074c0a8c",

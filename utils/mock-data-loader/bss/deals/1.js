@@ -1,3 +1,5 @@
+const { nowTimestamp } = require('../dates');
+
 module.exports = {
 	"mockId": 1,
 	"details" : {
@@ -31,9 +33,9 @@ module.exports = {
 				"checker@ukexportfinance.gov.uk"
 			]
 		},
-		"created" : "1626968267016",
-		"dateOfLastAction" : "1626971072253",
-		"submissionType" : "Automatic Inclusion Notice"
+		"created" : nowTimestamp,
+		"dateOfLastAction": nowTimestamp,
+		"submissionType": "Automatic Inclusion Notice",
 	},
 	"eligibility" : {
 		"status" : "Completed",
@@ -536,56 +538,6 @@ module.exports = {
 			"userId" : "60f7d72654f99900074c0a6d"
 		}
 	],
-	"facilities" : [
-		"1000443",
-		"1000444"
-	],
-	"bondTransactions" : {
-		"items" : [
-			{
-				"_id" : "1000443",
-				"facilityType" : "bond",
-				"associatedDealId" : "1000339",
-				"createdDate" : "1626968868279",
-				"bondIssuer" : "",
-				"bondType" : "Performance bond",
-				"ukefGuaranteeInMonths" : null,
-				"facilityStage" : "Issued",
-				"requestedCoverStartDate-day" : "20",
-				"requestedCoverStartDate-month" : "08",
-				"requestedCoverStartDate-year" : "2021",
-				"coverEndDate-day" : "20",
-				"coverEndDate-month" : "08",
-				"coverEndDate-year" : "2023",
-				"uniqueIdentificationNumber" : "A1 Test Bond",
-				"bondBeneficiary" : "",
-				"requestedCoverStartDate" : "1629474791142",
-				"lastEdited" : "1626969191162",
-				"facilityValue" : "500000.00",
-				"currencySameAsSupplyContractCurrency" : "true",
-				"currency" : {
-					"text" : "GBP - UK Sterling",
-					"id" : "GBP",
-					"currencyId" : 12
-				},
-				"conversionRate" : null,
-				"conversionRateDate-day" : null,
-				"conversionRateDate-month" : null,
-				"conversionRateDate-year" : null,
-				"riskMarginFee" : "2",
-				"coveredPercentage" : "80",
-				"minimumRiskMarginFee" : "",
-				"guaranteeFeePayableByBank" : "1.8000",
-				"ukefExposure" : "400,000.00",
-				"feeFrequency" : "Monthly",
-				"feeType" : "In arrear",
-				"dayCountBasis" : "365"
-			}
-		]
-	},
-	"loanTransactions" : {
-		"items" : [ ]
-	},
 	"mandatoryCriteria" : [
 		{
 			"_id" : "60f7d72854f99900074c0a8c",
