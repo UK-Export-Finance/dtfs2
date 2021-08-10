@@ -1,22 +1,29 @@
+const {
+  nowTimestamp,
+  twoMonths,
+  twoMonthsTimestamp,
+  threeMonths,
+} = require('../dates');
+
 module.exports = [
 	{
 		"mockDealId": 3,
 		"facilityType" : "bond",
-		"createdDate" : "1626970909762",
+		"createdDate" : nowTimestamp,
 		"bondIssuer" : "",
 		"bondType" : "Maintenance bond",
 		"ukefGuaranteeInMonths" : null,
 		"facilityStage" : "Issued",
-		"requestedCoverStartDate-day" : "22",
-		"requestedCoverStartDate-month" : "09",
-		"requestedCoverStartDate-year" : "2021",
-		"coverEndDate-day" : "22",
-		"coverEndDate-month" : "09",
-		"coverEndDate-year" : "2023",
+		"requestedCoverStartDate-day": twoMonths.day,
+		"requestedCoverStartDate-month": twoMonths.month,
+		"requestedCoverStartDate-year": twoMonths.year,
+		"coverEndDate-day": threeMonths.day,
+		"coverEndDate-month": threeMonths.month,
+		"coverEndDate-year": threeMonths.year,
 		"uniqueIdentificationNumber" : "Test Bond",
 		"bondBeneficiary" : "",
-		"requestedCoverStartDate" : "1632328430974",
-		"lastEdited" : "1626971630990",
+		"requestedCoverStartDate": twoMonthsTimestamp,
+		"lastEdited": nowTimestamp,
 		"facilityValue" : "600000.00",
 		"currencySameAsSupplyContractCurrency" : "true",
 		"currency" : {
