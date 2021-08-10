@@ -208,7 +208,7 @@ module.exports = {
 
     return Promise.resolve(resetDeal);
   },
-  submitDeal: (dealId) => ({
+  submitDeal: (dealType, dealId) => ({
     _id: dealId,
     // eslint-disable-next-line no-underscore-dangle
     dealSnapshot: ALL_MOCK_DEALS.find((d) => d._id === dealId),

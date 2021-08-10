@@ -189,15 +189,18 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
 };
 
 
-const submitDeal = async (dealId) => {
+const submitDeal = async (dealType, dealId) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/submit`,
+      url: `${centralApiUrl}/v1/tfm/deals/submit`,
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {},
+      data: {
+        dealType,
+        dealId,
+      },
     });
 
     return response.data;
@@ -524,6 +527,21 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
+const findGefFacilities = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/facilities`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
 
 module.exports = {
   findOneDeal,
@@ -555,4 +573,5 @@ module.exports = {
   createEstoreFolders,
   sendEmail,
   findOneGefDeal,
+  findGefFacilities,
 };

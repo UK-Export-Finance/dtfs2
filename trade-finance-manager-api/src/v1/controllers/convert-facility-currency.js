@@ -18,10 +18,8 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
       midPrice: exchangeRate,
     } = currencyExchange;
 
-    const strippedValue = Number(value.replace(/,/g, ''));
-
     // TODO: rename to valueInGBP
-    const facilityValueInGBP = strippedValue * exchangeRate;
+    const facilityValueInGBP = value * exchangeRate;
 
     facilityUpdate = {
       facilityValueInGBP,
