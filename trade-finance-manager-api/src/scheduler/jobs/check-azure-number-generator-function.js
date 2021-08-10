@@ -1,6 +1,10 @@
-const defaultSchedule = '*/5 * * * * *';
-const schedule = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE || defaultSchedule;
+// const defaultSchedule = '*/5 * * * * *';
+const dotenv = require('dotenv');
 
+dotenv.config();
+
+const schedule = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE;
+console.log({ schedule, env: process.env });
 const numberGeneratorController = require('../../v1/controllers/number-generator.controller');
 
 const checkAzureNumberGeneratorFunction = {
