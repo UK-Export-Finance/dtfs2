@@ -1,4 +1,4 @@
-import { add, format } from 'date-fns';
+import { add, sub, format } from 'date-fns';
 import { aboutFacility, validateAboutFacility } from './index';
 import * as api from '../../services/api';
 
@@ -78,7 +78,9 @@ describe('GET About Facility', () => {
 describe('Validate About Facility', () => {
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
+  const yesterday = sub(now, { days: 1 });
   const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
+  const lessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
   it('redirects user to application page if save and return is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -244,41 +246,42 @@ describe('Validate About Facility', () => {
     }));
   });
 
-  it('shows error message if no coverEndDateDay or coverEndDateMonth or coverEndDateYear has been provided', async () => {
+  it('doesnt show error message if coverStartDate is less than 3 months away', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
+
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
-    mockRequest.body['cover-end-date-day'] = '10';
-    mockRequest.body['cover-end-date-month'] = '11';
-    mockRequest.body['cover-end-date-year'] = '2022';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.body['cover-start-date-day'] = format(lessThanThreeMonthsFromNow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(lessThanThreeMonthsFromNow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(lessThanThreeMonthsFromNow, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
       errors: expect.objectContaining({
-        errorSummary: expect.not.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+        errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
       }),
     }));
+  });
 
-    mockRequest.body['cover-end-date-day'] = '';
+  it('shows error message if coverStartDate is in the past', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.hasBeenIssued = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+    mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+    mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
       errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
-      }),
-    }));
-
-    mockRequest.body['cover-end-date-day'] = '10';
-    mockRequest.body['cover-end-date-month'] = '';
-
-    await validateAboutFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+        errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
       }),
     }));
   });
