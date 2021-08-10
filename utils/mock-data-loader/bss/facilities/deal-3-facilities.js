@@ -1,0 +1,40 @@
+module.exports = [
+	{
+		"mockDealId": 3,
+		"facilityType" : "bond",
+		"createdDate" : "1626970909762",
+		"bondIssuer" : "",
+		"bondType" : "Maintenance bond",
+		"ukefGuaranteeInMonths" : null,
+		"facilityStage" : "Issued",
+		"requestedCoverStartDate-day" : "22",
+		"requestedCoverStartDate-month" : "09",
+		"requestedCoverStartDate-year" : "2021",
+		"coverEndDate-day" : "22",
+		"coverEndDate-month" : "09",
+		"coverEndDate-year" : "2023",
+		"uniqueIdentificationNumber" : "Test Bond",
+		"bondBeneficiary" : "",
+		"requestedCoverStartDate" : "1632328430974",
+		"lastEdited" : "1626971630990",
+		"facilityValue" : "600000.00",
+		"currencySameAsSupplyContractCurrency" : "true",
+		"currency" : {
+			"text" : "GBP - UK Sterling",
+			"id" : "GBP",
+			"currencyId" : 12
+		},
+		"conversionRate" : null,
+		"conversionRateDate-day" : null,
+		"conversionRateDate-month" : null,
+		"conversionRateDate-year" : null,
+		"riskMarginFee" : "2",
+		"coveredPercentage" : "60",
+		"minimumRiskMarginFee" : "",
+		"guaranteeFeePayableByBank" : "1.8000",
+		"ukefExposure" : "360,000.00",
+		"feeFrequency" : "Quarterly",
+		"feeType" : "In arrear",
+		"dayCountBasis" : "360"
+	}
+];
