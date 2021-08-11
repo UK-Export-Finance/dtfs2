@@ -1,5 +1,5 @@
 import moment from 'moment';
-import CONSTANTS from '../constants';
+import { TRANSACTION_STAGE, TRANSACTION_TYPE } from '../constants';
 
 // const buildDashboardFilters = (params, user) => {
 const buildDashboardFilters = (params) => {
@@ -13,8 +13,8 @@ const buildDashboardFilters = (params) => {
     };
   }
 
-  if (CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage]
-    && CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage] !== 'Any') {
+  if (TRANSACTION_STAGE[params.filterByTransactionStage]
+    && TRANSACTION_STAGE[params.filterByTransactionStage] !== 'Any') {
     filters.push(
       {
         field: 'transaction.transactionStage',
@@ -23,8 +23,8 @@ const buildDashboardFilters = (params) => {
     );
   }
 
-  if (CONSTANTS.TRANSACTION_TYPE[params.filterByTransactionType]
-    && CONSTANTS.TRANSACTION_TYPE[params.filterByTransactionType] !== 'Any') {
+  if (TRANSACTION_TYPE[params.filterByTransactionType]
+    && TRANSACTION_TYPE[params.filterByTransactionType] !== 'Any') {
     filters.push(
       {
         field: 'transaction.transactionType',

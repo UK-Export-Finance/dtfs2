@@ -1,4 +1,4 @@
-import STATUS from '../../constants/status';
+import { STATUS } from '../../constants';
 
 const userCanSubmitDeal = (deal, user) => {
   if ([STATUS.submitted, STATUS.refused].includes(deal.details.status)) {
