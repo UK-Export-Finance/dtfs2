@@ -72,39 +72,4 @@ context('Review application when returned to maker', () => {
       applicationPreview.status().contains("Ready for Checker's approval");
     });
   });
-
-  // describe('Application details when returned to maker', () => {
-  //   it('allows the maker to edit the application', () => {
-  //     applicationDetails.bankRefName().should('have.text', 'HSBC 123');
-  //     applicationDetails.addCashFacilityButton();
-  //     applicationDetails.addContingentFacilityButton();
-  //   });
-  //
-  //   it('displays the comments from the checker', () => {
-  //     applicationPreview.task();
-  //     applicationPreview.comments();
-  //     applicationPreview.comments().contains('DTFS2-4536 Comments from checker');
-  //   });
-  //
-  //   it('allows the maker to submit to be checked at the bank', () => {
-  //     applicationDetails.submitButton().click();
-  //   });
-  //
-  //   it('allows the maker to optionally add additional comments', () => {
-  //     applicationDetails.submitButton().click();
-  //     applicationSubmission.commentsField().type('Comments from the maker');
-  //     applicationSubmission.submmitButton().click();
-  //     applicationSubmission.confirmation();
-  //   });
-  //
-  //   it('changes the status to Ready for checkers approval', () => {
-  //     cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
-  //     applicationDetails.submitButton().click();
-  //     applicationSubmission.commentsField().type('Comments from the maker');
-  //     applicationSubmission.submmitButton().click();
-  //     applicationSubmission.confirmation();
-  //     cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
-  //     applicationPreview.status().contains("Ready for Checker's approval");
-  //   });
-  // });
 });
