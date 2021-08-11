@@ -4,7 +4,7 @@
 /* eslint-disable no-underscore-dangle */
 
 const api = require('./gef/api');
-const MOCKS = require('./mocks/gef');
+const MOCKS = require('./gef');
 
 const tokenFor = require('./temporary-token-handler');
 
