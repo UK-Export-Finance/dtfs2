@@ -521,7 +521,7 @@ const findOneGefDeal = async (dealId) => {
       },
     });
 
-    return response.data.deal;
+    return response.data;
   } catch ({ response }) {
     return false;
   }

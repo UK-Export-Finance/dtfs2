@@ -24,6 +24,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
         companyName: mockDeal.dealSnapshot.exporter.companyName,
         companiesHouseRegistrationNumber: mockDeal.dealSnapshot.exporter.companiesHouseRegistrationNumber,
       },
+      facilities: mockDeal.facilities,
       tfm: mockDeal.tfm,
     };
 
