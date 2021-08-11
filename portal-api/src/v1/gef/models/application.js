@@ -25,9 +25,9 @@ class Application {
       this.updatedAt = Date.now();
       // Only set properties if they are part of the request otherwise they get cleared
       const updatable = ['comments', 'submissionType', 'submissionCount', 'submissionDate', 'ukefDealId', 'checkerId'];
-      Object.keys(req).forEach((key) => {
-        if (updatable.includes(key) && req[key]) {
-          this[key] = req[key];
+      Object.entries(req).forEach(([key, value]) => {
+        if (updatable.includes(key) && value) {
+          this[key] = value;
         }
       });
     }
