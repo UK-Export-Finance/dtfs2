@@ -60,7 +60,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         ukefFacilityID,
         facilityType,
         currency,
-        value: facilityValue,
+        value: Number(facilityValue.replace(/,/g, '')),
         coverPercentage: coveredPercentage,
         ukefExposure,
         coverStartDate: requestedCoverStartDate,
