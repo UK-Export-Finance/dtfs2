@@ -148,7 +148,7 @@ services:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - ORDNANCE_SURVEY_API_URL=https://api.ordnancesurvey.co.uk
+      - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
       - ORDNANCE_SURVEY_API_KEY
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
