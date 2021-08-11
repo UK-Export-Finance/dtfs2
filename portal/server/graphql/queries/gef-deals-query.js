@@ -8,6 +8,7 @@ query gefDeals($start: Int, $pagesize: Int, $filters: [DashboardFilters]){
       _id
       bankInternalRefName
       status
+      submissionType
       exporter {
         companyName
       }
