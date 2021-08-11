@@ -1,5 +1,5 @@
 import {
-  add, format, isAfter, isPast, set,
+  add, format, isAfter, isBefore, set,
 } from 'date-fns';
 import * as api from '../../services/api';
 import { FACILITY_TYPE } from '../../../constants';
@@ -98,11 +98,12 @@ const validateAboutFacility = async (req, res) => {
       }
 
       if (body.shouldCoverStartOnSubmission === 'false' && coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
-        const threeMonthsFromNow = add(new Date(), { months: 3 });
+        const now = new Date();
+        const threeMonthsFromNow = add(now, { months: 3 });
         const startDate = set(new Date(),
-          { year: coverStartDateYear, month: coverStartDateMonth, date: coverStartDateDay });
+          { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
 
-        if (isPast(startDate)) {
+        if (isBefore(startDate, now)) {
           aboutFacilityErrors.push({
             errRef: 'coverStartDate',
             errMsg: 'Cover start date cannot be before today',
