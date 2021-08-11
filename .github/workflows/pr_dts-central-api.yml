@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths:
     - 'dtfs-central-api/**'
+    - 'utils/mock-data-loader/**'
 
 env:
   environment: dev

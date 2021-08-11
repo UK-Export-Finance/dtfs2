@@ -6,6 +6,7 @@ on:
     paths: 
     - 'trade-finance-manager-ui/**'
     - 'e2e-tests/trade-finance-manager/cypress/**'
+    - 'utils/mock-data-loader/**'
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
