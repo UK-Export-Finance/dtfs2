@@ -19,17 +19,18 @@ class Application {
       this.submissionDate = null;
       this.ukefDealId = null;
       this.checkerId = null;
+      this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
     } else {
       // Update
       this.updatedAt = Date.now();
-      this.comments = req.comments;
-      this.submissionType = req.submissionType;
-      this.submissionCount = req.submissionCount;
-      this.submissionDate = req.submissionDate;
-      this.ukefDealId = req.ukefDealId;
-      this.checkerId = req.checkerId;
+      // Only set properties if they are part of the request otherwise they get cleared
+      const updatable = ['comments', 'submissionType', 'submissionCount', 'submissionDate', 'ukefDealId', 'checkerId'];
+      Object.keys(req).forEach((key) => {
+        if (updatable.includes(key) && req[key]) {
+          this[key] = req[key];
+        }
+      });
     }
-    this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
   }
 }
 
