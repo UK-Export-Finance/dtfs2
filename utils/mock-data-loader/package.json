@@ -18,6 +18,7 @@
     "apollo-client": "^2.6.9",
     "apollo-link-http": "^1.5.17",
     "axios": "^0.21.1",
+    "date-fns": "^2.23.0",
     "dotenv": "^8.2.0",
     "escape-html": "^1.0.3",
     "faker": "^5.4.0",

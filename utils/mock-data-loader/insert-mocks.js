@@ -1,6 +1,6 @@
 const api = require('./api');
 const centralApi = require('./centralApi');
-const MOCKS = require('./mocks');
+const MOCKS = require('./bss');
 
 const tokenFor = require('./temporary-token-handler');
 
@@ -11,7 +11,7 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'data-admin'],
-    bank: MOCKS.BANKS.find((bank) => bank.id === '956'),
+    bank: MOCKS.BANKS.find((bank) => bank.id === '9'),
   });
 
   const tfmMaker = MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER1');
@@ -40,21 +40,26 @@ const insertMocks = async () => {
     await api.createEligibilityCriteria(eligibilityCriteria, token);
   }
 
-  console.log('inserting deals');
+  console.log('inserting BSS deals');
+  const insertedDeals = [];
 
-  for (contract of MOCKS.DEALS) {
-    const createdDeal = await api.createDeal(contract, tfmMakerToken);
+  for (deal of MOCKS.DEALS) {
+    const createdDeal = await api.createDeal(deal, tfmMakerToken);
 
-    console.log('inserting deal facilites into central');
+    insertedDeals.push(createdDeal);
+  }
 
-    for (facility of MOCKS.FACILITIES) {
-      const createdFacility = await centralApi.createFacility(facility, createdDeal._id, tfmMakerToken);
-      const facilityWithDealId = {
-        ...facility,
-        associatedDealId: createdDeal._id
-      };
-      await centralApi.updateFacility(createdFacility._id, facilityWithDealId, tfmMakerToken);
-    }
+  console.log('inserting BSS facilites into central');
+
+  for (facility of MOCKS.FACILITIES) {
+    const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
+
+    const facilityToInsert = {
+      ...facility,
+      associatedDealId: associatedDeal._id,
+    };
+
+    await centralApi.createFacility(facilityToInsert, facilityToInsert.associatedDealId, tfmMakerToken);
   }
 };
 
