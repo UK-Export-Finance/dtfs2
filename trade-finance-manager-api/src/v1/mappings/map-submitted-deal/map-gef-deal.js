@@ -12,6 +12,7 @@ const mapGefDeal = (deal) => {
     status,
     ukefDealId,
     exporter,
+    facilities,
   } = dealSnapshot;
 
   const mapped = {
@@ -28,6 +29,7 @@ const mapGefDeal = (deal) => {
       companyName: exporter.companyName,
       companiesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     },
+    facilities,
     tfm,
   };
 
