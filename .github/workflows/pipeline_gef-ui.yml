@@ -89,7 +89,7 @@ jobs:
 
       COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-      ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
+      ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
       ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
       
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
