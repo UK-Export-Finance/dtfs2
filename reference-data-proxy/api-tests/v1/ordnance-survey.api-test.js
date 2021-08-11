@@ -1,4 +1,3 @@
-const axios = require('axios');
 const app = require('../../src/createApp');
 const { get } = require('../api')(app);
 
@@ -6,7 +5,7 @@ const mockResponse = {
   status: 200,
   data: {
     header: {
-      uri: 'https://api.ordnancesurvey.co.uk/places/v1/addresses/postcode?postcode=WR90DJ',
+      uri: 'https://api.os.co.uk/search/places/v1/postcode?postcode=WR90DJ',
       query: 'postcode=WR90DJ',
       offset: 0,
       totalresults: 46,
@@ -82,9 +81,7 @@ const mockResponse = {
   },
 };
 
-jest.mock('axios', () => jest.fn(() => {
-  return Promise.resolve(mockResponse);
-}));
+jest.mock('axios', () => jest.fn(() => Promise.resolve(mockResponse)));
 
 describe('/ordnance-survey', () => {
   describe('GET /ordnance-survey', () => {

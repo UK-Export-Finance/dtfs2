@@ -25,7 +25,7 @@ env:
   palo_alto_next_hop: 10.50.0.100
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-  ORDNANCE_SURVEY_API_URL: "https://api.ordnancesurvey.co.uk"
+  ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
 
 # Below this line should be the same for all environments
 
