@@ -80,7 +80,7 @@ describe('Validate About Facility', () => {
   const tomorrow = add(now, { days: 1 });
   const yesterday = sub(now, { days: 1 });
   const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
-  const lessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
+  const oneDayoneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
   it('redirects user to application page if save and return is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -253,9 +253,9 @@ describe('Validate About Facility', () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.hasBeenIssued = 'true';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
-    mockRequest.body['cover-start-date-day'] = format(lessThanThreeMonthsFromNow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(lessThanThreeMonthsFromNow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(lessThanThreeMonthsFromNow, 'yyyy');
+    mockRequest.body['cover-start-date-day'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'yyyy');
 
     await validateAboutFacility(mockRequest, mockResponse);
 
