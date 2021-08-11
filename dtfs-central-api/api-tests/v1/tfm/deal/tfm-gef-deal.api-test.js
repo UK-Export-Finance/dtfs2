@@ -38,7 +38,6 @@ describe('/v1/tfm/deal/:id', () => {
     });
   });
 
-
   describe('PUT /v1/tfm/deal/:id', () => {
     const dealUpdate = {
       tfm: {
