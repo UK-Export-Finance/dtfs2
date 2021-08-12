@@ -16,7 +16,7 @@ const mapCreateEstore = (deal) => {
   let riskMarket;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    // default values for GEF. GEF does not this data.
+    // default values for GEF. GEF does not have this data.
     buyerName = CONSTANTS.DEALS.DEAL_TYPE.GEF;
     destinationMarket = 'United Kingdom';
     riskMarket = 'United Kingdom';

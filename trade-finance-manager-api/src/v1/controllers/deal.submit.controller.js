@@ -28,6 +28,9 @@ const getDeal = async (dealId, dealType) => {
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
+
+    // temporarily return false for dev.
+    return false;
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {

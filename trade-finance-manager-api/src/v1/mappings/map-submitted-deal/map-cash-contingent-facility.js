@@ -32,8 +32,6 @@ const mapCashContingentFacility = (facility) => {
     coverEndDate,
   } = facility;
 
-  // TODO why is ukefFacilityID empty in original facility?
-
   return {
     _id,
     ukefFacilityID: ukefFacilityId,
