@@ -70,13 +70,7 @@ const submitDeal = async (dealId, dealType, checker) => {
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDateReceived);
 
-    // TEMP: estore calls currently does not work with GEF deals.
-    // Estore endpoint requires fields that do not exist in GEF deal.
-    let updatedDealWithCreateEstore = updatedDealWithUpdatedFacilities;
-
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
-    }
+    const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
