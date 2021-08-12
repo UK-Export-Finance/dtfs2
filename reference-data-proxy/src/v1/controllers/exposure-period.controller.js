@@ -10,7 +10,11 @@ const mapProductGroup = (facilityType) => {
     return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
   }
 
-  return null;
+  // return null;
+  //
+  // TEMP for dev whilst we don't know what product group to use for GEF.
+  // this code 'works'.
+  return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
 };
 
 exports.getExposurePeriod = async (req, res) => {
