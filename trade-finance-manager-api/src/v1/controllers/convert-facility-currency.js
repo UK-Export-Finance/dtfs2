@@ -3,7 +3,7 @@ const calculateUkefExposure = require('../helpers/calculateUkefExposure');
 
 const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
   const {
-    currency,
+    currencyCode,
     value,
     coverPercentage,
     ukefExposure,
@@ -11,8 +11,8 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
 
   let facilityUpdate;
 
-  if (currency && currency.id !== 'GBP') {
-    const currencyExchange = await api.getCurrencyExchangeRate(currency.id, 'GBP');
+  if (currencyCode && currencyCode !== 'GBP') {
+    const currencyExchange = await api.getCurrencyExchangeRate(currencyCode, 'GBP');
 
     const {
       midPrice: exchangeRate,
