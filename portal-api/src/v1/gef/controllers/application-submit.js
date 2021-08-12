@@ -46,16 +46,16 @@ const addSubmissionDateToIssuedFacilities = async (applicationId) => {
 const addUkefFacilityIdToFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
 
-  facilities.forEach(async (facility) => {
+  await Promise.all(facilities.map(async (facility) => {
     const ukefFacilityId = await generateUkefFacilityId(facility);
 
     if (ukefFacilityId !== facility.ukefFacilityId) {
       const update = {
         ukefFacilityId,
       };
-      updateFacility(facility._id, update);
+      await updateFacility(facility._id, update);
     }
-  });
+  }));
 
   return facilities;
 };
