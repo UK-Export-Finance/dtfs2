@@ -51,7 +51,7 @@ const mapBssEwcsFacility = (facility) => {
     _id,
     ukefFacilityID,
     facilityType,
-    currency,
+    currencyCode: currency.id,
     value: Number(facilityValue.replace(/,/g, '')),
     coverPercentage: coveredPercentage,
     ukefExposure,
