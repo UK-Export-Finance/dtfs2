@@ -34,7 +34,12 @@ describe('mappings - map submitted deal - mapSubmittedDeal', () => {
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
     it('should return mapGefDeal', () => {
-      const mockDeal = { dealSnapshot: MOCK_GEF_DEAL };
+      const mockDeal = {
+        dealSnapshot: {
+          ...MOCK_GEF_DEAL,
+          facilities: [],
+        },
+      };
 
       const result = mapSubmittedDeal(mockDeal);
 
