@@ -38,7 +38,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     associatedDealId: facility.associatedDealId,
     ukefFacilityID: facility.ukefFacilityID,
 
-    // TODO: we shouldn't need facilityType and ukefFacilityType.
+    // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
     facilityType: facility.facilityType,
     ukefFacilityType,
     facilityProduct: facility.facilityProduct,
