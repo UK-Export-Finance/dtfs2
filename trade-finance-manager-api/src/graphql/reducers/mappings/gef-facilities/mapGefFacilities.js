@@ -1,10 +1,10 @@
 const mapGefFacility = require('./mapGefFacility');
 
-const mapGefFacilities = (dealSnapshot) => {
+const mapGefFacilities = (dealSnapshot, dealTfm) => {
   const { facilities } = dealSnapshot;
 
-  return facilities.map((f) =>
-    mapGefFacility(f, dealSnapshot));
+  return facilities.map((facility) =>
+    mapGefFacility(facility, dealSnapshot, dealTfm));
 };
 
 module.exports = mapGefFacilities;

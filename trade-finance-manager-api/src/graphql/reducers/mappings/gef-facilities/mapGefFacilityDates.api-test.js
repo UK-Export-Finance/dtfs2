@@ -33,10 +33,10 @@ describe('mapGefFacilityDates', () => {
     expect(result.inclusionNoticeReceived).toEqual(mockMinDeal.manualInclusionNoticeSubmissionDate);
   });
 
-  it('should return bankIssueNoticeReceived as issuedFacilitySubmittedToUkefTimestamp', () => {
+  it('should return bankIssueNoticeReceived as submittedAsIssuedDate', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
-    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.issuedFacilitySubmittedToUkefTimestamp);
+    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.submittedAsIssuedDate);
   });
 
   it('should return coverStartDate as timestamp', () => {

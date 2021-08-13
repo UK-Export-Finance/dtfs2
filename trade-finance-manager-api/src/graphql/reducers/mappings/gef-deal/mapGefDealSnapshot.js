@@ -17,14 +17,14 @@ const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
 // dealValue(e.g 1234)
 // eligibility []
 
-const mapGefDealSnapshot = (dealSnapshot) => ({
+const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   _id: dealSnapshot._id,
   details: mapGefDealDetails(dealSnapshot),
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibilityCriteria: [],
   eligibility: {},
   dealFiles: {},
-  facilities: mapGefFacilities(dealSnapshot),
+  facilities: mapGefFacilities(dealSnapshot, dealTfm),
   totals: mapTotals(dealSnapshot.facilities),
 });
 
