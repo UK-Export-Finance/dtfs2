@@ -3,8 +3,8 @@ const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('./mock-deal-issued-facilities');
-const MOCK_FACILITIES = require('./mock-facilities');
-const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
+const MOCK_BSS_FACILITIES = require('./mock-facilities');
+const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_DEAL_MIA_SUBMITTED = require('./mock-deal-MIA-submitted');
 const MOCK_DEAL_MIA_NOT_SUBMITTED = require('./mock-deal-MIA-not-submitted');
@@ -22,6 +22,9 @@ const MOCK_USERS = require('./mock-users');
 const MOCK_TEAMS = require('./mock-teams');
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('./mock-premium-schedule-response');
 
+const MOCK_GEF_DEAL = require('./mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
+
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
   MOCK_DEAL_NO_PARTY_DB,
@@ -38,11 +41,13 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
   MOCK_MIA_SUBMITTED,
   MOCK_MIA_SECOND_SUBMIT,
+  MOCK_GEF_DEAL,
 ];
 
 const ALL_MOCK_FACILITIES = [
-  ...MOCK_FACILITIES,
-  ...MOCK_FACILITIES_USD_CURRENCY,
+  ...MOCK_BSS_FACILITIES,
+  ...MOCK_BSS_FACILITIES_USD_CURRENCY,
+  ...MOCK_CASH_CONTINGENT_FACILITIES,
 ];
 
 module.exports = {

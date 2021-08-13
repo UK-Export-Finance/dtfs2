@@ -26,7 +26,7 @@ describe('mapGefDealSnapshot', () => {
   };
 
   it('should return mapped deal', () => {
-    const result = mapGefDealSnapshot(mockDeal.dealSnapshot);
+    const result = mapGefDealSnapshot(mockDeal.dealSnapshot, mockDeal.tfm);
 
     const expected = {
       _id: MOCK_GEF_DEAL._id,
@@ -35,7 +35,7 @@ describe('mapGefDealSnapshot', () => {
       eligibilityCriteria: [],
       eligibility: {},
       dealFiles: {},
-      facilities: mapGefFacilities(mockDeal.dealSnapshot),
+      facilities: mapGefFacilities(mockDeal.dealSnapshot, mockDeal.tfm),
       totals: mapTotals(mockDeal.dealSnapshot.facilities),
     };
 

@@ -13,7 +13,7 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
     detailsOther: '',
     hasBeenIssued: true,
     interestPercentage: 24,
-    monthsOfCover: null,
+    monthsOfCover: 10,
     name: 'issued1',
     paymentType: null,
     shouldCoverStartOnSubmission: true,

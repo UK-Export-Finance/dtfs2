@@ -3,24 +3,20 @@ const mapFacilityStage = require('../facilities/mapFacilityStage');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
+const mapFacilityTfm = require('../facilities/mapFacilityTfm');
+
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 
-const mapGefFacility = (facility, dealSnapshot) => {
-  // fields that need to be in GEF facility data
-  // ukefFacilityID
-  // guaranteeFeePayableToUkef
-  // feeFrequency
-  // dayCountBasis
-
-  const { facilitySnapshot } = facility;
-
-  // mock facility.tfm until we have submission/facility.tfm working.
-  const facilityTfm = {};
+const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
+  const {
+    facilitySnapshot,
+    tfm: facilityTfm,
+  } = facility;
 
   const {
-    associatedDealId,
+    applicationId,
     coverPercentage,
     currency,
     value,
@@ -28,8 +24,9 @@ const mapGefFacility = (facility, dealSnapshot) => {
     paymentType,
     hasBeenIssued,
     name,
-    monthsOfCover: ukefGuaranteeInMonths,
     type: facilityType,
+    ukefFacilityId,
+    ukefExposure,
   } = facilitySnapshot;
 
   const formattedFacilityValue = formattedNumber(value);
@@ -42,7 +39,7 @@ const mapGefFacility = (facility, dealSnapshot) => {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     facilitySnapshot: {
       _id: facility._id, // eslint-disable-line no-underscore-dangle
-      associatedDealId,
+      associatedDealId: applicationId,
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,
       coveredPercentage: `${coverPercentage}%`,
@@ -56,10 +53,10 @@ const mapGefFacility = (facility, dealSnapshot) => {
 
       // TODO: we shouldn't need facilityType and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(facilityType),
-      ukefFacilityID: 'UKEF-ID-TODO',
-      ukefGuaranteeInMonths,
+      ukefFacilityID: ukefFacilityId,
+      ukefExposure: `${currency} ${ukefExposure}`,
     },
-    tfm: facilityTfm,
+    tfm: mapFacilityTfm(facilityTfm, dealTfm),
   };
 
   return result;
