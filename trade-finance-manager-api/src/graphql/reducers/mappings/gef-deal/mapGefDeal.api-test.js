@@ -1,6 +1,7 @@
 const mapGefDeal = require('./mapGefDeal');
 const mapGefDealSnapshot = require('./mapGefDealSnapshot');
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefDeal', () => {
   it('should return mapped deal', () => {
@@ -10,7 +11,7 @@ describe('mapGefDeal', () => {
         ...MOCK_GEF_DEAL,
         facilities: [
           {
-            facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
             tfm: {},
           },
         ],

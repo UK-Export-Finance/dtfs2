@@ -9,9 +9,6 @@ const mapSubmittedDeal = (deal) => {
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     mappedDeal = mapGefDeal(deal);
-
-    // temporarily return false for dev.
-    return false;
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
