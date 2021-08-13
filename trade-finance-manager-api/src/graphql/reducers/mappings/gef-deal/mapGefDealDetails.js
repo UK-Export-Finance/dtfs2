@@ -1,5 +1,5 @@
 const mapGefDealDetails = (dealSnapshot) => ({
-  ukefDealId: 'UKEF-ID-TODO',
+  ukefDealId: dealSnapshot.ukefDealId,
   bankSupplyContractID: dealSnapshot.bankInternalRefName,
   bankSupplyContractName: dealSnapshot.additionalRefName,
   // submissionType

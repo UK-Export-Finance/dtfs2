@@ -8,8 +8,11 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
-const MOCK_FACILITIES = require('../src/v1/__mocks__/mock-facilities');
+const MOCK_BSS_FACILITIES = require('../src/v1/__mocks__/mock-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../src/v1/__mocks__/mock-cash-contingent-facilities');
+
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const MOCK_GEF_DEAL = require('../src/v1/__mocks__/mock-gef-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
 
 const mockFacilityTfm = {
@@ -20,18 +23,8 @@ const mockFacilityTfm = {
   bondBeneficiaryPartyUrn: '123-test',
 };
 
-const mockFacility = {
-  ...MOCK_FACILITIES[0],
-  tfm: mockFacilityTfm,
-};
-
 const mockDealTfm = {
   exporterCreditRating: 'Good (BB-)',
-};
-
-const initFacilityShape = {
-  facilitySnapshot: mockFacility,
-  tfm: mockFacility.tfm,
 };
 
 const GET_FACILITY = gql`
@@ -57,7 +50,6 @@ const GET_FACILITY = gql`
         guaranteeFeePayableToUkef,
         bondIssuer,
         bondBeneficiary,
-        ukefExposure,
         banksInterestMargin,
         firstDrawdownAmountInExportCurrency,
         feeType,
@@ -118,15 +110,25 @@ describe('graphql query - get facility', () => {
     query = doQuery;
   });
 
-  it('should return a facility via facilityReducer', async () => {
+  it('should return a BSS/EWCS facility via facilityReducer', async () => {
     const { data } = await query({
       query: GET_FACILITY,
-      variables: { id: '12345678' },
+      variables: { id: MOCK_BSS_FACILITIES[0]._id },
     });
+
+    const mockFacility = {
+      ...MOCK_BSS_FACILITIES[0],
+      tfm: mockFacilityTfm,
+    };
+
+    const initFacilityShape = {
+      facilitySnapshot: mockFacility,
+      tfm: mockFacility.tfm,
+    };
 
     const reducerResult = facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
 
-    expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
+    expect(data.facility._id).toEqual(MOCK_BSS_FACILITIES[0]._id);
     expect(data.facility.facilitySnapshot).toEqual(reducerResult.facilitySnapshot);
 
     // remove fields that would be in the data/DB, but not defined in the schema.
@@ -134,5 +136,46 @@ describe('graphql query - get facility', () => {
     delete expectedTfmFacilityShape.ukefExposureCalculationTimestamp;
 
     expect(data.facility.tfm).toEqual(expectedTfmFacilityShape);
+  });
+
+  it('should return a Cash/Contingent facility via facilityReducer', async () => {
+    const { data } = await query({
+      query: GET_FACILITY,
+      variables: { id: MOCK_CASH_CONTINGENT_FACILITIES[0]._id },
+    });
+
+    const mockFacility = {
+      ...MOCK_CASH_CONTINGENT_FACILITIES[0],
+      tfm: mockFacilityTfm,
+    };
+
+    const initFacilityShape = {
+      _id: mockFacility._id,
+      facilitySnapshot: mockFacility,
+      tfm: mockFacility.tfm,
+    };
+
+    const reducerResult = facilityReducer(initFacilityShape, MOCK_GEF_DEAL, mockDealTfm);
+
+    expect(data.facility._id).toEqual(MOCK_CASH_CONTINGENT_FACILITIES[0]._id);
+
+    const expectedSnapshot = {
+      ...reducerResult.facilitySnapshot,
+      // fields that do not exist and therefore return as null from graphql query
+      bondBeneficiary: null,
+      bondIssuer: null,
+      dayCountBasis: null,
+      feeFrequency: null,
+      firstDrawdownAmountInExportCurrency: null,
+      guaranteeFeePayableToUkef: null,
+    };
+
+    expect(data.facility.facilitySnapshot).toEqual(expectedSnapshot);
+
+    // remove fields that would be in the data/DB, but not defined in the schema.
+    const expectedTfmFacilityShape = reducerResult.tfm;
+    delete expectedTfmFacilityShape.ukefExposureCalculationTimestamp;
+
+    expect(data.facility.tfm).toEqual(reducerResult.tfm);
   });
 });

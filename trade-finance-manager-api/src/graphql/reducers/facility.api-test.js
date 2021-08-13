@@ -57,6 +57,7 @@ describe('reducer - facility', () => {
       const expected = mapGefFacility(
         mockGefFacility,
         MOCK_GEF_DEAL,
+        mockGefDeal.tfm,
       );
 
       expect(result).toEqual(expected);
