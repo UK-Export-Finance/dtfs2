@@ -51,7 +51,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
       feeType: mapGefFacilityFeeType(paymentType),
 
-      // TODO: we shouldn't need facilityType and ukefFacilityType.
+      // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(facilityType),
       ukefFacilityID: ukefFacilityId,
       ukefExposure: `${currency} ${ukefExposure}`,
