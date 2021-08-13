@@ -11,7 +11,7 @@ When a deal is submitted to UKEF from the Portal, the deal is sent to TFM API. T
 - Call external UKEF APIs to populate more data (e.g currency conversions)
 - Allow TFM users to complete necessary updates to the deal.
 
-**Important note**: in TFM, a deal is known as a 'Case'. A Case will have one deal with facilities and tasks for the users's to complete in order to process the case.
+:warning: In TFM, a deal is known as a 'Case'. A Case will have one deal with facilities and tasks for the users's to complete in order to process the case.
 
 
 ## What happens when a deal is sent to TFM
@@ -30,8 +30,6 @@ In essence:
 All of this starts from [deal.submit.controller](/src/v1/controllers/deal.submit.controller.js)
 
 
-
-TFM does not ever update snapshot except...
 
 ## Snapshots and data structure
 
@@ -64,7 +62,7 @@ When TFM creates a snapshot (and adds to the TFM collections) for it's own consu
 }
 ```
 
-**The snapshot should not be changed by TFM.** TFM updates are stored in the tfm object.
+:warning: **The snapshot should not be changed by TFM.** TFM updates are stored in the tfm object.
 
 This is exactly the same for facilities - just replace `dealSnapshot` with `facilitySnapshot`.
 
@@ -72,7 +70,7 @@ The only exception for updating the snapshot is when TFM changes the `submission
 
 ## Different product types and data
 
-There are currently 2 types of deals and 4 types of facilities that TFM receives.
+There are currently 2 types of deals and 4 types of facilities that TFM receives:
 
 - BSS and EWCS (bond and loan facilities for a BSS deal)
 - CASH and CONTINGENT (facilities for a GEF deal)
