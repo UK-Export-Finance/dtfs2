@@ -9,7 +9,7 @@ const { objectIsEmpty } = require('../../utils/object');
 
 const postPremiumSchedule = async (premiumScheduleParameters) => {
   if (objectIsEmpty(premiumScheduleParameters)) {
-    console.log('Facility data not valid for premium schedule');
+    console.log('Unable to call Premium schedule - no facility data provided');
     return null;
   }
 

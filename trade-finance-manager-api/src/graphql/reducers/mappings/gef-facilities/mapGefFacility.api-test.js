@@ -9,12 +9,13 @@ const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacility', () => {
   it('should return mapped GEF facility', () => {
     const mockFacility = {
-      _id: MOCK_GEF_DEAL.facilities[0]._id,
-      facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+      _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,
+      facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
       tfm: {},
     };
 

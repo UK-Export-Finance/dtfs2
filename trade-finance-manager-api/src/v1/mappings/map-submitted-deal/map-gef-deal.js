@@ -1,3 +1,5 @@
+const { mapCashContingentFacility } = require('./map-cash-contingent-facility');
+
 const mapGefDeal = (deal) => {
   const { dealSnapshot, tfm } = deal;
 
@@ -12,6 +14,7 @@ const mapGefDeal = (deal) => {
     status,
     ukefDealId,
     exporter,
+    facilities,
   } = dealSnapshot;
 
   const mapped = {
@@ -28,6 +31,7 @@ const mapGefDeal = (deal) => {
       companyName: exporter.companyName,
       companiesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     },
+    facilities: facilities.map((facility) => mapCashContingentFacility(facility)),
     tfm,
   };
 
