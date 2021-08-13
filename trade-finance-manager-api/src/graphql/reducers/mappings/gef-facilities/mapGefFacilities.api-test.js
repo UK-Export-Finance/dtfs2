@@ -17,11 +17,13 @@ describe('mapGefFacilities', () => {
       ],
     };
 
-    const result = mapGefFacilities(mockDealSnapshot);
+    const mockDealTfm = {};
+
+    const result = mapGefFacilities(mockDealSnapshot, mockDealTfm);
 
     const expected = [
-      mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot),
-      mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot),
+      mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot, mockDealTfm),
+      mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot, mockDealTfm),
     ];
 
     expect(result).toEqual(expected);

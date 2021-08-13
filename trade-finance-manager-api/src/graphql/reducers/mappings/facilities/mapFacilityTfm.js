@@ -10,4 +10,5 @@ const mapFacilityTfm = (facilityTfm, dealTfm) =>
     premiumTotals: mapPremiumTotals(facilityTfm.premiumSchedule),
     creditRating: dealTfm.exporterCreditRating,
   });
+
 module.exports = mapFacilityTfm;
