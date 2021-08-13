@@ -21,7 +21,7 @@ const queryFacility = async ({ _id }) => {
   const deal = await findOneTfmDeal(dealId);
 
   const { dealSnapshot, tfm: dealTfm } = deal;
- 
+
   return facilityReducer(facility, dealSnapshot, dealTfm);
 };
 
