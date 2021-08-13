@@ -10,11 +10,19 @@ const mapProductGroup = (facilityType) => {
     return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
   }
 
-  // return null;
-  //
-  // TEMP for dev whilst we don't know what product group to use for GEF.
-  // this code 'works'.
-  return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
+  if (facilityType === CONSTANTS.EXPOSURE_PERIOD.FACILITY_TYPE.CASH) {
+    // TODO: use correct product group.
+    // TEMP whilst we don't know what product group to use for GEF.
+    return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
+  }
+
+  if (facilityType === CONSTANTS.EXPOSURE_PERIOD.FACILITY_TYPE.CONTINGENT) {
+    // TODO: use correct product group.
+    // TEMP whilst we don't know what product group to use for GEF.
+    return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
+  }
+
+  return null;
 };
 
 exports.getExposurePeriod = async (req, res) => {

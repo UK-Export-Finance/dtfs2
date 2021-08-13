@@ -284,10 +284,10 @@ describe('/v1/deals', () => {
     });
 
     describe('when dealType is `GEF`', () => {
-      it('should return 404', async () => {
+      it('should return 200', async () => {
         const { status } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
 
-        expect(status).toEqual(404);
+        expect(status).toEqual(200);
       });
     });
   });
