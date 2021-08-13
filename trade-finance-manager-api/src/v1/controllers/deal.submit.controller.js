@@ -72,6 +72,7 @@ const submitDeal = async (dealId, dealType, checker) => {
 
     let updatedDealWithCreateEstore = updatedDealWithUpdatedFacilities;
 
+    // TODO: enable when estore works for GEF data.
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
     }
