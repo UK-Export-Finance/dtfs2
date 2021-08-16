@@ -56,6 +56,19 @@ const MockCoverTermsResponse = () => {
   return res;
 };
 
+const MockEligibilityCriteriaResponse = () => {
+  return {
+    terms: [
+      {
+        id: 'coverStart',
+        htmlText: '<p>Some eligibility criteria</p>',
+        errMsg: '12. Select some eligibilty',
+      },
+    ],
+  };
+};
+
+
 const MockFacilityResponse = () => {
   const res = {};
   res.status = 'IN_PROGRESS';
@@ -75,12 +88,17 @@ describe('GET Application Details', () => {
     const mockExporterResponse = new MockExporterResponse();
     const mockCoverTermsResponse = new MockCoverTermsResponse();
     const mockFacilityResponse = new MockFacilityResponse();
+    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
 
-    mockFacilityResponse.items = [{ details: { type: 'CASH' }, validation: { required: [] } }];
+    mockFacilityResponse.items = [{
+      details: { type: 'CASH' },
+      validation: { required: [] }
+    }];
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
     api.getFacilities = () => Promise.resolve(mockFacilityResponse);
+    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render)
       .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
@@ -109,7 +127,8 @@ describe('GET Application Details', () => {
 
     api.getApplication = () => Promise.reject(error);
     await applicationDetails(mockRequest, mockResponse, mockNext);
-    expect(mockNext).toHaveBeenCalledWith(error);
+    expect(mockNext)
+      .toHaveBeenCalledWith(error);
   });
 });
 
@@ -120,6 +139,7 @@ describe('POST Application Details', () => {
   it('redirects to submission url', async () => {
     postApplicationDetails(mockRequest, mockResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/submit');
+    expect(mockResponse.redirect)
+      .toHaveBeenCalledWith('/gef/application-details/123/submit');
   });
 });
