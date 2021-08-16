@@ -138,7 +138,11 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
 
   const issuedFacilitiesList = `${issuedBondsList}\n${issuedLoansList}`;
-  const unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
+
+  let unissuedFacilitiesList;
+  if (unissuedBondsList.length || unissuedLoansList.length) {
+    unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
+  }
 
   const emailVariables = {
     firstname,
@@ -149,9 +153,9 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',
     issuedFacilitiesList,
-    showIssuedHeader: issuedFacilitiesList ? 'yes' : 'no',
+    showIssuedHeader: (issuedFacilitiesList && issuedFacilitiesList.length) ? 'yes' : 'no',
     unissuedFacilitiesList,
-    showUnissuedHeader: unissuedFacilitiesList ? 'yes' : 'no',
+    showUnissuedHeader: (unissuedFacilitiesList && unissuedFacilitiesList.length) ? 'yes' : 'no',
   };
 
   const emailResponse = await sendTfmEmail(
