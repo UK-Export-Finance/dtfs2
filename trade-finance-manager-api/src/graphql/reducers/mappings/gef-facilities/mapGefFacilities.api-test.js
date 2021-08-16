@@ -1,28 +1,29 @@
 const mapGefFacilities = require('./mapGefFacilities');
 const mapGefFacility = require('./mapGefFacility');
-
-const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacilities', () => {
   it('should return mapped GEF facilities', () => {
     const mockDealSnapshot = {
       facilities: [
         {
-          facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+          facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
           tfm: {},
         },
         {
-          facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+          facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
           tfm: {},
         },
       ],
     };
 
-    const result = mapGefFacilities(mockDealSnapshot);
+    const mockDealTfm = {};
+
+    const result = mapGefFacilities(mockDealSnapshot, mockDealTfm);
 
     const expected = [
-      mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot),
-      mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot),
+      mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot, mockDealTfm),
+      mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot, mockDealTfm),
     ];
 
     expect(result).toEqual(expected);

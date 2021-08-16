@@ -7,20 +7,25 @@ const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
+const mapFacilityTfm = require('../facilities/mapFacilityTfm');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacility', () => {
   it('should return mapped GEF facility', () => {
     const mockFacility = {
-      _id: MOCK_GEF_DEAL.facilities[0]._id,
-      facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+      _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,
+      facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
       tfm: {},
     };
+
+    const mockDealTfm = {};
 
     const result = mapGefFacility(
       mockFacility,
       MOCK_GEF_DEAL,
+      mockDealTfm,
     );
 
     const formattedFacilityValue = formattedNumber(mockFacility.facilitySnapshot.value);
@@ -36,7 +41,7 @@ describe('mapGefFacility', () => {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       facilitySnapshot: {
         _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
-        associatedDealId: facilitySnapshot.associatedDealId,
+        associatedDealId: facilitySnapshot.applicationId,
         bankFacilityReference: facilitySnapshot.name,
         banksInterestMargin: `${facilitySnapshot.interestPercentage}%`,
         coveredPercentage: `${facilitySnapshot.coverPercentage}%`,
@@ -48,10 +53,10 @@ describe('mapGefFacility', () => {
         facilityValue: mapFacilityValue(facilitySnapshot.currency, formattedFacilityValue, mockFacility.tfm),
         feeType: mapGefFacilityFeeType(facilitySnapshot.paymentType),
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
-        ukefFacilityID: 'UKEF-ID-TODO',
-        ukefGuaranteeInMonths: facilitySnapshot.monthsOfCover,
+        ukefFacilityID: facilitySnapshot.ukefFacilityId,
+        ukefExposure: `${facilitySnapshot.currency} ${facilitySnapshot.ukefExposure}`,
       },
-      tfm: mockFacility.tfm,
+      tfm: mapFacilityTfm(mockFacility.tfm, mockDealTfm),
     };
 
     expect(result).toEqual(expected);

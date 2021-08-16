@@ -8,13 +8,13 @@ const newDeal = {
   status: 'Draft',
 };
 
-describe('/v1/portal/gef/deal/:id', () => {
+describe('/v1/portal/gef/deals/:id', () => {
   beforeAll(async () => {
     await wipeDB.wipe(['gef-application']);
     await wipeDB.wipe(['gef-facilities']);
   });
 
-  describe('GET /v1/portal/gef/deal/:id', () => {
+  describe('GET /v1/portal/gef/deals/:id', () => {
     it('returns 404 when the deal is not found', async () => {
       const invalidDealId = '123456789f0ffe00219319c1';
 

@@ -521,22 +521,6 @@ const findOneGefDeal = async (dealId) => {
       },
     });
 
-    return response.data.deal;
-  } catch ({ response }) {
-    return false;
-  }
-};
-
-const findGefFacilities = async (dealId) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
     return response.data;
   } catch ({ response }) {
     return false;
@@ -573,5 +557,4 @@ module.exports = {
   createEstoreFolders,
   sendEmail,
   findOneGefDeal,
-  findGefFacilities,
 };

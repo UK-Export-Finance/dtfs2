@@ -5,10 +5,11 @@ const mapTenorDate = require('../facilities/mapTenorDate');
 const { convertDateToTimestamp } = require('../../../../utils/date');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacilityDates', () => {
   const mockFacility = {
-    ...MOCK_GEF_DEAL.facilities[0],
+    ...MOCK_CASH_CONTINGENT_FACILIIES[0],
     facilityStage: 'Issued',
   };
 
@@ -32,10 +33,10 @@ describe('mapGefFacilityDates', () => {
     expect(result.inclusionNoticeReceived).toEqual(mockMinDeal.manualInclusionNoticeSubmissionDate);
   });
 
-  it('should return bankIssueNoticeReceived as issuedFacilitySubmittedToUkefTimestamp', () => {
+  it('should return bankIssueNoticeReceived as submittedAsIssuedDate', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
-    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.issuedFacilitySubmittedToUkefTimestamp);
+    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.submittedAsIssuedDate);
   });
 
   it('should return coverStartDate as timestamp', () => {

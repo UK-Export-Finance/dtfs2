@@ -10,6 +10,18 @@ const mapProductGroup = (facilityType) => {
     return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
   }
 
+  if (facilityType === CONSTANTS.EXPOSURE_PERIOD.FACILITY_TYPE.CASH) {
+    // TODO: DTFS2-4633 - use correct product group.
+    // TEMP whilst we don't know what product group to use for GEF.
+    return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
+  }
+
+  if (facilityType === CONSTANTS.EXPOSURE_PERIOD.FACILITY_TYPE.CONTINGENT) {
+    // TODO: DTFS2-4633 - use correct product group.
+    // TEMP whilst we don't know what product group to use for GEF.
+    return CONSTANTS.EXPOSURE_PERIOD.PRODUCT_GROUP.LOAN;
+  }
+
   return null;
 };
 
