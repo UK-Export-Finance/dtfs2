@@ -1,3 +1,5 @@
+const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
+
 const MOCK_GEF_DEAL = {
   _id: 'MOCK_GEF_DEAL',
   dealType: 'GEF',
@@ -57,35 +59,6 @@ const MOCK_GEF_DEAL = {
   updatedAt: null,
   userId: '60e705d74cf03e0013d38395',
   checkerId: '60a705d74bf03d1300d96383',
-  facilities: [
-    {
-      _id: '123456',
-      associatedDealId: 'MOCK_GEF_DEAL',
-      coverEndDate: '2023-12-31T00:00:00.000Z',
-      coverPercentage: 80,
-      coverStartDate: 1626169888809,
-      createdAt: 1625828781317,
-      currency: 'GBP',
-      details: [
-        'TERM',
-        'RESOLVING',
-      ],
-      detailsOther: '',
-      hasBeenIssued: true,
-      interestPercentage: 2,
-      monthsOfCover: 4,
-      name: 'Sample Cash Facility',
-      paymentType: null,
-      shouldCoverStartOnSubmission: true,
-      type: 'CASH',
-      updatedAt: 1625828824412,
-      value: 500000,
-      issuedFacilitySubmittedToUkefTimestamp: 1626169888809,
-    },
-  ],
-  facilityIds: [
-    '123456',
-  ],
   comments: [
     {
       createdAt: 1625482095783,
@@ -93,6 +66,7 @@ const MOCK_GEF_DEAL = {
       comment: 'Sample comment',
     },
   ],
+  facilities: MOCK_CASH_CONTINGENT_FACILITIES,
 };
 
 module.exports = MOCK_GEF_DEAL;

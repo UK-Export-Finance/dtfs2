@@ -110,7 +110,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       const { status, body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
@@ -263,7 +263,7 @@ describe('/v1/portal/facilities', () => {
         user: mockUser,
       };
 
-      const deleteResponse = await api.remove({ user: mockUser }).to(`/v1/portal/facilities/${facilityId}`);
+      const deleteResponse = await api.remove(removeBondBody).to(`/v1/portal/facilities/${facilityId}`);
       expect(deleteResponse.status).toEqual(200);
 
       // check the deal's facilities array

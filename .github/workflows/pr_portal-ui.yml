@@ -6,6 +6,7 @@ on:
     paths: 
     - 'portal/**'
     - 'e2e-tests/portal/cypress/**'
+    - 'utils/mock-data-loader/**'
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:

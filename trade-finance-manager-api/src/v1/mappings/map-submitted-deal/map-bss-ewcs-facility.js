@@ -39,7 +39,6 @@ const mapBssEwcsFacility = (facility) => {
     ukefGuaranteeInMonths,
     hasBeenAcknowledged,
     requestedCoverStartDate,
-    // TODO are these in gef facility?
     dayCountBasis,
     guaranteeFeePayableByBank,
     feeType,
@@ -52,8 +51,8 @@ const mapBssEwcsFacility = (facility) => {
     _id,
     ukefFacilityID,
     facilityType,
-    currency,
-    value: facilityValue,
+    currencyCode: currency.id,
+    value: Number(facilityValue.replace(/,/g, '')),
     coverPercentage: coveredPercentage,
     ukefExposure,
     coverStartDate: requestedCoverStartDate,

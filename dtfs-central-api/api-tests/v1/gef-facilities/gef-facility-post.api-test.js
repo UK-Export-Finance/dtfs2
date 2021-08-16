@@ -1,0 +1,60 @@
+const wipeDB = require('../../wipeDB');
+const app = require('../../../src/createApp');
+const api = require('../../api')(app);
+const CONSTANTS = require('../../../src/constants');
+
+const newDeal = {
+  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  status: 'Draft',
+};
+
+const newFacility = {
+  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+};
+
+const createDeal = async () => {
+  const { body } = await api.post(newDeal).to('/v1/portal/gef/deals');
+  return body;
+};
+
+describe('/v1/portal/gef/facilities', () => {
+  let dealId;
+
+  beforeAll(async () => {
+    await wipeDB.wipe(['gef-application']);
+    await wipeDB.wipe(['gef-facilities']);
+  });
+
+  beforeEach(async () => {
+    const deal = await createDeal();
+
+    dealId = deal._id;
+    newFacility.applicationId = dealId;
+  });
+
+  describe('POST /v1/portal/gef/facilities', () => {
+    it('returns 404 when the associated deal is not found', async () => {
+      const facilityWithInvalidDealId = {
+        ...newFacility,
+        applicationId: '123456789f0ffe00219319c1',
+      };
+
+      const { status } = await api.post(facilityWithInvalidDealId).to('/v1/portal/gef/facilities');
+
+      expect(status).toEqual(404);
+    });
+
+    it('returns the created facility', async () => {
+      const { body, status } = await api.post(newFacility).to('/v1/portal/gef/facilities');
+
+      expect(status).toEqual(200);
+
+      const expected = {
+        _id: expect.any(String),
+        ...newFacility,
+      };
+
+      expect(body).toEqual(expected);
+    });
+  });
+});

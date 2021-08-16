@@ -189,15 +189,18 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
 };
 
 
-const submitDeal = async (dealId) => {
+const submitDeal = async (dealType, dealId) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/submit`,
+      url: `${centralApiUrl}/v1/tfm/deals/submit`,
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {},
+      data: {
+        dealType,
+        dealId,
+      },
     });
 
     return response.data;
@@ -518,12 +521,11 @@ const findOneGefDeal = async (dealId) => {
       },
     });
 
-    return response.data.deal;
+    return response.data;
   } catch ({ response }) {
     return false;
   }
 };
-
 
 module.exports = {
   findOneDeal,

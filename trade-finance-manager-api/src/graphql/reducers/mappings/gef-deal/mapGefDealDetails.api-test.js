@@ -15,7 +15,7 @@ describe('mapGefDealDetails', () => {
     const result = mapGefDealDetails(mockDeal.dealSnapshot);
 
     const expected = {
-      ukefDealId: 'UKEF-ID-TODO',
+      ukefDealId: mockDeal.dealSnapshot.ukefDealId,
       bankSupplyContractID: mockDeal.dealSnapshot.bankInternalRefName,
       bankSupplyContractName: mockDeal.dealSnapshot.additionalRefName,
     };

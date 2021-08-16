@@ -21,6 +21,11 @@ tfmRouter.use((req, res, next) => {
   next();
 });
 
+tfmRouter.route('/deals/submit')
+  .put(
+    tfmSubmitDealController.submitDealPut,
+  );
+
 tfmRouter.route('/deals/:id')
   .get(
     tfmGetDealController.findOneDealGet,
@@ -30,11 +35,6 @@ tfmRouter.route('/deals/:id')
   )
   .delete(
     tfmDeleteDealController.deleteDeal,
-  );
-
-tfmRouter.route('/deals/:id/submit')
-  .put(
-    tfmSubmitDealController.submitDealPut,
   );
 
 tfmRouter.route('/deals/:id/snapshot')
