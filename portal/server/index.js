@@ -5,7 +5,6 @@ import redis from 'redis';
 
 import flash from 'connect-flash';
 import path from 'path';
-import crypto from 'crypto';
 import json2csv from 'express-json2csv';
 import './azure-env';
 
@@ -21,47 +20,52 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-// Fail-safe fallback to a 256-bit random value:
-const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
+if (!process.env.SESSION_SECRET) {
+  console.error('Portal UI server - SESSION_SECRET missing');
+}
+
+if (!process.env.REDIS_HOSTNAME) {
+  console.error('Portal UI server - REDIS_HOSTNAME missing');
+}
+
+if (!process.env.REDIS_KEY) {
+  console.error('Portal UI server - REDIS_KEY missing');
+}
 
 const sessionOptions = {
-  secret: SESSION_SECRET,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 };
 
-if (process.env.REDIS_HOSTNAME) {
-  console.log(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
+console.log(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
 
-  let redisOptions = {};
+let redisOptions = {};
 
-  if (process.env.REDIS_KEY) {
-    redisOptions = {
-      auth_pass: process.env.REDIS_KEY,
-      tls: { servername: process.env.REDIS_HOSTNAME },
-    };
-  }
-
-  const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
-
-  redisClient.on('error', (err) => {
-    console.log(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
-  });
-
-  redisClient.on('ready', () => {
-    console.log('REDIS ready');
-  });
-
-  redisClient.on('connect', () => {
-    console.log('REDIS connected');
-  });
-
-  const sessionStore = new RedisStore({ client: redisClient });
-
-  sessionOptions.store = sessionStore;
-} else {
-  console.log('No REDIS configured, using default MemoryStore');
+if (process.env.REDIS_KEY) {
+  redisOptions = {
+    auth_pass: process.env.REDIS_KEY,
+    tls: { servername: process.env.REDIS_HOSTNAME },
+  };
 }
+
+const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+
+redisClient.on('error', (err) => {
+  console.log(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+});
+
+redisClient.on('ready', () => {
+  console.log('REDIS ready');
+});
+
+redisClient.on('connect', () => {
+  console.log('REDIS connected');
+});
+
+const sessionStore = new RedisStore({ client: redisClient });
+
+sessionOptions.store = sessionStore;
 
 app.use(session(sessionOptions));
 
