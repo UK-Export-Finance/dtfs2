@@ -12,8 +12,8 @@ describe(component, () => {
       wrapper = render(params);
     });
 
-    it('should render `Passed` text', () => {
-      wrapper.expectText('[data-cy="eligibility-criteria-answer-tag"]').toRead('Passed');
+    it('should render `TRUE` text', () => {
+      wrapper.expectText('[data-cy="eligibility-criteria-answer-tag"]').toRead('true');
     });
 
     it('should render green colour class', () => {
@@ -22,14 +22,13 @@ describe(component, () => {
   });
 
   describe('when params.answer is `false`', () => {
-
     beforeEach(() => {
       const params = { answer: 'false' };
       wrapper = render(params);
     });
 
-    it('should render `Failed` text', () => {
-      wrapper.expectText('[data-cy="eligibility-criteria-answer-tag"]').toRead('Failed');
+    it('should render `FALSE` text', () => {
+      wrapper.expectText('[data-cy="eligibility-criteria-answer-tag"]').toRead('false');
     });
 
     it('should render red colour class', () => {
