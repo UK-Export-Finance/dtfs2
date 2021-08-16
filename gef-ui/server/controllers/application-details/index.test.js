@@ -56,17 +56,15 @@ const MockCoverTermsResponse = () => {
   return res;
 };
 
-const MockEligibilityCriteriaResponse = () => {
-  return {
-    terms: [
-      {
-        id: 'coverStart',
-        htmlText: '<p>Some eligibility criteria</p>',
-        errMsg: '12. Select some eligibilty',
-      },
-    ],
-  };
-};
+const MockEligibilityCriteriaResponse = () => ({
+  terms: [
+    {
+      id: 'coverStart',
+      htmlText: '<p>Some eligibility criteria</p>',
+      errMsg: '12. Select some eligibilty',
+    },
+  ],
+});
 
 
 const MockFacilityResponse = () => {
@@ -92,7 +90,7 @@ describe('GET Application Details', () => {
 
     mockFacilityResponse.items = [{
       details: { type: 'CASH' },
-      validation: { required: [] }
+      validation: { required: [] },
     }];
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
