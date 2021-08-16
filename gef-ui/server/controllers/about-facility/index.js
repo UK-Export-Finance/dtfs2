@@ -50,28 +50,45 @@ const validateAboutFacility = async (req, res) => {
   const coverStartDateDay = body['cover-start-date-day'];
   const coverStartDateMonth = body['cover-start-date-month'];
   const coverStartDateYear = body['cover-start-date-year'];
+  const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
+  const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete
+    && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
+  const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateDay = body['cover-end-date-day'];
   const coverEndDateMonth = body['cover-end-date-month'];
   const coverEndDateYear = body['cover-end-date-year'];
+  const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
+  const coverEndDateIsPartiallyComplete = !coverEndDateIsFullyComplete
+    && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
+  const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
+
   let coverStartDate = null;
   let coverEndDate = null;
 
-  if (!saveAndReturn) {
-    if (isTrueSet(body.hasBeenIssued)) {
+  if (isTrueSet(body.hasBeenIssued)) {
     // Only validate facility name if hasBeenIssued is set to Yes
-      if (!body.facilityName) {
-        aboutFacilityErrors.push({
-          errRef: 'facilityName',
-          errMsg: `Enter a name for this ${facilityTypeString} facility`,
-        });
-      }
-      if (!body.shouldCoverStartOnSubmission) {
-        aboutFacilityErrors.push({
-          errRef: 'shouldCoverStartOnSubmission',
-          errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
-        });
-      }
-      if (body.shouldCoverStartOnSubmission === 'false' && (!coverStartDateDay || !coverStartDateMonth || !coverStartDateYear)) {
+    if (!saveAndReturn && !body.facilityName) {
+      aboutFacilityErrors.push({
+        errRef: 'facilityName',
+        errMsg: `Enter a name for this ${facilityTypeString} facility`,
+      });
+    }
+    if (!body.shouldCoverStartOnSubmission && !saveAndReturn) {
+      aboutFacilityErrors.push({
+        errRef: 'shouldCoverStartOnSubmission',
+        errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
+      });
+    }
+
+    if (body.shouldCoverStartOnSubmission === 'false') {
+      if (coverStartDateIsBlank) {
+        if (!saveAndReturn) {
+          aboutFacilityErrors.push({
+            errRef: 'coverStartDate',
+            errMsg: 'Enter a cover start date',
+          });
+        }
+      } else if (coverStartDateIsPartiallyComplete) {
         let msg = 'Cover start date must include a ';
         const dateFieldsInError = [];
         if (!coverStartDateDay) {
@@ -86,18 +103,13 @@ const validateAboutFacility = async (req, res) => {
           msg += !coverStartDateDay || !coverStartDateMonth ? 'and year' : 'year';
           dateFieldsInError.push('coverStartDate-year');
         }
-        if (!coverStartDateDay && !coverStartDateMonth && !coverStartDateYear) {
-          msg = 'Enter a cover start date';
-        }
 
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
           errMsg: msg,
           subFieldErrorRefs: dateFieldsInError,
         });
-      }
-
-      if (body.shouldCoverStartOnSubmission === 'false' && coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
+      } else if (coverStartDateIsFullyComplete) {
         const now = new Date();
         const threeMonthsFromNow = add(now, { months: 3 });
         const startDate = set(new Date(),
@@ -117,29 +129,52 @@ const validateAboutFacility = async (req, res) => {
           });
         }
       }
+    }
 
-      if (!coverEndDateDay || !coverEndDateMonth || !coverEndDateYear) {
+    if (coverEndDateIsBlank) {
+      if (!saveAndReturn) {
         aboutFacilityErrors.push({
           errRef: 'coverEndDate',
           errMsg: 'Enter a cover end date',
         });
       }
-    }
-    // Only validate months of cover if hasBeenIssued is set to No
-    if (!isTrueSet(body.hasBeenIssued) && !body.monthsOfCover) {
+    } else if (coverEndDateIsPartiallyComplete) {
+      let msg = 'Cover end date must include a ';
+      const dateFieldsInError = [];
+      if (!coverEndDateDay) {
+        msg += 'day ';
+        dateFieldsInError.push('coverEndDate-day');
+      }
+      if (!coverEndDateMonth) {
+        msg += !coverEndDateDay ? ' and month ' : 'month ';
+        dateFieldsInError.push('coverEndDate-month');
+      }
+      if (!coverEndDateYear) {
+        msg += !coverEndDateDay || !coverEndDateMonth ? 'and year' : 'year';
+        dateFieldsInError.push('coverEndDate-year');
+      }
+
       aboutFacilityErrors.push({
-        errRef: 'monthsOfCover',
-        errMsg: 'Enter the number of months you\'ll need UKEF cover for',
+        errRef: 'coverEndDate',
+        errMsg: msg,
+        subFieldErrorRefs: dateFieldsInError,
       });
     }
   }
+  // Only validate months of cover if hasBeenIssued is set to No
+  if (!saveAndReturn && !isTrueSet(body.hasBeenIssued) && !body.monthsOfCover) {
+    aboutFacilityErrors.push({
+      errRef: 'monthsOfCover',
+      errMsg: 'Enter the number of months you\'ll need UKEF cover for',
+    });
+  }
 
-  if (coverStartDateDay && coverStartDateMonth && coverStartDateYear) {
+  if (coverStartDateIsFullyComplete) {
     coverStartDate = set(new Date(),
       { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
   }
 
-  if (coverEndDateDay && coverEndDateMonth && coverEndDateYear) {
+  if (coverEndDateIsFullyComplete) {
     coverEndDate = set(new Date(),
       { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
   }
