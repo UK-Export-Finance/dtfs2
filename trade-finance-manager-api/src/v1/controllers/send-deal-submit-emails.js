@@ -153,9 +153,9 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',
     issuedFacilitiesList,
-    showIssuedHeader: (issuedFacilitiesList && issuedFacilitiesList.length) ? 'yes' : 'no',
+    showIssuedHeader: issuedFacilitiesList ? 'yes' : 'no',
     unissuedFacilitiesList,
-    showUnissuedHeader: (unissuedFacilitiesList && unissuedFacilitiesList.length) ? 'yes' : 'no',
+    showUnissuedHeader: unissuedFacilitiesList ? 'yes' : 'no',
   };
 
   const emailResponse = await sendTfmEmail(
