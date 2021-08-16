@@ -55,6 +55,7 @@ context('Application Details Page', () => {
       applicationDetails.automaticCoverStatus().contains('Not started');
       applicationDetails.automaticCoverDetailsLink();
       applicationDetails.automaticCoverSummaryList().should('not.exist');
+      applicationDetails.automaticCoverSummaryList().should('not.exist');
     });
 
     it('displays the correct facility elements', () => {
@@ -115,6 +116,7 @@ context('Application Details Page', () => {
       applicationDetails.automaticCoverHeading();
       applicationDetails.automaticCoverStatus().contains('In progress');
       applicationDetails.automaticCoverDetailsLink();
+      applicationDetails.automaticCoverCriteria().should('not.exist');
       applicationDetails.automaticCoverSummaryList().should('not.exist');
     });
 
@@ -145,8 +147,17 @@ context('Application Details Page', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
       applicationDetails.automaticCoverHeading();
       applicationDetails.automaticCoverStatus().contains('Complete');
+      applicationDetails.automaticCoverCriteria();
       applicationDetails.automaticCoverDetailsLink().should('not.exist');
       applicationDetails.automaticCoverSummaryList();
+      applicationDetails.eligibilityCriterionTwelve();
+      applicationDetails.eligibilityCriterionThirteen();
+      applicationDetails.eligibilityCriterionFourteen();
+      applicationDetails.eligibilityCriterionFifteen();
+      applicationDetails.eligibilityCriterionSixteen();
+      applicationDetails.eligibilityCriterionSeventeen();
+      applicationDetails.eligibilityCriterionEighteen();
+      applicationDetails.eligibilityCriterionNineteen();
     });
 
     it('displays the correct submit elements', () => {
