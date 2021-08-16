@@ -45,6 +45,9 @@ const mapBssEwcsFacility = (facility) => {
     premiumType,
     feeFrequency,
     premiumFrequency,
+    bankReferenceNumber,
+    uniqueIdentificationNumber,
+    bondType,
   } = facility;
 
   return {
@@ -67,6 +70,9 @@ const mapBssEwcsFacility = (facility) => {
     premiumFrequency,
     feeType,
     premiumType,
+    bankReferenceNumber,
+    uniqueIdentificationNumber,
+    bondType,
     tfm: facility.tfm,
   };
 };
