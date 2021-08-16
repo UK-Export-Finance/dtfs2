@@ -23,14 +23,6 @@ if (!process.env.SESSION_SECRET) {
   console.error('GEF UI server - SESSION_SECRET missing');
 }
 
-if (!process.env.REDIS_HOSTNAME) {
-  console.error('GEF UI server - REDIS_HOSTNAME missing');
-}
-
-if (!process.env.REDIS_KEY) {
-  console.error('GEF UI server - REDIS_KEY missing');
-}
-
 const sessionOptions = {
   secret: process.env.SESSION_SECRET,
   resave: false,
