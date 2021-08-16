@@ -2,6 +2,7 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('..api/../../api')(app);
 const aDeal = require('../../deal-builder');
+const CONSTANTS = require('../../../../src/constants');
 
 const mockUser = {
   _id: '123456789',
@@ -19,6 +20,7 @@ const newFacility = {
 };
 
 const newDeal = aDeal({
+  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
@@ -55,7 +57,10 @@ describe('/v1/tfm/facilities', () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/facilities/${newId}`);
 

@@ -16,7 +16,14 @@ const updateFacilityController = require('../controllers/portal/facility/update-
 const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
 const updateFacilityStatusController = require('../controllers/portal/facility/update-facility-status.controller');
 
-const getGefDealController = require('../controllers/portal/gef-deal/get-deal.controller');
+const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
+const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
+
+const createGefExporterController = require('../controllers/portal/gef-exporter/create-gef-exporter.controller');
+const getGefExporterController = require('../controllers/portal/gef-exporter/get-gef-exporter.controller');
+
+const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
+const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
@@ -88,9 +95,34 @@ portalRouter.route('/facilities/:id/status')
     updateFacilityStatusController.updateFacilityStatusPut,
   );
 
+portalRouter.route('/gef/deals')
+  .post(
+    createGefDealController.createDealPost,
+  );
+
 portalRouter.route('/gef/deals/:id')
   .get(
     getGefDealController.findOneDealGet,
+  );
+
+portalRouter.route('/gef/exporter')
+  .post(
+    createGefExporterController.createExporterPost,
+  );
+
+portalRouter.route('/gef/exporter/:id')
+  .get(
+    getGefExporterController.findOneExporterGet,
+  );
+
+portalRouter.route('/gef/deals/:id/facilities')
+  .get(
+    getGefFacilitiesController.findAllGet,
+  );
+
+portalRouter.route('/gef/facilities')
+  .post(
+    createGefFacilityController.createFacilityPost,
   );
 
 module.exports = portalRouter;

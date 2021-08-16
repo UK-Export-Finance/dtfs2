@@ -2,7 +2,7 @@
 
 const {
   FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, CURRENCY, PAYMENT_TYPE,
-} = require('../../../../portal-api/src/v1/gef/enums');
+} = require('../../../portal-api/src/v1/gef/enums');
 
 const FACILITIES = [[],
   [{

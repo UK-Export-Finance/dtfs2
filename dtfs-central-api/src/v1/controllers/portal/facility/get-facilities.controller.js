@@ -23,11 +23,5 @@ exports.findAllFacilitiesByDealId = findAllFacilitiesByDealId;
 exports.findAllGet = async (req, res) => {
   const facilities = await findAll();
 
-  // if (facilities) {
-  return res.status(200).send([
-    ...facilities,
-  ]);
-  // }
-
-  // return res.status(200).send([]);
+  return res.status(200).send(facilities);
 };

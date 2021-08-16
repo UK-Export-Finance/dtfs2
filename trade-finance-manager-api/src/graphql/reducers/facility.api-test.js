@@ -5,6 +5,7 @@ const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('reducer - facility', () => {
   it('should return mapped object', () => {
@@ -44,8 +45,8 @@ describe('reducer - facility', () => {
       };
 
       const mockGefFacility = {
-        _id: MOCK_GEF_DEAL.facilities[0]._id,
-        facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+        _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,
+        facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
         tfm: {
           facilityValueInGBP: '12,345.00',
         },
@@ -56,6 +57,7 @@ describe('reducer - facility', () => {
       const expected = mapGefFacility(
         mockGefFacility,
         MOCK_GEF_DEAL,
+        mockGefDeal.tfm,
       );
 
       expect(result).toEqual(expected);

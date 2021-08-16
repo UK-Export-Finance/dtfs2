@@ -90,7 +90,6 @@ openRouter.route('/premium-schedule')
     premiumSchedule.getPremiumSchedule,
   );
 
-
 openRouter.route('/companies-house/:companyRegNo')
   .get(
     companiesHouse.lookup,

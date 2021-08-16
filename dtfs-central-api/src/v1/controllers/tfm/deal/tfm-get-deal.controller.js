@@ -9,7 +9,7 @@ const findOneDeal = async (_id, callback) => {
   let returnDeal = deal;
 
   if (deal) {
-    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === 'GEF') {
+    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
       returnDeal = {
         ...deal,
         dealSnapshot: deal.dealSnapshot,

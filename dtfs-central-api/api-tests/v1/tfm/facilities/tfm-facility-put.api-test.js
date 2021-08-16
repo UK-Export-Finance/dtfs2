@@ -2,6 +2,7 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const aDeal = require('../../deal-builder');
+const CONSTANTS = require('../../../../src/constants');
 
 const mockUser = {
   _id: '123456789',
@@ -19,6 +20,7 @@ const newFacility = {
 };
 
 const newDeal = aDeal({
+  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
@@ -31,7 +33,7 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
 
@@ -58,7 +60,10 @@ describe('/v1/tfm/facilities', () => {
 
     it('returns 404 when adding facility to non-existant deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId: '1',
+      }).to('/v1/tfm/deals/submit');
 
       const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/111111}');
 
@@ -75,7 +80,10 @@ describe('/v1/tfm/facilities', () => {
         },
       };
 
-      await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
 
       const { body, status } = await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
 

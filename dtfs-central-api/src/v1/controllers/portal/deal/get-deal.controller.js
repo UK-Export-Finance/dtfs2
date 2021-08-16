@@ -1,5 +1,8 @@
+const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
+const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
+const { findOneExporter } = require('../gef-exporter/get-gef-exporter.controller');
 
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
@@ -30,8 +33,7 @@ const findOneDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id });
 
-
-  if (deal) {
+  if (deal && deal.facilities) {
     const facilityIds = deal.facilities;
 
     if (facilityIds && facilityIds.length > 0) {
@@ -84,6 +86,28 @@ const findOneDeal = async (_id, callback) => {
   return deal;
 };
 exports.findOneDeal = findOneDeal;
+
+const findOneGefDeal = async (_id, callback) => {
+  const dealsCollection = await db.getCollection('gef-application');
+
+  const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
+
+  if (deal) {
+    deal.facilities = await findAllGefFacilitiesByDealId(_id);
+    const exporter = await findOneExporter(deal.exporterId);
+
+    if (exporter) {
+      deal.exporter = exporter;
+    }
+  }
+
+  if (callback) {
+    callback(deal);
+  }
+
+  return deal;
+};
+exports.findOneGefDeal = findOneGefDeal;
 
 exports.findOneDealGet = async (req, res) => {
   const deal = await findOneDeal(req.params.id);

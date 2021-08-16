@@ -5,7 +5,7 @@ const postToAPI = async (apiEndpoint, apiData) => {
     return false;
   }
 
-  console.log('Calling eStore API: ', `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`);
+  console.log(`Calling eStore API (/${apiEndpoint}) with:\n`, apiData);
 
   const response = await axios({
     method: 'post',
@@ -19,14 +19,10 @@ const postToAPI = async (apiEndpoint, apiData) => {
     },
     data: [apiData],
   }).catch((catchErr) => {
-    console.error('Error calling eStore API',
-      {
-        url: `${process.env.MULESOFT_API_UKEF_ESTORE_EA_URL}/${apiEndpoint}`,
-        data: [apiData],
-        response: catchErr.response,
-      });
+    console.error(`Error calling eStore API (/${apiEndpoint}): ${catchErr.response.status} \n`, catchErr.response.data);
     return catchErr.response;
   });
+
   return response;
 };
 

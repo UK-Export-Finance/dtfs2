@@ -8,7 +8,7 @@ exports.lookup = async (req, res) => {
 
   const response = await axios({
     method: 'get',
-    url: `${ordnanceSurveyBaseUrl}/places/v1/addresses/postcode?postcode=${postcode}&key=${ordnanceSurveyApiKey}`,
+    url: `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${postcode}&key=${ordnanceSurveyApiKey}`,
   }).catch((catchErr) => catchErr.response);
 
   const { status, data } = response;
