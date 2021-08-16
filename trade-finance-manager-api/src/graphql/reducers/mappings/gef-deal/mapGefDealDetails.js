@@ -2,15 +2,9 @@ const mapGefDealDetails = (dealSnapshot) => ({
   ukefDealId: dealSnapshot.ukefDealId,
   bankSupplyContractID: dealSnapshot.bankInternalRefName,
   bankSupplyContractName: dealSnapshot.additionalRefName,
-  // submissionType
+  submissionType: dealSnapshot.submissionType,
   // owningBank: {
   //   name
-  // }
-  // submissionDate
-  // maker: {
-  //   firstname
-  //   surname
-  //   email
   // }
 });
 
