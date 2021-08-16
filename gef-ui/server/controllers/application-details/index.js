@@ -43,6 +43,7 @@ function buildBody(app, previewMode) {
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
   return {
+    application: app,
     isAutomaticCover: app.coverTerms.isAutomaticCover,
     exporter: {
       status: app.exporterStatus,
