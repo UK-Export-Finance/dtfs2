@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../../constants');
+const CONSTANTS = require('../../constants');
 
 const isGefFacility = (facilityType) =>
   facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH

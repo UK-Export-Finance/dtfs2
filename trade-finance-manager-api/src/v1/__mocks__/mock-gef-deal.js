@@ -1,3 +1,5 @@
+const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
+
 const MOCK_GEF_DEAL = {
   _id: 'MOCK_GEF_DEAL',
   dealType: 'GEF',
@@ -64,6 +66,7 @@ const MOCK_GEF_DEAL = {
       comment: 'Sample comment',
     },
   ],
+  facilities: MOCK_CASH_CONTINGENT_FACILITIES,
 };
 
 module.exports = MOCK_GEF_DEAL;

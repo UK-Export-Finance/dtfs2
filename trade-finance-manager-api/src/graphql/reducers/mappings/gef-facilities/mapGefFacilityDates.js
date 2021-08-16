@@ -7,7 +7,7 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
   const {
     coverStartDate,
     coverEndDate,
-    issuedFacilitySubmittedToUkefTimestamp,
+    submittedAsIssuedDate,
     monthsOfCover: ukefGuaranteeInMonths,
     facilityStage,
   } = facilitySnapsot;
@@ -18,7 +18,7 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
 
   return {
     inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
-    bankIssueNoticeReceived: issuedFacilitySubmittedToUkefTimestamp,
+    bankIssueNoticeReceived: submittedAsIssuedDate,
     coverStartDate: convertDateToTimestamp(coverStartDate),
     coverEndDate: mapCoverEndDate(
       moment(coverEndDate).format('DD'),
