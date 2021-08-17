@@ -19,6 +19,9 @@ describe('mapGefDealDetails', () => {
       bankSupplyContractID: mockDeal.dealSnapshot.bankInternalRefName,
       bankSupplyContractName: mockDeal.dealSnapshot.additionalRefName,
       submissionType: mockDeal.dealSnapshot.submissionType,
+      owningBank: {
+        name: mockDeal.dealSnapshot.bank.name,
+      },
     };
 
     expect(result).toEqual(expected);

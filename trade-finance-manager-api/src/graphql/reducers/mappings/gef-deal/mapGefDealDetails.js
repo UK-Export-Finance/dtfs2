@@ -3,9 +3,9 @@ const mapGefDealDetails = (dealSnapshot) => ({
   bankSupplyContractID: dealSnapshot.bankInternalRefName,
   bankSupplyContractName: dealSnapshot.additionalRefName,
   submissionType: dealSnapshot.submissionType,
-  // owningBank: {
-  //   name
-  // }
+  owningBank: {
+    name: dealSnapshot.bank.name,
+  },
 });
 
 module.exports = mapGefDealDetails;
