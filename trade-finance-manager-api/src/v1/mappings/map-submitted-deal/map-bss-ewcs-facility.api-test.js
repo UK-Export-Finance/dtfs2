@@ -53,6 +53,9 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         premiumType,
         feeFrequency,
         premiumFrequency,
+        bankReferenceNumber,
+        uniqueIdentificationNumber,
+        bondType,
       } = mockFacility;
 
       const expected = {
@@ -74,6 +77,9 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         premiumFrequency,
         feeType,
         premiumType,
+        bankReferenceNumber,
+        uniqueIdentificationNumber,
+        bondType,
         tfm: mockFacility.tfm,
       };
 

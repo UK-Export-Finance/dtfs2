@@ -138,7 +138,11 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
 
   const issuedFacilitiesList = `${issuedBondsList}\n${issuedLoansList}`;
-  const unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
+
+  let unissuedFacilitiesList;
+  if (unissuedBondsList.length || unissuedLoansList.length) {
+    unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
+  }
 
   const emailVariables = {
     firstname,
