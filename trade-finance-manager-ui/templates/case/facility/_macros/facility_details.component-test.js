@@ -16,7 +16,7 @@ describe(component, () => {
       facilityType: 'Performance Bond',
       facilityStage: 'Commitment',
       facilityProduct: {
-        name: 'Bond Support Scheme',
+        displayName: 'Bond Support Scheme',
       },
       coverEndDate: '1 Feb 2021',
       coveredPercentage: '10%',

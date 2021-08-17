@@ -7,6 +7,7 @@ const mapFacilityProduct = (facilityType) => {
     mapped = {
       code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND,
       name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.BOND,
+      displayName: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.BOND,
     };
   }
 
@@ -14,20 +15,25 @@ const mapFacilityProduct = (facilityType) => {
     mapped = {
       code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
       name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN,
+      displayName: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN,
     };
   }
 
   if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
     mapped = {
-      code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
+      // no official code so we use our own facilityType definition.
+      code: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
       name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH,
+      displayName: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
     };
   }
 
   if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
     mapped = {
-      code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
+      // no official code so we use our own facilityType definition.
+      code: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
       name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT,
+      displayName: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
     };
   }
 
