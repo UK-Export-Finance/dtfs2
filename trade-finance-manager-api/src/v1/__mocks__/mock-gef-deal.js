@@ -6,6 +6,7 @@ const MOCK_GEF_DEAL = {
   additionalRefName: 'Additional Reference 001',
   bankInternalRefName: 'Internal Reference 001',
   submissionDate: '1626169888809',
+  submissionCount: 1,
   coverTerms: {
     coverStart: 'true',
     dueDiligence: 'true',
@@ -55,7 +56,7 @@ const MOCK_GEF_DEAL = {
     updatedAt: 162582748022,
   },
   mandatoryVersionId: null,
-  status: 'IN_PROGRESS',
+  status: 'SUBMITTED_TO_UKEF',
   updatedAt: null,
   userId: '60e705d74cf03e0013d38395',
   checkerId: '60a705d74bf03d1300d96383',

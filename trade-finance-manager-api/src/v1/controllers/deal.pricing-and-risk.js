@@ -18,6 +18,7 @@ const addDealPricingAndRisk = async (deal) => {
   // but, don't know what the data could change to post-MVP so just use strings for MVP requirement.
   let dealUpdate = {
     tfm: {
+      ...tfm,
       lossGivenDefault: DEFAULTS.LOSS_GIVEN_DEFAULT,
       probabilityOfDefault: DEFAULTS.PROBABILITY_OF_DEFAULT,
     },
