@@ -82,6 +82,7 @@ const submitDeal = async (dealId, dealType, checker) => {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
+
       await sendDealSubmitEmails(updatedDealWithTasks);
 
       return updatedDeal;
