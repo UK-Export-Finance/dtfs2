@@ -52,7 +52,7 @@ describe(component, () => {
 
   describe('overview section', () => {
     it('should render facilityProduct', () => {
-      wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.name);
+      wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.displayName);
     });
 
     it('should render facilityType', () => {
