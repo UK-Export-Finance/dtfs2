@@ -1,5 +1,6 @@
 const mapFacilityType = require('./mapFacilityType');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
+const CONSTANTS = require('../../../../constants');
 
 describe('mapFacilityType', () => {
   describe('when facilityProduct.code is bond', () => {
@@ -33,35 +34,34 @@ describe('mapFacilityType', () => {
   });
 
 
-  describe('when facility is CASH', () => {
+  describe(`when facility is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CASH}`, () => {
     it('should return `Cash facility`', () => {
       const mockCashFacility = {
-        facilityType: 'CASH',
         facilityProduct: {
-          code: 'GEF',
-          name: 'Cash',
+          code: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
         },
       };
 
       const result = mapFacilityType(mockCashFacility);
 
-      expect(result).toEqual('Cash facility');
+      const expected = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
+      expect(result).toEqual(expected);
     });
   });
 
-  describe('when facility is CONTINGENT', () => {
+  describe(`when facility is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT}`, () => {
     it('should return `Contingent facility`', () => {
       const mockContingentFacility = {
-        facilityType: 'CONTINGENT',
         facilityProduct: {
-          code: 'GEF',
-          name: 'Contingent',
+          code: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
         },
       };
 
       const result = mapFacilityType(mockContingentFacility);
 
-      expect(result).toEqual('Contingent facility');
+      const expected = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
+
+      expect(result).toEqual(expected);
     });
   });
 

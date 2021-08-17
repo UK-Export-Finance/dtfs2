@@ -12,11 +12,11 @@ const mapFacilityType = (facility) => {
     return capitalizeFirstLetter(CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
   }
 
-  if (facilityProduct.name === CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH) {
+  if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
     return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
   }
 
-  if (facilityProduct.name === CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT) {
+  if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
     return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 
