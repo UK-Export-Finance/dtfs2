@@ -126,11 +126,37 @@ GEF is hosted on the same URL as Portal v2. To access GEF:
 After merging to master, dev environment will be updated.
 
 To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
-
 This will take the latest code in the development environment and deploy to test.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
 
+### Deploying to demo
+To deploy to the demo environment, run the `update-demo.sh` script in `.github/workflows` directory.
+This will take the latest code in the development environment and deploy to demo.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-demo-fd.azurefd.net/healthcheck
+
+### Deploying to staging
+To deploy to the staging environment, run the `update-staging.sh` script in `.github/workflows` directory.
+This will take the latest code in the test environment and deploy to staging.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-staging-fd.azurefd.net/healthcheck
+
+### Deploying to prod
+To deploy to the demo environment, run the `update-prod.sh` script in `.github/workflows` directory.
+This will take the latest code in the staging environment and deploy to prod.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
+
+### Updating the  database
+Should the database need to be refreshed with the latest mock data then this can be done by:
+1. SSH into the relevant VM. (Dev-VM for dev & demo, Test-VM for test & staging), Prod-VM for prod).
+The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Compute%2FVirtualMachines
+*Your public SSH key must first be added to the VM by someone with access.*
+2. `cd dtfs2 && git pull` to get the latest codebase
+3. `cd utils/mock-data-loader`
+4. Enure the .env file is pointing to the environment you want to update
+5. `node re-insert-mocks.js` *warning: this will delete the current data - DO NOT USE IN PROD*
 
 ### Git workflow
 
