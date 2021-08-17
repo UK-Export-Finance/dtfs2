@@ -32,7 +32,7 @@ export const abandonApplication = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-  return res.redirect('/dashboard');
+  return res.redirect('/dashboard/gef');
 };
 
 export default {
