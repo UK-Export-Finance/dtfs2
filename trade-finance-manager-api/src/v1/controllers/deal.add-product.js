@@ -1,27 +1,33 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 
-const mapDealProduct = (facilities) => {
-  if (!facilities) {
-    return null;
+const mapDealProduct = (deal) => {
+  const { dealType } = deal;
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    return CONSTANTS.DEALS.DEAL_TYPE.GEF;
   }
 
-  const bonds = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
-  const loans = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const { facilities } = deal;
 
-  const hasBonds = bonds.length > 0;
-  const hasLoans = loans.length > 0;
+    const bonds = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+    const loans = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-  if (hasBonds && hasLoans) {
-    return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND} & ${CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN}`;
-  }
+    const hasBonds = bonds.length > 0;
+    const hasLoans = loans.length > 0;
 
-  if (hasBonds) {
-    return CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
-  }
+    if (hasBonds && hasLoans) {
+      return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND} & ${CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN}`;
+    }
 
-  if (hasLoans) {
-    return CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
+    if (hasBonds) {
+      return CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
+    }
+
+    if (hasLoans) {
+      return CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
+    }
   }
 
   return null;
@@ -36,7 +42,7 @@ const addDealProduct = async (deal) => {
   const dealUpdate = {
     tfm: {
       ...tfm,
-      product: mapDealProduct(deal.facilities),
+      product: mapDealProduct(deal),
     },
   };
 
