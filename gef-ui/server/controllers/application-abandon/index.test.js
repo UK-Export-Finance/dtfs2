@@ -100,6 +100,27 @@ describe('GET application abandon', () => {
       }));
   });
 
+  it('redirects to the application details page if application is not abondonable', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockApplicationResponse = new MockApplicationResponse();
+    mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+    const mockExporterResponse = new MockExporterResponse();
+    const mockCoverTermsResponse = new MockCoverTermsResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
+    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
+    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
+    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
+    await confirmAbandonApplication(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect)
+      .toHaveBeenCalledWith('/gef/application-details/123');
+  });
+
   it('returns next(err) if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -117,6 +138,17 @@ describe('POST abandonApplication', () => {
   const mockRequest = new MockRequest();
 
   it('redirects to dashboard url if update is successful', async () => {
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockCoverTermsResponse = new MockCoverTermsResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
+    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
+    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
+    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
     api.setApplicationStatus = () => Promise.resolve({});
 
     await abandonApplication(mockRequest, mockResponse);
@@ -124,8 +156,19 @@ describe('POST abandonApplication', () => {
   });
 
   it('returns next(err) if update is unsuccessful', async () => {
+    const mockApplicationResponse = new MockApplicationResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockCoverTermsResponse = new MockCoverTermsResponse();
+    const mockFacilityResponse = new MockFacilityResponse();
+    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
     const mockNext = jest.fn();
     const err = new Error();
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
+    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
+    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
     api.setApplicationStatus = () => Promise.reject(err);
 
     await abandonApplication(mockRequest, mockResponse, mockNext);

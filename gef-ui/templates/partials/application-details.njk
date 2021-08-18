@@ -27,7 +27,7 @@
     {% include "includes/application-preview/summary.njk" %}
     {% include "includes/application-preview/task-comments.njk" %}
   {% else %}
-    <div class="govuk-width-container">
+    <div class="govuk-width-container" data-cy="application-banner">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
           <p class="govuk-body"><strong>Bank's reference</strong></p>
@@ -36,14 +36,16 @@
           <p class="govuk-body" data-cy="bank-ref-name">{{ bankInternalRefName }}</b></p>
         </div>
         <div class="govuk-grid-column-one-half" style="text-align: right;">
-          {{ govukButton({
-            text: "Abandon",
-            attributes: {
-              "data-cy": "abandon-link"
-            },
-            classes: "govuk-button--secondary",
-            href: "/gef/application-details/"+applicationId+"/abandon"
-          }) }}
+          {%if abandon %}
+            {{ govukButton({
+              text: "Abandon",
+              attributes: {
+                "data-cy": "abandon-link"
+              },
+              classes: "govuk-button--secondary",
+              href: "/gef/application-details/"+applicationId+"/abandon"
+            }) }}
+          {% endif %}
         </div>
       </div>
     </div>
