@@ -8,7 +8,7 @@ describe('mapFacilityType', () => {
       const mockBondFacility = {
         bondType: 'Bid bond',
         facilityProduct: {
-          code: 'BSS',
+          code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND,
         },
       };
 
@@ -23,7 +23,7 @@ describe('mapFacilityType', () => {
         bondType: null,
         facilityType: 'loan',
         facilityProduct: {
-          code: 'EWCS',
+          code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
         },
       };
 
@@ -38,8 +38,9 @@ describe('mapFacilityType', () => {
     it('should return `Cash facility`', () => {
       const mockCashFacility = {
         facilityProduct: {
-          code: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+          code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
         },
+        ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
       };
 
       const result = mapFacilityType(mockCashFacility);
@@ -53,8 +54,9 @@ describe('mapFacilityType', () => {
     it('should return `Contingent facility`', () => {
       const mockContingentFacility = {
         facilityProduct: {
-          code: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+          code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
         },
+        ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
       };
 
       const result = mapFacilityType(mockContingentFacility);

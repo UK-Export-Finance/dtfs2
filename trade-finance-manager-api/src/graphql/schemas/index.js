@@ -120,7 +120,6 @@ type DealEligibility {
 type FacilityProduct {
   code: String
   name: String
-  displayName: String
 }
 
 type FacilityDates {

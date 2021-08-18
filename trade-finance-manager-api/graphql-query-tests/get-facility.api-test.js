@@ -37,8 +37,7 @@ const GET_FACILITY = gql`
         associatedDealId,
         facilityProduct {
           code,
-          name,
-          displayName
+          name
         },
         facilityType,
         ukefFacilityType,
