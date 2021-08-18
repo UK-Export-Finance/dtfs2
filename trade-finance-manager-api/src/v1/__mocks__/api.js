@@ -56,6 +56,7 @@ module.exports = {
 
     let tfmHistory = { tasks: [], emails: [] };
     let tfmStage;
+    let tfmProduct;
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.history) {
       tfmHistory = {
@@ -66,6 +67,10 @@ module.exports = {
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.stage) {
       tfmStage = mockDeal.tfm.stage;
+    }
+
+    if (mockDeal && mockDeal.tfm && mockDeal.tfm.product) {
+      tfmProduct = mockDeal.tfm.product;
     }
 
     const deal = {
@@ -84,6 +89,7 @@ module.exports = {
         bondBeneficiaryPartyUrn: '',
         history: tfmHistory,
         stage: tfmStage,
+        product: tfmProduct,
       },
     };
 
@@ -107,6 +113,11 @@ module.exports = {
   },
   findOnePortalDeal: (dealId) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    return deal ? Promise.resolve(deal) : Promise.reject();
+  },
+  findOneGefDeal: (dealId) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   updatePortalDeal: (dealId, update) => {
@@ -173,6 +184,7 @@ module.exports = {
             history: updatedTfmDealData.tfm.history,
           },
         };
+
         ALL_MOCK_DEALS[dealIndex] = deal;
       }
     }

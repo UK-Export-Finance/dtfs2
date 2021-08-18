@@ -36,7 +36,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
-  dealType: 'BSS/EWCS',
+  dealType: mockDeal.dealType,
 });
 
 describe('/v1/deals', () => {
@@ -136,7 +136,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    it('should add product (facility products)', async () => {
+    it('should generate BSS product (based on facility products)', async () => {
       const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
       expect(status).toEqual(200);
@@ -146,7 +146,22 @@ describe('/v1/deals', () => {
         ...MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items,
       ];
 
-      const expected = mapDealProduct(facilities);
+      const mockDeal = {
+        ...MOCK_DEAL_AIN_SUBMITTED,
+        facilities,
+      };
+
+      const expected = mapDealProduct(mockDeal);
+
+      expect(body.tfm.product).toEqual(expected);
+    });
+
+    it('should generate GEF product (based on dealType)', async () => {
+      const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+
+      expect(status).toEqual(200);
+
+      const expected = mapDealProduct(MOCK_GEF_DEAL);
 
       expect(body.tfm.product).toEqual(expected);
     });

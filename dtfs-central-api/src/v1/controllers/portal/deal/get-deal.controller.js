@@ -3,6 +3,7 @@ const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { findOneExporter } = require('../gef-exporter/get-gef-exporter.controller');
+const { findOneBank } = require('../../bank/get-bank.controller');
 
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
@@ -95,9 +96,14 @@ const findOneGefDeal = async (_id, callback) => {
   if (deal) {
     deal.facilities = await findAllGefFacilitiesByDealId(_id);
     const exporter = await findOneExporter(deal.exporterId);
+    const bank = await findOneBank(deal.bankId);
 
     if (exporter) {
       deal.exporter = exporter;
+    }
+
+    if (bank) {
+      deal.bank = bank;
     }
   }
 
