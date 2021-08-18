@@ -14,7 +14,7 @@ describe(page, () => {
       },
     },
     tfm: {
-      probabilityOfDefault: '25',
+      probabilityOfDefault: 25,
     },
   };
 

@@ -26,7 +26,7 @@ describe('GET underwriting - probability of default', () => {
         },
       },
       tfm: {
-        probabilityOfDefault: '25',
+        probabilityOfDefault: 25,
       },
     };
 
@@ -190,7 +190,7 @@ describe('POST underwriting - probability of default', () => {
       });
     });
 
-    describe('with non numeric probability of default', () => {
+    describe('when non numeric probability of default is submitted', () => {
       it('should return template with validation errors', async () => {
         const req = {
           params: {
