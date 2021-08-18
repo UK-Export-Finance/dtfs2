@@ -20,6 +20,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -186,8 +187,8 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('lossGivenDefault and probabilityOfDefault', () => {
-      it('should be added to AIN deals', async () => {
+    describe('lossGivenDefault and probabilityOfDefault (BSS deal)', () => {
+      it('should add defaults to AIN deals', async () => {
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
@@ -195,20 +196,30 @@ describe('/v1/deals', () => {
         expect(body.tfm.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
       });
 
-      it('should be added to MIA deals', async () => {
+      it('should add defaults to MIA deals', async () => {
         const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
         expect(body.tfm.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
       });
+    });
 
-      it('should be added to MIN deals', async () => {
-        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
+    describe('lossGivenDefault and probabilityOfDefault (GEF deal)', () => {
+      it('should default lossGivenDefault and use probabilityOfDefault from deal for AIN deals', async () => {
+        const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
-        expect(body.tfm.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
+        expect(body.tfm.probabilityOfDefault).toEqual(MOCK_GEF_DEAL.exporter.probabilityOfDefault);
+      });
+
+      it('should default lossGivenDefault and use probabilityOfDefault from deal for MIA deals', async () => {
+        const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL_MIA)).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+        expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
+        expect(body.tfm.probabilityOfDefault).toEqual(MOCK_GEF_DEAL.exporter.probabilityOfDefault);
       });
     });
 
