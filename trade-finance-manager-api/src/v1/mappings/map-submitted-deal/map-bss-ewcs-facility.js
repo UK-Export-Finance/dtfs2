@@ -45,13 +45,16 @@ const mapBssEwcsFacility = (facility) => {
     premiumType,
     feeFrequency,
     premiumFrequency,
+    bankReferenceNumber,
+    uniqueIdentificationNumber,
+    bondType,
   } = facility;
 
   return {
     _id,
     ukefFacilityID,
     facilityType,
-    currencyCode: currency.id,
+    currencyCode: currency && currency.id,
     value: Number(facilityValue.replace(/,/g, '')),
     coverPercentage: coveredPercentage,
     ukefExposure,
@@ -67,6 +70,9 @@ const mapBssEwcsFacility = (facility) => {
     premiumFrequency,
     feeType,
     premiumType,
+    bankReferenceNumber,
+    uniqueIdentificationNumber,
+    bondType,
     tfm: facility.tfm,
   };
 };
