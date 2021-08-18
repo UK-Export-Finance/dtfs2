@@ -261,7 +261,7 @@ type TFMDealData {
   supplyContractValueInGBP: String
   stage: String
   lossGivenDefault: String
-  probabilityOfDefault: Int
+  probabilityOfDefault: String
   history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
