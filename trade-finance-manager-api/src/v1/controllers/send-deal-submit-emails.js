@@ -139,7 +139,7 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
 
   const issuedFacilitiesList = `${issuedBondsList}\n${issuedLoansList}`;
 
-  let unissuedFacilitiesList;
+  let unissuedFacilitiesList = '';
   if (unissuedBondsList.length || unissuedLoansList.length) {
     unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
   }
