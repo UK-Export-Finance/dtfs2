@@ -35,6 +35,8 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
 
   facilitySnapshot.facilityStage = mapFacilityStage(hasBeenIssued);
 
+  facilitySnapshot.ukefFacilityType = facilityType;
+
   const result = {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     facilitySnapshot: {

@@ -16,7 +16,7 @@ describe(component, () => {
       facilityType: 'Performance Bond',
       facilityStage: 'Commitment',
       facilityProduct: {
-        displayName: 'Bond Support Scheme',
+        name: 'Bond Support Scheme',
       },
       coverEndDate: '1 Feb 2021',
       coveredPercentage: '10%',
@@ -52,7 +52,7 @@ describe(component, () => {
 
   describe('overview section', () => {
     it('should render facilityProduct', () => {
-      wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.displayName);
+      wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.name);
     });
 
     it('should render facilityType', () => {

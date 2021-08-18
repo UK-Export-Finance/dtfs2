@@ -13,7 +13,7 @@ const facilityQuery = gql`
         ukefFacilityID,
         associatedDealId,
         facilityProduct {
-          displayName
+          name
         },
         facilityType,
         facilityStage,
