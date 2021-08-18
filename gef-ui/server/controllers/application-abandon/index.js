@@ -16,20 +16,19 @@ export const confirmAbandonApplication = async (req, res, next) => {
   } = req;
   const { applicationId } = params;
   const { user, userToken } = session;
-
+  let application;
   try {
-    const application = await Application.findById(applicationId, user, userToken);
+    application = await Application.findById(applicationId, user, userToken);
     if (!application) {
       return res.redirect(dashboardUrl);
     }
     if (!applicationIsAbandonable(application)) {
       return res.redirect(`/gef/application-details/${applicationId}`);
     }
-
-    res.render('application-abandon.njk', { application });
   } catch (err) {
     return next(err);
   }
+  return res.render('application-abandon.njk', { application });
 };
 
 export const abandonApplication = async (req, res, next) => {
