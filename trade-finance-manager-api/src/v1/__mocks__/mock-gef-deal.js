@@ -55,6 +55,14 @@ const MOCK_GEF_DEAL = {
     smeType: 'MEDIUM',
     updatedAt: 162582748022,
   },
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+    emails: [
+      'maker1@ukexportfinance.gov.uk',
+      'checker1@ukexportfinance.gov.uk',
+    ],
+  },
   mandatoryVersionId: null,
   status: 'SUBMITTED_TO_UKEF',
   updatedAt: null,
