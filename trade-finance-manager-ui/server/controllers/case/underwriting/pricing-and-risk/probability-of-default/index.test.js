@@ -86,18 +86,45 @@ describe('POST underwriting - probability of default', () => {
         },
       },
       tfm: {
-        probabilityOfDefault: '25',
+        probabilityOfDefault: 25,
       },
       mock: true,
     };
 
+    const apiUpdateSpy = jest.fn(() => Promise.resolve({
+      updateProbabilityOfDefault: {
+        probabilityOfDefault: 45,
+      },
+    }));
+
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
-      api.updateProbabilityOfDefault = () => Promise.resolve({
-        updateProbabilityOfDefault: {
-          probabilityOfDefault: '45',
+      api.updateProbabilityOfDefault = apiUpdateSpy;
+    });
+
+    it('should call api.updateProbabilityOfDefault with probabilityOfDefault as a number', async () => {
+      const submittedProbabilityOfDefault = '45';
+
+      const req = {
+        params: {
+          _id: mockDeal._id,
         },
-      });
+        session,
+        body: {
+          probabilityOfDefault: submittedProbabilityOfDefault,
+        },
+      };
+
+      await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+      const expectedUpdateObj = {
+        probabilityOfDefault: Number(submittedProbabilityOfDefault),
+      };
+
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        mockDeal._id,
+        expectedUpdateObj,
+      );
     });
 
     it('should redirect to /pricing-and-risk', async () => {
