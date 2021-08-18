@@ -22,31 +22,20 @@ Prerequisites
  * GovUK and MOJ design systems
  * Nunjucks (UI templates)
 
-### Secrets
+### Environment Variables
 
-Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set environment variables when running the build:
+As we interface with a number of 3rd party APIs, there are a range of environment variables required to manage this and to work with the repo locally.
 
- * `set_azure_api_keys.sh`
- * `set_companies_house_api_key.sh`
- * `set_gov_notify_api_key.sh`
- * `set_mulesoft_api_key.sh`
- * `set_session_secrets.sh`
+`.env.sample` files show the environment variables required, many will need details from the team. These need to be shared privately when a new engineer starts on the codebase.
 
-These scripts are not and should not be stored in the repo. All of these scripts need to be shared privately when a new engineer starts on the codebase.
+All variables are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
 
-The list of variables can be seen in the environment build workflows under [`.github/workflows`](.github/workflows)
-
-### Updating secrets
-
-All secrets are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
-
-To update secrets in the environments - i.e dev, test etc:
+These variables are stored as secrets in the repo. To update secrets in the environments - i.e dev, test etc:
 
 * Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
 * Run this script `/secrets/github/set_secrets.js`
 
 This will update all github secrets.
-
 
 ### Steps
 
