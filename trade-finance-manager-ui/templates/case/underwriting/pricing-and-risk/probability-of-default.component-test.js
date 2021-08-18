@@ -30,7 +30,7 @@ describe(page, () => {
     });
 
     it('should render probability of default input', () => {
-      wrapper.expectInput('[data-cy="input-probability-of-default"]').toHaveValue(params.tfm.probabilityOfDefault);
+      wrapper.expectInput('[data-cy="input-probability-of-default"]').toHaveValue(String(params.tfm.probabilityOfDefault));
     });
 
     it('should render save & close buttons', () => {
