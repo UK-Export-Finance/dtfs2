@@ -37,14 +37,14 @@ export default class Application {
       application.canSubmit = application.exporterStatus.code === PROGRESS.COMPLETED
         && application.coverStatus.code === PROGRESS.COMPLETED
         && application.facilitiesStatus.code === PROGRESS.COMPLETED
-        && ['Draft', 'CHANGES_REQUIRED'].includes(application.status)
+        && [PROGRESS.DRAFT, PROGRESS.CHANGES_REQUIRED].includes(application.status)
         && user.roles.includes('maker');
 
       application.checkerCanSubmit = ['BANK_CHECK'].includes(application.status)
         && user._id !== application.userId // The checker is not the maker
         && user.roles.includes('checker');
 
-      if (!['Draft'].includes(application.status)) {
+      if (![PROGRESS.DRAFT].includes(application.status)) {
         application.maker = await getUserDetails(application.userId, userToken);
       }
       if (application.checkerId) {
