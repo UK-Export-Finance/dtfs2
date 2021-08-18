@@ -59,10 +59,11 @@ context('Name Application Page', () => {
     });
   });
 
-  describe('Clicking on Cancel', () => {
-    it('keeps the user on the same page FOR NOW', () => {
+  describe('Clicking on Abandon', () => {
+    it('takes the user back to the dashboard', () => {
+      cy.on('uncaught:exception', () => false);
       nameApplication.cancelButton().click();
-      cy.url().should('eq', relative('/gef/name-application'));
+      cy.url().should('eq', relative('/dashboard/gef/0'));
     });
   });
 });
