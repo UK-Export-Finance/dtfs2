@@ -21,6 +21,7 @@ const FACILITY_PRODUCT_NAME = {
   LOAN: 'Export Working Capital Scheme',
   CASH: 'Cash',
   CONTINGENT: 'Contingent',
+  GEF: 'General export facility',
 };
 
 const FACILITY_FEE_TYPE_PORTAL = {
