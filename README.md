@@ -148,9 +148,10 @@ This will take the latest code in the staging environment and deploy to prod.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
 
-### Updating the  database
+### Updating the database
 Should the database need to be refreshed with the latest mock data then this can be done by:
-1. SSH into the relevant VM. (Dev-VM for dev & demo, Test-VM for test & staging), Prod-VM for prod).
+1. SSH into the relevant VM (Dev-VM for dev & demo, Test-VM for test & staging, Prod-VM for prod):
+`ssh azureuser@xx.xx.xx.xx`, where xx.xx.xx.xx is the IP Address for VM.
 The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Compute%2FVirtualMachines
 *Your public SSH key must first be added to the VM by someone with access.*
 2. `cd dtfs2 && git pull` to get the latest codebase
