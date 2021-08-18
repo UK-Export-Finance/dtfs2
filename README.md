@@ -22,31 +22,20 @@ Prerequisites
  * GovUK and MOJ design systems
  * Nunjucks (UI templates)
 
-### Secrets
+### Environment Variables
 
-Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set environment variables when running the build:
+As we interface with a number of 3rd party APIs, there are a range of environment variables required to manage this and to work with the repo locally.
 
- * `set_azure_api_keys.sh`
- * `set_companies_house_api_key.sh`
- * `set_gov_notify_api_key.sh`
- * `set_mulesoft_api_key.sh`
- * `set_session_secrets.sh`
+`.env.sample` files show the environment variables required, many will need details from the team. These need to be shared privately when a new engineer starts on the codebase.
 
-These scripts are not and should not be stored in the repo. All of these scripts need to be shared privately when a new engineer starts on the codebase.
+All variables are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
 
-The list of variables can be seen in the environment build workflows under [`.github/workflows`](.github/workflows)
-
-### Updating secrets
-
-All secrets are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
-
-To update secrets in the environments - i.e dev, test etc:
+These variables are stored as secrets in the repo. To update secrets in the environments - i.e dev, test etc:
 
 * Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
 * Run this script `/secrets/github/set_secrets.js`
 
 This will update all github secrets.
-
 
 ### Steps
 
@@ -126,11 +115,38 @@ GEF is hosted on the same URL as Portal v2. To access GEF:
 After merging to master, dev environment will be updated.
 
 To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
-
 This will take the latest code in the development environment and deploy to test.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
 
+### Deploying to demo
+To deploy to the demo environment, run the `update-demo.sh` script in `.github/workflows` directory.
+This will take the latest code in the development environment and deploy to demo.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-demo-fd.azurefd.net/healthcheck
+
+### Deploying to staging
+To deploy to the staging environment, run the `update-staging.sh` script in `.github/workflows` directory.
+This will take the latest code in the test environment and deploy to staging.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-staging-fd.azurefd.net/healthcheck
+
+### Deploying to prod
+To deploy to the demo environment, run the `update-prod.sh` script in `.github/workflows` directory.
+This will take the latest code in the staging environment and deploy to prod.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
+
+### Updating the database
+Should the database need to be refreshed with the latest mock data then this can be done by:
+1. SSH into the relevant VM (Dev-VM for dev & demo, Test-VM for test & staging, Prod-VM for prod):
+`ssh azureuser@xx.xx.xx.xx`, where xx.xx.xx.xx is the IP Address for VM.
+The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Compute%2FVirtualMachines
+*Your public SSH key must first be added to the VM by someone with access.*
+2. `cd dtfs2 && git pull` to get the latest codebase
+3. `cd utils/mock-data-loader`
+4. Enure the .env file is pointing to the environment you want to update
+5. `node re-insert-mocks.js` *warning: this will delete the current data - DO NOT USE IN PROD*
 
 ### Git workflow
 

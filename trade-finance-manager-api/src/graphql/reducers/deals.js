@@ -42,7 +42,7 @@ const mapGefDeal = (deal) => {
       details: mapGefDealDetails(deal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(deal.dealSnapshot),
     },
-    tfm: {},
+    tfm: mapDealTfm(deal),
   };
 
   return mapped;
