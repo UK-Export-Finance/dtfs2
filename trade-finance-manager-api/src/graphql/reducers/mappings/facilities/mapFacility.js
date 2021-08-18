@@ -23,7 +23,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     currency,
   } = facility;
 
-  const ukefFacilityType = facilityType;
+  facility.ukefFacilityType = facilityType;
 
   facility.facilityProduct = mapFacilityProduct(facilityType);
 
@@ -40,7 +40,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
     // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
     facilityType: facility.facilityType,
-    ukefFacilityType,
+    ukefFacilityType: facility.ukefFacilityType,
     facilityProduct: facility.facilityProduct,
     facilityStage: facility.facilityStage,
     coveredPercentage: `${facility.coveredPercentage}%`,
