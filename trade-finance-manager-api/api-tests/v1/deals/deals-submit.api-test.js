@@ -178,7 +178,7 @@ describe('/v1/deals', () => {
 
       describe('when deal is NOT AIN', () => {
         it('should NOT add exporterCreditRating to the deal', async () => {
-          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
 
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toBeUndefined();
@@ -189,7 +189,7 @@ describe('/v1/deals', () => {
     describe('exporterCreditRating (GEF deal)', () => {
       describe('when deal is AIN', () => {
         it('should add exporterCreditRating to the deal', async () => {
-          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toEqual(DEFAULTS.CREDIT_RATING.AIN);
@@ -198,7 +198,7 @@ describe('/v1/deals', () => {
 
       describe('when deal is NOT AIN', () => {
         it('should NOT add exporterCreditRating to the deal', async () => {
-          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL_MIA)).to('/v1/deals/submit');
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toBeUndefined();

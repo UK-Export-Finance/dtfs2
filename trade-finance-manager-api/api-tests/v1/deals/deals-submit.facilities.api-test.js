@@ -173,7 +173,7 @@ describe('/v1/deals', () => {
 
       describe('riskProfile (BSS/EWCS facilities)', () => {
         it('defaults all facilities riskProfile to `Flat`', async () => {
-          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
 
           expect(status).toEqual(200);
 
@@ -190,7 +190,7 @@ describe('/v1/deals', () => {
 
       describe('riskProfile (Cash/Contingent facilities)', () => {
         it('defaults all facilities riskProfile to `Flat`', async () => {
-          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
           expect(status).toEqual(200);
 
