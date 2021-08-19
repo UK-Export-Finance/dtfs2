@@ -25,16 +25,16 @@ const addDealPricingAndRisk = async (deal) => {
     },
   };
 
+  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    dealUpdate.tfm.exporterCreditRating = DEFAULTS.CREDIT_RATING.AIN;
+  }
+
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     dealUpdate.tfm.probabilityOfDefault = exporter.probabilityOfDefault;
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealUpdate.tfm.probabilityOfDefault = DEFAULTS.PROBABILITY_OF_DEFAULT;
-
-    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-      dealUpdate.tfm.exporterCreditRating = DEFAULTS.CREDIT_RATING.AIN;
-    }
   }
 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);

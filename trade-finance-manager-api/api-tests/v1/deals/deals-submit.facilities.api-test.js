@@ -10,6 +10,7 @@ const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/moc
 const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
+const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
@@ -27,7 +28,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
-  dealType: 'BSS/EWCS',
+  dealType: mockDeal.dealType,
 });
 
 describe('/v1/deals', () => {
@@ -171,20 +172,38 @@ describe('/v1/deals', () => {
         });
       });
 
-      it('defaults all facilities riskProfile to `Flat`', async () => {
-        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
+      describe('riskProfile (BSS/EWCS facilities)', () => {
+        it('defaults all facilities riskProfile to `Flat`', async () => {
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
-        expect(status).toEqual(200);
+          expect(status).toEqual(200);
 
-        const bond = body.facilities.find(({ facilityType }) =>
-          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const bond = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-        const loan = body.facilities.find(({ facilityType }) =>
-          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const loan = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
+          expect(loan.tfm.riskProfile).toEqual('Flat');
+          expect(bond.tfm.riskProfile).toEqual('Flat');
+        });
+      });
 
-        expect(loan.tfm.riskProfile).toEqual('Flat');
-        expect(bond.tfm.riskProfile).toEqual('Flat');
+      describe('riskProfile (Cash/Contingent facilities)', () => {
+        it('defaults all facilities riskProfile to `Flat`', async () => {
+          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+
+          const cashFacility = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH);
+
+          const contingentFacility = body.facilities.find(({ facilityType }) =>
+            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
+
+          expect(cashFacility.tfm.riskProfile).toEqual('Flat');
+          expect(contingentFacility.tfm.riskProfile).toEqual('Flat');
+        });
       });
     });
   });
