@@ -7,6 +7,7 @@ const MOCK_GEF_DEAL = {
   bankInternalRefName: 'Internal Reference 001',
   submissionDate: '1626169888809',
   submissionCount: 1,
+  submissionType: 'Automatic Inclusion Notice',
   coverTerms: {
     coverStart: 'true',
     dueDiligence: 'true',
@@ -54,6 +55,11 @@ const MOCK_GEF_DEAL = {
     },
     smeType: 'MEDIUM',
     updatedAt: 162582748022,
+  },
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
   },
   bank: {
     id: '9',
