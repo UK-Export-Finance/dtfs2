@@ -1,4 +1,5 @@
 import api from '../../../api';
+import userCanEdit from './helpers';
 
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -8,7 +9,10 @@ const getCaseParties = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { user } = req.session;
+
   return res.render('case/parties/parties.njk', {
+    userCanEdit: userCanEdit(user),
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     activePrimaryNavigation: 'manage work',
@@ -20,6 +24,12 @@ const getCaseParties = async (req, res) => {
 
 const getPartyDetails = (partyType) => (
   async (req, res) => {
+    const { user } = req.session;
+
+    if (!userCanEdit(user)) {
+      return res.redirect('/not-found');
+    }
+
     const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
     const deal = await api.getDeal(dealId);
 
@@ -44,6 +54,12 @@ const getAgentPartyDetails = getPartyDetails('agent');
 const getIndemnifierPartyDetails = getPartyDetails('indemnifier');
 
 const getBondIssuerPartyDetails = async (req, res) => {
+  const { user } = req.session;
+
+  if (!userCanEdit(user)) {
+    return res.redirect('/not-found');
+  }
+
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
@@ -61,6 +77,12 @@ const getBondIssuerPartyDetails = async (req, res) => {
 
 
 const getBondBeneficiaryPartyDetails = async (req, res) => {
+  const { user } = req.session;
+
+  if (!userCanEdit(user)) {
+    return res.redirect('/not-found');
+  }
+
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
@@ -78,6 +100,12 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
 
 const postPartyDetails = (partyType) => (
   async (req, res) => {
+    const { user } = req.session;
+
+    if (!userCanEdit(user)) {
+      return res.redirect('/not-found');
+    }
+
     const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
 
     const deal = await api.getDeal(dealId);
