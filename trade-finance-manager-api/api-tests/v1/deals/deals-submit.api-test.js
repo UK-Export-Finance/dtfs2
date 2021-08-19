@@ -21,6 +21,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -243,9 +244,9 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('TFM deal stage', () => {
+    describe('TFM deal stage (BSS)', () => {
       describe('when deal is AIN', () => {
-        describe('when portal deal status is `Submitted`', () => {
+        describe('when deal status is `Submitted`', () => {
           it('should add `Confirmed` tfm stage', async () => {
             const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
 
@@ -266,7 +267,7 @@ describe('/v1/deals', () => {
       });
 
       describe('when deal is MIA', () => {
-        describe('when portal deal status is `Submitted`', () => {
+        describe('when deal status is `Submitted`', () => {
           it('should add `Application` tfm stage', async () => {
             const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
 
@@ -288,6 +289,40 @@ describe('/v1/deals', () => {
       describe('when deal is MIN', () => {
         it('should NOT add tfm stage', async () => {
           const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.stage).toBeUndefined();
+        });
+      });
+    });
+
+    describe('TFM deal stage (GEF)', () => {
+      describe('when deal is AIN', () => {
+        describe('when deal status is `Submitted`', () => {
+          it('should add `Confirmed` tfm stage', async () => {
+            const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+
+            expect(status).toEqual(200);
+
+            expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
+          });
+        });
+      });
+
+      describe('when deal is MIA', () => {
+        describe('when deal status is `Submitted`', () => {
+          it('should add `Application` tfm stage', async () => {
+            const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL_MIA)).to('/v1/deals/submit');
+
+            expect(status).toEqual(200);
+            expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+          });
+        });
+      });
+
+      describe('when deal is MIN', () => {
+        it('should NOT add tfm stage', async () => {
+          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL_MIN)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.stage).toBeUndefined();

@@ -24,6 +24,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('./mock-premium-schedule-response
 
 const MOCK_GEF_DEAL = require('./mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('./mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_MIN = require('./mock-gef-deal-MIN');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 
 const ALL_MOCK_DEALS = [
@@ -44,6 +45,7 @@ const ALL_MOCK_DEALS = [
   MOCK_MIA_SECOND_SUBMIT,
   MOCK_GEF_DEAL,
   MOCK_GEF_DEAL_MIA,
+  MOCK_GEF_DEAL_MIN,
 ];
 
 const ALL_MOCK_FACILITIES = [
@@ -118,7 +120,12 @@ module.exports = {
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   findOneGefDeal: (dealId) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    const deal = {
+      _id: dealId,
+      dealSnapshot: mockDeal,
+    };
 
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
