@@ -167,7 +167,7 @@ describe('/v1/deals', () => {
       expect(body.tfm.product).toEqual(expected);
     });
 
-    describe('exporter credit rating', () => {
+    describe('exporterCreditRating (BSS deal)', () => {
       describe('when deal is AIN', () => {
         it('should add exporterCreditRating to the deal', async () => {
           const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
@@ -178,8 +178,28 @@ describe('/v1/deals', () => {
       });
 
       describe('when deal is NOT AIN', () => {
+        it('should NOT add exporterCreditRating to the deal', async () => {
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.exporterCreditRating).toBeUndefined();
+        });
+      });
+    });
+
+    describe('exporterCreditRating (GEF deal)', () => {
+      describe('when deal is AIN', () => {
         it('should add exporterCreditRating to the deal', async () => {
-          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIN)).to('/v1/deals/submit');
+          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+
+          expect(status).toEqual(200);
+          expect(body.tfm.exporterCreditRating).toEqual(DEFAULTS.CREDIT_RATING.AIN);
+        });
+      });
+
+      describe('when deal is NOT AIN', () => {
+        it('should NOT add exporterCreditRating to the deal', async () => {
+          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL_MIA)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
           expect(body.tfm.exporterCreditRating).toBeUndefined();
