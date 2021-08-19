@@ -23,6 +23,7 @@ const MOCK_TEAMS = require('./mock-teams');
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('./mock-premium-schedule-response');
 
 const MOCK_GEF_DEAL = require('./mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('./mock-gef-deal-MIA');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 
 const ALL_MOCK_DEALS = [
@@ -42,6 +43,7 @@ const ALL_MOCK_DEALS = [
   MOCK_MIA_SUBMITTED,
   MOCK_MIA_SECOND_SUBMIT,
   MOCK_GEF_DEAL,
+  MOCK_GEF_DEAL_MIA,
 ];
 
 const ALL_MOCK_FACILITIES = [
