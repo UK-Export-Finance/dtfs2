@@ -83,7 +83,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   }
 
   const update = {
-    probabilityOfDefault,
+    probabilityOfDefault: Number(probabilityOfDefault),
   };
 
   await api.updateProbabilityOfDefault(dealId, update);
