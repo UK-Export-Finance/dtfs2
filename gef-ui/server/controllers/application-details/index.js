@@ -10,7 +10,7 @@ import { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } from '../../../constants
 import Application from '../../models/application';
 
 function buildHeader(app) {
-  if (!['Draft'].includes(app.status)) {
+  if (!['DRAFT'].includes(app.status)) {
     const main = {
       ukefDealId: app.ukefDealId || '-',
       submissionDate: app.submissionDate || '-',
@@ -108,7 +108,7 @@ export const applicationDetails = async (req, res, next) => {
     // Behaviour depending on application state
     const stateToPartial = {
       CHANGES_REQUIRED: 'application-details',
-      Draft: 'application-details',
+      DRAFT: 'application-details',
       BANK_CHECK: 'application-preview',
       SUBMITTED_TO_UKEF: 'application-preview',
       ABANDONED: 'application-preview',
