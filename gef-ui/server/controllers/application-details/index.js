@@ -76,6 +76,10 @@ function buildBody(app, previewMode) {
 function buildActions(app) {
   return {
     submit: app.canSubmit,
+    abandon: [
+      PROGRESS.DRAFT,
+      PROGRESS.CHANGES_REQUIRED,
+      PROGRESS.BANK_CHECK].includes(app.status.toUpperCase()),
   };
 }
 
@@ -107,7 +111,7 @@ export const applicationDetails = async (req, res, next) => {
       DRAFT: 'application-details',
       BANK_CHECK: 'application-preview',
       SUBMITTED_TO_UKEF: 'application-preview',
-      ABANDONED: '',
+      ABANDONED: 'application-preview',
       UKEF_ACKNOWLEDGED: '',
       UKEF_IN_PROGRESS: '',
       UKEF_ACCEPTED_CONDITIONAL: '',

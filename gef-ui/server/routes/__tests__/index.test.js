@@ -5,6 +5,7 @@ import eligibleAutomaticCoverRoutes from '../eligible-automatic-cover';
 import ineligibleAutomaticCoverRoutes from '../ineligible-automatic-cover';
 import automaticCoverRoutes from '../automatic-cover';
 import applicationDetailsRoutes from '../application-details';
+import applicationAbandonRoutes from '../application-abandon';
 import applicationSubmissionRoutes from '../application-submission';
 import submitToUkefRoutes from '../submit-to-ukef';
 import companiesHouseRoutes from '../companies-house';
@@ -47,6 +48,7 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(ineligibleAutomaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(automaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(applicationDetailsRoutes);
+    expect(useSpy).toHaveBeenCalledWith(applicationAbandonRoutes);
     expect(useSpy).toHaveBeenCalledWith(applicationSubmissionRoutes);
     expect(useSpy).toHaveBeenCalledWith(submitToUkefRoutes);
     expect(useSpy).toHaveBeenCalledWith(companiesHouseRoutes);
