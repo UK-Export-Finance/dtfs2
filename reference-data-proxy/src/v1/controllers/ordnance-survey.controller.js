@@ -6,10 +6,20 @@ const ordnanceSurveyApiKey = process.env.ORDNANCE_SURVEY_API_KEY;
 exports.lookup = async (req, res) => {
   const { postcode } = req.params;
 
+  console.log('Calling Ordnance Survey API');
+
+  const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${postcode}&key=${ordnanceSurveyApiKey}`;
+
+  // TEMP for debugging
+  console.log('Calling Ordnance Survey API - URL \n', url);
+
   const response = await axios({
     method: 'get',
-    url: `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${postcode}&key=${ordnanceSurveyApiKey}`,
-  }).catch((catchErr) => catchErr.response);
+    url,
+  }).catch((catchErr) => {
+    console.log('Error calling Ordnance Survey API');
+    return catchErr.response;
+  });
 
   const { status, data } = response;
 
