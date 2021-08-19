@@ -227,8 +227,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
-          memory: 250M
+          cpus: '0.1'
+          memory: 150M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - WEBSITE_HOSTNAME=localhost:7072
