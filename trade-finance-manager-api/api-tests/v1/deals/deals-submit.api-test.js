@@ -208,7 +208,7 @@ describe('/v1/deals', () => {
 
     describe('lossGivenDefault and probabilityOfDefault (BSS deal)', () => {
       it('should add defaults to AIN deals', async () => {
-        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED)).to('/v1/deals/submit');
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -216,7 +216,7 @@ describe('/v1/deals', () => {
       });
 
       it('should add defaults to MIA deals', async () => {
-        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED)).to('/v1/deals/submit');
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -226,7 +226,7 @@ describe('/v1/deals', () => {
 
     describe('lossGivenDefault and probabilityOfDefault (GEF deal)', () => {
       it('should default lossGivenDefault and use probabilityOfDefault from deal for AIN deals', async () => {
-        const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -234,7 +234,7 @@ describe('/v1/deals', () => {
       });
 
       it('should default lossGivenDefault and use probabilityOfDefault from deal for MIA deals', async () => {
-        const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL_MIA)).to('/v1/deals/submit');
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
         expect(status).toEqual(200);
         expect(body.tfm.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
