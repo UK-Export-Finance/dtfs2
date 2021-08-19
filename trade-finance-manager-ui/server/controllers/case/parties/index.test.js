@@ -6,15 +6,20 @@ import userCanEdit from './helpers';
 
 const res = mockRes();
 
-const session = {
-  user: {
-    _id: '12345678',
-    username: 'testUser',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
-    teams: ['BUSINESS_SUPPORT'],
-  },
+const user = {
+  _id: '12345678',
+  username: 'testUser',
+  firstName: 'Joe',
+  lastName: 'Bloggs',
+  teams: ['BUSINESS_SUPPORT'],
 };
+
+const userNotAllowedToEdit = {
+  ...user,
+  teams: ['TEST'],
+};
+
+const session = { user };
 
 describe('controllers - case - parties', () => {
   describe('GET case parties', () => {
@@ -131,6 +136,22 @@ describe('controllers - case - parties', () => {
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
+        };
+
+        await partiesController.getExporterPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
   });
 
   describe('GET bond issuer edit', () => {
@@ -187,6 +208,22 @@ describe('controllers - case - parties', () => {
             _id: '1',
           },
           session,
+        };
+
+        await partiesController.getBondIssuerPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
         };
 
         await partiesController.getBondIssuerPartyDetails(req, res);
@@ -255,6 +292,22 @@ describe('controllers - case - parties', () => {
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
+        };
+
+        await partiesController.getBondBeneficiaryPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
   });
 
 
@@ -299,6 +352,22 @@ describe('controllers - case - parties', () => {
             _id: '1',
           },
           session,
+        };
+
+        await partiesController.postExporterPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
         };
 
         await partiesController.postExporterPartyDetails(req, res);
