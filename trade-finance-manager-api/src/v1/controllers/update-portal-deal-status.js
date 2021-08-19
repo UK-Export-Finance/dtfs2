@@ -13,7 +13,7 @@ const updatePortalDealStatus = async (deal) => {
 
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
-      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMISSION_ACKNOWLEDGED;
+      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMISSION_ACKNOWLEDGED;
 
       await api.updatePortalDealStatus(
         dealId,
@@ -22,7 +22,7 @@ const updatePortalDealStatus = async (deal) => {
     }
 
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL.IN_PROGRESS;
+      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.IN_PROGRESS;
 
       await api.updatePortalDealStatus(
         dealId,
