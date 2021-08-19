@@ -30,6 +30,7 @@ const mapGefDeal = (deal) => {
     exporter: {
       companyName: exporter.companyName,
       companiesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
+      probabilityOfDefault: Number(exporter.probabilityOfDefault),
     },
     facilities: facilities.map((facility) => mapCashContingentFacility(facility)),
     tfm,
