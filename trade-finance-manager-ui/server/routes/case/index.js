@@ -31,10 +31,10 @@ router.get('/:_id/parties/indemnifier', partiesController.getIndemnifierPartyDet
 router.post('/:_id/parties/indemnifier', partiesController.postIndemnifierPartyDetails);
 
 router.get('/:_id/parties/bond-issuer', partiesController.getBondIssuerPartyDetails);
-router.post('/:_id/parties/bond-issuer', partiesController.postTfmFacility);
+router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 
 router.get('/:_id/parties/bond-beneficiary', partiesController.getBondBeneficiaryPartyDetails);
-router.post('/:_id/parties/bond-beneficiary', partiesController.postTfmFacility);
+router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
 router.get('/:_id/activity', activityController.getActivity);
 
