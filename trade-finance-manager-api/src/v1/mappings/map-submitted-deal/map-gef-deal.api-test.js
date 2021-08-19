@@ -31,6 +31,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
         companiesHouseRegistrationNumber: mockDeal.dealSnapshot.exporter.companiesHouseRegistrationNumber,
         probabilityOfDefault: Number(mockDeal.dealSnapshot.exporter.probabilityOfDefault),
       },
+      maker: mockDeal.dealSnapshot.maker,
       facilities: mockDeal.dealSnapshot.facilities.map((facility) => mapCashContingentFacility(facility)),
       tfm: mockDeal.tfm,
     };

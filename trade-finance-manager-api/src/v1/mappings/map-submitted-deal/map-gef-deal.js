@@ -14,6 +14,7 @@ const mapGefDeal = (deal) => {
     status,
     ukefDealId,
     exporter,
+    maker,
     facilities,
   } = dealSnapshot;
 
@@ -32,6 +33,7 @@ const mapGefDeal = (deal) => {
       companiesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
       probabilityOfDefault: Number(exporter.probabilityOfDefault),
     },
+    maker,
     facilities: facilities.map((facility) => mapCashContingentFacility(facility)),
     tfm,
   };
