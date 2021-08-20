@@ -3,6 +3,7 @@
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../../_macros/not-applicable.njk' as notApplicable %}
 
 {% macro render(params) %}
   {% set deal = params.deal %}
@@ -32,51 +33,61 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      {{ keyValueGridRow.render({
-        key: 'Name',
-        value: deal.submissionDetails.buyerName,
-        dataCy: 'buyer-name'
-      }) }}
 
-      {% if userCanEdit %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-          {{ govukInput({
-            label: {
-              text: "Unique reference number (URN)"
-            },
-            id: "partyUrn",
-            name: "partyUrn",
-            attributes: {
-              "data-cy": "urn-input"
-            },
-            value: buyer.partyUrn
-          }) }}
-          </div>
-        </div>
+      {% if deal.dealType === 'GEF'%}
+        {{ notApplicable.render({ id: 'buyer' })}}
       {% else %}
-        {{ keyValueGridRow.render({
-          key: 'Unique reference number',
-          value: buyer.partyUrn or "NOT MATCHED",
-          valueStyle: uniqueRefStyle,
-          dataCy: 'buyer-unique-ref'
-        }) }}
+
+        <div data-cy="buyer-details">
+          {{ keyValueGridRow.render({
+            key: 'Name',
+            value: deal.submissionDetails.buyerName,
+            dataCy: 'buyer-name'
+          }) }}
+
+          {% if userCanEdit %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "Unique reference number (URN)"
+                },
+                id: "partyUrn",
+                name: "partyUrn",
+                attributes: {
+                  "data-cy": "urn-input"
+                },
+                value: buyer.partyUrn
+              }) }}
+              </div>
+            </div>
+          {% else %}
+            {{ keyValueGridRow.render({
+              key: 'Unique reference number',
+              value: buyer.partyUrn or "NOT MATCHED",
+              valueStyle: uniqueRefStyle,
+              dataCy: 'buyer-unique-ref'
+            }) }}
+          {% endif %}
+
+          {{ keyValueArrayGridRow.render({
+            key: 'Address',
+            values:  [ deal.submissionDetails.buyerAddressLine1,
+                    deal.submissionDetails.buyerAddressLine2,
+                    deal.submissionDetails.buyerAddressLine3,
+                    deal.submissionDetails.buyerAddressTown,
+                    deal.submissionDetails.buyerAddressPostcode],
+            dataCy: 'buyer-address'
+          }) }}
+          {{ keyValueGridRow.render({
+            key: 'Country',
+            value: deal.submissionDetails.buyerAddressCountry,
+            dataCy: 'buyer-address-country'
+          }) }}
+
+        </div>
       {% endif %}
 
-      {{ keyValueArrayGridRow.render({
-        key: 'Address',
-        values:  [ deal.submissionDetails.buyerAddressLine1,
-                deal.submissionDetails.buyerAddressLine2,
-                deal.submissionDetails.buyerAddressLine3,
-                deal.submissionDetails.buyerAddressTown,
-                deal.submissionDetails.buyerAddressPostcode],
-        dataCy: 'buyer-address'
-      }) }}
-      {{ keyValueGridRow.render({
-        key: 'Country',
-        value: deal.submissionDetails.buyerAddressCountry,
-        dataCy: 'buyer-address-country'
-      }) }}
     </div>
   </div>
 

@@ -3,6 +3,7 @@
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../../_macros/not-applicable.njk' as notApplicable %}
 
 {% macro render(params) %}
   {% set deal = params.deal %}
@@ -31,85 +32,95 @@
 
   <div class="govuk-grid-row deal">
     <div class="govuk-grid-column-one-half">
-      {{ keyValueGridRow.render({
-        key: 'Name',
-        value: deal.submissionDetails.indemnifierName,
-        dataCy: 'indemnifier-name'
-      }) }}
 
-      {% if userCanEdit %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-          {{ govukInput({
-            label: {
-              text: "Unique reference number (URN)"
-            },
-            id: "partyUrn",
-            name: "partyUrn",
-            attributes: {
-              "data-cy": "urn-input"
-            },
-            value: indemnifier.partyUrn
-          }) }}
-          </div>
-        </div>
+      {% if deal.dealType === 'GEF'%}
+        {{ notApplicable.render({ id: 'indemnifier' })}}
       {% else %}
-        {{ keyValueGridRow.render({
-          key: 'Unique reference number',
-          value: indemnifier.partyUrn or "NOT MATCHED",
-          valueStyle: uniqueRefStyle,
-          dataCy: 'indemnifier-unique-ref'
-        }) }}
+
+        <div data-cy="indemnifier-details">
+          {{ keyValueGridRow.render({
+            key: 'Name',
+            value: deal.submissionDetails.indemnifierName,
+            dataCy: 'indemnifier-name'
+          }) }}
+
+          {% if userCanEdit %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "Unique reference number (URN)"
+                },
+                id: "partyUrn",
+                name: "partyUrn",
+                attributes: {
+                  "data-cy": "urn-input"
+                },
+                value: indemnifier.partyUrn
+              }) }}
+              </div>
+            </div>
+          {% else %}
+            {{ keyValueGridRow.render({
+              key: 'Unique reference number',
+              value: indemnifier.partyUrn or "NOT MATCHED",
+              valueStyle: uniqueRefStyle,
+              dataCy: 'indemnifier-unique-ref'
+            }) }}
+          {% endif %}
+
+          {{ keyValueArrayGridRow.render({
+            key: 'Address',
+            values:  [ deal.submissionDetails.indemnifierAddressLine1,
+                    deal.submissionDetails.indemnifierAddressLine2,
+                    deal.submissionDetails.indemnifierAddressLine3,
+                    deal.submissionDetails.indemnifierAddressTown,
+                    deal.submissionDetails.indemnifierAddressPostcode],
+            dataCy: 'indemnifier-address'
+
+          }) }}
+
+          {{ keyValueGridRow.render({
+            key: 'Country',
+            value: deal.submissionDetails.indemnifierAddressCountry,
+            dataCy: 'indemnifier-address-country'
+          }) }}
+
+          {{ keyValueGridRow.render({
+            key: 'Companies house<br>registration number',
+            value: deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber,
+            dataCy: 'indemnifier-companies-house-registration-number'
+          }) }}
+          {{ keyValueGridRow.render({
+            key: 'Is the indemnifier legally<br>distinct from the exporter?',
+            value: deal.submissionDetails.legallyDistinct,
+            dataCy: 'indemnifier-legally-distinct'
+          }) }}
+          {{ keyValueGridRow.render({
+            key: 'Approval level required',
+            value: ''
+          }) }}
+        {% if not userCanEdit %}
+          </div>
+          <div class="govuk-grid-column-one-half">
+        {% endif %}
+          {{ keyValueArrayGridRow.render({
+            key: 'Correspondence Address',
+            values:  [ deal.submissionDetails.indemnifierCorrespondenceAddressLine1,
+                    deal.submissionDetails.indemnifierCorrespondenceAddressLine2,
+                    deal.submissionDetails.indemnifierCorrespondenceAddressLine3,
+                    deal.submissionDetails.indemnifierCorrespondenceAddressTown,
+                    deal.submissionDetails.indemnifierCorrespondenceAddressPostcode],
+            dataCy: 'correspondence-address'
+          }) }}
+          {{ keyValueGridRow.render({
+            key: 'Correspondence country',
+            value: deal.submissionDetails.indemnifierCorrespondenceAddressCountry
+          }) }}
+
+        </div>
       {% endif %}
 
-      {{ keyValueArrayGridRow.render({
-        key: 'Address',
-        values:  [ deal.submissionDetails.indemnifierAddressLine1,
-                deal.submissionDetails.indemnifierAddressLine2,
-                deal.submissionDetails.indemnifierAddressLine3,
-                deal.submissionDetails.indemnifierAddressTown,
-                deal.submissionDetails.indemnifierAddressPostcode],
-        dataCy: 'indemnifier-address'
-
-      }) }}
-
-      {{ keyValueGridRow.render({
-        key: 'Country',
-        value: deal.submissionDetails.indemnifierAddressCountry,
-        dataCy: 'indemnifier-address-country'
-      }) }}
-
-      {{ keyValueGridRow.render({
-        key: 'Companies house<br>registration number',
-        value: deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber,
-        dataCy: 'indemnifier-companies-house-registration-number'
-      }) }}
-      {{ keyValueGridRow.render({
-        key: 'Is the indemnifier legally<br>distinct from the exporter?',
-        value: deal.submissionDetails.legallyDistinct,
-        dataCy: 'indemnifier-legally-distinct'
-      }) }}
-      {{ keyValueGridRow.render({
-        key: 'Approval level required',
-        value: ''
-      }) }}
-    {% if not userCanEdit %}
-      </div>
-      <div class="govuk-grid-column-one-half">
-    {% endif %}
-      {{ keyValueArrayGridRow.render({
-        key: 'Correspondence Address',
-        values:  [ deal.submissionDetails.indemnifierCorrespondenceAddressLine1,
-                deal.submissionDetails.indemnifierCorrespondenceAddressLine2,
-                deal.submissionDetails.indemnifierCorrespondenceAddressLine3,
-                deal.submissionDetails.indemnifierCorrespondenceAddressTown,
-                deal.submissionDetails.indemnifierCorrespondenceAddressPostcode],
-        dataCy: 'correspondence-address'
-      }) }}
-      {{ keyValueGridRow.render({
-        key: 'Correspondence country',
-        value: deal.submissionDetails.indemnifierCorrespondenceAddressCountry
-      }) }}
     </div>
   </div>
 {% endmacro %}

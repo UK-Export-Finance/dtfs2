@@ -1,5 +1,6 @@
 {% import './bond-beneficiary-facilities-table.njk' as bondBeneficiaryFacilitiesTable %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../../_macros/not-applicable.njk' as notApplicable %}
 
 {% macro render(params) %}
 {% set deal = params.deal %}
@@ -19,25 +20,23 @@
 
 </div>
 
-  <div class="govuk-grid-row deal">
+<div class="govuk-grid-row deal">
 
-    {% if filteredFacilities.length > 0 %}
-
-      {% set componentData = {
-        facilities: filteredFacilities,
-        caseId: deal._id
-      } %}
-              
-      <div class="govuk-grid-column-full">
-        {{ bondBeneficiaryFacilitiesTable.render(componentData) }}
-      </div>
-
-    {% else %}
-      <div class="govuk-grid-column-one-half">
-        <p class="govuk-body-s" data-cy="bond-beneficiaries-not-applicable">Not applicable</p>
-      </div>
-    {% endif %}
-  </div>
+  {% if deal.dealType === 'GEF' or not filteredFacilities.length > 0%}
+    <div class="govuk-grid-column-one-half">
+      {{ notApplicable.render({ id: 'bond-beneficiary' })}}
+    </div>
+  {% elif filteredFacilities.length > 0 %}
+    {% set componentData = {
+      facilities: filteredFacilities,
+      caseId: deal._id
+    } %}
+            
+    <div class="govuk-grid-column-full">
+      {{ bondBeneficiaryFacilitiesTable.render(componentData) }}
+    </div>
+  {% endif %}
 
 </div>
+
 {% endmacro %}

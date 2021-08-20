@@ -3,6 +3,7 @@
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../../_macros/not-applicable.njk' as notApplicable %}
 
 {% macro render(params) %}
   {% set deal = params.deal %}
@@ -31,73 +32,82 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      {{ keyValueGridRow.render({
-        key: 'Name',
-        value: deal.eligibility.agentName,
-        dataCy: 'agent-name'
-      }) }}
 
-      {% if userCanEdit %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-          {{ govukInput({
-            label: {
-              text: "Unique reference number (URN)"
-            },
-            id: "partyUrn",
-            name: "partyUrn",
-            attributes: {
-              "data-cy": "agent-unique-ref-input"
-            },
-            value: agent.partyUrn
-          }) }}
-          </div>
-        </div>
+      {% if deal.dealType === 'GEF'%}
+        {{ notApplicable.render({ id: 'agent' })}}
       {% else %}
-        {{ keyValueGridRow.render({
-          key: 'Unique reference number',
-          value: agent.partyUrn or "NOT MATCHED",
-          valueStyle: uniqueRefStyle,
-          dataCy: 'agent-unique-ref'
-        }) }}
-      {% endif %}
 
-      {{ keyValueArrayGridRow.render({
-        key: 'Address',
-        values:  [ deal.eligibility.agentAddressLine1,
-                deal.eligibility.agentAddressLine2,
-                deal.eligibility.agentAddressLine3,
-                deal.eligibility.agentAddressTown,
-                deal.eligibility.agentAddressPostcode],
-        dataCy: 'agent-address'
-      }) }}
-      {{ keyValueGridRow.render({
-        key: 'Country',
-        value: deal.eligibility.agentAddressCountry.name,
-        dataCy: 'agent-address-country'
-      }) }}
-      {% if userCanEdit %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-          {{ govukInput({
-            label: {
-              text: "Commission rate"
-            },
-            id: "commissionRate",
-            name: "commissionRate",
-            attributes: {
-              "data-cy": "agent-commission-rate-input"
-            },
-            value: agent.commissionRate
+        <div data-cy="agent-details">
+          {{ keyValueGridRow.render({
+            key: 'Name',
+            value: deal.eligibility.agentName,
+            dataCy: 'agent-name'
           }) }}
-          </div>
+
+          {% if userCanEdit %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "Unique reference number (URN)"
+                },
+                id: "partyUrn",
+                name: "partyUrn",
+                attributes: {
+                  "data-cy": "agent-unique-ref-input"
+                },
+                value: agent.partyUrn
+              }) }}
+              </div>
+            </div>
+          {% else %}
+            {{ keyValueGridRow.render({
+              key: 'Unique reference number',
+              value: agent.partyUrn or "NOT MATCHED",
+              valueStyle: uniqueRefStyle,
+              dataCy: 'agent-unique-ref'
+            }) }}
+          {% endif %}
+
+          {{ keyValueArrayGridRow.render({
+            key: 'Address',
+            values:  [ deal.eligibility.agentAddressLine1,
+                    deal.eligibility.agentAddressLine2,
+                    deal.eligibility.agentAddressLine3,
+                    deal.eligibility.agentAddressTown,
+                    deal.eligibility.agentAddressPostcode],
+            dataCy: 'agent-address'
+          }) }}
+          {{ keyValueGridRow.render({
+            key: 'Country',
+            value: deal.eligibility.agentAddressCountry.name,
+            dataCy: 'agent-address-country'
+          }) }}
+          {% if userCanEdit %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "Commission rate"
+                },
+                id: "commissionRate",
+                name: "commissionRate",
+                attributes: {
+                  "data-cy": "agent-commission-rate-input"
+                },
+                value: agent.commissionRate
+              }) }}
+              </div>
+            </div>
+          {% else %}
+            {{ keyValueGridRow.render({
+              key: 'Commission rate',
+              value: agent.commissionRate,
+              dataCy: 'agent-commission-rate'
+            }) }}
+          {% endif %}
         </div>
-      {% else %}
-        {{ keyValueGridRow.render({
-          key: 'Commission rate',
-          value: agent.commissionRate,
-          dataCy: 'agent-commission-rate'
-        }) }}
+
       {% endif %}
     </div>
 </div>

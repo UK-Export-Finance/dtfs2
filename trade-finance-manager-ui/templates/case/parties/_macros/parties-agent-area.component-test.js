@@ -81,41 +81,67 @@ describe(page, () => {
     },
   };
 
-  beforeEach(() => {
-    wrapper = render(params);
-  });
-
   it('should render agent address country', () => {
-    wrapper
-      .expectText('[data-cy="agent-address-country"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address-country"]')
       .toRead(params.deal.eligibility.agentAddressCountry.name);
   });
+
   it('should render agent agentAddressLine1 in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressLine1);
   });
+
   it('should render agent agentAddressLine2 in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressLine2);
   });
+
   it('should render agent agentAddressLine3 in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressLine3);
   });
+
   it('should render agent agentAddressTown in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressTown);
   });
+
   it('should render agent agentAddressPostcode in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressPostcode);
   });
+
   it('should render agent name', () => {
+    wrapper = render(params);
+
     wrapper.expectText('[data-cy="agent-name"]').toRead(params.deal.eligibility.agentName);
+  });
+
+  describe('when dealType is GEF', () => {
+    it('should render `Not applicable`', () => {
+      const gefDeal = {
+        deal: {
+          ...params.deal,
+          dealType: 'GEF',
+        },
+      };
+
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="agent-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="agent-details"]').notToExist();
+    });
   });
 });
