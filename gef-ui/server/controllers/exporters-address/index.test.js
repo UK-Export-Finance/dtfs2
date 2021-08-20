@@ -195,6 +195,7 @@ describe('Validate Exporters Address', () => {
       errors: expect.any(Object),
       correspondence: 'true',
       registeredAddress,
+      applicationId: mockRequest.params.applicationId,
     }));
   });
 
@@ -236,6 +237,7 @@ describe('Validate Exporters Address', () => {
         postcode,
         registeredAddress,
         correspondence,
+        applicationId: mockRequest.params.applicationId,
       },
     );
   });
