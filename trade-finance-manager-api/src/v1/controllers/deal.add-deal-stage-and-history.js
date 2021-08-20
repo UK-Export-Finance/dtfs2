@@ -23,7 +23,10 @@ const addDealStageAndHistory = async (deal) => {
 
   let tfmDealStage;
 
-  if (status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL.SUBMITTED) {
+  const hasSubmittedStatus = (status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMITTED
+    || status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.SUBMITTED);
+
+  if (hasSubmittedStatus) {
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED;
     }
