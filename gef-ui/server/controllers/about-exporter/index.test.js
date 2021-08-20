@@ -63,7 +63,7 @@ describe('GET About Exporter', () => {
 });
 
 describe('Validate About Exporter', () => {
-  it('returns no validation errors if `save and return` is set to true', async () => {
+  it('returns no validation errors if `save and return` is set to true and all fields are blank', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockAboutExporterResponse = new MockAboutExporterResponse();
@@ -71,19 +71,60 @@ describe('Validate About Exporter', () => {
 
     api.getApplication = () => Promise.resolve(mockRequest);
     api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
-    await aboutExporter(mockRequest, mockResponse);
+    api.updateExporter = () => Promise.resolve({});
+
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockRequest.params.applicationId}`);
+  });
+
+  it('returns validation errors if `save and return` is set to true and probabilityOfDefault field has invalid value', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.probabilityOfDefault = 'foo';
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.any(Object),
       industries: null,
-      smeType: null,
+      selectedIndustry: null,
+      smeType: undefined,
       status: undefined,
-      probabilityOfDefault: null,
-      isFinanceIncreasing: null,
+      probabilityOfDefault: 'foo',
+      isFinanceIncreasing: undefined,
       applicationId: '123',
     }));
   });
 
-  it('returns validation error object if no `save and return` query is set', async () => {
+  it('returns validation errors if `save and return` is set to true and probabilityOfDefault field is outside value range', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.probabilityOfDefault = '14.2';
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.any(Object),
+      industries: null,
+      selectedIndustry: null,
+      smeType: undefined,
+      status: undefined,
+      probabilityOfDefault: '14.2',
+      isFinanceIncreasing: undefined,
+      applicationId: '123',
+    }));
+  });
+
+  it('returns validation error object if no `save and return` query is set and all fields are blank', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
     const mockAboutExporterResponse = new MockAboutExporterResponse();
@@ -97,6 +138,28 @@ describe('Validate About Exporter', () => {
       industries: null,
       smeType: undefined,
       probabilityOfDefault: undefined,
+      isFinanceIncreasing: undefined,
+      applicationId: '123',
+    }));
+  });
+
+  it('returns validation error object if no `save and return` query is set and probabilityOfDefault field is outside value range', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockAboutExporterResponse = new MockAboutExporterResponse();
+    mockRequest.body.probabilityOfDefault = '14.2';
+
+    api.getApplication = () => Promise.resolve(mockRequest);
+    api.getExporter = () => Promise.resolve(mockAboutExporterResponse);
+    await validateAboutExporter(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
+      errors: expect.any(Object),
+      industries: null,
+      selectedIndustry: null,
+      smeType: undefined,
+      status: undefined,
+      probabilityOfDefault: '14.2',
       isFinanceIncreasing: undefined,
       applicationId: '123',
     }));
