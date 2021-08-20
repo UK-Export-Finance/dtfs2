@@ -27,7 +27,7 @@ Prerequisites
 * Clone this repo
 * Run `nvm install` to ensure you are using the correct version of node
 * Create `.env` files for each service. You can use `.env.sample` as a base. Some sensitive variables need to be shared from the team
-* Generate JWT keypairs with `secrets/set_jwt_keypair.sh`
+* Generate JWT keypairs with `secrets/set_jwt_keypair.sh` (`bash secrets/set_jwt_keypair.sh` for Windows)
 * Base64 encode the generated public and private keys and declare as environment variables in your terminal. E.g:
   * `export JWT_SIGNING_KEY=1234`
   * `export JWT_VALIDATING_KEY=1234`
