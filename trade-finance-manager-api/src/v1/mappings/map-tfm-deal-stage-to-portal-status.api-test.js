@@ -6,7 +6,7 @@ describe('mapTfmDealStageToPortalStatus', () => {
     it('should return portal status APPROVED_WITH_CONDITIONS', () => {
       const result = mapTfmDealStageToPortalStatus('Approved (with conditions)');
 
-      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL.APPROVED_WITH_CONDITIONS);
+      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.APPROVED_WITH_CONDITIONS);
     });
   });
 
@@ -14,7 +14,7 @@ describe('mapTfmDealStageToPortalStatus', () => {
     it('should return portal status APPROVED_WITHOUT_CONDITIONS', () => {
       const result = mapTfmDealStageToPortalStatus('Approved (without conditions)');
 
-      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL.APPROVED_WITHOUT_CONDITIONS);
+      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.APPROVED_WITHOUT_CONDITIONS);
     });
   });
 
@@ -22,7 +22,7 @@ describe('mapTfmDealStageToPortalStatus', () => {
     it('should return portal status DECLINED', () => {
       const result = mapTfmDealStageToPortalStatus('Declined');
 
-      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL.REFUSED);
+      expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.REFUSED);
     });
   });
 
