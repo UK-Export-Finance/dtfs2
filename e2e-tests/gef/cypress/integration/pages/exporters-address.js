@@ -13,6 +13,7 @@ const automaticCover = {
   yesRadioButton: () => cy.get('[data-cy="correspondence-yes"]'),
   noRadioButton: () => cy.get('[data-cy="correspondence-no"]'),
   correspondenceAddress: () => cy.get('[data-cy="correspondence-address"]'),
+  manualAddressEntryLink: () => cy.get('[data-cy="enter-address-manually"]'),
 };
 
 export default automaticCover;

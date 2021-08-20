@@ -76,6 +76,7 @@ const validateExportersAddress = async (req, res) => {
         postcode: postcode ? postcode.toUpperCase() : '',
         registeredAddress,
         correspondence,
+        applicationId,
       });
     }
 
