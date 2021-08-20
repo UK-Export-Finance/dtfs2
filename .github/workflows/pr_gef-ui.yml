@@ -138,10 +138,10 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }} dtfs/gef-ui
-    - name: Pull Azure functions
+    - name: Pull Azure Number Generator function
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }} dtfs/azure-function-acbs
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
