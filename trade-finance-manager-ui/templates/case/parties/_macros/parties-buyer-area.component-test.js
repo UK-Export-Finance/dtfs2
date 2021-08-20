@@ -78,41 +78,68 @@ describe(page, () => {
     },
   };
 
-  beforeEach(() => {
+  it('should render buyer name', () => {
     wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-name"]')
+      .toRead(params.deal.submissionDetails.buyerName);
   });
 
-  it('should render buyer name', () => {
-    wrapper.expectText('[data-cy="buyer-name"]').toRead(params.deal.submissionDetails.buyerName);
-  });
   it('should render bank', () => {
-    wrapper
-      .expectText('[data-cy="buyer-address-country"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-address-country"]')
       .toRead(params.deal.submissionDetails.buyerAddressCountry);
   });
+
   it('should render buyer address', () => {
-    wrapper
-      .expectText('[data-cy="buyer-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-address"]')
       .toContain(params.deal.submissionDetails.buyerAddressLine1);
   });
+
   it('should render buyer address', () => {
-    wrapper
-      .expectText('[data-cy="buyer-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-address"]')
       .toContain(params.deal.submissionDetails.buyerAddressLine2);
   });
+
   it('should render buyer address', () => {
-    wrapper
-      .expectText('[data-cy="buyer-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-address"]')
       .toContain(params.deal.submissionDetails.buyerAddressLine3);
   });
+
   it('should render buyer address', () => {
-    wrapper
-      .expectText('[data-cy="buyer-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-address"]')
       .toContain(params.deal.submissionDetails.buyerAddressTown);
   });
+
   it('should render buyer address', () => {
-    wrapper
-      .expectText('[data-cy="buyer-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="buyer-address"]')
       .toContain(params.deal.submissionDetails.buyerAddressPostcode);
+  });
+
+  describe('when dealType is GEF', () => {
+    it('should render `Not applicable`', () => {
+      const gefDeal = {
+        deal: {
+          ...params.deal,
+          dealType: 'GEF',
+        },
+      };
+
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="buyer-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="buyer-details"]').notToExist();
+    });
   });
 });
