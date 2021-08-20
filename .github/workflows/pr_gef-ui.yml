@@ -138,6 +138,10 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }} dtfs/gef-ui
+    - name: Pull Azure functions
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }} dtfs/azure-function-acbs
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
