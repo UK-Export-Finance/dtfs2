@@ -159,7 +159,7 @@ jobs:
     - name: Temporary debugs
       run: |
         docker ps
-        curl localhost:7072
+        curl -X POST localhost:7072/api/orchestrators/numbergenerator -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
