@@ -4,10 +4,12 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-context('User can view party details', () => {
+context('Parties - user can view and edit buyer', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
+  const businessSupportUser = MOCK_USERS.find((user) => user.teams.includes('BUSINESS_SUPPORT'));
+  const nonBusinessSupportUser = MOCK_USERS.find((user) => !user.teams.includes('BUSINESS_SUPPORT'));
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
@@ -28,52 +30,64 @@ context('User can view party details', () => {
       });
   });
 
-  beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
-    cy.visit(relative(`/case/${dealId}/parties`));
-  });
-
   after(() => {
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
     });
   });
 
-
   describe('Buyer page', () => {
-    it('should render edit page', () => {
-      pages.partiesPage.buyerEditLink().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
-      pages.partiesPage.buyerEditLink().should('not.exist');
-
-      pages.buyerPage.urnInput().should('exist');
-      pages.buyerPage.heading().should('have.text', 'Edit buyer details');
-
-      pages.buyerPage.saveButton().should('exist');
-      pages.buyerPage.closeLink().should('exist');
-
-      pages.buyerPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/parties`));
-    });
-
-    it('should save entered details', () => {
-      const partyUrn = 'test partyurn';
-
-      pages.partiesPage.buyerEditLink().click();
-      pages.buyerPage.urnInput().type(partyUrn);
-
-      pages.buyerPage.saveButton().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/parties`));
-
-      pages.buyerPage.uniqueRef().invoke('text').then((text) => {
-        expect(text.trim()).equal(partyUrn);
+    describe('when user is in BUSINESS_SUPPORT team', () => {
+      beforeEach(() => {
+        cy.login(businessSupportUser);
+        cy.visit(relative(`/case/${dealId}/parties`));
       });
 
-      pages.partiesPage.buyerEditLink().click();
-      pages.buyerPage.urnInput().invoke('val').then((value) => {
-        expect(value.trim()).equal(partyUrn);
+      it('should render edit page', () => {
+        pages.partiesPage.buyerEditLink().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.partiesPage.buyerEditLink().should('not.exist');
+
+        pages.buyerPage.urnInput().should('exist');
+        pages.buyerPage.heading().should('have.text', 'Edit buyer details');
+
+        pages.buyerPage.saveButton().should('exist');
+        pages.buyerPage.closeLink().should('exist');
+
+        pages.buyerPage.closeLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+      });
+
+      it('should save entered details', () => {
+        const partyUrn = 'test partyurn';
+
+        pages.partiesPage.buyerEditLink().click();
+        pages.buyerPage.urnInput().type(partyUrn);
+
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+        pages.buyerPage.uniqueRef().invoke('text').then((text) => {
+          expect(text.trim()).equal(partyUrn);
+        });
+
+        pages.partiesPage.buyerEditLink().click();
+        pages.buyerPage.urnInput().invoke('val').then((value) => {
+          expect(value.trim()).equal(partyUrn);
+        });
+      });
+    });
+
+    describe('when user is NOT in BUSINESS_SUPPORT team', () => {
+      beforeEach(() => {
+        cy.login(nonBusinessSupportUser);
+      });
+
+      it('user cannot manually to the page', () => {
+        cy.visit(`/case/${dealId}/parties/buyer`);
+        cy.url().should('eq', relative('/not-found'));
       });
     });
   });

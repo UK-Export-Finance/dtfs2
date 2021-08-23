@@ -79,6 +79,7 @@ const GET_DEAL = gql`
       }
       dealSnapshot {
         _id,
+        dealType
         details {
           ukefDealId,
           status,

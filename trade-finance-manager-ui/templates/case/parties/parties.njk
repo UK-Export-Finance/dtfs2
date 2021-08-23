@@ -10,30 +10,66 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% block sub_content %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <p class="header-label">Parties</p>
     </div>
   </div>
+
   <section class="deal-parties-section">
-    {{ exporterArea.render({deal: deal, tfm: tfm}) }}
-  </section>
-  <section class="deal-parties-section">
-    {{ buyerArea.render({deal: deal, tfm: tfm}) }}
-  </section>
-  <section class="deal-parties-section">
-    {{ agentArea.render({deal: deal, tfm: tfm}) }}
-  </section>
-  <section class="deal-parties-section">
-    {{ indemnifierArea.render({ deal: deal, tfm: tfm}) }}
-  </section>
-  <section class="deal-parties-section">
-    {{ bondIssuerArea.render({ deal: deal, tfm: tfm}) }}
-  </section>
-  <section class="deal-parties-section">
-    {{ bondBeneficiaryArea.render({ deal: deal, tfm: tfm}) }}
+    {{ exporterArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
   </section>
 
+  <section class="deal-parties-section">
+    {{ buyerArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
 
+  <section class="deal-parties-section">
+    {{ agentArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink,
+      renderEditForm: renderEditForm
+    }) }}
+  </section>
+
+  <section class="deal-parties-section">
+    {{ indemnifierArea.render({ 
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+  <section class="deal-parties-section">
+    {{ bondIssuerArea.render({ 
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+  <section class="deal-parties-section">
+    {{ bondBeneficiaryArea.render({ 
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
 
 {% endblock %}

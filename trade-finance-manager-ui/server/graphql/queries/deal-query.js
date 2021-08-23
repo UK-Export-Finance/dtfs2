@@ -63,6 +63,7 @@ const dealQuery = gql`
       }
       dealSnapshot {
         _id,
+        dealType
         details {
           ukefDealId,
           status,

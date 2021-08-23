@@ -106,7 +106,7 @@ describe(page, () => {
 
       wrapper = render(paramsWithFacilities);
 
-      wrapper.expectElement('[data-cy="bond-beneficiaries-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="bond-beneficiary-not-applicable"]').toExist();
       wrapper.expectElement('[data-cy="bond-beneficiary-facilities-table"]').notToExist();
     });
   });
