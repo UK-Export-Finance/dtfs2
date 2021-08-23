@@ -182,7 +182,7 @@ jobs:
         echo "Try port 7072"
         curl http://localhost:7072
         echo "Try POST to end point"
-        curl -X POST "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+        curl POST "http://localhost:7072/api/orchestrators/numbergenerator" --progress-bar --verbose -d '{ "entityType":"facility", "entityId":"12211" }'
         curlCode=$?
         echo "Curl exit code=$curlCode"
     - name: Load mock data
