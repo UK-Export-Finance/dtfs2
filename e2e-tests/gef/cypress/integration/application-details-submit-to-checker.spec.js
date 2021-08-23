@@ -86,12 +86,12 @@ context('Application Details Submission', () => {
 
       applicationDetails.submitHeading().should('not.exist');
       applicationDetails.submitButton().should('not.exist');
-      applicationDetails.abandonLink().should('not.exist');
       applicationDetails.exporterDetailsLink().should('not.exist');
       applicationDetails.automaticCoverDetailsLink().should('not.exist');
       applicationDetails.addCashFacilityButton().should('not.exist');
       applicationDetails.addContingentFacilityButton().should('not.exist');
       applicationDetails.deleteFacilityLink().should('not.exist');
+      applicationDetails.abandonLink().should('exist');
     });
   });
 });
