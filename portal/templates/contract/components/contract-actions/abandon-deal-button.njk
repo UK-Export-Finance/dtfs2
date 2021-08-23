@@ -17,7 +17,7 @@
           "href": "/contract/" + params.deal._id + "/delete"
         }) }}
 
-      {% elseif  ["Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) %}
+      {% elseif  ["Abandoned", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) %}
 
         {{ govukButton({
           "disabled": true,

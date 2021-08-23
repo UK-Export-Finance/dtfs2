@@ -2,7 +2,7 @@ const STATUS = {
   draft: 'Draft',
   readyForApproval: 'Ready for Checker\'s approval',
   inputRequired: 'Further Maker\'s input required',
-  abandoned: 'Abandoned Deal',
+  abandoned: 'Abandoned',
   submitted: 'Submitted',
   submissionAcknowledged: 'Acknowledged by UKEF',
   inProgress: 'In progress by UKEF',
