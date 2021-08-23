@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: set-environment
     environment:
-      name: ${{ needs.set-environment.outputs.environment }}
+      name: E2ETEST
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
