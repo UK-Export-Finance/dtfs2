@@ -2,7 +2,7 @@ const statusLabelMap = {
   DRAFT: 'Draft',
   BANK_CHECK: "Ready for Checker's approval",
   CHANGES_REQUIRED: "Further Maker's input required",
-  ABANDONED: 'Abandoned Deal',
+  ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
   UKEF_IN_PROGRESS: 'In progress by UKEF',

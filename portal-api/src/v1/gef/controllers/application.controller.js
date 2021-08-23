@@ -169,7 +169,7 @@ exports.changeStatus = async (req, res) => {
 
   const { status } = req.body;
 
-  let applicationUpdate = { status };
+  let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
 
   // TODO: protect so that only a user with checker role can submit to UKEF.
   if (status === STATUS.SUBMITTED_TO_UKEF) {

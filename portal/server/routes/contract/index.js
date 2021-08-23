@@ -109,7 +109,7 @@ router.post('/contract/:_id/delete', async (req, res) => {
   const updateToSend = {
     _id,
     comments,
-    status: 'Abandoned Deal',
+    status: 'Abandoned',
   };
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
