@@ -28,13 +28,15 @@ Prerequisites
 * Run `nvm install` to ensure you are using the correct version of node
 * Create `.env` files for each service. You can use `.env.sample` as a base. Some sensitive variables need to be shared from the team
 * Generate JWT keypairs with `secrets/set_jwt_keypair.sh` (`bash secrets/set_jwt_keypair.sh` for Windows)
-* Base64 encode the generated public and private keys and declare as environment variables in your terminal. E.g:
-  * `export JWT_SIGNING_KEY=1234`
-  * `export JWT_VALIDATING_KEY=1234`
+* Base64 encode the generated public and private keys and add to your portal-api .env file:
+  * `JWT_SIGNING_KEY=1234`
+  * `JWT_VALIDATING_KEY=5678`
+* Set session secret environment variable in your terminal. eg: `export SESSION_SECRET=abc1234`
 * Ensure you have MongoDB installed on your machine. Create a DB called `dtfs-submissions` with default MongoDB port 27017
 * Start up your local environment: `docker-compose up --build`
 * Create mock data: navigate to `utils/mock-data-loader`, run `npm install`and then `node re-insert-mocks.js`. This should generate mocks in your DB.
 * Optional/recommended: Run `npm run pipeline` in the root directory of the repo to run a full build and test to make sure that everything is working.
+
 
 Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
 
@@ -101,6 +103,8 @@ Several services are built:
 | Central API | http://localhost:5005 |
 | GEF | http://localhost:5006 |
 | Mongo DB | root:r00t@localhost:27017 | Connect via MongoDB client
+
+To access GEF locally, use http://localhost.
 
 ### CI
 Several environments are used:
