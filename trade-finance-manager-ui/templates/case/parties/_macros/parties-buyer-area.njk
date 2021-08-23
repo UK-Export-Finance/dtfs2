@@ -8,6 +8,8 @@
 {% macro render(params) %}
   {% set deal = params.deal %}
   {% set userCanEdit = params.userCanEdit %}
+  {% set renderEditLink = params.renderEditLink %}
+  {% set renderEditForm = params.renderEditForm %}
   {% set buyer = params.tfm.parties.buyer %}
 
   {% if not buyer.partyUrn %}
@@ -16,7 +18,7 @@
 
   <div class="govuk-grid-row {% if not userCanEdit %}ukef-flex-container separator-line deal{% endif %}" data-cy="parties-buyer">
     <div class="govuk-grid-column-one-half">
-        {% if userCanEdit %}
+        {% if userCanEdit and renderEditForm %}
           <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading">Edit buyer details</h1>
         {% else %}
           <h2 class="ukef-heading-l" data-cy="edit-heading">Buyer</h2>
@@ -24,7 +26,7 @@
       </h2>
     </div>
 
-    {% if userCanEdit %}
+    {% if renderEditLink %}
       <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
         {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'buyer'}) }}
       </div>
@@ -45,7 +47,7 @@
             dataCy: 'buyer-name'
           }) }}
 
-          {% if userCanEdit %}
+          {% if userCanEdit and renderEditForm %}
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-one-half">
               {{ govukInput({

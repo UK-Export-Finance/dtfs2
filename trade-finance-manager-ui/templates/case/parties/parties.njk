@@ -21,7 +21,8 @@
     {{ exporterArea.render({
       deal: deal,
       tfm: tfm,
-      userCanEdit: userCanEdit
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
     }) }}
   </section>
 
@@ -29,7 +30,8 @@
     {{ buyerArea.render({
       deal: deal,
       tfm: tfm,
-      userCanEdit: userCanEdit
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
     }) }}
   </section>
 
@@ -37,7 +39,9 @@
     {{ agentArea.render({
       deal: deal,
       tfm: tfm,
-      userCanEdit: userCanEdit
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink,
+      renderEditForm: renderEditForm
     }) }}
   </section>
 
@@ -45,7 +49,8 @@
     {{ indemnifierArea.render({ 
       deal: deal,
       tfm: tfm,
-      userCanEdit: userCanEdit
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
     }) }}
   </section>
 
@@ -53,7 +58,8 @@
     {{ bondIssuerArea.render({ 
       deal: deal,
       tfm: tfm,
-      userCanEdit: userCanEdit
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
     }) }}
   </section>
 
@@ -61,7 +67,8 @@
     {{ bondBeneficiaryArea.render({ 
       deal: deal,
       tfm: tfm,
-      userCanEdit: userCanEdit
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
     }) }}
   </section>
 

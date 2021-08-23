@@ -47,6 +47,8 @@ describe('controllers - case - parties', () => {
         await partiesController.getCaseParties(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/parties.njk', {
           userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: userCanEdit(req.session.user),
+          renderEditForm: false,
           deal: mockDeal.dealSnapshot,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'parties',
@@ -75,7 +77,7 @@ describe('controllers - case - parties', () => {
     });
   });
 
-  describe('GET party edit', () => {
+  describe('GET exporter edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {
         _id: '1000023',
@@ -99,7 +101,7 @@ describe('controllers - case - parties', () => {
         api.getDeal = () => Promise.resolve(mockDeal);
       });
 
-      it('should render edit template with data', async () => {
+      it('should render exporter edit template with data', async () => {
         const req = {
           params: {
             _id: mockDeal._id,
@@ -109,6 +111,9 @@ describe('controllers - case - parties', () => {
 
         await partiesController.getExporterPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'parties',
           deal: mockDeal.dealSnapshot,
@@ -178,7 +183,7 @@ describe('controllers - case - parties', () => {
         api.getDeal = () => Promise.resolve(mockDeal);
       });
 
-      it('should render bond edit template with data', async () => {
+      it('should render bond issuer edit template with data', async () => {
         const req = {
           params: {
             _id: mockDeal._id,
@@ -189,6 +194,9 @@ describe('controllers - case - parties', () => {
         await partiesController.getBondIssuerPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-issuer-edit.njk',
           {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
@@ -256,7 +264,7 @@ describe('controllers - case - parties', () => {
         api.getDeal = () => Promise.resolve(mockDeal);
       });
 
-      it('should render bond edit template with data', async () => {
+      it('should render bond beneficiary edit template with data', async () => {
         const req = {
           params: {
             _id: mockDeal._id,
@@ -267,6 +275,9 @@ describe('controllers - case - parties', () => {
         await partiesController.getBondBeneficiaryPartyDetails(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-beneficiary-edit.njk',
           {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
@@ -322,7 +333,7 @@ describe('controllers - case - parties', () => {
         api.getDeal = () => Promise.resolve(mockDeal);
       });
 
-      it('should render bond edit template with data', async () => {
+      it('should render party edit template with data', async () => {
         const req = {
           params: {
             _id: mockDeal._id,
