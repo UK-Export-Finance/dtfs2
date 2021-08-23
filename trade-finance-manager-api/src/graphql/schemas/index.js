@@ -323,6 +323,7 @@ input DealsInput {
 
 type DealSnapshot {
   _id: String!
+  dealType: String!
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]

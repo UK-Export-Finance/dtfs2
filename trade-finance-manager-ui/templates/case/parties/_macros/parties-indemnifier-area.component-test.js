@@ -6,8 +6,10 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const params = {
+    renderEditLink: true,
     deal: {
       _id: '12345678',
+      dealType: 'BSS/EWCS',
       details: {
         submissionType: 'Automatic Inclusion Notice',
         bankSupplyContractID: 'contract-1',
@@ -80,56 +82,89 @@ describe(page, () => {
     },
   };
 
-  beforeEach(() => {
-    wrapper = render(params);
-  });
-
   it('should render indemnifier address country', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-address-country"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-address-country"]')
       .toRead(params.deal.submissionDetails.indemnifierAddressCountry);
   });
+
   it('should render indemnifier indemnifierAddressLine1 in address', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-address"]')
       .toContain(params.deal.submissionDetails.indemnifierAddressLine1);
   });
+
   it('should render indemnifier indemnifierAddressLine2 in address', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-address"]')
       .toContain(params.deal.submissionDetails.indemnifierAddressLine2);
   });
+
   it('should render indemnifier indemnifierAddressLine3 in address', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-address"]')
       .toContain(params.deal.submissionDetails.indemnifierAddressLine3);
   });
+
   it('should render indemnifier indemnifierAddressTown in address', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-address"]')
       .toContain(params.deal.submissionDetails.indemnifierAddressTown);
   });
+
   it('should render indemnifier indemnifierAddressPostcode in address', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-address"]')
       .toContain(params.deal.submissionDetails.indemnifierAddressPostcode);
   });
 
   it('should render indemnifier name', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-name"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-name"]')
       .toRead(params.deal.submissionDetails.indemnifierName);
   });
 
   it('should render indemnifier companies house no', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-companies-house-registration-number"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-companies-house-registration-number"]')
       .toRead(params.deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber);
   });
 
   it('should render indemnifier legally distinct', () => {
-    wrapper
-      .expectText('[data-cy="indemnifier-legally-distinct"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-legally-distinct"]')
       .toRead(params.deal.submissionDetails.legallyDistinct);
+  });
+
+  describe('when dealType is GEF', () => {
+    const gefDeal = {
+      ...params,
+      deal: {
+        ...params.deal,
+        dealType: 'GEF',
+      },
+    };
+
+    it('should NOT render edit link', () => {
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="edit-party-link"]').notToExist();
+    });
+
+    it('should render `Not applicable`', () => {
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="indemnifier-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="indemnifier-details"]').notToExist();
+    });
   });
 });
