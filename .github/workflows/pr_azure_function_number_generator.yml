@@ -52,7 +52,7 @@ jobs:
     name: Run PR tests
     needs: [set-environment, build]
     environment:
-      name: ${{ needs.set-environment.outputs.environment }}
+      name: E2ETEST
     runs-on: ubuntu-latest
     env:
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
