@@ -119,7 +119,7 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
       MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
-      
+
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
 
       COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
@@ -183,6 +183,8 @@ jobs:
         curl http://localhost:7072
         echo "Try POST to end point"
         curl -X POST "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+        curlCode=$?
+        echo "Curl exit code=$curlCode"
     - name: Load mock data
       run: |
         cd utils/mock-data-loader

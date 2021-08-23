@@ -89,3 +89,5 @@ jobs:
         curl http://localhost:7072
         echo "Try POST to end point"
         curl -X POST "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+        curlCode=$?
+        echo "Curl exit code=$curlCode"
