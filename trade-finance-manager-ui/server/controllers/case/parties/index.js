@@ -11,14 +11,18 @@ const getCaseParties = async (req, res) => {
 
   const { user } = req.session;
 
+  const canEdit = userCanEdit(user);
+
   return res.render('case/parties/parties.njk', {
-    userCanEdit: userCanEdit(user),
+    userCanEdit: canEdit,
+    renderEditLink: canEdit,
+    renderEditForm: false,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'parties',
     dealId,
-    user: req.session.user,
+    user,
   });
 };
 
@@ -26,7 +30,9 @@ const getPartyDetails = (partyType) => (
   async (req, res) => {
     const { user } = req.session;
 
-    if (!userCanEdit(user)) {
+    const canEdit = userCanEdit(user);
+
+    if (!canEdit) {
       return res.redirect('/not-found');
     }
 
@@ -38,6 +44,9 @@ const getPartyDetails = (partyType) => (
     }
 
     return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+      userCanEdit: canEdit,
+      renderEditLink: false,
+      renderEditForm: true,
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'parties',
       deal: deal.dealSnapshot,
@@ -56,7 +65,9 @@ const getIndemnifierPartyDetails = getPartyDetails('indemnifier');
 const getBondIssuerPartyDetails = async (req, res) => {
   const { user } = req.session;
 
-  if (!userCanEdit(user)) {
+  const canEdit = userCanEdit(user);
+
+  if (!canEdit) {
     return res.redirect('/not-found');
   }
 
@@ -68,10 +79,13 @@ const getBondIssuerPartyDetails = async (req, res) => {
   }
 
   return res.render('case/parties/edit/bonds-issuer-edit.njk', {
+    userCanEdit: canEdit,
+    renderEditLink: false,
+    renderEditForm: true,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'parties',
     deal: deal.dealSnapshot,
-    user: req.session.user,
+    user,
   });
 };
 
@@ -79,7 +93,9 @@ const getBondIssuerPartyDetails = async (req, res) => {
 const getBondBeneficiaryPartyDetails = async (req, res) => {
   const { user } = req.session;
 
-  if (!userCanEdit(user)) {
+  const canEdit = userCanEdit(user);
+
+  if (!canEdit) {
     return res.redirect('/not-found');
   }
 
@@ -91,10 +107,13 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
   }
 
   return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
+    userCanEdit: canEdit,
+    renderEditLink: false,
+    renderEditForm: true,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'parties',
     deal: deal.dealSnapshot,
-    user: req.session.user,
+    user,
   });
 };
 

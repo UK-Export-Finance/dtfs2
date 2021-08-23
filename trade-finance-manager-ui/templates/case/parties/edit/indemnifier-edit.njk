@@ -10,7 +10,12 @@
 
   {% block content %}
     <form autocomplete="off" method="POST">
-      {{ indemnifierArea.render({deal: deal, tfm: tfm, editable: true}) }}
+      {{ indemnifierArea.render({
+        deal: deal,
+        tfm: tfm,
+        userCanEdit: userCanEdit,
+        renderEditForm: renderEditForm
+      }) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">

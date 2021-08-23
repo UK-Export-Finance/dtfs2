@@ -20,7 +20,11 @@
 
     {% for facility in filteredFacilities %}
       <input name="facilityId[]" type="hidden" value="{{ facility._id }}" />
-      {{ bondIssuerEdit.render({ bond: facility }) }}
+      {{ bondIssuerEdit.render({
+        bond: facility,
+        userCanEdit: userCanEdit,
+        renderEditForm: renderEditForm
+      }) }}
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     {% endfor %}
 
