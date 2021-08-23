@@ -123,7 +123,7 @@ module.exports = [
     details: {
       bankSupplyContractID: 'abc-6-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      status: 'Abandoned Deal',
+      status: 'Abandoned',
       previousStatus: 'Draft',
       submissionDate: moment().utc().valueOf(),
       owningBank: {
@@ -415,7 +415,7 @@ module.exports = [
     details: {
       bankSupplyContractID: 'abc 2 def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      status: 'Abandoned Deal',
+      status: 'Abandoned',
       previousStatus: 'Draft',
       owningBank: {
         id: '9',

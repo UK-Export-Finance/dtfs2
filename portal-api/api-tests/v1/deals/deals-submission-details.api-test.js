@@ -129,7 +129,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       const { status } = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/submission-details`);

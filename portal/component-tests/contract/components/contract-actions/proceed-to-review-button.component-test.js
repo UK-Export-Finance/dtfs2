@@ -107,7 +107,7 @@ describe(component, () => {
       const deals = [
         { _id: 1, details: { status: 'Draft' } },
         { _id: 2, details: { status: "Further Maker's input required" } },
-        { _id: 3, details: { status: 'Abandoned Deal' } },
+        { _id: 3, details: { status: 'Abandoned' } },
         { _id: 4, details: { status: 'Acknowledged by UKEF' } },
       ];
 
@@ -128,7 +128,7 @@ describe(component, () => {
       const deals = [
         { _id: 1, details: { status: 'Draft' } },
         { _id: 2, details: { status: 'Further Maker\'s input required' } },
-        { _id: 3, details: { status: 'Abandoned Deal' } },
+        { _id: 3, details: { status: 'Abandoned' } },
         { _id: 4, details: { status: 'Acknowledged by UKEF' } },
       ];
 
@@ -148,7 +148,7 @@ describe(component, () => {
         { _id: 2, details: { status: "Further Maker's input required" } },
         { _id: 3, details: { status: 'Submitted' } },
         { _id: 4, details: { status: 'Rejected by UKEF' } },
-        { _id: 5, details: { status: 'Abandoned Deal' } },
+        { _id: 5, details: { status: 'Abandoned' } },
         { _id: 6, details: { status: 'Acknowledged by UKEF' } },
         { _id: 7, details: { status: 'Accepted by UKEF (without conditions)' } },
         { _id: 8, details: { status: 'Accepted by UKEF (with conditions)' } },

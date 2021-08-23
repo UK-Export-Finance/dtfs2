@@ -36,7 +36,7 @@ describe(component, () => {
     it("should be disabled for deals in all other states", () =>{
       const user = {_id: 123, roles: ['maker']};
       const deals = [
-        {_id: 1, details:{status:"Abandoned Deal", maker:{_id:123}}},
+        {_id: 1, details:{status:"Abandoned", maker:{_id:123}}},
         {_id: 2, details:{status:"Acknowledged by UKEF", maker:{_id:123}}},
         {_id: 3, details:{status:"Accepted by UKEF (without conditions)", maker:{_id:123}}},
         {_id: 4, details:{status:"Accepted by UKEF (with conditions)", maker:{_id:123}}},

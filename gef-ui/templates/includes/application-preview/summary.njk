@@ -13,18 +13,8 @@
   </div>
 </div>
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-      <div class="govuk-grid-column-one-half">
-        <p class="govuk-body"><strong>Bank's reference</strong></p>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <p class="govuk-body" data-cy="bank-reference">{{ bankInternalRefName }}</b></p>
-      </div>
-    </div>
-  </div>
-</div>
+{% include "includes/application-details/applicationReferenceAndActions.njk" %}
+
 
 <div class="application-banner preview-banner" data-cy="application-banner">
   <div class="govuk-width-container">
