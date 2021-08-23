@@ -6,8 +6,10 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const params = {
+    renderEditLink: true,
     deal: {
       _id: '12345678',
+      dealType: 'BSS/EWCS',
       details: {
         submissionType: 'Automatic Inclusion Notice',
         bankSupplyContractID: 'contract-1',
@@ -129,15 +131,28 @@ describe(page, () => {
     wrapper.expectText('[data-cy="agent-name"]').toRead(params.deal.eligibility.agentName);
   });
 
-  describe('when dealType is GEF', () => {
-    it('should render `Not applicable`', () => {
-      const gefDeal = {
-        deal: {
-          ...params.deal,
-          dealType: 'GEF',
-        },
-      };
+  it('should render edit link', () => {
+    wrapper = render(params);
 
+    wrapper.expectElement('[data-cy="edit-party-link"]').toExist();
+  });
+
+  describe('when dealType is GEF', () => {
+    const gefDeal = {
+      ...params,
+      deal: {
+        ...params.deal,
+        dealType: 'GEF',
+      },
+    };
+
+    it('should NOT render edit link', () => {
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="edit-party-link"]').notToExist();
+    });
+
+    it('should render `Not applicable`', () => {
       wrapper = render(gefDeal);
 
       wrapper.expectElement('[data-cy="agent-not-applicable"]').toExist();
