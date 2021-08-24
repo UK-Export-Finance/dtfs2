@@ -18,6 +18,7 @@ import aboutFacility from '../about-facility';
 import providedFacility from '../provided-facility';
 import facilityCurrency from '../facility-currency';
 import facilityValue from '../facility-value';
+import facilityGuarantee from '../facility-guarantee';
 import facilityConfirmDeletion from '../facility-confirm-deletion';
 import returnToMaker from '../return-to-maker';
 
@@ -61,6 +62,7 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(providedFacility);
     expect(useSpy).toHaveBeenCalledWith(facilityCurrency);
     expect(useSpy).toHaveBeenCalledWith(facilityValue);
+    expect(useSpy).toHaveBeenCalledWith(facilityGuarantee);
     expect(useSpy).toHaveBeenCalledWith(facilityConfirmDeletion);
     expect(useSpy).toHaveBeenCalledWith(returnToMaker);
   });

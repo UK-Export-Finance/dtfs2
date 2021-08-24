@@ -54,7 +54,7 @@
           class="govuk-visually-hidden"
           id="facilityType"
           name="facilityType"
-          hidden="true"
+          type="hidden"
           value="{{facilityType}}"
           data-cy="hidden-facility-type">
 
@@ -142,14 +142,22 @@
 
         <div class="govuk-button-group">
           {{ govukButton({
-            text: "Done",
+            text: "Continue",
             attributes: {
-              'data-cy': 'done-button'
+              'data-cy': 'continue-button'
+            }
+          }) }}
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "facility-value?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
             }
           }) }}
         </div>
       </form>
     </div>
   </div>
-  
+
 {% endblock %}

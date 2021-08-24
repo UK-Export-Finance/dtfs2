@@ -53,6 +53,9 @@ class Facility {
       this.ukefExposure = 0;
       this.submittedAsIssuedDate = null;
       this.ukefFacilityId = null;
+      this.feeType = null;
+      this.frequency = null;
+      this.dayCountBasis = null;
     } else {
       // update application
       if (req.hasBeenIssued != null) {
@@ -103,6 +106,18 @@ class Facility {
 
       if (req.interestPercentage != null) {
         this.interestPercentage = Number(req.interestPercentage);
+      }
+
+      if (req.feeType) {
+        this.feeType = req.feeType;
+      }
+
+      if (req.frequency) {
+        this.frequency = req.frequency;
+      }
+
+      if (req.dayCountBasis) {
+        this.dayCountBasis = req.dayCountBasis;
       }
 
       if (req.paymentType != null) {
