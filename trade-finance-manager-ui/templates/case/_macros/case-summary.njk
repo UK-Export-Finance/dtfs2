@@ -58,6 +58,11 @@
 
       <div class="case-summary-overview-column ukef-grid-column-one-sixth">
         <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Product</div>
+          <div class="ukef-body-s" data-cy="ukef-product">{{ tfm.product | dashIfEmpty }}</div>
+        </div>
+
+        <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Type</div>
           <div class="ukef-body-s" data-cy="submission-type">{{ deal.details.submissionType | dashIfEmpty }}</div>
         </div>

@@ -4,7 +4,7 @@ import tfmPages from '../../../../../../trade-finance-manager/cypress/integratio
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_AIN_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import MOCK_MIADEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
@@ -23,7 +23,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_AIN_DEAL_READY_TO_SUBMIT(),
+      MOCK_MIADEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         deal = insertedDeals[0];
@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage is added to the deal in TFM', () => {
+  it('Portal MIA deal is submitted to UKEF, `Application` deal stage and product is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -79,9 +79,15 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(tfmCaseDealPage);
 
 
+    //---------------------------------------------------------------
+    // deal stage and product type is populated
+    //---------------------------------------------------------------
     tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Confirmed');
+      expect(text.trim()).to.contain('Application');
     });
 
+    tfmPartials.caseSummary.ukefProduct().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('BSS & EWCS');
+    });
   });
 });
