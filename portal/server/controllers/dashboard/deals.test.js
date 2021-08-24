@@ -94,14 +94,12 @@ describe('controllers/dashboard', () => {
             _id: 'mockDeal2',
             exporter: 'mock company',
             product: 'GEF',
-            type: '-',
             lastUpdate: 5678,
           },
           {
             _id: 'mockDeal',
             exporter: 'mock company',
             product: 'GEF',
-            type: '-',
             lastUpdate: 1234,
           }],
         pages: {

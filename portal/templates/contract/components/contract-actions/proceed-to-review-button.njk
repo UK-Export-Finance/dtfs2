@@ -26,7 +26,7 @@
         "href": ""
       }) }}
 
-    {% elseif  ["Draft", "Further Maker's input required", "Abandoned Deal", "Acknowledged by UKEF"].includes(params.deal.details.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged by UKEF"].includes(params.deal.details.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
 
       {{ govukButton({
         "disabled": true,

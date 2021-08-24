@@ -10,7 +10,13 @@
 
   {% block content %}
    <form autocomplete="off" method="POST">
-    {{ agentArea.render({deal: deal, tfm: tfm, editable: true}) }}
+    {{ agentArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink,
+      renderEditForm: renderEditForm
+    }) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">

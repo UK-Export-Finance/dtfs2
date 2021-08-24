@@ -1,15 +1,17 @@
 
-const queryAllDeals = require('./query-all-deals');
-const queryDeals = require('./query-deals');
-const queryTransactions = require('./query-transactions');
-const queryGefDeals = require('./query-gef-deals');
+const allDeals = require('./query-all-deals');
+const deals = require('./query-deals');
+const transactions = require('./query-transactions');
+const gefDeals = require('./query-gef-deals');
+const gefFacilities = require('./query-gef-facilities');
 
 const resolvers = {
   Query: {
-    allDeals: queryAllDeals,
-    deals: queryDeals,
-    gefDeals: queryGefDeals,
-    transactions: queryTransactions,
+    allDeals,
+    deals,
+    gefDeals,
+    transactions,
+    gefFacilities,
   },
 };
 

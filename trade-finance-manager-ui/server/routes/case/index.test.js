@@ -3,6 +3,7 @@ import {
   post,
 } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
+import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
 
 describe('routes - case', () => {
@@ -26,19 +27,19 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId', caseController.getCaseFacility);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties', caseController.getCaseParties);
+    expect(get).toHaveBeenCalledWith('/:_id/parties', partiesController.getCaseParties);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter', caseController.getExporterPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.getExporterPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer', caseController.getBuyerPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.getBuyerPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/agent', caseController.getAgentPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.getAgentPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier', caseController.getIndemnifierPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.getIndemnifierPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-issuer', caseController.getBondIssuerPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-issuer', partiesController.getBondIssuerPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', partiesController.getBondBeneficiaryPartyDetails);
 
     expect(get).toHaveBeenCalledWith('/:_id/documents', caseController.getCaseDocuments);
 
@@ -69,13 +70,13 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', caseController.postExporterPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.postExporterPartyDetails);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer', caseController.postBuyerPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.postBuyerPartyDetails);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/agent', caseController.postAgentPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.postAgentPartyDetails);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier', caseController.postIndemnifierPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.postIndemnifierPartyDetails);
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 

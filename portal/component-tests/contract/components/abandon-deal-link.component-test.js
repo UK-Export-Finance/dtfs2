@@ -24,7 +24,7 @@ describe(component, () => {
       const deals = [
         {_id: 1, details:{status:"Submitted", maker:{_id:123}}},
         {_id: 2, details:{status:"Rejected by UKEF", maker:{_id:123}}},
-        {_id: 3, details:{status:"Abandoned Deal", maker:{_id:123}}},
+        {_id: 3, details:{status:"Abandoned", maker:{_id:123}}},
         {_id: 4, details:{status:"Acknowledged by UKEF", maker:{_id:123}}},
         {_id: 5, details:{status:"Accepted by UKEF (without conditions)", maker:{_id:123}}},
         {_id: 6, details:{status:"Accepted by UKEF (with conditions)", maker:{_id:123}}},
@@ -48,7 +48,7 @@ describe(component, () => {
         {_id: 2, details:{status:"Further Maker's input required"}},
         {_id: 3, details:{status:"Submitted"}},
         {_id: 4, details:{status:"Rejected by UKEF"}},
-        {_id: 5, details:{status:"Abandoned Deal"}},
+        {_id: 5, details:{status:"Abandoned"}},
         {_id: 6, details:{status:"Acknowledged by UKEF"}},
         {_id: 7, details:{status:"Accepted by UKEF (without conditions)"}},
         {_id: 8, details:{status:"Accepted by UKEF (with conditions)"}},

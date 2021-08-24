@@ -81,7 +81,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);
     contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Abandoned Deal');
+      expect(text.trim()).to.equal('Abandoned');
     });
     contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Draft');

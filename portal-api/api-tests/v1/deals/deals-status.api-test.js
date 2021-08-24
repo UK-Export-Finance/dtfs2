@@ -134,7 +134,7 @@ describe('/v1/deals/:id/status', () => {
 
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       const { status } = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/status`);
@@ -153,13 +153,13 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
-      expect(body.details.status).toEqual('Abandoned Deal');
+      expect(body.details.status).toEqual('Abandoned');
     });
 
     it('updates the deal', async () => {
@@ -167,7 +167,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -175,7 +175,7 @@ describe('/v1/deals/:id/status', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.details.status).toEqual('Abandoned Deal');
+      expect(body.deal.details.status).toEqual('Abandoned');
     });
 
     it('updates the deals details.dateOfLastAction field', async () => {
@@ -183,7 +183,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -199,7 +199,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -208,7 +208,7 @@ describe('/v1/deals/:id/status', () => {
 
       expect(status).toEqual(200);
       expect(body.deal.details.previousStatus).toEqual(createdDeal.details.status);
-      expect(body.deal.details.status).toEqual('Abandoned Deal');
+      expect(body.deal.details.status).toEqual('Abandoned');
     });
 
     it('updates details.previousWorkflowStatus only when relevant workflow status changed', async () => {
@@ -216,7 +216,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -252,7 +252,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -282,7 +282,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -352,11 +352,11 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.editedBy.length).toEqual(0);
     });
 
-    it('rejects "Abandoned Deal" updates if no comment provided.', async () => {
+    it('rejects "Abandoned" updates if no comment provided.', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
-        status: 'Abandoned Deal',
+        status: 'Abandoned',
       };
 
       const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
