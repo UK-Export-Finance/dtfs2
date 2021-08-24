@@ -72,8 +72,6 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
-    - name: Debugging with tmate
-      uses: mxschmitt/action-tmate@v3.6
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh

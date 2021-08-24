@@ -15,9 +15,6 @@ const CONSTANTS = require('../constants');
 
 module.exports = df.orchestrator(function* numbergenerator(context) {
 //  const { dealId, facilities = [] } = context.df.getInput();
-  return {
-    num: 'TEMP_DEBUG',
-  };
   const { entityType } = context.df.getInput();
 
   if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
