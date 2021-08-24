@@ -49,7 +49,7 @@ const CURRENCY = {
   GBP: 'GBP',
   EUR: 'EUR',
   USD: 'USD',
-  YEN: 'YEN',
+  YEN: 'JPY',
 };
 
 module.exports = {
