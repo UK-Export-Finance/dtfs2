@@ -271,9 +271,7 @@ services:
           memory: 3000M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-      - WEBSITES_ENABLE_APP_SERVICE_STORAGE=false
       - WEBSITE_HOSTNAME=localhost:7072
-      - FUNCTIONS_WORKER_RUNTIME=node
       - MULESOFT_API_UKEF_TF_EA_URL
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
