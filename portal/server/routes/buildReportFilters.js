@@ -1,5 +1,5 @@
 import moment from 'moment';
-import CONSTANTS from '../constants';
+import { FACILITY_STAGE, STATUS, SUBMISSION_TYPE } from '../constants';
 
 const getUserFilters = (params, user = {}) => {
   const { filterBySubmissionUser } = params;
@@ -36,31 +36,31 @@ const buildReportFilters = (params, user) => {
   }
 
   //  if (params.filterBySubmissionUser) filters = applyUserFilters(params, user, filters);
-  if (CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType]) {
+  if (SUBMISSION_TYPE[params.filterBySubmissionType]) {
     filters.push(
       {
         field: 'details.submissionType',
-        value: CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType],
+        value: SUBMISSION_TYPE[params.filterBySubmissionType],
       },
     );
   }
 
-  if (CONSTANTS.STATUS[params.filterByStatus]) {
+  if (STATUS[params.filterByStatus]) {
     filters.push(
       {
         field: 'details.status',
-        value: CONSTANTS.STATUS[params.filterByStatus],
+        value: STATUS[params.filterByStatus],
       },
     );
   }
 
-  if (CONSTANTS.FACILITY_STAGE[params.facilityStage]) {
+  if (FACILITY_STAGE[params.facilityStage]) {
     /*
-    const stage = CONSTANTS.FACILITY_STAGE[params.facilityStage];
-    let filterValue = (stage === CONSTANTS.FACILITY_STAGE.unissued ||
-      stage === CONSTANTS.FACILITY_STAGE.conditional ? 'unissued_conditional' : 'issued_unconditional');
-    if (stage === CONSTANTS.FACILITY_STAGE.incomplete) filterValue = stage;
-    if (stage === CONSTANTS.FACILITY_STAGE.submitted) filterValue = stage;
+    const stage = FACILITY_STAGE[params.facilityStage];
+    let filterValue = (stage === FACILITY_STAGE.unissued ||
+      stage === FACILITY_STAGE.conditional ? 'unissued_conditional' : 'issued_unconditional');
+    if (stage === FACILITY_STAGE.incomplete) filterValue = stage;
+    if (stage === FACILITY_STAGE.submitted) filterValue = stage;
      */
     filters.push(
       {

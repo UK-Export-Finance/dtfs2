@@ -6,8 +6,10 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const params = {
+    renderEditLink: true,
     deal: {
       _id: '12345678',
+      dealType: 'BSS/EWCS',
       details: {
         submissionType: 'Automatic Inclusion Notice',
         bankSupplyContractID: 'contract-1',
@@ -81,41 +83,80 @@ describe(page, () => {
     },
   };
 
-  beforeEach(() => {
-    wrapper = render(params);
-  });
-
   it('should render agent address country', () => {
-    wrapper
-      .expectText('[data-cy="agent-address-country"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address-country"]')
       .toRead(params.deal.eligibility.agentAddressCountry.name);
   });
+
   it('should render agent agentAddressLine1 in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressLine1);
   });
+
   it('should render agent agentAddressLine2 in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressLine2);
   });
+
   it('should render agent agentAddressLine3 in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressLine3);
   });
+
   it('should render agent agentAddressTown in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressTown);
   });
+
   it('should render agent agentAddressPostcode in address', () => {
-    wrapper
-      .expectText('[data-cy="agent-address"]')
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-address"]')
       .toContain(params.deal.eligibility.agentAddressPostcode);
   });
+
   it('should render agent name', () => {
+    wrapper = render(params);
+
     wrapper.expectText('[data-cy="agent-name"]').toRead(params.deal.eligibility.agentName);
+  });
+
+  it('should render edit link', () => {
+    wrapper = render(params);
+
+    wrapper.expectElement('[data-cy="edit-party-link"]').toExist();
+  });
+
+  describe('when dealType is GEF', () => {
+    const gefDeal = {
+      ...params,
+      deal: {
+        ...params.deal,
+        dealType: 'GEF',
+      },
+    };
+
+    it('should NOT render edit link', () => {
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="edit-party-link"]').notToExist();
+    });
+
+    it('should render `Not applicable`', () => {
+      wrapper = render(gefDeal);
+
+      wrapper.expectElement('[data-cy="agent-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="agent-details"]').notToExist();
+    });
   });
 });

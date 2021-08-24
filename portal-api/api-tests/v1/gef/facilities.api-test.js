@@ -60,7 +60,7 @@ describe(baseUrl, () => {
         ukefFacilityId: null,
       },
       validation: {
-        required: ['name', 'monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
+        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
       },
     };
     completeUpdate = {
@@ -121,12 +121,6 @@ describe(baseUrl, () => {
 
       await as(aMaker).post({
         applicationId: mockApplication.body._id,
-        type: FACILITY_TYPE.CONTINGENT,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      await as(aMaker).post({
-        applicationId: 'shouldNotBeInTheList',
         type: FACILITY_TYPE.CONTINGENT,
         hasBeenIssued: false,
       }).to(baseUrl);
@@ -288,6 +282,43 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
+    it('name is required if hasBeenIssued', async () => {
+      const { details } = newFacility;
+      const update = {
+        hasBeenIssued: true,
+        name: null,
+        shouldCoverStartOnSubmission: true,
+        coverStartDate: null,
+        coverEndDate: '2015-01-01T00:00:00.000Z',
+        monthsOfCover: 12,
+        details: ['test'],
+        detailsOther: null,
+        currency: 'GBP',
+        value: 10000000,
+        coverPercentage: 80,
+        interestPercentage: 40,
+        paymentType: 'IN_ADVANCE_QUARTERLY',
+      };
+      const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
+      const expected = {
+        status: STATUS.IN_PROGRESS,
+        details: {
+          ...details,
+          ...update,
+          updatedAt: expect.any(Number),
+          monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
+          ukefExposure: calculateUkefExposure(update, {}),
+        },
+        validation: {
+          required: ['name'],
+        },
+      };
+
+      expect(body).toEqual(expected);
+      expect(status).toEqual(200);
+    });
+
     it('other description is required if I select the other checkmark', async () => {
       const { details } = newFacility;
       const update = {
@@ -300,10 +331,10 @@ describe(baseUrl, () => {
         details: {
           ...details,
           ...update,
-          updatedAt: expect.any(Number)
+          updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['name', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
+          required: ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
         },
       };
 

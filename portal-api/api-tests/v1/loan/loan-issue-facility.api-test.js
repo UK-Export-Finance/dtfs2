@@ -121,7 +121,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
       // put deal into a state that doesn't allow facility issuance
       await as(aSuperuser).put({
         comments: 'test',
-        status: 'Abandoned Deal'
+        status: 'Abandoned'
       }).to(`/v1/deals/${dealId}/status`);
 
       const { status } = await putIssueFacility(dealId, loanId, {});

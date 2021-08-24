@@ -5,7 +5,7 @@ import {
   getApiData,
   requestParams,
 } from '../../helpers';
-import CONSTANTS from '../../constants';
+import { FACILITY_STAGE } from '../../constants';
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -140,7 +140,7 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
     filter: {
       ...reportFilters,
     },
-    facilityStages: CONSTANTS.FACILITY_STAGE,
+    facilityStages: FACILITY_STAGE,
     primaryNav,
     subNav: 'audit-transactions',
     user: req.session.user,

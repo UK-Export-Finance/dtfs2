@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+
 function checkType(type) {
   if (type) {
     switch (type.toUpperCase()) {
@@ -30,29 +32,29 @@ class Facility {
   constructor(req) {
     if (req.applicationId) {
       // new application
-      this.applicationId = req.applicationId ? req.applicationId : null;
+      this.applicationId = req.applicationId ? new ObjectId(req.applicationId) : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
-      this.name = null;
+      this.name = req.name || null;
       this.shouldCoverStartOnSubmission = null;
       this.coverStartDate = null;
       this.coverEndDate = null;
       this.monthsOfCover = null;
       this.details = null;
       this.detailsOther = null;
-      this.currency = null;
-      this.value = null;
+      this.currency = req.currency || null;
+      this.value = req.value || null;
       this.coverPercentage = null;
       this.interestPercentage = null;
       this.paymentType = null;
       this.createdAt = Date.now();
       this.updatedAt = Date.now();
       this.ukefExposure = 0;
-      this.submittedAsIssuedDate = null;
-      this.ukefFacilityId = null;
+      this.submittedAsIssuedDate = req.submittedAsIssuedDate || null;
+      this.ukefFacilityId = req.ukefFacilityId || null;
       this.feeType = null;
       this.frequency = null;
       this.dayCountBasis = null;

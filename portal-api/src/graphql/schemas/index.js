@@ -103,6 +103,7 @@ type Transaction {
   deal_owningBank: String
   deal_created: String
   deal_submissionDate: String
+  deal_submissionType: String
   transaction_id: String
   bankFacilityId: String
   ukefFacilityId: String
@@ -141,10 +142,10 @@ input TransactionInput {
 }
 
 type Exporter {
-  _id : String
+  _id: String
   companiesHouseRegistrationNumber: String
   companyName: String
-  registeredAddress : String
+  registeredAddress: String
   correspondenceAddress: String
   selectedIndustry: String
   industries: String,
@@ -179,6 +180,11 @@ type GefDeal {
   bankInternalRefName: String
   mandatoryVersionId: String
   additionalRefName: String
+  submissionCount: String
+  submissionDate: Float
+  submissionType: String
+  ukefDealId: String
+  checkerId: String
   createdAt: Float
   updatedAt: Float
   exporter: Exporter
@@ -190,12 +196,43 @@ type GefDealsQuery {
   deals: [GefDeal]
 }
 
+type GefFacility {
+  _id: String
+  applicationId: String
+  type: String
+  hasBeenIssued: Boolean
+  name: String
+  shouldCoverStartOnSubmission: String
+  coverStartDate: Float
+  coverEndDate: Float
+  monthsOfCover: Int
+  details: String
+  detailsOther: String
+  currency: String
+  value: Float
+  coverPercentage: Float
+  interestPercentage: Float
+  paymentType: String
+  ukefExposure: Float
+  submittedAsIssuedDate: Float
+  ukefFacilityId: String
+  createdAt: Float
+  updatedAt: Float
+  deal: GefDeal
+}
+
+type GefFacilitiesQuery {
+  count: Int
+  facilities: [GefFacility]
+}
+
 type Query {
   currencies: [Currency]
   allDeals(params: DealsInput): AllDealsQuery
   deals(params: DealsInput): DealsQuery
   gefDeals(params: DealsInput): GefDealsQuery
   transactions(params: TransactionInput): TransactionQuery
+  gefFacilities(params: TransactionInput): GefFacilitiesQuery
 }
 
 type DealStatusErrorItem {

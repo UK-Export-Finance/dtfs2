@@ -3,7 +3,7 @@ const validate = require('./completeDealValidation-flat');
 module.exports = (deal, requestedUpdate, user) => {
   let errorList = {};
 
-  if (requestedUpdate.status === 'Abandoned Deal') {
+  if (requestedUpdate.status === 'Abandoned') {
     if (!user.roles.includes('maker')) {
       // TODO reject this?
     } else if (!requestedUpdate.comments) {

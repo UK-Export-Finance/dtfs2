@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import apollo from './graphql/apollo';
 
 import {
-  allDealsQuery, dealsQuery, transactionsQuery, gefDealsQuery,
+  allDealsQuery, dealsQuery, transactionsQuery, gefDealsQuery, gefFacilitiesQuery,
 } from './graphql/queries';
 
 require('dotenv').config();
@@ -647,6 +647,18 @@ const gefDeals = async (start, pagesize, filters, token) => {
   return response.data.gefDeals || { count: 0, deals: [] };
 };
 
+const gefFacilities = async (start, pagesize, filters, token) => {
+  const params = {
+    start,
+    pagesize,
+    filters,
+  };
+
+  const response = await apollo('GET', gefFacilitiesQuery, params, token);
+
+  return response.data.gefFacilities || { count: 0, facilities: [] };
+};
+
 export default {
   allDeals,
   banks,
@@ -691,4 +703,5 @@ export default {
   mga,
   downloadMga,
   gefDeals,
+  gefFacilities,
 };

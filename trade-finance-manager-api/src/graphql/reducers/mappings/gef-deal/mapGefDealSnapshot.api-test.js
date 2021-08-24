@@ -30,6 +30,7 @@ describe('mapGefDealSnapshot', () => {
 
     const expected = {
       _id: MOCK_GEF_DEAL._id,
+      dealType: MOCK_GEF_DEAL.dealType,
       details: mapGefDealDetails(mockDeal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(mockDeal.dealSnapshot),
       eligibilityCriteria: [],
