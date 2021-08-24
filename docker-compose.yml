@@ -262,8 +262,11 @@ services:
     restart: always
     ports:
       - "7072:80"
-    volumes:
-      - ./azure-functions/number-generator-function:/home/site/wwwroot
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - WEBSITE_HOSTNAME=localhost:7072
