@@ -5,6 +5,7 @@ const {
   facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums,
 } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
+const { isSuperUser } = require('../../users/checks');
 
 const collectionName = 'gef-facilities';
 
@@ -34,7 +35,7 @@ const getAllFacilitiesByApplicationId = async (applicationId) => {
   let find = {};
 
   if (applicationId) {
-    find = { applicationId: String(applicationId) };
+    find = { applicationId: ObjectId(applicationId) };
   }
 
   const doc = await collection.find(find).toArray();
@@ -142,7 +143,7 @@ exports.updatePUT = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
+  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
@@ -150,4 +151,62 @@ exports.deleteByApplicationId = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const response = await collection.deleteMany({ applicationId: req.query.applicationId });
   res.status(200).send(response);
+};
+
+const facilitiesFilters = (user, filters = []) => {
+  const amendedFilters = [...filters];
+
+  // add the bank clause if we're not a superuser
+  if (!isSuperUser(user)) { amendedFilters.push({ 'deal.bankId': { $eq: user.bank.id } }); }
+
+  let result = {};
+  if (amendedFilters.length === 1) {
+    [result] = amendedFilters;
+  } else if (amendedFilters.length > 1) {
+    result = {
+      $and: amendedFilters,
+    };
+  }
+
+  return result;
+};
+
+exports.findFacilities = async (
+  requestingUser,
+  filters,
+  start = 0,
+  pagesize = 0,
+) => {
+  const sanitisedFilters = facilitiesFilters(requestingUser, filters);
+
+  const collection = await db.getCollection(collectionName);
+
+  const doc = await collection
+    .aggregate([
+      {
+        $lookup: {
+          from: 'gef-application',
+          localField: 'applicationId',
+          foreignField: '_id',
+          as: 'deal',
+        },
+      },
+      { $unwind: '$deal' },
+      { $match: sanitisedFilters },
+      { $sort: { updatedAt: -1, createdAt: -1 } },
+      {
+        $facet: {
+          count: [{ $count: 'total' }],
+          facilities: [
+            { $skip: start },
+            ...(pagesize ? [{ $limit: pagesize }] : []),
+          ],
+        },
+      },
+      { $unwind: '$count' },
+      { $project: { count: '$count.total', facilities: 1 } },
+    ])
+    .toArray();
+
+  return doc;
 };

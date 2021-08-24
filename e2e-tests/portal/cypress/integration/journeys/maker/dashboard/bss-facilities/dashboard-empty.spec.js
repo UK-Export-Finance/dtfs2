@@ -1,8 +1,7 @@
-const { transactionDashboard, defaults } = require('../../../../pages');
-const relative = require('../../../../relativeURL');
-
+const { facilitiesDashboard, defaults } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Dashboard Transactions', () => {
   beforeEach(() => {
@@ -17,7 +16,7 @@ context('Dashboard Transactions', () => {
 
   it('Can display an empty dashboard', () => {
     cy.login(MAKER_LOGIN);
-    transactionDashboard.visit();
-    cy.title().should('eq', `Transactions${defaults.pageTitleAppend}`);
+    facilitiesDashboard.visit();
+    cy.title().should('eq', `Facilities${defaults.pageTitleAppend}`);
   });
 });
