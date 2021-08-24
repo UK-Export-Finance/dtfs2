@@ -13,8 +13,8 @@ const facilityValue = {
   percentageCoverError: () => cy.get('[data-cy="percentage-cover-error"]'),
   interestPercentage: () => cy.get('[data-cy="interest-percentage"]'),
   interestPercentageError: () => cy.get('[data-cy="interest-percentage-error"]'),
-  yenCheckbox: () => cy.get('[data-cy="yen-checkbox"]'),
-  doneButton: () => cy.get('[data-cy="done-button"]'),
+  continueButton: () => cy.get('[data-cy="continue-button"]'),
+  saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };
 
 export default facilityValue;
