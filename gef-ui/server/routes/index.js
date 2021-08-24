@@ -24,6 +24,13 @@ import returnToMaker from './return-to-maker';
 
 const router = express.Router();
 
+router.use('*', (req, res, next) => {
+  if (req.session && req.session.user) {
+    res.locals.user = req.session.user;
+  }
+  return next();
+});
+
 router.use(mandatoryCriteriaRoutes);
 router.use(nameApplicationRoutes);
 router.use(ineligibleGefRoutes);
