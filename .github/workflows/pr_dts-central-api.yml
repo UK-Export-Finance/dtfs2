@@ -67,7 +67,7 @@ jobs:
 
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-
+      
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -82,7 +82,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:${{ github.sha }} dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d
+        docker-compose up -d dtfs-central-api
     - name: Run API tests
       run: |
         docker-compose exec -T dtfs-central-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
