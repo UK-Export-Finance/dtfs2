@@ -125,12 +125,6 @@ describe(baseUrl, () => {
         hasBeenIssued: false,
       }).to(baseUrl);
 
-      await as(aMaker).post({
-        applicationId: 'shouldNotBeInTheList',
-        type: FACILITY_TYPE.CONTINGENT,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
       const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${mockApplication.body._id}`);
 
       expect(body).toEqual({ status: STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
@@ -300,7 +294,7 @@ describe(baseUrl, () => {
         details: {
           ...details,
           ...update,
-          updatedAt: expect.any(Number)
+          updatedAt: expect.any(Number),
         },
         validation: {
           required: ['name', 'monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage'],

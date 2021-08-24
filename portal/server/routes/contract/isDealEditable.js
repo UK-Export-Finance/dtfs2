@@ -1,4 +1,4 @@
-import STATUS from '../../constants/status';
+import { STATUS } from '../../constants';
 
 const isDealEditable = (deal, user) => {
   if (!user.roles.includes('maker')) {
