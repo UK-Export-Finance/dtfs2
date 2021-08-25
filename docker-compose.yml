@@ -15,7 +15,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: '0.25'
           memory: 500M
       
   dtfs-central-api:
@@ -48,6 +48,11 @@ services:
       - trade-finance-manager-api
     ports:
       - "5003:5003"
+        deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./trade-finance-manager-ui/scripts:/app/scripts:ro
       - ./trade-finance-manager-ui/styles:/app/styles:ro
@@ -74,8 +79,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
-          memory: 500M
+          cpus: '0.25'
+          memory: 1000M
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
@@ -130,8 +135,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
-          memory: 500M
+          cpus: '0.25'
+          memory: 1000M
     volumes:
       - ./portal-api/src:/app/src:ro
     environment:
@@ -283,6 +288,11 @@ services:
       - gef-ui
     ports:
       - "80:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
