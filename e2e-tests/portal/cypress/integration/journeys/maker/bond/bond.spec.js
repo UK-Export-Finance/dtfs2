@@ -192,8 +192,6 @@ context('Add a Bond to a Deal', () => {
           expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
         });
 
-        // TODO: UKEF facility ID (when built)
-
         row.bondStatus().invoke('text').then((text) => {
           expect(text.trim()).equal('Completed');
         });

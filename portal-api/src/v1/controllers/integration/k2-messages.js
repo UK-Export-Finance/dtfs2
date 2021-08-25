@@ -362,7 +362,6 @@ const createTypeA = async (deal, fromStatus) => {
     typeAxmlStr, filename, errorCount, errorList,
   } = await generateTypeA(deal, fromStatus);
 
-  // TODO - Decide what to do with invalid typeA xml
   if (errorCount) {
     return {
       errorCount,

@@ -5,9 +5,6 @@ const { QUERY, apollo } = require('./graphql');
 
 const { gef } = require('./gef/api');
 
-// TODO multiple services talk to the same api; we end up writing basically the same code twice to achieve this
-//  ... a binary repo to publish things to so we can share? ... local references in package.json??
-
 const urlRoot = process.env.DEAL_API_URL;
 
 const createBank = async (bank, token) => {

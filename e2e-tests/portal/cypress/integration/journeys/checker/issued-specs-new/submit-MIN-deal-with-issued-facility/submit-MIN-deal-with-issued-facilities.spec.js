@@ -151,7 +151,5 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contract.visit(deal);
     loanRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanId}`));
-
-    // TODO: assert that if user tries to navigate to a bond or loan form, you go to unauth page.
   });
 });

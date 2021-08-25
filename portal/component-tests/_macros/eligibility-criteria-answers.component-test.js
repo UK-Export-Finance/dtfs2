@@ -29,9 +29,4 @@ describe(component, () => {
       wrapper.expectText(`[data-cy="${criterionIdSelector}-description"]`).toRead(criterion.description);
     }
   });
-
-  // TODO
-  // describe('criterion 11', () => {
-  //   it('should render agent name and address')
-  // });
 });
