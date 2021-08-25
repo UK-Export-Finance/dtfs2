@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('..api/../../api')(app);
@@ -31,14 +30,11 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       const { body: facility1 } = await api.post(newFacility).to('/v1/portal/gef/facilities');
       const { body: facility2 } = await api.post(newFacility).to('/v1/portal/gef/facilities');
 
-
       // submit deal/facilities
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
       }).to('/v1/tfm/deals/submit');
-
-      // why is tfm-facilities empty
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
 
