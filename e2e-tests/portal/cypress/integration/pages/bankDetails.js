@@ -6,8 +6,6 @@ const page = {
   bankDealNameCount: () => cy.get('[data-cy="bankSupplyContractName-count"]'),
   submit: () => cy.get('[data-cy="submit-button"]'),
   cancel: () => cy.get('[data-cy="Cancel"]'),
-  bondSupportScheme: () => '//TODO',
-  exportWorkingCapitalScheme: () => '//TODO',
 };
 
 module.exports = page;
