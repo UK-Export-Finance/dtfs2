@@ -3,24 +3,24 @@
 # UKEF Trade Finance Service
 
 This repository contains the code for the UK Export Finance Trade Finance Service.
- 
+
 ## Setup
 
 Prerequisites
 
- * Version 13 or later of `node` with a corresponding `npm`
- * Docker and Docker Compose
+* Version 13 or later of `node` with a corresponding `npm`
+* Docker and Docker Compose
 
 ### Tech stack
 
- * Node, NPM
- * MongoDB
- * Docker
- * GraphQL
- * Cypress (e2e tests)
- * Webpack
- * GovUK and MOJ design systems
- * Nunjucks (UI templates)
+* Node, NPM
+* MongoDB
+* Docker
+* GraphQL
+* Cypress (e2e tests)
+* Webpack
+* GovUK and MOJ design systems
+* Nunjucks (UI templates)
 
 ### Getting started
 
@@ -34,7 +34,7 @@ Prerequisites
 * Set session secret environment variable in your terminal. eg: `export SESSION_SECRET=abc1234`
 * Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`
 * Start up your local environment: `docker-compose up --build`
-* Create mock data: navigate to `utils/mock-data-loader`, run `npm install`and then `node re-insert-mocks.js`. This should generate mocks in your DB.
+* Create mock data: navigate to `utils/mock-data-loader`, run `npm install` and then `node re-insert-mocks.js`. This should generate mocks in your DB.
 * Optional/recommended: Run `npm run pipeline` in the root directory of the repo to run a full build and test to make sure that everything is working.
 
 After these initial steps, you'll typically only need to run `docker-compose up` (without a full build). However, hot reloading is currently not in place for the UIs. If UI changes are made, you'll need to rebuild.
@@ -42,7 +42,6 @@ After these initial steps, you'll typically only need to run `docker-compose up`
 Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
 Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
-
 
 ### Environment Variables
 
@@ -76,7 +75,6 @@ E2E tests
 From respective folder (./e2e-tests/portal, ./e2e-tests/trade-finance-manager, ./e2e-tests/gef)
 All tests: npx cypress run
 Individual tests: npx cypress open
-
 ```
 
 ### Running the world locally
@@ -109,6 +107,7 @@ Several services are built:
 To access GEF locally, use http://localhost.
 
 ### CI
+
 Several environments are used:
 - http://tfs-dev-fd.azurefd.net/
 - http://tfs-demo-fd.azurefd.net/
@@ -117,12 +116,15 @@ Several environments are used:
 - http://tfs-prod-fd.azurefd.net/
 
 ### GEF test environment
+
 GEF is hosted on the same URL as Portal v2. To access GEF:
-- Login to Portal v2: https://tfs-test-fd.azurefd.net
-- Manually navigate to this GEF URL, to create a new GEF application: https://tfs-test-fd.azurefd.net/gef/mandatory-criteria
-- Alternatively, visit an existing GEF deal by ID: http://tfs-test-fd.azurefd.net/gef/deals/1
+
+* Login to Portal v2: https://tfs-test-fd.azurefd.net
+* Manually navigate to this GEF URL, to create a new GEF application: https://tfs-test-fd.azurefd.net/gef/mandatory-criteria
+* Alternatively, visit an existing GEF deal by ID: http://tfs-test-fd.azurefd.net/gef/deals/1
 
 ### Deploying to test
+
 After merging to master, dev environment will be updated.
 
 To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
@@ -131,25 +133,30 @@ This will take the latest code in the development environment and deploy to test
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
 
 ### Deploying to demo
+
 To deploy to the demo environment, run the `update-demo.sh` script in `.github/workflows` directory.
 This will take the latest code in the development environment and deploy to demo.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-demo-fd.azurefd.net/healthcheck
 
 ### Deploying to staging
+
 To deploy to the staging environment, run the `update-staging.sh` script in `.github/workflows` directory.
 This will take the latest code in the test environment and deploy to staging.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-staging-fd.azurefd.net/healthcheck
 
 ### Deploying to prod
+
 To deploy to the demo environment, run the `update-prod.sh` script in `.github/workflows` directory.
 This will take the latest code in the staging environment and deploy to prod.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
 
 ### Updating the database
+
 Should the database need to be refreshed with the latest mock data then this can be done by:
+
 1. SSH into the relevant VM (Dev-VM for dev & demo, Test-VM for test & staging, Prod-VM for prod):
 `ssh azureuser@xx.xx.xx.xx`, where xx.xx.xx.xx is the IP Address for VM.
 The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Compute%2FVirtualMachines
@@ -167,4 +174,13 @@ Pushing to the `infrastructure` branch will trigger a refresh of the infrastruct
 
 Pushing to the `demo` branch will trigger tagging of the current development container images with `demo` tag, which will in turn trigger a redeployment of the demo environment. This ensures the demo environment isn't affected by CI/CD and is only refreshed on demand.
 
+### Azure storage account
 
+This will be needed to work with file uploads and azure functions. You can create a storage account inside the Azure Portal GUI: Home > Services > Storage accounts > Create
+
+### How to run Azure functions locally
+
+1. Run everything as normal (`docker-compose up` from the root directory)
+2. In a seperate terminal tab, go to azure-functions directory and run `docker-compose up`
+
+Ideally, azure-functions would be run in the same root docker, but this caused memory issues in github actions.
