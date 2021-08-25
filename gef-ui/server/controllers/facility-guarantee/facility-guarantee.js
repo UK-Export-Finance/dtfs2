@@ -14,23 +14,29 @@ function validateFacilityGuarantee({
     errRef: 'dayCountBasis',
     errMsg: 'Select a day count basis',
   };
-  const frequencyError = {
-    errRef: 'frequency',
+  const inArrearsFrequencyError = {
+    errRef: 'inArrearsFrequency',
     errMsg: 'Select how often your bank will pay the fee to UKEF',
   };
-  if (!['in-advance', 'in-arrears', 'at-maturity'].includes(feeType)) {
+  const inAdvanceFrequencyError = {
+    errRef: 'inAdvanceFrequency',
+    errMsg: 'Select how often your bank will pay the fee to UKEF',
+  };
+
+  if (!['in advance', 'in arrears', 'At maturity'].includes(feeType)) {
     facilityGuaranteeErrors.push(feeTypeError);
+  }
+  const FREQUENCIES = ['Monthly', 'Quarterly', 'Semi-annually', 'Annually'];
+  if (['in advance'].includes(feeType)
+    && !FREQUENCIES.includes(inAdvanceFrequency)) {
+    facilityGuaranteeErrors.push(inAdvanceFrequencyError);
+  }
+  if (['in arrears'].includes(feeType)
+    && !FREQUENCIES.includes(inArrearsFrequency)) {
+    facilityGuaranteeErrors.push(inArrearsFrequencyError);
   }
   if (!['360', '365'].includes(dayCountBasis)) {
     facilityGuaranteeErrors.push(dayCountBasisError);
-  }
-  if (['in-advance'].includes(feeType)
-    && !['monthly', 'quarterly', 'semi-annually', 'annually'].includes(inAdvanceFrequency)) {
-    facilityGuaranteeErrors.push(frequencyError);
-  }
-  if (['in-arrears'].includes(feeType)
-    && !['monthly', 'quarterly', 'semi-annually', 'annually'].includes(inArrearsFrequency)) {
-    facilityGuaranteeErrors.push(frequencyError);
   }
   return facilityGuaranteeErrors;
 }

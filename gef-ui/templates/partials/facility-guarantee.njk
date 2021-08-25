@@ -60,25 +60,25 @@
             },
             items: [
               {
-                value: "monthly",
+                value: "Monthly",
                 text: "Monthly",
                 checked: inAdvanceFrequency === 'monthly',
                 attributes: { 'data-cy': 'frequency-monthly' }
               },
               {
-                value: "quarterly",
+                value: "Quarterly",
                 text: "Quarterly",
                 checked: inAdvanceFrequency === 'quarterly',
                 attributes: {'data-cy': 'frequency-quarterly'}
               },
               {
-                value: "semi-annually",
+                value: "Semi-annually",
                 text: "Semi-annually",
                 checked: inAdvanceFrequency === 'semi-annually',
                 attributes: {'data-cy': 'frequency-semi-annually'}
               },
               {
-                value: "annually",
+                value: "Annually",
                 text: "Annually",
                 checked: inAdvanceFrequency === 'annually',
                 attributes: {'data-cy': 'frequency-annually'}
@@ -107,25 +107,25 @@
             },
             items: [
               {
-                value: "monthly",
+                value: "Monthly",
                 text: "Monthly",
                 checked: inArrearsFrequency === 'monthly',
                 attributes: { 'data-cy': 'frequency-monthly' }
               },
               {
-                value: "quarterly",
+                value: "Quarterly",
                 text: "Quarterly",
                 checked: inArrearsFrequency === 'quarterly',
                 attributes: {'data-cy': 'frequency-quarterly'}
               },
               {
-                value: "semi-annually",
+                value: "Semi-annually",
                 text: "Semi-annually",
                 checked: inArrearsFrequency === 'semi-annually',
                 attributes: {'data-cy': 'frequency-semi-annually'}
               },
               {
-                value: "annually",
+                value: "Annually",
                 text: "Annually",
                 checked: inArrearsFrequency === 'annually',
                 attributes: {'data-cy': 'frequency-annually'}
@@ -154,27 +154,27 @@
           },
           items: [
             {
-              value: "in-advance",
+              value: "in advance",
               text: "In advance",
               conditional: {
                 html: inAdvanceFrequencyHtml
               },
-              checked: feeType === "in-advance",
+              checked: feeType === 'in advance',
               attributes: { 'data-cy': 'fee-type-in-advance' }
             },
             {
-              value: "in-arrears",
+              value: "in arrears",
               text: "In arrears",
               conditional: {
                 html: inArrearsFrequencyHtml
               },
-              checked: feeType === 'in-arrears',
+              checked: feeType === 'in arrears',
               attributes: {'data-cy': 'fee-type-in-arrears'}
             },
             {
-              value: "at-maturity",
+              value: "At maturity",
               text: "At maturity",
-              checked: feeType === 'at-maturity',
+              checked: feeType === 'At maturity',
               attributes: {'data-cy': 'fee-type-at-maturity'}
             }
           ]
