@@ -30,7 +30,6 @@ function checkPaymentType(paymentType) {
 
 class Facility {
   constructor(req) {
-    console.log('CREATE NEW FACILITY - REQ \n', req);
     if (req.applicationId) {
       // new application
       this.applicationId = req.applicationId ? new ObjectId(req.applicationId) : null;
