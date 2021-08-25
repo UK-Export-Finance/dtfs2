@@ -139,6 +139,9 @@ jobs:
         docker-compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
+    - name: Wake up Azure Function
+      run: |
+        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Load mock data
       run: |
         cd utils/mock-data-loader

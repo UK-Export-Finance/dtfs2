@@ -40,10 +40,13 @@ const callNumberGenerator = async ({
         entityId,
         dealId,
         user,
-        error: response.err,
+        error: await response.err.toJSON(),
       },
     });
-    return response;
+
+    return {
+      status: 500,
+    };
   }
 
   const { id: instanceId, ...numberGeneratorFunctionUrls } = response.data;

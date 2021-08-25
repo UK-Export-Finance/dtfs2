@@ -168,23 +168,9 @@ jobs:
         docker-compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
-    - name: Temporary debugs
+    - name: Wake up Azure Function
       run: |
-        docker ps
-        echo "Wait 30 secs"
-        sleep 30
-        echo AZURE_PORTAL_STORAGE_ACCOUNT=$AZURE_PORTAL_STORAGE_ACCOUNT
-        echo AZURE_PORTAL_STORAGE_ACCESS_KEY=$AZURE_PORTAL_STORAGE_ACCESS_KEY
-        echo MULESOFT_API_UKEF_TF_EA_URL=$MULESOFT_API_UKEF_TF_EA_URL
-        echo MULESOFT_API_KEY=$MULESOFT_API_KEY
-        echo MULESOFT_API_SECRET=$MULESOFT_API_SECRET
-        echo TEST_EMPTY_ENV=$TEST_EMPTY_ENV
-        echo "Try port 7072"
-        curl http://localhost:7072
-        echo "Try POST to end point"
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" --verbose -d '{ "entityType":"facility", "entityId":"12211" }'
-        curlCode=$?
-        echo "Curl exit code=$curlCode"
+        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
