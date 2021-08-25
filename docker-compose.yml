@@ -12,6 +12,11 @@ services:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
     ports:
       - "27017-27019:27017-27019"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
       
   dtfs-central-api:
     build: ./dtfs-central-api
@@ -22,6 +27,11 @@ services:
       - reference-data-proxy
     ports:
       - "5005:5005"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
     environment:
@@ -61,6 +71,11 @@ services:
       - reference-data-proxy
     ports:
       - "5004:5004"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
@@ -84,6 +99,11 @@ services:
       - portal-api
     ports:
       - "5000:5000"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./portal/scripts:/app/scripts:ro
       - ./portal/styles:/app/styles:ro
@@ -107,6 +127,11 @@ services:
       - reference-data-proxy
     ports:
       - "5001:5001"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./portal-api/src:/app/src:ro
     environment:
@@ -142,6 +167,11 @@ services:
     restart: always
     ports:
       - "5002:5002"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
     environment:
@@ -181,6 +211,11 @@ services:
       - portal-api
     ports:
       - "5006:5006"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
     volumes:
       - ./gef-ui/scripts:/app/scripts:ro
       - ./gef-ui/styles:/app/styles:ro
@@ -222,7 +257,7 @@ services:
       resources:
         limits:
           cpus: '0.1'
-          memory: 300M
+          memory: 500M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - WEBSITE_HOSTNAME=localhost:7072
@@ -234,6 +269,11 @@ services:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
 
   reverse-proxy:
     build: ./reverse-proxy
@@ -246,6 +286,11 @@ services:
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
 
   test-hook-api:
     build: ./test-hook-api
@@ -255,6 +300,11 @@ services:
       - portal-api
     ports:
       - "5069:5069"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
     volumes:
       - ./test-hook-api/src:/app/src:ro
     environment:
