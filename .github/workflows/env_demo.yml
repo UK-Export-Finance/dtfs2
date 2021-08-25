@@ -785,7 +785,7 @@ jobs:
   # END Redis setup
 
   # START Function setup
-  functions:
+  functions-acbs:
     name: ACBS Function Setup
     needs: [set-environment, vnet, private-dns, file-storage]
     environment:
@@ -910,12 +910,134 @@ jobs:
           az functionapp deployment container config --name tfs-${{ env.environment }}-function-acbs \
             --enable-cd true
 
+  functions-number-generator:
+    name: Number Generator Function Setup
+    needs: [set-environment, vnet, private-dns, file-storage]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp create --name tfs-${{ env.environment }}-function-number-generator \
+            --plan ${{ env.app_service_plan }} \
+            --functions-version 3 \
+            --storage-account tfs${{ env.environment }}storage \
+            --deployment-container-image-name ${{ env.registry }}/azure-function-number-generator:${{ env.environment }}
+    
+    - name: Set environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp config appsettings set --name tfs-${{ env.environment }}-function-number-generator \
+            --settings \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
+              MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
+              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
+        inlineScript: |
+          az functionapp vnet-integration add --name tfs-${{ env.environment }}-function-number-generator \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource".
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          acbs_function_id=$(az functionapp show --name tfs-${{ env.environment }}-function-number-generator --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-function-number-generator \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$acbs_function_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-function-number-generator
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        # NB the -z tests below are checking 
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-function-number-generator --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-function-number-generator --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-number-generator --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-number-generator \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-number-generator.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-number-generator.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-function-number-generator --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-number-generator --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-number-generator \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-function-number-generator.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-function-number-generator.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-function-number-generator.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment container config --name tfs-${{ env.environment }}-function-number-generator \
+            --enable-cd true
+
   # END Function setup
 
   # START API setup
   reference-data-proxy:
     name: Reference data API
-    needs: [set-environment, vnet, private-dns]
+    needs: [set-environment, vnet, private-dns, functions-acbs, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
@@ -1046,6 +1168,10 @@ jobs:
         inlineScript: |
           acbs_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-acbs --query "defaultHostName" -o tsv)
 
+          num_gen_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-number-generator --query "defaultHostName" -o tsv)
+
+          mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+
           az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
             --settings \
               PORT=5000 \
@@ -1075,7 +1201,10 @@ jobs:
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
               ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
               AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
-              GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}"
+              GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
+              AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
+              MONGO_INITDB_DATABASE="${{ env.database_name }}" \
+              MONGODB_URI="$mongo_connection_string"
  
   dtfs-central-api:
     name: DTFS Central API
@@ -1416,7 +1545,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
@@ -1562,6 +1691,8 @@ jobs:
 
           dtfs_central_api_url=$(az webapp show --name tfs-${{ env.environment }}-dtfs-central-api --query defaultHostName -o tsv)
           echo "DTFS central API url: http://$dtfs_central_api_url"
+          
+          num_gen_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-number-generator --query "defaultHostName" -o tsv)
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --connection-string-type custom \
@@ -1572,7 +1703,8 @@ jobs:
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
-              TFM_URI="${{ secrets.TFM_URI }}"
+              TFM_URI="${{ secrets.TFM_URI }}" \
+              AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url"
               
   # END API setup
  
