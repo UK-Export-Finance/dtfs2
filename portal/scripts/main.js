@@ -1,4 +1,3 @@
-import 'core-js';
 import {
   changeScreenVisibilityOfElement as changeScreenVisibilityOfElementFunc,
   showHideElement as showHideElementFunc,

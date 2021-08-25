@@ -4,6 +4,7 @@ module.exports = {
     jest: true,
     browser: true,
   },
+  root:true,
   rules: {
     'max-len': ['error', 120, 2, {
       ignoreUrls: true,
@@ -14,6 +15,7 @@ module.exports = {
     }],
     "no-underscore-dangle": ['error', { allow: ['_id'] }],
     "import/no-named-as-default": 0,
-    "implicit-arrow-linebreak": 0
+    "implicit-arrow-linebreak": 0,
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js", "**/webpack.*.js"]}]
   }
 };
