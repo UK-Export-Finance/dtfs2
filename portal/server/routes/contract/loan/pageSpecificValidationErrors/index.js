@@ -10,7 +10,6 @@ export const loanFinancialDetailsValidationErrors = (validationErrors, loan) =>
 export const loanDatesRepaymentsValidationErrors = (validationErrors, loan) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.DATES_REPAYMENTS, loan);
 
-// TODO: make reusable
 // preview pages display all required field validation errors.
 // because each field/validation error originates from  a different page,
 // for each validation error, we need to add a hrefRoot to the page in question.

@@ -38,9 +38,6 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
 
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
-  // TODO
-  // repeated Acknowledged by UKEF condition... not covered in test coverage
-  // could be simplified
   const allowedDealAndFacilityStatus = (
     (dealStatus === 'Acknowledged by UKEF' || facilityStatus === 'Maker\'s input required')
     || (dealStatus === 'Acknowledged by UKEF' && facilityStatus === 'Not started')

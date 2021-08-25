@@ -10,7 +10,6 @@ export const bondFinancialDetailsValidationErrors = (validationErrors, bond) =>
 export const bondFeeDetailsValidationErrors = (validationErrors, bond) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.FEE_DETAILS, bond);
 
-// TODO: make reusable
 // preview pages display all required field validation errors.
 // because each field/validation error originates from  a different page,
 // for each validation error, we need to add a hrefRoot to the page in question.

@@ -18,7 +18,6 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
     res.redirect('/');
   }
 
-  // TODO wire up getMIAData function
   const filterByDealStatus = 'Accepted by UKEF (with conditions)';
   let maxDays = 10;
   let workingDays = 14;

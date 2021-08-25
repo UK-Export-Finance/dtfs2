@@ -10,7 +10,6 @@ export const flattenOriginalData = (originalData, answers) => {
   delete flattened.criteria;
 
   // remove status and validationErrors since these are not submitted values.
-  // TODO: ideally these should not be saved in the API and instead returned dynamically
   delete flattened.status;
   delete flattened.validationErrors;
 

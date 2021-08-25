@@ -31,14 +31,9 @@ const FIELDS = {
       'conversionRate',
       'conversionRateDate',
 
-      // TODO
       // optional fields that could have validation errors
-      // find smart way to do this/rename arrays
       'minimumQuarterlyFee',
     ],
-    // OPTIONAL_FIELDS: [
-    //   'minimumQuarterlyFee',
-    // ],
   },
   DATES_REPAYMENTS: {
     REQUIRED_FIELDS: [

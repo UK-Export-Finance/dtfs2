@@ -10,7 +10,6 @@ export const buyerValidationErrors = (validationErrors, submittedValues) =>
 export const financialPageValidationErrors = (validationErrors, submittedValues) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.FINANCIAL, submittedValues);
 
-// TODO: make reusable
 // preview pages display all required field validation errors.
 // because each field/validation error originates from  a different page,
 // for each validation error, we need to add a hrefRoot to the page in question.

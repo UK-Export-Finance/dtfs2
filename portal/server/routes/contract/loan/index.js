@@ -254,7 +254,6 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
     ),
   );
 
-  // TODO: make similar to other routes, using page specific function.
   let formattedValidationErrors;
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(

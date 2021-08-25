@@ -35,7 +35,7 @@ export const bssFacilities = async (req, res) => {
       currency: facility.currency && facility.currency.id,
     },
     bankStage: facility.transactionStage,
-    ukefStage: '-', // TODO when UKEF guarantee stage is ready it needs adding here
+    ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here
     date: facility.issuedDate,
     url: `/contract/${facility.deal_id}/${facility.transactionType}/${facility.transaction_id}/${facility.transactionType === 'bond' ? 'details' : 'guarantee-details'}`,
   }));
@@ -78,7 +78,7 @@ export const gefFacilities = async (req, res) => {
       currency: facility.currency || '',
     },
     bankStage: facility.hasBeenIssued ? 'Issued' : 'Unissued',
-    ukefStage: '-', // TODO when UKEF guarantee stage is ready it needs adding here
+    ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here
     date: facility.submittedAsIssuedDate,
     url: `/gef/application-details/${facility.applicationId}/facilities/${facility._id}/`,
   }));

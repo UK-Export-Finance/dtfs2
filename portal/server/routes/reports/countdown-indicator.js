@@ -27,7 +27,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   // - STATUS:submissionAcknowledged + TRANSACTION_STAGE:unissued_conditional
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approved + MIN not issued
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approvedWithConditions + MIN not submitted
-  const stageFilters = { // TODO use CONSTANTS lowercase string
+  const stageFilters = {
     facilityStage: 'unissued_conditional',
     filterByStatus: 'submissionAcknowledged',
   };

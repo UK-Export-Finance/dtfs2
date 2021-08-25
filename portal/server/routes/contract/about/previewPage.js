@@ -32,7 +32,7 @@ router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
 
   const deal = req.apiData[DEAL];
 
-  // TODO dirty hack; this is how we apply the business rule
+  // dirty hack; this is how we apply the business rule
   //  "don't display error messages unless the user has viewed the preview page"
   await api.updateSubmissionDetails(deal, { viewedPreviewPage: true }, userToken);
 

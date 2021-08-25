@@ -258,7 +258,6 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) =>
     ),
   );
 
-  // TODO: make similar to other routes, using page specific function.
   let formattedValidationErrors;
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(

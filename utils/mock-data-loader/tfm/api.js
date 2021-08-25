@@ -1,9 +1,6 @@
 const axios = require('axios');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-// TODO multiple services talk to the same api; we end up writing basically the same code twice to achieve this
-//  ... a binary repo to publish things to so we can share? ... local references in package.json??
-
 const urlRoot = process.env.DTFS_CENTRAL_API;
 
 const createTeam = async (team, token) => {

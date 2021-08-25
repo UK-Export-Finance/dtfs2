@@ -1,7 +1,5 @@
 const CONSTANTS = require('../../constants');
 
-// TODO update to match portal `canIssueOrEditIssueFacility`
-
 const canIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes('maker');
 
