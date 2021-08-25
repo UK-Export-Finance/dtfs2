@@ -58,6 +58,9 @@ describe(baseUrl, () => {
         ukefExposure: 0,
         submittedAsIssuedDate: null,
         ukefFacilityId: null,
+        dayCountBasis: null,
+        feeType: null,
+        frequency: null,
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
