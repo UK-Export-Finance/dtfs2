@@ -81,6 +81,7 @@ context('Facility Guarantee Page', () => {
       facilityGuarantee.feeFrequencyMonthlyInput();
       facilityGuarantee.feeFrequencyQuarterlyInput();
       facilityGuarantee.feeFrequencySemiAnnuallyInput();
+      facilityGuarantee.dayCountBasis365Input().click();
       facilityGuarantee.doneButton().click();
       facilityGuarantee.errorSummary();
       facilityGuarantee.feeFrequencyInputErrorMessage();
