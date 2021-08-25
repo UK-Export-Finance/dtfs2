@@ -51,7 +51,7 @@ context('About Exporter Page', () => {
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
       aboutExporter.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[1]}/enter-exporters-correspondence-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[1]}/exporters-address`));
     });
 
     it('displays selected Industry string', () => {
