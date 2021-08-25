@@ -67,7 +67,7 @@ context('Facility Value Page', () => {
       facilityValue.mainHeading().contains('risk');
       facilityValue.hiddenFacilityType().should('be', 'invisible');
       facilityValue.valueLabel().should('contain', 'contingent');
-      facilityValue.valueSuffix().should('contain', 'YEN');
+      facilityValue.valueSuffix().should('contain', 'JPY');
       facilityValue.continueButton();
     });
   });

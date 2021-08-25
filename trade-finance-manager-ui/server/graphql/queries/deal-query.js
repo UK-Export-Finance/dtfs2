@@ -5,6 +5,7 @@ const dealQuery = gql`
     deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
       _id
       tfm {
+        product
         dateReceived
         parties {
           exporter {
