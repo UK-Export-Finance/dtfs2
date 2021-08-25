@@ -225,6 +225,22 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
+const findFacilitesByDealId = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 const updateFacility = async (facilityId, facilityUpdate) => {
   try {
     const response = await axios({
@@ -540,6 +556,7 @@ module.exports = {
   updateDealSnapshot,
   submitDeal,
   findOneFacility,
+  findFacilitesByDealId,
   updateFacility,
   queryDeals,
   getPartyDbInfo,

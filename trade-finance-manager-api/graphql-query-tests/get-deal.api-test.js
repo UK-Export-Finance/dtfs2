@@ -67,6 +67,7 @@ const GET_DEAL = gql`
         supplyContractValueInGBP
         lossGivenDefault
         probabilityOfDefault
+        product
         stage
         underwriterManagersDecision {
           decision

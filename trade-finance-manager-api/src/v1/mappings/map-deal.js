@@ -6,9 +6,7 @@ const mapDeal = async (deal) => {
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
   if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    mappedDeal.facilities = await Promise.all(deal.facilities.map(async (facility) =>
-      api.findOneFacility(facility._id)));
-
+    mappedDeal.facilities = await api.findFacilitesByDealId(deal._id);
     return mappedDeal;
   }
 
