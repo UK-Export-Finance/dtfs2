@@ -31,7 +31,6 @@ This repository contains the code for the UK Export Finance Trade Finance Servic
 * Base64 encode the generated public and private keys and add to your portal-api .env file:
   * `JWT_SIGNING_KEY=1234`
   * `JWT_VALIDATING_KEY=5678`
-* Set session secret environment variable in your terminal. eg: `export SESSION_SECRET=abc1234`
 * Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`
 * Start up your local environment: `docker-compose up --build`
 * Create mock data: navigate to `utils/mock-data-loader`, run `npm install` and then `node re-insert-mocks.js`. This should generate mocks in your DB.
@@ -47,9 +46,9 @@ Note: If you're on Windows and having issues with MongoDB, install mongosh for c
 docker-compose up
 ```
 
-*warning: If you make changes to a UI server, you'll need to do a build with `docker-compose up --build`. Hot reloading will be in place shortly
+*:warning: If you make changes to a UI server, you'll need to do a build with `docker-compose up --build`. Hot reloading will be in place shortly.
 
-### Several services are built
+Several services are built:
 
 | Service | URL |
 | ------- | --- |
@@ -220,7 +219,7 @@ The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/B
 2. `cd dtfs2 && git pull` to get the latest codebase
 3. `cd utils/mock-data-loader`
 4. Enure the .env file is pointing to the environment you want to update
-5. `node re-insert-mocks.js` *warning: **this will delete the current data - DO NOT USE IN PROD**
+5. `node re-insert-mocks.js` *:warning: **this will delete the current data - DO NOT USE IN PROD**
 
 ## Azure storage account
 
