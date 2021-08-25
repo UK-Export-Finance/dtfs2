@@ -212,6 +212,24 @@ services:
   #     - MULESOFT_API_UKEF_MDM_EA_KEY
   #     - MULESOFT_API_UKEF_MDM_EA_SECRET
 
+  number-generator-function:
+    build: ./azure-functions/number-generator-function
+    image: dtfs/azure-function-number-generator
+    restart: always
+    ports:
+      - "7072:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - WEBSITE_HOSTNAME=localhost:7072
+      - MULESOFT_API_UKEF_TF_EA_URL
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+
   redis:
     image: "redis:alpine"
     ports:
