@@ -32,15 +32,17 @@ Prerequisites
   * `JWT_SIGNING_KEY=1234`
   * `JWT_VALIDATING_KEY=5678`
 * Set session secret environment variable in your terminal. eg: `export SESSION_SECRET=abc1234`
-* Ensure you have MongoDB installed on your machine. Create a DB called `dtfs-submissions` with default MongoDB port 27017
+* Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`
 * Start up your local environment: `docker-compose up --build`
 * Create mock data: navigate to `utils/mock-data-loader`, run `npm install`and then `node re-insert-mocks.js`. This should generate mocks in your DB.
 * Optional/recommended: Run `npm run pipeline` in the root directory of the repo to run a full build and test to make sure that everything is working.
 
+After these initial steps, you'll typically only need to run `docker-compose up` (without a full build). However, hot reloading is currently not in place for the UIs. If UI changes are made, you'll need to rebuild.
+
+Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
 Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
 
-After these initial steps, you'll typically only need to run `docker-compose up` (without a full build). However, hot reloading is currently not in place for the UIs. If UI changes are made, you'll need to rebuild.
 
 ### Environment Variables
 
