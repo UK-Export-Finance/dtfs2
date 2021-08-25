@@ -1037,7 +1037,7 @@ jobs:
   # START API setup
   reference-data-proxy:
     name: Reference data API
-    needs: [set-environment, vnet, private-dns]
+    needs: [set-environment, vnet, private-dns, functions-acbs, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
@@ -1545,7 +1545,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
