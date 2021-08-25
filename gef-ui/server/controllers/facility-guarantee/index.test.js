@@ -54,7 +54,7 @@ describe('GET Facility Guarantee', () => {
     const mockFacilityGuaranteeResponse = new MockFacilityGuaranteeResponse();
 
     mockRequest.query.status = 'change';
-    mockFacilityGuaranteeResponse.details.frequency = 'monthly';
+    mockFacilityGuaranteeResponse.details.frequency = 'Monthly';
     mockFacilityGuaranteeResponse.details.dayCountBasis = '365';
     mockFacilityGuaranteeResponse.details.feeType = 'in advance';
     api.getFacility = () => Promise.resolve(mockFacilityGuaranteeResponse);
@@ -64,7 +64,7 @@ describe('GET Facility Guarantee', () => {
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
       inArrearsFrequency: '',
-      inAdvanceFrequency: 'monthly',
+      inAdvanceFrequency: 'Monthly',
       dayCountBasis: '365',
       feeType: 'in advance',
       applicationId: '123',
@@ -102,8 +102,8 @@ describe('Update Facility Guarantee', () => {
 
     jest.clearAllMocks();
 
-    mockRequest.body.feeType = 'advance';
-    mockRequest.body.frequency = 'monthly';
+    mockRequest.body.feeType = 'in advance';
+    mockRequest.body.frequency = 'Monthly';
     mockRequest.body.dayCountBasis = '';
 
     api.updateFacility = () => Promise.resolve(mockFacilityGuaranteeResponse);
@@ -123,14 +123,14 @@ describe('Update Facility Guarantee', () => {
 
     mockRequest.body.feeType = 'in advance';
     mockRequest.body.dayCountBasis = '365';
-    mockRequest.body.inAdvanceFrequency = 'monthly';
+    mockRequest.body.inAdvanceFrequency = 'Monthly';
 
     await updateFacilityGuarantee(mockRequest, mockResponse);
 
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
       feeType: 'in advance',
       dayCountBasis: '365',
-      frequency: 'monthly',
+      frequency: 'Monthly',
     });
 
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
@@ -141,7 +141,7 @@ describe('Update Facility Guarantee', () => {
     const mockRequest = new MockRequest();
     mockRequest.body.feeType = 'in advance';
     mockRequest.body.dayCountBasis = '365';
-    mockRequest.body.inAdvanceFrequency = 'monthly';
+    mockRequest.body.inAdvanceFrequency = 'Monthly';
 
     api.updateFacility = () => Promise.reject();
     await updateFacilityGuarantee(mockRequest, mockResponse);
