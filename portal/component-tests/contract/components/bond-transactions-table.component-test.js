@@ -73,8 +73,6 @@ describe(component, () => {
 
         wrapper.expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
 
-        // todo assert date values
-        // split into new component?
         wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date"]`).toExist();
 
         wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date"]`).toExist();

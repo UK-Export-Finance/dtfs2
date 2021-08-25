@@ -12,7 +12,6 @@ const primaryNav = 'reports';
 const router = express.Router();
 
 router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, res) => {
-  // TODO wire up getMIAData function
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {

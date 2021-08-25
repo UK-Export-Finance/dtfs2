@@ -550,7 +550,6 @@ const updateUser = async (id, update, token) => {
   return response;
 };
 
-// TODO middleware uses getDeal; once everything uses middleware get rid of the 'contract' method..
 const getDeal = async (id, token) => {
   const response = await axios({
     method: 'get',

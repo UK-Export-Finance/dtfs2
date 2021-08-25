@@ -83,8 +83,6 @@ const allDealsFilters = (user, filters = []) => {
     sanitisedFilters.push({ bankId: user.bank && user.bank.id });
   }
 
-  // TODO: some transformations may be needed for certain filters, such as general keyword filter
-
   let result = {};
   if (sanitisedFilters.length === 1) {
     [result] = sanitisedFilters;

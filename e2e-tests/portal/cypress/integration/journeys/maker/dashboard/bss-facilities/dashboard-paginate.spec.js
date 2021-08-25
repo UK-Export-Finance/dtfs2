@@ -23,7 +23,6 @@ context('The Transactions dashboard', () => {
       .then((insertedDeals) => deals = insertedDeals);
   });
 
-  // TODO nothing here cares about the order of the results.. should it?
   it('has pagination', () => {
     cy.login(MAKER_LOGIN);
     facilitiesDashboard.visit();

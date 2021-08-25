@@ -33,7 +33,10 @@ describe(page, () => {
     wrapper = render(params);
   });
 
-  // TODO page title
+  it('should render page title', () => {
+    wrapper.expectText('[data-cy="page-title"]').toRead('Deal');
+  });
+
   it('should render mga version', () => {
     wrapper.expectText('[data-cy="mga-version"]').toRead('January 2020');
   });

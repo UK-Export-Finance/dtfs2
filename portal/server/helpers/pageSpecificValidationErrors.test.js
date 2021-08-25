@@ -227,8 +227,6 @@ describe('page specific validation errors', () => {
     });
   });
 
-  // todo update pageSpecificValidationErrors....
-
   describe('pageSpecificValidationErrors', () => {
     it('should return mapRequiredValidationErrors result', () => {
       const mockErrorList = {

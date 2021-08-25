@@ -68,19 +68,15 @@ context('about-supply-contract', () => {
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313'); // TODO better test company?
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313');
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // // the search should populate the supplier address fields
-    // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
-    contractAboutSupplier.supplierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
-    contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); // TODO
-    contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); // TODO
-    contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); // TODO
+    contractAboutSupplier.supplierName().should('not.have.value', '');
+    contractAboutSupplier.supplierAddress().line1().should('not.have.value', '');
+    contractAboutSupplier.supplierAddress().town().should('not.have.value', '');
+    contractAboutSupplier.supplierAddress().postcode().should('not.have.value', '');
     contractAboutSupplier.supplierAddress().country().should('have.value', 'GBR');
-
-    // TODO: industry sector is populated from companise house data / should not be 'Please select'
-    // TODO: industry class is populated from companise house data / should not be 'Please select'
 
     //---
     // fill in the simplest version of the form so we can submit it and save it..

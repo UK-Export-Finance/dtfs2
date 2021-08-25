@@ -35,12 +35,10 @@ describe(component, () => {
     wrapper.expectText('[data-cy="ukef-guarantee-length-in-months"]').toRead(loan.ukefGuaranteeInMonths);
   });
 
-  // TODO: test formatted date properly
   it('should render issuedDate', () => {
     wrapper.expectElement('[data-cy="issued-date"]').toExist();
   });
 
-  // TODO: test formatted date properly
   it('should render requestedCoverStartDate', () => {
     wrapper.expectElement('[data-cy="requested-cover-start-date"]').toExist();
   });
