@@ -155,18 +155,6 @@ describe(component, () => {
                     .toRead("-");
     });
 
-//TODO - can't instantly think how to do this properly;
-//  possibly a filter to generate 'name' from our user that can - if we dont have the data?
-    // it("displays deal.details.maker.username", () =>{
-    //   return wrapper.expectText('[data-cy="maker"]')
-    //                 .toRead("-");
-    // });
-    //
-    // it("displays deal.details.checker", () =>{
-    //   return wrapper.expectText('[data-cy="checker"]')
-    //                 .toRead("-");
-    // });
-
     it("displays deal.details.submissionDate", () =>{
       return wrapper.expectText('[data-cy="submissionDate"]')
                     .toRead("-");
