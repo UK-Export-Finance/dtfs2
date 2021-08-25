@@ -68,7 +68,7 @@ const createFacilitiesSnapshot = async (deal) => {
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    dealFacilities = await findAllGefFacilitiesByDealId(String(dealId));
+    dealFacilities = await findAllGefFacilitiesByDealId(dealId);
   }
 
   const collection = await db.getCollection('tfm-facilities');

@@ -24,8 +24,10 @@ describe('/v1/portal/gef/deals/:id', () => {
     });
 
     it('returns the deal', async () => {
+      // create deal
       const { body: createdDeal } = await api.post(newDeal).to('/v1/portal/gef/deals');
 
+      // get deal
       const { body, status } = await api.get(`/v1/portal/gef/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
