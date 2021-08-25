@@ -32,6 +32,7 @@ All variables are listed in a private spreadsheet - this needs to be shared with
 
 These variables are stored as secrets in the repo. To update secrets in the environments - i.e dev, test etc:
 
+* Create a Github Personal Access Token and save in `/secrets/github/pat.txt` - this only needs to be done once
 * Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
 * Run this script `/secrets/github/set_secrets.js`
 
