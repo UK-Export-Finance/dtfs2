@@ -5,7 +5,7 @@ const interestErrorExpected = {
   errRef: 'interestPercentage',
 };
 const coverErrorExpected = {
-  errMsg: 'You can only only enter a number between 1 and 80',
+  errMsg: 'You can only enter a number between 1 and 80',
   errRef: 'coverPercentage',
 };
 

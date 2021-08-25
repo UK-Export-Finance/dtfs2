@@ -8,7 +8,7 @@ function validateFacilityValue({ interestPercentage, coverPercentage }, saveAndR
 
   const coverPercentageError = {
     errRef: 'coverPercentage',
-    errMsg: 'You can only only enter a number between 1 and 80',
+    errMsg: 'You can only enter a number between 1 and 80',
   };
   const interestPercentageError = {
     errRef: 'interestPercentage',
