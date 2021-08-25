@@ -46,7 +46,7 @@ Note: If you're on Windows and having issues with MongoDB, install mongosh for c
 docker-compose up
 ```
 
-*:warning: If you make changes to a UI server, you'll need to do a build with `docker-compose up --build`. Hot reloading will be in place shortly.
+:warning: If you make changes to a UI server, you'll need to do a build with `docker-compose up --build`. Hot reloading will be in place shortly.
 
 Several services are built:
 
@@ -219,7 +219,7 @@ The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/B
 2. `cd dtfs2 && git pull` to get the latest codebase
 3. `cd utils/mock-data-loader`
 4. Enure the .env file is pointing to the environment you want to update
-5. `node re-insert-mocks.js` *:warning: **this will delete the current data - DO NOT USE IN PROD**
+5. `node re-insert-mocks.js` :warning: **this will delete the current data - DO NOT USE IN PROD**
 
 ## Azure storage account
 
