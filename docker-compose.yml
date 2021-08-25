@@ -48,7 +48,7 @@ services:
       - trade-finance-manager-api
     ports:
       - "5003:5003"
-        deploy:
+    deploy:
       resources:
         limits:
           cpus: '0.1'

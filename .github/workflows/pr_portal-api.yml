@@ -126,8 +126,6 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api  
-    - name: Debugging with tmate
-      uses: mxschmitt/action-tmate@v3.6
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d
