@@ -56,7 +56,7 @@ describe('GET Facility Guarantee', () => {
     mockRequest.query.status = 'change';
     mockFacilityGuaranteeResponse.details.frequency = 'monthly';
     mockFacilityGuaranteeResponse.details.dayCountBasis = '365';
-    mockFacilityGuaranteeResponse.details.feeType = 'in-advance';
+    mockFacilityGuaranteeResponse.details.feeType = 'in advance';
     api.getFacility = () => Promise.resolve(mockFacilityGuaranteeResponse);
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
 
@@ -66,7 +66,7 @@ describe('GET Facility Guarantee', () => {
       inArrearsFrequency: '',
       inAdvanceFrequency: 'monthly',
       dayCountBasis: '365',
-      feeType: 'in-advance',
+      feeType: 'in advance',
       applicationId: '123',
       facilityId: 'xyz',
       // status: 'change',
@@ -121,14 +121,14 @@ describe('Update Facility Guarantee', () => {
     const mockRequest = new MockRequest();
     const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
 
-    mockRequest.body.feeType = 'in-advance';
+    mockRequest.body.feeType = 'in advance';
     mockRequest.body.dayCountBasis = '365';
     mockRequest.body.inAdvanceFrequency = 'monthly';
 
     await updateFacilityGuarantee(mockRequest, mockResponse);
 
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      feeType: 'in-advance',
+      feeType: 'in advance',
       dayCountBasis: '365',
       frequency: 'monthly',
     });
@@ -139,7 +139,7 @@ describe('Update Facility Guarantee', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    mockRequest.body.feeType = 'in-advance';
+    mockRequest.body.feeType = 'in advance';
     mockRequest.body.dayCountBasis = '365';
     mockRequest.body.inAdvanceFrequency = 'monthly';
 

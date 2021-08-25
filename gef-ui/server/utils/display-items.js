@@ -64,7 +64,7 @@ const facilityItems = (facilityUrl, {
   ukefFacilityId,
   feeType,
 }) => {
-  const AT_MATURITY = 'at-maturity';
+  const AT_MATURITY = 'At maturity';
   return [
     {
       label: 'Name',

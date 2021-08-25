@@ -20,8 +20,8 @@ const facilityGuarantee = async (req, res) => {
       applicationId: facility.applicationId,
       facilityId: facility.facilityId,
       feeType: facility.feeType,
-      inAdvanceFrequency: facility.feeType === 'in-advance' ? facility.frequency : '',
-      inArrearsFrequency: facility.feeType === 'in-arrears' ? facility.frequency : '',
+      inAdvanceFrequency: facility.feeType === 'in advance' ? facility.frequency : '',
+      inArrearsFrequency: facility.feeType === 'in arrears' ? facility.frequency : '',
       dayCountBasis: facility.dayCountBasis,
     });
   } catch (err) {
@@ -42,7 +42,7 @@ const updateFacilityGuarantee = async (req, res) => {
     try {
       await api.updateFacility(facilityId, {
         feeType,
-        frequency: feeType === 'in-advance' ? inAdvanceFrequency : inArrearsFrequency,
+        frequency: feeType === 'in advance' ? inAdvanceFrequency : inArrearsFrequency,
         dayCountBasis,
       });
       return res.redirect(`/gef/application-details/${applicationId}`);
