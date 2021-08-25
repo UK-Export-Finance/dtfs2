@@ -1545,7 +1545,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, num_gen_function_url]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
