@@ -1,9 +1,12 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const findAllGefFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('gef-facilities');
-  const facilities = collection.find({ applicationId: dealId });
-  return facilities.toArray();
+
+  const facilities = await collection.find({ applicationId: ObjectId(dealId) }).toArray();
+
+  return facilities;
 };
 exports.findAllGefFacilitiesByDealId = findAllGefFacilitiesByDealId;
 
