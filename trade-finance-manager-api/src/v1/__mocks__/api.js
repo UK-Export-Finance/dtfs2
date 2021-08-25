@@ -267,6 +267,20 @@ module.exports = {
       },
     };
   },
+  findFacilitesByDealId: (dealId) => {
+    const facilities = ALL_MOCK_FACILITIES.filter((f) => f.applicationid === dealId);
+
+    const mapped = facilities.map((facility) => ({
+      _id: facility._id,
+      facilitySnapshot: {
+        ...facility,
+        _id: facility._id,
+      },
+      tfm: {},
+    }));
+
+    return mapped;
+  },
   updateFacility: (facilityId, tfmUpdate) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
 
