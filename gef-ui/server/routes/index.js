@@ -1,4 +1,5 @@
 import express from 'express';
+import { sessionUserToLocals } from '../middleware/sessionUserToLocals';
 import mandatoryCriteriaRoutes from './mandatory-criteria';
 import nameApplicationRoutes from './name-application';
 import applicationDetailsRoutes from './application-details';
@@ -24,12 +25,7 @@ import returnToMaker from './return-to-maker';
 
 const router = express.Router();
 
-router.use('*', (req, res, next) => {
-  if (req.session && req.session.user) {
-    res.locals.user = req.session.user;
-  }
-  return next();
-});
+router.use('*', sessionUserToLocals);
 
 router.use(mandatoryCriteriaRoutes);
 router.use(nameApplicationRoutes);
