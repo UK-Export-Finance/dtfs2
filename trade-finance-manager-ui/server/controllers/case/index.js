@@ -222,9 +222,6 @@ const postTfmFacility = async (req, res) => {
     }),
   );
 
-
-  // const { data } = await api.updateParty(dealId, update);
-
   return res.redirect(`/case/${dealId}/parties`);
 };
 

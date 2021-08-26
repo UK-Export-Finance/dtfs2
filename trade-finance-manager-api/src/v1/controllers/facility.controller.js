@@ -13,7 +13,9 @@ const updateTfmFacility = async (facilityId, tfmUpdate) => {
   // eslint-disable-next-line no-underscore-dangle
   const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
 
-  await dealController.submitACBSIfAllPartiesHaveUrn(updatedFacility.facilitySnapshot.associatedDealId);
+  // TONY NOTE: I don't think we need this. see if tests pass.
+  // this is called elsewhere
+  // await dealController.submitACBSIfAllPartiesHaveUrn(updatedFacility.facilitySnapshot.associatedDealId);
 
   return updatedFacility.tfm;
 };
