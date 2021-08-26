@@ -1,5 +1,5 @@
 const api = require('../api');
-const dealController = require('./deal.controller');
+// const dealController = require('./deal.controller');
 
 const findOneFacility = async (_id) => {
   const facility = await api.findOneFacility(_id);
