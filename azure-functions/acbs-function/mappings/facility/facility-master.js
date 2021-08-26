@@ -73,7 +73,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     riskCountryCode: 'GBR',
     riskStatusCode: '03',
     effectiveDate,
-    foreCastPercentage: helpers.getForecastPercentage(facility),
+    foreCastPercentage: helpers.getForecastPercentage(facilitySnapshot.facilityStage),
     issueDate,
     description: helpers.getDescription(facility),
     agentBankIdentifier: '00000000',
