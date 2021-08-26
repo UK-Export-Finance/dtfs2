@@ -77,7 +77,7 @@ Launch everything with:
 docker-compose up --build
 ```
 
-NB `--build` is optional - it will rebuild the contaners.
+NB `--build` is optional - it will rebuild the containers.
 
 From another terminal, stop everything cleanly with:
 ```
