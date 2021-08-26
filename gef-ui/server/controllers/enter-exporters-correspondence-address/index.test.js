@@ -8,6 +8,7 @@ const MockRequest = () => {
   req.params.applicationId = '123';
   req.session = {};
   req.body = {};
+  req.get = () => '/url';
   return req;
 };
 
@@ -49,6 +50,7 @@ describe('GET Enter Exporters Correspondence Address', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
       addressForm: '',
       applicationId: '123',
+      backUrl: '/url',
     });
   });
 
@@ -72,6 +74,7 @@ describe('GET Enter Exporters Correspondence Address', () => {
         postalCode: undefined,
       },
       applicationId: '123',
+      backUrl: '/url',
     });
   });
 
@@ -92,6 +95,7 @@ describe('GET Enter Exporters Correspondence Address', () => {
         addressLine2: 'LINE2',
       },
       applicationId: '123',
+      backUrl: '/url',
     });
   });
 
