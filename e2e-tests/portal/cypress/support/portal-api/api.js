@@ -191,3 +191,37 @@ module.exports.setGefApplicationStatus = (applicationId, token, status) => cy.re
     Authorization: token,
   },
 }).then((res) => res);
+
+module.exports.listGefFacilities = (token, applicationId) => cy.request({
+  url: `${api()}/v1/gef/facilities/?applicationId=${applicationId}`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body.items;
+});
+
+module.exports.deleteGefFacility = (token, facility) => cy.request({
+  url: `${api()}/v1/gef/facilities/${facility.details._id}`,
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => expect(resp.status).to.equal(200));
+
+module.exports.insertGefFacility = (deal, token) => cy.request({
+  url: `${api()}/v1/gef/facilities`,
+  method: 'POST',
+  body: deal,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(201);
+  return resp.body;
+});

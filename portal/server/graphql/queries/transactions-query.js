@@ -13,6 +13,7 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       deal_owningBank,
       deal_created,
       deal_submissionDate,
+      deal_submissionType,
       transaction_id,
       bankFacilityId,
       ukefFacilityId,

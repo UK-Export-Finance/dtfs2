@@ -4,10 +4,12 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-context('User can view bond details', () => {
+context('Parties - user can view and edit bond beneficiary', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
+  const businessSupportUser = MOCK_USERS.find((user) => user.teams.includes('BUSINESS_SUPPORT'));
+  const nonBusinessSupportUser = MOCK_USERS.find((user) => !user.teams.includes('BUSINESS_SUPPORT'));
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
@@ -28,49 +30,61 @@ context('User can view bond details', () => {
       });
   });
 
-  beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
-    cy.visit(relative(`/case/${dealId}/parties`));
-  });
-
   after(() => {
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
     });
   });
 
-
   describe('Bond issuer page', () => {
-    it('should render edit page', () => {
-      pages.partiesPage.bondBeneficiaryEditLink().click();
+    describe('when user is in BUSINESS_SUPPORT team', () => {
+      beforeEach(() => {
+        cy.login(businessSupportUser);
+        cy.visit(relative(`/case/${dealId}/parties`));
+      });
 
-      cy.url().should('eq', relative(`/case/${dealId}/parties/bond-beneficiary`));
-      pages.partiesPage.bondBeneficiaryEditLink().should('not.exist');
+      it('should render edit page', () => {
+        pages.partiesPage.bondBeneficiaryEditLink().click();
 
-      pages.bondBeneficiaryPage.urnInput().should('exist');
-      pages.bondBeneficiaryPage.heading().should('have.text', 'Edit bond beneficiary details');
+        cy.url().should('eq', relative(`/case/${dealId}/parties/bond-beneficiary`));
+        pages.partiesPage.bondBeneficiaryEditLink().should('not.exist');
 
-      pages.bondBeneficiaryPage.saveButton().should('exist');
-      pages.bondBeneficiaryPage.closeLink().should('exist');
+        pages.bondBeneficiaryPage.urnInput().should('exist');
+        pages.bondBeneficiaryPage.heading().should('have.text', 'Edit bond beneficiary details');
 
-      pages.bondBeneficiaryPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/parties`));
+        pages.bondBeneficiaryPage.saveButton().should('exist');
+        pages.bondBeneficiaryPage.closeLink().should('exist');
+
+        pages.bondBeneficiaryPage.closeLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+      });
+
+      it('should save entered details', () => {
+        const partyUrn = 'test partyurn';
+
+        pages.partiesPage.bondBeneficiaryEditLink().click();
+        pages.bondBeneficiaryPage.urnInput().type(partyUrn);
+
+        pages.bondBeneficiaryPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+        pages.partiesPage.bondBeneficiaryEditLink().click();
+
+        pages.bondBeneficiaryPage.urnInput().invoke('val').then((value) => {
+          expect(value.trim()).equal(partyUrn);
+        });
+      });
     });
 
-    it('should save entered details', () => {
-      const partyUrn = 'test partyurn';
+    describe('when user is NOT in BUSINESS_SUPPORT team', () => {
+      beforeEach(() => {
+        cy.login(nonBusinessSupportUser);
+      });
 
-      pages.partiesPage.bondBeneficiaryEditLink().click();
-      pages.bondBeneficiaryPage.urnInput().type(partyUrn);
-
-      pages.bondBeneficiaryPage.saveButton().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/parties`));
-
-      pages.partiesPage.bondBeneficiaryEditLink().click();
-
-      pages.bondBeneficiaryPage.urnInput().invoke('val').then((value) => {
-        expect(value.trim()).equal(partyUrn);
+      it('user cannot manually to the page', () => {
+        cy.visit(`/case/${dealId}/parties/bond-beneficiary`);
+        cy.url().should('eq', relative('/not-found'));
       });
     });
   });

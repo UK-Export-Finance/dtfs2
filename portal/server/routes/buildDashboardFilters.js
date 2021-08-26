@@ -1,5 +1,5 @@
 import moment from 'moment';
-import CONSTANTS from '../constants';
+import { STATUS, SUBMISSION_TYPE } from '../constants';
 
 const getUserFilters = (params, user = {}) => {
   const { filterBySubmissionUser } = params;
@@ -39,21 +39,21 @@ const buildDashboardFilters = (params, user) => {
     filters.push(userFilter);
   }
 
-  if (CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType]) {
+  if (SUBMISSION_TYPE[params.filterBySubmissionType]) {
     filters.push(
       {
         field: 'details.submissionType',
-        value: CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType],
+        value: SUBMISSION_TYPE[params.filterBySubmissionType],
       },
     );
   }
 
-  if (CONSTANTS.STATUS[params.filterByStatus]) {
+  if (STATUS[params.filterByStatus]) {
     isUsingAdvancedFilter = true;
     filters.push(
       {
         field: 'details.status',
-        value: CONSTANTS.STATUS[params.filterByStatus],
+        value: STATUS[params.filterByStatus],
       },
     );
   }
@@ -61,7 +61,7 @@ const buildDashboardFilters = (params, user) => {
   if (params.filterByShowAbandonedDeals === false || params.filterByShowAbandonedDeals === 'false') {
     filters.push({
       field: 'details.status',
-      value: CONSTANTS.STATUS.abandoned,
+      value: STATUS.abandoned,
       operator: 'ne',
     });
   }

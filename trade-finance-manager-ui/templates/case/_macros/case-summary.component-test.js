@@ -22,6 +22,7 @@ let params = {
     supplyContractValueInGBP: 'GBP 123,456.78',
     stage: 'Confirmed',
     dateReceived: '01-02-2021',
+    product: 'GEF',
   },
   user: {
     timezone: 'Europe/London',
@@ -39,20 +40,21 @@ describe(component, () => {
     wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.deal.details.ukefDealId);
   });
 
-  it('should render correct supplier type', () => {
+  it('should render supplier type', () => {
     wrapper.expectText('[data-cy="case-summary"] [data-cy="supplier-type"]').toRead('Exporter');
   });
+
 
   it('should render supplier name', () => {
     wrapper.expectText('[data-cy="supplier-name"]').toRead(params.deal.submissionDetails.supplierName);
   });
 
-  it('should add `chevron-right` class to supplier column', () => {
-    wrapper.expectElement('[data-cy="supplier-column"]').hasClass('case-summary-supplier chevron-right');
-  });
-
   it('should render buyer name', () => {
     wrapper.expectText('[data-cy="buyer-name"]').toRead(params.deal.submissionDetails.buyerName);
+  });
+
+  it('should add `chevron-right` class to supplier column', () => {
+    wrapper.expectElement('[data-cy="supplier-column"]').hasClass('case-summary-supplier chevron-right');
   });
 
   it('should render ukef deal stage component', () => {
@@ -90,6 +92,14 @@ describe(component, () => {
   it('should render date received', () => {
     const expected = formatDateString(params.tfm.dateReceived, 'DD-MM-YYYY', 'D MMMM YYYY');
     wrapper.expectText('[data-cy="date-received"]').toRead(expected);
+  });
+
+  it('should render UKEF product', () => {
+    wrapper.expectText('[data-cy="ukef-product"]').toRead(params.tfm.product);
+  });
+
+  it('should render submission type', () => {
+    wrapper.expectText('[data-cy="submission-type"]').toRead(params.deal.details.submissionType);
   });
 
   describe('when there is no date received', () => {

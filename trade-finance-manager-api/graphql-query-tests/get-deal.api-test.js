@@ -67,6 +67,7 @@ const GET_DEAL = gql`
         supplyContractValueInGBP
         lossGivenDefault
         probabilityOfDefault
+        product
         stage
         underwriterManagersDecision {
           decision
@@ -79,6 +80,7 @@ const GET_DEAL = gql`
       }
       dealSnapshot {
         _id,
+        dealType
         details {
           ukefDealId,
           status,

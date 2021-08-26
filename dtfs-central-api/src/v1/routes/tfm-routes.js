@@ -8,6 +8,7 @@ const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal
 const tfmDeleteDealController = require('../controllers/tfm/deal/tfm-delete-deal.controller');
 const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal.controller');
 const tfmUpdateDealStageController = require('../controllers/tfm/deal/tfm-update-deal-stage.controller');
+const tfmGetFacilitiesController = require('../controllers/tfm/facility/tfm-get-facilities.controller');
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
 
@@ -50,6 +51,11 @@ tfmRouter.route('/deals/:id/stage')
 tfmRouter.route('/deals')
   .get(
     tfmGetDealsController.findDealsGet,
+  );
+
+tfmRouter.route('/deals/:id/facilities')
+  .get(
+    tfmGetFacilitiesController.findFacilitiesGet,
   );
 
 tfmRouter.route('/facilities/:id')

@@ -20,6 +20,7 @@ import aboutFacilityRoutes from './about-facility';
 import providedFacilityRoutes from './provided-facility';
 import facilityCurrencyRoutes from './facility-currency';
 import facilityValueRoutes from './facility-value';
+import facilityGuaranteeRoutes from './facility-guarantee';
 import facilityConfirmDeletionRoutes from './facility-confirm-deletion';
 import returnToMaker from './return-to-maker';
 
@@ -47,6 +48,7 @@ router.use(aboutFacilityRoutes);
 router.use(providedFacilityRoutes);
 router.use(facilityCurrencyRoutes);
 router.use(facilityValueRoutes);
+router.use(facilityGuaranteeRoutes);
 router.use(facilityConfirmDeletionRoutes);
 router.use(returnToMaker);
 

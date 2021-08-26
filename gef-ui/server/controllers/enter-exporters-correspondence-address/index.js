@@ -7,6 +7,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
   const { address } = session;
   const parseAddress = address ? JSON.parse(address) : null;
   const { status } = query;
+  const backUrl = req.get('Referrer');
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
@@ -29,6 +30,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       addressForm: mappedAddress || correspondenceAddress,
       applicationId,
       status,
+      backUrl,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');

@@ -1,0 +1,151 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
+
+{% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
+{% import '_macros/date-range.njk' as dateRange %}
+{% import '_macros/pagination.njk' as pagination %}
+
+{% import './_macros/transaction-advanced-filters.njk' as advancedFilters %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle %}Facilities{% endblock %}
+
+{% block content %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
+
+  {{ mojPageHeaderActions({
+    heading: {
+      html: '<h1 class="govuk-heading-xl">Applications and notices</h1>'
+    },
+    items: user.roles.includes('maker') and [{
+      text: 'Create new',
+      attributes: {"data-cy":"CreateNewSubmission"},
+      href: "/select-scheme"
+    }]
+  }) }}
+
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">Contents</h2>
+
+    {{ dashboardTabs.nav(selected = tab) }}
+
+    <section class="govuk-tabs__panel">
+
+      <h2 class="govuk-heading-l">Facilities</h2>
+
+      {% set items = [] %}
+      {% for facility in facilities %}
+        {% set linkHtml %}
+          <a
+            href="{{ facility.url }}"
+            class="govuk-link"
+            data-cy="facility__link--{{ facility.bankId }}"
+          >
+            {{ facility.bankId }}
+          </a>
+        {% endset %}
+
+        {% set item = [
+          {
+            html: linkHtml,
+            attributes: { "data-cy": "facility__bankId--" + facility.bankId  },
+            classes: "govuk-body-s"
+          },
+          {
+            text: facility.ukefId | dashIfEmpty,
+            attributes: { "data-cy": "facility__ukefId--" + facility.bankId },
+            classes: "govuk-body-s"
+          },
+          {
+            text: facility.facilityType | capitalize,
+            attributes: { "data-cy": "facility__facilityType--" + facility.bankId },
+            classes: "govuk-body-s"
+          },
+          {
+            text: facility.noticeType | dashIfEmpty,
+            attributes: { "data-cy": "facility__noticeType--" + facility.bankId },
+            classes: "govuk-body-s"
+          },
+          {
+            text: facility.value.currency + ' ' + (facility.value.amount | string | formatAsCurrency),
+            attributes: { "data-cy": "facility__value--" + facility.bankId },
+            classes: "govuk-body-s"
+          },
+          {
+            text: facility.bankStage,
+            attributes: { "data-cy": "facility__bankStage--" + facility.bankId },
+            classes: "govuk-body-s"
+          },
+          {
+            text: facility.date | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
+            attributes: { 'data-cy': 'facility__date--' + facility.bankId },
+            classes: "govuk-body-s"
+          }
+        ] %}
+
+        {% set items = (items.push(item), items) %}
+      {% endfor %}
+
+      {{ govukTable({
+        classes: "govuk-!-margin-bottom-0",
+        head: [
+          {
+            text: "Bank facility ID",
+            attributes: {
+              "data-cy": "facility__bankId--header"
+            }
+          },
+          {
+            text: "UKEF facility ID",
+            attributes: {
+              "data-cy": "facility__ukefId--header"
+            }
+          },
+          {
+            text: "Facility type",
+            attributes: {
+              "data-cy": "facility__facilityType--header"
+            }
+          },
+          {
+            text: "Notice type",
+            attributes: {
+              "data-cy": "facility__noticeType--header"
+            }
+          },
+          {
+            text: "Value",
+            attributes: {
+              "data-cy": "facility__value--header"
+            }
+          },
+          {
+            text: "Bank’s facility stage",
+            attributes: {
+              "data-cy": "facility__bankStage--header"
+            }
+          },
+          {
+            text: "Issued date",
+            attributes: {
+              "data-cy": "facility__date--header"
+            }
+          }
+        ],
+        rows: items
+      }) }}
+
+      {{ pagination.pagination(pages.totalPages, pages.currentPage, pages.totalItems, '/dashboard/facilities' if tab === 'bssFacilities' else '/dashboard/facilities/gef') }}
+
+    </section>
+
+  </div>
+
+{% endblock %}

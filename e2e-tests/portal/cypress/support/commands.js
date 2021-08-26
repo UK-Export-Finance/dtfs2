@@ -42,6 +42,9 @@ Cypress.Commands.add('deleteGefApplications', require('./portal-api/deleteGefApp
 Cypress.Commands.add('insertOneGefApplication', require('./portal-api/insertOneGefApplication'));
 Cypress.Commands.add('insertManyGefApplications', require('./portal-api/insertManyGefApplications'));
 Cypress.Commands.add('setGefApplicationStatus', require('./portal-api/setGefApplicationStatus'));
+Cypress.Commands.add('deleteGefFacilities', require('./portal-api/deleteGefFacilities'));
+Cypress.Commands.add('insertOneGefFacility', require('./portal-api/insertOneGefFacility'));
+Cypress.Commands.add('insertManyGefFacilities', require('./portal-api/insertManyGefFacilities'));
 
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));

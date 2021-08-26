@@ -9,7 +9,7 @@ const hasRequiredItems = (doc) => {
   if (doc.hasBeenIssued === null) {
     required.push('hasBeenIssued');
   }
-  if (!doc.name) {
+  if (doc.hasBeenIssued === true && !doc.name) {
     required.push('name');
   }
   if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && !doc.coverStartDate)) {
