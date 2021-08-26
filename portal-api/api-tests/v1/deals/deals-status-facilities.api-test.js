@@ -63,7 +63,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let createdFacilities;
 
       beforeEach(async (done) => {
-        completedDeal.status = 'Further Maker\'s input required';
+        completedDeal.details.status = 'Further Maker\'s input required';
         completedDeal.details.submissionDate = moment().utc().valueOf();
 
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -80,6 +80,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const statusUpdate = {
             status: 'Ready for Checker\'s approval',
+            comments: 'test',
           };
 
           updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
@@ -118,7 +119,6 @@ describe('/v1/deals/:id/status - facilities', () => {
             expect(loan.previousFacilityStage).toEqual('Conditional');
             expect(typeof loan.lastEdited).toEqual('string');
           });
-
         });
       });
 
@@ -762,7 +762,6 @@ describe('/v1/deals/:id/status - facilities', () => {
           });
         });
       });
-
     });
   });
 });
