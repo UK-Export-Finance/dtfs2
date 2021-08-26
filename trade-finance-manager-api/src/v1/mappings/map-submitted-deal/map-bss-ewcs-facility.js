@@ -48,6 +48,7 @@ const mapBssEwcsFacility = (facility) => {
     bankReferenceNumber,
     uniqueIdentificationNumber,
     bondType,
+    facilityStage,
   } = facility;
 
   return {
@@ -60,8 +61,7 @@ const mapBssEwcsFacility = (facility) => {
     ukefExposure,
     coverStartDate: requestedCoverStartDate,
     ukefGuaranteeInMonths,
-    // TODO simplify isIssued to just take 1 param, not object
-    hasBeenIssued: isIssued(facility),
+    hasBeenIssued: isIssued(facilityStage),
     hasBeenAcknowledged,
     coverEndDate: mapCoverEndDate(facility),
     guaranteeFeePayableByBank,
