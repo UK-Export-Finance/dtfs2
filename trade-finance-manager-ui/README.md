@@ -7,3 +7,4 @@ The UI uses GraphQL to query [TFM API](trade-finance-manager-api) for deals and 
 The only logic in the codebase is for page routes, controllers, form validation and user permissions. The UI should be kept as simple as possible - only adding logic or business rules when it absolutely needs to be in the UI.
 
 
+-- Testing changes
