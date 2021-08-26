@@ -20,7 +20,7 @@
   {% if status !== 'change' %}
     {{ govukBackLink({
       text: "Back to previous page",
-      href: '/gef/application-details/' + applicationId + '/select-exporters-correspondence-address',
+      href: backUrl,
       attributes: {
         'data-cy': 'back-link'
       }
