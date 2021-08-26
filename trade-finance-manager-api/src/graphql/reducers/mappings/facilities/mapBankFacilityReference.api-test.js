@@ -1,15 +1,16 @@
 const mapBankFacilityReference = require('./mapBankFacilityReference');
+const CONSTANTS = require('../../../../constants');
 
 describe('mapBankFacilityReference', () => {
   const mockBond = {
     _id: '1234',
-    bondType: 'Retention bond',
+    ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
     uniqueIdentificationNumber: 'abc123',
   };
 
   const mockLoan = {
     _id: '1234',
-    interestMarginFee: '12',
+    ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
     bankReferenceNumber: '700',
   };
 
@@ -25,5 +26,10 @@ describe('mapBankFacilityReference', () => {
       const result = mapBankFacilityReference(mockLoan);
       expect(result).toEqual(mockLoan.bankReferenceNumber);
     });
+  });
+
+  it('should return null', () => {
+    const result = mapBankFacilityReference({});
+    expect(result).toEqual(null);
   });
 });

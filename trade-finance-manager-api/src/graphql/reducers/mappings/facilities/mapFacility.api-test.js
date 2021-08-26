@@ -44,6 +44,7 @@ describe('mapFacility', () => {
     associatedDealId: '100200300',
     ukefFacilityID: '0040004833',
     facilityType: mockFacilityType,
+    ukefFacilityType: mockFacilityType,
     ...mockCoverEndDate,
     coveredPercentage: mockCoveredPercentage,
     bondType: 'Performance Bond',
