@@ -90,7 +90,7 @@ const updateIssuedFacilities = async (
       deal.facilities.forEach(async (facilityId) => {
         const facility = await facilitiesController.findOne(facilityId);
 
-        const { facilityStage } = facility;
+        const { facilityStage, facilityType } = facility;
 
         const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                     && facility.issueFacilityDetailsProvided
@@ -109,9 +109,9 @@ const updateIssuedFacilities = async (
               facility.status = newStatus;
             }
 
-            if (isLoanFacility(facilityStage)) {
+            if (isLoanFacility(facilityType)) {
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-            } else if (isBondFacility(facilityStage)) {
+            } else if (isBondFacility(facilityType)) {
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
             }
           } else if (shouldUpdateStatus) {
