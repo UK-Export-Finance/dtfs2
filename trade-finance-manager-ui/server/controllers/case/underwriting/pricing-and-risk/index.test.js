@@ -86,7 +86,6 @@ describe('GET underwriting - pricing and risk', () => {
 
 describe('GET underwriting - pricing and risk edit', () => {
   describe('when deal exists', () => {
-
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
     });
