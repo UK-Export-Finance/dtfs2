@@ -305,6 +305,7 @@ describe('/v1/deals/:id/status', () => {
 
       const statusUpdate = {
         status: 'Submitted',
+        confirmSubmit: true,
       };
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
