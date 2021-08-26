@@ -21,7 +21,7 @@ const mapGefDeal = (deal) => {
   const mapped = {
     _id,
     dealType,
-    bankSupplyContractID: bankInternalRefName,
+    bankReferenceNumber: bankInternalRefName,
     bankAdditionalReferenceName: additionalRefName,
     submissionCount,
     submissionType,

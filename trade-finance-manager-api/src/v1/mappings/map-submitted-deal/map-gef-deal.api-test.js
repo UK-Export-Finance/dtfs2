@@ -19,7 +19,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
     const expected = {
       _id: mockDeal.dealSnapshot._id,
       dealType: mockDeal.dealSnapshot.dealType,
-      bankSupplyContractID: mockDeal.dealSnapshot.bankInternalRefName,
+      bankReferenceNumber: mockDeal.dealSnapshot.bankInternalRefName,
       bankAdditionalReferenceName: mockDeal.dealSnapshot.additionalRefName,
       submissionCount: mockDeal.dealSnapshot.submissionCount,
       submissionType: mockDeal.dealSnapshot.submissionType,
