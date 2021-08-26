@@ -227,7 +227,7 @@ This is needed to work with file uploads and azure functions. You can create a s
 
 Home > Services > Storage accounts > Create
 
-Make sure that you select UK South region.
+Make sure that you select UK South region and the dev/test resource group.
 
 ## Azure functions
 
