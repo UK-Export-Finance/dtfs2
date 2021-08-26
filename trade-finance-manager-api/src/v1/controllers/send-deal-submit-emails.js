@@ -101,20 +101,7 @@ const sendMiaAcknowledgement = async (deal) => {
   return emailResponse;
 };
 
-const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
-  const {
-    ukefDealId,
-    bankReferenceNumber,
-    submissionType,
-    maker,
-    facilities,
-    exporter,
-  } = deal;
-
-  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    return null;
-  }
+const generateBssFacilityLists = (facilities) => {
   const {
     issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
   } = issuedFacilities(facilities);
@@ -129,6 +116,95 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
     return null;
   }
 
+  const issued = `${issuedBondsList}\n${issuedLoansList}`;
+
+  let unissued = '';
+  if (unissuedBondsList.length || unissuedLoansList.length) {
+    unissued = `${unissuedBondsList}\n${unissuedLoansList}`;
+  }
+
+  return {
+    issued,
+    unissued,
+  };
+};
+
+const generateGefFacilityLists = (facilities) => {
+  const {
+    issuedCash, unissuedCash, issuedContingent, unissuedContingent,
+  } = issuedFacilities(facilities);
+
+  // const issuedCashList = generateBSSListString(issuedCash);
+  // const issuedContingentList = generateEWCSListString(issuedContingent);
+
+  // const unissuedCashList = generateBSSListString(unissuedCash);
+  // const unissuedContingentList = generateEWCSListString(unissuedContingent);
+
+  const issuedCashList = 'TONY TEST';
+  const issuedContingentList = 'TONY TEST';
+
+  const unissuedCashList = 'TONY TEST';
+  const unissuedContingentList = 'TONY TEST';
+
+  if (issuedCashList.length === 0 && issuedContingentList.length === 0) {
+    return null;
+  }
+
+  const issued = `${issuedCashList}\n${issuedContingentList}`;
+
+  let unissued = '';
+  if (unissuedCashList.length || unissuedContingentList.length) {
+    unissued = `${unissuedCashList}\n${unissuedContingentList}`;
+  }
+
+  return {
+    issued,
+    unissued,
+  };
+};
+
+const generateFacilityLists = (dealType, facilities) => {
+  let issuedList;
+  let unissuedList;
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const { issued, unissued } = generateBssFacilityLists(facilities);
+    issuedList = issued;
+    unissuedList = unissued;
+  } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    const { issued, unissued } = generateGefFacilityLists(facilities);
+    issuedList = issued;
+    unissuedList = unissued;
+  }
+
+  return {
+    issued: issuedList,
+    unissued: unissuedList,
+  };
+};
+
+const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
+  const {
+    dealType,
+    ukefDealId,
+    bankReferenceNumber,
+    submissionType,
+    maker,
+    facilities,
+    exporter,
+  } = deal;
+
+  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    return null;
+  }
+
+  const facilityLists = generateFacilityLists(dealType, facilities);
+
+  if (!facilityLists.issued) {
+    return null;
+  }
+
   const {
     firstname,
     surname,
@@ -136,13 +212,6 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
   } = maker;
 
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
-
-  const issuedFacilitiesList = `${issuedBondsList}\n${issuedLoansList}`;
-
-  let unissuedFacilitiesList = '';
-  if (unissuedBondsList.length || unissuedLoansList.length) {
-    unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
-  }
 
   const emailVariables = {
     firstname,
@@ -152,10 +221,10 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
     ukefDealId,
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',
-    issuedFacilitiesList,
-    showIssuedHeader: issuedFacilitiesList ? 'yes' : 'no',
-    unissuedFacilitiesList,
-    showUnissuedHeader: unissuedFacilitiesList ? 'yes' : 'no',
+    issuedFacilitiesList: facilityLists.issued,
+    showIssuedHeader: facilityLists.issued ? 'yes' : 'no',
+    unissuedFacilitiesList: facilityLists.unissued,
+    showUnissuedHeader: facilityLists.unissued ? 'yes' : 'no',
   };
 
   const emailResponse = await sendTfmEmail(
