@@ -26,6 +26,12 @@ describe('mapGefSubmissionDetails', () => {
       industryClass: mockDeal.dealSnapshot.exporter.selectedIndustry.class.name,
       supplierCompaniesHouseRegistrationNumber: mockDeal.dealSnapshot.exporter.companiesHouseRegistrationNumber,
       smeType: mockDeal.dealSnapshot.exporter.smeType,
+      supplierCorrespondenceAddressLine1: mockDeal.dealSnapshot.exporter.correspondenceAddress.addressLine1,
+      supplierCorrespondenceAddressLine2: mockDeal.dealSnapshot.exporter.correspondenceAddress.addressLine2,
+      supplierCorrespondenceAddressLine3: mockDeal.dealSnapshot.exporter.correspondenceAddress.addressLine3,
+      supplierCorrespondenceAddressTown: mockDeal.dealSnapshot.exporter.correspondenceAddress.locality,
+      supplierCorrespondenceAddressPostcode: mockDeal.dealSnapshot.exporter.correspondenceAddress.postalCode,
+      supplierCorrespondenceAddressCountry: mockDeal.dealSnapshot.exporter.correspondenceAddress.country,
     };
 
     expect(result).toEqual(expected);
