@@ -23,31 +23,13 @@ const facilityHasValidIssuedDate = (facility, deal) => {
   return false;
 };
 
-const isLoanFacility = (facilityStage) => {
-  // TODO: workaround until we have a `facilityType` on every facility
+const isLoanFacility = (facilityType) =>
+  facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
 
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-    || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
-    return true;
-  }
-
-  return false;
-};
-
-const isBondFacility = (facilityStage) => {
-  // TODO: workaround until we have a `facilityType` on every facility
-
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-    || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
-    return true;
-  }
-
-  return false;
-};
+const isBondFacility = (facilityType) =>
+  facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
 
 const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
-  // TODO: maybe don't need the previousFacilityStage check?
-
   if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
       && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
         || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)) {
@@ -57,8 +39,6 @@ const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
 };
 
 const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
-  // TODO: maybe don't need the previousFacilityStage check?
-
   if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
     && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
       || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED)) {
@@ -69,16 +49,16 @@ const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
 };
 
 const shouldUpdateFacility = (facility) => {
-  const { facilityStage, previousFacilityStage } = facility;
+  const { facilityType, facilityStage, previousFacilityStage } = facility;
 
-  if (isLoanFacility(facilityStage)) {
+  if (isLoanFacility(facilityType)) {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
       || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
 
-  if (isBondFacility(facilityStage)) {
+  if (isBondFacility(facilityType)) {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
       || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
