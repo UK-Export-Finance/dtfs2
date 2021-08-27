@@ -10,14 +10,6 @@ let applicationIds = [];
 let exporterId;
 let token;
 
-const fillInForm = () => {
-  enterExportersCorAddress.addressLine1().type('Line 1');
-  enterExportersCorAddress.addressLine2().type('Line 2');
-  enterExportersCorAddress.addressLine3().type('Line 3');
-  enterExportersCorAddress.locality().type('Locality');
-  enterExportersCorAddress.postcode().type('Postcode');
-};
-
 context('Enter Exporters Correspondence Address Page', () => {
   before(() => {
     cy.reinsertMocks();
@@ -140,12 +132,6 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
-  });
-
-  it('Submitting the form defaults and shows country as United Kingdom', () => {
-    fillInForm();
-    enterExportersCorAddress.saveAndReturnButton().click();
-    applicationDetails.exporterSummaryList().should('contain', 'United Kingdom');
   });
 
   describe('Status query is set to `change`', () => {
