@@ -20,7 +20,6 @@ module.exports = {
   mode: 'development',
   entry: {
     main: './scripts/main.js',
-    maskedInputs: './scripts/masked-inputs.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
