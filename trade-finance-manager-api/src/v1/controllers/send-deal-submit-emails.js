@@ -3,9 +3,8 @@ const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
 const { issuedFacilities } = require('../helpers/issued-facilities');
 const {
+  generateFacilitiesReferenceListString,
   generateFacilitiesListString,
-  generateBSSListString,
-  generateEWCSListString,
 } = require('../helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
@@ -106,15 +105,11 @@ const generateBssFacilityLists = (facilities) => {
     issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
   } = issuedFacilities(facilities);
 
-  const issuedBondsList = generateBSSListString(issuedBonds);
-  const issuedLoansList = generateEWCSListString(issuedLoans);
+  const issuedBondsList = generateFacilitiesListString(issuedBonds);
+  const issuedLoansList = generateFacilitiesListString(issuedLoans);
 
-  const unissuedBondsList = generateBSSListString(unissuedBonds);
-  const unissuedLoansList = generateEWCSListString(unissuedLoans);
-
-  if (issuedBondsList.length === 0 && issuedLoansList.length === 0) {
-    return null;
-  }
+  const unissuedBondsList = generateFacilitiesListString(unissuedBonds);
+  const unissuedLoansList = generateFacilitiesListString(unissuedLoans);
 
   const issued = `${issuedBondsList}\n${issuedLoansList}`;
 
@@ -129,26 +124,17 @@ const generateBssFacilityLists = (facilities) => {
   };
 };
 
+
 const generateGefFacilityLists = (facilities) => {
   const {
     issuedCash, unissuedCash, issuedContingent, unissuedContingent,
   } = issuedFacilities(facilities);
 
-  // const issuedCashList = generateBSSListString(issuedCash);
-  // const issuedContingentList = generateEWCSListString(issuedContingent);
+  const issuedCashList = generateFacilitiesListString(issuedCash);
+  const issuedContingentList = generateFacilitiesListString(issuedContingent);
 
-  // const unissuedCashList = generateBSSListString(unissuedCash);
-  // const unissuedContingentList = generateEWCSListString(unissuedContingent);
-
-  const issuedCashList = 'TONY TEST';
-  const issuedContingentList = 'TONY TEST';
-
-  const unissuedCashList = 'TONY TEST';
-  const unissuedContingentList = 'TONY TEST';
-
-  if (issuedCashList.length === 0 && issuedContingentList.length === 0) {
-    return null;
-  }
+  const unissuedCashList = generateFacilitiesListString(unissuedCash);
+  const unissuedContingentList = generateFacilitiesListString(unissuedContingent);
 
   const issued = `${issuedCashList}\n${issuedContingentList}`;
 
@@ -259,6 +245,6 @@ module.exports = {
   sendFirstTaskEmail,
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
-  generateFacilitiesListString,
+  generateFacilitiesReferenceListString,
   sendAinMinIssuedFacilitiesAcknowledgement,
 };
