@@ -196,6 +196,7 @@ const dealQuery = gql`
           supplierType,
           smeType
         }
+        isFinanceIncreasing
       }
     }
   }

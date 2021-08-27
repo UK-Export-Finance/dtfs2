@@ -328,6 +328,7 @@ type DealSnapshot {
   totals: DealTotals
   facilities: [Facility]
   submissionDetails: DealSubmissionDetails
+  isFinanceIncreasing: Boolean
   eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility
   dealFiles: DealFiles
