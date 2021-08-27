@@ -2,12 +2,21 @@
 /* eslint-disable no-undef */
 import relative from './relativeURL';
 import enterExportersCorAddress from './pages/enter-exporters-corr-address';
+import applicationDetails from './pages/application-details';
 import exportersAddress from './pages/exporters-address';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 let applicationIds = [];
 let exporterId;
 let token;
+
+const fillInForm = () => {
+  enterExportersCorAddress.addressLine1().type('Line 1');
+  enterExportersCorAddress.addressLine2().type('Line 2');
+  enterExportersCorAddress.addressLine3().type('Line 3');
+  enterExportersCorAddress.locality().type('Locality');
+  enterExportersCorAddress.postcode().type('Postcode');
+};
 
 context('Enter Exporters Correspondence Address Page', () => {
   before(() => {
@@ -108,11 +117,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     });
 
     it('takes user to about export page if form has been filled in correctly', () => {
-      enterExportersCorAddress.addressLine1().type('Line 1');
-      enterExportersCorAddress.addressLine2().type('Line 2');
-      enterExportersCorAddress.addressLine3().type('Line 3');
-      enterExportersCorAddress.locality().type('Locality');
-      enterExportersCorAddress.postcode().type('Postcode');
+      fillInForm();
       enterExportersCorAddress.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/about-exporter`));
     });
@@ -124,6 +129,12 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
+  });
+
+  it('Submitting the form defaults and shows country as United Kingdom', () => {
+    fillInForm();
+    enterExportersCorAddress.saveAndReturnButton().click();
+    applicationDetails.exporterSummaryList().should('contain', 'United Kingdom');
   });
 
   describe('Status query is set to `change`', () => {

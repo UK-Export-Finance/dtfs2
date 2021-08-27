@@ -52,3 +52,5 @@ export const AUTHORISATION_LEVEL = {
   EDIT: 'EDIT',
   CHANGE_STATUS: 'CHANGE_STATUS',
 };
+
+export const DEFAULT_COUNTRY = 'United Kingdom';
