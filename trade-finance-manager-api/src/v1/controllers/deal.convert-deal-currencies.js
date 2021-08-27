@@ -32,7 +32,7 @@ const convertDealCurrencies = async (deal) => {
 
       const strippedDealValue = Number(dealValue.replace(/,/g, ''));
 
-      // TODO rename supplyContractValueInGBP to dealValueInGBP
+      // TODO: DTFS2-4704 - rename supplyContractValueInGBP to dealValueInGBP
       const supplyContractValueInGBP = strippedDealValue * exchangeRate;
 
       dealUpdate = {
