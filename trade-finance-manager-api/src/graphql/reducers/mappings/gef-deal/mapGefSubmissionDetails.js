@@ -13,8 +13,12 @@ const mapGefSubmissionDetails = (dealSnapshot) => {
     industryClass: exporter.selectedIndustry.class.name,
     supplierCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     smeType: exporter.smeType,
-    // supplyContractCurrency
-    // supplyContractValue
+    supplierCorrespondenceAddressLine1: exporter.correspondenceAddress.addressLine1,
+    supplierCorrespondenceAddressLine2: exporter.correspondenceAddress.addressLine2,
+    supplierCorrespondenceAddressLine3: exporter.correspondenceAddress.addressLine3,
+    supplierCorrespondenceAddressTown: exporter.correspondenceAddress.locality,
+    supplierCorrespondenceAddressPostcode: exporter.correspondenceAddress.postalCode,
+    supplierCorrespondenceAddressCountry: exporter.correspondenceAddress.country,
   };
 };
 

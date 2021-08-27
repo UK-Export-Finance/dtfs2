@@ -22,7 +22,14 @@ const MOCK_GEF_DEAL = {
   exporter: {
     companiesHouseRegistrationNumber: '10686321',
     companyName: 'FOUNDRY4 CONSULTING LTD',
-    correspondenceAddress: null,
+    correspondenceAddress: {
+      addressLine1: 'Test line 1',
+      addressLine2: 'Test line 2',
+      addressLine3: 'Test line 3',
+      locality: 'Test locality',
+      postalCode: 'Test postcode',
+      country: 'Test country',
+    },
     createdAt: 1625827333468,
     industries: [
       {

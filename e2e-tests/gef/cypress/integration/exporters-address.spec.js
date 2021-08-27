@@ -70,14 +70,14 @@ context('Exporters Address Page', () => {
 
     it('shows error message if user enter bad postcode and a valid manual address entry link', () => {
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type('E1');
+      exportersAddress.correspondenceAddress().type('1');
       exportersAddress.continueButton().click();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
     });
 
-    xit('redirects use to Select exporters correspondence address page if form filled in correctly', () => {
+    xit('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type('E1 6JE');
       exportersAddress.continueButton().click();
