@@ -55,7 +55,6 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   });
 };
 
-// TODO: POST should probably be restricted
 const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);

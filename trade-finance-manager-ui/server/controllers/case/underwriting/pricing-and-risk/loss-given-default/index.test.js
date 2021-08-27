@@ -76,6 +76,10 @@ describe('GET underwriting - loss given default', () => {
 });
 
 describe('POST underwriting - loss given default', () => {
+  const apiUpdateSpy = jest.fn(() => Promise.resolve({
+    lossGivenDefault: 45,
+  }));
+
   describe('when deal exists', () => {
     const mockDeal = {
       _id: '1000023',
@@ -93,14 +97,10 @@ describe('POST underwriting - loss given default', () => {
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
-      api.updateLossGivenDefault = () => Promise.resolve({
-        updateLossGivenDefault: {
-          lossGivenDefault: '45',
-        },
-      });
+      api.updateLossGivenDefault = apiUpdateSpy;
     });
 
-    it('should redirect to /pricing-and-risk', async () => {
+    it('should call API and redirect to /pricing-and-risk', async () => {
       const req = {
         params: {
           _id: mockDeal._id,
@@ -112,6 +112,11 @@ describe('POST underwriting - loss given default', () => {
       };
 
       await lossGivenDefaultController.postUnderWritingLossGivenDefault(req, res);
+
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        mockDeal._id,
+        { lossGivenDefault: Number(req.body.lossGivenDefault) },
+      );
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
