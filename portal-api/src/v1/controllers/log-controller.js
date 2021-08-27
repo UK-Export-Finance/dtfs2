@@ -1,6 +1,5 @@
 const db = require('../../drivers/db-client');
 
-
 exports.logError = async (msg) => {
   const collection = await db.getCollection('errorLog');
 

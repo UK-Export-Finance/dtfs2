@@ -43,7 +43,6 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
-
   const isAllowedDealStatusAndSubmissionType = ((allowedDealStatus
                                                 && allowedDealSubmissionType)
                                                 || isMiaDealInApprovedStatus);

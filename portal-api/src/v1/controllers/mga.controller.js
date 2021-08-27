@@ -1,4 +1,3 @@
-
 const stream = require('stream');
 const { readFile } = require('../../drivers/fileshare');
 const { findOneBank } = require('./banks.controller');
@@ -28,7 +27,6 @@ exports.downloadMga = async (req, res) => {
     folder: `${EXPORT_FOLDER}/mga/${bank.id}`,
     filename,
   };
-
 
   const bufferedFile = await readFile(documentLocation);
 

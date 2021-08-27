@@ -52,7 +52,6 @@ const bankCheckApplication = {
   status: 'BANK_CHECK',
 };
 
-
 describe('user-authorisation-levels', () => {
   it('returns the expected authorisation levels for DRAFT', () => {
     expect(getUserAuthorisationLevelsToApplication(makerUser, draftApplication)).toEqual(['EDIT']);

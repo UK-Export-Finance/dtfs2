@@ -43,7 +43,6 @@ exports.findOne = (req, res) => (
   findOneBank(req.params.id, (deal) => res.status(200).send(deal))
 );
 
-
 exports.update = async (req, res) => {
   const collection = await db.getCollection('banks');
   const updatedBank = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});

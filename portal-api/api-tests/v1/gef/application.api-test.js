@@ -64,7 +64,6 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
       await as(aMaker).post(mockApplications[15]).to(baseUrl);
 
-
       // MW: couldn't get the promise.all running in sequential order
       // await mockApplications.map(async (item) => {
       //   return as(aMaker).post(item).to(baseUrl);
@@ -85,6 +84,7 @@ describe(baseUrl, () => {
           submissionType: null,
           submissionCount: 0,
           submissionDate: null,
+          supportingInformation: {},
           ukefDealId: null,
           checkerId: null,
         })),
@@ -120,6 +120,9 @@ describe(baseUrl, () => {
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
+        supportingInformation: {
+          status: 'NOT_STARTED',
+        },
         ukefDealId: null,
         checkerId: null,
       };
@@ -179,6 +182,7 @@ describe(baseUrl, () => {
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
+        supportingInformation: {},
         ukefDealId: null,
         checkerId: null,
       };

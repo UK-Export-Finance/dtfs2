@@ -62,7 +62,6 @@ const createSubmissionToUkef = async (req, res) => {
   }
 };
 
-
 module.exports = {
   submitToUkef,
   createSubmissionToUkef,

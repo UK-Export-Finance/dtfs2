@@ -52,7 +52,6 @@ describe('facility-guarantee', () => {
     expect(errors).toContainEqual(inArrearsFrequencyErrorExpected);
   });
 
-
   it('validates frequency when completed', () => {
     const errors = validateFacilityGuarantee({
       feeType: 'in advance', // advance/arrears/maturity

@@ -15,7 +15,6 @@ const getIndustrySector = (findCode) => MOCK_INDUSTRY_SECTORS.find(({ code }) =>
 
 const sendEmail = () => MOCK_EMAIL_RESPONSE;
 
-
 module.exports = {
   countries: {
     getCountries,

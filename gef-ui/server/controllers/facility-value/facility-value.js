@@ -1,4 +1,3 @@
-
 function validateFacilityValue({ interestPercentage, coverPercentage }, saveAndReturn = false) {
   const facilityValueErrors = [];
   // Regex tests to see if value between 1 and 80

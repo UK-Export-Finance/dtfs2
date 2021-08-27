@@ -182,7 +182,6 @@ describe('controllers/automatic-cover', () => {
       });
     });
 
-
     it('redirects user to `problem with service` page if there is an issue with the api', async () => {
       const next = jest.fn();
 

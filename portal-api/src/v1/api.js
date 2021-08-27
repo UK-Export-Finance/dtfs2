@@ -246,7 +246,6 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
   }
 };
 
-
 module.exports = {
   findOneDeal,
   queryDeals,
