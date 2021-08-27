@@ -10,14 +10,6 @@ let applicationIds = [];
 let exporterId;
 let token;
 
-const fillInForm = () => {
-  enterExportersCorAddress.addressLine1().type('Line 1');
-  enterExportersCorAddress.addressLine2().type('Line 2');
-  enterExportersCorAddress.addressLine3().type('Line 3');
-  enterExportersCorAddress.locality().type('Locality');
-  enterExportersCorAddress.postcode().type('Postcode');
-};
-
 context('Enter Exporters Correspondence Address Page', () => {
   before(() => {
     cy.reinsertMocks();
@@ -68,7 +60,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type('E1');
+      exportersAddress.correspondenceAddress().type('1');
       exportersAddress.continueButton().click();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
@@ -116,10 +108,21 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.postcodeError();
     });
 
-    it('takes user to about export page if form has been filled in correctly', () => {
-      fillInForm();
-      enterExportersCorAddress.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/about-exporter`));
+    describe('if form has been filled in correctly', () => {
+      it('takes user to about export page ', () => {
+        enterExportersCorAddress.addressLine1().type('Line 1');
+        enterExportersCorAddress.addressLine2().type('Line 2');
+        enterExportersCorAddress.addressLine3().type('Line 3');
+        enterExportersCorAddress.locality().type('Locality');
+        enterExportersCorAddress.postcode().type('Postcode');
+        enterExportersCorAddress.continueButton().click();
+        cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/about-exporter`));
+      });
+
+      it('defaults and shows country as United Kingdom', () => {
+        cy.visit(`/gef/application-details/${applicationIds[0].id}`);
+        applicationDetails.exporterSummaryList().should('contain', 'United Kingdom');
+      });
     });
   });
 
@@ -129,12 +132,6 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
-  });
-
-  it('Submitting the form defaults and shows country as United Kingdom', () => {
-    fillInForm();
-    enterExportersCorAddress.saveAndReturnButton().click();
-    applicationDetails.exporterSummaryList().should('contain', 'United Kingdom');
   });
 
   describe('Status query is set to `change`', () => {
