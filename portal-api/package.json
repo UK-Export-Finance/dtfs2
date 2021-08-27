@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "start": "node src/index.js",
     "start:dev": "npx nodemon src/index.js",
     "start_azure_debug": "node --inspect=0.0.0.0:$APPSVC_TUNNEL_PORT src/index.js",
@@ -63,9 +64,9 @@
     "xss": "^1.0.8"
   },
   "devDependencies": {
-    "eslint": "6.1.0",
-    "eslint-config-airbnb-base": "14.0.0",
-    "eslint-plugin-import": "2.22.1",
+    "eslint": "7.5.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.24.2",
     "jest": "26.1.0",
     "nodemon": "^2.0.4",
     "supertest": "4.0.2"

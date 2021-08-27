@@ -7,7 +7,6 @@ const postcode = 'EE1 1EE';
 const companyName = 'Test Company';
 const registeredAddress = { addressLine1: 'line 1', addressLine2: 'line 2' };
 
-
 const MockRequest = () => {
   const req = {};
   req.params = {};
