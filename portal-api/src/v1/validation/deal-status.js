@@ -1,6 +1,6 @@
 const validate = require('./completeDealValidation-flat');
 
-module.exports = (deal, requestedUpdate, user) => {
+module.exports = (deal, requestedUpdate) => {
   let errorList = {};
 
   if (requestedUpdate.status === 'Abandoned') {
