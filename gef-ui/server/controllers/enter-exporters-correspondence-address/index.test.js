@@ -1,5 +1,6 @@
 import { enterExportersCorrespondenceAddress, validateEnterExportersCorrespondenceAddress } from './index';
 import * as api from '../../services/api';
+import { DEFAULT_COUNTRY } from '../../../constants';
 
 const MockRequest = () => {
   const req = {};
@@ -138,6 +139,35 @@ describe('Validate Enter Exporters Correspondence Address', () => {
       applicationId: '123',
       addressForm: { addressLine1: 'Line1', postalCode: '' },
     }));
+  });
+
+  it(`calls api with country defaulted to ${DEFAULT_COUNTRY}`, async () => {
+    const mockRequest = new MockRequest();
+    const mockResponse = new MockResponse();
+    const mockExporterResponse = new MockExporterResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+
+    mockRequest.body.addressLine1 = 'Line1';
+    mockRequest.body.postalCode = 'sa1 7fr';
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+
+    const apiUpdateExporterSpy = jest.fn(() => Promise.resolve(mockExporterResponse));
+
+    api.updateExporter = apiUpdateExporterSpy;
+    await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
+
+    const expectedBody = {
+      correspondenceAddress: {
+        ...mockRequest.body,
+        country: DEFAULT_COUNTRY,
+      },
+    };
+
+    expect(apiUpdateExporterSpy).toHaveBeenCalledWith(
+      mockApplicationResponse.exporterId,
+      expectedBody,
+    );
   });
 
   it('redirects user to `about exporter` page if response from api is successful', async () => {

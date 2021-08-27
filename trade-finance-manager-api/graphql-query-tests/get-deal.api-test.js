@@ -198,12 +198,12 @@ const GET_DEAL = gql`
           supplierAddressPostcode,
           supplierAddressTown,
           supplierCompaniesHouseRegistrationNumber,
-          supplierCorrespondenceAddressCountry,
           supplierCorrespondenceAddressLine1,
           supplierCorrespondenceAddressLine2,
           supplierCorrespondenceAddressLine3,
           supplierCorrespondenceAddressPostcode,
           supplierCorrespondenceAddressTown,
+          supplierCorrespondenceAddressCountry,
           smeType
         }
       }
