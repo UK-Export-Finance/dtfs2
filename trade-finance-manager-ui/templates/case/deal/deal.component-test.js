@@ -8,6 +8,7 @@ describe(page, () => {
   const params = {
     deal: {
       _id: '12345678',
+      dealType: 'BSS',
       details: {
         submissionType: 'Automatic Inclusion Notice',
         bankSupplyContractID: 'contract-1',
@@ -64,5 +65,17 @@ describe(page, () => {
 
   it('should render facilities table', () => {
     wrapper.expectElement('[data-cy="facilities-table"]').toExist();
+  });
+
+  it('should render bank\'s financing to exporter', () => {
+    if (params.deal.dealType === 'GEF') {
+      wrapper.expectElement('[data-cy="finance-increasing"]').toExist();
+    }
+  });
+
+  it('should NOT render bank\'s financing to exporter', () => {
+    if (params.deal.dealType !== 'GEF') {
+      wrapper.expectElement('[data-cy="finance-increasing"]').notToExist();
+    }
   });
 });
