@@ -20,12 +20,12 @@ const cleanFacilities = async (token) => {
 
 const cleanDeals = async (token) => {
   console.log('cleaning deals');
+  const deals = await api.listDeals(token);
 
-  for (deal of await api.listDeals(token)) {
-    await api.deleteDeal(deal, token);
-    // TODO : delete TFM deals separately once tfm.listDeal endpoint available
-    // delete tfm deals
-    await centralApi.deleteDeal(deal, token);
+  if (deals) {
+    for (deal of deals) {
+      await api.deleteDeal(deal, token);
+    }
   }
 };
 
