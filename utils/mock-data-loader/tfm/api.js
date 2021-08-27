@@ -89,6 +89,14 @@ const deleteUser = async (user) => {
   return response.data;
 };
 
+const listDeals = async () => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/tfm/deals`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.deals;
+};
 
 module.exports = {
   createTeam,
@@ -97,4 +105,5 @@ module.exports = {
   deleteUser,
   listTeams,
   listUsers,
+  listDeals,
 };
