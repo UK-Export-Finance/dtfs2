@@ -17,7 +17,6 @@ const getNextQuarterDate = (issuedDate) => {
     mmdd = moment(issuedDate).format('MM-DD');
     year = moment(issuedDate).format('YYYY');
   } else {
-    // TODO - 2021-03-26: Liz is checking what the nextQuarterEndDate should be for unissued facilities. use todays date for now
     mmdd = moment().format('MM-DD');
     year = moment().format('YYYY');
   }

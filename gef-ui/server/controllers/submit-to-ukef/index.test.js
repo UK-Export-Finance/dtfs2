@@ -54,7 +54,7 @@ describe('create submission to UKEF', () => {
 
   it('redirects to submission url', async () => {
     await createSubmissionToUkef(mockRequest, mockResponse);
-    // TODO: Consider using redirect instead of render.
+    // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     expect(mockResponse.render)
       .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk');
   });
