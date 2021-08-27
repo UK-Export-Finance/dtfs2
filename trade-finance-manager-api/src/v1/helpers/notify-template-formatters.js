@@ -1,6 +1,28 @@
 const { capitalizeFirstLetter } = require('../../utils/string');
+const CONSTANTS = require('../../constants');
 
-const generateFacilitiesListString = (facilities) => facilities.reduce((acc, facility) => {
+const generateFacilitiesListHeading = (facilityType) => {
+  let heading;
+  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+    heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN;
+  }
+
+  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+    heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.BOND;
+  }
+
+  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
+    heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH;
+  }
+
+  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
+    heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT;
+  }
+
+  return `#${heading}\n\n`;
+};
+
+const generateFacilitiesReferenceListString = (facilities) => facilities.reduce((acc, facility) => {
   const {
     facilityType, ukefFacilityID, bankReferenceNumber, uniqueIdentificationNumber,
   } = facility;
@@ -13,52 +35,43 @@ const generateFacilitiesListString = (facilities) => facilities.reduce((acc, fac
   return `${acc}- ${fType} facility ${bankRefString}has been given the UKEF reference: ${ukefFacilityID} \n`;
 }, '');
 
-const generateBSSListString = (facilities) => {
-  const bssList = facilities.reduce((acc, facility) => {
-    const {
-      bondType, ukefFacilityID, bankReferenceNumber, uniqueIdentificationNumber,
-    } = facility;
+const generateFacilitiesListString = (facilities) => {
+  const list = facilities.reduce((acc, facility) => {
+    const { ukefFacilityID } = facility;
 
-    const bankReference = uniqueIdentificationNumber || bankReferenceNumber;
-    const bankRefString = bankReference
-      ? `*Your bank ref: ${bankReference}\n`
-      : '';
+    let string = `${acc}`;
+    let bankReference;
 
-    return `${acc}*${bondType}\n${bankRefString}*UKEF facility ID: ${ukefFacilityID} \n\n`;
+    if (facility.uniqueIdentificationNumber) {
+      bankReference = facility.uniqueIdentificationNumber;
+    } else if (facility.bankReferenceNumber) {
+      bankReference = facility.bankReferenceNumber;
+    }
+
+    if (bankReference) {
+      const bankRefString = bankReference
+        ? `*Your bank ref: ${bankReference}\n`
+        : '';
+
+      string += bankRefString;
+    }
+
+    string += `*UKEF facility ID: ${ukefFacilityID}\n\n`;
+
+    return string;
   }, '');
 
-  if (bssList.length) {
-    const heading = '#Bond Support Scheme\n\n';
-    return `${heading}${bssList}`;
-  }
+  if (list.length) {
+    const { facilityType } = facilities[0];
 
-  return '';
-};
-
-const generateEWCSListString = (facilities) => {
-  const ewcsList = facilities.reduce((acc, facility) => {
-    const {
-      ukefFacilityID, bankReferenceNumber, uniqueIdentificationNumber,
-    } = facility;
-
-    const bankReference = uniqueIdentificationNumber || bankReferenceNumber;
-    const bankRefString = bankReference
-      ? `*Your bank ref: ${bankReference}\n`
-      : '';
-
-    return `${acc}${bankRefString}*UKEF facility ID: ${ukefFacilityID}\n\n`;
-  }, '');
-
-  if (ewcsList.length) {
-    const heading = '#Export Working Capital Scheme\n\n';
-    return `${heading}${ewcsList}`;
+    const heading = generateFacilitiesListHeading(facilityType);
+    return `${heading}${list}`;
   }
 
   return '';
 };
 
 module.exports = {
+  generateFacilitiesReferenceListString,
   generateFacilitiesListString,
-  generateBSSListString,
-  generateEWCSListString,
 };
