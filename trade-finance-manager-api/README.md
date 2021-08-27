@@ -27,8 +27,7 @@ In essence:
 7) Generate a list of tasks for the deal
 8) Send emails for acknowledgment and 'tasks are ready to start'
 
-All of this starts from [deal.submit.controller](/src/v1/controllers/deal.submit.controller.js)
-
+All of this starts from the deal submission controller: `/src/v1/controllers/deal.submit.controller.js`
 
 
 ## Snapshots and data structure
@@ -148,12 +147,12 @@ We map the data when:
     - Create a flat, generic structure for all deal and facility types.
     - Use the generic structure to call external UKEF APIs.
     - Only the fields required for API calls are mapped.
-    - This is only referenced locally in the [submit controller](/src/v1/controllers/deal.submit.controller.js). It is not stored or referenced anywhere else.
-    - See [map-submitted-deal](/src/v1/mappings/map-submitted-deal/index.js)
+    - This is only referenced locally in the submit controller: `/src/v1/controllers/deal.submit.controller.js`. It is not stored or referenced anywhere else.
+    - See map-submitted-deal: `/src/v1/mappings/map-submitted-deal`
 
 2) The deal or facility is queried from the UI (after submission)
     - Maps all deals and facilities into the BSS structure.
     - A GEF deal/facility will get mapped into the BSS structure.
-    - See [GraphQL reducer mappings](/src/graphql/reducers)
+    - See GraphQL reducer mappings: `/src/graphql/reducers`
 
 When BSS is redesigned, it should share a generic data structure with GEF. TFM should then be refactored to query and render data based on the generic data structure, instead of BSS. The submission mapping is a step towards this.
