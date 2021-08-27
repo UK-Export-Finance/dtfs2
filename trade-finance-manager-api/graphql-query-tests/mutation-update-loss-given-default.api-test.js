@@ -41,7 +41,7 @@ describe('graphql mutation - update loss given default', () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
       lossGivenDefaultUpdate: {
-        lossGivenDefault: '45',
+        lossGivenDefault: 45,
       },
     };
 

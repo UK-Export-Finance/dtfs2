@@ -85,7 +85,7 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
   }
 
   const update = {
-    lossGivenDefault,
+    lossGivenDefault: Number(lossGivenDefault),
   };
 
   await api.updateLossGivenDefault(dealId, update);

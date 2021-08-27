@@ -102,7 +102,6 @@ const getCaseTask = async (req, res) => {
   }
 
   if (!task.canEdit) {
-    // TODO: ideally we will redirect to custom error page.
     return res.redirect(`/case/${dealId}/tasks`);
   }
 
