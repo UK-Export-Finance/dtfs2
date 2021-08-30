@@ -1,10 +1,10 @@
-name: Deploy ACBS Function App
+name: Deploy ACBS Number Generator Function App
 
 on:
   push:
     branches: [ master ]
     paths: 
-    - 'azure-functions/acbs-function/**'
+    - 'azure-functions/number-generator-function/**'
   schedule:
     # A weekly run to roll up any base image patches, 
     # in office hours, avoiding bank holiday Mondays:
@@ -42,8 +42,8 @@ jobs:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
-        repository: azure-function-acbs
-        path: azure-functions/acbs-function
+        repository: azure-function-number-generator
+        path: azure-functions/number-generator-function
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
@@ -67,8 +67,8 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD_DEV }}
     - name: Pull ACBS Function
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs dtfs/azure-function-acbs
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator dtfs/azure-function-number-generator
         
   promote:
     name: Promote container images to Dev
@@ -87,9 +87,9 @@ jobs:
       run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:$from
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:$from ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:$to
-        docker push ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:$to
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:$from
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:$from ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:$to
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:$to
 
   deploy:
     name: Deploy container images to Dev
@@ -113,13 +113,13 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az functionapp deployment slot create --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-acbs
+          az functionapp deployment slot create --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-number-generator
 
     - name: Swap slot ${{ github.sha }}
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --action swap
+          az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --action swap
 
     - name: Delete slot ${{ github.sha }}
       # Clean up the slot regardless of errors
@@ -127,5 +127,5 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }}
+          az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }}
 
