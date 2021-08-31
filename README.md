@@ -237,3 +237,14 @@ To run Azure functions locally:
 2. In a seperate terminal tab, go to azure-functions directory and run `docker-compose up`
 
 Ideally, azure-functions would be run in the same root docker, but this caused memory issues in github actions.
+
+## Number Generator
+Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the Mulesoft Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
+
+The steps taken are:
+1. Deal is created in Portal/GEF and submitted to TFM
+2. TFM calls the Number Generator Azure Function, stores the status endpoint for the function call in the Durable Functions log and returns a ukefID="PENDING"
+3. The Number Generator Function tries the number generator a maximum of 5 times before delaring a failure
+4. A scheduled job on tfm-api polls the status endpoint for each running job until a result is received
+5. If the result is a success then the deal & facilities are updated with the generated IDs
+6. If the result is an error, then the entry in the durable functions log collection is updated with the error
