@@ -238,6 +238,8 @@ To run Azure functions locally:
 
 Ideally, azure-functions would be run in the same root docker, but this caused memory issues in github actions.
 
+Number Generator Function is now run in root `docker-compose.yml`
+
 ## Number Generator
 Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the Mulesoft Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
 
