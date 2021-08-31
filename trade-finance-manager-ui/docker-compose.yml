@@ -2,7 +2,7 @@ version: "3"
 services:
 
   portal:
-    build: ../portal
+    build: ./portal
     image: dtfs/portal
     restart: always
     depends_on:
