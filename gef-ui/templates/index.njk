@@ -38,13 +38,12 @@
     {% endif %}
 
     {% include "includes/header.njk" %}
-    <div class="govuk-width-container">
     {% include "includes/primary-navigation.njk" %}
-
-
-    {% if primaryNav == "reports" %}
-    {% include "includes/sub-navigation.njk" %}
-    {% endif %}
+    <div class="govuk-width-container">
+    
+      {% if primaryNav == "reports" %}
+      {% include "includes/sub-navigation.njk" %}
+      {% endif %}
 
       <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         {% block content %}{% endblock %}
