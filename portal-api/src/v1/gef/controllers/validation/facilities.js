@@ -39,9 +39,15 @@ const hasRequiredItems = (doc) => {
   if (!doc.interestPercentage) {
     required.push('interestPercentage');
   }
-  // if (doc.paymentType === null) {
-  //   required.push('paymentType');
-  // }
+  if (!doc.feeType) {
+    required.push('feeType');
+  }
+  if (doc.feeType !== 'At maturity' && !doc.frequency) {
+    required.push('frequency');
+  }
+  if (!doc.dayCountBasis) {
+    required.push('dayCountBasis');
+  }
   return required;
 };
 
