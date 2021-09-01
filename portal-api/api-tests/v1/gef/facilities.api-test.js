@@ -63,7 +63,7 @@ describe(baseUrl, () => {
         frequency: null,
       },
       validation: {
-        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
+        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'frequency', 'dayCountBasis'],
       },
     };
     completeUpdate = {
@@ -80,6 +80,9 @@ describe(baseUrl, () => {
       coverPercentage: 75,
       interestPercentage: 10,
       paymentType: 'IN_ARREARS_QUARTLY',
+      dayCountBasis: '365',
+      feeType: 'in advance',
+      frequency: 'Monthly',
     };
   });
 
@@ -214,7 +217,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage'],
+          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'frequency', 'dayCountBasis'],
         },
       };
 
@@ -264,6 +267,9 @@ describe(baseUrl, () => {
         coverPercentage: 80,
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
+        feeType: 'in advance',
+        frequency: 'Monthly',
+        dayCountBasis: '365',
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
@@ -301,6 +307,9 @@ describe(baseUrl, () => {
         coverPercentage: 80,
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
+        feeType: 'in advance',
+        frequency: 'Monthly',
+        dayCountBasis: '365',
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
@@ -337,7 +346,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage'],
+          required: ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'frequency', 'dayCountBasis'],
         },
       };
 

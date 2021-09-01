@@ -19,8 +19,6 @@ export default class Facility {
       const coverPercentage = JSON.stringify(details.coverPercentage);
       const interestPercentage = JSON.stringify(details.interestPercentage);
 
-      // const { value, coverPercentage, interestPercentage } = details;
-
       return {
         currency: details.currency,
         value,
