@@ -45,7 +45,7 @@ context('View a deal', () => {
     facilitiesDashboard.facilityType(loanId).should('contain', 'Loan');
 
     facilitiesDashboard.noticeType(bondId).should('contain', 'Automatic Inclusion Notice');
-    facilitiesDashboard.noticeType(loanId).should('contain', '-');
+    facilitiesDashboard.noticeType(loanId).should('contain', 'Automatic Inclusion Notice');
 
     facilitiesDashboard.facilityValue(bondId).should('contain', 'GBP 123.00');
     facilitiesDashboard.facilityValue(loanId).should('contain', 'GBP 456.00');
