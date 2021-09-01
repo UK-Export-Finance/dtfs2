@@ -1,4 +1,5 @@
 const { capitalizeFirstLetter } = require('../../utils/string');
+const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
 const generateFacilitiesListHeading = (facilityType) => {
@@ -71,7 +72,78 @@ const generateFacilitiesListString = (facilities) => {
   return '';
 };
 
+const generateBssFacilityLists = (facilities) => {
+  const {
+    issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
+  } = issuedFacilities(facilities);
+
+  const issuedBondsList = generateFacilitiesListString(issuedBonds);
+  const issuedLoansList = generateFacilitiesListString(issuedLoans);
+
+  const unissuedBondsList = generateFacilitiesListString(unissuedBonds);
+  const unissuedLoansList = generateFacilitiesListString(unissuedLoans);
+
+  const issued = `${issuedBondsList}\n${issuedLoansList}`;
+
+  let unissued = '';
+  if (unissuedBondsList.length || unissuedLoansList.length) {
+    unissued = `${unissuedBondsList}\n${unissuedLoansList}`;
+  }
+
+  return {
+    issued,
+    unissued,
+  };
+};
+
+const generateGefFacilityLists = (facilities) => {
+  const {
+    issuedCash, unissuedCash, issuedContingent, unissuedContingent,
+  } = issuedFacilities(facilities);
+
+  const issuedCashList = generateFacilitiesListString(issuedCash);
+  const issuedContingentList = generateFacilitiesListString(issuedContingent);
+
+  const unissuedCashList = generateFacilitiesListString(unissuedCash);
+  const unissuedContingentList = generateFacilitiesListString(unissuedContingent);
+
+  const issued = `${issuedCashList}\n${issuedContingentList}`;
+
+  let unissued = '';
+  if (unissuedCashList.length || unissuedContingentList.length) {
+    unissued = `${unissuedCashList}\n${unissuedContingentList}`;
+  }
+
+  return {
+    issued,
+    unissued,
+  };
+};
+
+const generateFacilityLists = (dealType, facilities) => {
+  let issuedList;
+  let unissuedList;
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const { issued, unissued } = generateBssFacilityLists(facilities);
+    issuedList = issued;
+    unissuedList = unissued;
+  } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    const { issued, unissued } = generateGefFacilityLists(facilities);
+    issuedList = issued;
+    unissuedList = unissued;
+  }
+
+  return {
+    issued: issuedList,
+    unissued: unissuedList,
+  };
+};
+
 module.exports = {
   generateFacilitiesReferenceListString,
   generateFacilitiesListString,
+  generateBssFacilityLists,
+  generateGefFacilityLists,
+  generateFacilityLists,
 };
