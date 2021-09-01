@@ -109,33 +109,33 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui dtfs/portal
-    - name: Start Docker Compose
-      run: |
-        source secrets/set_jwt_keypair.sh
-        docker-compose up -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
-    - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm install
-        node ./re-insert-mocks.js
-        pwd
-    - name: Run e2e tests
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install
-        cd e2e-tests/portal
-        npx cypress run --config video=false # --record
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
+    # - name: Start Docker Compose
+    #   run: |
+    #     source secrets/set_jwt_keypair.sh
+    #     docker-compose up -d
+    #     echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
+    #     sleep 10
+    # - name: Load mock data
+    #   run: |
+    #     cd utils/mock-data-loader
+    #     npm install
+    #     node ./re-insert-mocks.js
+    #     pwd
+    # - name: Run e2e tests
+    #   env:
+    #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+    #   run: |
+    #     pwd
+    #     cd $GITHUB_WORKSPACE
+    #     npm install
+    #     cd e2e-tests/portal
+    #     npx cypress run --config video=false # --record
+    # - name: Save Cypress screenshots
+    #   if: ${{ failure() }}
+    #   uses: actions/upload-artifact@main
+    #   with:
+    #     name: screenshots
+    #     path: './cypress/screenshots'
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
