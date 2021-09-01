@@ -169,35 +169,16 @@ const generateFacilityLists = (dealType, facilities) => {
   };
 };
 
-const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
+const generateAinMinEmailVariables = (deal, facilityLists) => {
   const {
-    dealType,
     ukefDealId,
     bankReferenceNumber,
     submissionType,
     maker,
-    facilities,
     exporter,
   } = deal;
 
-  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    return null;
-  }
-
-  const facilityLists = generateFacilityLists(dealType, facilities);
-
-  if (!facilityLists.issued) {
-    return null;
-  }
-
-  const {
-    firstname,
-    surname,
-    email: sendToEmailAddress,
-  } = maker;
-
-  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
+  const { firstname, surname } = maker;
 
   const emailVariables = {
     firstname,
@@ -213,6 +194,34 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
     showUnissuedHeader: facilityLists.unissued ? 'yes' : 'no',
   };
 
+  return emailVariables;
+};
+
+const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
+  const {
+    dealType,
+    submissionType,
+    maker,
+    facilities,
+  } = deal;
+
+  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    return null;
+  }
+
+  const facilityLists = generateFacilityLists(dealType, facilities);
+
+  if (!facilityLists.issued) {
+    return null;
+  }
+
+  const { email: sendToEmailAddress } = maker;
+
+  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
+
+  const emailVariables = generateAinMinEmailVariables(deal, facilityLists);
+
   const emailResponse = await sendTfmEmail(
     templateId,
     sendToEmailAddress,
@@ -227,9 +236,7 @@ const sendDealSubmitEmails = async (deal) => {
     return false;
   }
 
-  // send email for the first task
   const firstTaskEmail = await sendFirstTaskEmail(deal);
-
   const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
   const emailAcknowledgementAinMinIssued = await sendAinMinIssuedFacilitiesAcknowledgement(deal);
 
@@ -246,5 +253,7 @@ module.exports = {
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
   generateFacilitiesReferenceListString,
+  generateFacilityLists,
+  generateAinMinEmailVariables,
   sendAinMinIssuedFacilitiesAcknowledgement,
 };

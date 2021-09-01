@@ -12,11 +12,11 @@ const generateFacilitiesListHeading = (facilityType) => {
   }
 
   if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
-    heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH;
+    heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
   }
 
   if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
-    heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT;
+    heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 
   return `#${heading}\n\n`;
