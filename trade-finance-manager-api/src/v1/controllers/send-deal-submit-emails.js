@@ -170,7 +170,6 @@ const generateFacilityLists = (dealType, facilities) => {
 
 const generateAinMinEmailVariables = (deal, facilityLists) => {
   const {
-    dealType,
     ukefDealId,
     bankReferenceNumber,
     submissionType,
@@ -253,5 +252,7 @@ module.exports = {
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
   generateFacilitiesListString,
+  generateFacilityLists,
+  generateAinMinEmailVariables,
   sendAinMinIssuedFacilitiesAcknowledgement,
 };
