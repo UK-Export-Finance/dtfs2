@@ -2,17 +2,11 @@ const {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
   sendDealSubmitEmails,
-  generateFacilityLists,
   generateAinMinEmailVariables,
   sendMiaAcknowledgement,
-  sendAinMinIssuedFacilitiesAcknowledgement,
 } = require('../src/v1/controllers/send-deal-submit-emails');
-const {
-  generateFacilitiesReferenceListString,
-  generateFacilitiesListString,
-} = require('../src/v1/helpers/notify-template-formatters');
+const { generateFacilityLists } = require('../src/v1/helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../src/v1/helpers/generate-task-email-variables');
-const sendTfmEmail = require('../src/v1/controllers/send-tfm-email');
 
 const CONSTANTS = require('../src/constants');
 const MOCK_TEAMS = require('../src/v1/__mocks__/mock-teams');
