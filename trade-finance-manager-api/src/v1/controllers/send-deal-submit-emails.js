@@ -52,6 +52,7 @@ const sendFirstTaskEmail = async (deal) => {
   return null;
 };
 
+// TODO: is there  a unit test for this
 const sendMiaAcknowledgement = async (deal) => {
   const {
     ukefDealId,
@@ -97,75 +98,6 @@ const sendMiaAcknowledgement = async (deal) => {
     deal,
   );
   return emailResponse;
-};
-
-const generateBssFacilityLists = (facilities) => {
-  const {
-    issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
-  } = issuedFacilities(facilities);
-
-  const issuedBondsList = generateFacilitiesListString(issuedBonds);
-  const issuedLoansList = generateFacilitiesListString(issuedLoans);
-
-  const unissuedBondsList = generateFacilitiesListString(unissuedBonds);
-  const unissuedLoansList = generateFacilitiesListString(unissuedLoans);
-
-  const issued = `${issuedBondsList}\n${issuedLoansList}`;
-
-  let unissued = '';
-  if (unissuedBondsList.length || unissuedLoansList.length) {
-    unissued = `${unissuedBondsList}\n${unissuedLoansList}`;
-  }
-
-  return {
-    issued,
-    unissued,
-  };
-};
-
-
-const generateGefFacilityLists = (facilities) => {
-  const {
-    issuedCash, unissuedCash, issuedContingent, unissuedContingent,
-  } = issuedFacilities(facilities);
-
-  const issuedCashList = generateFacilitiesListString(issuedCash);
-  const issuedContingentList = generateFacilitiesListString(issuedContingent);
-
-  const unissuedCashList = generateFacilitiesListString(unissuedCash);
-  const unissuedContingentList = generateFacilitiesListString(unissuedContingent);
-
-  const issued = `${issuedCashList}\n${issuedContingentList}`;
-
-  let unissued = '';
-  if (unissuedCashList.length || unissuedContingentList.length) {
-    unissued = `${unissuedCashList}\n${unissuedContingentList}`;
-  }
-
-  return {
-    issued,
-    unissued,
-  };
-};
-
-const generateFacilityLists = (dealType, facilities) => {
-  let issuedList;
-  let unissuedList;
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    const { issued, unissued } = generateBssFacilityLists(facilities);
-    issuedList = issued;
-    unissuedList = unissued;
-  } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    const { issued, unissued } = generateGefFacilityLists(facilities);
-    issuedList = issued;
-    unissuedList = unissued;
-  }
-
-  return {
-    issued: issuedList,
-    unissued: unissuedList,
-  };
 };
 
 const generateAinMinEmailVariables = (deal, facilityLists) => {
