@@ -1704,7 +1704,8 @@ jobs:
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
               TFM_URI="${{ secrets.TFM_URI }}" \
-              AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url"
+              AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
+              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}"
               
   # END API setup
  
@@ -2593,4 +2594,4 @@ jobs:
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
- 
+   
