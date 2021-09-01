@@ -1,5 +1,6 @@
 import * as api from '../../services/api';
 import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
+import { DEFAULT_COUNTRY } from '../../../constants';
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
@@ -7,6 +8,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
   const { address } = session;
   const parseAddress = address ? JSON.parse(address) : null;
   const { status } = query;
+  const backUrl = req.get('Referrer');
 
   try {
     const { exporterId } = await api.getApplication(applicationId);
@@ -29,6 +31,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       addressForm: mappedAddress || correspondenceAddress,
       applicationId,
       status,
+      backUrl,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -64,6 +67,10 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
       });
     }
   }
+
+  // always default to UK (this is not entered in the UI)
+  // https://ukef-dtfs.atlassian.net/browse/DTFS2-4456?focusedCommentId=15031
+  body.country = DEFAULT_COUNTRY;
 
   try {
     const { exporterId } = await api.getApplication(applicationId);

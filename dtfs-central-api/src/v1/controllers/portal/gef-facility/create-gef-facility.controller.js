@@ -1,8 +1,12 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
 
-const createFacility = async (facility) => {
+const createFacility = async (newFacility) => {
+  const facility = newFacility;
   const collection = await db.getCollection('gef-facilities');
+
+  facility.applicationId = new ObjectId(facility.applicationId);
 
   const response = await collection.insertOne(facility);
   const createdFacility = response.ops[0];

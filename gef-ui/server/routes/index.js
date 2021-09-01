@@ -1,4 +1,5 @@
 import express from 'express';
+import { sessionUserToLocals } from '../middleware/sessionUserToLocals';
 import mandatoryCriteriaRoutes from './mandatory-criteria';
 import nameApplicationRoutes from './name-application';
 import applicationDetailsRoutes from './application-details';
@@ -24,6 +25,8 @@ import facilityConfirmDeletionRoutes from './facility-confirm-deletion';
 import returnToMaker from './return-to-maker';
 
 const router = express.Router();
+
+router.use('*', sessionUserToLocals);
 
 router.use(mandatoryCriteriaRoutes);
 router.use(nameApplicationRoutes);

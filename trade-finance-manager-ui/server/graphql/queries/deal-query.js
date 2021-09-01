@@ -5,6 +5,7 @@ const dealQuery = gql`
     deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
       _id
       tfm {
+        product
         dateReceived
         parties {
           exporter {
@@ -186,12 +187,12 @@ const dealQuery = gql`
           supplierAddressPostcode,
           supplierAddressTown,
           supplierCompaniesHouseRegistrationNumber,
-          supplierCorrespondenceAddressCountry,
           supplierCorrespondenceAddressLine1,
           supplierCorrespondenceAddressLine2,
           supplierCorrespondenceAddressLine3,
           supplierCorrespondenceAddressPostcode,
           supplierCorrespondenceAddressTown,
+          supplierCorrespondenceAddressCountry,
           supplierType,
           smeType
         }
