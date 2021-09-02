@@ -87,7 +87,7 @@ describe('notify-template-formatters', () => {
         const mockFacility = {
           facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ukefFacilityID: '1',
-          bankReferenceNumber: '100',
+          bankReference: '100',
         };
 
         const result = generateFacilitiesReferenceListString([mockFacility]);
@@ -96,10 +96,10 @@ describe('notify-template-formatters', () => {
           const {
             facilityType,
             ukefFacilityID,
-            bankReferenceNumber,
+            bankReference,
           } = facility;
 
-          const bankRefString = `with your reference ${bankReferenceNumber} `;
+          const bankRefString = `with your reference ${bankReference} `;
 
           return `- ${capitalizeFirstLetter(facilityType)} facility ${bankRefString}has been given the UKEF reference: ${ukefFacilityID} \n`;
         };
@@ -171,13 +171,13 @@ describe('notify-template-formatters', () => {
       expect(result).toEqual(expected);
     });
 
-    describe('when a facility has no uniqueIdentificationNumber, but has bankReferenceNumber', () => {
-      it('should return string with bankReferenceNumber', () => {
+    describe('when a facility has no uniqueIdentificationNumber, but has bankReference', () => {
+      it('should return string with bankReference', () => {
         const mockFacilities = [
           {
             facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
             ukefFacilityID: '1',
-            bankReferenceNumber: '123',
+            bankReference: '123',
           },
         ];
 
@@ -185,7 +185,7 @@ describe('notify-template-formatters', () => {
 
         const heading = generateFacilitiesListHeading(mockFacilities[0].facilityType);
 
-        const string = expectedString(mockFacilities[0], 'bankReferenceNumber');
+        const string = expectedString(mockFacilities[0], 'bankReference');
 
         const expected = `${heading}${string}`;
 
@@ -193,7 +193,7 @@ describe('notify-template-formatters', () => {
       });
     });
 
-    describe('when a facility does NOT have uniqueIdentificationNumber or bankReferenceNumber', () => {
+    describe('when a facility does NOT have uniqueIdentificationNumber or bankReference', () => {
       it('should return string', () => {
         const mockFacilities = [
           {

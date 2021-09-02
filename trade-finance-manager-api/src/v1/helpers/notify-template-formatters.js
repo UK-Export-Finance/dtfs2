@@ -1,5 +1,5 @@
-const { capitalizeFirstLetter } = require('../../utils/string');
 const { issuedFacilities } = require('./issued-facilities');
+const { capitalizeFirstLetter } = require('../../utils/string');
 const CONSTANTS = require('../../constants');
 
 const generateFacilitiesListHeading = (facilityType) => {
@@ -23,14 +23,20 @@ const generateFacilitiesListHeading = (facilityType) => {
   return `#${heading}\n\n`;
 };
 
+
+// TODO This is not used, but SHOULD be.
+// it's used for "UKEF has received your facility stage update" email.
+// TODO: rename
+// TODO: maybe move away from this file.
+// NOTE: I don't this is needed at all now.
 const generateFacilitiesReferenceListString = (facilities) => facilities.reduce((acc, facility) => {
   const {
-    facilityType, ukefFacilityID, bankReferenceNumber, uniqueIdentificationNumber,
+    facilityType, ukefFacilityID, bankReference, uniqueIdentificationNumber,
   } = facility;
   const fType = capitalizeFirstLetter(facilityType);
-  const bankReference = uniqueIdentificationNumber || bankReferenceNumber;
-  const bankRefString = bankReference
-    ? `with your reference ${bankReference} `
+  const bankRef = uniqueIdentificationNumber || bankReference;
+  const bankRefString = bankRef
+    ? `with your reference ${bankRef} `
     : '';
 
   return `${acc}- ${fType} facility ${bankRefString}has been given the UKEF reference: ${ukefFacilityID} \n`;
@@ -41,17 +47,17 @@ const generateFacilitiesListString = (facilities) => {
     const { ukefFacilityID } = facility;
 
     let string = `${acc}`;
-    let bankReference;
+    let bankRef;
 
     if (facility.uniqueIdentificationNumber) {
-      bankReference = facility.uniqueIdentificationNumber;
-    } else if (facility.bankReferenceNumber) {
-      bankReference = facility.bankReferenceNumber;
+      bankRef = facility.uniqueIdentificationNumber;
+    } else if (facility.bankReference) {
+      bankRef = facility.bankReference;
     }
 
-    if (bankReference) {
-      const bankRefString = bankReference
-        ? `*Your bank ref: ${bankReference}\n`
+    if (bankRef) {
+      const bankRefString = bankRef
+        ? `*Your bank ref: ${bankRef}\n`
         : '';
 
       string += bankRefString;
@@ -141,6 +147,7 @@ const generateFacilityLists = (dealType, facilities) => {
 };
 
 module.exports = {
+  generateFacilitiesListHeading,
   generateFacilitiesReferenceListString,
   generateFacilitiesListString,
   generateBssFacilityLists,
