@@ -148,7 +148,7 @@ jobs:
   promote:
     name: Promote container images to Dev
     #needs: [set-environment, test]
-    needs: [set-environment]
+    needs: [set-environment, build]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
