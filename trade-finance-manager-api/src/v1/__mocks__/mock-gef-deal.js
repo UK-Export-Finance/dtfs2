@@ -3,7 +3,6 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-faciliti
 const MOCK_GEF_DEAL = {
   _id: 'MOCK_GEF_DEAL',
   dealType: 'GEF',
-  isFinanceIncreasing: false,
   additionalRefName: 'Additional Reference 001',
   bankInternalRefName: 'Internal Reference 001',
   submissionDate: '1626169888809',
@@ -21,6 +20,7 @@ const MOCK_GEF_DEAL = {
   },
   createdAt: 1625827333471,
   exporter: {
+    isFinanceIncreasing: true,
     companiesHouseRegistrationNumber: '10686321',
     companyName: 'FOUNDRY4 CONSULTING LTD',
     correspondenceAddress: {
