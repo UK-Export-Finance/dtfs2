@@ -1,17 +1,17 @@
-import api from '../../api';
+const api = require('../../api');
 
-import { PRODUCT } from '../../constants';
+const { PRODUCT } = require('../../constants');
 
-import {
+const {
   getApiData,
   requestParams,
   getFlashSuccessMessage,
-} from '../../helpers';
+} = require('../../helpers');
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
 
-export const bssFacilities = async (req, res) => {
+exports.bssFacilities = async (req, res) => {
   const tab = 'bssFacilities';
   const { userToken } = requestParams(req);
 
@@ -56,7 +56,7 @@ export const bssFacilities = async (req, res) => {
   });
 };
 
-export const gefFacilities = async (req, res) => {
+exports.gefFacilities = async (req, res) => {
   const tab = 'gefFacilities';
   const { userToken } = requestParams(req);
 

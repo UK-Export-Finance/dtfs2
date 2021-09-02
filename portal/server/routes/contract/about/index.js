@@ -1,10 +1,10 @@
-import express from 'express';
-import buyerPage from './buyerPage';
-import companiesHouseSearch from './companiesHouseSearch';
-import financialPage from './financialPage';
-import previewPage from './previewPage';
-import supplierPage from './supplierPage';
-import { provide, DEAL } from '../../api-data-provider';
+const express = require('express');
+const buyerPage = require('./buyerPage');
+const companiesHouseSearch = require('./companiesHouseSearch');
+const financialPage = require('./financialPage');
+const previewPage = require('./previewPage');
+const supplierPage = require('./supplierPage');
+const { provide, DEAL } = require('../../api-data-provider');
 
 const router = express.Router();
 
@@ -15,4 +15,4 @@ router.use(buyerPage);
 router.use(financialPage);
 router.use(previewPage);
 
-export default router;
+module.exports = router;

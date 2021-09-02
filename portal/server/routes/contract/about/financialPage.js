@@ -1,22 +1,22 @@
-import express from 'express';
-import api from '../../../api';
-import {
+const express = require('express');
+const api = require('../../../api');
+const {
   requestParams,
   mapCurrencies,
   errorHref,
   generateErrorSummary,
   sanitizeCurrency,
-} from '../../../helpers';
+} = require('../../../helpers');
 
-import {
+const {
   provide, DEAL, CURRENCIES,
-} from '../../api-data-provider';
+} = require('../../api-data-provider');
 
-import updateSubmissionDetails from './updateSubmissionDetails';
-import calculateStatusOfEachPage from './navStatusCalculations';
-import aboutTaskList from './aboutTaskList';
-import { financialPageValidationErrors } from './pageSpecificValidationErrors';
-import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+const updateSubmissionDetails = require('./updateSubmissionDetails');
+const calculateStatusOfEachPage = require('./navStatusCalculations');
+const aboutTaskList = require('./aboutTaskList');
+const { financialPageValidationErrors } = require('./pageSpecificValidationErrors');
+const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 
 const router = express.Router();
 
@@ -93,4 +93,4 @@ router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), asyn
 });
 
 
-export default router;
+module.exports = router;

@@ -1,4 +1,4 @@
-import { STATUS } from '../../constants';
+const { STATUS } = require('../../constants');
 
 const userCanSubmitDeal = (deal, user) => {
   if ([STATUS.submitted, STATUS.refused].includes(deal.details.status)) {
@@ -22,4 +22,4 @@ const userCanSubmitDeal = (deal, user) => {
 };
 
 
-export default userCanSubmitDeal;
+module.exports = userCanSubmitDeal;

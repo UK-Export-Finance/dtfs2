@@ -17,4 +17,4 @@ const mapCountries = (countries, selectedCountry) => {
   return mappedCountries;
 };
 
-export default mapCountries;
+module.exports = mapCountries;

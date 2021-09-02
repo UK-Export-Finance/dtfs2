@@ -1,13 +1,13 @@
-import express from 'express';
-import moment from 'moment';
-import api from '../../../api';
-import {
+const express = require('express');
+const moment = require('moment');
+const api = require('../../../api');
+const {
   provide,
   BOND,
   DEAL,
   CURRENCIES,
-} from '../../api-data-provider';
-import {
+} = require('../../api-data-provider');
+const {
   getApiData,
   requestParams,
   errorHref,
@@ -15,19 +15,19 @@ import {
   mapCurrencies,
   generateErrorSummary,
   formattedTimestamp,
-} from '../../../helpers';
-import {
+} = require('../../../helpers');
+const {
   bondDetailsValidationErrors,
   bondFinancialDetailsValidationErrors,
   bondFeeDetailsValidationErrors,
   bondPreviewValidationErrors,
-} from './pageSpecificValidationErrors';
-import completedBondForms from './completedForms';
-import bondTaskList from './bondTaskList';
-import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
-import canIssueOrEditIssueFacility from '../canIssueOrEditIssueFacility';
-import isDealEditable from '../isDealEditable';
-import feeFrequencyField from './feeFrequencyField';
+} = require('./pageSpecificValidationErrors');
+const completedBondForms = require('./completedForms');
+const bondTaskList = require('./bondTaskList');
+const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
+const isDealEditable = require('../isDealEditable');
+const feeFrequencyField = require('./feeFrequencyField');
 
 const router = express.Router();
 
@@ -522,4 +522,4 @@ router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
 });
 
 
-export default router;
+module.exports = router;

@@ -1,4 +1,4 @@
-import FIELDS from '../pageFields';
+const FIELDS = require('../pageFields');
 
 const elgibilityCheckYourAnswersValidationErrors = (validationErrors, dealId) => {
   const mappedValidationErrors = validationErrors;
@@ -20,4 +20,4 @@ const elgibilityCheckYourAnswersValidationErrors = (validationErrors, dealId) =>
   return mappedValidationErrors;
 };
 
-export default elgibilityCheckYourAnswersValidationErrors;
+module.exports = elgibilityCheckYourAnswersValidationErrors;

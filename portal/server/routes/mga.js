@@ -1,11 +1,11 @@
-import express from 'express';
-import stream from 'stream';
-import api from '../api';
-import {
+const express = require('express');
+const stream = require('stream');
+const api = require('../api');
+const {
   getApiData,
   requestParams,
-} from '../helpers';
-import validateToken from './middleware/validate-token';
+} = require('../helpers');
+const validateToken = require('./middleware/validate-token');
 
 const router = express.Router();
 
@@ -38,4 +38,4 @@ router.get('/mga/:filename', async (req, res) => {
   fileData.pipe(readStream).pipe(res);
 });
 
-export default router;
+module.exports = router;

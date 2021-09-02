@@ -1,16 +1,16 @@
-import express from 'express';
-import api from '../../../api';
-import {
+const express = require('express');
+const api = require('../../../api');
+const {
   requestParams,
   errorHref,
   generateErrorSummary,
-} from '../../../helpers';
+} = require('../../../helpers');
 
-import { DEAL } from '../../api-data-provider';
+const { DEAL } = require('../../api-data-provider');
 
-import { aboutSupplyContractPreviewValidationErrors } from './pageSpecificValidationErrors';
-import calculateStatusOfEachPage from './navStatusCalculations';
-import aboutTaskList from './aboutTaskList';
+const { aboutSupplyContractPreviewValidationErrors } = require('./pageSpecificValidationErrors');
+const calculateStatusOfEachPage = require('./navStatusCalculations');
+const aboutTaskList = require('./aboutTaskList');
 
 const router = express.Router();
 
@@ -62,4 +62,4 @@ router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
 });
 
 
-export default router;
+module.exports = router;

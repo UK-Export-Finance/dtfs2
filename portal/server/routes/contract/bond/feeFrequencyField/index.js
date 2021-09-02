@@ -36,4 +36,4 @@ const feeFrequencyField = (bondBody, existingBond) => {
   return modifiedBond;
 };
 
-export default feeFrequencyField;
+module.exports = feeFrequencyField;

@@ -1,5 +1,5 @@
-import FIELDS from '../pageFields';
-import isCompleted from '../../../../helpers/formCompleted';
+const FIELDS = require('../pageFields');
+const { isCompleted } = require('../../../../helpers/formCompleted');
 
 const completedBondForms = (validationErrors) => ({
   bondDetails: isCompleted(validationErrors, FIELDS.DETAILS),
@@ -7,4 +7,4 @@ const completedBondForms = (validationErrors) => ({
   bondFeeDetails: isCompleted(validationErrors, FIELDS.FEE_DETAILS),
 });
 
-export default completedBondForms;
+module.exports = completedBondForms;

@@ -1,6 +1,6 @@
 import completedLoanForms from '.';
 import FIELDS from '../pageFields';
-import isCompleted from '../../../../helpers/formCompleted';
+import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedLoanForms', () => {
   it('should return an object with each loan page/form\'s completed status', () => {

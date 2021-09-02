@@ -1,11 +1,11 @@
-import express from 'express';
-import companiesHouseAPI from '../../../companies-house-api';
-import {
+const express = require('express');
+const companiesHouseAPI = require('../../../companies-house-api');
+const {
   provide,
   DEAL,
   INDUSTRY_SECTORS,
   COUNTRIES,
-} from '../../api-data-provider';
+} = require('../../api-data-provider');
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
 // England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
@@ -122,4 +122,4 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   return res.redirect(redirectUrl);
 });
 
-export default router;
+module.exports = router;

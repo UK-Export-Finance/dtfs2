@@ -1,3 +1,3 @@
-import dealStatusUpdate from './dealStatusMutation';
+const dealStatusUpdate = require('./dealStatusMutation');
 
-export default dealStatusUpdate;
+module.exports = dealStatusUpdate;

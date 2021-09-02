@@ -1,12 +1,12 @@
-import express from 'express';
-import moment from 'moment';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import {
+const express = require('express');
+const moment = require('moment');
+const api = require('../../api');
+const buildReportFilters = require('../buildReportFilters');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
-import { validate } from '../role-validator';
+} = require('../../helpers');
+const { validate } = require('../role-validator');
 
 const primaryNav = 'reports';
 const router = express.Router();
@@ -93,4 +93,4 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
   return res.redirect('/reports/reconciliation-report/0');
 });
 
-export default router;
+module.exports = router;

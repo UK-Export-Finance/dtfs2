@@ -1,12 +1,12 @@
-import api from '../../api';
+const api = require('../../api');
 
-import { PRODUCT } from '../../constants';
+const { PRODUCT } = require('../../constants');
 
-import {
+const {
   getApiData,
   requestParams,
   getFlashSuccessMessage,
-} from '../../helpers';
+} = require('../../helpers');
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
@@ -21,7 +21,7 @@ const getRoles = (roles) => {
   };
 };
 
-export const bssDeals = async (req, res) => {
+exports.bssDeals = async (req, res) => {
   const tab = 'bssDeals';
   const { userToken } = requestParams(req);
   const { isMaker, isChecker } = getRoles(req.session.user.roles);
@@ -56,7 +56,7 @@ export const bssDeals = async (req, res) => {
   });
 };
 
-export const gefDeals = async (req, res) => {
+exports.gefDeals = async (req, res) => {
   const tab = 'gefDeals';
   const { userToken } = requestParams(req);
   const { isMaker, isChecker } = getRoles(req.session.user.roles);

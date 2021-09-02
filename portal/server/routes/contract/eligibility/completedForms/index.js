@@ -1,5 +1,5 @@
-import FIELDS from '../pageFields';
-import isCompleted from '../../../../helpers/formCompleted';
+const FIELDS = require('../pageFields');
+const { isCompleted } = require('../../../../helpers/formCompleted');
 
 const completedEligibilityForms = (eligibilityStatus, validationErrors) => {
   if (eligibilityStatus === 'Not started') {
@@ -15,5 +15,4 @@ const completedEligibilityForms = (eligibilityStatus, validationErrors) => {
   };
 };
 
-
-export default completedEligibilityForms;
+module.exports = completedEligibilityForms;

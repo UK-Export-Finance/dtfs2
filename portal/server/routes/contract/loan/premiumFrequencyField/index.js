@@ -36,4 +36,4 @@ const premiumFrequencyField = (loanBody, existingLoan) => {
   return modifiedLoan;
 };
 
-export default premiumFrequencyField;
+module.exports = premiumFrequencyField;

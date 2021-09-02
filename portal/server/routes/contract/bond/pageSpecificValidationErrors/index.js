@@ -1,20 +1,20 @@
-import { pageSpecificValidationErrors } from '../../../../helpers';
-import FIELDS from '../pageFields';
+const { pageSpecificValidationErrors } = require('../../../../helpers');
+const FIELDS = require('../pageFields');
 
-export const bondDetailsValidationErrors = (validationErrors, bond) =>
+exports.bondDetailsValidationErrors = (validationErrors, bond) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.DETAILS, bond);
 
-export const bondFinancialDetailsValidationErrors = (validationErrors, bond) =>
+exports.bondFinancialDetailsValidationErrors = (validationErrors, bond) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.FINANCIAL_DETAILS, bond);
 
-export const bondFeeDetailsValidationErrors = (validationErrors, bond) =>
+exports.bondFeeDetailsValidationErrors = (validationErrors, bond) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.FEE_DETAILS, bond);
 
 // TODO: make reusable
 // preview pages display all required field validation errors.
 // because each field/validation error originates from  a different page,
 // for each validation error, we need to add a hrefRoot to the page in question.
-export const bondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
+exports.bondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
   const mappedValidationErrors = validationErrors;
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {

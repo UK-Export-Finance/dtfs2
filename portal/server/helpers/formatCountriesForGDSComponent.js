@@ -16,4 +16,4 @@ const formatCountriesForGDSComponent = ((countries, selectedCountryCode, showSel
   return countryOptions;
 });
 
-export default formatCountriesForGDSComponent;
+module.exports = formatCountriesForGDSComponent;
