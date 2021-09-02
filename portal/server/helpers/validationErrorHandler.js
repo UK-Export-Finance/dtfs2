@@ -1,4 +1,4 @@
-import isObject from './isObject';
+const isObject = require('./isObject');
 
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
@@ -24,4 +24,4 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
-export default validationErrorHandler;
+module.exports = validationErrorHandler;

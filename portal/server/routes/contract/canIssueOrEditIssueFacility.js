@@ -63,4 +63,4 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
   return false;
 };
 
-export default canIssueOrEditIssueFacility;
+module.exports = canIssueOrEditIssueFacility;

@@ -11,4 +11,4 @@ const submittedDocumentationMatchesOriginalData = (formData, formFiles, original
   return true;
 };
 
-export default submittedDocumentationMatchesOriginalData;
+module.exports = submittedDocumentationMatchesOriginalData;

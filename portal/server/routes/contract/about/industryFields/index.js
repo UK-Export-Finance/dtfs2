@@ -1,4 +1,4 @@
-import { getIndustrySectorById, getIndustryClassById } from '../getIndustryById';
+const { getIndustrySectorById, getIndustryClassById } = require('../getIndustryById');
 
 const industryFields = (postedSubmissionDetails, industrySectors) => {
   const submissionDetails = postedSubmissionDetails;
@@ -33,4 +33,4 @@ const industryFields = (postedSubmissionDetails, industrySectors) => {
   return submissionDetails;
 };
 
-export default industryFields;
+module.exports = industryFields;

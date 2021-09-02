@@ -21,4 +21,4 @@ const getApiData = (query, res) => new Promise((resolve) =>
       return res.redirect('/login');
     }));
 
-export default getApiData;
+module.exports = getApiData;

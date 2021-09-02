@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { FACILITY_STAGE, STATUS, SUBMISSION_TYPE } from '../constants';
+const moment = require('moment');
+const { FACILITY_STAGE, STATUS, SUBMISSION_TYPE } = require('../constants');
 
 const getUserFilters = (params, user = {}) => {
   const { filterBySubmissionUser } = params;
@@ -172,4 +172,4 @@ const buildReportFilters = (params, user) => {
   return filters;
 };
 
-export default buildReportFilters;
+module.exports = buildReportFilters;

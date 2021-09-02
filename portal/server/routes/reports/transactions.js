@@ -1,9 +1,9 @@
-import express from 'express';
-import api from '../../api';
-import {
+const express = require('express');
+const api = require('../../api');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
+} = require('../../helpers');
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -36,4 +36,4 @@ router.get('/reports/:id/transactions/:page', async (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

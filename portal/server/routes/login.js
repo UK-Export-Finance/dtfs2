@@ -1,8 +1,8 @@
-import express from 'express';
-import api from '../api';
-import {
+const express = require('express');
+const api = require('../api');
+const {
   requestParams, generateErrorSummary, errorHref, validationErrorHandler,
-} from '../helpers';
+} = require('../helpers');
 
 const router = express.Router();
 
@@ -104,4 +104,4 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/?passwordupdated=1');
 });
 
-export default router;
+module.exports = router;

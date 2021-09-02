@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { TRANSACTION_STAGE, TRANSACTION_TYPE } from '../constants';
+const moment = require('moment');
+const { TRANSACTION_STAGE, TRANSACTION_TYPE } = require('../constants');
 
 // const buildDashboardFilters = (params, user) => {
 const buildDashboardFilters = (params) => {
@@ -81,4 +81,4 @@ const buildDashboardFilters = (params) => {
   };
 };
 
-export default buildDashboardFilters;
+module.exports = buildDashboardFilters;

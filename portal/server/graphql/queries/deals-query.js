@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const dealsQuery = gql`
 query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
@@ -40,4 +40,4 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
   }
 }`;
 
-export default dealsQuery;
+module.exports = dealsQuery;

@@ -16,4 +16,4 @@ const bondTaskList = (completedForms) => [
   },
 ];
 
-export default bondTaskList;
+module.exports = bondTaskList;

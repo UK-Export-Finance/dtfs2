@@ -1,11 +1,11 @@
-import nunjucks from 'nunjucks';
-import filterLocaliseTimestamp from './filter-localiseTimestamp';
-import dashIfEmpty from './filter-dashIfEmpty';
-import displayName from './filter-displayName';
-import formatAsCurrency from './formatAsCurrency';
-import countriesWithEmptyInitialOption from './filter-countriesWithEmptyInitialOption';
-import replaceWhiteSpaceWithDash from './filter-replaceWhiteSpaceWithDash';
-import getStatusLabel from './filter-getStatusLabel';
+const nunjucks = require('nunjucks');
+const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
+const dashIfEmpty = require('./filter-dashIfEmpty');
+const displayName = require('./filter-displayName');
+const formatAsCurrency = require('./formatAsCurrency');
+const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
+const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
+const getStatusLabel = require('./filter-getStatusLabel');
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -26,4 +26,4 @@ const configureNunjucks = (opts) => {
   return nunjucks;
 };
 
-export default configureNunjucks;
+module.exports = configureNunjucks;

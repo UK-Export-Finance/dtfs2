@@ -1,4 +1,5 @@
-import formDataMatchesOriginalData, {
+import {
+  formDataMatchesOriginalData,
   isObjectWithChildValues,
   stripEmptyValues,
   getFieldsWithEmptyValues,

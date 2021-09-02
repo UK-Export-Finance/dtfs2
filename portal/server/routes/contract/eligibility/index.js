@@ -1,22 +1,22 @@
-import express from 'express';
-import multer from 'multer';
-import stream from 'stream';
-import api from '../../../api';
-import {
+const express = require('express');
+const multer = require('multer');
+const stream = require('stream');
+const api = require('../../../api');
+const {
   getApiData,
   requestParams,
   generateErrorSummary,
   formatCountriesForGDSComponent,
   errorHref,
-} from '../../../helpers';
-import {
+} = require('../../../helpers');
+const {
   provide, DEAL, COUNTRIES,
-} from '../../api-data-provider';
-import submittedEligibilityMatchesOriginalData from './submittedEligibilityMatchesOriginalData';
-import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
-import completedEligibilityForms from './completedForms';
-import eligibilityTaskList from './eligibilityTaskList';
-import elgibilityCheckYourAnswersValidationErrors from './elgibilityCheckYourAnswersValidationErrors';
+} = require('../../api-data-provider');
+const { submittedEligibilityMatchesOriginalData } = require('./submittedEligibilityMatchesOriginalData');
+const submittedDocumentationMatchesOriginalData = require('./submittedDocumentationMatchesOriginalData');
+const completedEligibilityForms = require('./completedForms');
+const eligibilityTaskList = require('./eligibilityTaskList');
+const elgibilityCheckYourAnswersValidationErrors = require('./elgibilityCheckYourAnswersValidationErrors');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = (criteria && criteria.validationErrors && criteria.validationErrors.count)
@@ -282,4 +282,4 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
   });
 });
 
-export default router;
+module.exports = router;

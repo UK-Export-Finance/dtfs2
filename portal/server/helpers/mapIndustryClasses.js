@@ -28,4 +28,4 @@ const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedInd
   return mappedIndustryClasses;
 };
 
-export default mapIndustryClasses;
+module.exports = mapIndustryClasses;

@@ -1,12 +1,12 @@
-import { validationErrorHandler } from '../../helpers';
+const { validationErrorHandler } = require('../../helpers');
 
-export const getSchemeType = (req, res) => {
+exports.getSchemeType = (req, res) => {
   res.render('select-scheme.njk', {
     user: req.session.user,
   });
 };
 
-export const postSchemeType = (req, res) => {
+exports.postSchemeType = (req, res) => {
   const { scheme } = req.body;
 
   switch (scheme) {

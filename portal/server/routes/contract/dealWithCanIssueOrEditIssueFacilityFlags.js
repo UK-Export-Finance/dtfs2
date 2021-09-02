@@ -1,4 +1,4 @@
-import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
+const canIssueOrEditIssueFacility = require('./canIssueOrEditIssueFacility');
 
 const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
   const modifiedDeal = deal;
@@ -27,4 +27,4 @@ const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
   return modifiedDeal;
 };
 
-export default dealWithCanIssueFacilityFlags;
+module.exports = dealWithCanIssueFacilityFlags;

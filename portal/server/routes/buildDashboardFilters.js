@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { STATUS, SUBMISSION_TYPE } from '../constants';
+const moment = require('moment');
+const { STATUS, SUBMISSION_TYPE } = require('../constants');
 
 const getUserFilters = (params, user = {}) => {
   const { filterBySubmissionUser } = params;
@@ -129,4 +129,4 @@ const buildDashboardFilters = (params, user) => {
   };
 };
 
-export default buildDashboardFilters;
+module.exports = buildDashboardFilters;

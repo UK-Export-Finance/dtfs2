@@ -1,3 +1,3 @@
 const errorHref = (id) => `#${id}`;
 
-export default errorHref;
+module.exports = errorHref;

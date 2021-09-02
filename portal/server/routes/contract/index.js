@@ -1,10 +1,10 @@
-import express from 'express';
-import api from '../../api';
-import aboutRoutes from './about';
-import bondRoutes from './bond';
-import eligibilityRoutes from './eligibility';
-import loanRoutes from './loan';
-import {
+const express = require('express');
+const api = require('../../api');
+const aboutRoutes = require('./about');
+const bondRoutes = require('./bond');
+const eligibilityRoutes = require('./eligibility');
+const loanRoutes = require('./loan');
+const {
   requestParams,
   errorHref,
   postToApi,
@@ -12,15 +12,15 @@ import {
   dealHasIncompleteTransactions,
   generateErrorSummary,
   getFlashSuccessMessage,
-} from '../../helpers';
-import {
+} = require('../../helpers');
+const {
   provide, DEAL, MANDATORY_CRITERIA,
-} from '../api-data-provider';
-import isDealEditable from './isDealEditable';
-import userCanSubmitDeal from './userCanSubmitDeal';
-import dealHasIssuedFacilitiesToSubmit from './dealHasIssuedFacilitiesToSubmit';
-import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
-import validateToken from '../middleware/validate-token';
+} = require('../api-data-provider');
+const isDealEditable = require('./isDealEditable');
+const userCanSubmitDeal = require('./userCanSubmitDeal');
+const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
+const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
+const validateToken = require('../middleware/validate-token');
 
 const router = express.Router();
 
@@ -389,4 +389,4 @@ router.use('/',
   bondRoutes,
   eligibilityRoutes);
 
-export default router;
+module.exports = router;

@@ -16,4 +16,4 @@ const aboutTaskList = (completedForms) => [
   },
 ];
 
-export default aboutTaskList;
+module.exports = aboutTaskList;
