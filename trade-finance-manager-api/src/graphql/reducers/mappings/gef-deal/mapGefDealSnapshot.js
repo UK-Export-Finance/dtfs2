@@ -6,6 +6,7 @@ const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
 const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   _id: dealSnapshot._id,
   dealType: dealSnapshot.dealType,
+  isFinanceIncreasing: dealSnapshot.exporter.isFinanceIncreasing,
   details: mapGefDealDetails(dealSnapshot),
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibilityCriteria: [],
