@@ -52,7 +52,6 @@ const sendFirstTaskEmail = async (deal) => {
   return null;
 };
 
-// TODO: is there  a unit test for this
 const sendMiaAcknowledgement = async (deal) => {
   const {
     ukefDealId,
