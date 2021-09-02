@@ -4,4 +4,4 @@ const TRANSACTION_TYPE = {
   loan: 'Loan',
 };
 
-export default TRANSACTION_TYPE;
+module.exports = TRANSACTION_TYPE;

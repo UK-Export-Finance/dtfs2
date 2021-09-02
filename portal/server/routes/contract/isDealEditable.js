@@ -1,4 +1,4 @@
-import { STATUS } from '../../constants';
+const { STATUS } = require('../../constants');
 
 const isDealEditable = (deal, user) => {
   if (!user.roles.includes('maker')) {
@@ -16,4 +16,4 @@ const isDealEditable = (deal, user) => {
   return true;
 };
 
-export default isDealEditable;
+module.exports = isDealEditable;

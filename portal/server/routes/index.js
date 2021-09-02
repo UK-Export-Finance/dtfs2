@@ -1,15 +1,15 @@
-import express from 'express';
-import startRoutes from './start';
-import loginRoutes from './login';
-import dashboardRoutes from './dashboard';
-import contractRoutes from './contract';
-import miscRoutes from './misc';
-import reportRoutes from './reports';
-import adminRoutes from './admin';
-import userRoutes from './user';
-import mgaRoutes from './mga';
-import feedbackRoutes from './feedback';
-import schemeTypeRoutes from './schemeType';
+const express = require('express');
+const startRoutes = require('./start');
+const loginRoutes = require('./login');
+const dashboardRoutes = require('./dashboard');
+const contractRoutes = require('./contract');
+const miscRoutes = require('./misc');
+const reportRoutes = require('./reports');
+const adminRoutes = require('./admin');
+const userRoutes = require('./user');
+const mgaRoutes = require('./mga');
+const feedbackRoutes = require('./feedback');
+const schemeTypeRoutes = require('./schemeType');
 
 const router = express.Router();
 
@@ -25,4 +25,4 @@ router.use('/', mgaRoutes);
 router.use('/', feedbackRoutes);
 router.use('/', schemeTypeRoutes);
 
-export default router;
+module.exports = router;

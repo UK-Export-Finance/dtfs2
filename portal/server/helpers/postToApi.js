@@ -1,4 +1,4 @@
-import generateErrorSummary from './generateErrorSummary';
+const generateErrorSummary = require('./generateErrorSummary');
 
 const makeApiCall = async (query) => {
   try {
@@ -32,4 +32,4 @@ const postToApi = async (query, errorHref) => {
   return apiResponse;
 };
 
-export default postToApi;
+module.exports = postToApi;

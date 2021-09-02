@@ -25,4 +25,4 @@ const dealHasIssuedFacilitiesToSubmit = (deal) => {
   return false;
 };
 
-export default dealHasIssuedFacilitiesToSubmit;
+module.exports = dealHasIssuedFacilitiesToSubmit;

@@ -49,4 +49,4 @@ const FIELDS = {
   },
 };
 
-export default FIELDS;
+module.exports = FIELDS;

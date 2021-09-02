@@ -8,4 +8,4 @@ const isMaker = async (req, res, next) => {
   return next();
 };
 
-export default isMaker;
+module.exports = isMaker;

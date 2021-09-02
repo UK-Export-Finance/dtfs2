@@ -65,4 +65,4 @@ const calculateStatusOfEachPage = (errors) => {
   };
 };
 
-export default calculateStatusOfEachPage;
+module.exports = calculateStatusOfEachPage;

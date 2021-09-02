@@ -1,11 +1,11 @@
-import moment from 'moment';
-import util from 'util';
-import api from '../api';
-import buildReportFilters from './buildReportFilters';
-import {
+const moment = require('moment');
+const util = require('util');
+const api = require('../api');
+const buildReportFilters = require('./buildReportFilters');
+const {
   getApiData,
   requestParams,
-} from '../helpers';
+} = require('../helpers');
 
 const ONE_DAY = 86400000; // milliseconds
 const PAGESIZE = 20;
@@ -145,7 +145,7 @@ const getMIAData = async (req, res, filterByDealStatus) => {
   return { deals, pages };
 };
 
-export {
+module.exports = {
   getRAGstatus,
   getExpiryDates,
   getMIAData,

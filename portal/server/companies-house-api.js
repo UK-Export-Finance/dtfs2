@@ -31,6 +31,6 @@ const getByRegistrationNumber = async (registrationNumber) => {
   }
 };
 
-export default {
+module.exports = {
   getByRegistrationNumber,
 };

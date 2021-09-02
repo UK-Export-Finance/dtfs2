@@ -1,10 +1,10 @@
-import axios from 'axios';
-import FormData from 'form-data';
-import apollo from './graphql/apollo';
+const axios = require('axios');
+const FormData = require('form-data');
+const apollo = require('./graphql/apollo');
 
-import {
+const {
   allDealsQuery, dealsQuery, transactionsQuery, gefDealsQuery, gefFacilitiesQuery,
-} from './graphql/queries';
+} = require('./graphql/queries');
 
 require('dotenv').config();
 
@@ -659,7 +659,7 @@ const gefFacilities = async (start, pagesize, filters, token) => {
   return response.data.gefFacilities || { count: 0, facilities: [] };
 };
 
-export default {
+module.exports = {
   allDeals,
   banks,
   cloneDeal,

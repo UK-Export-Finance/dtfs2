@@ -1,32 +1,32 @@
-import express from 'express';
-import moment from 'moment';
-import api from '../../../api';
-import {
+const express = require('express');
+const moment = require('moment');
+const api = require('../../../api');
+const {
   provide,
   LOAN,
   DEAL,
   CURRENCIES,
-} from '../../api-data-provider';
-import {
+} = require('../../api-data-provider');
+const {
   requestParams,
   postToApi,
   errorHref,
   mapCurrencies,
   generateErrorSummary,
   formattedTimestamp,
-} from '../../../helpers';
-import {
+} = require('../../../helpers');
+const {
   loanGuaranteeDetailsValidationErrors,
   loanFinancialDetailsValidationErrors,
   loanDatesRepaymentsValidationErrors,
   loanPreviewValidationErrors,
-} from './pageSpecificValidationErrors';
-import completedLoanForms from './completedForms';
-import loanTaskList from './loanTaskList';
-import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
-import canIssueOrEditIssueFacility from '../canIssueOrEditIssueFacility';
-import isDealEditable from '../isDealEditable';
-import premiumFrequencyField from './premiumFrequencyField';
+} = require('./pageSpecificValidationErrors');
+const completedLoanForms = require('./completedForms');
+const loanTaskList = require('./loanTaskList');
+const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
+const isDealEditable = require('../isDealEditable');
+const premiumFrequencyField = require('./premiumFrequencyField');
 
 const router = express.Router();
 
@@ -504,4 +504,4 @@ router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
-export default router;
+module.exports = router;

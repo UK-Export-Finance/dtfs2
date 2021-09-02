@@ -11,4 +11,4 @@ const eligibilityTaskList = (completedForms) => [
   },
 ];
 
-export default eligibilityTaskList;
+module.exports = eligibilityTaskList;

@@ -1,6 +1,6 @@
 import completedBondForms from '.';
 import FIELDS from '../pageFields';
-import isCompleted from '../../../../helpers/formCompleted';
+import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedBondForms', () => {
   it('should return an object with each bond page/form\'s completed status', () => {

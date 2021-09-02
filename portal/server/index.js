@@ -1,20 +1,20 @@
-import express from 'express';
-import morgan from 'morgan';
-import session from 'express-session';
-import redis from 'redis';
+const express = require('express');
+const morgan = require('morgan');
+const session = require('express-session');
+const redis = require('redis');
 
-import flash from 'connect-flash';
-import path from 'path';
-import json2csv from 'express-json2csv';
-import './azure-env';
-
-import routes from './routes';
-import healthcheck from './healthcheck';
-import uploadTest from './upload-test';
-
-import configureNunjucks from './nunjucks-configuration';
+const flash = require('connect-flash');
+const path = require('path');
+const json2csv = require('express-json2csv');
+require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
+const routes = require('./routes');
+const healthcheck = require('./healthcheck');
+const uploadTest = require('./upload-test');
+
+const configureNunjucks = require('./nunjucks-configuration');
+
 
 const app = express();
 

@@ -1,4 +1,4 @@
-import moment from 'moment';
+const moment = require('moment');
 
 const formattedTimestamp = (timestamp) => {
   const utc = moment(parseInt(timestamp, 10));
@@ -6,4 +6,4 @@ const formattedTimestamp = (timestamp) => {
   return moment(dt).isValid() ? dt.format() : '';
 };
 
-export default formattedTimestamp;
+module.exports = formattedTimestamp;

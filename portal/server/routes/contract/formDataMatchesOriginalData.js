@@ -1,9 +1,9 @@
-import isEqual from 'lodash.isequal';
+const isEqual = require('lodash.isequal');
 
-export const isObjectWithChildValues = (field) =>
+const isObjectWithChildValues = (field) =>
   Boolean(Object.keys(field).length && Object.keys(field).length > 0);
 
-export const stripEmptyValues = (obj, originalData) => {
+const stripEmptyValues = (obj, originalData) => {
   const stripped = {};
 
   // only return fields that have a 'value':
@@ -19,7 +19,7 @@ export const stripEmptyValues = (obj, originalData) => {
   return stripped;
 };
 
-export const getFieldsFromOriginalData = (formData, originalData) => {
+const getFieldsFromOriginalData = (formData, originalData) => {
   const fieldsWeWant = Object.getOwnPropertyNames(formData);
   const stripped = {};
 
@@ -32,7 +32,7 @@ export const getFieldsFromOriginalData = (formData, originalData) => {
   return stripped;
 };
 
-export const getFieldsWithEmptyValues = (obj) => {
+const getFieldsWithEmptyValues = (obj) => {
   const result = {};
 
   Object.entries(obj).forEach(([key, value]) => {
@@ -61,4 +61,10 @@ const formDataMatchesOriginalData = (formData, originalData) => {
   return false;
 };
 
-export default formDataMatchesOriginalData;
+module.exports = {
+  formDataMatchesOriginalData,
+  getFieldsWithEmptyValues,
+  getFieldsFromOriginalData,
+  stripEmptyValues,
+  isObjectWithChildValues,
+};

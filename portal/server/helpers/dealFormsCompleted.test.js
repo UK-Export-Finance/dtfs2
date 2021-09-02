@@ -1,4 +1,4 @@
-import dealFormsCompleted, { dealHasIncompleteTransactions } from './dealFormsCompleted';
+import { dealFormsCompleted, dealHasIncompleteTransactions } from './dealFormsCompleted';
 
 const completeFacilities = {
   items: [

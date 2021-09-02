@@ -3,4 +3,4 @@ const countriesWithEmptyInitialOption = (countries) => [
   ...countries,
 ];
 
-export default countriesWithEmptyInitialOption;
+module.exports = countriesWithEmptyInitialOption;

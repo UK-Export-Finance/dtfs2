@@ -17,4 +17,4 @@ const mapCurrencies = (currencies, selectedCurrency) => {
   return mappedCurrencies;
 };
 
-export default mapCurrencies;
+module.exports = mapCurrencies;

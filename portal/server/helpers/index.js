@@ -1,22 +1,22 @@
-import dealFormsCompleted, { dealHasIncompleteTransactions } from './dealFormsCompleted';
-import getApiData from './getApiData';
-import requestParams from './requestParams';
-import getFlashSuccessMessage from './getFlashSuccessMessage';
-import generateErrorSummary from './generateErrorSummary';
-import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
-import formattedTimestamp from './formattedTimestamp';
-import errorHref from './errorHref';
-import postToApi from './postToApi';
-import mapCurrencies from './mapCurrencies';
-import mapCountries from './mapCountries';
-import mapIndustryClasses from './mapIndustryClasses';
-import mapIndustrySectors from './mapIndustrySectors';
-import pageSpecificValidationErrors from './pageSpecificValidationErrors';
-import sanitizeCurrency from './sanitizeCurrency';
-import isObject from './isObject';
-import validationErrorHandler from './validationErrorHandler';
+const { dealFormsCompleted, dealHasIncompleteTransactions } = require('./dealFormsCompleted');
+const getApiData = require('./getApiData');
+const requestParams = require('./requestParams');
+const getFlashSuccessMessage = require('./getFlashSuccessMessage');
+const generateErrorSummary = require('./generateErrorSummary');
+const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
+const formattedTimestamp = require('./formattedTimestamp');
+const errorHref = require('./errorHref');
+const postToApi = require('./postToApi');
+const mapCurrencies = require('./mapCurrencies');
+const mapCountries = require('./mapCountries');
+const mapIndustryClasses = require('./mapIndustryClasses');
+const mapIndustrySectors = require('./mapIndustrySectors');
+const { pageSpecificValidationErrors } = require('./pageSpecificValidationErrors');
+const sanitizeCurrency = require('./sanitizeCurrency');
+const isObject = require('./isObject');
+const validationErrorHandler = require('./validationErrorHandler');
 
-export {
+module.exports = {
   dealFormsCompleted,
   dealHasIncompleteTransactions,
   getApiData,
