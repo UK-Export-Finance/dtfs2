@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
+    "@babel/core": "7.10.1",
     "@babel/node": "^7.14.9",
     "@babel/runtime": "7.10.1",
     "@ministryofjustice/frontend": "0.2.5",
@@ -67,7 +68,6 @@
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/core": "7.10.1",
     "@babel/plugin-transform-runtime": "7.10.1",
     "@babel/preset-env": "7.10.1",
     "babel-jest": "25.1.0",
