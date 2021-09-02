@@ -1,4 +1,5 @@
-import pageSpecificValidationErrors, {
+import {
+  pageSpecificValidationErrors,
   allFieldsArray,
   shouldReturnRequiredValidation,
   mapRequiredValidationErrors,

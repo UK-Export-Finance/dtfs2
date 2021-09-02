@@ -3,4 +3,4 @@ const dashIfEmpty = (text) => {
   return isEmpty ? '-' : text;
 };
 
-export default dashIfEmpty;
+module.exports = dashIfEmpty;

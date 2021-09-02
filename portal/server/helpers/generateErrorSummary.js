@@ -81,4 +81,4 @@ const generateErrorSummary = (
   };
 };
 
-export default generateErrorSummary;
+module.exports = generateErrorSummary;

@@ -16,4 +16,4 @@ const loanTaskList = (completedForms) => [
   },
 ];
 
-export default loanTaskList;
+module.exports = loanTaskList;

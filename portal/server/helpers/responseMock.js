@@ -9,4 +9,4 @@ const mockResponse = () => {
   return res;
 };
 
-export default mockResponse;
+module.exports = mockResponse;

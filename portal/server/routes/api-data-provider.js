@@ -1,4 +1,4 @@
-import api from '../api';
+const api = require('../api');
 
 const INDUSTRY_SECTORS = 'industrySectors';
 const COUNTRIES = 'countries';
@@ -107,7 +107,7 @@ const provide = (listOfDataTypes) => async (req, res, next) => {
   return next();
 };
 
-export {
+module.exports = {
   INDUSTRY_SECTORS,
   COUNTRIES,
   CURRENCIES,

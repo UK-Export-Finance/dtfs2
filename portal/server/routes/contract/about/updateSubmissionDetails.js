@@ -1,4 +1,4 @@
-import api from '../../../api';
+const api = require('../../../api');
 
 const updateSubmissionDetails = async (deal, postedSubmissionDetails, userToken) => {
   const submissionDetails = {
@@ -19,4 +19,4 @@ const updateSubmissionDetails = async (deal, postedSubmissionDetails, userToken)
   await api.updateSubmissionDetails(deal, submissionDetails, userToken);
 };
 
-export default updateSubmissionDetails;
+module.exports = updateSubmissionDetails;

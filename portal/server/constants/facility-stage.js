@@ -11,4 +11,4 @@ const FACILITY_STATUS = {
 */
 };
 
-export default FACILITY_STATUS;
+module.exports = FACILITY_STATUS;

@@ -1,15 +1,15 @@
-import express from 'express';
-import auditSupplyContracts from './audit-supply-contracts';
-import auditTransactions from './audit-transactions';
-import countdownIndicator from './countdown-indicator';
-import miaMinCoverStartDateChanges from './mia_min-cover-start-date-changes';
-import miaToBeSubmittedWithConditions from './mia-to-be-submitted-with-conditions';
-import miaToBeSubmittedWithoutConditions from './mia-to-be-submitted-without-conditions';
-import reconciliation from './reconciliation';
-import transactionsReport from './transactions-report';
-import transactions from './transactions';
-import unissuedTransactions from './unissued-transactions';
-import validateToken from '../middleware/validate-token';
+const express = require('express');
+const auditSupplyContracts = require('./audit-supply-contracts');
+const auditTransactions = require('./audit-transactions');
+const countdownIndicator = require('./countdown-indicator');
+const miaMinCoverStartDateChanges = require('./mia_min-cover-start-date-changes');
+const miaToBeSubmittedWithConditions = require('./mia-to-be-submitted-with-conditions');
+const miaToBeSubmittedWithoutConditions = require('./mia-to-be-submitted-without-conditions');
+const reconciliation = require('./reconciliation');
+const transactionsReport = require('./transactions-report');
+const transactions = require('./transactions');
+const unissuedTransactions = require('./unissued-transactions');
+const validateToken = require('../middleware/validate-token');
 
 const router = express.Router();
 
@@ -36,4 +36,4 @@ router.use('/', transactionsReport);
 router.use('/', transactions);
 router.use('/', unissuedTransactions);
 
-export default router;
+module.exports = router;

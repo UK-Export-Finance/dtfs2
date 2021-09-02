@@ -1,24 +1,24 @@
-import express from 'express';
-import api from '../../../api';
-import {
+const express = require('express');
+const api = require('../../../api');
+const {
   requestParams,
   mapCountries,
   mapIndustrySectors,
   mapIndustryClasses,
   errorHref,
   generateErrorSummary,
-} from '../../../helpers';
+} = require('../../../helpers');
 
-import {
+const {
   provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
-} from '../../api-data-provider';
+} = require('../../api-data-provider');
 
-import updateSubmissionDetails from './updateSubmissionDetails';
-import calculateStatusOfEachPage from './navStatusCalculations';
-import aboutTaskList from './aboutTaskList';
-import { supplierValidationErrors } from './pageSpecificValidationErrors';
-import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
-import industryFields from './industryFields';
+const updateSubmissionDetails = require('./updateSubmissionDetails');
+const calculateStatusOfEachPage = require('./navStatusCalculations');
+const aboutTaskList = require('./aboutTaskList');
+const { supplierValidationErrors } = require('./pageSpecificValidationErrors');
+const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const industryFields = require('./industryFields');
 
 const router = express.Router();
 
@@ -222,4 +222,4 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
   return res.redirect(redirectUrl);
 });
 
-export default router;
+module.exports = router;

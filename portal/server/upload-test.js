@@ -1,5 +1,5 @@
-import express from 'express';
-import axios from 'axios';
+const express = require('express');
+const axios = require('axios');
 
 const uploadTest = express.Router();
 const dealApiUrl = process.env.DEAL_API_URL;
@@ -23,4 +23,4 @@ uploadTest.get('/upload-test', async (req, res) => {
   });
 });
 
-export default uploadTest;
+module.exports = uploadTest;

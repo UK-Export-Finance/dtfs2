@@ -1,6 +1,6 @@
 import completedEligibilityForms from '.';
 import FIELDS from '../pageFields';
-import isCompleted from '../../../../helpers/formCompleted';
+import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedEligibilityForms', () => {
   it('should return an object with each eligibility page/form\'s completed status', () => {

@@ -1,4 +1,4 @@
-export const requiredFieldsArray = (fields) => {
+exports.requiredFieldsArray = (fields) => {
   const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
   const allRequiredFields = [...REQUIRED_FIELDS];
 
@@ -9,7 +9,7 @@ export const requiredFieldsArray = (fields) => {
   return allRequiredFields;
 };
 
-export const filterErrorList = (errorList, fields) => {
+exports.filterErrorList = (errorList, fields) => {
   const filteredErrorList = {};
 
   if (errorList) {

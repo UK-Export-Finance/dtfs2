@@ -11,4 +11,4 @@ const STATUS = {
   refused: 'Rejected by UKEF',
 };
 
-export default STATUS;
+module.exports = STATUS;

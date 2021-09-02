@@ -95,7 +95,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
-    command: npx nodemon --exec babel-node server/index.js
+    command: npx nodemon server/index.js
 
   portal-api:
     build: ./portal-api

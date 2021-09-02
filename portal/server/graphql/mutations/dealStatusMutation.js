@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
-const dealStatusUpdate = `
+const dealStatusUpdate = gql(`
 mutation DealStatus($dealId: String, $status: String, $comments: String){
   dealStatusUpdate(dealId: $dealId, status: $status, comments: $comments) {
     status
@@ -14,7 +14,7 @@ mutation DealStatus($dealId: String, $status: String, $comments: String){
     }
     count
   }
-}`;
+}`);
 
 
-export default gql(dealStatusUpdate);
+module.exports = dealStatusUpdate;

@@ -19,5 +19,4 @@ const mapIndustrySectors = (industrySectors, selectedIndustrySector) => {
   ];
   return mappedSectors;
 };
-
-export default mapIndustrySectors;
+module.exports = mapIndustrySectors;

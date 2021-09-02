@@ -1,12 +1,12 @@
-import express from 'express';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import {
+const express = require('express');
+const moment = require('moment');
+const api = require('../../api');
+const buildReportFilters = require('../buildReportFilters');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
+} = require('../../helpers');
 
-const moment = require('moment');
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -191,4 +191,4 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
   });
 });
 
-export default router;
+module.exports = router;

@@ -16,4 +16,4 @@ const requestParams = (req) => {
   };
 };
 
-export default requestParams;
+module.exports = requestParams;

@@ -1,8 +1,8 @@
-import express from 'express';
+const express = require('express');
 
-import userRoutes from './users';
-import { validate } from '../role-validator';
-import validateToken from '../middleware/validate-token';
+const userRoutes = require('./users');
+const { validate } = require('../role-validator');
+const validateToken = require('../middleware/validate-token');
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.use('/admin/',
   validate({ role: ['admin', 'ukef_operations'] }),
   userRoutes);
 
-export default router;
+module.exports = router;

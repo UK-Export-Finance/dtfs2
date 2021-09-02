@@ -1,19 +1,19 @@
-import express from 'express';
-import api from '../api';
-import {
+const express = require('express');
+const api = require('../api');
+const {
   requestParams,
   generateErrorSummary,
   errorHref,
   postToApi,
-} from '../helpers';
+} = require('../helpers');
 
-import validateToken from './middleware/validate-token';
+const validateToken = require('./middleware/validate-token');
 
-import {
+const {
   provide, MANDATORY_CRITERIA,
-} from './api-data-provider';
+} = require('./api-data-provider');
 
-import beforeYouStartValidation from '../validation/before-you-start';
+const beforeYouStartValidation = require('../validation/before-you-start');
 
 const router = express.Router();
 router.use('/before-you-start/*', validateToken);
@@ -109,4 +109,4 @@ router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk
   user: req.session.user,
 }));
 
-export default router;
+module.exports = router;

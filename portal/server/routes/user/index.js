@@ -1,7 +1,7 @@
-import express from 'express';
+const express = require('express');
 
-import userProfileRoutes from './profile';
-import validateToken from '../middleware/validate-token';
+const userProfileRoutes = require('./profile');
+const validateToken = require('../middleware/validate-token');
 
 const router = express.Router();
 
@@ -10,4 +10,4 @@ router.use('/user/*', validateToken);
 router.use('/user/',
   userProfileRoutes);
 
-export default router;
+module.exports = router;
