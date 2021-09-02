@@ -20,6 +20,7 @@ const MOCK_GEF_DEAL = {
   },
   createdAt: 1625827333471,
   exporter: {
+    isFinanceIncreasing: true,
     companiesHouseRegistrationNumber: '10686321',
     companyName: 'FOUNDRY4 CONSULTING LTD',
     correspondenceAddress: {
@@ -41,7 +42,6 @@ const MOCK_GEF_DEAL = {
         },
       },
     ],
-    isFinanceIncreasing: false,
     probabilityOfDefault: 14,
     registeredAddress: {
       organisationName: null,
