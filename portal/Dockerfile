@@ -9,4 +9,4 @@ RUN npm install
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 
-CMD babel-node server/index.js
+CMD npx babel-node server/index.js
