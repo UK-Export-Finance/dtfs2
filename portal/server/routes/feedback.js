@@ -1,9 +1,9 @@
-import express from 'express';
-import api from '../api';
-import {
+const express = require('express');
+const api = require('../api');
+const {
   requestParams,
   generateErrorSummary,
-} from '../helpers';
+} = require('../helpers');
 
 const router = express.Router();
 
@@ -46,4 +46,4 @@ router.post('/feedback', async (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

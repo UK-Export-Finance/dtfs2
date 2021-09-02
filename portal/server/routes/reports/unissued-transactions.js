@@ -1,11 +1,11 @@
-import express from 'express';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import { getExpiryDates } from '../expiryStatusUtils';
-import {
+const express = require('express');
+const api = require('../../api');
+const buildReportFilters = require('../buildReportFilters');
+const { getExpiryDates } = require('../expiryStatusUtils');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
+} = require('../../helpers');
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -123,4 +123,4 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
   return res.redirect('/reports/unissued-transactions/0');
 });
 
-export default router;
+module.exports = router;

@@ -1,11 +1,11 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import { getExpiryDates } from '../expiryStatusUtils';
+} = require('../../helpers');
+const api = require('../../api');
+const buildReportFilters = require('../buildReportFilters');
+const { getExpiryDates } = require('../expiryStatusUtils');
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -116,4 +116,4 @@ router.post('/reports/mia-to-be-submitted/with-conditions/:page', async (req, re
   return res.redirect('/reports/mia-to-be-submitted/with-conditions/0');
 });
 
-export default router;
+module.exports = router;

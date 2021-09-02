@@ -1,12 +1,12 @@
-import express from 'express';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import { getRAGstatus } from '../expiryStatusUtils';
+const express = require('express');
+const api = require('../../api');
+const buildReportFilters = require('../buildReportFilters');
+const { getRAGstatus } = require('../expiryStatusUtils');
 
-import {
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
+} = require('../../helpers');
 
 const primaryNav = 'reports';
 const router = express.Router();
@@ -135,4 +135,4 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

@@ -1,6 +1,6 @@
-import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 
-export const flattenOriginalData = (originalData, answers) => {
+const flattenOriginalData = (originalData, answers) => {
   const flattened = {
     ...originalData,
     ...answers,
@@ -17,7 +17,7 @@ export const flattenOriginalData = (originalData, answers) => {
   return flattened;
 };
 
-export const originalCriteriaAnswersAsStrings = (criteria) => {
+const originalCriteriaAnswersAsStrings = (criteria) => {
   const result = {};
 
   criteria.forEach((c) => {
@@ -43,4 +43,8 @@ const submittedEligibilityMatchesOriginalData = (formData, originalData) => {
 };
 
 
-export default submittedEligibilityMatchesOriginalData;
+module.exports = {
+  submittedEligibilityMatchesOriginalData,
+  originalCriteriaAnswersAsStrings,
+  flattenOriginalData,
+};

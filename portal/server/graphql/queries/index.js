@@ -1,5 +1,13 @@
-export { default as allDealsQuery } from './all-deals-query';
-export { default as dealsQuery } from './deals-query';
-export { default as gefDealsQuery } from './gef-deals-query';
-export { default as transactionsQuery } from './transactions-query';
-export { default as gefFacilitiesQuery } from './gef-facilities-query';
+const allDealsQuery = require('./all-deals-query');
+const dealsQuery = require('./deals-query');
+const gefDealsQuery = require('./gef-deals-query');
+const transactionsQuery = require('./transactions-query');
+const gefFacilitiesQuery = require('./gef-facilities-query');
+
+module.exports = {
+  allDealsQuery,
+  dealsQuery,
+  gefDealsQuery,
+  transactionsQuery,
+  gefFacilitiesQuery,
+};

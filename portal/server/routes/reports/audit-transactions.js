@@ -1,18 +1,19 @@
-import express from 'express';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import {
+const express = require('express');
+const moment = require('moment');
+
+const api = require('../../api');
+const buildReportFilters = require('../buildReportFilters');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
-import { FACILITY_STAGE } from '../../constants';
+} = require('../../helpers');
+const { FACILITY_STAGE } = require('../../constants');
+
+require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
 const router = express.Router();
-
-const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
 
 function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
   const format = 'DD/MM/YYYY HH:mm';
@@ -164,4 +165,4 @@ router.post('/reports/audit-transactions/:page', async (req, res) => {
   return res.redirect('/reports/audit-transactions/0');
 });
 
-export default router;
+module.exports = router;

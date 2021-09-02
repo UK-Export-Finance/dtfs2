@@ -1,6 +1,6 @@
-import isCompleted, { validationErrorsCount } from './formCompleted';
+import { isCompleted, validationErrorsCount } from './formCompleted';
 
-describe('formCompleted', () => {
+describe('isCompleted', () => {
   const mockFields = {
     REQUIRED_FIELDS: [
       'fieldB',

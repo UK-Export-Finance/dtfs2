@@ -4,4 +4,4 @@ const TRANSACTION_STAGE = {
   issued_unconditional: 'Issued/Unconditional',
 };
 
-export default TRANSACTION_STAGE;
+module.exports = TRANSACTION_STAGE;

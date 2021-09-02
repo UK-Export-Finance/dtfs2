@@ -1,9 +1,9 @@
-import express from 'express';
+const express = require('express');
 
-import validateToken from '../middleware/validate-token';
-import isMaker from '../middleware/isMaker';
+const validateToken = require('../middleware/validate-token');
+const isMaker = require('../middleware/isMaker');
 
-import { getSchemeType, postSchemeType } from '../../controllers/schemeType';
+const { getSchemeType, postSchemeType } = require('../../controllers/schemeType');
 
 const router = express.Router();
 router.use('/select-scheme/*', [validateToken, isMaker]);
@@ -12,4 +12,4 @@ router.get('/select-scheme', getSchemeType);
 
 router.post('/select-scheme', postSchemeType);
 
-export default router;
+module.exports = router;

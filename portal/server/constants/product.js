@@ -3,4 +3,4 @@ const PRODUCT = {
   GEF: 'GEF',
 };
 
-export default PRODUCT;
+module.exports = PRODUCT;

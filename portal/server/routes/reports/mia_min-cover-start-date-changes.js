@@ -1,10 +1,10 @@
-import express from 'express';
-import api from '../../api';
-import {
+const express = require('express');
+const api = require('../../api');
+const {
   getApiData,
   requestParams,
-} from '../../helpers';
-import buildReportFilters from '../buildReportFilters';
+} = require('../../helpers');
+const buildReportFilters = require('../buildReportFilters');
 
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -53,4 +53,4 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
   });
 });
 
-export default router;
+module.exports = router;

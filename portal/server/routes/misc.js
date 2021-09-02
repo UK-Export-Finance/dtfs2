@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -10,4 +10,4 @@ router.get('/accessibility-statement', (req, res) => res.render('accessibility-s
 
 router.get('/not-found', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
-export default router;
+module.exports = router;

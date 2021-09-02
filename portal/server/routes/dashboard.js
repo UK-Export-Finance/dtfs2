@@ -1,9 +1,9 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   gefDeals, bssDeals, bssFacilities, gefFacilities,
-} from '../controllers/dashboard';
+} = require('../controllers/dashboard');
 
-import validateToken from './middleware/validate-token';
+const validateToken = require('./middleware/validate-token');
 
 const router = express.Router();
 
@@ -31,4 +31,4 @@ router.get('/dashboard/facilities/:page', bssFacilities);
 // needs to be ordered last to avoid issues with taking priority over transaction routes
 router.get('/dashboard/:page', bssDeals);
 
-export default router;
+module.exports = router;

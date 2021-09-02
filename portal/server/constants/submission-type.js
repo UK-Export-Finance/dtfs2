@@ -4,4 +4,4 @@ const SUBMISSION_TYPE = {
   manualInclusionNotice: 'Manual Inclusion Notice',
 };
 
-export default SUBMISSION_TYPE;
+module.exports = SUBMISSION_TYPE;

@@ -17,4 +17,4 @@ const sanitizeCurrency = (originalValue = '') => {
   };
 };
 
-export default sanitizeCurrency;
+module.exports = sanitizeCurrency;

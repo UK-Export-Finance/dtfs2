@@ -22,4 +22,4 @@ const beforeYouStartValidation = (formBody) => {
   };
 };
 
-export default beforeYouStartValidation;
+module.exports = beforeYouStartValidation;

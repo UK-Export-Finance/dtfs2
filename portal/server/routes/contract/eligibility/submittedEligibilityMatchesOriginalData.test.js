@@ -1,4 +1,5 @@
-import submittedEligibilityMatchesOriginalData, {
+import {
+  submittedEligibilityMatchesOriginalData,
   flattenOriginalData,
   originalCriteriaAnswersAsStrings,
 } from './submittedEligibilityMatchesOriginalData';

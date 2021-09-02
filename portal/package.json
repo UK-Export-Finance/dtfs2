@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint ./server ./scripts",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
-    "start": "babel-node server/index.js",
+    "start": "node server/index.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
     "test": "jest --notify --coverage --verbose --config=jest.config.js --detectOpenHandles",
     "test-quick": "jest --config=jest.config.js --detectOpenHandles",
@@ -34,9 +34,6 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
-    "@babel/core": "7.10.1",
-    "@babel/node": "^7.14.9",
-    "@babel/runtime": "7.10.1",
     "@ministryofjustice/frontend": "0.2.5",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
@@ -70,6 +67,8 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "7.10.1",
     "@babel/preset-env": "7.10.1",
+    "@babel/core": "7.10.1",
+    "@babel/runtime": "7.10.1",
     "babel-jest": "25.1.0",
     "babel-loader": "8.0.6",
     "cheerio": "1.0.0-rc.3",
