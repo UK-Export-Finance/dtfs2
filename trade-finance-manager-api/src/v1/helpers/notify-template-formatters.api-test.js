@@ -1,13 +1,11 @@
 const {
   generateFacilitiesListHeading,
-  generateFacilitiesReferenceListString,
   generateFacilitiesListString,
   generateBssFacilityLists,
   generateGefFacilityLists,
   generateFacilityLists,
 } = require('./notify-template-formatters');
 const { issuedFacilities } = require('./issued-facilities');
-const { capitalizeFirstLetter } = require('../../utils/string');
 
 const CONSTANTS = require('../../constants');
 
@@ -42,90 +40,6 @@ describe('notify-template-formatters', () => {
         const result = generateFacilitiesListHeading(CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
 
         expect(result).toEqual(`#${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility\n\n`);
-      });
-    });
-  });
-
-  describe('generateFacilitiesReferenceListString', () => {
-    it('should return string list for all facilities', () => {
-      const mockFacilities = [
-        {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-          ukefFacilityID: '1',
-          uniqueIdentificationNumber: '123',
-        },
-        {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-          ukefFacilityID: '2',
-          uniqueIdentificationNumber: '456',
-        },
-      ];
-
-      const result = generateFacilitiesReferenceListString(mockFacilities);
-
-      const expectedString = (facility) => {
-        const {
-          facilityType,
-          ukefFacilityID,
-          uniqueIdentificationNumber,
-        } = facility;
-
-        const bankRefString = `with your reference ${uniqueIdentificationNumber} `;
-
-        return `- ${capitalizeFirstLetter(facilityType)} facility ${bankRefString}has been given the UKEF reference: ${ukefFacilityID} \n`;
-      };
-
-      const firstString = expectedString(mockFacilities[0]);
-      const secondString = expectedString(mockFacilities[1]);
-
-      const expected = `${firstString}${secondString}`;
-      expect(result).toEqual(expected);
-    });
-
-    describe('when a facility has no uniqueIdentificationNumber, but has bankReference', () => {
-      it('should return string with bankReference', () => {
-        const mockFacility = {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-          ukefFacilityID: '1',
-          bankReference: '100',
-        };
-
-        const result = generateFacilitiesReferenceListString([mockFacility]);
-
-        const expectedString = (facility) => {
-          const {
-            facilityType,
-            ukefFacilityID,
-            bankReference,
-          } = facility;
-
-          const bankRefString = `with your reference ${bankReference} `;
-
-          return `- ${capitalizeFirstLetter(facilityType)} facility ${bankRefString}has been given the UKEF reference: ${ukefFacilityID} \n`;
-        };
-
-        const expected = expectedString(mockFacility);
-        expect(result).toEqual(expected);
-      });
-    });
-
-    describe('when a facility does NOT have uniqueIdentificationNumber or bankReference', () => {
-      it('should return string', () => {
-        const mockFacility = {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-          ukefFacilityID: '1',
-        };
-
-        const result = generateFacilitiesReferenceListString([mockFacility]);
-
-        const expectedString = (facility) => {
-          const { facilityType, ukefFacilityID } = facility;
-
-          return `- ${capitalizeFirstLetter(facilityType)} facility has been given the UKEF reference: ${ukefFacilityID} \n`;
-        };
-
-        const expected = expectedString(mockFacility);
-        expect(result).toEqual(expected);
       });
     });
   });
