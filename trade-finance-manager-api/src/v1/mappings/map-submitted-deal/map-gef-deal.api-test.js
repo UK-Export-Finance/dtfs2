@@ -27,6 +27,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
       status: mockDeal.dealSnapshot.status,
       ukefDealId: mockDeal.dealSnapshot.ukefDealId,
       exporter: {
+        isFinanceIncreasing: mockDeal.dealSnapshot.isFinanceIncreasing,
         companyName: mockDeal.dealSnapshot.exporter.companyName,
         companiesHouseRegistrationNumber: mockDeal.dealSnapshot.exporter.companiesHouseRegistrationNumber,
         probabilityOfDefault: Number(mockDeal.dealSnapshot.exporter.probabilityOfDefault),

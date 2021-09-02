@@ -197,6 +197,7 @@ const dealQuery = gql`
           smeType
         }
       }
+      isFinanceIncreasing
     }
   }
 `;
