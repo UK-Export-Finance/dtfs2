@@ -46,10 +46,12 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       });
 
       expect(status).toEqual(200);
-      expect(body).toEqual([
-        expectedFacilityShape(facility1),
-        expectedFacilityShape(facility2),
-      ]);
+
+      const foundFacility1 = body.find((f) => f._id === facility1._id);
+      const foundFacility2 = body.find((f) => f._id === facility2._id);
+
+      expect(foundFacility1).toEqual(expectedFacilityShape(facility1));
+      expect(foundFacility2).toEqual(expectedFacilityShape(facility2));
     });
   });
 });
