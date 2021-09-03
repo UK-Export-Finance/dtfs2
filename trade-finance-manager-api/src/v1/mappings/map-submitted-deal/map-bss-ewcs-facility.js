@@ -70,7 +70,7 @@ const mapBssEwcsFacility = (facility) => {
     premiumFrequency,
     feeType,
     premiumType,
-    bankReferenceNumber,
+    bankReference: bankReferenceNumber,
     uniqueIdentificationNumber,
     bondType,
     tfm: facility.tfm,

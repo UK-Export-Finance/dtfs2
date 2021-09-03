@@ -1,23 +1,43 @@
 const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
-const issuedBond = {
+const issuedBondFacility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
   hasBeenIssued: true,
 };
 
-const issuedLoan = {
+const issuedLoanFacility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
   hasBeenIssued: true,
 };
 
-const unissuedBond = {
+const unissuedBondFacility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
   hasBeenIssued: false,
 };
 
-const unissuedLoan = {
+const unissuedLoanFacility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  hasBeenIssued: false,
+};
+
+const issuedCashFacility = {
+  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  hasBeenIssued: true,
+};
+
+const unissuedCashFacility = {
+  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  hasBeenIssued: false,
+};
+
+const issuedContingentFacility = {
+  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  hasBeenIssued: true,
+};
+
+const unissuedContingentFacility = {
+  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
 };
 
@@ -26,10 +46,14 @@ describe('return list of issued & unissued facilities', () => {
     let facilities;
     beforeAll(() => {
       facilities = [
-        issuedBond,
-        unissuedBond,
-        issuedLoan,
-        unissuedLoan,
+        issuedBondFacility,
+        unissuedBondFacility,
+        issuedLoanFacility,
+        unissuedLoanFacility,
+        issuedCashFacility,
+        unissuedCashFacility,
+        issuedContingentFacility,
+        unissuedContingentFacility,
       ];
     });
 
@@ -39,12 +63,21 @@ describe('return list of issued & unissued facilities', () => {
         unissuedBonds,
         issuedLoans,
         unissuedLoans,
+        issuedCash,
+        unissuedCash,
+        issuedContingent,
+        unissuedContingent,
       } = issuedFacilities(facilities);
 
-      expect(issuedBonds).toEqual([issuedBond]);
-      expect(unissuedBonds).toEqual([unissuedBond]);
-      expect(unissuedLoans).toEqual([unissuedLoan]);
-      expect(issuedLoans).toEqual([issuedLoan]);
+      expect(issuedBonds).toEqual([issuedBondFacility]);
+      expect(unissuedBonds).toEqual([unissuedBondFacility]);
+      expect(unissuedLoans).toEqual([unissuedLoanFacility]);
+      expect(issuedLoans).toEqual([issuedLoanFacility]);
+
+      expect(issuedCash).toEqual([issuedCashFacility]);
+      expect(unissuedCash).toEqual([unissuedCashFacility]);
+      expect(issuedContingent).toEqual([issuedContingentFacility]);
+      expect(unissuedContingent).toEqual([unissuedContingentFacility]);
     });
   });
 
@@ -52,8 +85,8 @@ describe('return list of issued & unissued facilities', () => {
     let facilities;
     beforeAll(() => {
       facilities = [
-        issuedBond,
-        unissuedLoan,
+        issuedBondFacility,
+        unissuedLoanFacility,
       ];
     });
 
@@ -65,9 +98,9 @@ describe('return list of issued & unissued facilities', () => {
         unissuedLoans,
       } = issuedFacilities(facilities);
 
-      expect(issuedBonds).toEqual([issuedBond]);
+      expect(issuedBonds).toEqual([issuedBondFacility]);
       expect(unissuedBonds).toEqual([]);
-      expect(unissuedLoans).toEqual([unissuedLoan]);
+      expect(unissuedLoans).toEqual([unissuedLoanFacility]);
       expect(issuedLoans).toEqual([]);
     });
   });

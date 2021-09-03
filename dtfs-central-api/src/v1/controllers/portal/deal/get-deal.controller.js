@@ -4,6 +4,7 @@ const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { findOneExporter } = require('../gef-exporter/get-gef-exporter.controller');
 const { findOneBank } = require('../../bank/get-bank.controller');
+const { findOneUser } = require('../../user/get-user.controller');
 
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
@@ -94,9 +95,21 @@ const findOneGefDeal = async (_id, callback) => {
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 
   if (deal) {
-    deal.facilities = await findAllGefFacilitiesByDealId(_id);
-    const exporter = await findOneExporter(deal.exporterId);
-    const bank = await findOneBank(deal.bankId);
+    const promises = await Promise.all([
+      findAllGefFacilitiesByDealId(_id),
+      findOneExporter(deal.exporterId),
+      findOneBank(deal.bankId),
+      findOneUser(deal.userId),
+    ]);
+
+    const [
+      facilities,
+      exporter,
+      bank,
+      maker,
+    ] = [...promises];
+
+    deal.facilities = facilities;
 
     if (exporter) {
       deal.exporter = exporter;
@@ -104,6 +117,10 @@ const findOneGefDeal = async (_id, callback) => {
 
     if (bank) {
       deal.bank = bank;
+    }
+
+    if (maker) {
+      deal.maker = maker;
     }
   }
 
