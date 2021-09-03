@@ -12,6 +12,7 @@ const MOCK_DEAL = {
       username: 'JOE',
       firstname: 'Joe',
       surname: 'Bloggs',
+      email: 'test@testing.com',
     },
     checker: {
       username: 'CHECKER',
