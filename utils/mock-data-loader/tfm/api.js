@@ -98,6 +98,20 @@ const listDeals = async () => {
   return response.data.deals;
 };
 
+const deleteDeal = async (deal, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/tfm/deals/${deal._id}`,
+  }).catch(() => { });
+
+  return response && response.data;
+};
+
 module.exports = {
   createTeam,
   createUser,
@@ -106,4 +120,5 @@ module.exports = {
   listTeams,
   listUsers,
   listDeals,
+  deleteDeal,
 };

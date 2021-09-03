@@ -24,7 +24,7 @@ const cleanTfmDeals = async (token) => {
 
   if (tfmDeals) {
     for (deal of tfmDeals) {
-      await centralApi.deleteDeal(deal, token);
+      await api.deleteDeal(deal, token);
     }
   }
 };
