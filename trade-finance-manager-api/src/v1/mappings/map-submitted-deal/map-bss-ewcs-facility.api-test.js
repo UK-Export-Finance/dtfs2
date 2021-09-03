@@ -77,7 +77,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         premiumFrequency,
         feeType,
         premiumType,
-        bankReferenceNumber,
+        bankReference: bankReferenceNumber,
         uniqueIdentificationNumber,
         bondType,
         tfm: mockFacility.tfm,

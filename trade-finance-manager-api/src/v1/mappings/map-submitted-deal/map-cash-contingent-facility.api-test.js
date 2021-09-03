@@ -58,6 +58,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         coverPercentage,
         ukefExposure,
         coverEndDate,
+        name,
       } = mockFacility;
 
       const expected = {
@@ -72,6 +73,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         ukefExposure,
         coverStartDate: mapCoverStartDate(mockFacility),
         coverEndDate,
+        bankReference: name,
         tfm: mockFacility.tfm,
       };
 

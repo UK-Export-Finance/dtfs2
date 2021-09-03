@@ -1,11 +1,9 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
-const { issuedFacilities } = require('../helpers/issued-facilities');
 const {
+  generateFacilityLists,
   generateFacilitiesListString,
-  generateBSSListString,
-  generateEWCSListString,
 } = require('../helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
@@ -101,48 +99,16 @@ const sendMiaAcknowledgement = async (deal) => {
   return emailResponse;
 };
 
-const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
+const generateAinMinEmailVariables = (deal, facilityLists) => {
   const {
     ukefDealId,
     bankReferenceNumber,
     submissionType,
     maker,
-    facilities,
     exporter,
   } = deal;
 
-  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    return null;
-  }
-  const {
-    issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
-  } = issuedFacilities(facilities);
-
-  const issuedBondsList = generateBSSListString(issuedBonds);
-  const issuedLoansList = generateEWCSListString(issuedLoans);
-
-  const unissuedBondsList = generateBSSListString(unissuedBonds);
-  const unissuedLoansList = generateEWCSListString(unissuedLoans);
-
-  if (issuedBondsList.length === 0 && issuedLoansList.length === 0) {
-    return null;
-  }
-
-  const {
-    firstname,
-    surname,
-    email: sendToEmailAddress,
-  } = maker;
-
-  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
-
-  const issuedFacilitiesList = `${issuedBondsList}\n${issuedLoansList}`;
-
-  let unissuedFacilitiesList = '';
-  if (unissuedBondsList.length || unissuedLoansList.length) {
-    unissuedFacilitiesList = `${unissuedBondsList}\n${unissuedLoansList}`;
-  }
+  const { firstname, surname } = maker;
 
   const emailVariables = {
     firstname,
@@ -152,11 +118,39 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
     ukefDealId,
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',
-    issuedFacilitiesList,
-    showIssuedHeader: issuedFacilitiesList ? 'yes' : 'no',
-    unissuedFacilitiesList,
-    showUnissuedHeader: unissuedFacilitiesList ? 'yes' : 'no',
+    issuedFacilitiesList: facilityLists.issued,
+    showIssuedHeader: facilityLists.issued ? 'yes' : 'no',
+    unissuedFacilitiesList: facilityLists.unissued,
+    showUnissuedHeader: facilityLists.unissued ? 'yes' : 'no',
   };
+
+  return emailVariables;
+};
+
+const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
+  const {
+    dealType,
+    submissionType,
+    maker,
+    facilities,
+  } = deal;
+
+  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    return null;
+  }
+
+  const facilityLists = generateFacilityLists(dealType, facilities);
+
+  if (!facilityLists.issued) {
+    return null;
+  }
+
+  const { email: sendToEmailAddress } = maker;
+
+  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
+
+  const emailVariables = generateAinMinEmailVariables(deal, facilityLists);
 
   const emailResponse = await sendTfmEmail(
     templateId,
@@ -172,9 +166,7 @@ const sendDealSubmitEmails = async (deal) => {
     return false;
   }
 
-  // send email for the first task
   const firstTaskEmail = await sendFirstTaskEmail(deal);
-
   const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
   const emailAcknowledgementAinMinIssued = await sendAinMinIssuedFacilitiesAcknowledgement(deal);
 
@@ -190,6 +182,6 @@ module.exports = {
   sendFirstTaskEmail,
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
-  generateFacilitiesListString,
+  generateAinMinEmailVariables,
   sendAinMinIssuedFacilitiesAcknowledgement,
 };
