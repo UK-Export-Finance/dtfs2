@@ -1,7 +1,7 @@
 const mapGefSubmissionDetails = (dealSnapshot) => {
   const { exporter } = dealSnapshot;
 
-  return {
+  const mapped = {
     supplierName: exporter.companyName,
     supplierAddressLine1: exporter.registeredAddress.addressLine1,
     supplierAddressLine2: exporter.registeredAddress.addressLine2,
@@ -13,13 +13,18 @@ const mapGefSubmissionDetails = (dealSnapshot) => {
     industryClass: exporter.selectedIndustry.class.name,
     supplierCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     smeType: exporter.smeType,
-    supplierCorrespondenceAddressLine1: exporter.correspondenceAddress.addressLine1,
-    supplierCorrespondenceAddressLine2: exporter.correspondenceAddress.addressLine2,
-    supplierCorrespondenceAddressLine3: exporter.correspondenceAddress.addressLine3,
-    supplierCorrespondenceAddressTown: exporter.correspondenceAddress.locality,
-    supplierCorrespondenceAddressPostcode: exporter.correspondenceAddress.postalCode,
-    supplierCorrespondenceAddressCountry: exporter.correspondenceAddress.country,
   };
+
+  if (exporter.correspondenceAddress) {
+    mapped.supplierCorrespondenceAddressLine1 = exporter.correspondenceAddress.addressLine1;
+    mapped.supplierCorrespondenceAddressLine2 = exporter.correspondenceAddress.addressLine2;
+    mapped.supplierCorrespondenceAddressLine3 = exporter.correspondenceAddress.addressLine3;
+    mapped.supplierCorrespondenceAddressTown = exporter.correspondenceAddress.locality;
+    mapped.supplierCorrespondenceAddressPostcode = exporter.correspondenceAddress.postalCode;
+    mapped.supplierCorrespondenceAddressCountry = exporter.correspondenceAddress.country;
+  }
+
+  return mapped;
 };
 
 module.exports = mapGefSubmissionDetails;

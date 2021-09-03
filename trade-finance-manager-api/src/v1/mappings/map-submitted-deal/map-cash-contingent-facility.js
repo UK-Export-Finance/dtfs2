@@ -30,6 +30,8 @@ const mapCashContingentFacility = (facility) => {
     coverPercentage,
     ukefExposure,
     coverEndDate,
+    name,
+    tfm,
   } = facility;
 
   return {
@@ -44,11 +46,8 @@ const mapCashContingentFacility = (facility) => {
     ukefExposure,
     coverStartDate: mapCoverStartDate(facility),
     coverEndDate,
-    tfm: facility.tfm,
-    // not in the data
-    // premiumType,
-    // dayCountBasis,
-    // guaranteeFeePayableByBank,
+    bankReference: name,
+    tfm,
   };
 };
 

@@ -7,6 +7,7 @@ const {
   BANK_ROUTE,
   PORTAL_ROUTE,
   TFM_ROUTE,
+  USER_ROUTE,
 } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
@@ -17,6 +18,7 @@ const {
   bankRoutes,
   portalRoutes,
   tfmRoutes,
+  userRoutes,
 } = require('./v1/routes');
 
 // const { CORS_ORIGIN } = process.env;
@@ -28,6 +30,7 @@ app.use(healthcheck);
 app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
 app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
 app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
+app.use(`/v1/${USER_ROUTE}`, userRoutes);
 
 
 // app.use(cors({

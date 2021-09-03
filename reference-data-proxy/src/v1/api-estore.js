@@ -5,7 +5,7 @@ const postToAPI = async (apiEndpoint, apiData) => {
     return false;
   }
 
-  console.log(`Calling eStore API (/${apiEndpoint}) with:\n`, apiData);
+  console.log(`Calling eStore API (/${apiEndpoint})`);
 
   const response = await axios({
     method: 'post',
