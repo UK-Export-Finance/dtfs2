@@ -213,7 +213,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     //           bankId: 1,
     //           status: 1,
     //           product: 'GEF',
-    //           type: '-', // TODO: add handling for GEF cover terms once field is available
+    //           type: '$submissionType',
     //           exporter: '$exporter.companyName',
     //           lastUpdate: { $ifNull: ['$updatedAt', '$createdAt'] },
     //         },
