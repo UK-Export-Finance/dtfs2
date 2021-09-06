@@ -198,8 +198,10 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
+    const submissionType = (deal.dealSnapshot.submissionType || deal.dealSnapshot.details.submissionType);
+
     const updateDealStage = shouldUpdateDealStage(
-      deal.dealSnapshot.details.submissionType,
+      submissionType,
       taskIdToUpdate,
       groupId,
       statusFrom,
