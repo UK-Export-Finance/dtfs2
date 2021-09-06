@@ -1,3 +1,4 @@
+import { decode } from 'html-entities';
 import { automaticCover, validateAutomaticCover } from './index';
 import * as api from '../../services/api';
 import { DEAL_SUBMISSION_TYPE } from '../../../constants';
@@ -20,7 +21,15 @@ const MockResponse = () => {
 
 const MockCoverResponse = () => {
   const res = {};
-  res.terms = [];
+  res.terms = [{
+    id: 'coverStart',
+    htmlText: '&lt;p&gt;x. this one shouldn&#39;t show as it&#39;s an old version&lt;/p&gt',
+    errMsg: 'Error message',
+  }, {
+    id: 'value',
+    htmlText: '&lt;p&gt;x. this one shouldn&#39;t show as it&#39;s an old version&lt;/p&gt',
+    errMsg: 'Error message',
+  }];
   return res;
 };
 
@@ -42,12 +51,6 @@ describe('GET Automatic Cover', () => {
     const mockEligibilityCriteriaResponse = new MockCoverResponse();
     const mockCoverTermsResponse = new MockCoverTermsResponse();
 
-    mockEligibilityCriteriaResponse.terms.push({
-      id: 'coverStart',
-      htmlText: '&lt;p&gt;x. this one shouldn&#39;t show as it&#39;s an old version&lt;/p&gt',
-      errMsg: 'Error message',
-    });
-
     api.getApplication = () => Promise.resolve(mockRequest);
     api.getEligibilityCriteria = () => Promise.resolve(mockEligibilityCriteriaResponse);
     api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
@@ -58,6 +61,10 @@ describe('GET Automatic Cover', () => {
           errMsg: 'Error message',
           htmlText: '<p>x. this one shouldn\'t show as it\'s an old version</p>',
           id: 'coverStart',
+        }, {
+          errMsg: 'Error message',
+          htmlText: '<p>x. this one shouldn\'t show as it\'s an old version</p>',
+          id: 'value',
         }],
         applicationId: '123',
       });
@@ -83,7 +90,7 @@ describe('Validate Automatic Cover', () => {
 
     beforeEach(async () => {
       mockRequest.query.saveAndReturn = 'true';
-      mockRequest.body = { coverStart: 'true', value: 'true' };
+      mockRequest.body = { coverStart: 'true' };
 
       api.getApplication = () => Promise.resolve(mockRequest);
       api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
@@ -96,9 +103,9 @@ describe('Validate Automatic Cover', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockApplicationId}`);
     });
 
-    it('calls api.updateApplication with AIN submissionType', () => {
+    it('calls api.updateApplication with undefined submissionType', () => {
       const expected = {
-        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+        submissionType: undefined,
       };
 
       expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
@@ -110,17 +117,15 @@ describe('Validate Automatic Cover', () => {
     const mockResponse = new MockResponse();
     const mockCoverResponse = new MockCoverResponse();
 
-    mockCoverResponse.terms.push({
-      id: 'coverStart',
-      htmlText: 'Some text',
-      errMsg: 'Error message for some text',
-    });
     api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
     await validateAutomaticCover(mockRequest, mockResponse);
     expect(mockResponse.render)
       .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
         errors: expect.any(Object),
-        terms: mockCoverResponse.terms,
+        terms: mockCoverResponse.terms.map((term) => ({
+          ...term,
+          htmlText: decode(term.htmlText),
+        })),
         selected: {},
         applicationId: '123',
       }));
@@ -135,7 +140,7 @@ describe('Validate Automatic Cover', () => {
     beforeEach(async () => {
       api.updateApplication = mockUpdateApplication;
 
-      mockRequest.body = { coverStart: 'false' };
+      mockRequest.body = { coverStart: 'false', value: 'true' };
       api.getEligibilityCriteria = () => Promise.resolve(mockCoverResponse);
       await validateAutomaticCover(mockRequest, mockResponse);
     });
