@@ -3,10 +3,9 @@ const CONSTANTS = require('../../../../constants');
 const mapFacilityStage = (facilityStage) => {
   let mapped;
 
-  // NOTE: we have two data sources.
+  // NOTE: we currently have two different data sources.
   // - Bond & Loan facilities have facilityStage string of 'issued' or 'unissued'.
   // - Cash & Contingent facilities have hasBeenIssued boolean.
-  // TODO: add hasBeenIssued boolean to Bond & Loan facilities.
 
   const isIssuedGefFacility = (facilityStage === true);
 

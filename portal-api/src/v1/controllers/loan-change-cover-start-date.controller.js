@@ -25,9 +25,6 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         return res.status(404).send();
       }
 
-      // TODO (?)
-      // only allow the checks/modifications below
-      // if all other fields in loan are valid
       if (existingLoan.facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL) {
         return res.status(400).send();
       }

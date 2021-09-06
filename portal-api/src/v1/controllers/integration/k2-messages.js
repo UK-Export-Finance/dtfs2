@@ -180,7 +180,6 @@ const generateTypeA = async (deal, fromStatus) => {
       }
 
       const bss = builder.createBSS()
-      //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
         .UKEF_BSS_facility_id(bondUkefFacilityId)
         .BSS_bank_id(bondUniqueIdentificationNumber)
@@ -245,7 +244,6 @@ const generateTypeA = async (deal, fromStatus) => {
         }
 
         const ewcs = builder.createEWCS()
-        //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
           .UKEF_EWCS_facility_id(loanUkefFacilityId)
           .EWCS_bank_id(loan.bankReferenceNumber)
@@ -362,7 +360,6 @@ const createTypeA = async (deal, fromStatus) => {
     typeAxmlStr, filename, errorCount, errorList,
   } = await generateTypeA(deal, fromStatus);
 
-  // TODO - Decide what to do with invalid typeA xml
   if (errorCount) {
     return {
       errorCount,

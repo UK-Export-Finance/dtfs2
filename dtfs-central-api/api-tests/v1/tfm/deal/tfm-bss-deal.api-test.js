@@ -37,7 +37,7 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('GET /v1/tfm/deal/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/tfm/deals/12345678910');
+      const { status } = await api.get('/v1/tfm/deals/1');
       expect(status).toEqual(404);
     });
 

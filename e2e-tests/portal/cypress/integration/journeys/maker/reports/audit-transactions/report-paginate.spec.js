@@ -26,7 +26,6 @@ context('Audit - Transactions Report', () => {
       .then((insertedDeals) => deals = insertedDeals);
   });
 
-  // TODO nothing here cares about the order of the results.. should it?
   it('has pagination', () => {
     cy.login(MAKER_LOGIN);
     auditTransactionsReport.visit();

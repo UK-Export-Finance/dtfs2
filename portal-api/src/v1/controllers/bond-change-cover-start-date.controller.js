@@ -25,9 +25,6 @@ exports.updateBondCoverStartDate = async (req, res) => {
         return res.status(404).send();
       }
 
-      // TODO (?)
-      // only allow the checks/modifications below
-      // if all other fields in bond are valid
       if (existingBond.facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED) {
         return res.status(400).send();
       }

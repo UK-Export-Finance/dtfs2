@@ -30,7 +30,7 @@ const CREDIT_RATING = {
 };
 
 const LOSS_GIVEN_DEFAULT = {
-  '50_PERCENT': '50',
+  '50_PERCENT': 50,
 };
 
 const PROBABILITY_OF_DEFAULT = {

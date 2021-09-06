@@ -1,9 +1,6 @@
 const axios = require('axios');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-// TODO multiple services talk to the same api; we end up writing basically the same code twice to achieve this
-//  ... a binary repo to publish things to so we can share? ... local references in package.json??
-
 const urlRoot = process.env.DTFS_CENTRAL_API;
 
 const createTeam = async (team, token) => {
@@ -92,6 +89,28 @@ const deleteUser = async (user) => {
   return response.data;
 };
 
+const listDeals = async () => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/tfm/deals`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.deals;
+};
+
+const deleteDeal = async (deal, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/tfm/deals/${deal._id}`,
+  }).catch(() => { });
+
+  return response && response.data;
+};
 
 module.exports = {
   createTeam,
@@ -100,4 +119,6 @@ module.exports = {
   deleteUser,
   listTeams,
   listUsers,
+  listDeals,
+  deleteDeal,
 };

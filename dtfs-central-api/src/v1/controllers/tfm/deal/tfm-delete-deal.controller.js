@@ -7,8 +7,9 @@ exports.deleteDeal = async (req, res) => {
       const collection = await db.getCollection('tfm-deals');
       const facilitiesCollection = await db.getCollection('tfm-facilities');
       const status = await collection.deleteOne({ _id: req.params.id });
-      // eslint-disable-next-line no-underscore-dangle
-      await facilitiesCollection.deleteMany({ facilitySnapshot: { associatedDealId: deal._id } });
+
+      await facilitiesCollection.deleteMany({ 'facilitySnapshot.associatedDealId': { $eq: deal._id } });
+      await facilitiesCollection.deleteMany({ 'facilitySnapshot.applicationId': { $eq: deal._id } });
       return res.status(200).send(status);
     }
 

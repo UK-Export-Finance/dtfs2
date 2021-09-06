@@ -8,8 +8,6 @@ const { dateValidationText } = require('../../../src/v1/validation/fields/date')
 const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp');
 
 describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
-  // TODO
-  // add all required Conditional loan fields
   const submissionDate = moment().subtract(1, 'week');
 
   const newDeal = aDeal({
@@ -99,11 +97,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
       expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
       expect(body.validationErrors.errorList.bankReferenceNumber).toBeDefined();
     });
-
-    // TODO coverEndDate
-    // TODO coverDate
-    // TODO disbursementAmount
-    // TODO bankReferenceNumber
 
     describe('issuedDate', () => {
       const updateIssuedDate = async (issuedDate) => {

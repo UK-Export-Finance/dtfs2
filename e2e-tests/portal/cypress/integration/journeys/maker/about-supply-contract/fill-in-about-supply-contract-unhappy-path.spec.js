@@ -85,10 +85,10 @@ context('about-supply-contract', () => {
     //------
     // the search should populate the indemnifier address fields
     //
-    contractAboutSupplier.indemnifierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
-    contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); // TODO
-    contractAboutSupplier.indemnifierAddress().town().should('not.have.value', ''); // TODO
-    contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', ''); // TODO
+    contractAboutSupplier.indemnifierName().should('not.have.value', '');
+    contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', '');
+    contractAboutSupplier.indemnifierAddress().town().should('not.have.value', '');
+    contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', '');
     contractAboutSupplier.indemnifierAddress().country().should('have.value', 'GBR');
 
     //-----

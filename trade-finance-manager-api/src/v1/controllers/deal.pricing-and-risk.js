@@ -15,9 +15,6 @@ const addDealPricingAndRisk = async (deal) => {
     tfm,
   } = deal;
 
-  // TODO:
-  // lossGivenDefault should be integers without text/percentage symbol.
-  // but, don't know what the data could change to post-MVP so just use strings for MVP requirement.
   const dealUpdate = {
     tfm: {
       ...tfm,

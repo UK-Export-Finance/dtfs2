@@ -36,7 +36,6 @@ const handleTransactionCurrencyFields = async (dealSection, deal) => {
       modifiedSection.currency = await getCurrencyObject(supplyContractCurrencyCodeId);
     }
   } else if (currencyCode) {
-    // TODO: make this clearer
     // currencyCode can be a single string (from form),
     // or an object with ID, if has been previously submitted.
     const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;

@@ -8,29 +8,36 @@ import {
 
 const res = mockRes();
 
+const mockUser = {
+  _id: '12345678',
+  username: 'testUser',
+  firstName: 'Joe',
+  lastName: 'Bloggs',
+  teams: ['UNDERWRITERS'],
+};
+
 const session = {
-  user: {
-    _id: '12345678',
-    username: 'testUser',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
-    teams: ['UNDERWRITING_SUPPORT'],
+  user: mockUser,
+};
+
+const userCannotEdit = {
+  ...mockUser,
+  teams: ['RISK_MANAGERS'],
+};
+
+const mockDeal = {
+  _id: '1000023',
+  dealSnapshot: {
+    _id: '1000023',
+    submissionDetails: {
+      supplierName: 'test supplier',
+    },
   },
+  tfm: {},
 };
 
 describe('GET underwriting - pricing and risk', () => {
   describe('when deal exists', () => {
-    const mockDeal = {
-      _id: '1000023',
-      dealSnapshot: {
-        _id: '1000023',
-        submissionDetails: {
-          supplierName: 'test supplier',
-        },
-      },
-      tfm: {},
-    };
-
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
     });
@@ -79,17 +86,6 @@ describe('GET underwriting - pricing and risk', () => {
 
 describe('GET underwriting - pricing and risk edit', () => {
   describe('when deal exists', () => {
-    const mockDeal = {
-      _id: '1000023',
-      dealSnapshot: {
-        _id: '1000023',
-        submissionDetails: {
-          supplierName: 'test supplier',
-        },
-      },
-      tfm: {},
-    };
-
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
     });
@@ -133,22 +129,30 @@ describe('GET underwriting - pricing and risk edit', () => {
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
+
+  describe('when user is not allowed to edit', () => {
+    beforeEach(() => {
+      api.getDeal = () => Promise.resolve(mockDeal);
+    });
+
+    it('should redirect to not-found route', async () => {
+      const req = {
+        params: {
+          _id: '1',
+        },
+        session: {
+          user: userCannotEdit,
+        },
+      };
+
+      await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
+      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+    });
+  });
 });
 
 describe('POST underwriting - pricing and risk edit', () => {
   describe('when deal exists', () => {
-    const mockDeal = {
-      _id: '1000023',
-      dealSnapshot: {
-        _id: '1000023',
-        submissionDetails: {
-          supplierName: 'test supplier',
-        },
-      },
-      tfm: {},
-      mock: true,
-    };
-
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
       api.updateUnderwriterManagersDecision = () => Promise.resolve({
@@ -347,6 +351,26 @@ describe('POST underwriting - pricing and risk edit', () => {
           _id: '1',
         },
         session,
+      };
+
+      await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
+      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+    });
+  });
+
+  describe('when user is not allowed to edit', () => {
+    beforeEach(() => {
+      api.getDeal = () => Promise.resolve(mockDeal);
+    });
+
+    it('should redirect to not-found route', async () => {
+      const req = {
+        params: {
+          _id: '1',
+        },
+        session: {
+          user: userCannotEdit,
+        },
       };
 
       await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);

@@ -97,7 +97,7 @@ module.exports.findById = (req, res, next) => {
     } else if (user) {
       res.status(200).json(sanitizeUser(user));
     } else {
-      res.status(200).json({}); // TODO - this should 404- rethink tests?
+      res.status(200).json({});
     }
   });
 };
@@ -127,7 +127,7 @@ module.exports.updateById = (req, res, next) => {
         });
       }
     } else {
-      res.status(200).json({}); // TODO - this should 404- rethink tests?
+      res.status(200).json({});
     }
   });
 };

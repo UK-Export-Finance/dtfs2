@@ -11,7 +11,6 @@ const ONE_DAY = 86400000; // milliseconds
 const PAGESIZE = 20;
 
 // get expiry date based on count from creation date
-// TODO change for MIA
 const addExpiryDate = (val, days, isDeal) => {
   let created = val.createdDate;
   let id = val.deal_id;
