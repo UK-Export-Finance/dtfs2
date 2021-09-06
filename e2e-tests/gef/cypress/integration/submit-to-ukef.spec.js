@@ -29,7 +29,7 @@ context('Submit to UKEF', () => {
     cy.visit(relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
   });
 
-  // TODO add negative tests - i.e. checking that the application state is correct.
+  // TODO: DTFS2-4761 - add negative tests
 
   describe('Submit to UKEF', () => {
     it('displays the page as expected', () => {
