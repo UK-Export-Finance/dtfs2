@@ -34,10 +34,11 @@ describe('mapDealSnapshot', () => {
 
     const expected = {
       ...mockDeal.dealSnapshot,
-      totals: mapTotals(mockFacilities),
-      facilities: mapFacilities(mockFacilities, MOCK_DEAL.details, mockDeal.tfm),
       submissionDetails: mapSubmissionDetails(MOCK_DEAL.submissionDetails),
       eligibilityCriteria: MOCK_DEAL.eligibility.criteria,
+      facilities: mapFacilities(mockFacilities, MOCK_DEAL.details, mockDeal.tfm),
+      totals: mapTotals(mockFacilities),
+      isFinanceIncreasing: false,
     };
 
     expect(result).toEqual(expected);
