@@ -86,10 +86,9 @@ To update a secret (Make sure to select the relevant environments, i.e dev, test
 3) Deploy to development environment
 4) Deploy to test environment
 
-
 ## Testing
 
-### **Run all tests (E2E, API and UI)*8
+### **Run all tests (E2E, API and UI)**
 
 With docker running, execute all tests with:
 
@@ -131,7 +130,7 @@ npm run api-test
 
 #### **Run a single API test**
 
-```shell 
+```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
 
@@ -146,6 +145,7 @@ npm run test
 ```
 
 #### **Run a single UI test**
+
 ```shell
 npm run test /path/to/file.test.js
 ```
@@ -243,9 +243,11 @@ Ideally, azure-functions would be run in the same root docker, but this caused m
 Number Generator Function is now run in root `docker-compose.yml`
 
 ## Number Generator
+
 Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the Mulesoft Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
 
 The steps taken are:
+
 1. Deal is created in Portal/GEF and submitted to TFM
 2. TFM calls the Number Generator Azure Function, stores the status endpoint for the function call in the Durable Functions log and returns a ukefID="PENDING"
 3. The Number Generator Function tries the number generator a maximum of 5 times before delaring a failure
