@@ -1,8 +1,8 @@
 const faker = require('faker');
 
 const EXPORTER = [{
-// Not started - the mock inserter will ignore this line as the updatedTime is bumped
-// but leave it in as its index based
+  // Not started - the mock inserter will ignore this line as the updatedTime is bumped
+  // but leave it in as its index based
 },
 { // Half Completed
   companiesHouseRegistrationNumber: null,
