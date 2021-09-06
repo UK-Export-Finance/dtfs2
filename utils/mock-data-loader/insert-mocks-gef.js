@@ -32,12 +32,13 @@ const insertMocks = async () => {
     await api.createApplication(item, token);
   }
 
-  const applications = await api.listApplication(token);
+  const application = await api.listApplication(token);
 
   console.log('update exporter information');
-
-  for (const application of applications) {
-    await api.updateExporter(application.exporterId, MOCKS.EXPORTER[0], token);
+  for (const [index, item] of MOCKS.EXPORTER.entries()) {
+    if (index > 0) {
+      await api.updateExporter(application[index].exporterId, item, token);
+    }
   }
 
   console.log('inserting and updating facilities information');
@@ -45,7 +46,7 @@ const insertMocks = async () => {
     // eslint-disable-next-line no-restricted-syntax
     for (const subitem of item) {
       // eslint-disable-next-line no-param-reassign
-      subitem.applicationId = applications[index]._id;
+      subitem.applicationId = application[index]._id;
       const facilty = await api.createFacilities(subitem, token);
       // eslint-disable-next-line no-param-reassign
       delete subitem.applicationId;
@@ -56,7 +57,7 @@ const insertMocks = async () => {
   console.log('updating cover terms information');
   for (const [index, item] of MOCKS.COVER_TERMS.entries()) {
     if (index > 0) {
-      await api.updateCoverTerms(applications[index].coverTermsId, item, token);
+      await api.updateCoverTerms(application[index].coverTermsId, item, token);
     }
   }
 };
