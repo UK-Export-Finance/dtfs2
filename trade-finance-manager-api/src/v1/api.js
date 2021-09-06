@@ -499,7 +499,7 @@ const createEstoreFolders = async (eStoreFolderInfo) => {
     });
     return response.data;
   } catch (err) {
-    return err;
+    return false;
   }
 };
 
