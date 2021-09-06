@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 
+const bssApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
 
@@ -15,7 +16,11 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'checker', 'data-admin'],
+    email: 'maker1@ukexportfinance.gov.uk',
   });
+
+  const allUsers = await bssApi.listUsers();
+  const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
 
   console.log('inserting mandatory-criteria-versioned');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
@@ -29,7 +34,14 @@ const insertMocks = async () => {
 
   console.log('inserting application');
   for (const item of MOCKS.APPLICATION) {
-    await api.createApplication(item, token);
+    item.userId = makerUserId;
+    const application = await api.createApplication(item, token);
+
+    await api.updateApplication(
+      application._id,
+      { submissionType: item.submissionType },
+      token,
+    );
   }
 
   const application = await api.listApplication(token);

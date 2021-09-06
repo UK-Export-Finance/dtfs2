@@ -21,6 +21,21 @@ const createApplication = async (data, token) => {
   return response.data;
 };
 
+const updateApplication = async (id, data, token) => {
+  const response = await axios({
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/application/${id}`,
+    data,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
 const deleteApplication = async (data, token) => {
   const response = await axios({
     method: 'delete',
@@ -248,6 +263,7 @@ const listMandatoryCriteriaVersioned = async (token) => {
 
 module.exports = {
   createApplication,
+  updateApplication,
   deleteApplication,
   listApplication,
   deleteExporter,

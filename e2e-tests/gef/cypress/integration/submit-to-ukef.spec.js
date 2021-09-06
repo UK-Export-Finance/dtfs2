@@ -16,7 +16,7 @@ context('Submit to UKEF', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[0]._id;
+        applicationId = body.items[2]._id;
       });
 
     cy.login(CREDENTIALS.CHECKER);
