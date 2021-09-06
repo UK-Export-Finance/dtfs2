@@ -1,4 +1,4 @@
-import { PROGRESS, AUTHORISATION_LEVEL } from '../../constants';
+const { PROGRESS, AUTHORISATION_LEVEL } = require('../../constants');
 
 const statesWhereMakerHasEditAccess = [
   PROGRESS.DRAFT,
@@ -40,7 +40,7 @@ statesWhereCheckerHasCommentAccess.forEach((state) => {
   authorisationMap.CHECKER[state].push(AUTHORISATION_LEVEL.COMMENT);
 });
 
-export const getUserAuthorisationLevelsToApplication = (user, application) => {
+const getUserAuthorisationLevelsToApplication = (user, application) => {
   const { roles } = user;
   const applicationState = application.status.toUpperCase();
 
@@ -58,4 +58,4 @@ export const getUserAuthorisationLevelsToApplication = (user, application) => {
   return [];
 };
 
-export default { getUserAuthorisationLevelsToApplication };
+module.exports = getUserAuthorisationLevelsToApplication;

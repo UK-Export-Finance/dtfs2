@@ -1,13 +1,13 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   confirmAbandonApplication,
   abandonApplication,
-} from '../controllers/application-abandon';
-import validateToken from './middleware/validate-token';
+} = require('../controllers/application-abandon');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
 router.get('/application-details/:applicationId/abandon', validateToken, confirmAbandonApplication);
 router.post('/application-details/:applicationId/abandon', validateToken, abandonApplication);
 
-export default router;
+module.exports = router;

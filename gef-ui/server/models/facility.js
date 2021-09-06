@@ -1,10 +1,10 @@
-import {
+const {
   getFacility,
   getApplication,
-} from '../services/api';
-import { FACILITY_TYPE } from '../../constants';
+} = require('../services/api');
+const { FACILITY_TYPE } = require('../../constants');
 
-export default class Facility {
+class Facility {
   static async find(applicationId, facilityId, status, user) {
     try {
       const { details } = await getFacility(facilityId);
@@ -40,3 +40,5 @@ export default class Facility {
     }
   }
 }
+
+module.exports = Facility;

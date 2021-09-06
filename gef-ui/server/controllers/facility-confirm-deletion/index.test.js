@@ -1,5 +1,7 @@
 import { facilityConfirmDeletion, deleteFacility } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -25,63 +27,64 @@ const MockFacilityResponse = () => {
 };
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
-describe('GET Facility Confirm Deletion', () => {
-  it('renders the `Facility Currency` template', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
+describe('controllers/facility-confirm-deletion', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockFacilityResponse;
 
-    mockFacilityResponse.details.type = 'CASH';
-    api.getFacility = () => Promise.resolve(mockFacilityResponse);
+  beforeEach(() => {
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
+    mockFacilityResponse = MockFacilityResponse();
 
-    await facilityConfirmDeletion(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-confirm-deletion.njk', expect.objectContaining({
-      heading: 'Cash',
-      applicationId: '123',
-    }));
+    api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.deleteFacility.mockResolvedValue({});
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    api.getFacility = () => Promise.reject();
-    await facilityConfirmDeletion(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  afterEach(() => {
+    jest.resetAllMocks();
   });
-});
+  describe('GET Facility Confirm Deletion', () => {
+    it('renders the `Facility Currency` template', async () => {
+      mockFacilityResponse.details.type = 'CASH';
+      api.getFacility.mockResolvedValueOnce(mockFacilityResponse);
 
-describe('Delete Facility', () => {
-  it('calls the update api with the correct data', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const deleteFacilitySpy = jest.spyOn(api, 'deleteFacility').mockImplementationOnce(() => Promise.resolve());
+      await facilityConfirmDeletion(mockRequest, mockResponse);
 
-    await deleteFacility(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-confirm-deletion.njk', expect.objectContaining({
+        heading: 'Cash',
+        applicationId: '123',
+      }));
+    });
 
-    expect(deleteFacilitySpy).toHaveBeenCalledWith('xyz');
-  });
-  it('redirects user to application page if deletion was successful', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-
-    api.deleteFacility = () => Promise.resolve();
-    await deleteFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      await facilityConfirmDeletion(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+  describe('Delete Facility', () => {
+    it('calls the update api with the correct data', async () => {
+      await deleteFacility(mockRequest, mockResponse);
 
-    api.deleteFacility = () => Promise.reject();
-    await deleteFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(api.deleteFacility).toHaveBeenCalledWith('xyz');
+    });
+
+    it('redirects user to application page if deletion was successful', async () => {
+      await deleteFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      api.deleteFacility.mockRejectedValueOnce();
+
+      await deleteFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
   });
 });

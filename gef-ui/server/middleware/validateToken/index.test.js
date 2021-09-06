@@ -1,5 +1,7 @@
-import validateToken from '../validate-token';
-import * as api from '../../../services/api';
+import validateToken from '.';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockRequest = () => {
   const req = {};

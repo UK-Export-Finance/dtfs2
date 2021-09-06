@@ -1,13 +1,13 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   automaticCover,
   validateAutomaticCover,
-} from '../controllers/automatic-cover';
-import validateToken from './middleware/validate-token';
+} = require('../controllers/automatic-cover');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
 router.get('/application-details/:applicationId/automatic-cover', validateToken, (req, res) => automaticCover(req, res));
 router.post('/application-details/:applicationId/automatic-cover', validateToken, (req, res) => validateAutomaticCover(req, res));
 
-export default router;
+module.exports = router;

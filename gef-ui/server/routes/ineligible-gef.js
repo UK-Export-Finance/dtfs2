@@ -1,9 +1,9 @@
-import express from 'express';
-import ineligibleGef from '../controllers/ineligible-gef';
-import validateToken from './middleware/validate-token';
+const express = require('express');
+const ineligibleGef = require('../controllers/ineligible-gef');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
 router.get('/ineligible-gef', validateToken, (req, res) => ineligibleGef(req, res));
 
-export default router;
+module.exports = router;

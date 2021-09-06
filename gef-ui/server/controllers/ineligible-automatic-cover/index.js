@@ -7,4 +7,4 @@ const ineligibleAutomaticCover = async (req, res) => {
   });
 };
 
-export default ineligibleAutomaticCover;
+module.exports = ineligibleAutomaticCover;

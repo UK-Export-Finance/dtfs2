@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require('express');
 // import axios from 'axios';
 // import companiesHouseAPI from './companies-house-api';
 
@@ -40,4 +40,4 @@ healthcheck.get('/healthcheck', async (req, res) => {
   });
 });
 
-export default healthcheck;
+module.exports = healthcheck;

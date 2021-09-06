@@ -1,13 +1,13 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   selectExportersCorrespondenceAddress,
   validateSelectExportersCorrespondenceAddress,
-} from '../controllers/select-exporters-correspondence-address';
-import validateToken from './middleware/validate-token';
+} = require('../controllers/select-exporters-correspondence-address');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
 router.get('/application-details/:applicationId/select-exporters-correspondence-address', validateToken, (req, res) => selectExportersCorrespondenceAddress(req, res));
 router.post('/application-details/:applicationId/select-exporters-correspondence-address', validateToken, (req, res) => validateSelectExportersCorrespondenceAddress(req, res));
 
-export default router;
+module.exports = router;

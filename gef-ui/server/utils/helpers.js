@@ -1,10 +1,10 @@
-import httpError from 'http-errors';
-import _isEmpty from 'lodash/isEmpty';
-import commaNumber from 'comma-number';
-import cleanDeep from 'clean-deep';
-import { FACILITY_PROVIDED_DETAILS } from '../../constants';
+const httpError = require('http-errors');
+const lodashIsEmpty = require('lodash/isEmpty');
+const commaNumber = require('comma-number');
+const cleanDeep = require('clean-deep');
+const { FACILITY_PROVIDED_DETAILS } = require('../../constants');
 
-// Fetches the user token from session
+// Fetches the user token = require( sessio)n
 const userToken = (req) => {
   const token = req.session.userToken;
   return token;
@@ -27,7 +27,7 @@ const apiErrorHandler = ({ code, response }) => {
 };
 
 /*
-  Maps through validation errors from the server and returns it
+  Maps through validation errors = require( the server and returns i)t
   so both Summary Error component and field component
   can display the error messages correctly.
 */
@@ -65,10 +65,10 @@ const validationErrorHandler = (errs, href = '') => {
 /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
   properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
   Object is empty or not. */
-const isEmpty = (value) => _isEmpty(cleanDeep(value));
+const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
 const mapSummaryList = (data, itemsToShow, preview = false) => {
-  if (!data || _isEmpty(data)) { return []; }
+  if (!data || lodashIsEmpty(data)) { return []; }
   const { details, validation } = data;
   const { required } = validation;
 
@@ -137,7 +137,7 @@ const mapSummaryList = (data, itemsToShow, preview = false) => {
       summaryItems = [
         ...(href ? [{
           href,
-          /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
+          /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
           properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
           Object is empty or not. */
           text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
@@ -208,7 +208,7 @@ const status = ({
   },
 });
 
-export {
+module.exports = {
   apiErrorHandler,
   getApplicationType,
   isEmpty,
