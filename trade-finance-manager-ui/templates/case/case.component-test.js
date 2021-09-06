@@ -20,8 +20,6 @@ describe(page, () => {
   beforeEach(() => {
     wrapper = render(params);
   });
-  
-  // TODO page title
 
   it('should render case summary component', () => {
     wrapper.expectElement('[data-cy="case-summary"]').toExist();

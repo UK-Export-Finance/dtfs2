@@ -83,9 +83,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-      // TODO - since we are running inside the same VM as the service during these tests..
-      //  we -can- mock the system clock and do accurate assertions here..
-      // feels more unit-test-like but something to think about
       expect(body.deal.details.submissionDate).toBeDefined();
     });
 
@@ -399,9 +396,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
-      // TODO - since we are running inside the same VM as the service during these tests..
-      //  we -can- mock the system clock and do accurate assertions here..
-      // feels more unit-test-like but something to think about
       expect(body.deal.details.submissionDate).toBeDefined();
       expect(body.deal.details.manualInclusionApplicationSubmissionDate).toBeDefined();
     });

@@ -18,7 +18,7 @@ export const postApplicationSubmission = async (req, res, next) => {
   const application = await api.getApplication(applicationId);
   const maker = await api.getUserDetails(application.userId, userToken);
 
-  // TODO : Add some validation here to make sure that the whole application is valid
+  // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
   try {
     if (comment.length > maxCommentLength) {
       const errors = validationErrorHandler({

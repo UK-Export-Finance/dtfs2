@@ -17,6 +17,18 @@ const cleanUsers = async (token) => {
   }
 };
 
+const cleanTfmDeals = async (token) => {
+  console.log('cleaning TFM deals and facilities');
+
+  const tfmDeals = await api.listDeals(token);
+
+  if (tfmDeals) {
+    for (deal of tfmDeals) {
+      await api.deleteDeal(deal, token);
+    }
+  }
+};
+
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
@@ -27,6 +39,7 @@ const cleanAllTables = async () => {
 
   await cleanTeams(token);
   await cleanUsers(token);
+  await cleanTfmDeals(token);
 };
 
 module.exports = cleanAllTables;

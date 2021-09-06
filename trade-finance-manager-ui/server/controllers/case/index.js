@@ -56,9 +56,6 @@ const filterCaseTasks = async (req, res) => {
 
   const { filterType } = req.body;
 
-  // currently, data shape allows users to be in multiple teams.
-  // however, user will only ever be in one team.
-  // TODO: update user.teams into single string (double check with business)
   const userTeamId = req.session.user.teams[0];
 
   const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
@@ -105,7 +102,6 @@ const getCaseTask = async (req, res) => {
   }
 
   if (!task.canEdit) {
-    // TODO: ideally we will redirect to custom error page.
     return res.redirect(`/case/${dealId}/tasks`);
   }
 
@@ -224,9 +220,6 @@ const postTfmFacility = async (req, res) => {
       return api.updateFacility(id, facilityUpdate);
     }),
   );
-
-
-  // const { data } = await api.updateParty(dealId, update);
 
   return res.redirect(`/case/${dealId}/parties`);
 };

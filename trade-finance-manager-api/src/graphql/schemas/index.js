@@ -260,7 +260,7 @@ type TFMDealData {
   exporterCreditRating: String
   supplyContractValueInGBP: String
   stage: String
-  lossGivenDefault: String
+  lossGivenDefault: Int
   probabilityOfDefault: Float
   history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
@@ -391,7 +391,7 @@ input TFMCreditRatingInput {
 }
 
 input TFMLossGivenDefaultInput {
-  lossGivenDefault: String
+  lossGivenDefault: Int
 }
 
 input TFMProbabilityOfDefaultInput {

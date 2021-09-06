@@ -36,7 +36,11 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+
+  const userCanEdit = userCanEditGeneral(user);
+
+  if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
   }
 
@@ -51,12 +55,13 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   });
 };
 
-// TODO: POST should probably be restricted
 const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  const { user } = req.session;
+
+  if (!deal || !userCanEditGeneral(user)) {
     return res.redirect('/not-found');
   }
 

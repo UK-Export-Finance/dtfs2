@@ -56,6 +56,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         bankReferenceNumber,
         uniqueIdentificationNumber,
         bondType,
+        facilityStage,
       } = mockFacility;
 
       const expected = {
@@ -68,7 +69,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         ukefExposure,
         coverStartDate: requestedCoverStartDate,
         ukefGuaranteeInMonths,
-        hasBeenIssued: isIssued(mockFacility),
+        hasBeenIssued: isIssued(facilityStage),
         hasBeenAcknowledged,
         coverEndDate: expect.any(Object), // date object,
         guaranteeFeePayableByBank,

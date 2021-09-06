@@ -11,6 +11,8 @@ context('Case Underwriting - Pricing and risk', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
+  const underWritingUser = MOCK_USERS.find((user) => user.teams.includes('UNDERWRITERS'));
+  const underwritingSupportUser = MOCK_USERS.find((user) => !user.teams.includes('UNDERWRITING_SUPPORT'));
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
@@ -37,12 +39,9 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  describe('not able to add edit', () => {
+  describe('when unable to edit', () => {
     beforeEach(() => {
-      const underWritingManagerUser = MOCK_USERS.find((user) =>
-        user.teams.includes('UNDERWRITING_SUPPORT'));
-
-      cy.login(underWritingManagerUser);
+      cy.login(underwritingSupportUser);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
@@ -50,7 +49,7 @@ context('Case Underwriting - Pricing and risk', () => {
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
     });
 
-    it('should dispay the correct change links', () => {
+    it('should NOT display `change` links', () => {
       pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.be.visible');
@@ -58,11 +57,8 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  describe('able to edit', () => {
+  describe('when able to edit', () => {
     beforeEach(() => {
-      const underWritingUser = MOCK_USERS.find((user) =>
-        user.teams.includes('UNDERWRITERS'));
-
       cy.login(underWritingUser);
       cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -189,28 +185,30 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
     });
+  });
 
-    it('a user that is not in the `underwriting support` team cannot add or edit a credit rating', () => {
-    // double check that a credit rating already exists from previous tests
+  describe('a user that is not in the `underwriters` or `underwriter managers`', () => {
+    beforeEach(() => {
+      cy.login(underwritingSupportUser);
+
+      cy.visit(`/case/${dealId}/underwriting/pricing-and-risk`);
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    });
+
+    it('cannot add or edit a credit rating', () => {
+      // double check that a credit rating already exists from previous tests
       pages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
         expect(text.trim()).to.equal(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
       });
-
-      // non-underwriting support user goes to the `Pricing and risk` page
-      const nonUnderWritingSupportUser = MOCK_USERS.find((user) =>
-        !user.teams.includes('UNDERWRITERS'));
-
-      cy.login(nonUnderWritingSupportUser);
-      cy.visit(relative(`/case/${dealId}/deal`));
-
-      // go to pricing and risk page
-      partials.caseSubNavigation.underwritingLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
 
       pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
       pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.be.visible');
     });
+
+    it('cannot manually navigate to the edit page', () => {
+      cy.visit(`/case/${dealId}/underwriting/pricing-and-risk/edit`);
+      cy.url().should('eq', relative('/not-found'));
+    });
   });
-  // TODO what if they manually navigate to the page?
 });

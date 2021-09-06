@@ -1,5 +1,3 @@
-// TODO - perhaps each of these sections should have their own rules for this that we call on here?
-
 const completedFacilityStatus = ['Completed', 'Acknowledged by UKEF'];
 
 const hasIncompleteBonds = (deal) => {

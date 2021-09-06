@@ -118,12 +118,7 @@ exports.update = (req, res) => {
     if (!deal) return res.status(404).send();
     if (!userHasAccessTo(user, deal)) return res.status(401).send();
 
-    // TODO - we calculate status on the fly now, so should we ever persist this field?
-    // if (validationErrors.count === 0) {
-    //   submissionDetails.status = 'Completed';
-    // } else {
     submissionDetails.status = 'Incomplete';
-    // }
 
     // build a date out of the conversion-date fields if we have them
     const day = submissionDetails['supplyContractConversionDate-day'];

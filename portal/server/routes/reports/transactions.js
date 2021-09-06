@@ -15,7 +15,7 @@ router.get('/reports/:id/transactions/:page', async (req, res) => {
     res.redirect('/');
   }
 
-  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
+  const filters = {};
 
   const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
