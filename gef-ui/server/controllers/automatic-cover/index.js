@@ -3,16 +3,8 @@ import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 import { DEAL_SUBMISSION_TYPE } from '../../../constants';
 
-const updateSubmissionType = async (applicationId, isAutomaticCover) => {
-  const applicationUpdate = {};
-
-  if (isAutomaticCover) {
-    applicationUpdate.submissionType = DEAL_SUBMISSION_TYPE.AIN;
-  } else {
-    applicationUpdate.submissionType = DEAL_SUBMISSION_TYPE.MIA;
-  }
-
-  await api.updateApplication(applicationId, applicationUpdate);
+const updateSubmissionType = async (applicationId, coverType) => {
+  await api.updateApplication(applicationId, { submissionType: coverType });
 };
 
 const automaticCover = async (req, res) => {
@@ -36,53 +28,39 @@ const automaticCover = async (req, res) => {
   }
 };
 
+const getValidationErrors = (fields, items) => {
+  const receivedFields = Object.keys(fields); // Array of received fields i.e ['coverStart']
+  const errorsToDisplay = items.filter(
+    (item) => !receivedFields.includes(item.id),
+  );
+
+  return errorsToDisplay.map((error) => ({
+    errRef: error.id,
+    errMsg: error.errMsg,
+  }));
+};
+
+const deriveCoverType = (fields, items) => {
+  const receivedFields = Object.values(fields);
+
+  if (receivedFields.length !== items.length) return undefined;
+  if (receivedFields.every(((field) => field === 'true'))) return DEAL_SUBMISSION_TYPE.AIN;
+  if (receivedFields.some((field) => field === 'false')) return DEAL_SUBMISSION_TYPE.MIA;
+
+  return undefined;
+};
+
 const validateAutomaticCover = async (req, res, next) => {
-  function AutomaticCoverErrors(fields, items) {
-    const receivedFields = Object.keys(fields); // Array of received fields i.e ['coverStart']
-    const errorsToDisplay = items.filter(
-      (item) => !receivedFields.includes(item.id),
-    );
-
-    return errorsToDisplay.map((error) => ({
-      errRef: error.id,
-      errMsg: error.errMsg,
-    }));
-  }
-
-  function fieldContainsAFalseBoolean(fields) {
-    const receivedFields = Object.values(fields);
-    return receivedFields.some((field) => field === 'false');
-  }
-
-  const { body, params, query } = req;
-  const { applicationId } = params;
-  const { saveAndReturn } = query;
-  const { coverTermsId } = await api.getApplication(applicationId);
-
   try {
-    if (saveAndReturn) {
-      const payload = {
-        coverStart: body.coverStart,
-        noticeDate: body.noticeDate,
-        facilityLimit: body.facilityLimit,
-        exporterDeclaration: body.exporterDeclaration,
-        dueDiligence: body.dueDiligence,
-        facilityLetter: body.facilityLetter,
-        facilityBaseCurrency: body.facilityBaseCurrency,
-        facilityPaymentCurrency: body.facilityPaymentCurrency,
-      };
-
-      await api.updateCoverTerms(coverTermsId, payload);
-
-      const isAutomaticCover = !fieldContainsAFalseBoolean(body);
-      await updateSubmissionType(applicationId, isAutomaticCover);
-
-      return res.redirect(`/gef/application-details/${applicationId}`);
-    }
+    const { body, params, query } = req;
+    const { applicationId } = params;
+    const { saveAndReturn } = query;
+    const { coverTermsId } = await api.getApplication(applicationId);
     const { terms } = await api.getEligibilityCriteria();
-    const automaticCoverErrors = new AutomaticCoverErrors(body, terms);
+    const automaticCoverErrors = getValidationErrors(body, terms);
+    const coverType = deriveCoverType(body, terms);
 
-    if (automaticCoverErrors.length > 0) {
+    if (!saveAndReturn && automaticCoverErrors.length > 0) {
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
         selected: body,
@@ -94,21 +72,25 @@ const validateAutomaticCover = async (req, res, next) => {
       });
     }
 
+    await updateSubmissionType(applicationId, coverType);
     await api.updateCoverTerms(coverTermsId, body);
 
-    const isAutomaticCover = !fieldContainsAFalseBoolean(body);
+    if (saveAndReturn) {
+      return res.redirect(`/gef/application-details/${applicationId}`);
+    }
 
-    await updateSubmissionType(applicationId, isAutomaticCover);
-
-    if (!isAutomaticCover) {
+    if (coverType === DEAL_SUBMISSION_TYPE.MIA) {
       return res.redirect(
         `/gef/application-details/${applicationId}/ineligible-automatic-cover`,
       );
     }
+    if (coverType === DEAL_SUBMISSION_TYPE.AIN) {
+      return res.redirect(
+        `/gef/application-details/${applicationId}/eligible-automatic-cover`,
+      );
+    }
 
-    return res.redirect(
-      `/gef/application-details/${applicationId}/eligible-automatic-cover`,
-    );
+    return res.redirect(`/gef/application-details/${applicationId}`);
   } catch (err) {
     return next(err);
   }
