@@ -17,6 +17,12 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.params.applicationId = '1234';
+  req.session = {
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+    },
+  };
   return req;
 };
 
@@ -30,6 +36,10 @@ const MockSubmissionRequest = () => ({
   },
   session: {
     userToken: '',
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+    },
   },
 });
 
@@ -38,52 +48,127 @@ const MockApplicationResponse = () => {
   res._id = '1234';
   res.exporterId = '123';
   res.coverTermsId = '123';
+  res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
+  res.coverTerms = {
+    isAutomaticCover: true,
+  };
   return res;
 };
 
 const MockUserResponse = () => ({
   username: 'maker',
+  bank: { id: 'BANKID' },
 });
 
+const MockExporterResponse = () => {
+  const res = {};
+  res.details = {};
+  res.status = 'IN_PROGRESS';
+  res.validation = {};
+  res.details.companiesHouseRegistrationNumber = 'tedsi';
+  res.validation.required = [];
+  return res;
+};
+
+const MockCoverTermsResponse = () => {
+  const res = {};
+  res.status = 'COMPLETE';
+  res.details = {};
+  res.validation = {};
+  res.validation.required = [];
+  res.isAutomaticCover = true;
+  res.data = [];
+  return res;
+};
+
+const MockEligibilityCriteriaResponse = () => ({
+  terms: [
+    {
+      id: 'coverStart',
+      htmlText: '<p>Some eligibility criteria</p>',
+      errMsg: '12. Select some eligibilty',
+    },
+  ],
+});
+
+const MockFacilityResponse = () => {
+  const res = {};
+  res.status = 'IN_PROGRESS';
+  res.data = [];
+  return res;
+};
+
 describe('GET Application Submission', () => {
+  let mockResponse; let mockRequest; let mockApplicationResponse;
+  let mockExporterResponse; let mockCoverTermsResponse; let mockFacilityResponse;
+  let mockEligibiltyCriteriaResponse;
+
+  beforeEach(() => {
+    mockResponse = new MockResponse();
+    mockRequest = new MockRequest();
+    mockApplicationResponse = new MockApplicationResponse();
+    mockExporterResponse = new MockExporterResponse();
+    mockCoverTermsResponse = new MockCoverTermsResponse();
+    mockFacilityResponse = new MockFacilityResponse();
+    mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
+    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
+    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders submission page as expected', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    getApplicationSubmission(mockRequest, mockResponse);
+    await getApplicationSubmission(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
       applicationId: expect.any(String),
+      isAutomaticCover: expect.any(Boolean),
       maxCommentLength: expect.any(Number),
     }));
   });
 });
 
 describe('POST Application Submission', () => {
-  const mockResponse = new MockResponse();
-  const mockRequest = new MockSubmissionRequest();
-  const mockUserResponse = new MockUserResponse();
+  let mockApplicationResponse; let mockResponse; let mockRequest; let mockUserResponse;
+  let mockExporterResponse; let mockCoverTermsResponse; let mockFacilityResponse;
+  let mockEligibiltyCriteriaResponse;
+
+  beforeEach(() => {
+    mockApplicationResponse = new MockApplicationResponse();
+    mockResponse = new MockResponse();
+    mockRequest = new MockSubmissionRequest();
+    mockUserResponse = new MockUserResponse();
+    mockExporterResponse = new MockExporterResponse();
+    mockCoverTermsResponse = new MockCoverTermsResponse();
+    mockFacilityResponse = new MockFacilityResponse();
+    mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+    mockUserResponse = new MockUserResponse();
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
+    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
+    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
+    api.getUserDetails = () => Promise.resolve(mockUserResponse);
+    api.updateApplication = () => Promise.resolve({});
+    api.setApplicationStatus = () => Promise.resolve({});
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders confirmation if successfully submitted', async () => {
-    const mockApplicationResponse = new MockApplicationResponse();
-
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.updateApplication = () => Promise.resolve({});
-    api.setApplicationStatus = () => Promise.resolve({});
-
     await postApplicationSubmission(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
       applicationId: expect.any(String),
+      isAutomaticCover: expect.any(Boolean),
     }));
   });
 
@@ -102,15 +187,10 @@ describe('POST Application Submission', () => {
   });
 
   it('adds a comment to the application when the user enters one', async () => {
-    const mockApplicationResponse = new MockApplicationResponse();
-    api.updateApplication = jest.fn();
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getUserDetails = () => Promise.resolve(mockUserResponse);
-    api.setApplicationStatus = () => Promise.resolve({});
     mockRequest.body.comment = 'Some comments here';
+    api.updateApplication = jest.fn();
 
     const expected = {
-      ...mockApplicationResponse,
       ...{
         comments: [{
           role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
@@ -124,22 +204,15 @@ describe('POST Application Submission', () => {
   });
 
   it('doesnt add a comment to the application when the user doesnt enter one', async () => {
-    const mockApplicationResponse = new MockApplicationResponse();
     api.updateApplication = jest.fn();
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getUserDetails = () => Promise.resolve(mockUserResponse);
     mockRequest.body.comment = '';
 
     await postApplicationSubmission(mockRequest, mockResponse);
 
-    expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, mockApplicationResponse);
+    expect(api.updateApplication).not.toHaveBeenCalled();
   });
 
   it('updates the application status to `BANK_CHECK`', async () => {
-    const mockApplicationResponse = new MockApplicationResponse();
-    api.updateApplication = () => Promise.resolve({});
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getUserDetails = () => Promise.resolve(mockUserResponse);
     api.setApplicationStatus = jest.fn();
     mockRequest.body.comment = '';
 
