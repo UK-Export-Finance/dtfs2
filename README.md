@@ -77,17 +77,19 @@ As we interface with a number of 3rd party APIs, there are a range of environmen
 
 All variables are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
 
-These variables are stored as secrets in the repo. To update secrets in the environments - i.e dev, test etc:
+These variables are then stored as secrets in the GitHub repo. When deploying to an Azure environment, Azure picks up the GitHub secrets and updates accordingly.
 
-* Create a Github Personal Access Token and save in `/secrets/github/pat.txt` - this only needs to be done once
-* Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
-* Run this script `/secrets/github/set_secrets.js`
+To update a secret (Make sure to select the relevant environments, i.e dev, test):
 
-This will update all github secrets. When deploying to different environments, the github secret values are picked up.
+1) Update the secret in the spreadsheet
+2) Update the secret in GitHub secrets
+3) Deploy to development environment
+4) Deploy to test environment
+
 
 ## Testing
 
-#### **Run all tests (E2E, API and UI)**
+### **Run all tests (E2E, API and UI)*8
 
 With docker running, execute all tests with:
 
