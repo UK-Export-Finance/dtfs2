@@ -1,13 +1,13 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   facilityGuarantee,
   updateFacilityGuarantee,
-} from '../controllers/facility-guarantee';
-import validateToken from './middleware/validate-token';
+} = require('../controllers/facility-guarantee');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
 router.get('/application-details/:applicationId/facilities/:facilityId/facility-guarantee', validateToken, (req, res) => facilityGuarantee(req, res));
 router.post('/application-details/:applicationId/facilities/:facilityId/facility-guarantee', validateToken, (req, res) => updateFacilityGuarantee(req, res));
 
-export default router;
+module.exports = router;

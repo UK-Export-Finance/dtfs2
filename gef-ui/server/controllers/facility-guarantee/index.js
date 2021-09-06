@@ -1,7 +1,7 @@
-import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
-import Facility from '../../models/facility';
-import validateFacilityGuarantee from './facility-guarantee';
+const { validationErrorHandler } = require('../../utils/helpers');
+const Facility = require('../../models/facility');
+const validateFacilityGuarantee = require('./facility-guarantee');
+const api = require('../../services/api');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
@@ -67,7 +67,7 @@ const updateFacilityGuarantee = async (req, res) => {
   return update();
 };
 
-export {
+module.exports = {
   facilityGuarantee,
   updateFacilityGuarantee,
 };

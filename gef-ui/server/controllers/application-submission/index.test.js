@@ -2,8 +2,10 @@ import {
   getApplicationSubmission,
   postApplicationSubmission,
 } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
 import { PROGRESS } from '../../../constants';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -99,125 +101,103 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-describe('GET Application Submission', () => {
-  let mockResponse; let mockRequest; let mockApplicationResponse;
-  let mockExporterResponse; let mockCoverTermsResponse; let mockFacilityResponse;
-  let mockEligibiltyCriteriaResponse;
+describe('controllers/application-submission', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockApplicationResponse;
 
   beforeEach(() => {
-    mockResponse = new MockResponse();
-    mockRequest = new MockRequest();
-    mockApplicationResponse = new MockApplicationResponse();
-    mockExporterResponse = new MockExporterResponse();
-    mockCoverTermsResponse = new MockCoverTermsResponse();
-    mockFacilityResponse = new MockFacilityResponse();
-    mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
+    mockApplicationResponse = MockApplicationResponse();
 
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('renders submission page as expected', async () => {
-    await getApplicationSubmission(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-      applicationId: expect.any(String),
-      isAutomaticCover: expect.any(Boolean),
-      maxCommentLength: expect.any(Number),
-    }));
-  });
-});
-
-describe('POST Application Submission', () => {
-  let mockApplicationResponse; let mockResponse; let mockRequest; let mockUserResponse;
-  let mockExporterResponse; let mockCoverTermsResponse; let mockFacilityResponse;
-  let mockEligibiltyCriteriaResponse;
-
-  beforeEach(() => {
-    mockApplicationResponse = new MockApplicationResponse();
-    mockResponse = new MockResponse();
-    mockRequest = new MockSubmissionRequest();
-    mockUserResponse = new MockUserResponse();
-    mockExporterResponse = new MockExporterResponse();
-    mockCoverTermsResponse = new MockCoverTermsResponse();
-    mockFacilityResponse = new MockFacilityResponse();
-    mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
-    mockUserResponse = new MockUserResponse();
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-    api.getUserDetails = () => Promise.resolve(mockUserResponse);
-    api.updateApplication = () => Promise.resolve({});
-    api.setApplicationStatus = () => Promise.resolve({});
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
+    api.getExporter.mockResolvedValue(MockExporterResponse());
+    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
+    api.getFacilities.mockResolvedValue(MockFacilityResponse());
+    api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
+    api.getUserDetails.mockResolvedValue(MockUserResponse());
+    api.updateApplication.mockResolvedValue({});
+    api.setApplicationStatus.mockResolvedValue({});
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
-  it('renders confirmation if successfully submitted', async () => {
-    await postApplicationSubmission(mockRequest, mockResponse);
+  describe('GET Application Submission', () => {
+    it('renders submission page as expected', async () => {
+      await getApplicationSubmission(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
-      applicationId: expect.any(String),
-      isAutomaticCover: expect.any(Boolean),
-    }));
+      expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
+        applicationId: expect.any(String),
+        isAutomaticCover: expect.any(Boolean),
+        maxCommentLength: expect.any(Number),
+      }));
+    });
   });
 
-  it('renders error where comments are too long', async () => {
-    const longComments = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante nec magna fringilla dapibus. Praesent porta nibh at metus venenatis feugiat. Proin vel sollicitudin ligula. Nulla sed massa quis augue bibendum lacinia vitae id leo. Aliquam quis imperdiet felis, et tempus eros. Duis efficitur odio nisl, non finibus urna convallis sit amet. Cras tortor odio, finibus in fermentum vel, posuere quis.';
-    mockRequest.body.comment = longComments;
+  describe('POST Application Submission', () => {
+    beforeEach(() => {
+      mockRequest = new MockSubmissionRequest();
+    });
 
-    await postApplicationSubmission(mockRequest, mockResponse);
+    it('renders confirmation if successfully submitted', async () => {
+      await postApplicationSubmission(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-      applicationId: expect.any(String),
-      comment: longComments,
-      maxCommentLength: expect.any(Number),
-      errors: expect.any(Object),
-    }));
-  });
+      expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
+        applicationId: expect.any(String),
+        isAutomaticCover: expect.any(Boolean),
+      }));
+    });
 
-  it('adds a comment to the application when the user enters one', async () => {
-    mockRequest.body.comment = 'Some comments here';
-    api.updateApplication = jest.fn();
+    it('renders error where comments are too long', async () => {
+      const longComments = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante nec magna fringilla dapibus. Praesent porta nibh at metus venenatis feugiat. Proin vel sollicitudin ligula. Nulla sed massa quis augue bibendum lacinia vitae id leo. Aliquam quis imperdiet felis, et tempus eros. Duis efficitur odio nisl, non finibus urna convallis sit amet. Cras tortor odio, finibus in fermentum vel, posuere quis.';
+      mockRequest.body.comment = longComments;
 
-    const expected = {
-      ...{
-        comments: [{
-          role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
-        }],
-      },
-    };
+      await postApplicationSubmission(mockRequest, mockResponse);
 
-    await postApplicationSubmission(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
+        applicationId: expect.any(String),
+        comment: longComments,
+        maxCommentLength: expect.any(Number),
+        errors: expect.any(Object),
+      }));
+    });
 
-    expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, expected);
-  });
+    it('adds a comment to the application when the user enters one', async () => {
+      mockRequest.body.comment = 'Some comments here';
+      api.updateApplication = jest.fn();
 
-  it('doesnt add a comment to the application when the user doesnt enter one', async () => {
-    api.updateApplication = jest.fn();
-    mockRequest.body.comment = '';
+      const expected = {
+        ...{
+          comments: [{
+            role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
+          }],
+        },
+      };
 
-    await postApplicationSubmission(mockRequest, mockResponse);
+      await postApplicationSubmission(mockRequest, mockResponse);
 
-    expect(api.updateApplication).not.toHaveBeenCalled();
-  });
+      expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, expected);
+    });
 
-  it('updates the application status to `BANK_CHECK`', async () => {
-    api.setApplicationStatus = jest.fn();
-    mockRequest.body.comment = '';
+    it('doesnt add a comment to the application when the user doesnt enter one', async () => {
+      api.updateApplication = jest.fn();
+      mockRequest.body.comment = '';
 
-    await postApplicationSubmission(mockRequest, mockResponse);
+      await postApplicationSubmission(mockRequest, mockResponse);
 
-    expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, PROGRESS.BANK_CHECK);
+      expect(api.updateApplication).not.toHaveBeenCalled();
+    });
+
+    it('updates the application status to `BANK_CHECK`', async () => {
+      api.setApplicationStatus = jest.fn();
+      mockRequest.body.comment = '';
+
+      await postApplicationSubmission(mockRequest, mockResponse);
+
+      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, PROGRESS.BANK_CHECK);
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { getUserAuthorisationLevelsToApplication } from './user-authorisation-level';
+import getUserAuthorisationLevelsToApplication from './user-authorisation-level';
 
 const makerUser = {
   username: 'MAKER',

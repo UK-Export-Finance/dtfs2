@@ -1,9 +1,9 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   facilities,
   createFacility,
-} from '../controllers/facilities';
-import validateToken from './middleware/validate-token';
+} = require('../controllers/facilities');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.get('/application-details/:applicationId/facilities/:facilityId', validat
 router.post('/application-details/:applicationId/facilities', validateToken, (req, res) => createFacility(req, res));
 router.post('/application-details/:applicationId/facilities/:facilityId', validateToken, (req, res) => createFacility(req, res));
 
-export default router;
+module.exports = router;
