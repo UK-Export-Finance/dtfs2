@@ -134,9 +134,19 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage.heading().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
-    });
+    if (expectedResultsLength > 1) {
+      pages.dealsPage.heading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
+      });
+    } else if (expectedResultsLength === 1) {
+      pages.dealsPage.heading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
+      });
+    } else {
+      pages.dealsPage.heading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
+      });
+    }
   });
 
   it('search/filter by bank name', () => {
