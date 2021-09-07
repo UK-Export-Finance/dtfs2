@@ -104,6 +104,8 @@ const submitDeal = async (dealId, dealType, checker) => {
     if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, checker);
 
+      // NOTE: this is the one and only time that TFM updates a snapshot.
+      // Without this, it would involve additional API calls going around in circles.
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
       updatedDeal.submissionType = dealSnapshot.details.submissionType;
