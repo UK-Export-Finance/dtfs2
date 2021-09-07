@@ -50,6 +50,7 @@ describe('reducer - deals', () => {
         dealSnapshot: {
           ...mockDeal.dealSnapshot,
           submissionDetails: mapSubmissionDetails(mockDeal.dealSnapshot.submissionDetails),
+          isFinanceIncreasing: false,
         },
         tfm: mapDealTfm(mockDealWithMappedFacilities(mockDeal)),
       };
@@ -67,6 +68,7 @@ describe('reducer - deals', () => {
           _id: mockGefDeal._id,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
+          isFinanceIncreasing: mockGefDeal.dealSnapshot.exporter.isFinanceIncreasing,
         },
         tfm: mapDealTfm(mockGefDeal),
       };
