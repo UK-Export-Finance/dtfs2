@@ -1,4 +1,4 @@
-const BANKS = require('./banks');
+const BANKS = require('../banks');
 
 const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
 const UKEF_TEST_BANK_2 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
