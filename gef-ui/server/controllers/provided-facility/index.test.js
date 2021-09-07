@@ -59,6 +59,19 @@ describe('GET Provided Facility', () => {
 });
 
 describe('Validate Provided Facility', () => {
+  it('shows error message if nothing is set', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+
+    await validateProvidedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+      errors: expect.objectContaining({
+        errorSummary: expect.arrayContaining([{ href: '#', text: expect.any(String) }]),
+      }),
+    }));
+  });
+
   it('redirects user to application page if application page if save and return is set to true', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
@@ -76,6 +89,7 @@ describe('Validate Provided Facility', () => {
     const mockRequest = new MockRequest();
     const mockProvidedFacilityResponse = new MockProvidedFacilityResponse();
     mockRequest.query.status = 'change';
+    mockRequest.body.details = ['TERMS'];
 
     api.updateFacility = () => Promise.resolve(mockProvidedFacilityResponse);
     await validateProvidedFacility(mockRequest, mockResponse);
@@ -126,6 +140,7 @@ describe('Validate Provided Facility', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
+    mockRequest.body.details = ['TERMS'];
 
     api.updateFacility = () => Promise.reject();
     await validateProvidedFacility(mockRequest, mockResponse);
