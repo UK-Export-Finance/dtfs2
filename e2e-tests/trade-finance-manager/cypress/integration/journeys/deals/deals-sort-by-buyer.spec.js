@@ -9,7 +9,6 @@ context('User can view and sort deals by buyer', () => {
   let ALL_FACILITIES = [];
   let dealBuyerA;
   let dealBuyerB;
-  let dealBuyerC;
 
   const DEAL_BUYER_A = createMockDeal({
     details: {
@@ -29,19 +28,9 @@ context('User can view and sort deals by buyer', () => {
     },
   });
 
-  const DEAL_BUYER_C = createMockDeal({
-    details: {
-      testId: 'DEAL_BUYER_C',
-    },
-    submissionDetails: {
-      'buyer-name': 'BUYER C',
-    },
-  });
-
   const MOCK_DEALS = [
     DEAL_BUYER_A,
     DEAL_BUYER_B,
-    DEAL_BUYER_C,
   ];
 
   before(() => {
@@ -71,9 +60,6 @@ context('User can view and sort deals by buyer', () => {
 
           dealBuyerB = ALL_SUBMITTED_DEALS.find((deal) =>
             deal.dealSnapshot.details.testId === DEAL_BUYER_B.details.testId);
-
-          dealBuyerC = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_BUYER_C.details.testId);
         });
       });
   });
@@ -108,10 +94,6 @@ context('User can view and sort deals by buyer', () => {
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
     row2.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerB._id}`);
 
-    // check third row
-    const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerC._id}`);
-
     pages.dealsPage.dealsTable.headings.buyer().invoke('attr', 'aria-sort').should('eq', 'ascending');
     pages.dealsPage.dealsTable.headings.buyerSortButton().invoke('attr', 'name').should('eq', 'descending');
   });
@@ -125,16 +107,13 @@ context('User can view and sort deals by buyer', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
 
+    // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerC._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerB._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerB._id}`);
-
-    // check third row
-    const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerA._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealBuyerA._id}`);
 
     pages.dealsPage.dealsTable.headings.buyer().invoke('attr', 'aria-sort').should('eq', 'descending');
     pages.dealsPage.dealsTable.headings.buyerSortButton().invoke('attr', 'name').should('eq', 'ascending');
