@@ -34,7 +34,7 @@
       </h1>
 
       <p class="govuk-body govuk-!-margin-bottom-6">
-        Someone at your bank must check your automatic inclusion notice before they can submit it to UKEF.
+        Someone at your bank must check your {% if isAutomaticCover %}automatic inclusion notice{% else %}manual inclusion application{% endif %} before they can submit it to UKEF.
       </p>
     </div>
 

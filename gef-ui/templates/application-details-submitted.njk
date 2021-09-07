@@ -10,7 +10,9 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {{ govukPanel({
-        titleText: "Automatic inclusion notice submitted for checking at your bank",
+        titleText: "Automatic inclusion notice submitted for checking at your bank" 
+          if isAutomaticCover else 
+          "Manual inclusion application submitted for checking at your bank",
         classes: "govuk-!-margin-bottom-7",
         attributes: {
           'data-cy': 'application-submission-confirmation'
