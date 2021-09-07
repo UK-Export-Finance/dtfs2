@@ -206,6 +206,7 @@ const GET_DEAL = gql`
           supplierCorrespondenceAddressCountry,
           smeType
         }
+        isFinanceIncreasing
       }
     }
   }
