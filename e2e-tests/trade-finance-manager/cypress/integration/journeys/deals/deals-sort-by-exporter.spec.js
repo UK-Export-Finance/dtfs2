@@ -9,7 +9,6 @@ context('User can view and sort deals by exporter', () => {
   let ALL_FACILITIES = [];
   let dealSupplier1;
   let dealSupplier2;
-  let dealSupplier3;
 
   const DEAL_A_SUPPLIER = createMockDeal({
     details: {
@@ -29,20 +28,9 @@ context('User can view and sort deals by exporter', () => {
     },
   });
 
-  const DEAL_C_SUPPLIER = createMockDeal({
-    details: {
-      testId: 'DEAL_C_SUPPLIER',
-    },
-    submissionDetails: {
-      'supplier-name': 'C_SUPPLIER',
-    },
-  });
-
-
   const MOCK_DEALS = [
     DEAL_A_SUPPLIER,
     DEAL_B_SUPPLIER,
-    DEAL_C_SUPPLIER,
   ];
 
   before(() => {
@@ -72,9 +60,6 @@ context('User can view and sort deals by exporter', () => {
 
           dealSupplier2 = ALL_SUBMITTED_DEALS.find((deal) =>
             deal.dealSnapshot.details.testId === DEAL_B_SUPPLIER.details.testId);
-
-          dealSupplier3 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_C_SUPPLIER.details.testId);
         });
       });
   });
@@ -109,9 +94,6 @@ context('User can view and sort deals by exporter', () => {
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
     row2.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier2._id}`);
 
-    // check third row
-    const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier3._id}`);
 
     pages.dealsPage.dealsTable.headings.exporter().invoke('attr', 'aria-sort').should('eq', 'ascending');
     pages.dealsPage.dealsTable.headings.exporterSortButton().invoke('attr', 'name').should('eq', 'descending');
@@ -126,16 +108,13 @@ context('User can view and sort deals by exporter', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
 
+    // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier3._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier2._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier2._id}`);
-
-    // check third row
-    const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier1._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier1._id}`);
 
     pages.dealsPage.dealsTable.headings.exporter().invoke('attr', 'aria-sort').should('eq', 'descending');
     pages.dealsPage.dealsTable.headings.exporterSortButton().invoke('attr', 'name').should('eq', 'ascending');

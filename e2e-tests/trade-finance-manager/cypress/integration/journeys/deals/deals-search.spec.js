@@ -240,14 +240,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by loan productCode', () => {
     const searchString = 'EWCS';
 
-    const dealsWithLoans = MOCK_DEALS.filter((deal) => {
-      if (deal.mockFacilities.find((f) => f.facilityType === 'loan')) {
-        return deal;
-      }
-      return null;
-    });
-
-    const expectedResultsLength = dealsWithLoans.length;
+    const expectedResultsLength = 1;
 
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();
@@ -255,7 +248,7 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
     pages.dealsPage.heading().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
+      expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
     });
   });
 

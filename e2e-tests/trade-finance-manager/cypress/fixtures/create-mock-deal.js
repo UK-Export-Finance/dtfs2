@@ -3,7 +3,9 @@ import MOCK_DEAL_AIN from './deal-AIN';
 
 const createMockDeal = (overrides) => {
   let submissionDate = moment().utc().valueOf().toString();
-  let facilities = MOCK_DEAL_AIN.mockFacilities;
+  let facilities = [
+    { ...MOCK_DEAL_AIN.mockFacilities[0] },
+  ];
 
   if (overrides.mockFacilities) {
     facilities = overrides.mockFacilities;

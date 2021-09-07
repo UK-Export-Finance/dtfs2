@@ -10,11 +10,9 @@ context('User can view and sort deals', () => {
   let ALL_FACILITIES = [];
   let deal1;
   let deal2;
-  let deal3;
 
   const twoDaysAgo = moment().subtract(2, 'day');
   const yesterday = moment().subtract(1, 'day');
-  const today = moment();
 
   const DEAL_WITH_UKDEALID_1 = createMockDeal({
     details: {
@@ -30,15 +28,7 @@ context('User can view and sort deals', () => {
     },
   });
 
-  const DEAL_WITH_UKDEALID_3 = createMockDeal({
-    details: {
-      ukefDealId: 3,
-      submissionDate: moment(today).utc().valueOf().toString(),
-    },
-  });
-
   const MOCK_DEALS = [
-    DEAL_WITH_UKDEALID_3,
     DEAL_WITH_UKDEALID_2,
     DEAL_WITH_UKDEALID_1,
   ];
@@ -70,10 +60,6 @@ context('User can view and sort deals', () => {
 
           deal2 = ALL_SUBMITTED_DEALS.find((deal) =>
             deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_2.details.ukefDealId);
-
-          deal3 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_3.details.ukefDealId);
-
         });
       });
   });
@@ -95,14 +81,10 @@ context('User can view and sort deals', () => {
 
     // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${deal3._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${deal2._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${deal2._id}`);
-
-    // check third row
-    const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
   });
 });
