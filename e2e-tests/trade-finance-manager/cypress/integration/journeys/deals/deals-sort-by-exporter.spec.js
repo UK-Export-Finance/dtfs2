@@ -7,24 +7,21 @@ import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 context('User can view and sort deals by exporter', () => {
   let ALL_SUBMITTED_DEALS = [];
   let ALL_FACILITIES = [];
-  let dealSupplier1;
-  let dealSupplier2;
+  let dealAscending1;
+  let dealAscending2;
+  let dealDescending1;
+  let dealDescending2;
 
+  // Exporter (called supplier-name in a BSS deal), is generated automatically with mock data and deal ID.
   const DEAL_A_SUPPLIER = createMockDeal({
     details: {
       testId: 'DEAL_A_SUPPLIER',
-    },
-    submissionDetails: {
-      'supplier-name': 'A_SUPPLIER',
     },
   });
 
   const DEAL_B_SUPPLIER = createMockDeal({
     details: {
       testId: 'DEAL_B_SUPPLIER',
-    },
-    submissionDetails: {
-      'supplier-name': 'B_SUPPLIER',
     },
   });
 
@@ -53,13 +50,19 @@ context('User can view and sort deals by exporter', () => {
         });
 
         cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
-          ALL_SUBMITTED_DEALS = submittedDeals;
+          // sort by ascending order
+          ALL_SUBMITTED_DEALS = submittedDeals.sort((a, b) => {
+            const dealASupplier = a.dealSnapshot.submissionDetails['supplier-name'];
+            const dealBSupplier = b.dealSnapshot.submissionDetails['supplier-name'];
 
-          dealSupplier1 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_A_SUPPLIER.details.testId);
+            return dealASupplier.localeCompare(dealBSupplier);
+          });
 
-          dealSupplier2 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_B_SUPPLIER.details.testId);
+          dealAscending1 = ALL_SUBMITTED_DEALS[0];
+          dealAscending2 = ALL_SUBMITTED_DEALS[1];
+
+          dealDescending1 = dealAscending2;
+          dealDescending2 = dealAscending1;
         });
       });
   });
@@ -88,11 +91,11 @@ context('User can view and sort deals by exporter', () => {
 
     // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier1._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealAscending1._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier2._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealAscending2._id}`);
 
 
     pages.dealsPage.dealsTable.headings.exporter().invoke('attr', 'aria-sort').should('eq', 'ascending');
@@ -110,11 +113,11 @@ context('User can view and sort deals by exporter', () => {
 
     // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier2._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealDescending1._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealSupplier1._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealDescending2._id}`);
 
     pages.dealsPage.dealsTable.headings.exporter().invoke('attr', 'aria-sort').should('eq', 'descending');
     pages.dealsPage.dealsTable.headings.exporterSortButton().invoke('attr', 'name').should('eq', 'ascending');
