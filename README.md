@@ -71,6 +71,11 @@ Simply escape the running terminal and run:
 docker-compose down
 ```
 
+## Login credentials
+
+* For Portal (BSS & GEF) mock users: utils/mock-data-loader/portal/users.js
+* For Trade Finance Manager (TFM) mock users: utils/mock-data-loader/tfm/users.js
+
 ## Environment Variables
 
 As we interface with a number of 3rd party APIs, there are a range of environment variables required to manage this and to work with the repo locally.
