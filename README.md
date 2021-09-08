@@ -248,3 +248,9 @@ The steps taken are:
 4. A scheduled job on tfm-api polls the status endpoint for each running job until a result is received
 5. If the result is a success then the deal & facilities are updated with the generated IDs
 6. If the result is an error, then the entry in the durable functions log collection is updated with the error
+
+## Workflow/typeB integration
+
+At the start of the project, the requirement was to submit deals to another system called Workflow. "TypeB" is a Workflow service. Workflow is being retired and we submit to TFM now - so there is no need to integrate with Workflow/TypeB and this has been disabled.
+
+In the codebase there is commented out code for the TypeB functionality just incase we need to use it again. For more information see jira ticket DTFS2-4545 which contains links to the relevant PRs.
