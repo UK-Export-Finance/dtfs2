@@ -29,12 +29,23 @@ const updateFacilityCurrency = async (req, res) => {
   const { params, body, query } = req;
   const { applicationId, facilityId } = params;
   const { currency, facilityType } = body;
-  const { returnToApplication, status } = query;
+  const { returnToApplication, status, saveAndReturn } = query;
   const facilityTypeConst = FACILITY_TYPE[facilityType];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityCurrencyErrors = [];
 
   if (isTrueSet(returnToApplication)) {
+    return res.redirect(`/gef/application-details/${applicationId}`);
+  }
+
+  if (isTrueSet(saveAndReturn)) {
+    if (!currency) {
+      return res.redirect(`/gef/application-details/${applicationId}`);
+    }
+
+    await api.updateFacility(facilityId, {
+      currency,
+    });
     return res.redirect(`/gef/application-details/${applicationId}`);
   }
 
