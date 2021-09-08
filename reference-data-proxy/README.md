@@ -22,4 +22,3 @@ npm run api-test
 ```
  
 Test coverage will be generated.
-
