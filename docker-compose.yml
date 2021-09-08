@@ -10,6 +10,11 @@ services:
     volumes:
       - ./dtfs-submissions-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     ports:
       - "27017-27019:27017-27019"
       
@@ -24,6 +29,11 @@ services:
       - "5005:5005"
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - PORT=5005
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -43,6 +53,11 @@ services:
       - ./trade-finance-manager-ui/styles:/app/styles:ro
       - ./trade-finance-manager-ui/templates:/app/templates:ro
       - ./trade-finance-manager-ui/server:/app/server:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
@@ -69,10 +84,16 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
+      - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 600M
     entrypoint: npx nodemon src/index.js
   
   portal:
@@ -88,6 +109,11 @@ services:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
       - ./portal/templates:/app/templates:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 700M
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -108,6 +134,11 @@ services:
       - "5001:5001"
     volumes:
       - ./portal-api/src:/app/src:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 750M
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
@@ -139,10 +170,17 @@ services:
     build: ./reference-data-proxy
     image: dtfs/reference-data-proxy
     restart: always
+    depends_on:
+      - dtfs-submissions-data
     ports:
       - "5002:5002"
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -168,7 +206,10 @@ services:
       - MULESOFT_API_UKEF_ESTORE_EA_KEY
       - MULESOFT_API_UKEF_ESTORE_EA_SECRET
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - GOV_NOTIFY_API_KEY
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
 
   gef-ui:
@@ -185,6 +226,11 @@ services:
       - ./gef-ui/styles:/app/styles:ro
       - ./gef-ui/templates:/app/templates:ro
       - ./gef-ui/server:/app/server:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -211,10 +257,33 @@ services:
   #     - MULESOFT_API_UKEF_MDM_EA_KEY
   #     - MULESOFT_API_UKEF_MDM_EA_SECRET
 
+  number-generator-function:
+    build: ./azure-functions/number-generator-function
+    image: dtfs/azure-function-number-generator
+    restart: always
+    ports:
+      - "7072:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - WEBSITE_HOSTNAME=localhost:7072
+      - MULESOFT_API_UKEF_TF_EA_URL
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+
   redis:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
 
   reverse-proxy:
     build: ./reverse-proxy
@@ -227,6 +296,11 @@ services:
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
+    deploy:
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 150M
 
   test-hook-api:
     build: ./test-hook-api
@@ -238,6 +312,11 @@ services:
       - "5069:5069"
     volumes:
       - ./test-hook-api/src:/app/src:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - PORT=5069
       - CORS_ORIGIN=http://localhost:5000

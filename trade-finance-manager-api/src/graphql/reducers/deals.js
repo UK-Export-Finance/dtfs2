@@ -27,6 +27,7 @@ const mapDeal = (deal) => {
     dealSnapshot: {
       ...deal.dealSnapshot,
       submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
+      isFinanceIncreasing: false,
     },
     tfm: mapDealTfm(dealWithMappedFacilities),
   };
@@ -41,6 +42,7 @@ const mapGefDeal = (deal) => {
       _id: deal._id, // eslint-disable-line no-underscore-dangle
       details: mapGefDealDetails(deal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(deal.dealSnapshot),
+      isFinanceIncreasing: deal.dealSnapshot.exporter.isFinanceIncreasing,
     },
     tfm: mapDealTfm(deal),
   };

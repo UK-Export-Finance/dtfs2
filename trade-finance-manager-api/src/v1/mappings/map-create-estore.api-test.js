@@ -51,7 +51,7 @@ describe('mapCreateEstore', () => {
 
       expect(result).toEqual(expected);
     });
-  }); 
+  });
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
     it('should return mapped object with some default values', () => {
