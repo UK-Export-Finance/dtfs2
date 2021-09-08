@@ -111,6 +111,12 @@ npm run api-test
 
 Test coverage will be generated.
 
+### **Run a single API test**
+
+```shell
+npm run api-test-file "**/*/deals-party-db.api-test.js"
+```
+
 ## Moving forwards
 
 Currently, BSS (portal-api) uses the Central API for deal and facility CRUD operations. GEF (gef endpoints in portal-api) does not do this.

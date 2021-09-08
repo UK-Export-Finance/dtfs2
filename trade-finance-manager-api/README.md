@@ -1,6 +1,36 @@
 # Trade Finance Manager API
 
-Also known as TFM.
+Also known as TFM, TFM API is primarily responsible for handling deal submission to UKEF.
+
+Once TFM has successfully received a deal, graphQL is used to query and mutate TFM data.
+
+## Prerequisite
+
+Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
+
+## Running locally
+
+```shell
+docker-compose up
+```
+
+Alternatively, every service can be started from the root directory (`docker-compose up`).
+
+## Testing
+
+In a second terminal, run:
+
+```shell
+npm run api-test
+```
+
+Test coverage will be generated.
+
+### **Run a single API test**
+
+```shell
+npm run api-test-file "**/*/deals-party-db.api-test.js"
+```
 
 ## What this API does
 
@@ -9,7 +39,7 @@ When a deal is submitted to UKEF from the Portal, the deal is sent to TFM API. T
 - Accept submitted deals
 - Trigger a status update for the Portal (from 'Submitted' to e.g 'Acknowledged')
 - Call external UKEF APIs to populate more data (e.g currency conversions)
-- Allow TFM users to complete necessary updates to the deal.
+- Thereafter allowing TFM users to complete necessary updates to the deal (triggered by TFM UI)
 
 :warning: In TFM, a deal is known as a 'Case'. A Case will have one deal with facilities and tasks for the users's to complete in order to process the case.
 
