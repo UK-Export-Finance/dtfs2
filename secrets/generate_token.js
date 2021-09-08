@@ -7,7 +7,7 @@ const fs = require('fs');
 const buf = crypto.randomBytes(256 / 8);
 
 // Convert to base-64
-token = buf.toString('hex')
+const token = buf.toString('hex');
 
 // Write the token file
 fs.writeFileSync('token.txt', token);
