@@ -13,7 +13,6 @@ When a deal is submitted to UKEF from the Portal, the deal is sent to TFM API. T
 
 :warning: In TFM, a deal is known as a 'Case'. A Case will have one deal with facilities and tasks for the users's to complete in order to process the case.
 
-
 ## What happens when a deal is sent to TFM
 
 In essence:
@@ -28,7 +27,6 @@ In essence:
 8) Send emails for acknowledgment and 'tasks are ready to start'
 
 All of this starts from the deal submission controller: `/src/v1/controllers/deal.submit.controller.js`
-
 
 ## Snapshots and data structure
 
