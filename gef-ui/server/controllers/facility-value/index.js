@@ -21,6 +21,11 @@ const facilityValue = async (req, res) => {
       console.log('Facility not found, or not authorised');
       return res.redirect('/');
     }
+
+    if (!facility.currency) {
+      return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-currency`);
+    }
+
     return res.render('partials/facility-value.njk', facility);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
