@@ -155,6 +155,14 @@ npm run test
 npm run test /path/to/file.test.js
 ```
 
+## Linting
+
+In the root directory - or in any service, run:
+
+```shell
+npm run lint
+```
+
 ## Git workflow
 
 1) Create a branch and PR clearly describing the change, along with Jira ticket number
@@ -238,6 +246,16 @@ The steps taken are:
 4. A scheduled job on tfm-api polls the status endpoint for each running job until a result is received
 5. If the result is a success then the deal & facilities are updated with the generated IDs
 6. If the result is an error, then the entry in the durable functions log collection is updated with the error
+
+## Deal submission to TFM
+
+When a deal is submitted to TFM, there are currently many external API calls made in the TFM submission controller.
+
+Not only does this takes a long time (hindering the user/dev experience), it eats up resources and can be flaky if for example one of the API calls fail. Retries are not setup.
+
+The solution is to move all of these API calls into background processes, with retries.
+
+This will improve the user experience, make it fail safe, and improve the development lifecycle.
 
 ## Workflow/typeB integration
 

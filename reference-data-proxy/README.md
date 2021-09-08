@@ -43,9 +43,3 @@ Test coverage will be generated.
 ```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
-
-## Linting
-
-```shell
-npm run lint
-```
