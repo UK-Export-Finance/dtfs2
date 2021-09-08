@@ -78,6 +78,20 @@ describe('GET Facility Value', () => {
     }));
   });
 
+  it('redirects to currency page when no currency is set for this facility', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    const mockFacilityValueResponse = new MockFacilityValueResponse();
+    const mockApplicationResponse = new MockApplicationResponse();
+
+    api.getFacility = () => Promise.resolve(mockFacilityValueResponse);
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+
+    await facilityValue(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
+  });
+
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
