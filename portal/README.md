@@ -47,12 +47,6 @@ npm run component-test ./component-tests/path/to/file.component-test.js
 
 See e2e-tests README.md.
 
-## Linting
-
-```shell
-npm run lint
-```
-
 ## Basic happy flow behind the scenes
 
 1. User logs into Portal UI
