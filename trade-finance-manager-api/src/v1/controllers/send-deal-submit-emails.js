@@ -182,6 +182,8 @@ module.exports = {
   sendFirstTaskEmail,
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
+  generateFacilitiesListString,
+  generateFacilityLists,
   generateAinMinEmailVariables,
   sendAinMinIssuedFacilitiesAcknowledgement,
 };

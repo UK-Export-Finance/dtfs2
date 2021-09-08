@@ -8,39 +8,29 @@ import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 context('User can view and sort deals', () => {
   let ALL_SUBMITTED_DEALS = [];
   let ALL_FACILITIES = [];
-  let deal1;
-  let deal2;
-  let deal3;
+  let dealMostRecent;
+  let dealNotRecent;
 
   const twoDaysAgo = moment().subtract(2, 'day');
   const yesterday = moment().subtract(1, 'day');
-  const today = moment();
 
-  const DEAL_WITH_UKDEALID_1 = createMockDeal({
+  const DEAL_NOT_RECENT = createMockDeal({
     details: {
       ukefDealId: 1,
       submissionDate: moment(twoDaysAgo).utc().valueOf().toString(),
     },
   });
 
-  const DEAL_WITH_UKDEALID_2 = createMockDeal({
+  const DEAL_MOST_RECENT = createMockDeal({
     details: {
       ukefDealId: 2,
       submissionDate: moment(yesterday).utc().valueOf().toString(),
     },
   });
 
-  const DEAL_WITH_UKDEALID_3 = createMockDeal({
-    details: {
-      ukefDealId: 3,
-      submissionDate: moment(today).utc().valueOf().toString(),
-    },
-  });
-
   const MOCK_DEALS = [
-    DEAL_WITH_UKDEALID_3,
-    DEAL_WITH_UKDEALID_2,
-    DEAL_WITH_UKDEALID_1,
+    DEAL_NOT_RECENT,
+    DEAL_MOST_RECENT,
   ];
 
   before(() => {
@@ -65,15 +55,11 @@ context('User can view and sort deals', () => {
         cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
-          deal1 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_1.details.ukefDealId);
+          dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) =>
+            deal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate);
 
-          deal2 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_2.details.ukefDealId);
-
-          deal3 = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.ukefDealId === DEAL_WITH_UKDEALID_3.details.ukefDealId);
-
+          dealNotRecent = ALL_SUBMITTED_DEALS.find((deal) =>
+            deal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate);
         });
       });
   });
@@ -95,14 +81,10 @@ context('User can view and sort deals', () => {
 
     // check first row
     const row1 = pages.dealsPage.dealsTableRows().eq(0);
-    row1.invoke('attr', 'data-cy').should('eq', `deal-${deal3._id}`);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealMostRecent._id}`);
 
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
-    row2.invoke('attr', 'data-cy').should('eq', `deal-${deal2._id}`);
-
-    // check third row
-    const row3 = pages.dealsPage.dealsTableRows().eq(2);
-    row3.invoke('attr', 'data-cy').should('eq', `deal-${deal1._id}`);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealNotRecent._id}`);
   });
 });

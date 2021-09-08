@@ -2,16 +2,21 @@ const axios = require('axios');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
-const create = async (entityType) => {
+const create = async ({
+  dealType, entityType, entityId, dealId, user,
+}) => {
   const { data } = await axios({
-    method: 'get',
-    url: `${referenceProxyUrl}/number-generator/${entityType}`,
+    method: 'POST',
+    url: `${referenceProxyUrl}/number-generator/`,
     headers: {
       'Content-Type': 'application/json',
     },
-  }).catch((err) => err);
+    data: {
+      dealType, entityType, entityId, dealId, user,
+    },
+  }).catch((err) => err.response);
 
-  return data.id;
+  return data;
 };
 
 module.exports = {

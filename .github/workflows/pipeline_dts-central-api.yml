@@ -86,10 +86,10 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d
+        docker-compose up -d dtfs-central-api
     - name: Run API tests
       run: |
-        docker-compose exec -T dtfs-central-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
+        docker-compose exec -T dtfs-central-api npm run api-test
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}

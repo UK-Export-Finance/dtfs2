@@ -95,6 +95,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
         dealFiles {
           security
         }
+        isFinanceIncreasing
       }
     }
   }

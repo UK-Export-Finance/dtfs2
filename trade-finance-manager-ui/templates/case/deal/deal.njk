@@ -1,4 +1,5 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import './_macros/facilities-table.njk' as facilitiesTable %}
 
@@ -63,6 +64,24 @@
   <div class="govuk-grid-row" data-cy="deal-facilities">
     <div class="govuk-grid-column-full separator-line deal">
       <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
+
+        {% if deal.dealType == 'GEF' %}
+          {% if deal.isFinanceIncreasing %}
+              {{ govukWarningText({
+                  text: "The bank's financing to this exporter is increasing with this deal",
+                  iconFallbackText: "Warning",
+                  classes: 'ukef-warning',
+                  attributes: { 'data-cy': 'finance-increasing' }
+              }) }}
+          {% else %}
+              {{ govukWarningText({
+                  text: "The bank's financing to this exporter is not increasing with this deal",
+                  iconFallbackText: "Warning",
+                  classes: 'ukef-warning',
+                  attributes: { 'data-cy': 'finance-increasing' }
+              }) }}
+          {% endif %}
+        {% endif %}
 
       {% set componentData = {
         facilities: deal.facilities,

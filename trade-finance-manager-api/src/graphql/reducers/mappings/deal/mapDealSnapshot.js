@@ -20,6 +20,7 @@ const mapDealSnapshot = (deal) => {
     eligibilityCriteria: eligibility.criteria,
     facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
     totals: mapTotals(facilities),
+    isFinanceIncreasing: false,
   };
 };
 
