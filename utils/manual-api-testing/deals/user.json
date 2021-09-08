@@ -1,9 +1,0 @@
-{
-  "username": "MAKER",
-  "password": "MAKER",
-  "roles": ["maker"],
-  "bank": {
-    "id": "1",
-    "name": "aBank"
-  }
-}
