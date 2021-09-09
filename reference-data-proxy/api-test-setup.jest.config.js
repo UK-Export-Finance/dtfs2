@@ -14,7 +14,3 @@ mockFiles.forEach((mockFile) => {
 beforeAll(() => {
   axios.defaults.adapter = corsAdapter;
 });
-
-afterAll(async (done) => {
-  done();
-});
