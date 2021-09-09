@@ -36,11 +36,20 @@ const validateProvidedFacility = async (req, res) => {
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const details = Array.isArray(body.details) ? body.details : [body.details];
 
-  if (body.details && body.details.includes('OTHER') && !body.detailsOther) {
-    providedFacilityErrors.push({
-      errRef: 'detailsOther',
-      errMsg: 'Enter details for "Other"',
-    });
+  if (!isTrueSet(saveAndReturn)) {
+    if (!body.details) {
+      providedFacilityErrors.push({
+        errRef: '',
+        errMsg: 'You must select at least one option',
+      });
+    }
+
+    if (body.details && body.details.includes('OTHER') && !body.detailsOther) {
+      providedFacilityErrors.push({
+        errRef: 'detailsOther',
+        errMsg: 'Enter details for "Other"',
+      });
+    }
   }
 
   if (providedFacilityErrors.length > 0) {

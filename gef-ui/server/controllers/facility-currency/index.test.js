@@ -63,15 +63,28 @@ describe('GET Facility Currency', () => {
 });
 
 describe('Update Facility Currency', () => {
-  it('redirects user to application page if returnToApplication is set to true', async () => {
+  it('saves and redirects user to application page if saveAndReturn is set to true and currency has been set', async () => {
     const mockResponse = new MockResponse();
     const mockRequest = new MockRequest();
-    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
-    mockRequest.query.returnToApplication = 'true';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.currency = 'GBP';
+    api.updateFacility = jest.fn();
 
-    api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
 
+    expect(api.updateFacility).toHaveBeenCalled();
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+  });
+
+  it('redirects user to application page if saveAndReturn is set to true and currency has not been set', async () => {
+    const mockResponse = new MockResponse();
+    const mockRequest = new MockRequest();
+    mockRequest.query.saveAndReturn = 'true';
+    api.updateFacility = jest.fn();
+
+    await updateFacilityCurrency(mockRequest, mockResponse);
+
+    expect(api.updateFacility).not.toHaveBeenCalled();
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
   });
 
