@@ -1,9 +1,9 @@
-import {
+const {
   add, format, isAfter, isBefore, set,
-} from 'date-fns';
-import * as api from '../../services/api';
-import { FACILITY_TYPE } from '../../../constants';
-import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
+} = require('date-fns');
+const api = require('../../services/api');
+const { FACILITY_TYPE } = require('../../../constants');
+const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const aboutFacility = async (req, res) => {
   const { params, query } = req;
@@ -229,7 +229,7 @@ const validateAboutFacility = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   aboutFacility,
   validateAboutFacility,
 };

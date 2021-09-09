@@ -1,12 +1,13 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   getApplicationSubmission,
   postApplicationSubmission,
-} from '../controllers/application-submission';
-import validateToken from './middleware/validate-token';
+} = require('../controllers/application-submission');
+const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
 router.get('/application-details/:applicationId/submit', validateToken, getApplicationSubmission);
 router.post('/application-details/:applicationId/submit', validateToken, postApplicationSubmission);
-export default router;
+
+module.exports = router;

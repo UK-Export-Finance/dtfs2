@@ -1,5 +1,5 @@
-import Axios from './axios';
-import { apiErrorHandler } from '../utils/helpers';
+const Axios = require('./axios');
+const { apiErrorHandler } = require('../utils/helpers');
 
 const validateToken = async (token) => {
   try {
@@ -185,7 +185,7 @@ const getUserDetails = async (id, token) => {
   }
 };
 
-export {
+module.exports = {
   validateToken,
   getMandatoryCriteria,
   createApplication,

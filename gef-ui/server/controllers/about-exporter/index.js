@@ -1,5 +1,5 @@
-import * as api from '../../services/api';
-import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
+const api = require('../../services/api');
+const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
 
 const mappedIndustries = (industries, selectedIndustry) => {
   if (!industries) { return null; }
@@ -116,7 +116,7 @@ const validateAboutExporter = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   aboutExporter,
   validateAboutExporter,
 };

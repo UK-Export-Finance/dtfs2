@@ -9,11 +9,10 @@ const isIssued = require('../helpers/is-issued');
 const addToACBSLog = async ({
   deal = {}, facility = {}, bank = {}, acbsTaskLinks,
 }) => {
-  const collection = await db.getCollection('durable-functions-log');
+  const collection = await db.getCollection('acbs-log');
 
   const acbsLog = await collection.insertOne({
     // eslint-disable-next-line no-underscore-dangle
-    type: 'ACBS',
     dealId: deal._id,
     deal,
     facility,
@@ -28,7 +27,7 @@ const addToACBSLog = async ({
 };
 
 const clearACBSLog = async () => {
-  const collection = await db.getCollection('durable-functions-log');
+  const collection = await db.getCollection('acbs-log');
   const removed = await collection.remove({});
 
   return removed;
@@ -66,11 +65,8 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
 const checkAzureAcbsFunction = async () => {
   // Fetch outstanding functions
 
-  const collection = await db.getCollection('durable-functions-log');
-  const runningTasks = await collection.find({
-    type: 'ACBS',
-    status: 'Running',
-  }).toArray();
+  const collection = await db.getCollection('acbs-log');
+  const runningTasks = await collection.find({ status: 'Running' }).toArray();
 
   const tasks = runningTasks.map(({ acbsTaskLinks = {} }) => api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
   const taskList = await Promise.all(tasks);

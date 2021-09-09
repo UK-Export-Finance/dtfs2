@@ -1,5 +1,7 @@
 import { providedFacility, validateProvidedFacility } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -24,126 +26,118 @@ const MockProvidedFacilityResponse = () => {
   return res;
 };
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+describe('controllers/provided-facility', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockProvidedFacilityResponse;
 
-describe('GET Provided Facility', () => {
-  it('renders the `Provided Facility` template', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockProvidedFacilityResponse = new MockProvidedFacilityResponse();
+  beforeEach(() => {
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
+    mockProvidedFacilityResponse = MockProvidedFacilityResponse();
 
-    mockRequest.query.status = 'change';
-    mockProvidedFacilityResponse.details.details = ['TERMS', 'RESOLVING'];
-    mockProvidedFacilityResponse.details.type = 'CASH';
-    api.getFacility = () => Promise.resolve(mockProvidedFacilityResponse);
-    await providedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-      details: ['TERMS', 'RESOLVING'],
-      facilityTypeString: 'cash',
-      applicationId: '123',
-      facilityId: 'xyz',
-      status: 'change',
-    }));
+    // api.getApplication.mockResolvedValue();
+    api.getFacility.mockResolvedValue(mockProvidedFacilityResponse);
+    api.updateFacility.mockResolvedValue(mockProvidedFacilityResponse);
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    api.getFacility = () => Promise.reject();
-    await providedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
-});
-
-describe('Validate Provided Facility', () => {
-  it('shows error message if nothing is set', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    await validateProvidedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#', text: expect.any(String) }]),
-      }),
-    }));
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
-  it('redirects user to application page if application page if save and return is set to true', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockProvidedFacilityResponse = new MockProvidedFacilityResponse();
-    mockRequest.query.saveAndReturn = 'true';
+  describe('GET Provided Facility', () => {
+    it('renders the `Provided Facility` template', async () => {
+      mockRequest.query.status = 'change';
+      mockProvidedFacilityResponse.details.details = ['TERMS', 'RESOLVING'];
+      mockProvidedFacilityResponse.details.type = 'CASH';
 
-    api.updateFacility = () => Promise.resolve(mockProvidedFacilityResponse);
-    await validateProvidedFacility(mockRequest, mockResponse);
+      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
-  });
+      await providedFacility(mockRequest, mockResponse);
 
-  it('redirects user to application page if application page if query status is equal to `change`', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockProvidedFacilityResponse = new MockProvidedFacilityResponse();
-    mockRequest.query.status = 'change';
-    mockRequest.body.details = ['TERMS'];
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+        details: ['TERMS', 'RESOLVING'],
+        facilityTypeString: 'cash',
+        applicationId: '123',
+        facilityId: 'xyz',
+        status: 'change',
+      }));
+    });
 
-    api.updateFacility = () => Promise.resolve(mockProvidedFacilityResponse);
-    await validateProvidedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
-  });
-
-  it('shows error message if Other textarea is left empty', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    mockRequest.body.details = 'OTHER';
-
-    await validateProvidedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
-      }),
-    }));
-
-    mockRequest.body.details = ['OTHER', 'TERMS'];
-
-    await validateProvidedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
-      }),
-    }));
-  });
-
-  it('calls the updateFacility api with the correct data', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
-
-    mockRequest.body.details = ['TERMS', 'RESOLVING'];
-    mockRequest.body.type = 'CASH';
-
-    await validateProvidedFacility(mockRequest, mockResponse);
-
-    expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      details: ['TERMS', 'RESOLVING'],
-      detailsOther: undefined,
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      api.getFacility.mockRejectedValueOnce();
+      await providedFacility(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    mockRequest.body.details = ['TERMS'];
+  describe('Validate Provided Facility', () => {
+    it('shows error message if nothing is set', async () => {
+      await validateProvidedFacility(mockRequest, mockResponse);
 
-    api.updateFacility = () => Promise.reject();
-    await validateProvidedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('redirects user to application page if application page if save and return is set to true', async () => {
+      mockRequest.query.saveAndReturn = 'true';
+
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('redirects user to application page if application page if query status is equal to `change`', async () => {
+      mockRequest.query.status = 'change';
+      mockRequest.body.details = ['TERMS'];
+
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('shows error message if Other textarea is left empty', async () => {
+      mockRequest.body.details = 'OTHER';
+
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+        }),
+      }));
+
+      mockRequest.body.details = ['OTHER', 'TERMS'];
+
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('calls the updateFacility api with the correct data', async () => {
+      mockRequest.body.details = ['TERMS', 'RESOLVING'];
+      mockRequest.body.type = 'CASH';
+
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
+        details: ['TERMS', 'RESOLVING'],
+        detailsOther: undefined,
+      });
+    });
+
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      mockRequest.body.details = ['TERMS'];
+      api.updateFacility.mockRejectedValueOnce();
+      await validateProvidedFacility(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
   });
 });

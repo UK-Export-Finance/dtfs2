@@ -1,8 +1,8 @@
-import moment from 'moment';
-import { isTrueSet } from './helpers';
-import {
+const moment = require('moment');
+const { isTrueSet } = require('./helpers');
+const {
   SME_TYPE, BOOLEAN, STAGE, FACILITY_TYPE,
-} from '../../constants';
+} = require('../../constants');
 
 const exporterItems = (exporterUrl, options = {}) => [
   {
@@ -156,7 +156,7 @@ const facilityItems = (facilityUrl, {
   ];
 };
 
-export {
+module.exports = {
   exporterItems,
   coverItems,
   facilityItems,

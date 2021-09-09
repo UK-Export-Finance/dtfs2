@@ -1,5 +1,7 @@
 import { facilityGuarantee, updateFacilityGuarantee } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -36,115 +38,113 @@ const MockApplicationResponse = () => {
   return res;
 };
 
-const MockFacilityGuaranteeResponse = () => {
+const MockFacilityResponse = () => {
   const res = {};
   res.details = {};
   return res;
 };
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+describe('controllers/facility-guarantee', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockFacilityResponse;
 
-describe('GET Facility Guarantee', () => {
-  it('renders the `Facility Guarantee` template', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockFacilityGuaranteeResponse = new MockFacilityGuaranteeResponse();
+  beforeEach(() => {
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
+    mockFacilityResponse = MockFacilityResponse();
 
-    mockRequest.query.status = 'change';
-    mockFacilityGuaranteeResponse.details.frequency = 'Monthly';
-    mockFacilityGuaranteeResponse.details.dayCountBasis = '365';
-    mockFacilityGuaranteeResponse.details.feeType = 'in advance';
-    api.getFacility = () => Promise.resolve(mockFacilityGuaranteeResponse);
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-
-    await facilityGuarantee(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
-      inArrearsFrequency: '',
-      inAdvanceFrequency: 'Monthly',
-      dayCountBasis: '365',
-      feeType: 'in advance',
-      applicationId: '123',
-      facilityId: 'xyz',
-      // status: 'change',
-    }));
+    api.getApplication.mockResolvedValue(MockApplicationResponse());
+    api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.updateFacility.mockResolvedValue(mockFacilityResponse);
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    api.getFacility = () => Promise.reject();
-    await facilityGuarantee(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
-});
-
-describe('Update Facility Guarantee', () => {
-  it('shows error message if any fields are not selected', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityGuaranteeResponse = new MockFacilityGuaranteeResponse();
-
-    mockRequest.body.dayCountBasis = '365';
-
-    api.updateFacility = () => Promise.resolve(mockFacilityGuaranteeResponse);
-    await updateFacilityGuarantee(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#feeType', text: expect.any(String) }]),
-      }),
-    }));
-
-    jest.clearAllMocks();
-
-    mockRequest.body.feeType = 'in advance';
-    mockRequest.body.frequency = 'Monthly';
-    mockRequest.body.dayCountBasis = '';
-
-    api.updateFacility = () => Promise.resolve(mockFacilityGuaranteeResponse);
-    await updateFacilityGuarantee(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#dayCountBasis', text: expect.any(String) }]),
-      }),
-    }));
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
-  it('calls the update api with the correct data and redirects user back to application page', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
+  describe('GET Facility Guarantee', () => {
+    it('renders the `Facility Guarantee` template', async () => {
+      mockRequest.query.status = 'change';
+      mockFacilityResponse.details.frequency = 'Monthly';
+      mockFacilityResponse.details.dayCountBasis = '365';
+      mockFacilityResponse.details.feeType = 'in advance';
 
-    mockRequest.body.feeType = 'in advance';
-    mockRequest.body.dayCountBasis = '365';
-    mockRequest.body.inAdvanceFrequency = 'Monthly';
+      api.getFacility.mockResolvedValueOnce(mockFacilityResponse);
 
-    await updateFacilityGuarantee(mockRequest, mockResponse);
+      await facilityGuarantee(mockRequest, mockResponse);
 
-    expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      feeType: 'in advance',
-      dayCountBasis: '365',
-      frequency: 'Monthly',
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
+        inArrearsFrequency: '',
+        inAdvanceFrequency: 'Monthly',
+        dayCountBasis: '365',
+        feeType: 'in advance',
+        applicationId: '123',
+        facilityId: 'xyz',
+      }));
     });
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      api.getFacility.mockRejectedValueOnce();
+
+      await facilityGuarantee(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    mockRequest.body.feeType = 'in advance';
-    mockRequest.body.dayCountBasis = '365';
-    mockRequest.body.inAdvanceFrequency = 'Monthly';
+  describe('Update Facility Guarantee', () => {
+    it('shows error message if any fields are not selected', async () => {
+      mockRequest.body.dayCountBasis = '365';
 
-    api.updateFacility = () => Promise.reject();
-    await updateFacilityGuarantee(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      await updateFacilityGuarantee(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#feeType', text: expect.any(String) }]),
+        }),
+      }));
+
+      jest.resetAllMocks();
+
+      mockRequest.body.feeType = 'in advance';
+      mockRequest.body.frequency = 'Monthly';
+      mockRequest.body.dayCountBasis = '';
+
+      await updateFacilityGuarantee(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#dayCountBasis', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('calls the update api with the correct data and redirects user back to application page', async () => {
+      mockRequest.body.feeType = 'in advance';
+      mockRequest.body.dayCountBasis = '365';
+      mockRequest.body.inAdvanceFrequency = 'Monthly';
+
+      await updateFacilityGuarantee(mockRequest, mockResponse);
+
+      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
+        feeType: 'in advance',
+        dayCountBasis: '365',
+        frequency: 'Monthly',
+      });
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      mockRequest.body.feeType = 'in advance';
+      mockRequest.body.dayCountBasis = '365';
+      mockRequest.body.inAdvanceFrequency = 'Monthly';
+
+      api.updateFacility.mockRejectedValueOnce();
+
+      await updateFacilityGuarantee(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
   });
 });

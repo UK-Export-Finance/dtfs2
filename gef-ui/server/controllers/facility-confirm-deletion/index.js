@@ -1,6 +1,6 @@
-import _startCase from 'lodash/startCase';
-import * as api from '../../services/api';
-import { FACILITY_TYPE } from '../../../constants';
+const startCase = require('lodash/startCase');
+const { FACILITY_TYPE } = require('../../../constants');
+const api = require('../../services/api');
 
 const facilityConfirmDeletion = async (req, res) => {
   const { params } = req;
@@ -8,7 +8,7 @@ const facilityConfirmDeletion = async (req, res) => {
 
   try {
     const { details } = await api.getFacility(facilityId);
-    const heading = _startCase(FACILITY_TYPE[details.type].toLowerCase());
+    const heading = startCase(FACILITY_TYPE[details.type].toLowerCase());
 
     return res.render('partials/facility-confirm-deletion.njk', {
       heading,
@@ -32,7 +32,7 @@ const deleteFacility = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   facilityConfirmDeletion,
   deleteFacility,
 };

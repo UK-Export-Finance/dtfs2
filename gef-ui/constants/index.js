@@ -1,4 +1,4 @@
-export const PROGRESS = {
+const PROGRESS = {
   DRAFT: 'DRAFT',
   NOT_STARTED: 'NOT_STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -9,34 +9,34 @@ export const PROGRESS = {
   ABANDONED: 'ABANDONED',
 };
 
-export const DEAL_SUBMISSION_TYPE = {
+const DEAL_SUBMISSION_TYPE = {
   AIN: 'Automatic Inclusion Notice',
   MIA: 'Manual Inclusion Application',
 };
 
-export const FACILITY_TYPE = {
+const FACILITY_TYPE = {
   CASH: 'CASH',
   CONTINGENT: 'CONTINGENT',
 };
 
-export const SME_TYPE = {
+const SME_TYPE = {
   MICRO: 'Micro',
   SMALL: 'Small',
   MEDIUM: 'Medium',
   NOT_SME: 'Not an SME',
 };
 
-export const BOOLEAN = {
+const BOOLEAN = {
   YES: 'Yes',
   NO: 'No',
 };
 
-export const STAGE = {
+const STAGE = {
   ISSUED: 'Issued',
   UNISSUED: 'Unissued',
 };
 
-export const FACILITY_PROVIDED_DETAILS = {
+const FACILITY_PROVIDED_DETAILS = {
   TERM: 'Term basis',
   RESOLVING: 'Revolving or renewing basis',
   COMMITTED: 'Committed basis',
@@ -46,11 +46,23 @@ export const FACILITY_PROVIDED_DETAILS = {
   OTHER: 'Other',
 };
 
-export const AUTHORISATION_LEVEL = {
+const AUTHORISATION_LEVEL = {
   READ: 'READ',
   COMMENT: 'COMMENT',
   EDIT: 'EDIT',
   CHANGE_STATUS: 'CHANGE_STATUS',
 };
 
-export const DEFAULT_COUNTRY = 'United Kingdom';
+const DEFAULT_COUNTRY = 'United Kingdom';
+
+module.exports = {
+  PROGRESS,
+  DEAL_SUBMISSION_TYPE,
+  FACILITY_TYPE,
+  SME_TYPE,
+  BOOLEAN,
+  STAGE,
+  FACILITY_PROVIDED_DETAILS,
+  AUTHORISATION_LEVEL,
+  DEFAULT_COUNTRY,
+};

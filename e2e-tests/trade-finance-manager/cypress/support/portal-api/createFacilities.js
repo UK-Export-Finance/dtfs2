@@ -8,23 +8,21 @@ module.exports = (dealId, facilities, user) => {
     const facilitiesWithUkefIds = [];
 
     facilities.forEach((facilityToInsert) => {
-      const ukefId = getIdFromNumberGenerator();
-      const facilityWithId = {
-        ...facilityToInsert,
-        ukefFacilityID: ukefId,
-      };
+      getIdFromNumberGenerator('facility').then(({ id: numberGeneratorId }) => {
+        const facilityWithId = facilityToInsert;
+        facilityWithId.ukefFacilityID = numberGeneratorId;
 
-      facilitiesWithUkefIds.push(facilityWithId);
+        facilitiesWithUkefIds.push(facilityWithId);
 
-      if (facilitiesWithUkefIds.length === facilities.length) {
-        createFacilities(
-          dealId,
-          facilitiesWithUkefIds,
-          user,
-          token,
-        ).then((createdFacilities) => createdFacilities);
-      }
+        if (facilitiesWithUkefIds.length === facilities.length) {
+          createFacilities(
+            dealId,
+            facilities,
+            user,
+            token,
+          ).then((createdFacilities) => createdFacilities);
+        }
+      });
     });
-  //  return Promise.resolve(facilitiesWithUkefIds);
   });
 };
