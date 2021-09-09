@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectID } = require('bson');
 const assert = require('assert');
 const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()

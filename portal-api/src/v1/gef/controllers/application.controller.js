@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { ObjectId } = require('mongodb');
+const { ObjectID } = require('bson');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
