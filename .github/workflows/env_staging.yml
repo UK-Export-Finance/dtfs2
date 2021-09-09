@@ -512,8 +512,8 @@ jobs:
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
       
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name durable-functions-log || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name durable-functions-log --shard "_id" \
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name acbs-log || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name acbs-log --shard "_id" \
             --idx '[{"key": {"keys": ["status"]}},  {"key": {"keys": ["_id"]}} ]'
     
   cosmos-db-private:
