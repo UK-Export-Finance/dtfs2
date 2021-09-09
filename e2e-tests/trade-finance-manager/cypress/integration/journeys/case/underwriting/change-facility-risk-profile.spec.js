@@ -9,7 +9,6 @@ const underWritingManagerUser = MOCK_USERS.find((user) =>
   user.teams.includes('UNDERWRITER_MANAGERS'));
 
 context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
-  let deal;
   let dealId;
   const dealFacilities = [];
   let facilityId;
@@ -19,11 +18,9 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = deal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_MIA;
+        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           facilityId = createdFacilities[0]._id; // eslint-disable-line no-underscore-dangle

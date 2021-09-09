@@ -6,7 +6,6 @@ import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Case Underwriting - Bank Security', () => {
-  let deal;
   let dealId;
   const dealFacilities = [];
 
@@ -15,11 +14,9 @@ context('Case Underwriting - Bank Security', () => {
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = deal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_MIA;
+        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
