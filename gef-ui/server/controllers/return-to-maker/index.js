@@ -1,17 +1,18 @@
-import {
+const {
   getApplication, getUserDetails, updateApplication, setApplicationStatus,
-} from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
-import { PROGRESS } from '../../../constants';
+} = require('../../services/api');
+const { validationErrorHandler } = require('../../utils/helpers');
+const { PROGRESS } = require('../../../constants');
 
-export const MAX_COMMENT_LENGTH = 400;
+const MAX_COMMENT_LENGTH = 400;
 
-export const getReturnToMaker = async (req, res) => {
+const getReturnToMaker = async (req, res) => {
   const { params } = req;
   const { applicationId } = params;
   const { status } = await getApplication(applicationId);
 
   if (status !== PROGRESS.BANK_CHECK) {
+    // eslint-disable-next-line no-console
     console.log('Incorrect status or permissions, redirecting to dashboard');
     return res.redirect('/dashboard/gef/');
   }
@@ -19,7 +20,7 @@ export const getReturnToMaker = async (req, res) => {
   return res.render('partials/return-to-maker.njk', { applicationId, maxCommentLength: MAX_COMMENT_LENGTH });
 };
 
-export const postReturnToMaker = async (req, res, next) => {
+const postReturnToMaker = async (req, res, next) => {
   const { params, body, session } = req;
   const { user, userToken } = session;
   const { applicationId } = params;
@@ -60,7 +61,8 @@ export const postReturnToMaker = async (req, res, next) => {
   return res.redirect('/dashboard/gef/');
 };
 
-export default {
+module.exports = {
+  MAX_COMMENT_LENGTH,
   getReturnToMaker,
   postReturnToMaker,
 };

@@ -24,10 +24,12 @@ const MockResponse = () => {
 };
 
 describe('controllers/return-to-maker', () => {
-  const mockResponse = new MockResponse();
+  let mockResponse;
   let mockRequest;
 
   beforeEach(() => {
+    mockResponse = MockResponse();
+
     getApplication.mockResolvedValue({
       _id: '1234',
       status: PROGRESS.BANK_CHECK,
@@ -42,7 +44,7 @@ describe('controllers/return-to-maker', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('getReturnToMaker', () => {

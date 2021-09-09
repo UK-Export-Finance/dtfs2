@@ -1,4 +1,4 @@
-import * as api from '../../services/api';
+const api = require('../../services/api');
 
 const validateToken = async (req, res, next) => {
   const { userToken } = req.session;
@@ -11,4 +11,4 @@ const validateToken = async (req, res, next) => {
   });
 };
 
-export default validateToken;
+module.exports = validateToken;

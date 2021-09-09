@@ -1,5 +1,5 @@
-import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+const { validationErrorHandler } = require('../../utils/helpers');
+const api = require('../../services/api');
 
 const nameApplication = async (req, res) => res.render('partials/name-application.njk');
 
@@ -28,7 +28,7 @@ const createApplication = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   nameApplication,
   createApplication,
 };

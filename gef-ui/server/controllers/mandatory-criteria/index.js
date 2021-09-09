@@ -1,7 +1,6 @@
-import _isEmpty from 'lodash/isEmpty';
-import { decode } from 'html-entities';
-import * as api from '../../services/api';
-import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
+const { decode } = require('html-entities');
+const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/helpers');
+const api = require('../../services/api');
 
 const getMandatoryCriteria = async (req, res) => {
   try {
@@ -21,12 +20,11 @@ const getMandatoryCriteria = async (req, res) => {
 const validateMandatoryCriteria = async (req, res) => {
   const { body } = req;
   const { mandatoryCriteria } = body;
-  const isEmpty = _isEmpty(mandatoryCriteria);
 
   try {
     const criteria = await api.getMandatoryCriteria();
 
-    if (isEmpty) {
+    if (isEmpty(mandatoryCriteria)) {
       const mandatoryError = {
         errRef: 'confirm',
         errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
@@ -51,7 +49,7 @@ const validateMandatoryCriteria = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   getMandatoryCriteria,
   validateMandatoryCriteria,
 };

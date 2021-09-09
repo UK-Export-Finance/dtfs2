@@ -1,4 +1,4 @@
-import validateToken from '../middleware/validate-token';
+import validateToken from '../../middleware/validateToken';
 
 const getSpy = jest.fn();
 const postSpy = jest.fn();

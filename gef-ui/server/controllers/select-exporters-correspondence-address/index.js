@@ -1,7 +1,7 @@
 
-import _isEmpty from 'lodash/isEmpty';
-import * as api from '../../services/api';
-import { selectDropdownAddresses, validationErrorHandler } from '../../utils/helpers';
+const { selectDropdownAddresses, validationErrorHandler, isEmpty } = require('../../utils/helpers');
+
+const api = require('../../services/api');
 
 const selectExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
@@ -28,7 +28,7 @@ const validateSelectExportersCorrespondenceAddress = (req, res) => {
   const parseAddresses = JSON.parse(addresses);
   let selectedAddressError;
 
-  if (_isEmpty(selectedAddress)) {
+  if (isEmpty(selectedAddress)) {
     selectedAddressError = {
       errRef: 'selectedAddress',
       errMsg: 'Select an address',
@@ -47,7 +47,7 @@ const validateSelectExportersCorrespondenceAddress = (req, res) => {
   return res.redirect(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`);
 };
 
-export {
+module.exports = {
   selectExportersCorrespondenceAddress,
   validateSelectExportersCorrespondenceAddress,
 };

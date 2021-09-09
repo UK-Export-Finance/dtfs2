@@ -1,25 +1,25 @@
-import express from 'express';
-import morgan from 'morgan';
-import session from 'express-session';
-import redis from 'redis';
+const express = require('express');
+const morgan = require('morgan');
+const session = require('express-session');
+const redis = require('redis');
 
-import flash from 'connect-flash';
-import path from 'path';
-import json2csv from 'express-json2csv';
-import './azure-env';
-
-import routes from './routes';
-import healthcheck from './healthcheck';
-
-import configureNunjucks from './nunjucks-configuration';
+const flash = require('connect-flash');
+const path = require('path');
+const json2csv = require('express-json2csv');
+require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
+const routes = require('./routes');
+const healthcheck = require('./healthcheck');
+
+const configureNunjucks = require('./nunjucks-configuration');
 
 const app = express();
 
 const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {
+  // eslint-disable-next-line no-console
   console.error('GEF UI server - SESSION_SECRET missing');
 }
 
@@ -74,7 +74,6 @@ configureNunjucks({
 
 app.use(express.urlencoded());
 
-
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
 }));
@@ -83,9 +82,7 @@ app.use(healthcheck);
 
 app.use('/', routes);
 
-app.use(express.static('dist'));
-
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
 app.get('*', (req, res) => res.render('partials/page-not-found.njk', { user: req.session.user }));
 

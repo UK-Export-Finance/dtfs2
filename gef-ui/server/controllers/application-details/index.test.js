@@ -2,7 +2,9 @@ import {
   applicationDetails,
   postApplicationDetails,
 } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -74,70 +76,75 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+describe('controllers/about-exporter', () => {
+  let mockResponse;
+  let mockRequest;
 
-describe('GET Application Details', () => {
-  it('renders the `Application Details` template', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    const mockCoverTermsResponse = new MockCoverTermsResponse();
-    const mockFacilityResponse = new MockFacilityResponse();
-    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
-
-    mockFacilityResponse.items = [{
-      details: { type: 'CASH' },
-      validation: { required: [] },
-    }];
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-    await applicationDetails(mockRequest, mockResponse);
-    expect(mockResponse.render)
-      .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
-        bankInternalRefName: 'My test',
-        exporter: {
-          status: expect.any(Object),
-          rows: expect.any(Array),
-        },
-        coverTerms: {
-          status: expect.any(Object),
-          rows: expect.any(Array),
-        },
-        facilities: {
-          status: expect.any(Object),
-          data: expect.any(Array),
-        },
-        submit: expect.any(Boolean),
-      }));
+  beforeEach(() => {
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockNext = jest.fn();
-    const error = new Error('error');
-
-    api.getApplication = () => Promise.reject(error);
-    await applicationDetails(mockRequest, mockResponse, mockNext);
-    expect(mockNext)
-      .toHaveBeenCalledWith(error);
+  afterEach(() => {
+    jest.resetAllMocks();
   });
-});
 
-describe('POST Application Details', () => {
-  const mockResponse = new MockResponse();
-  const mockRequest = new MockRequest();
+  describe('GET Application Details', () => {
+    it('renders the `Application Details` template', async () => {
+      const mockApplicationResponse = new MockApplicationResponse();
+      const mockExporterResponse = new MockExporterResponse();
+      const mockCoverTermsResponse = new MockCoverTermsResponse();
+      const mockFacilityResponse = new MockFacilityResponse();
+      const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
 
-  it('redirects to submission url', async () => {
-    postApplicationDetails(mockRequest, mockResponse);
+      mockFacilityResponse.items = [{
+        details: { type: 'CASH' },
+        validation: { required: [] },
+      }];
 
-    expect(mockResponse.redirect)
-      .toHaveBeenCalledWith('/gef/application-details/123/submit');
+      api.getApplication.mockResolvedValue(mockApplicationResponse);
+      api.getExporter.mockResolvedValue(mockExporterResponse);
+      api.getCoverTerms.mockResolvedValue(mockCoverTermsResponse);
+      api.getFacilities.mockResolvedValue(mockFacilityResponse);
+      api.getEligibilityCriteria.mockResolvedValue(mockEligibiltyCriteriaResponse);
+
+      await applicationDetails(mockRequest, mockResponse);
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+          bankInternalRefName: 'My test',
+          exporter: {
+            status: expect.any(Object),
+            rows: expect.any(Array),
+          },
+          coverTerms: {
+            status: expect.any(Object),
+            rows: expect.any(Array),
+          },
+          facilities: {
+            status: expect.any(Object),
+            data: expect.any(Array),
+          },
+          submit: expect.any(Boolean),
+        }));
+    });
+
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      const mockNext = jest.fn();
+      const error = new Error('error');
+
+      api.getApplication.mockRejectedValue(error);
+      await applicationDetails(mockRequest, mockResponse, mockNext);
+      expect(mockNext)
+        .toHaveBeenCalledWith(error);
+    });
+  });
+
+  describe('POST Application Details', () => {
+    it('redirects to submission url', async () => {
+      postApplicationDetails(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect)
+        .toHaveBeenCalledWith('/gef/application-details/123/submit');
+    });
   });
 });
