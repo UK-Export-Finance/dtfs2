@@ -82,7 +82,7 @@ exports.getByRegistrationNumber = async (req, res) => {
             selectedIndustry,
             industries,
           },
-        }, { returnOriginal: false },
+        }, { returnDocument: 'after', returnOriginal: false },
       );
     }
     return res.status(200).send(response.data);

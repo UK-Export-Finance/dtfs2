@@ -71,7 +71,7 @@ exports.update = async (req, res) => {
   const update = req.body;
   update.updatedAt = Date.now();
   const response = await collection.findOneAndUpdate(
-    { _id: ObjectID(req.params.id) }, { $set: update }, { returnOriginal: false },
+    { _id: ObjectID(req.params.id) }, { $set: update }, { returnDocument: 'after', returnOriginal: false },
   );
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

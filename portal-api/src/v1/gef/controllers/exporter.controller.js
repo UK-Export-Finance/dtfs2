@@ -28,7 +28,7 @@ exports.update = async (req, res) => {
   } else {
     const collection = await db.getCollection(collectionName);
     const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnOriginal: false },
+      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnDocument: 'after', returnOriginal: false },
     );
     let response;
     if (result.value) {
