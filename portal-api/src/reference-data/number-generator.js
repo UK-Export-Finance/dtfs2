@@ -14,7 +14,7 @@ const create = async ({
     data: {
       dealType, entityType, entityId, dealId, user,
     },
-  }).catch((err) => err.response);
+  }).catch((err) => err);
 
   return data;
 };
