@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
-import _startCase from 'lodash/startCase';
-import { mapSummaryList } from '../../utils/helpers';
-import {
+const _startCase = require('lodash/startCase');
+const { mapSummaryList } = require('../../utils/helpers');
+const {
   exporterItems, coverItems, facilityItems,
-} from '../../utils/display-items';
-import { getUserAuthorisationLevelsToApplication } from '../../utils/user-authorisation-level';
-import { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } from '../../../constants';
+} = require('../../utils/display-items');
+const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
+const { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } = require('../../../constants');
 
-import Application from '../../models/application';
+const Application = require('../../models/application');
 
 function buildHeader(app) {
   if (!['DRAFT'].includes(app.status)) {
@@ -90,7 +90,7 @@ function buildView(app, previewMode) {
   return { ...header, ...body, ...actions };
 }
 
-export const applicationDetails = async (req, res, next) => {
+const applicationDetails = async (req, res, next) => {
   const {
     params,
     session,
@@ -127,13 +127,13 @@ export const applicationDetails = async (req, res, next) => {
   }
 };
 
-export const postApplicationDetails = (req, res) => {
+const postApplicationDetails = (req, res) => {
   const { params } = req;
   const { applicationId } = params;
   return res.redirect(`/gef/application-details/${applicationId}/submit`);
 };
 
-export default {
+module.exports = {
   applicationDetails,
   postApplicationDetails,
 };

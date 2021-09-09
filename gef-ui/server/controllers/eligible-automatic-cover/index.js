@@ -7,4 +7,4 @@ const eligibleAutomaticCover = async (req, res) => {
   });
 };
 
-export default eligibleAutomaticCover;
+module.exports = eligibleAutomaticCover;

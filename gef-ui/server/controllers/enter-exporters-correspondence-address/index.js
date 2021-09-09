@@ -1,6 +1,6 @@
-import * as api from '../../services/api';
-import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
-import { DEFAULT_COUNTRY } from '../../../constants';
+const api = require('../../services/api');
+const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
+const { DEFAULT_COUNTRY } = require('../../../constants');
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
@@ -85,7 +85,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   enterExportersCorrespondenceAddress,
   validateEnterExportersCorrespondenceAddress,
 };

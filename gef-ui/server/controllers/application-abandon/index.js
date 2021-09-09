@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import * as api from '../../services/api';
-import { PROGRESS } from '../../../constants';
-import Application from '../../models/application';
+const { PROGRESS } = require('../../../constants');
+const Application = require('../../models/application');
+const api = require('../../services/api');
 
 const applicationIsAbandonable = (application) => [PROGRESS.DRAFT,
   PROGRESS.CHANGES_REQUIRED,
@@ -9,7 +9,7 @@ const applicationIsAbandonable = (application) => [PROGRESS.DRAFT,
 
 const dashboardUrl = '/dashboard/gef';
 
-export const confirmAbandonApplication = async (req, res, next) => {
+const confirmAbandonApplication = async (req, res, next) => {
   const {
     params,
     session,
@@ -31,7 +31,7 @@ export const confirmAbandonApplication = async (req, res, next) => {
   return res.render('application-abandon.njk', { application });
 };
 
-export const abandonApplication = async (req, res, next) => {
+const abandonApplication = async (req, res, next) => {
   const { params, session } = req;
   const { applicationId } = params;
   const { user, userToken } = session;
@@ -46,7 +46,7 @@ export const abandonApplication = async (req, res, next) => {
   return res.redirect(dashboardUrl);
 };
 
-export default {
+module.exports = {
   confirmAbandonApplication,
   abandonApplication,
 };

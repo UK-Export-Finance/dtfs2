@@ -14,7 +14,7 @@ const MockResponse = () => {
 };
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe('GET Eligible Automatic Cover', () => {

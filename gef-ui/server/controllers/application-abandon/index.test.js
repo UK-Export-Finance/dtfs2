@@ -2,7 +2,9 @@ import {
   confirmAbandonApplication,
   abandonApplication,
 } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -73,105 +75,72 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+describe('controllers/application-abandon', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockApplicationResponse;
 
-describe('GET application abandon', () => {
-  it('renders the confirm application abandon page', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    const mockCoverTermsResponse = new MockCoverTermsResponse();
-    const mockFacilityResponse = new MockFacilityResponse();
-    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+  beforeEach(() => {
+    mockResponse = new MockResponse();
+    mockRequest = new MockRequest();
+    mockApplicationResponse = MockApplicationResponse();
 
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-    await confirmAbandonApplication(mockRequest, mockResponse);
-
-    expect(mockResponse.render)
-      .toHaveBeenCalledWith('application-abandon.njk', expect.objectContaining({
-        application: mockApplicationResponse,
-      }));
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
+    api.getExporter.mockResolvedValue(MockExporterResponse());
+    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
+    api.getFacilities.mockResolvedValue(MockFacilityResponse());
+    api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
+    api.setApplicationStatus.mockResolvedValue({});
   });
 
-  it('redirects to the application details page if application is not abondonable', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockApplicationResponse = new MockApplicationResponse();
-    mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
-    const mockExporterResponse = new MockExporterResponse();
-    const mockCoverTermsResponse = new MockCoverTermsResponse();
-    const mockFacilityResponse = new MockFacilityResponse();
-    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
-
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-    await confirmAbandonApplication(mockRequest, mockResponse);
-
-    expect(mockResponse.redirect)
-      .toHaveBeenCalledWith('/gef/application-details/123');
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
-  it('returns next(err) if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockNext = jest.fn();
-    const error = new Error('error');
+  describe('GET application abandon', () => {
+    it('renders the confirm application abandon page', async () => {
+      await confirmAbandonApplication(mockRequest, mockResponse);
 
-    api.getApplication = () => Promise.reject(error);
-    await confirmAbandonApplication(mockRequest, mockResponse, mockNext);
-    expect(mockNext).toHaveBeenCalledWith(error);
-  });
-});
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('application-abandon.njk', expect.objectContaining({
+          application: mockApplicationResponse,
+        }));
+    });
 
-describe('POST abandonApplication', () => {
-  const mockResponse = new MockResponse();
-  const mockRequest = new MockRequest();
+    it('redirects to the application details page if application is not abondonable', async () => {
+      mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-  it('redirects to dashboard url if update is successful', async () => {
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    const mockCoverTermsResponse = new MockCoverTermsResponse();
-    const mockFacilityResponse = new MockFacilityResponse();
-    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
+      await confirmAbandonApplication(mockRequest, mockResponse);
 
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-    api.setApplicationStatus = () => Promise.resolve({});
+      expect(mockResponse.redirect)
+        .toHaveBeenCalledWith('/gef/application-details/123');
+    });
 
-    await abandonApplication(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard/gef');
+    it('returns next(err) if there is an issue with the API', async () => {
+      const mockNext = jest.fn();
+      const error = new Error('error');
+
+      api.getApplication.mockRejectedValueOnce(error);
+      await confirmAbandonApplication(mockRequest, mockResponse, mockNext);
+      expect(mockNext).toHaveBeenCalledWith(error);
+    });
   });
 
-  it('returns next(err) if update is unsuccessful', async () => {
-    const mockApplicationResponse = new MockApplicationResponse();
-    const mockExporterResponse = new MockExporterResponse();
-    const mockCoverTermsResponse = new MockCoverTermsResponse();
-    const mockFacilityResponse = new MockFacilityResponse();
-    const mockEligibiltyCriteriaResponse = new MockEligibilityCriteriaResponse();
-    const mockNext = jest.fn();
-    const err = new Error();
+  describe('POST abandonApplication', () => {
+    it('redirects to dashboard url if update is successful', async () => {
+      await abandonApplication(mockRequest, mockResponse);
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard/gef');
+    });
 
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getExporter = () => Promise.resolve(mockExporterResponse);
-    api.getCoverTerms = () => Promise.resolve(mockCoverTermsResponse);
-    api.getFacilities = () => Promise.resolve(mockFacilityResponse);
-    api.getEligibilityCriteria = () => Promise.resolve(mockEligibiltyCriteriaResponse);
-    api.setApplicationStatus = () => Promise.reject(err);
+    it('returns next(err) if update is unsuccessful', async () => {
+      const mockNext = jest.fn();
+      const err = new Error();
 
-    await abandonApplication(mockRequest, mockResponse, mockNext);
-    expect(mockNext).toHaveBeenCalledWith(err);
+      api.setApplicationStatus.mockRejectedValueOnce(err);
+
+      await abandonApplication(mockRequest, mockResponse, mockNext);
+      expect(mockNext).toHaveBeenCalledWith(err);
+    });
   });
 });

@@ -181,10 +181,9 @@ services:
     ports:
       - "5006:5006"
     volumes:
-      - ./gef-ui/scripts:/app/scripts:ro
-      - ./gef-ui/styles:/app/styles:ro
-      - ./gef-ui/templates:/app/templates:ro
       - ./gef-ui/server:/app/server:ro
+      - ./gef-ui/public:/app/public:ro
+      - ./gef-ui/templates:/app/templates:ro
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -192,7 +191,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
-    command: node dist/server.js
+    command: npx nodemon server/index.js
   
   # ACBS function is causing an out of memory error on github actions. disable for now
   # acbs-function:

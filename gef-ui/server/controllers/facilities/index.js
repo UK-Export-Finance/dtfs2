@@ -1,6 +1,6 @@
-import * as api from '../../services/api';
-import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
-import { FACILITY_TYPE } from '../../../constants';
+const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
+const { FACILITY_TYPE } = require('../../../constants');
+const api = require('../../services/api');
 
 const facilities = async (req, res) => {
   const { params, query } = req;
@@ -83,7 +83,7 @@ const createFacility = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   facilities,
   createFacility,
 };

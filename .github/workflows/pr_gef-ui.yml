@@ -8,17 +8,11 @@ on:
     - 'portal-api/**'
     - 'e2e-tests/gef/cypress/**'
     - 'utils/mock-data-loader/**'
-  schedule:
-    # A weekly run to roll up any base image patches, 
-    # in office hours, avoiding bank holiday Mondays:
-    # "At 12:00 on Tuesday." - https://crontab.guru/
-    - cron: '0 12 * * 2'
 
 env:
   environment: dev
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.RESOURCE_GROUP }}
 
 jobs:
   set-environment:
@@ -33,12 +27,22 @@ jobs:
 
   build:
     name: Build and push GEF UI
-    runs-on: ubuntu-latest
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    defaults:
+      run:
+        working-directory:  gef-ui
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: npm ci
+    - run: npm run lint
+    - run: npm t
+
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push Gef-ui
