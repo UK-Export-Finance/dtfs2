@@ -1,7 +1,18 @@
 const api = require('../api');
 
-exports.create = async (facilityBody, user) =>
-  api.createFacility(facilityBody, user);
+exports.create = async (facilityBody, user) => {
+  const createdFacility = await api.createFacility(facilityBody, user);
+
+  const { status, data } = createdFacility;
+  const { _id } = data;
+
+  const facility = await api.findOneFacility(_id);
+
+  return {
+    status,
+    data: facility,
+  };
+};
 
 exports.findOne = async (facilityId) =>
   api.findOneFacility(facilityId);
