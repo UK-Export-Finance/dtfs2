@@ -1,8 +1,9 @@
+const app = require('../../../src/createApp');
+const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 const CONSTANTS = require('../../../src/constants');
-const submitDeal = require('../utils/submitDeal');
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
@@ -43,7 +44,7 @@ describe('/v1/deals', () => {
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('facilities', () => {
       it('adds facilityValueInGBP to all facilities that are NOT in GBP', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
+        const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY)).to('/v1/deals/submit');
 
         expect(status).toEqual(200);
 
@@ -64,7 +65,7 @@ describe('/v1/deals', () => {
 
       describe('all bonds that are NOT in GBP', () => {
         it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -84,7 +85,7 @@ describe('/v1/deals', () => {
 
       describe('all loans that are NOT in GBP', () => {
         it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -104,7 +105,7 @@ describe('/v1/deals', () => {
 
       describe('all bonds that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -119,7 +120,7 @@ describe('/v1/deals', () => {
 
       describe('all loans that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -134,7 +135,7 @@ describe('/v1/deals', () => {
 
       describe('exposure period', () => {
         it('gets the exposure period for issued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
+          const { status } = await api.put(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -145,7 +146,7 @@ describe('/v1/deals', () => {
         });
 
         it('does not get the exposure period info for unissued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -155,7 +156,7 @@ describe('/v1/deals', () => {
 
       describe('premium scheduler', () => {
         it('gets the premium scheduler info for issued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
+          const { status } = await api.put(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -163,7 +164,7 @@ describe('/v1/deals', () => {
         });
 
         it('does not gets the premium scheduler info for unissued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -173,7 +174,7 @@ describe('/v1/deals', () => {
 
       describe('riskProfile (BSS/EWCS facilities)', () => {
         it('defaults all facilities riskProfile to `Flat`', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status, body } = await api.put(createSubmitBody(MOCK_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 
@@ -190,7 +191,7 @@ describe('/v1/deals', () => {
 
       describe('riskProfile (Cash/Contingent facilities)', () => {
         it('defaults all facilities riskProfile to `Flat`', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+          const { status, body } = await api.put(createSubmitBody(MOCK_GEF_DEAL)).to('/v1/deals/submit');
 
           expect(status).toEqual(200);
 

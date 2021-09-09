@@ -24,7 +24,7 @@ context('A TFM checker submits a deal', () => {
 
   before(() => {
     cy.insertManyDeals([dealReadyToSubmit()], MAKER_LOGIN)
-      .then((insertedDeals) => {
+      .then(insertedDeals => {
         deal = insertedDeals[0];
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
@@ -56,8 +56,7 @@ context('A TFM checker submits a deal', () => {
     pages.contract.proceedToSubmit().click();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
-    // Need to pass deal to trigger submission to TFM post UKEFID generation
-    pages.contractConfirmSubmission.acceptAndSubmit().click(deal);
+    pages.contractConfirmSubmission.acceptAndSubmit().click();
 
     pages.contract.visit(deal);
 
