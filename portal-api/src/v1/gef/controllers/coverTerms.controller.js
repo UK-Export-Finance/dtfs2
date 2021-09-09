@@ -12,7 +12,7 @@ const collectionName = 'gef-cover-terms';
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: ObjectID(String(req.params.id)) });
   if (doc) {
     res.status(200)
       .send({
@@ -32,7 +32,7 @@ exports.update = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const update = new CoverTerms(req.body);
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: update }, { returnDocument: 'after', returnOriginal: false },
+    { _id: { $eq: ObjectID(String(req.params.id)) } }, { $set: update }, { returnDocument: 'after', returnOriginal: false },
   );
   let response;
   if (result.value) {

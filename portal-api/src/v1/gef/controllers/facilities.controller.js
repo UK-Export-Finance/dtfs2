@@ -16,12 +16,16 @@ exports.create = async (req, res) => {
       res.status(422).send(enumValidationErr);
     } else {
       const collection = await db.getCollection(collectionName);
-      const doc = await collection.insertOne(new Facility(req.body));
-      const value = doc.ops[0];
+      const createdFacility = await collection.insertOne(new Facility(req.body));
+
+      const facility = await collection.findOne({
+        _id: ObjectID(String(createdFacility.insertedId)),
+      });
+
       const response = {
-        status: facilitiesStatus(value),
-        details: value,
-        validation: facilitiesValidation(value),
+        status: facilitiesStatus(facility),
+        details: facility,
+        validation: facilitiesValidation(facility),
       };
       res.status(201).json(response);
     }
@@ -35,7 +39,7 @@ const getAllFacilitiesByApplicationId = async (applicationId) => {
   let find = {};
 
   if (applicationId) {
-    find = { applicationId: ObjectId(applicationId) };
+    find = { applicationId: ObjectID(applicationId) };
   }
 
   const doc = await collection.find(find).toArray();
@@ -71,7 +75,7 @@ exports.getAllGET = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: ObjectID(String(req.params.id)) });
   if (doc) {
     res.status(200).send({
       status: facilitiesStatus(doc),
@@ -104,7 +108,7 @@ exports.calculateUkefExposure = calculateUkefExposure;
 
 const update = async (id, updateBody) => {
   const collection = await db.getCollection(collectionName);
-  const facilityId = ObjectId(String(id));
+  const facilityId = ObjectID(String(id));
 
   const existingFacility = await collection.findOne({ _id: facilityId });
 
@@ -143,7 +147,7 @@ exports.updatePUT = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
+  const response = await collection.findOneAndDelete({ _id: ObjectID(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 

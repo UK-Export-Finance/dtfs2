@@ -60,10 +60,16 @@ exports.create = async (req, res) => {
   } else {
     const exporter = await exporterCollection.insertOne(new Exporter());
     const coverTerms = await coverTermsCollection.insertOne(new CoverTerms());
-    const doc = await applicationCollection.insertOne(
-      new Application(req.body, exporter.ops[0]._id, coverTerms.ops[0]._id),
+
+    const createdApplication = await applicationCollection.insertOne(
+      new Application(req.body, exporter.insertedId, coverTerms.insertedId),
     );
-    res.status(201).json(doc.ops[0]);
+
+    const application = await applicationCollection.findOne({
+      _id: ObjectID(String(createdApplication.insertedId)),
+    });
+
+    res.status(201).json(application);
   }
 };
 
@@ -79,7 +85,7 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const doc = await collection.findOne({
-    _id: ObjectId(String(req.params.id)),
+    _id: ObjectID(String(req.params.id)),
   });
   if (doc) {
     res.status(200).send(doc);
@@ -91,7 +97,7 @@ exports.getById = async (req, res) => {
 exports.getStatus = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const doc = await collection.findOne({
-    _id: ObjectId(String(req.params.id)),
+    _id: ObjectID(String(req.params.id)),
   });
   if (doc) {
     res.status(200).send({ status: doc.status });
@@ -104,7 +110,7 @@ exports.update = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const update = new Application(req.body);
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(req.params.id)) } },
+    { _id: { $eq: ObjectID(String(req.params.id)) } },
     { $set: update },
     { returnDocument: 'after', returnOriginal: false },
   );
@@ -125,14 +131,14 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   // get maker user details
   const userCollection = await db.getCollection(userCollectionName);
   const { firstname: firstName = '', surname = '' } = userId
-    ? await userCollection.findOne({ _id: new ObjectId(String(userId)) })
+    ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
     : {};
 
   const exporterCollection = await db
     .getCollection(exporterCollectionName);
   // get exporter name
   const { companyName = '' } = await exporterCollection.findOne({
-    _id: ObjectId(String(existingApplication.exporterId)),
+    _id: ObjectID(String(existingApplication.exporterId)),
   });
 
   user.bank.emails.forEach(async (email) => {
@@ -160,7 +166,7 @@ exports.changeStatus = async (req, res) => {
 
   const collection = await db.getCollection(applicationCollectionName);
   const existingApplication = await collection.findOne({
-    _id: ObjectId(String(applicationId)),
+    _id: ObjectID(String(applicationId)),
   });
 
   if (!existingApplication) {
@@ -185,7 +191,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(applicationId)) } },
+    { _id: { $eq: ObjectID(String(applicationId)) } },
     {
       $set: applicationUpdate,
     },
@@ -227,14 +233,14 @@ exports.delete = async (req, res) => {
     applicationCollectionName,
   );
   const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: ObjectId(String(req.params.id)),
+    _id: ObjectID(String(req.params.id)),
   });
   if (applicationResponse.value) {
     // remove exporter information related to the application
     if (applicationResponse.value.exporterId) {
       const exporterCollection = await db.getCollection(exporterCollectionName);
       await exporterCollection.findOneAndDelete({
-        _id: ObjectId(String(applicationResponse.value.exporterId)),
+        _id: ObjectID(String(applicationResponse.value.exporterId)),
       });
     }
     if (applicationResponse.value.coverTermsId) {
@@ -242,7 +248,7 @@ exports.delete = async (req, res) => {
         coverTermsCollectionName,
       );
       await coverTermsCollection.findOneAndDelete({
-        _id: ObjectId(String(applicationResponse.value.coverTermsId)),
+        _id: ObjectID(String(applicationResponse.value.coverTermsId)),
       });
     }
     // remove facility information related to the application

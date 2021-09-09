@@ -8,7 +8,7 @@ const collectionName = 'gef-exporter';
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: ObjectID(String(req.params.id)) });
   if (doc) {
     const response = {
       status: exporterStatus(doc),
@@ -28,7 +28,7 @@ exports.update = async (req, res) => {
   } else {
     const collection = await db.getCollection(collectionName);
     const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnDocument: 'after', returnOriginal: false },
+      { _id: { $eq: ObjectID(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnDocument: 'after', returnOriginal: false },
     );
     let response;
     if (result.value) {

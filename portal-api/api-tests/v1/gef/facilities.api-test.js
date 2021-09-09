@@ -7,7 +7,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-// const { expectMongoId } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef/facilities';
 const collectionName = 'gef-facilities';
@@ -34,6 +33,7 @@ describe(baseUrl, () => {
     aChecker = testUsers().withRole('checker').one();
     // anEditor = testUsers().withRole('editor').one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
+
     newFacility = {
       status: STATUS.IN_PROGRESS,
       details: {

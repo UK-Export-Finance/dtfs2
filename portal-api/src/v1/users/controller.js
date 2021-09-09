@@ -105,16 +105,20 @@ exports.create = async (user, callback) => {
   const collection = await db.getCollection('users');
   const createUserResult = await collection.insertOne(insert);
 
-  const createdUser = sanitizeUser(createUserResult.ops[0]);
+  const { insertedId: userId } = createUserResult;
+
+  const createdUser = await collection.findOne({ _id: userId });
+
+  const sanitizedUser = sanitizeUser(createdUser);
 
   // nasty hack, but... right now we have a load of test users with
   // non-email-address usernames and no time to fix that neatly.. so..
-  if (createdUser.username && createdUser.username.includes('@')) {
-    const resetPasswordToken = await createPasswordToken(createdUser.email);
-    await sendNewAccountEmail(createdUser, resetPasswordToken);
+  if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
+    const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
+    await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
   }
 
-  callback(null, createdUser);
+  callback(null, sanitizedUser);
 };
 
 exports.update = async (_id, update, callback) => {

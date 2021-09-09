@@ -32,7 +32,7 @@ class Facility {
   constructor(req) {
     if (req.applicationId) {
       // new application
-      this.applicationId = req.applicationId ? new ObjectId(req.applicationId) : null;
+      this.applicationId = req.applicationId ? new ObjectID(req.applicationId) : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {

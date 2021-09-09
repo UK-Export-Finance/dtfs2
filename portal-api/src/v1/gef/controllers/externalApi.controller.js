@@ -65,7 +65,7 @@ exports.getByRegistrationNumber = async (req, res) => {
       }
       const address = response.data.registered_office_address;
       await collection.findOneAndUpdate(
-        { _id: { $eq: ObjectId(String(req.query.exporterId)) } }, {
+        { _id: { $eq: ObjectID(String(req.query.exporterId)) } }, {
           $set: {
             companiesHouseRegistrationNumber: response.data.company_number,
             companyName: response.data.company_name,
