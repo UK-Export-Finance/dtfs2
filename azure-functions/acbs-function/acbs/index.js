@@ -15,6 +15,7 @@ const retryOptions = require('../helpers/retryOptions');
 
 module.exports = df.orchestrator(function* acbsDeal(context) {
   const { deal, bank } = context.df.getInput();
+
   // Get ACBS industry code
   const industryCode = deal.dealSnapshot.submissionDetails['industry-class']
                         && deal.dealSnapshot.submissionDetails['industry-class'].code;
