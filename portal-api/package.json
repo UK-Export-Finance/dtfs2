@@ -61,6 +61,7 @@
     "notifications-node-client": "^4.8.0",
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
+    "request": "^2.88.2",
     "xss": "^1.0.8"
   },
   "devDependencies": {
