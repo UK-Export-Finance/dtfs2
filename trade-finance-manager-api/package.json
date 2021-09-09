@@ -48,7 +48,8 @@
     "moment-timezone": "^0.5.33",
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "^4.0.0",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "node-notifier": "^10.0.0"
   },
   "devDependencies": {
     "apollo-server-testing": "^2.19.0",
