@@ -93,8 +93,6 @@ jobs:
     env: 
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
-      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -109,10 +107,10 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d trade-finance-manager-api
+        docker-compose up -d
     - name: Run API tests
       run: |
-        docker-compose exec -T trade-finance-manager-api npm run api-test
+        docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}

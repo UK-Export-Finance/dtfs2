@@ -128,7 +128,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api  
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh && docker-compose up -d portal-api
+        source secrets/set_jwt_keypair.sh && docker-compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -138,7 +138,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T portal-api npm run api-test
+        docker-compose exec -T portal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand --forceExit
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
@@ -219,14 +219,6 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ github.sha }} dtfs/trade-finance-manager-ui
-    - name: Pull Azure Number Generator function
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
-    - name: Pull reference-data-proxy
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }} dtfs/reference-data-proxy
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh

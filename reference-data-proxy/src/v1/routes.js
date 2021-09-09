@@ -50,9 +50,9 @@ openRouter.route('/industry-sectors/:code/acbs-sector')
     industrySectors.getACBSIndustrySector,
   );
 
-openRouter.route('/number-generator')
-  .post(
-    numberGenerator.callNumberGeneratorPOST,
+openRouter.route('/number-generator/:entityType')
+  .get(
+    numberGenerator.create,
   );
 
 openRouter.route('/acbs')
