@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS image
+FROM node:lts AS image
 
 WORKDIR /app
 

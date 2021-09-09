@@ -1,5 +1,7 @@
-import { facilityCurrency, updateFacilityCurrency } from './index';
-import * as api from '../../services/api';
+import { facilityCurrency, updateFacilityCurrency } from '.';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -25,7 +27,7 @@ const MockFacilityCurrencyResponse = () => {
 };
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe('GET Facility Currency', () => {
@@ -37,7 +39,7 @@ describe('GET Facility Currency', () => {
     mockRequest.query.status = 'change';
     mockFacilityCurrencyResponse.details.currency = 'EUR';
     mockFacilityCurrencyResponse.details.type = 'CASH';
-    api.getFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
+    api.getFacility.mockResolvedValueOnce(mockFacilityCurrencyResponse);
 
     await facilityCurrency(mockRequest, mockResponse);
 

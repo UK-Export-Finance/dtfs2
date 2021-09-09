@@ -1,7 +1,8 @@
-import { decode } from 'html-entities';
-import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
-import { DEAL_SUBMISSION_TYPE } from '../../../constants';
+const { decode } = require('html-entities');
+const { validationErrorHandler } = require('../../utils/helpers');
+const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
+
+const api = require('../../services/api');
 
 const updateSubmissionType = async (applicationId, coverType) => {
   await api.updateApplication(applicationId, { submissionType: coverType });
@@ -96,7 +97,7 @@ const validateAutomaticCover = async (req, res, next) => {
   }
 };
 
-export {
+module.exports = {
   automaticCover,
   validateAutomaticCover,
 };

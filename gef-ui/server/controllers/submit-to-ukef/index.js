@@ -1,6 +1,6 @@
-import { PROGRESS } from '../../../constants/index';
-import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+const { PROGRESS } = require('../../../constants/index');
+const { validationErrorHandler } = require('../../utils/helpers');
+const api = require('../../services/api');
 
 const MAX_COMMENT_LENGTH = 400;
 
@@ -63,7 +63,7 @@ const createSubmissionToUkef = async (req, res) => {
 };
 
 
-export {
+module.exports = {
   submitToUkef,
   createSubmissionToUkef,
 };

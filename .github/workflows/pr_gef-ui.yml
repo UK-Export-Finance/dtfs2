@@ -8,17 +8,11 @@ on:
     - 'portal-api/**'
     - 'e2e-tests/gef/cypress/**'
     - 'utils/mock-data-loader/**'
-  schedule:
-    # A weekly run to roll up any base image patches, 
-    # in office hours, avoiding bank holiday Mondays:
-    # "At 12:00 on Tuesday." - https://crontab.guru/
-    - cron: '0 12 * * 2'
 
 env:
   environment: dev
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.RESOURCE_GROUP }}
 
 jobs:
   set-environment:
@@ -33,12 +27,22 @@ jobs:
 
   build:
     name: Build and push GEF UI
-    runs-on: ubuntu-latest
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    defaults:
+      run:
+        working-directory:  gef-ui
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: npm ci
+    - run: npm run lint
+    - run: npm t
+
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push Gef-ui
@@ -71,17 +75,6 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: portal-ui
         path: portal
-        tags: ${{ github.sha }}
-        build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true   
-    - name: Build and push Number-Generator
-      uses: docker/build-push-action@v1
-      with:
-        registry: ${{ secrets.ACR_REGISTRY_DEV }}
-        username: ${{ secrets.ACR_USERNAME_DEV }}
-        password: ${{ secrets.ACR_PASSWORD_DEV }}
-        repository: azure-function-number-generator
-        path: azure-functions/number-generator-function
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true   
@@ -118,7 +111,6 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
-      MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
 
@@ -150,18 +142,6 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }} dtfs/gef-ui
-    - name: Pull Azure Number Generator function
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
-    - name: Pull tfm-api
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
-    - name: Pull reference-data-proxy
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }} dtfs/reference-data-proxy
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -174,10 +154,6 @@ jobs:
         npm install
         node ./re-insert-mocks.js
         pwd
-    - name: Wake up Azure Function
-      run: |
-        sleep 30
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

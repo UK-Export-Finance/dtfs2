@@ -24,7 +24,7 @@ reference-data-proxy/generated_reports
 
 *.ipynb
 .ipynb_checkpoints
-.vscode
+.vscode/settings.json
 .DS_Store
 e2e-tests/trade-finance-manager/cypress/.eslintrc.json
 db-schema/**

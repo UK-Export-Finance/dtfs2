@@ -1,4 +1,4 @@
-export const sessionUserToLocals = (req, res, next) => {
+const sessionUserToLocals = (req, res, next) => {
   if (req.session && req.session.user) {
     res.locals.user = req.session.user;
   }
@@ -6,4 +6,4 @@ export const sessionUserToLocals = (req, res, next) => {
   return next();
 };
 
-export default { sessionUserToLocals };
+module.exports = sessionUserToLocals;

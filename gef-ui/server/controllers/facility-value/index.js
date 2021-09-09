@@ -1,8 +1,9 @@
-import * as api from '../../services/api';
-import { FACILITY_TYPE } from '../../../constants';
-import { validationErrorHandler } from '../../utils/helpers';
-import Facility from '../../models/facility';
-import validateFacilityValue from './facility-value';
+const { FACILITY_TYPE } = require('../../../constants');
+const { validationErrorHandler } = require('../../utils/helpers');
+const Facility = require('../../models/facility');
+const validateFacilityValue = require('./facility-value');
+
+const api = require('../../services/api');
 
 const facilityValue = async (req, res) => {
   const {
@@ -97,7 +98,7 @@ const updateFacilityValue = async (req, res) => {
   return update();
 };
 
-export {
+module.exports = {
   facilityValue,
   updateFacilityValue,
 };

@@ -10,11 +10,6 @@ openRouter.route('/deals/submit')
     dealSubmit.submitDealPUT,
   );
 
-openRouter.route('/deals/submitDealAfterUkefIds')
-  .put(
-    dealSubmit.submitDealAfterUkefIdsPUT,
-  );
-
 // Mock user routes. Not required once active directory login is enabled
 openRouter.route('/users/:username')
   .get(

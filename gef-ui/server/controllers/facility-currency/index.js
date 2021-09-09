@@ -1,6 +1,6 @@
-import * as api from '../../services/api';
-import { FACILITY_TYPE } from '../../../constants';
-import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
+const { FACILITY_TYPE } = require('../../../constants');
+const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
+const api = require('../../services/api');
 
 const facilityCurrency = async (req, res) => {
   const { params, query } = req;
@@ -82,7 +82,7 @@ const updateFacilityCurrency = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   facilityCurrency,
   updateFacilityCurrency,
 };

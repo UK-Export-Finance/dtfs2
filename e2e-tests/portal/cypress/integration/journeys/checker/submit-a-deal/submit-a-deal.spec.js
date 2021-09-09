@@ -21,7 +21,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   let dealBondCoverStartDateInThePast;
   let dealLoanCoverStartDateInThePast;
 
-  beforeEach(() => {
+  beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -29,7 +29,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  before(() => {
+  before( () => {
     cy.insertManyDeals([
       dealReadyToSubmit(),
       dealWithInvalidLoanCoverStartDate(),
@@ -37,9 +37,9 @@ context('A checker selects to submit a contract from the view-contract page', ()
       submittedDealWithBondCoverStartDateInThePast(),
       submittedDealWithLoanCoverStartDateInThePast(),
     ], MAKER_LOGIN)
-      .then((insertedDeals) => {
-        goodDeal = insertedDeals[0];
-        badDealInvalidLoanCoverStartDate = insertedDeals[1];
+      .then(insertedDeals => {
+        goodDeal=insertedDeals[0];
+        badDealInvalidLoanCoverStartDate=insertedDeals[1];
         badDealInvalidBondCoverStartDate = insertedDeals[2];
         dealBondCoverStartDateInThePast = insertedDeals[3];
         dealLoanCoverStartDateInThePast = insertedDeals[4];
@@ -86,7 +86,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // check we've gone to the right page
     cy.url().should('eq', relative(`/contract/${goodDeal._id}`));
-  });
+  }); 
 
   it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     // log in, visit a deal, select abandon
@@ -208,10 +208,10 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);
     contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
     });
     contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
+      expect(text.trim()).to.equal('Submitted');
     });
   });
 });
