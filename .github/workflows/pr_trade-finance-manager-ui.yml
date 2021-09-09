@@ -114,22 +114,10 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
-    - name: Pull tfm-ui
+    - name: Pull portal
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ github.sha }} dtfs/trade-finance-manager-ui
-    - name: Pull portal-api
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
-    - name: Pull Azure Number Generator function
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
-    - name: Pull reference-data-proxy
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }} dtfs/reference-data-proxy
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -142,10 +130,6 @@ jobs:
         npm install
         node ./re-insert-mocks.js
         pwd
-    - name: Wake up Azure Function
-      run: |
-        sleep 30
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

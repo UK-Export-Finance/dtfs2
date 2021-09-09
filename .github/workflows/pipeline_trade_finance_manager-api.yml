@@ -76,7 +76,7 @@ jobs:
         docker-compose up -d trade-finance-manager-api
     - name: Run API tests
       run: |
-        docker-compose exec -T trade-finance-manager-api npm run api-test
+        docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
     # - name: Load mock data
     #   run: |
     #     cd utils/mock-data-loader
