@@ -5,9 +5,11 @@ const createExporter = async (exporter) => {
 
   const response = await collection.insertOne(exporter);
 
-  const createdDeal = response.ops[0];
+  const { insertedId } = response;
 
-  return createdDeal;
+  return {
+    _id: insertedId,
+  };
 };
 
 exports.createExporterPost = async (req, res) => {

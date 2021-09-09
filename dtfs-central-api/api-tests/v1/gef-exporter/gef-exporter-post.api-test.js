@@ -13,17 +13,19 @@ describe('/v1/portal/gef/exporter', () => {
   });
 
   describe('POST /v1/portal/gef/exporter', () => {
-    it('returns the created exporter ', async () => {
+    it('creates an exporter ', async () => {
       const { body, status } = await api.post(newExporter).to('/v1/portal/gef/exporter');
 
       expect(status).toEqual(200);
 
-      const expected = {
+      expect(body).toEqual({ _id: expect.any(String) });
+
+      const { body: exporterAfterCreation } = await api.get(`/v1/portal/gef/exporter/${body._id}`);
+
+      expect(exporterAfterCreation).toEqual({
         _id: expect.any(String),
         ...newExporter,
-      };
-
-      expect(body).toEqual(expected);
+      });
     });
   });
 });

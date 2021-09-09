@@ -32,10 +32,22 @@ describe('/v1/tfm/teams', () => {
 
   describe('POST /v1/tfm/teams', () => {
     it('returns the created resource', async () => {
+      const mockTeam = mockTeams[0];
+
       const { status, body } = await api.post({ team: mockTeams[0] }).to('/v1/tfm/teams');
 
       expect(status).toEqual(200);
-      expect(body).toMatchObject(mockTeams[0]);
+
+      const teamMongoId = body._id;
+
+      const { body: teamAfterCreation } = await api.get(`/v1/tfm/teams/${mockTeam.id}`);
+
+      expect(teamAfterCreation).toMatchObject({
+        team: {
+          _id: teamMongoId,
+          ...mockTeam,
+        },
+      });
     });
   });
 
@@ -57,14 +69,16 @@ describe('/v1/tfm/teams', () => {
     });
 
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ team: mockTeams[0] }).to('/v1/tfm/teams');
+      const mockTeam = mockTeams[0];
 
-      const teamId = postResult.body.id;
+      await api.post({ team: mockTeam }).to('/v1/tfm/teams');
+
+      const teamId = mockTeam.id;
 
       const { status, body } = await api.get(`/v1/tfm/teams/${teamId}`);
 
       expect(status).toEqual(200);
-      expect(body.team).toMatchObject(mockTeams[0]);
+      expect(body.team).toMatchObject(mockTeam);
     });
   });
 

@@ -36,16 +36,13 @@ const createDeal = async () => {
 };
 
 describe('/v1/portal/facilities', () => {
-  let dealId;
-
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
 
-    const deal = await createDeal();
+    const { _id } = await createDeal();
 
-    dealId = deal._id;
-    newFacility.associatedDealId = dealId;
+    newFacility.associatedDealId = _id;
   });
 
   describe('POST /v1/portal/facilities', () => {
@@ -55,7 +52,7 @@ describe('/v1/portal/facilities', () => {
         facilityType: 'bond',
       };
 
-      const { body, status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
+      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
@@ -71,15 +68,20 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns the created facility with correct fields', async () => {
+    it('creates a facility', async () => {
       const { body, status } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       expect(status).toEqual(200);
 
       expect(typeof body._id).toEqual('string');
-      expect(body.facilityType).toEqual(newFacility.facilityType);
-      expect(body.associatedDealId).toEqual(newFacility.associatedDealId);
-      expect(typeof body.createdDate).toEqual('string');
+
+      const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${body._id}`);
+
+      expect(facilityAfterCreation).toEqual({
+        _id: body._id,
+        ...newFacility,
+        createdDate: expect.any(String),
+      });
     });
 
     it('creates incremental integer facility IDs', async () => {
@@ -87,7 +89,7 @@ describe('/v1/portal/facilities', () => {
       const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      expect(parseInt(facility1.body._id).toString()).toEqual(facility1.body._id);
+      expect(facility1.body._id).toEqual(facility1.body._id);
       expect(facility2.body._id - facility1.body._id).toEqual(1);
       expect(facility3.body._id - facility2.body._id).toEqual(1);
     });

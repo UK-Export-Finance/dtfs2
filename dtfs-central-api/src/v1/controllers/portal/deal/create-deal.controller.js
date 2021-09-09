@@ -37,10 +37,10 @@ const createDeal = async (deal, maker) => {
 
   const response = await collection.insertOne(newDeal);
 
-  const createdDeal = response.ops[0];
+  const { insertedId } = response;
 
   return {
-    deal: createdDeal,
+    _id: insertedId,
   };
 };
 
@@ -52,15 +52,15 @@ exports.createDealPost = async (req, res) => {
 
   const {
     validationErrors,
-    deal,
+    _id,
   } = await createDeal(req.body.deal, user);
 
   if (validationErrors) {
     return res.status(400).send({
-      ...deal,
+      _id,
       validationErrors,
     });
   }
 
-  return res.status(200).send(deal);
+  return res.status(200).send({ _id });
 };

@@ -15,17 +15,19 @@ describe('/v1/portal/gef/deals', () => {
   });
 
   describe('POST /v1/portal/gef/deals', () => {
-    it('returns the created deal with correct fields', async () => {
+    it('creates a deal', async () => {
       const { body, status } = await api.post(newDeal).to('/v1/portal/gef/deals');
 
       expect(status).toEqual(200);
 
-      const expected = {
-        _id: expect.any(String),
-        ...newDeal,
-      };
+      expect(body).toEqual({ _id: expect.any(String) });
 
-      expect(body).toEqual(expected);
+      const { body: dealAfterCreation } = await api.get(`/v1/portal/gef/deals/${body._id}`)
+
+      expect(dealAfterCreation).toEqual({
+        _id: body._id,
+        ...newDeal,
+      });
     });
   });
 });

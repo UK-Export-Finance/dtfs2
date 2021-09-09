@@ -43,7 +43,7 @@ describe('/v1/tfm/users', () => {
       const { status, body } = await api.post({ user: mockUsers[0] }).to('/v1/tfm/users');
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(mockUsers[0]));
+      expect(typeof body._id).toEqual('string');
     });
   });
 

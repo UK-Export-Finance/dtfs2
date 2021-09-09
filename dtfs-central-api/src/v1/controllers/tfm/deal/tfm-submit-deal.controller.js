@@ -50,7 +50,7 @@ const createDealSnapshot = async (deal) => {
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: String(deal._id) },
     $.flatten(withoutId(update)),
-    { returnOriginal: false, upsert: true },
+    { returnDocument: 'after', returnOriginal: false, upsert: true },
   );
 
   return findAndUpdateResponse.value;
@@ -86,7 +86,7 @@ const createFacilitiesSnapshot = async (deal) => {
       dealFacilities.map(async (facility) => collection.findOneAndUpdate(
         { _id: String(facility._id) },
         $.flatten({ facilitySnapshot: facility, ...tfmInit }),
-        { returnOriginal: false, upsert: true },
+        { returnDocument: 'after', returnOriginal: false, upsert: true },
       )),
     );
 

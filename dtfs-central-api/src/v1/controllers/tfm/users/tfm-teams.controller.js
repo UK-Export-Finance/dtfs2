@@ -10,7 +10,12 @@ exports.createTeam = createTeam;
 
 exports.createTeamPOST = async (req, res) => {
   const team = await createTeam(req.body.team);
-  res.status(200).json(team.ops[0]);
+
+  const { insertedId } = team;
+
+  res.status(200).json({
+    _id: insertedId,
+  });
 };
 
 const listTeams = async () => {

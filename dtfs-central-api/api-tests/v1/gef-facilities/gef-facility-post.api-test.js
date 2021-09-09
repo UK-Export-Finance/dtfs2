@@ -44,17 +44,21 @@ describe('/v1/portal/gef/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns the created facility', async () => {
+    it('returns new facility id and creates the facility', async () => {
       const { body, status } = await api.post(newFacility).to('/v1/portal/gef/facilities');
 
       expect(status).toEqual(200);
 
-      const expected = {
-        _id: expect.any(String),
-        ...newFacility,
-      };
+      const facilityId = body._id;
 
-      expect(body).toEqual(expected);
+      expect(body).toEqual({ _id: expect.any(String) });
+
+      const { body: allFacilitiesByDealId } = await api.get(`/v1/portal/gef/deals/${dealId}/facilities`);
+
+      expect(allFacilitiesByDealId).toEqual([{
+        _id: facilityId,
+        ...newFacility,
+      }]);
     });
   });
 });

@@ -47,7 +47,8 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const expected = {
       _id: createDealBody._id,
       dealSnapshot: {
-        ...createDealBody,
+        _id: createDealBody._id,
+        ...newDeal,
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
@@ -113,6 +114,8 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
 
     const { body: createdExporter } = await api.post(newExporter).to('/v1/portal/gef/exporter');
 
+    const { body: exporterAfterCreate } = await api.get(`/v1/portal/gef/exporter/${createdExporter._id}`);
+
     // create deal with exporterId
     newDeal.exporterId = createdExporter._id;
     const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
@@ -126,6 +129,6 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
 
     expect(status).toEqual(200);
 
-    expect(body.dealSnapshot.exporter).toEqual(createdExporter);
+    expect(body.dealSnapshot.exporter).toEqual(exporterAfterCreate);
   });
 });
