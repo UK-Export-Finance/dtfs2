@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Trade Finance Manager API",
   "main": "src/index.js",
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
@@ -40,7 +40,7 @@
     "express": "4.17.1",
     "moment": "^2.29.1",
     "mongo-dot-notation": "2.0.0",
-    "mongodb": "^4.1.1"
+    "mongodb": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "6.1.0",

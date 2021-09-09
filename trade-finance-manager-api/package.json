@@ -47,7 +47,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "mongo-dot-notation": "^2.0.0",
-    "mongodb": "^4.1.1",
+    "mongodb": "^4.0.0",
     "node-cron": "^3.0.0"
   },
   "devDependencies": {
