@@ -72,6 +72,16 @@ describe('controllers/provided-facility', () => {
   });
 
   describe('Validate Provided Facility', () => {
+    it('shows error message if nothing is set', async () => {
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
     it('redirects user to application page if application page if save and return is set to true', async () => {
       mockRequest.query.saveAndReturn = 'true';
 
@@ -82,6 +92,7 @@ describe('controllers/provided-facility', () => {
 
     it('redirects user to application page if application page if query status is equal to `change`', async () => {
       mockRequest.query.status = 'change';
+      mockRequest.body.details = ['TERMS'];
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
@@ -123,6 +134,7 @@ describe('controllers/provided-facility', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      mockRequest.body.details = ['TERMS'];
       api.updateFacility.mockRejectedValueOnce();
       await validateProvidedFacility(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
