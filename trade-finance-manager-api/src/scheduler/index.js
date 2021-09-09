@@ -4,7 +4,7 @@ const jobs = require('./jobs');
 const initScheduler = () => {
   Object.values(jobs).forEach((job) => {
     const { schedule, task, message } = job.init();
-    console.log(`Added schedule: ${message} on schedule ${schedule}`);
+    console.log(`Added schedule: ${message}`);
     cron.schedule(schedule, task);
   });
 };

@@ -37,22 +37,7 @@ const getDeal = async (dealId, dealType) => {
   return deal;
 };
 
-// Only create the TFM record until UKEFids have been generated, then process the submission
-// This allows a deal in Pending state to be seen in TFM,
-// which indicates to UKEF that a deal has been submitted before UKEFids are generated
-const submitDealBeforeUkefIds = async (dealId, dealType) => {
-  const deal = await getDeal(dealId, dealType);
-
-  if (!deal) {
-    return false;
-  }
-
-  return api.submitDeal(dealId);
-};
-exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
-
-
-const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
+const submitDeal = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
@@ -138,7 +123,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   return api.updateDeal(dealId, submittedDeal);
 };
 
-exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
+exports.submitDeal = submitDeal;
 
 const submitDealPUT = async (req, res) => {
   const {
@@ -147,7 +132,7 @@ const submitDealPUT = async (req, res) => {
     checker,
   } = req.body;
 
-  const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+  const deal = await submitDeal(dealId, dealType, checker);
 
   if (!deal) {
     return res.status(404).send();

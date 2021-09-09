@@ -2,13 +2,9 @@ const axios = require('axios');
 
 require('dotenv').config();
 
-const CONSTANTS = require('../constants');
-
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
-const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
-
 
 const findOnePortalDeal = async (dealId) => {
   try {
@@ -470,22 +466,9 @@ const updateACBSfacility = async (facility, supplierName) => {
   }
 };
 
-const getFunctionsAPI = async (type = 'ACBS', url = '') => {
+const getFunctionsAPI = async (url = '') => {
   // Need to refer to docker internal to work on localhost
-  let functionUrl;
-  switch (type) {
-    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS:
-      functionUrl = azureAcbsFunctionUrl;
-      break;
-
-    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
-      functionUrl = azureNumberGeneratorUrl;
-      break;
-
-    default:
-  }
-
-  const modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
+  const modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, azureAcbsFunctionUrl);
 
   try {
     const response = await axios({
@@ -495,6 +478,7 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
         'Content-Type': 'application/json',
       },
     });
+
     return response.data;
   } catch (err) {
     return err.response.data;
