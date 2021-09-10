@@ -2,7 +2,7 @@ name: DTFS Central API
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - 'dtfs-central-api/**'
   schedule:

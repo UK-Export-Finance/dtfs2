@@ -2,7 +2,7 @@ name: Deploy ACBS Function App
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
     - 'azure-functions/acbs-function/**'
   schedule:

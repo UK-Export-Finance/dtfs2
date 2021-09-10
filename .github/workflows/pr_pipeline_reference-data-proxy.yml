@@ -2,7 +2,7 @@ name: PR tests - Reference Data proxy
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - 'reference-data-proxy/**'
     - 'utils/mock-data-loader/**'
