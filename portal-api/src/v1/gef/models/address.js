@@ -13,7 +13,6 @@ module.exports = {
   Address,
 };
 
-
 // class Address {
 //   constructor(address) {
 //     this.organisationName = address.organisation_name || null;

@@ -31,6 +31,7 @@ class Application {
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
       application.coverStatus = status[application.coverTerms.status || PROGRESS.NOT_STARTED];
       application.facilitiesStatus = status[application.facilities.status || PROGRESS.NOT_STARTED];
+      application.supportingInfoStatus = status[application.supportingInformation?.status || PROGRESS.NOT_STARTED];
 
       // Can only submit when all section statuses are set to complete
       // and the application is in Draft or CHANGES_REQUIRED

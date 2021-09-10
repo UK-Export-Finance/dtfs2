@@ -1,0 +1,58 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-heading-l" data-cy="supportingInfo-heading">
+      Supporting information
+    </h2>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    {{ govukTag({
+      text: supportingInfo.status.text,
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + supportingInfo.status.class,
+      attributes: {
+        'data-cy': 'supportingInfo-status'
+      }
+    }) }}
+  </div>
+</div>
+
+{% if supportingInfo.status.code === 'NOT_STARTED' and not previewMode %}
+  <a class="govuk-link" href="/gef/application-details/{{applicationId}}/supporting-information/manual-inclusion-questionnaire" data-cy="supportingInfo-start-link">Add supporting information</a>
+{% else %}
+  {% set securityDetailsHtml %}
+    <p>{{ supportingInfo.securityDetails.exporter | truncate(90, false, "...") }}</p>
+    <p>{{ supportingInfo.securityDetails.application | truncate(90, false, "...") }}</p>
+  {% endset %}
+
+  {{ govukSummaryList({
+    attributes: {
+      'data-cy': 'supportingInfo-summary-list'
+    },
+    rows: [
+      {
+        key: {
+          text: "Security details"
+        },
+        value: {
+          text: "Required" if not supportingInfo.securityDetails,
+          classes: "has-text-danger" if not supportingInfo.securityDetails,
+          html: securityDetailsHtml if supportingInfo
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/security-details",
+              text: "Change" if supportingInfo.securityDetails else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      }
+    ]
+  }) }}
+{% endif %}
+
+<hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">

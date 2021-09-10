@@ -414,7 +414,6 @@ module.exports = () => {
       return builder;
     },
 
-
     validationErrors,
 
     build: () => js2xmlparser.parse('Deal', deal),

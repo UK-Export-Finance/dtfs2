@@ -35,6 +35,16 @@ const updateExporter = (exporterId, token, address) => cy.request({
   },
 }).then((res) => res);
 
+const updateCoverTerms = (coverTermsId, token, coverTerms) => cy.request({
+  url: `${BASE_URL}/gef/cover-terms/${coverTermsId}`,
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+  body: coverTerms,
+}).then((res) => res);
+
 const fetchAllFacilities = (applicationId, token) => cy.request({
   url: `${BASE_URL}/gef/facilities`,
   qs: {
@@ -63,4 +73,5 @@ export {
   updateExporter,
   fetchAllFacilities,
   setApplicationStatus,
+  updateCoverTerms,
 };

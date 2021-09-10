@@ -31,7 +31,6 @@ const MockExporterResponse = () => {
   return res;
 };
 
-
 describe('controllers/about-exporter', () => {
   let mockResponse;
   let mockRequest;

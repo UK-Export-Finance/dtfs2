@@ -112,7 +112,6 @@ const constructor = (user, filters) => {
       return listSoFar;
     }, []);
 
-
     if (!isSuperUser(user)) {
       listOfMongoQueryElements.push({ 'details.owningBank.id': { $eq: user.bank.id } });
     }
@@ -145,6 +144,5 @@ const constructor = (user, filters) => {
     filteredTransactions,
   };
 };
-
 
 module.exports = constructor;

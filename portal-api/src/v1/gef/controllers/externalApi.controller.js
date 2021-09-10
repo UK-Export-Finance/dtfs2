@@ -31,7 +31,6 @@ const findSicCodes = async (companySicCodes) => {
   return null;
 };
 
-
 exports.getByRegistrationNumber = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   try {

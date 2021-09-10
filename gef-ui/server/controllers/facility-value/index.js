@@ -60,7 +60,6 @@ const updateFacilityValue = async (req, res) => {
     }
   }
 
-
   if (saveAndReturn) {
     facilityValueErrors.push(...validateFacilityValue(body, saveAndReturn));
     //  save the updated values

@@ -23,6 +23,7 @@ const facilityValueRoutes = require('./facility-value');
 const facilityGuaranteeRoutes = require('./facility-guarantee');
 const facilityConfirmDeletionRoutes = require('./facility-confirm-deletion');
 const returnToMaker = require('./return-to-maker');
+const supportingInformation = require('./supporting-information');
 
 const router = express.Router();
 
@@ -51,5 +52,6 @@ router.use(facilityValueRoutes);
 router.use(facilityGuaranteeRoutes);
 router.use(facilityConfirmDeletionRoutes);
 router.use(returnToMaker);
+router.use(supportingInformation);
 
 module.exports = router;

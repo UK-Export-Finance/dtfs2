@@ -35,7 +35,6 @@ const authRouter = express.Router();
 const openRouter = express.Router();
 const authRouterAllowXss = express.Router();
 
-
 authRouterAllowXss.use(
   passport.authenticate('jwt', { session: false }),
 );
@@ -236,7 +235,6 @@ authRouter.route('/countries/:code')
     countries.findOne,
   );
 
-
 authRouter.route('/feedback')
   .get(
     validate({ role: ['data-admin'] }),
@@ -261,7 +259,6 @@ authRouter.route('/industry-sectors')
   .get(
     industrySectors.findAll,
   );
-
 
 authRouter.route('/industry-sectors/:code')
   .get(
