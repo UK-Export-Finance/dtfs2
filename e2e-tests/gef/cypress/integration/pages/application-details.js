@@ -32,6 +32,11 @@ const applicationDetails = {
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
   deleteFacilityLink: () => cy.get('[data-cy="delete-facility"]'),
 
+  supportingInfoHeading: () => cy.get('[data-cy="supportingInfo-heading"]'),
+  supportingInfoStatus: () => cy.get('[data-cy="supportingInfo-status"]'),
+  supportingInfoStartLink: () => cy.get('[data-cy="supportingInfo-start-link'),
+  supportingInfoSummaryList: () => cy.get('[data-cy="supportingInfo-summary-list"]'),
+
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitValidationText: () => cy.get('[data-cy="submit-validation-text"]'),

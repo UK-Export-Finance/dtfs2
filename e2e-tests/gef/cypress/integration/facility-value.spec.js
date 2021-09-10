@@ -48,9 +48,9 @@ context('Facility Value Page', () => {
     });
 
     it('redirects user to `facility currency` page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-currency`));
     });
 
     it('hides back button if visiting page with `change` query', () => {
@@ -74,7 +74,7 @@ context('Facility Value Page', () => {
 
   describe('Percentage of cover field', () => {
     it('only allows the user to enter a value between 1 and 80', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('0');
       facilityValue.percentageCover().type('0');
@@ -111,29 +111,29 @@ context('Facility Value Page', () => {
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('80');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
 
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('0');
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('1');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
 
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('0');
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('79');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
     });
   });
 
   describe('Interest margin Percentage field', () => {
     it('only allows the user to enter a value between 0 and 100, and allows decimal places', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('79');
       facilityValue.interestPercentage().clear();
@@ -163,37 +163,37 @@ context('Facility Value Page', () => {
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('1');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
 
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('79');
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('100');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
 
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('79');
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('79');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
 
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('79');
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('10.1');
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
     });
   });
 
   describe('Save and return', () => {
     it('displays an error for interest percentage when it has an invalid entry', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('-1');
@@ -203,7 +203,7 @@ context('Facility Value Page', () => {
     });
 
     it('displays an error for percentage cover when it has an invalid entry', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('-1');
       facilityValue.interestPercentage().clear();
@@ -213,39 +213,44 @@ context('Facility Value Page', () => {
     });
 
     it('returns to the application page when all the fields are blank', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.interestPercentage().clear();
       facilityValue.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
     it('returns to the application page when all the fields have valid entries', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('80');
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('1');
       facilityValue.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
     it('returns to the application page when percentage cover is blank and interestPercentage is valid', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.interestPercentage().clear();
       facilityValue.interestPercentage().type('100');
       facilityValue.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
     it('returns to the application page when percentage cover is valid and interestPercentage is blank', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValue.percentageCover().clear();
       facilityValue.percentageCover().type('80');
       facilityValue.interestPercentage().clear();
       facilityValue.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
+    });
+
+    it('redirects to the currency page when currency is not set for the facility', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
     });
   });
 });

@@ -1,11 +1,11 @@
-import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
-import { PROGRESS } from '../../../constants';
-import Application from '../../models/application';
+const api = require('../../services/api');
+const { validationErrorHandler } = require('../../utils/helpers');
+const { PROGRESS } = require('../../../constants');
+const Application = require('../../models/application');
 
 const maxCommentLength = 400;
 
-export const getApplicationSubmission = async (req, res) => {
+const getApplicationSubmission = async (req, res) => {
   const { params, session } = req;
   const { applicationId } = params;
   const { user, userToken } = session;
@@ -15,7 +15,7 @@ export const getApplicationSubmission = async (req, res) => {
   return res.render('application-details-comments.njk', { applicationId, isAutomaticCover, maxCommentLength });
 };
 
-export const postApplicationSubmission = async (req, res, next) => {
+const postApplicationSubmission = async (req, res, next) => {
   const { params, session, body } = req;
   const { user, userToken } = session;
   const { applicationId } = params;
@@ -46,7 +46,6 @@ export const postApplicationSubmission = async (req, res, next) => {
       await api.updateApplication(applicationId, { comments });
     }
 
-
     await api.setApplicationStatus(applicationId, PROGRESS.BANK_CHECK);
   } catch (err) {
     return next(err);
@@ -55,7 +54,7 @@ export const postApplicationSubmission = async (req, res, next) => {
   return res.render('application-details-submitted.njk', { applicationId, isAutomaticCover });
 };
 
-export default {
+module.exports = {
   getApplicationSubmission,
   postApplicationSubmission,
 };

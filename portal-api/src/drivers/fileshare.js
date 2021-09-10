@@ -86,7 +86,6 @@ const tmpTests = async () => {
   });
 };
 
-
 const uploadFile = async ({
   fileshare, folder, filename, buffer, allowOverwrite,
 }) => {
@@ -135,7 +134,6 @@ const uploadFile = async ({
     },
   };
 };
-
 
 const readFile = async ({
   fileshare, folder = '', filename,

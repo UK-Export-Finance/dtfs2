@@ -1,4 +1,3 @@
-
 const allDeals = require('./query-all-deals');
 const deals = require('./query-deals');
 const transactions = require('./query-transactions');

@@ -1,6 +1,6 @@
-import * as api from '../../services/api';
-import { validationErrorHandler, isTrueSet } from '../../utils/helpers';
-import { FACILITY_TYPE } from '../../../constants';
+const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
+const { FACILITY_TYPE } = require('../../../constants');
+const api = require('../../services/api');
 
 const facilities = async (req, res) => {
   const { params, query } = req;
@@ -10,7 +10,6 @@ const facilities = async (req, res) => {
 
   facilityType = facilityType || FACILITY_TYPE.CASH;
   const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
-
 
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
@@ -83,7 +82,7 @@ const createFacility = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   facilities,
   createFacility,
 };

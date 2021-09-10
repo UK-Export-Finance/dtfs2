@@ -1,8 +1,9 @@
-import * as api from '../../services/api';
-import { FACILITY_TYPE } from '../../../constants';
-import { validationErrorHandler } from '../../utils/helpers';
-import Facility from '../../models/facility';
-import validateFacilityValue from './facility-value';
+const { FACILITY_TYPE } = require('../../../constants');
+const { validationErrorHandler } = require('../../utils/helpers');
+const Facility = require('../../models/facility');
+const validateFacilityValue = require('./facility-value');
+
+const api = require('../../services/api');
 
 const facilityValue = async (req, res) => {
   const {
@@ -21,6 +22,11 @@ const facilityValue = async (req, res) => {
       console.log('Facility not found, or not authorised');
       return res.redirect('/');
     }
+
+    if (!facility.currency) {
+      return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-currency`);
+    }
+
     return res.render('partials/facility-value.njk', facility);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -53,7 +59,6 @@ const updateFacilityValue = async (req, res) => {
       return res.render('partials/problem-with-service.njk');
     }
   }
-
 
   if (saveAndReturn) {
     facilityValueErrors.push(...validateFacilityValue(body, saveAndReturn));
@@ -92,7 +97,7 @@ const updateFacilityValue = async (req, res) => {
   return update();
 };
 
-export {
+module.exports = {
   facilityValue,
   updateFacilityValue,
 };

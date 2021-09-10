@@ -1,5 +1,5 @@
-import * as api from '../../services/api';
-import { validationErrorHandler } from '../../utils/helpers';
+const api = require('../../services/api');
+const { validationErrorHandler } = require('../../utils/helpers');
 
 const companiesHouse = async (req, res) => {
   const { params, query } = req;
@@ -68,7 +68,7 @@ const validateCompaniesHouse = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   companiesHouse,
   validateCompaniesHouse,
 };

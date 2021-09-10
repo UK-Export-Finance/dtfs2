@@ -10,6 +10,7 @@ const facilityCurrency = {
   yenCheckbox: () => cy.get('[data-cy="yen-checkbox"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   returnToApplicationButton: () => cy.get('[data-cy="return-to-application-button"]'),
+  saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };
 
 export default facilityCurrency;

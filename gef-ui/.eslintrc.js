@@ -1,9 +1,10 @@
 module.exports = {
-  extends: "airbnb-base",
+  extends: 'airbnb-base',
   env: {
     jest: true,
     browser: true,
   },
+  root: true,
   rules: {
     'max-len': ['error', 120, 2, {
       ignoreUrls: true,
@@ -12,8 +13,12 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
-    "no-underscore-dangle": ['error', { allow: ['_id'] }],
-    "import/no-named-as-default": 0,
-    "implicit-arrow-linebreak": 0
-  }
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'import/no-named-as-default': 0,
+    'implicit-arrow-linebreak': 0,
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
+  },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };

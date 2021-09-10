@@ -6,6 +6,9 @@ const {
   validationApplicationCreate,
   validatorStatusCheckEnums,
 } = require('./validation/applicationExists');
+const {
+  supportingInfoStatus,
+} = require('./validation/supportingInfo');
 const { isSuperUser } = require('../../users/checks');
 
 const { Application } = require('../models/application');
@@ -77,6 +80,11 @@ exports.getAll = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
 
   const doc = await collection.find({}).toArray();
+
+  if (doc.length && doc.supportingInformation) {
+    doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
+  }
+
   res.status(200).send({
     items: doc,
   });
@@ -87,7 +95,9 @@ exports.getById = async (req, res) => {
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
   });
+
   if (doc) {
+    if (doc.supportingInformation) doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
     res.status(200).send(doc);
   } else {
     res.status(204).send();

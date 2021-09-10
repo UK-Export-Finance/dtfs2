@@ -1,4 +1,4 @@
-import { getUserAuthorisationLevelsToApplication } from './user-authorisation-level';
+import getUserAuthorisationLevelsToApplication from './user-authorisation-level';
 
 const makerUser = {
   username: 'MAKER',
@@ -51,7 +51,6 @@ const bankCheckApplication = {
   ...draftApplication,
   status: 'BANK_CHECK',
 };
-
 
 describe('user-authorisation-levels', () => {
   it('returns the expected authorisation levels for DRAFT', () => {

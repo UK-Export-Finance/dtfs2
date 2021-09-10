@@ -1,6 +1,6 @@
-import * as api from '../../services/api';
-import { FACILITY_TYPE } from '../../../constants';
-import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
+const api = require('../../services/api');
+const { FACILITY_TYPE } = require('../../../constants');
+const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const providedFacility = async (req, res) => {
   const { params, query } = req;
@@ -36,11 +36,20 @@ const validateProvidedFacility = async (req, res) => {
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const details = Array.isArray(body.details) ? body.details : [body.details];
 
-  if (body.details && body.details.includes('OTHER') && !body.detailsOther) {
-    providedFacilityErrors.push({
-      errRef: 'detailsOther',
-      errMsg: 'Enter details for "Other"',
-    });
+  if (!isTrueSet(saveAndReturn)) {
+    if (!body.details) {
+      providedFacilityErrors.push({
+        errRef: '',
+        errMsg: 'You must select at least one option',
+      });
+    }
+
+    if (body.details && body.details.includes('OTHER') && !body.detailsOther) {
+      providedFacilityErrors.push({
+        errRef: 'detailsOther',
+        errMsg: 'Enter details for "Other"',
+      });
+    }
   }
 
   if (providedFacilityErrors.length > 0) {
@@ -72,7 +81,7 @@ const validateProvidedFacility = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   providedFacility,
   validateProvidedFacility,
 };

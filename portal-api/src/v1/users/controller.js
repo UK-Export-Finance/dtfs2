@@ -30,7 +30,6 @@ const createPasswordToken = async (email) => {
 };
 exports.createPasswordToken = createPasswordToken;
 
-
 const sendBlockedEmail = async (emailAddress) => {
   const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
 
@@ -71,7 +70,6 @@ const sendNewAccountEmail = async (user, resetToken) => {
     variables,
   );
 };
-
 
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');

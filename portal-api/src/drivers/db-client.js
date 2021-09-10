@@ -6,7 +6,6 @@ let client;
 
 let connection = null;
 
-
 const dbConnect = async () => {
   client = await MongoClient.connect(
     url,

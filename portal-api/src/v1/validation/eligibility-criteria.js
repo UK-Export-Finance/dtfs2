@@ -31,7 +31,6 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
     };
   }
 
-
   if (!criteria11Additional.agentName) {
     errorList.agentName = {
       order: '11-1',

@@ -38,7 +38,6 @@ const task = async (fileshare = 'workflow', overwriteFolder) => {
   const filePromises = [];
   const filenames = [];
 
-
   await uploadFile(lockFile);
   files.filter((f) => f.name.toLowerCase().endsWith('xml')).forEach((file) => {
     const documentLocation = {

@@ -57,7 +57,6 @@ const shouldCheckIssuedFacilities = (dealStatus, dealSubmissionType) => {
   const isMiaDealInApprovedStatus = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
                                     && acceptedByUkefDealStatus);
 
-
   const shouldCheck = ((allowedDealStatus && allowedDealSubmissionType)
                       || isMiaDealInApprovedStatus);
 

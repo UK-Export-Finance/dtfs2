@@ -13,16 +13,19 @@ const MockResponse = () => {
   return res;
 };
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('GET Ineligible Automatic Cover', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('renders the `ineligible for Automatic Cover` template with the correct paramaters', async () => {
     const mockResponse = MockResponse();
     const mockRequest = MockRequest();
+
     mockRequest.params.applicationId = '123';
+
     await ineligibleAutomaticCover(mockRequest, mockResponse);
+
     expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-automatic-cover.njk', {
       applicationId: '123',
     });

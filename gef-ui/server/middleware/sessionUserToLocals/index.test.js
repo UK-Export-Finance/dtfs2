@@ -1,4 +1,4 @@
-import { sessionUserToLocals } from './index';
+import sessionUserToLocals from '.';
 
 const MockRequest = () => {
   const req = {};

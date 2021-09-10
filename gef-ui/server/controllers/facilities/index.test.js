@@ -1,5 +1,7 @@
 import { facilities, createFacility } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -28,131 +30,121 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-const createFacilitySpy = jest.spyOn(api, 'createFacility').mockImplementationOnce(() => Promise.resolve());
-const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
-
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
-describe('Facilities', () => {
-  it('renders the `Facilities` template when there is no facility ID provided', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+describe('controllers/facilities', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockFacilityResponse;
 
-    await facilities(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-      facilityType: 'cash',
-      applicationId: '123',
-      status: undefined,
-    }));
+  beforeEach(() => {
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
+    mockFacilityResponse = MockFacilityResponse();
+
+    api.getApplication.mockResolvedValue({});
+    api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.createFacility.mockResolvedValue(mockFacilityResponse);
+    api.updateFacility.mockResolvedValue(mockFacilityResponse);
   });
 
-  it('renders the `Facilities` template when there is a facility ID', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
-
-    mockRequest.params.facilityId = 'xyz';
-    api.getFacility = () => Promise.resolve(mockFacilityResponse);
-    await facilities(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-      facilityType: 'cash',
-      applicationId: '123',
-      hasBeenIssued: 'true',
-      status: undefined,
-    }));
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+  describe('Facilities', () => {
+    it('renders the `Facilities` template when there is no facility ID provided', async () => {
+      await facilities(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
+        facilityType: 'cash',
+        applicationId: '123',
+        status: undefined,
+      }));
+    });
 
-    mockRequest.params.facilityId = 'xyz';
+    it('renders the `Facilities` template when there is a facility ID', async () => {
+      mockRequest.params.facilityId = 'xyz';
 
-    api.getFacility = () => Promise.reject();
-    await facilities(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
-});
+      await facilities(mockRequest, mockResponse);
 
-describe('Create Facility', () => {
-  it('returns Has Been Issued validation error', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
+        facilityType: 'cash',
+        applicationId: '123',
+        hasBeenIssued: 'true',
+        status: undefined,
+      }));
+    });
 
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      mockRequest.params.facilityId = 'xyz';
+      api.getFacility.mockRejectedValueOnce();
 
-    await createFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
-      }),
-      applicationId: '123',
-    }));
-  });
-
-  it('calls the create facility api if no facility ID has been provided', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-
-    mockRequest.body.hasBeenIssued = 'true';
-    await createFacility(mockRequest, mockResponse);
-
-    expect(updateFacilitySpy).not.toHaveBeenCalled();
-    expect(createFacilitySpy).toHaveBeenCalledWith({
-      applicationId: '123',
-      hasBeenIssued: true,
-      type: 'CASH',
+      await facilities(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
-  it('calls the update facility api if facility ID has been provided', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+  describe('Create Facility', () => {
+    it('returns Has Been Issued validation error', async () => {
+      await createFacility(mockRequest, mockResponse);
 
-    mockRequest.body.hasBeenIssued = 'false';
-    mockRequest.params.facilityId = 'xyz';
-    await createFacility(mockRequest, mockResponse);
-
-    expect(createFacilitySpy).not.toHaveBeenCalled();
-    expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      hasBeenIssued: false,
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
+        }),
+        applicationId: '123',
+      }));
     });
-  });
 
-  it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockedRejection = { response: { status: 400, message: 'Whoops' } };
-    mockRequest.body.hasBeenIssued = 'true';
-    api.createFacility = () => Promise.reject(mockedRejection);
-    await createFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
+    it('calls the create facility api if no facility ID has been provided', async () => {
+      mockRequest.body.hasBeenIssued = 'true';
+      await createFacility(mockRequest, mockResponse);
 
-  it('redirects user to `application` page if status query is set to `Change`', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+      expect(api.updateFacility).not.toHaveBeenCalled();
+      expect(api.createFacility).toHaveBeenCalledWith({
+        applicationId: '123',
+        hasBeenIssued: true,
+        type: 'CASH',
+      });
+    });
 
-    mockRequest.query.status = 'change';
-    mockRequest.body.hasBeenIssued = 'true';
+    it('calls the update facility api if facility ID has been provided', async () => {
+      mockRequest.body.hasBeenIssued = 'false';
+      mockRequest.params.facilityId = 'xyz';
+      await createFacility(mockRequest, mockResponse);
 
+      expect(api.createFacility).not.toHaveBeenCalled();
+      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
+        hasBeenIssued: false,
+      });
+    });
 
-    api.createFacility = () => Promise.resolve();
-    await createFacility(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
-  });
+    it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
+      mockRequest.body.hasBeenIssued = 'true';
+      api.createFacility.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
 
-  it('redirects user to `about facility` page if response from api is successful', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityResponse = new MockFacilityResponse();
+      await createFacility(mockRequest, mockResponse);
 
-    mockRequest.body.hasBeenIssued = 'true';
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
 
-    api.createFacility = () => Promise.resolve(mockFacilityResponse);
-    await createFacility(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/abc/about-facility');
+    it('redirects user to `application` page if status query is set to `Change`', async () => {
+      mockRequest.query.status = 'change';
+      mockRequest.body.hasBeenIssued = 'true';
+
+      await createFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('redirects user to `about facility` page if response from api is successful', async () => {
+      mockRequest.body.hasBeenIssued = 'true';
+
+      await createFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/abc/about-facility');
+    });
   });
 });

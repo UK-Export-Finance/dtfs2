@@ -1,4 +1,3 @@
-
 exports.mongoStatus = (response) => {
   let status = 200;
   if (response.ok) {

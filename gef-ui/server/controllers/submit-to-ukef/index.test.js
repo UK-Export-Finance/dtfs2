@@ -1,5 +1,7 @@
 import { submitToUkef, createSubmissionToUkef } from './index';
-import * as api from '../../services/api';
+import api from '../../services/api';
+
+jest.mock('../../services/api');
 
 const MockResponse = () => {
   const res = {};
@@ -38,59 +40,59 @@ const MockMakerUserResponse = () => ({
   timezone: 'Europe/London',
 });
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+describe('controllers/submit-to-ukef', () => {
+  let mockResponse;
+  let mockRequest;
 
-describe('create submission to UKEF', () => {
-  const mockResponse = new MockResponse();
-  const mockRequest = new MockRequest();
-  const mockApplicationResponse = new MockApplicationResponse();
-  const mockMakerUserResponse = new MockMakerUserResponse();
-  api.getApplication = () => Promise.resolve(mockApplicationResponse);
-  api.getUserDetails = () => Promise.resolve(mockMakerUserResponse);
-  api.updateApplication = () => Promise.resolve(mockApplicationResponse);
-  api.setApplicationStatus = () => Promise.resolve(mockApplicationResponse);
+  beforeEach(() => {
+    mockResponse = MockResponse();
+    mockRequest = MockRequest();
+    const mockApplicationResponse = MockApplicationResponse();
 
-  it('redirects to submission url', async () => {
-    await createSubmissionToUkef(mockRequest, mockResponse);
-    // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-    expect(mockResponse.render)
-      .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk');
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
+    api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
+    api.updateApplication.mockResolvedValue(mockApplicationResponse);
+    api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
   });
 
-  it('renders an error when the comment is over the maximum length', async () => {
-    api.getApplication = () => Promise.resolve(mockApplicationResponse);
-    api.getUserDetails = () => Promise.resolve(mockMakerUserResponse);
-    api.updateApplication = () => Promise.resolve(mockApplicationResponse);
-
-    const longComments = 'a'.repeat(401);
-    mockRequest.body.comment = longComments;
-
-    await createSubmissionToUkef(mockRequest, mockResponse);
-
-    expect(mockResponse.render)
-      .toHaveBeenCalledWith('partials/submit-to-ukef.njk', expect.objectContaining({
-        applicationId: expect.any(String),
-        comment: longComments,
-        maxCommentLength: expect.any(Number),
-        errors: expect.any(Object),
-      }));
+  afterEach(() => {
+    jest.resetAllMocks();
   });
-});
 
-describe('Submit to UKEF', () => {
-  it('renders the page as expected', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+  describe('create submission to UKEF', () => {
+    it('redirects to submission url', async () => {
+      await createSubmissionToUkef(mockRequest, mockResponse);
+      // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk');
+    });
 
-    await submitToUkef(mockRequest, mockResponse);
+    it('renders an error when the comment is over the maximum length', async () => {
+      const longComments = 'a'.repeat(401);
+      mockRequest.body.comment = longComments;
 
-    expect(mockResponse.render)
-      .toHaveBeenCalledWith('partials/submit-to-ukef.njk',
-        expect.objectContaining({
+      await createSubmissionToUkef(mockRequest, mockResponse);
+
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('partials/submit-to-ukef.njk', expect.objectContaining({
           applicationId: expect.any(String),
+          comment: longComments,
           maxCommentLength: expect.any(Number),
+          errors: expect.any(Object),
         }));
+    });
+  });
+
+  describe('Submit to UKEF', () => {
+    it('renders the page as expected', async () => {
+      await submitToUkef(mockRequest, mockResponse);
+
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('partials/submit-to-ukef.njk',
+          expect.objectContaining({
+            applicationId: expect.any(String),
+            maxCommentLength: expect.any(Number),
+          }));
+    });
   });
 });

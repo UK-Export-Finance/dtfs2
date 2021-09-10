@@ -27,7 +27,6 @@ const {
   calculateFacilityConversionDate,
 } = require('./helpers');
 
-
 const generateTypeA = async (deal, fromStatus) => {
   const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
 
@@ -205,7 +204,6 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_cover_period(calculateExposurePeriod(bond))
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
 
-
       if (!businessRules.transactions.isPremiumTypeAtMaturity(bond.feeType)) {
         bss.BSS_premium_freq(k2Map.FACILITIES.FEE_FREQUENCY[bond.feeFrequency]);
       }
@@ -236,7 +234,6 @@ const generateTypeA = async (deal, fromStatus) => {
 
         const loanConversionRate = calculateFacilityConversionRate(loan, dealCurrencyId);
         const loanConversionDate = calculateFacilityConversionDate(loan, dealCurrencyId);
-
 
         let loanUkefFacilityId;
         if (loan.ukefFacilityID) {
@@ -317,13 +314,11 @@ const generateTypeA = async (deal, fromStatus) => {
     }
   }
 
-
   const typeAxmlStr = builder.build();
 
   // Validate XML against XSD schema
   const typeAxsd = fs.readFileSync(path.resolve(__dirname, './type-a-defs/type-a.xsd'),
     { encoding: 'utf8', flag: 'r' });
-
 
   const parsedXml = libxml.parseXml(typeAxmlStr);
   const parsedXsd = libxml.parseXml(typeAxsd);
@@ -339,7 +334,6 @@ const generateTypeA = async (deal, fromStatus) => {
   const filename = `${deal._id}_${ucActionName}`; // eslint-disable-line no-underscore-dangle
 
   const isValidXml = parsedXml.validate(parsedXsd);
-
 
   if (!isValidXml) {
     const errorList = parsedXml.validationErrors.map((ve) => ({ text: ve.message }));
@@ -386,7 +380,6 @@ const createTypeA = async (deal, fromStatus) => {
     filename: 'portal.lock',
     buffer: Buffer.from('', 'utf-8'),
   };
-
 
   await fileshare.uploadFile(lockFile);
   const dealUpload = await fileshare.uploadFile(upload);
