@@ -62,13 +62,6 @@ describe('/v1/deals/:id/loan/:loanId', () => {
 
     const updatedLoan = await updateLoan(dealId, loanId, modifiedLoan);
 
-    deal.loanTransactions = {
-      items: [
-        ...deal.loanTransactions.items,
-        updatedLoan.loan,
-      ]
-    };
-
     return updatedLoan.body;
   };
 

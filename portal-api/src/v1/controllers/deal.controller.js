@@ -236,6 +236,7 @@ exports.findOne = (req, res) => {
 
 const updateDeal = async (dealId, dealUpdate, user) => {
   const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+
   return updatedDeal;
 };
 exports.updateDeal = updateDeal;

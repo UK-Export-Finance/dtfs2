@@ -4,7 +4,6 @@ const corsAdapter = require('axios/lib/adapters/http');
 const db = require('./src/drivers/db-client');
 
 const mockFiles = [
-  './src/v1/controllers/log-controller',
   './src/scheduler',
   './src/reference-data/api',
   './src/v1/email',

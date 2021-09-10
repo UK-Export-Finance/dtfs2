@@ -43,9 +43,7 @@ exports.create = async (req, res) => {
   };
 
   const collection = await db.getCollection('feedback');
-  const response = await collection.insertOne(modifiedFeedback);
-
-  const createdFeedback = response.ops[0];
+  const createdFeedback = await collection.insertOne(modifiedFeedback);
 
   // get formatted date from created timestamp, to display in email
   const targetTimezone = req.user.timezone;
@@ -89,7 +87,7 @@ exports.create = async (req, res) => {
     emailVariables,
   );
 
-  return res.status(200).send(createdFeedback);
+  return res.status(200).send({ _id: createdFeedback.insertedId });
 };
 
 exports.findOne = (req, res) => (

@@ -41,8 +41,8 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const item = await collection.insertOne(new EligibilityCriteria(req.body));
-  res.status(201).send(item.ops[0]);
+  const criteria = await collection.insertOne(new EligibilityCriteria(req.body));
+  res.status(201).send({ _id: criteria.insertedId });
 };
 
 exports.delete = async (req, res) => {

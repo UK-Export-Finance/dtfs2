@@ -26,8 +26,16 @@ exports.delete = async (facilityId, user) =>
 exports.createMultiple = async (req, res) => {
   const { facilities, associatedDealId, user } = req.body;
 
-  const { data } = await api.createMultipleFacilities(facilities, associatedDealId, user);
-  return res.status(200).send(data);
+  const { data: ids } = await api.createMultipleFacilities(facilities, associatedDealId, user);
+
+  const allFacilities = await Promise.all(
+    ids.map(async (id) => {
+      const facility = await api.findOneFacility(id);
+      return facility;
+    }),
+  );
+
+  return res.status(200).send(allFacilities);
 };
 
 exports.createMultipleFacilities = async (facilities, associatedDealId, user) =>

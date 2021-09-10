@@ -42,7 +42,7 @@ exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(req.body));
 
-  res.status(201).send(mandatoryCriteria.ops[0]);
+  res.status(201).send({ _id: mandatoryCriteria.insertedId });
 };
 
 exports.findAll = (req, res) => (
@@ -79,5 +79,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const response = await collection.findOneAndDelete({ _id: new ObjectID(String(req.params.id)) });
+
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

@@ -64,13 +64,6 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
 
     const updatedBond = await updateBond(dealId, bondId, modifiedBond);
 
-    deal.bondTransactions = {
-      items: [
-        ...deal.bondTransactions.items,
-        updatedBond.bond,
-      ]
-    };
-
     return updatedBond.body;
   };
 
