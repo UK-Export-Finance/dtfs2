@@ -24,7 +24,6 @@ const userHasAccessTo = (user, resource) => {
 const userOwns = (user, resource) =>
   user._id.toString() === resource.details.maker._id.toString();// eslint-disable-line no-underscore-dangle
 
-
 module.exports = {
   isSuperUser,
   userHasAccessTo,

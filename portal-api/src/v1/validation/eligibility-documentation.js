@@ -1,4 +1,3 @@
-
 const CONSTANTS = require('../../constants');
 
 exports.getDocumentationErrors = (submissionType, dealFiles, uploadErrors = []) => {
@@ -14,7 +13,6 @@ exports.getDocumentationErrors = (submissionType, dealFiles, uploadErrors = []) 
       return {};
     }
     const text = `${fieldText} ${errorText}`;
-
 
     order += 1;
     return {

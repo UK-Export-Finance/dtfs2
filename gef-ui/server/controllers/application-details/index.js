@@ -65,6 +65,10 @@ function buildBody(app, previewMode) {
       }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
+    supportingInfo: {
+      ...app.supportingInformation,
+      status: app.supportingInfoStatus,
+    },
     bankInternalRefName: app.bankInternalRefName,
     applicationId: app.id,
     makerCanSubmit: app.canSubmit,

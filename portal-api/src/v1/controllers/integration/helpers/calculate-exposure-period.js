@@ -32,15 +32,12 @@ const calculateExposurePeriod = (facility) => {
     return facility.ukefGuaranteeInMonths;
   }
 
-
   const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
 
   const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
 
-
   return durationMonths + monthOffset;
 };
-
 
 module.exports = calculateExposurePeriod;
 
@@ -56,7 +53,6 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
 
 /*
 calculates the  Exposure Period from 2 dates
@@ -83,7 +79,6 @@ DECLARE @PORTAL_ID_EXISTS int =  CASE WHEN
     (Select FACILITY_PORTAL_ID from FACILITY where FACILITY_PORTAL_ID = @INPUT_UKEF_FACILITY_ID) IS NULL
       THEN 0 ELSE 1 END
 
-
 --Type of Facilty Product is it EWCS or BS
 -- This will only work if a correct  UKEF Facility ID or Facility Portal ID has been passed to the function
 DECLARE @PRODUCT Nvarchar(2)
@@ -101,7 +96,6 @@ JOIN PRODUCT_GROUP PG on PT.D_PRODUCT_GROUP_ID = PG.D_PRODUCT_GROUP_ID
 Where FACILITY_PORTAL_ID = @INPUT_UKEF_FACILITY_ID);
 END
 
-
 --------------------------------------------------------------
 DECLARE @RESULT int
 /*
@@ -117,7 +111,6 @@ For BS cases you only add on a period if the expiry date is also EOM
 IF (@GC_END_MONTH = 0 AND @PRODUCT = 'EW')
 BEGIN
 
-
     SET @RESULT = (
                     SELECT
                     CASE
@@ -126,7 +119,6 @@ BEGIN
                         ELSE DATEDIFF(MONTH, @GC_DATE, @GE_DATE)
                     END
                     )
-
 
 END
 
@@ -162,7 +154,6 @@ END
 --
     RETURN @Result
 END
-
 
 GO
 */

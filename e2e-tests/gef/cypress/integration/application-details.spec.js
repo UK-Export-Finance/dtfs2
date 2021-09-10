@@ -5,7 +5,7 @@ import applicationDetails from './pages/application-details';
 import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const applicationIds = [];
+let applications;
 
 context('Application Details Page', () => {
   before(() => {
@@ -16,21 +16,20 @@ context('Application Details Page', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        body.items.forEach((item) => {
-          applicationIds.push(item._id);
-        });
+        applications = body.items;
       });
+
     cy.login(CREDENTIALS.MAKER);
 
     cy.on('uncaught:exception', () => false);
   });
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
-  });
-
   describe('Visiting page for the first time - NOT STARTED', () => {
+    beforeEach(() => {
+      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.visit(relative(`/gef/application-details/${applications[0]._id}`));
+    });
+
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
@@ -74,37 +73,40 @@ context('Application Details Page', () => {
 
     it('takes you to companies house page when clicking on `Enter details`', () => {
       applicationDetails.exporterDetailsLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}/companies-house`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[0]._id}/companies-house`));
     });
 
     it('keeps you on the same page for now when clicking on `Abandon` link', () => {
       applicationDetails.abandonLink().click();
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.visit(relative(`/gef/application-details/${applications[0]._id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[0]._id}`));
     });
 
     it('takes you to Cash facility page when clicking on `Add a cash facility` button', () => {
       applicationDetails.addCashFacilityButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.url().should('eq', relative(`/gef/application-details/${applications[0]._id}/facilities`));
       facilities.hasBeenIssuedHeading().contains('cash');
     });
 
     it('takes you to Contingent facility page when clicking on `Add a contingent facility` button', () => {
       applicationDetails.addContingentFacilityButton().click();
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities?facilityType=CONTINGENT`));
+      cy.visit(relative(`/gef/application-details/${applications[0]._id}/facilities?facilityType=CONTINGENT`));
     });
   });
 
   describe('Visiting page when IN PROGRESS status', () => {
+    beforeEach(() => {
+      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
+    });
+
     it('displays the application banner', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.bankRefName().should('have.text', 'UKEF Test 123');
     });
 
     it('displays the correct exporter elements', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
       applicationDetails.exporterHeading();
       applicationDetails.exporterStatus().contains('In progress');
       applicationDetails.exporterDetailsLink().should('not.exist');
@@ -112,7 +114,6 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct automatic cover elements', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[1]}`));
       applicationDetails.automaticCoverHeading();
       applicationDetails.automaticCoverStatus().contains('In progress');
       applicationDetails.automaticCoverDetailsLink();
@@ -128,15 +129,18 @@ context('Application Details Page', () => {
   });
 
   describe('Visiting page when COMPLETED status', () => {
+    beforeEach(() => {
+      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.visit(relative(`/gef/application-details/${applications[2]._id}`));
+    });
+
     it('displays the application banner', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.bankRefName().should('have.text', 'HSBC 123');
     });
 
     it('displays the correct exporter elements', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
       applicationDetails.exporterHeading();
       applicationDetails.exporterStatus().contains('Completed');
       applicationDetails.exporterDetailsLink().should('not.exist');
@@ -144,7 +148,6 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct automatic cover elements', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
       applicationDetails.automaticCoverHeading();
       applicationDetails.automaticCoverStatus().contains('Complete');
       applicationDetails.automaticCoverCriteria();
@@ -161,10 +164,53 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
       applicationDetails.submitHeading();
       applicationDetails.submitButton();
       applicationDetails.submitValidationText().should('not.exist');
+    });
+  });
+
+  context('Manual Inclusion Application', () => {
+    before(() => {
+      // Force item to be manual inclusion notice
+
+      cy.apiLogin(CREDENTIALS.MAKER)
+        .then((token) => token)
+        .then((token) => {
+          const coverTerms = {
+            coverStart: false,
+            noticeDate: false,
+            facilityLimit: false,
+            exporterDeclaration: false,
+            dueDiligence: false,
+            facilityLetter: false,
+            facilityBaseCurrency: false,
+            facilityPaymentCurrency: false,
+          };
+
+          cy.apiUpdateCoverTerms(applications[1].coverTermsId, token, coverTerms);
+        });
+
+      cy.login(CREDENTIALS.MAKER);
+      cy.on('uncaught:exception', () => false);
+    });
+
+    beforeEach(() => {
+      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
+    });
+
+    describe('Supporting information section', () => {
+      it('displays the section elements', () => {
+        applicationDetails.supportingInfoHeading();
+        applicationDetails.supportingInfoStartLink();
+        applicationDetails.supportingInfoStatus().contains('Not started');
+      });
+
+      it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {
+        applicationDetails.supportingInfoStartLink().click();
+        cy.url().should('eq', relative(`/gef/application-details/${applications[1]._id}/supporting-information/manual-inclusion-questionnaire`));
+      });
     });
   });
 });

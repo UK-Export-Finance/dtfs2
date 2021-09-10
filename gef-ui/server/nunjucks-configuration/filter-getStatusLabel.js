@@ -13,7 +13,6 @@ const statusLabelMap = {
   WITHDRAWN: 'Withdrawn',
 };
 
-
 const getStatusLabel = (status) => statusLabelMap[status] || status;
 
 module.exports = getStatusLabel;

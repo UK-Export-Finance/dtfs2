@@ -17,4 +17,7 @@ module.exports = {
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
   },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };

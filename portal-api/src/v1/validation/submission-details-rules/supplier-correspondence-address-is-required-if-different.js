@@ -42,6 +42,5 @@ module.exports = (submissionDetails, errorList) => {
     }
   }
 
-
   return newErrorList;
 };
