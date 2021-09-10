@@ -7,7 +7,7 @@ const findFacilitiesByDealId = async (dealId) => {
   // NOTE: only GEF facilities have applicationId.
   // this could be adapted so that we get the deal, check dealType,
   // then search for either dealId or applicationId.
-  const facilities = await collection.find({ 'facilitySnapshot.applicationId': { $eq: ObjectId(dealId) } }).toArray();
+  const facilities = await collection.find({ 'facilitySnapshot.applicationId': { $eq: ObjectID(dealId) } }).toArray();
 
   return facilities;
 };
