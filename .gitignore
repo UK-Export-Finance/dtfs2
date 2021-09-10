@@ -5,8 +5,6 @@
 pipeline.log
 dist
 node_modules
-deal-api-data-volume
-portal-api-data-volume
 dtfs-submissions-data-volume*
 **/cypress/videos
 **/cypress/screenshots

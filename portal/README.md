@@ -1,6 +1,6 @@
-# gef-ui
+# portal
 
-UI for GEF (General Export Facility). Uses the /gef endpoints in portal-api to send and receive data.
+UI for BSS/EWCS (Bond Support Scheme, Export Working Capital Scheme). Uses the portal-api to send and receive data. Also handles login.
 
 ## Prerequisite
 
@@ -9,9 +9,7 @@ Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variab
 ## Running locally
 
 1. `docker-compose up`
-2. Visit http://localhost in your browser
-
-Note: no port number is used due to reverse-proxy.
+2. Visit http://localhost:5000 in your browser
 
 Alternatively, every service can be started from the root directory (`docker-compose up`).
 
@@ -33,6 +31,18 @@ npm run test
 npm run test /path/to/file.test.js
 ```
 
+### **Run UI component tests**
+
+```shell
+npm run component-test
+```
+
+### **Run a single UI component tests**
+
+```shell
+npm run component-test ./component-tests/path/to/file.component-test.js
+```
+
 ### **End to end tests**
 
 See e2e-tests README.md.
@@ -51,27 +61,27 @@ npm run lint
 4. User completes the deal/application and submits to the bank
 5. Bank approves the deal and submits to UKEF. The deal is sent to Trade Finance Manager (TFM)
 
-## Moving forwards - aligning GEF and BSS
+## Moving forwards - aligning Portal, BSS and GEF
 
 ### Design
 
-Before GEF was started, we only had the BSS product and UI.
+Portal (also known as BSS/EWCS) was the first product and UI.
 
-The GEF and BSS products are very similar, but the designs are very different. GEF has a new, better design - whereas BSS UI has an old design.
+Portal/BSS currently has an old design - the initial approach was to shift the old design/technology into a JavaScript application.
 
-The vision is that once GEF is completed, GEF can be reused in BSS; Bringing both products into a consistent, modern design.
+The vision is that once GEF is completed (with a new design), GEF can be reused in BSS; Bringing both products into a consistent, modern design.
 
 ### Data
 
-Whilst GEF and BSS are very similar in terms of functionality and what is submitted, the data structures are very different.
-
-GEF has a nice, simpler data structure; BSS is a more complicated. The current BSS data structure is due to the old design and lack of initial understanding.
+The current BSS data structure is not great - this is due to the old design and lack of initial understanding.
 
 The vision is to use the same GEF data structure in BSS.
 
 ### Summary
 
-The GEF UI, API and data structure should be used for other products in order to:
+BSS and GEF products are very similar, but they currently have different designs and approaches.
+
+Portal/BSS should be shifted to use the GEF UI, API and data structure in order to:
 
 - Deliver a nice, modern user experience
 - Be consistent
