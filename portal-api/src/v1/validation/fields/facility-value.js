@@ -19,7 +19,6 @@ const isValidFormat = (value) => {
   return false;
 };
 
-
 const isInRange = (value) => value >= MIN_VALUE;
 
 const isValid = (str) => {

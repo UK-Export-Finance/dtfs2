@@ -1,4 +1,3 @@
-
 const CONSTANTS = require('../../../../constants');
 
 const transactions = {

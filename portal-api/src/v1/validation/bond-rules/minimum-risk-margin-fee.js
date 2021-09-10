@@ -60,7 +60,6 @@ const validationText = (str, fieldTitle) => {
   return '';
 };
 
-
 module.exports = (bond, errorList) => {
   const newErrorList = { ...errorList };
 

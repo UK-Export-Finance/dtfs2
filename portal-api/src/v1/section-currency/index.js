@@ -45,7 +45,6 @@ const handleTransactionCurrencyFields = async (dealSection, deal) => {
   return modifiedSection;
 };
 
-
 module.exports = {
   getCurrencyObject,
   handleTransactionCurrencyFields,

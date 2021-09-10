@@ -20,6 +20,5 @@ module.exports = (facility, errorList) => {
     }
   }
 
-
   return newErrorList;
 };

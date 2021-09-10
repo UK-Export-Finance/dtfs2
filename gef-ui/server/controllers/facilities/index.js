@@ -11,7 +11,6 @@ const facilities = async (req, res) => {
   facilityType = facilityType || FACILITY_TYPE.CASH;
   const facilityTypeString = FACILITY_TYPE[facilityType].toLowerCase();
 
-
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
       facilityType: facilityTypeString,

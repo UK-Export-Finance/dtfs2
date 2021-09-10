@@ -21,6 +21,7 @@ import facilityValue from '../facility-value';
 import facilityGuarantee from '../facility-guarantee';
 import facilityConfirmDeletion from '../facility-confirm-deletion';
 import returnToMaker from '../return-to-maker';
+import supportingInformation from '../supporting-information';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -65,5 +66,6 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(facilityGuarantee);
     expect(useSpy).toHaveBeenCalledWith(facilityConfirmDeletion);
     expect(useSpy).toHaveBeenCalledWith(returnToMaker);
+    expect(useSpy).toHaveBeenCalledWith(supportingInformation);
   });
 });

@@ -18,4 +18,7 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
   },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };
