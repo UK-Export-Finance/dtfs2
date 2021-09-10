@@ -3,7 +3,7 @@
   "dealApiProtocol": "http://",
   "dealApiHost": "localhost",
   "dealApiPort": "5001",
-  "projectId": "f1ud6y",
+  "projectId": "sefntb",
   "testFiles": "**/*.spec.js",
   "chromeWebSecurity": false,
   "pageLoadTimeout": 120000,
