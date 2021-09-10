@@ -71,23 +71,29 @@ Simply escape the running terminal and run:
 docker-compose down
 ```
 
+## Login credentials
+
+* For Portal (BSS & GEF) mock users: utils/mock-data-loader/portal/users.js
+* For Trade Finance Manager (TFM) mock users: utils/mock-data-loader/tfm/users.js
+
 ## Environment Variables
 
 As we interface with a number of 3rd party APIs, there are a range of environment variables required to manage this and to work with the repo locally.
 
 All variables are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
 
-These variables are stored as secrets in the repo. To update secrets in the environments - i.e dev, test etc:
+These variables are then stored as secrets in the GitHub repo. When deploying to an Azure environment, Azure picks up the GitHub secrets and updates accordingly.
 
-* Create a Github Personal Access Token and save in `/secrets/github/pat.txt` - this only needs to be done once
-* Download the spreadsheet as a CSV and place in this directory: `/secrets/github`
-* Run this script `/secrets/github/set_secrets.js`
+To update a secret (Make sure to select the relevant environments, i.e dev, test):
 
-This will update all github secrets. When deploying to different environments, the github secret values are picked up.
+1) Update the secret in the spreadsheet
+2) Update the secret in GitHub secrets
+3) Deploy to development environment
+4) Deploy to test environment
 
 ## Testing
 
-#### **Run all tests (E2E, API and UI)**
+### **Run all tests (E2E, API and UI)**
 
 With docker running, execute all tests with:
 
@@ -129,7 +135,7 @@ npm run api-test
 
 #### **Run a single API test**
 
-```shell 
+```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
 
@@ -144,6 +150,7 @@ npm run test
 ```
 
 #### **Run a single UI test**
+
 ```shell
 npm run test /path/to/file.test.js
 ```
@@ -229,21 +236,12 @@ Home > Services > Storage accounts > Create
 
 Make sure that you select UK South region and the dev/test resource group.
 
-## Azure functions
-
-To run Azure functions locally:
-
-1. Run everything as normal (`docker-compose up` from the root directory)
-2. In a seperate terminal tab, go to azure-functions directory and run `docker-compose up`
-
-Ideally, azure-functions would be run in the same root docker, but this caused memory issues in github actions.
-
-Number Generator Function is now run in root `docker-compose.yml`
-
 ## Number Generator
+
 Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the Mulesoft Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
 
 The steps taken are:
+
 1. Deal is created in Portal/GEF and submitted to TFM
 2. TFM calls the Number Generator Azure Function, stores the status endpoint for the function call in the Durable Functions log and returns a ukefID="PENDING"
 3. The Number Generator Function tries the number generator a maximum of 5 times before delaring a failure
