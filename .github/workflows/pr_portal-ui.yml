@@ -146,7 +146,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm install
         cd e2e-tests/portal
-        npx cypress run --config video=false # --record
+        npx cypress run --config video=false --record
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
