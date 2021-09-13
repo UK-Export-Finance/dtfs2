@@ -26,6 +26,20 @@ const apiErrorHandler = ({ code, response }) => {
   throw httpError(response.status, response.statusText);
 };
 
+
+const ErrorMessagesMap = {
+  bankInternalRefName: {
+    'ERROR.MANDATORY_FIELD': 'Application reference name is mandatory',
+    'ERROR.FIELD_TOO_LONG': 'Application reference name can only be up to 30 characters in length',
+    'ERROR.FIELD_INVALID_CHARACTERS': 'Application reference name is mandatory can only contain letters, numbers and punctuation',
+  },
+  additionalRefName: {
+    'ERROR.MANDATORY_FIELD': 'Additional reference name is mandatory',
+    'ERROR.FIELD_TOO_LONG': 'Additional reference name can only be up to 30 characters in length',
+    'ERROR.FIELD_INVALID_CHARACTERS': 'Additional reference name can only contain letters, numbers and punctuation',
+  },
+};
+
 /*
   Maps through validation errors = require( the server and returns i)t
   so both Summary Error component and field component
@@ -40,8 +54,9 @@ const validationErrorHandler = (errs, href = '') => {
   const errors = isObject(errs) ? [errs] : errs;
 
   errors.forEach((el) => {
+    const mappedErrorMessage = ErrorMessagesMap[el.errRef][el.ERROR_CODE];
     errorSummary.push({
-      text: el.errMsg,
+      text: mappedErrorMessage || el.errMsg,
       href: `${href}#${el.errRef}`,
     });
     fieldErrors[el.errRef] = {

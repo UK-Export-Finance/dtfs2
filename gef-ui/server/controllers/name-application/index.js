@@ -3,7 +3,7 @@ const api = require('../../services/api');
 
 const nameApplication = async (req, res) => res.render('partials/name-application.njk');
 
-const createApplication = async (req, res) => {
+const createApplication = async (req, res, next) => {
   const { body, session } = req;
   const { _id: userId, bank: { id: bankId } } = session.user;
 
@@ -17,6 +17,8 @@ const createApplication = async (req, res) => {
     // Validation errors
     if (application.status === 422) {
       return res.render('partials/name-application.njk', {
+        bankInternalRefName: body.bankInternalRefName,
+        additionalRefName: body.additionalRefName,
         errors: validationErrorHandler(application.data),
       });
     }
@@ -24,7 +26,7 @@ const createApplication = async (req, res) => {
     // eslint-disable-next-line no-underscore-dangle
     return res.redirect(`application-details/${application._id}`);
   } catch (err) {
-    return res.render('partials/problem-with-service.njk');
+    return next(err);
   }
 };
 

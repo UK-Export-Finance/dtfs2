@@ -3,9 +3,9 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
-  validationApplicationCreate,
+  validateApplicationReferences,
   validatorStatusCheckEnums,
-} = require('./validation/applicationExists');
+} = require('./validation/application');
 const {
   supportingInfoStatus,
 } = require('./validation/supportingInfo');
@@ -54,9 +54,8 @@ exports.create = async (req, res) => {
   );
   const exporterCollection = await db.getCollection(exporterCollectionName);
   const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
-  const validateErrs = await validationApplicationCreate(
-    applicationCollection,
-    req.body.bankInternalRefName,
+  const validateErrs = validateApplicationReferences(
+    req.body,
   );
   if (validateErrs) {
     res.status(422).send(validateErrs);
