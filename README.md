@@ -1,5 +1,3 @@
-![Pipeline](https://github.com/notbinary/dtfs2/workflows/Pipeline/badge.svg)
-
 # UKEF Trade Finance Service
 
 This repository contains the code for the UK Export Finance Trade Finance Service.

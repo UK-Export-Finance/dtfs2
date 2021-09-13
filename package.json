@@ -30,12 +30,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/notbinary/dtfs2.git"
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/notbinary/dtfs2/issues"
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
-  "homepage": "https://github.com/notbinary/dtfs2#readme"
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme"
 }
