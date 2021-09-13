@@ -31,8 +31,8 @@ context('User can view a case deal', () => {
   });
 
   after(() => {
-    dealFacilities.forEach((facilityId) => {
-      cy.deleteFacility(facilityId, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
     });
   });
 
@@ -50,7 +50,7 @@ context('User can view a case deal', () => {
 
   describe('facilities table', () => {
     it('clicking `Facility ID` link should take user to facility details page', () => {
-      const facilityId = dealFacilities[0];
+      const facilityId = dealFacilities[0]._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
       facilityRow.facilityId().click();
