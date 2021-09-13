@@ -10,6 +10,7 @@ const {
   canUpdateTask,
 } = require('../helpers/tasks');
 const sendUpdatedTaskEmail = require('./task-emails');
+const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 const updateHistory = ({
   taskId,
@@ -134,7 +135,9 @@ const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, stat
 };
 
 const updateTfmTask = async (dealId, tfmTaskUpdate) => {
-  const deal = await api.findOneDeal(dealId);
+  const unmappedDeal = await api.findOneDeal(dealId);
+  const deal = mapSubmittedDeal(unmappedDeal);
+
   const allTasks = deal.tfm.tasks;
 
   const {
@@ -198,10 +201,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
-    const submissionType = (deal.dealSnapshot.submissionType || deal.dealSnapshot.details.submissionType);
-
     const updateDealStage = shouldUpdateDealStage(
-      submissionType,
+      deal.submissionType,
       taskIdToUpdate,
       groupId,
       statusFrom,

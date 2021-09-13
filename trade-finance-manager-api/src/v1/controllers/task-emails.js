@@ -8,21 +8,17 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
   let sendToEmailAddress;
   let team;
 
-  const { dealSnapshot } = deal;
   const {
     _id: dealId,
-    submissionDetails,
-    details,
-  } = dealSnapshot;
-
-  const { 'supplier-name': exporterName } = submissionDetails;
-  const { ukefDealId } = details;
+    ukefDealId,
+    exporter,
+  } = deal;
 
   const emailVariables = generateTaskEmailVariables(
     urlOrigin,
     task,
     dealId,
-    exporterName,
+    exporter.companyName,
     ukefDealId,
   );
 
