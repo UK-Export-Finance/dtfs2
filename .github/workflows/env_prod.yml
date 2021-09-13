@@ -346,19 +346,6 @@ jobs:
             --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
-          
-          # David
-          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 1000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Andrew
-          az network nsg rule create --name team-ips-andrew --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 2000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "81.174.144.245" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
           # UKEF IP
           az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 3000 --direction Inbound --protocol "*" --access Allow \
