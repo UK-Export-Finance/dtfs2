@@ -25,11 +25,13 @@ const CONSTANTS = require('../../constants');
 
 describe('tasks controller', () => {
   const mockDeal = {
-    dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
+    _id: MOCK_DEAL_MIA_SUBMITTED._id,
+    ukefDealId: MOCK_DEAL_MIA_SUBMITTED.ukefDealId,
+    exporter: {
+      companyName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
+    },
     tfm: {
-      history: {
-        emails: [],
-      },
+      history: { emails: [] },
     },
   };
 
