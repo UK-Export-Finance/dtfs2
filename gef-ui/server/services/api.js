@@ -1,3 +1,4 @@
+const FormData = require('form-data');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
 
@@ -185,6 +186,65 @@ const getUserDetails = async (id, token) => {
   }
 };
 
+const uploadFile = async (files, id, token, maxSize) => {
+  if (!files?.length || !id || !token) return false;
+
+  const formData = new FormData();
+
+  formData.append('parentId', id);
+  if (maxSize) formData.append('maxSize', maxSize);
+
+  files.forEach((file) => {
+    formData.append(file.fieldname, file.buffer, file.originalname);
+  });
+
+  const formHeaders = formData.getHeaders();
+
+  try {
+    const { data } = await Axios.post('/gef/files/', formData, {
+      headers: {
+        Authorization: token,
+        ...formHeaders,
+      },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    });
+
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const deleteFile = async (fileId, token) => {
+  try {
+    const { data } = await Axios.delete(`/gef/files/${fileId}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const downloadFile = async (fileId, token) => {
+  try {
+    const { data } = await Axios({
+      method: 'get',
+      responseType: 'stream',
+      url: `/gef/files/${fileId}/download`,
+      headers: {
+        Authorization: token,
+      },
+    });
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 module.exports = {
   validateToken,
   getMandatoryCriteria,
@@ -205,4 +265,7 @@ module.exports = {
   getAddressesByPostcode,
   getUserDetails,
   setApplicationStatus,
+  uploadFile,
+  deleteFile,
+  downloadFile,
 };

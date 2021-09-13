@@ -1,6 +1,8 @@
 const express = require('express');
 const { validate } = require('../../role-validator');
 
+const fileUpload = require('./middleware/fileUpload');
+
 const application = require('./controllers/application.controller');
 const exporter = require('./controllers/exporter.controller');
 const facilities = require('./controllers/facilities.controller');
@@ -8,6 +10,7 @@ const coverTerms = require('./controllers/coverTerms.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const externalApi = require('./controllers/externalApi.controller');
+const files = require('./controllers/files.controller');
 
 const router = express.Router();
 
@@ -71,6 +74,22 @@ router.route('/mandatory-criteria-versioned/:id')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), mandatoryCriteriaVersioned.findOne)
   .put(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.update)
   .delete(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.delete);
+
+// File Uploads
+// TODO: this feels like it should be a service: https://ukef-dtfs.atlassian.net/browse/DTFS2-4842
+router.route('/files')
+  .post(
+    validate({ role: ['maker', 'data-admin'] }),
+    fileUpload.any(),
+    files.create,
+  );
+
+router.route('/files/:id')
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), files.getById)
+  .delete(validate({ role: ['maker', 'data-admin'] }), files.delete);
+
+router.route('/files/:id/download')
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), files.downloadFile);
 
 // 3rd Party
 router.route('/company/:number') // companies house
