@@ -17,7 +17,8 @@ Alternatively, every service can be started from the root directory (`docker-com
 
 ## Login credentials
 
-See mock users: utils/mock-data-loader/portal/users.js.
+See mock users: utils/mock-data-loader/portal/users.js
+
 
 ## Testing
 
@@ -36,12 +37,6 @@ npm run test /path/to/file.test.js
 ### **End to end tests**
 
 See e2e-tests README.md.
-
-## Linting
-
-```shell
-npm run lint
-```
 
 ## Basic happy flow behind the scenes
 

@@ -155,6 +155,14 @@ npm run test
 npm run test /path/to/file.test.js
 ```
 
+## Linting
+
+In the root directory - or in any service, run:
+
+```shell
+npm run lint
+```
+
 ## Git workflow
 
 1) Create a branch and PR clearly describing the change, along with Jira ticket number
@@ -172,7 +180,6 @@ Several environments are used:
 * http://tfs-test-fd.azurefd.net/
 * http://tfs-staging-fd.azurefd.net/
 * http://tfs-prod-fd.azurefd.net/
-
 
 GEF test environment is hosted on the same URL as Portal v2. To access GEF:
 
@@ -215,18 +222,9 @@ This will take the latest code in the staging environment and deploy to prod.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
 
-## Updating the database
+## Updating/refreshing the database with mock data
 
-Should the database need to be refreshed with the latest mock data then this can be done by:
-
-1. SSH into the relevant VM (Dev-VM for dev & demo, Test-VM for test & staging, Prod-VM for prod):
-`ssh azureuser@xx.xx.xx.xx`, where xx.xx.xx.xx is the IP Address for VM.
-The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Compute%2FVirtualMachines
-*Your public SSH key must first be added to the VM by someone with access.*
-2. `cd dtfs2 && git pull` to get the latest codebase
-3. `cd utils/mock-data-loader`
-4. Enure the .env file is pointing to the environment you want to update
-5. `node re-insert-mocks.js` :warning: **this will delete the current data - DO NOT USE IN PROD**
+See /utils/mock-data-loader README.
 
 ## Azure storage account
 
@@ -248,3 +246,27 @@ The steps taken are:
 4. A scheduled job on tfm-api polls the status endpoint for each running job until a result is received
 5. If the result is a success then the deal & facilities are updated with the generated IDs
 6. If the result is an error, then the entry in the durable functions log collection is updated with the error
+
+## Deal submission to TFM
+
+When a deal is submitted to TFM, there are currently many external API calls made in the TFM submission controller.
+
+Not only does this takes a long time (hindering the user/dev experience), it eats up resources and can be flaky if for example one of the API calls fail. Retries are not setup.
+
+The solution is to move all of these API calls into background processes, with retries.
+
+This will improve the user experience, make it fail safe, and improve the development lifecycle.
+
+## Workflow/typeB integration
+
+At the start of the project, the requirement was to submit deals to another system called Workflow. "TypeB" is a Workflow service. Workflow is being retired and we submit to TFM now - so there is no need to integrate with Workflow/TypeB and this has been disabled.
+
+In the codebase there is commented out code for the TypeB functionality just incase we need to use it again. For more information see jira ticket DTFS2-4545 which contains links to the relevant PRs.
+
+## Docker
+
+After some time, docker eats up hard drive space. Clean it up by running
+
+```shell
+docker system prune --volumes
+```

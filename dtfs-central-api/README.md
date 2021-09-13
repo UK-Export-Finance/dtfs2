@@ -99,13 +99,9 @@ Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variab
 docker-compose up
 ```
 
+Alternatively, every service can be started from the root directory (`docker-compose up`).
+
 ## Testing
-
-In one terminal, start the service:
-
-```shell
-docker-compose up --build
-```
 
 In a second terminal, run:
 
@@ -114,6 +110,12 @@ npm run api-test
 ```
 
 Test coverage will be generated.
+
+### **Run a single API test**
+
+```shell
+npm run api-test-file "**/*/deals-party-db.api-test.js"
+```
 
 ## Moving forwards
 
@@ -126,6 +128,6 @@ There are 2 potential approaches from here to make both products consistent:
 
 However it's important to note that currently, BSS and GEF are misaligned. Eventually, GEF and BSS will be aligned to use the same design and approach (see portal and gef-ui READMEs). When this happens, the deal and facility CRUD operations in Central API - that are currently consumed only by BSS (Portal), may become redundant. In which case they can just be deleted.
 
-This has not been thought about as a team. What's the best, most scalable approach? Food for thought.
+This has not been thought about as a team. What's the best, most scalable approach?
 
 Just to be clear - Both BSS and GEF submit to TFM directly. The TFM submission handling works the same for both product types (i.e TFM always calls Central API to create snapshots).
