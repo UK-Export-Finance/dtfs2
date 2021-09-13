@@ -46,8 +46,6 @@ Note: If you're on Windows and having issues with MongoDB, install mongosh for c
 docker-compose up
 ```
 
-:warning: If you make changes to a UI server, you'll need to do a build with `docker-compose up --build`. Hot reloading will be in place shortly.
-
 Several services are built:
 
 | Service | URL |
