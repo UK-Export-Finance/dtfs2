@@ -28,6 +28,11 @@ exports.bssDeals = async (req, res) => {
 
   const filters = [];
 
+  filters.push({
+    field: 'userId',
+    value: req.session.user._id,
+  });
+
   if (isChecker && !isMaker) {
     filters.push({
       field: 'status',
@@ -35,10 +40,8 @@ exports.bssDeals = async (req, res) => {
     });
   }
 
-  const { count, deals } = await getApiData(
-    api.allDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
+  // eslint-disable-next-line max-len
+  const { count, deals } = await getApiData(api.allDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -62,6 +65,11 @@ exports.gefDeals = async (req, res) => {
   const { isMaker, isChecker } = getRoles(req.session.user.roles);
 
   const filters = [];
+
+  filters.push({
+    field: 'userId',
+    value: req.session.user._id,
+  });
 
   if (isChecker && !isMaker) {
     filters.push({

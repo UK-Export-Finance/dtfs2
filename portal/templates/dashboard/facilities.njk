@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
 {% import '_macros/date-range.njk' as dateRange %}
@@ -39,6 +40,17 @@
     <section class="govuk-tabs__panel">
 
       <h2 class="govuk-heading-l">Facilities</h2>
+
+    {{ govukCheckboxes({
+        idPrefix: "waste",
+        name: "waste",
+        items: [
+            {
+            value: "carcasses",
+            text: "Created by you (facility)"
+            }
+        ]
+    }) }}
 
       {% set items = [] %}
       {% for facility in facilities %}

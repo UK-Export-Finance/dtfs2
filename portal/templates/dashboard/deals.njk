@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
@@ -35,6 +36,23 @@
     {{ dashboardTabs.nav(selected = tab) }}
 
     <section class="govuk-tabs__panel">
+
+    <form method="GET" autocomplete="off">
+        {{ govukCheckboxes({
+            name: "createdByYou",
+            classes: "govuk-checkboxes--small",
+            items: [
+                {
+                value: "true",
+                text: "Created by you",
+                checked: true,
+                attributes: {"data-cy": "created-by-you"}
+                }
+            ]
+        }) }}
+
+            <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Submit</button>
+    </form>
 
       {% set items = [] %}
       {% for deal in deals %}
