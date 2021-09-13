@@ -1,5 +1,7 @@
 const api = require('./api');
 const centralApi = require('./centralApi');
+const PORTAL_MOCKS = require('./portal');
+const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
 
 const tokenFor = require('./temporary-token-handler');
@@ -11,21 +13,21 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'data-admin'],
-    bank: MOCKS.BANKS.find((bank) => bank.id === '9'),
+    bank: MOCK_BANKS.find((bank) => bank.id === '9'),
   });
 
-  const tfmMaker = MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER1');
+  const tfmMaker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER1');
   const tfmMakerToken = await tokenFor({
     ...tfmMaker,
   });
 
-  console.log('inserting users');
-  for (user of MOCKS.USERS) {
+  console.log('inserting portal users');
+  for (user of PORTAL_MOCKS.USERS) {
     await api.createUser(user);
   }
 
   console.log('inserting banks');
-  for (bank of MOCKS.BANKS) {
+  for (bank of MOCK_BANKS) {
     await api.createBank(bank, token);
   }
 
