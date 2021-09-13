@@ -4,6 +4,7 @@ module.exports = {
     jest: true,
     browser: true,
   },
+  root: true,
   rules: {
     'max-len': ['error', 120, 2, {
       ignoreUrls: true,
