@@ -40,7 +40,7 @@ context('Admin user creates a new user', () => {
     cy.login(ADMIN_LOGIN);
 
     header.users().click();
-    users.user(validUser).should('not', 'exist');
+    users.user(validUser).should('not.exist');
 
     users.addUser().click();
 
@@ -81,7 +81,7 @@ context('Admin user creates a new user', () => {
     cy.login(ADMIN_LOGIN);
 
     header.users().click();
-    users.user(userWithInvalidPassword).should('not', 'exist');
+    users.user(userWithInvalidPassword).should('not.exist');
 
     users.addUser().click();
 

@@ -79,7 +79,7 @@ context('Portal to TFM deal submission', () => {
     const tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${facilityId}`;
     cy.forceVisit(tfmFacilityPage);
 
-    tfmPages.facilityPage.facilityDealCreditRating().should('not.be.visible');
+    tfmPages.facilityPage.facilityDealCreditRating().should('not.exist');
 
     tfmPages.facilityPage.facilityDealCreditRatingNotSet().should('be.visible');
   });
