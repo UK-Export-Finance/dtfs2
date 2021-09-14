@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require('bson');
 const db = require('../../../drivers/db-client');
 
 const findOneUser = async (_id) => {

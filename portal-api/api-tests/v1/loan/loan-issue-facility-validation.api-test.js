@@ -64,13 +64,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
     const updatedLoan = await updateLoan(dealId, loanId, modifiedLoan);
 
-    deal.loanTransactions = {
-      items: [
-        ...deal.loanTransactions.items,
-        updatedLoan.loan,
-      ],
-    };
-
     return updatedLoan.body;
   };
 
@@ -85,7 +78,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   });
 
   describe('PUT /v1/deals/:id/loan/:loanId/issue-facility', () => {
-
     it('returns 400 with validation errors', async () => {
       await createDealAndLoan();
 

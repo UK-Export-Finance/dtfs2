@@ -20,7 +20,7 @@ const updateDeal = async (dealId, deal, stage) => {
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: dealId },
     $.flatten(withoutId(update)),
-    { returnOriginal: false },
+    { returnDocument: 'after', returnOriginal: false },
   );
 
   return findAndUpdateResponse.value;

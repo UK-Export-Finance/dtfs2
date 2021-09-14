@@ -4,7 +4,6 @@ const corsAdapter = require('axios/lib/adapters/http');
 const db = require('./src/drivers/db-client');
 
 const mockFiles = [
-  './src/v1/controllers/log-controller',
   './src/scheduler',
   './src/reference-data/api',
   './src/v1/email',
@@ -18,7 +17,6 @@ beforeAll(() => {
   axios.defaults.adapter = corsAdapter;
 });
 
-afterAll(async (done) => {
+afterAll(async () => {
   await db.close();
-  done();
 });

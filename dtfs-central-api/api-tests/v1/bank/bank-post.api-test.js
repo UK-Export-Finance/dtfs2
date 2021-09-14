@@ -23,17 +23,19 @@ describe('/v1/bank', () => {
   });
 
   describe('POST /v1/bank', () => {
-    it('returns the created bank', async () => {
+    it('creates a bank', async () => {
       const { body, status } = await api.post(newBank).to('/v1/bank');
 
       expect(status).toEqual(200);
 
-      const expected = {
-        _id: expect.any(String),
-        ...newBank,
-      };
+      expect(body).toEqual({ _id: expect.any(String) });
 
-      expect(body).toEqual(expected);
+      const { body: bankAfterCreation } = await api.get(`/v1/bank/${newBank.id}`);
+
+      expect(bankAfterCreation).toEqual({
+        _id: body._id,
+        ...newBank,
+      });
     });
   });
 });

@@ -196,7 +196,9 @@ describe('/v1/deals/:id/status', () => {
 
     it('updates the deals.details.previousStatus field', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
+      const { body: createdDealBody } = await as(anHSBCMaker).get(`/v1/deals/${postResult.body._id}`);
+      const createdDeal = createdDealBody.deal;
+
       const statusUpdate = {
         comments: 'Flee!',
         status: 'Abandoned',

@@ -78,10 +78,15 @@ describe('/v1/tfm/deal/:id', () => {
           ...mockFacility,
         };
 
-        const createdBond1 = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-        const createdBond2 = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-        const createdLoan1 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
-        const createdLoan2 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+        const { body: createdBond1 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+        const { body: createdBond2 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+
+        const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
+        const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
+        const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
+        const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
 
         await api.put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -93,13 +98,13 @@ describe('/v1/tfm/deal/:id', () => {
         expect(status).toEqual(200);
 
         expect(body.deal.dealSnapshot.bondTransactions.items).toEqual([
-          createdBond1.body,
-          createdBond2.body,
+          bond1,
+          bond2,
         ]);
 
         expect(body.deal.dealSnapshot.loanTransactions.items).toEqual([
-          createdLoan1.body,
-          createdLoan2.body,
+          loan1,
+          loan2,
         ]);
       });
     });
@@ -128,11 +133,16 @@ describe('/v1/tfm/deal/:id', () => {
         dealId,
       }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
+      const { status } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.dealSnapshot).toMatchObject(newDeal);
-      expect(body.tfm).toEqual(dealUpdate.tfm);
+
+      const { body } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      const dealAfterUpdate = body.deal;
+
+      expect(dealAfterUpdate.dealSnapshot).toMatchObject(newDeal);
+      expect(dealAfterUpdate.tfm).toEqual(dealUpdate.tfm);
     });
 
     it('retains existing deal.tfm.history when adding new history', async () => {
@@ -157,10 +167,15 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      const firstUpdateResponse = await api.put({ dealUpdate: firstHistoryUpdate }).to(`/v1/tfm/deals/${dealId}`);
+      const { status: firstUpdateStatus } = await api.put({ dealUpdate: firstHistoryUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
-      expect(firstUpdateResponse.status).toEqual(200);
-      expect(firstUpdateResponse.body.tfm.history).toEqual(firstHistoryUpdate.tfm.history);
+      expect(firstUpdateStatus).toEqual(200);
+
+      const { body: dealFirstUpdateBody } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      const dealAfterFirstUpdate = dealFirstUpdateBody.deal;
+
+      expect(dealAfterFirstUpdate.tfm.history).toEqual(firstHistoryUpdate.tfm.history);
 
       const secondHistoryUpdate = {
         tfm: {
@@ -175,9 +190,14 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      const secondUpdateResponse = await api.put({ dealUpdate: secondHistoryUpdate }).to(`/v1/tfm/deals/${dealId}`);
+      const { status: secondUpdateStatus } = await api.put({ dealUpdate: secondHistoryUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
-      expect(secondUpdateResponse.status).toEqual(200);
+      expect(secondUpdateStatus).toEqual(200);
+
+      const { body: dealSecondUpdateBody } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      const dealAfterSecondUpdate = dealSecondUpdateBody.deal;
+
 
       const expectedHistory = {
         tasks: [
@@ -190,7 +210,7 @@ describe('/v1/tfm/deal/:id', () => {
         ],
       };
 
-      expect(secondUpdateResponse.body.tfm.history).toEqual(expectedHistory);
+      expect(dealAfterSecondUpdate.tfm.history).toEqual(expectedHistory);
     });
   });
 
@@ -226,14 +246,17 @@ describe('/v1/tfm/deal/:id', () => {
         testing: true,
       };
 
-      const { status, body } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
+      const { status } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
 
       expect(status).toEqual(200);
-      expect(body.dealSnapshot).toMatchObject({
+
+      const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(dealAfterUpdate.deal.dealSnapshot).toMatchObject({
         ...newDeal,
         ...snapshotUpdate,
       });
-      expect(body.tfm).toEqual(mockTfm.tfm);
+      expect(dealAfterUpdate.deal.tfm).toEqual(mockTfm.tfm);
     });
   });
 
@@ -267,11 +290,14 @@ describe('/v1/tfm/deal/:id', () => {
       // add some dummy data to deal.tfm
       await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { status, body } = await api.put(dealStageUpdate).to(`/v1/tfm/deals/${dealId}/stage`);
+      const { status } = await api.put(dealStageUpdate).to(`/v1/tfm/deals/${dealId}/stage`);
 
       expect(status).toEqual(200);
-      expect(body.dealSnapshot).toMatchObject(newDeal);
-      expect(body.tfm).toEqual({
+
+      const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(dealAfterUpdate.deal.dealSnapshot).toMatchObject(newDeal);
+      expect(dealAfterUpdate.deal.tfm).toEqual({
         ...dealUpdate.tfm,
         stage: dealStageUpdate.stage,
       });

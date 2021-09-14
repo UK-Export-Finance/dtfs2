@@ -338,15 +338,12 @@ router.post('/contract/:_id/clone', async (req, res) => {
     errorHref,
   );
 
-  const {
-    validationErrors,
-    details,
-  } = apiResponse;
+  const { validationErrors } = apiResponse;
 
   const {
     bankSupplyContractID,
     bankSupplyContractName,
-  } = details;
+  } = req.body;
 
   if (validationErrors) {
     return res.status(400).render('contract/contract-clone.njk', {

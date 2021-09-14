@@ -6,6 +6,7 @@ const CONSTANTS = require('../../../../src/constants');
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
+  submissionCount: 0,
 };
 
 describe('/v1/tfm/deal/:id', () => {

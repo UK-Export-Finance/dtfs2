@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { ObjectId } = require('mongodb');
+const { ObjectID } = require('bson');
 const db = require('../../../drivers/db-client');
 const { companiesHouseError } = require('./validation/external');
 require('dotenv').config();
@@ -64,7 +64,7 @@ exports.getByRegistrationNumber = async (req, res) => {
       }
       const address = response.data.registered_office_address;
       await collection.findOneAndUpdate(
-        { _id: { $eq: ObjectId(String(req.query.exporterId)) } }, {
+        { _id: { $eq: ObjectID(String(req.query.exporterId)) } }, {
           $set: {
             companiesHouseRegistrationNumber: response.data.company_number,
             companyName: response.data.company_name,
@@ -81,7 +81,7 @@ exports.getByRegistrationNumber = async (req, res) => {
             selectedIndustry,
             industries,
           },
-        }, { returnOriginal: false },
+        }, { returnDocument: 'after', returnOriginal: false },
       );
     }
     return res.status(200).send(response.data);

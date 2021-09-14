@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectID } = require('bson');
 
 /* eslint-disable no-underscore-dangle */
 const db = require('../../../../drivers/db-client');
@@ -12,8 +12,10 @@ const createUser = async (User) => {
 exports.createUser = createUser;
 
 exports.createUserPOST = async (req, res) => {
-  const user = await createUser(req.body.user);
-  res.status(200).json(user.ops[0]);
+  const response = await createUser(req.body.user);
+
+  const { insertedId } = response;
+  res.status(200).json({ _id: insertedId });
 };
 
 const listUsers = async () => {

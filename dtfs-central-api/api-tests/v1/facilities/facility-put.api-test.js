@@ -197,8 +197,6 @@ describe('/v1/portal/facilities', () => {
 
       const createdFacilityResponse = await api.post({ facility: mockSubmittedFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      expect(createdFacilityResponse.body.status).toEqual(mockSubmittedFacility.status);
-
       await api.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${createdFacilityResponse.body._id}/status`);
 
       const { body } = await api.get(`/v1/portal/facilities/${createdFacilityResponse.body._id}`);

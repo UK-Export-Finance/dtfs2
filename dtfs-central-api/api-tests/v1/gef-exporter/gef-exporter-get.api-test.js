@@ -14,7 +14,8 @@ describe('/v1/portal/gef/exporter', () => {
 
   describe('GET /v1/portal/gef/exporter', () => {
     it('returns the created deal with correct fields', async () => {
-      const { body, status } = await api.post(newExporter).to('/v1/portal/gef/exporter');
+      const { body: createdExporter } = await api.post(newExporter).to('/v1/portal/gef/exporter');
+      const { status, body } = await api.get(`/v1/portal/gef/exporter/${createdExporter._id}`);
 
       expect(status).toEqual(200);
 

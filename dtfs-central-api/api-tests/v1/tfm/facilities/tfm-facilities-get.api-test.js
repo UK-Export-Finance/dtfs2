@@ -27,8 +27,8 @@ describe('/v1/tfm/deals/:id/facilities', () => {
 
       // create some facilities
       newFacility.applicationId = dealId;
-      const { body: facility1 } = await api.post(newFacility).to('/v1/portal/gef/facilities');
-      const { body: facility2 } = await api.post(newFacility).to('/v1/portal/gef/facilities');
+      await api.post(newFacility).to('/v1/portal/gef/facilities');
+      await api.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
       await api.put({
@@ -38,20 +38,25 @@ describe('/v1/tfm/deals/:id/facilities', () => {
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
 
+      expect(status).toEqual(200);
+
+      // get facilities after they've been created so we have all the data
+      const { body: allFacilitiesAfterCreation } = await api.get(`/v1/portal/gef/deals/${dealId}/facilities`);
+
       const expectedFacilityShape = (facility) => ({
         _id: facility._id,
         facilitySnapshot: {
-          ...facility,
+          _id: facility._id,
+          ...newFacility,
         },
       });
 
-      expect(status).toEqual(200);
+      // assert all facilities returned from GET against the created facilities
+      const facility1 = body.find((f) => f._id === allFacilitiesAfterCreation[0]._id);
+      const facility2 = body.find((f) => f._id === allFacilitiesAfterCreation[1]._id);
 
-      const foundFacility1 = body.find((f) => f._id === facility1._id);
-      const foundFacility2 = body.find((f) => f._id === facility2._id);
-
-      expect(foundFacility1).toEqual(expectedFacilityShape(facility1));
-      expect(foundFacility2).toEqual(expectedFacilityShape(facility2));
+      expect(facility1).toEqual(expectedFacilityShape(facility1));
+      expect(facility2).toEqual(expectedFacilityShape(facility2));
     });
   });
 });
