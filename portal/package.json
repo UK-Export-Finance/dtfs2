@@ -14,8 +14,8 @@
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "start": "node server/index.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
-    "test": "jest --notify --coverage --verbose --config=jest.config.js --detectOpenHandles",
-    "test-quick": "jest --config=jest.config.js --detectOpenHandles",
+    "test": "jest --notify --coverage --verbose --config=jest.config.js",
+    "test-quick": "jest --config=jest.config.js",
     "test-watch": "jest --watchAll --notify --coverage --verbose --config=jest.config.js --detectOpenHandles"
   },
   "repository": {
@@ -58,6 +58,7 @@
     "morgan": "1.10.0",
     "multer": "1.4.2",
     "node-fetch": "^2.6.1",
+    "node-notifier": "^10.0.0",
     "nunjucks": "3.2.1",
     "path": "0.12.7",
     "redis": "^3.1.2",
@@ -74,7 +75,7 @@
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-plugin-import": "2.20.1",
     "file-loader": "^6.0.0",
-    "jest": "26.1.0",
+    "jest": "27.1.0",
     "nodemon": "^2.0.4",
     "sass": "^1.35.2",
     "sass-loader": "8.0.2",

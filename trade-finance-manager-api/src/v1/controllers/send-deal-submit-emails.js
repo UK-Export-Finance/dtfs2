@@ -23,30 +23,32 @@ const sendFirstTaskEmail = async (deal) => {
 
   const { tasks } = tfm;
 
-  const firstTask = getFirstTask(tasks);
+  if (tasks) {
+    const firstTask = getFirstTask(tasks);
 
-  if (shouldSendFirstTaskEmail(firstTask)) {
-    const urlOrigin = process.env.TFM_URI;
-    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+    if (shouldSendFirstTaskEmail(firstTask)) {
+      const urlOrigin = process.env.TFM_URI;
+      const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
-    const { team } = firstTask;
-    const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
+      const { team } = firstTask;
+      const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
-    const emailVariables = generateTaskEmailVariables(
-      urlOrigin,
-      firstTask,
-      dealId,
-      exporter.companyName,
-      ukefDealId,
-    );
+      const emailVariables = generateTaskEmailVariables(
+        urlOrigin,
+        firstTask,
+        dealId,
+        exporter.companyName,
+        ukefDealId,
+      );
 
-    const emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-    return emailResponse;
+      const emailResponse = await sendTfmEmail(
+        templateId,
+        sendToEmailAddress,
+        emailVariables,
+        deal,
+      );
+      return emailResponse;
+    }
   }
 
   return null;

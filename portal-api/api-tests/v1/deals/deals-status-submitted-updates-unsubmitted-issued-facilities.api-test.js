@@ -104,7 +104,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       status: 'Ready for check',
     });
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       originalFacilities = [
         mockUnsubmittedUnconditionalLoan('1'),
         mockUnsubmittedUnconditionalLoan('2'),
@@ -121,24 +121,20 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       dealId = postResult.body._id;
 
       api.tfmDealSubmit = () => Promise.resolve();
+
       externalApis.numberGenerator = {
         create: () => Promise.resolve(),
       };
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+      completedDeal.mockFacilities = createdFacilities;
 
-      if (createdFacilities.length) {
-        completedDeal.mockFacilities = createdFacilities;
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
 
-        const statusUpdate = {
-          status: 'Submitted',
-          confirmSubmit: true,
-        };
-
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
-
-        done();
-      }
+      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
     });
 
     describe('any Unconditional loans that do NOT have issueFacilityDetailsSubmitted', () => {

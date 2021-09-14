@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectID } = require('bson');
 const db = require('../../../../drivers/db-client');
 
 const findOneDeal = async (_id, callback) => {

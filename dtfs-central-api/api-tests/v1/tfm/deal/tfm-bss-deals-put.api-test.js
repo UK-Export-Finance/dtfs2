@@ -60,14 +60,17 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
 
     expect(status).toEqual(200);
 
+    const { body: dealAfterCreation } = await api.get(`/v1/portal/deals/${dealId}`);
+
     const expected = {
       _id: createDealBody._id,
       dealSnapshot: {
-        ...createDealBody,
+        ...dealAfterCreation.deal,
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
     };
+
     expect(body).toEqual(expected);
   });
 

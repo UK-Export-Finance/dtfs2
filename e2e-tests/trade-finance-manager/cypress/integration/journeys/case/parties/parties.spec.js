@@ -5,23 +5,20 @@ import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Parties page', () => {
-  let deal;
   let dealId;
   const dealFacilities = [];
   const team1User = MOCK_USERS.find((user) => user.teams.includes('TEAM1'));
   const businessSupportUser = MOCK_USERS.find((user) => user.teams.includes('BUSINESS_SUPPORT'));
-  const nonBusinessSupportUser = MOCK_USERS.find((user) => !user.teams.includes('BUSINESS_SUPPORT'));
+
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = deal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_AIN;
+        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);

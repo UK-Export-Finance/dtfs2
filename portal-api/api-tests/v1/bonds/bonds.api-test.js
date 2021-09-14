@@ -239,8 +239,6 @@ describe('/v1/deals/:id/bond', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      expect(postResult.body.facilities.length).toEqual(0);
-
       const newBond = {
         facilityType: 'bond',
         associatedDealId: dealId,

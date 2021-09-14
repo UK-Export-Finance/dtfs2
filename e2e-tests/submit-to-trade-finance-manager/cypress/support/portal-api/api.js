@@ -32,6 +32,15 @@ module.exports.insertDeal = (deal, token) => cy.request({
   return resp.body;
 });
 
+module.exports.getDeal = (dealId, token) => cy.request({
+  url: `${api()}/v1/deals/${dealId}`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => resp.body);
+
 module.exports.createFacilities = (dealId, facilities, user, token) => cy.request({
   url: `${api()}/v1/deals/${dealId}/multiple-facilities`,
   method: 'POST',

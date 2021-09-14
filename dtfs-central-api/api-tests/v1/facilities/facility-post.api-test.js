@@ -31,7 +31,7 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
 
@@ -57,7 +57,7 @@ describe('/v1/portal/facilities', () => {
         facilityType: 'bond',
       };
 
-      const { body, status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
+      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
@@ -73,15 +73,18 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns the created facility with correct fields', async () => {
+    it('creates a facility with correct fields', async () => {
       const { body, status } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       expect(status).toEqual(200);
-
       expect(typeof body._id).toEqual('string');
-      expect(body.facilityType).toEqual(newFacility.facilityType);
-      expect(body.associatedDealId).toEqual(newFacility.associatedDealId);
-      expect(typeof body.createdDate).toEqual('string');
+
+      const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${body._id}`);
+
+
+      expect(facilityAfterCreation.facilityType).toEqual(newFacility.facilityType);
+      expect(facilityAfterCreation.associatedDealId).toEqual(newFacility.associatedDealId);
+      expect(typeof facilityAfterCreation.createdDate).toEqual('string');
     });
 
     it('creates incremental integer facility IDs', async () => {

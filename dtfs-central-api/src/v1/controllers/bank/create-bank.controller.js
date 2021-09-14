@@ -5,9 +5,11 @@ const createBank = async (bank) => {
 
   const response = await collection.insertOne(bank);
 
-  const createdBank = response.ops[0];
+  const { insertedId } = response;
 
-  return createdBank;
+  return {
+    _id: insertedId,
+  };
 };
 
 exports.createBankPost = async (req, res) => {

@@ -1,4 +1,5 @@
 const moment = require('moment');
+require('moment-timezone'); // monkey-patch to provide moment().tz()
 const api = require('../api');
 
 const generateDateFromSubmissionDate = (submissionDate) => {

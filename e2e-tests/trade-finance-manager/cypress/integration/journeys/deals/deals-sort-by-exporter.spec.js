@@ -73,8 +73,8 @@ context('User can view and sort deals by exporter', () => {
   });
 
   after(() => {
-    ALL_FACILITIES.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+    ALL_FACILITIES.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
     });
     cy.deleteTfmDeals();
   });

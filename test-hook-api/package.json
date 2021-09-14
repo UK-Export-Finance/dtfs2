@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "DTFS2 deal API",
   "main": "src/index.js",
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
@@ -39,7 +39,7 @@
     "eslint": "6.1.0",
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-plugin-import": "2.20.1",
-    "jest": "26.1.0",
+    "jest": "27.1.0",
     "nodemon": "^2.0.4"
   }
 }

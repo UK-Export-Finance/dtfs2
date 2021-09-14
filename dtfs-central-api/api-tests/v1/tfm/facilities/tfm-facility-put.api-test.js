@@ -24,6 +24,7 @@ const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
+    submissionCount: 0,
   },
   editedBy: [],
   eligibility: {
@@ -65,7 +66,7 @@ describe('/v1/tfm/facilities', () => {
         dealId: '1',
       }).to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/111111}');
+      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/111111');
 
       expect(status).toEqual(404);
     });

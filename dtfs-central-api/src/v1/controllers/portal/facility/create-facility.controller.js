@@ -18,16 +18,18 @@ const createFacility = async (facility, user, routePath) => {
   };
 
   const response = await collection.insertOne(newFacility);
-  const createdFacility = response.ops[0];
+  const { insertedId } = response;
 
   await addFacilityIdToDeal(
     associatedDealId,
-    createdFacility._id, // eslint-disable-line no-underscore-dangle
+    insertedId,
     user,
     routePath,
   );
 
-  return createdFacility;
+  return {
+    _id: insertedId,
+  };
 };
 
 exports.createFacilityPost = async (req, res) => {
@@ -47,9 +49,9 @@ exports.createFacilityPost = async (req, res) => {
 
   return findOneDeal(facility.associatedDealId, async (deal) => {
     if (deal) {
-      const updatedFacility = await createFacility(facility, user, req.routePath);
+      const createdFacility = await createFacility(facility, user, req.routePath);
 
-      return res.status(200).send(updatedFacility);
+      return res.status(200).send(createdFacility);
     }
 
     return res.status(404).send('Deal not found');

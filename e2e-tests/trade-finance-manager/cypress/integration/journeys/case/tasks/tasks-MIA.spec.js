@@ -26,7 +26,6 @@ const MIA_TASKS_STRUCTURE = {
 
 
 context('Case tasks - MIA deal', () => {
-  let deal;
   let dealId;
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
@@ -49,11 +48,9 @@ context('Case tasks - MIA deal', () => {
   beforeEach(() => {
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = deal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_MIA;
+        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);

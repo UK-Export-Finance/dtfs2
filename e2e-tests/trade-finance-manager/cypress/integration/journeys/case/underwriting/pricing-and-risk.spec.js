@@ -8,7 +8,6 @@ import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
 
 context('Case Underwriting - Pricing and risk', () => {
-  let deal;
   let dealId;
   const dealFacilities = [];
   const underWritingUser = MOCK_USERS.find((user) => user.teams.includes('UNDERWRITERS'));
@@ -19,11 +18,9 @@ context('Case Underwriting - Pricing and risk', () => {
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = deal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_MIA;
+        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);

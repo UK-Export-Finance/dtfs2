@@ -5,9 +5,11 @@ const createUser = async (user) => {
 
   const response = await collection.insertOne(user);
 
-  const createdUser = response.ops[0];
+  const { insertedId } = response;
 
-  return createdUser;
+  return {
+    _id: insertedId,
+  };
 };
 
 exports.createUserPost = async (req, res) => {

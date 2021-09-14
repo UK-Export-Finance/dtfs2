@@ -5,7 +5,6 @@ const xml2js = { parseStringPromise: () => {} };
 
 const dealController = require('../deal.controller');
 const dealCommentsController = require('../deal-comments.controller');
-const logController = require('../log-controller');
 const {
   generateStatus,
   updateFacilities,
@@ -73,10 +72,6 @@ const processTypeB = async ({ filename, fileContents }) => {
     .catch((err) => ({ error: err.message }));
 
   if (error) {
-    await logController.logError({
-      filename,
-      error,
-    });
     return { filename, error, success: false };
   }
 
@@ -85,10 +80,6 @@ const processTypeB = async ({ filename, fileContents }) => {
   const deal = await dealController.findOneDeal(dealId);
 
   if (!deal) {
-    await logController.logError({
-      dealId,
-      error: 'Deal not found',
-    });
     return {
       filename,
       success: false,
@@ -133,12 +124,6 @@ const processTypeB = async ({ filename, fileContents }) => {
 
   const updatedDeal = await updateStatusViaController(dealId, interfaceUser, updateData);
 
-  if (!updatedDeal) {
-    await logController.logError({
-      dealId,
-      error: 'Error updating deal',
-    });
-  }
   return {
     filename,
     success: Boolean(updatedDeal),

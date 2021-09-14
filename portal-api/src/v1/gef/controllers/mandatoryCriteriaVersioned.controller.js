@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { ObjectID } = require('mongodb');
+const { ObjectID } = require('bson');
 
 const db = require('../../../drivers/db-client');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
@@ -42,7 +42,7 @@ exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(req.body));
 
-  res.status(201).send(mandatoryCriteria.ops[0]);
+  res.status(201).send({ _id: mandatoryCriteria.insertedId });
 };
 
 exports.findAll = (req, res) => (
@@ -71,7 +71,7 @@ exports.update = async (req, res) => {
   const update = req.body;
   update.updatedAt = Date.now();
   const response = await collection.findOneAndUpdate(
-    { _id: ObjectID(req.params.id) }, { $set: update }, { returnOriginal: false },
+    { _id: ObjectID(req.params.id) }, { $set: update }, { returnDocument: 'after', returnOriginal: false },
   );
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
@@ -79,5 +79,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const response = await collection.findOneAndDelete({ _id: new ObjectID(String(req.params.id)) });
+
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

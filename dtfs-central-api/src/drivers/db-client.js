@@ -13,7 +13,6 @@ const dbConnect = async () => {
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      numberOfRetries: 0, // this can change if a mongo replica-set is setup
     },
   );
   connection = await client.db(dbName);

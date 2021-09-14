@@ -92,11 +92,12 @@ describe('/v1/deals/:id/clone', () => {
       let createdFacilities;
 
       beforeEach(async () => {
-        const { body } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals');
-        originalDeal = body;
-        const originalDealId = originalDeal._id;
-
+        const { body: createdDeal } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals');
+        const originalDealId = createdDeal._id;
         createdFacilities = await createFacilities(anHSBCMaker, originalDealId, completedDeal.mockFacilities);
+
+        const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${originalDealId}`);
+        originalDeal = dealAfterCreation.deal;
       });
 
       it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
@@ -109,24 +110,27 @@ describe('/v1/deals/:id/clone', () => {
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         expect(body._id).toEqual(body._id);
-        expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
-        expect(body.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
-        expect(body.details.dateOfLastAction).toBeDefined();
-        expect(body.details.submissionType).toEqual(originalDeal.details.submissionType);
 
-        expect(body.details.maker.username).toEqual(aBarclaysMaker.username);
-        expect(body.details.maker.roles).toEqual(aBarclaysMaker.roles);
-        expect(body.details.maker.bank).toEqual(aBarclaysMaker.bank);
-        expect(body.details.maker.firstname).toEqual(aBarclaysMaker.firstname);
-        expect(body.details.maker.surname).toEqual(aBarclaysMaker.surname);
-        expect(body.details.maker._id).toEqual(aBarclaysMaker._id);
+        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
-        expect(body.details.owningBank).toEqual(aBarclaysMaker.bank);
-        expect(body.details.status).toEqual('Draft');
-        expect(body.editedBy).toEqual([]);
-        expect(body.comments).toEqual([]);
-        expect(body.ukefComments).toEqual([]);
-        expect(body.specialConditions).toEqual([]);
+        expect(cloned.deal.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
+        expect(cloned.deal.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
+        expect(cloned.deal.details.dateOfLastAction).toBeDefined();
+        expect(cloned.deal.details.submissionType).toEqual(originalDeal.details.submissionType);
+
+        expect(cloned.deal.details.maker.username).toEqual(aBarclaysMaker.username);
+        expect(cloned.deal.details.maker.roles).toEqual(aBarclaysMaker.roles);
+        expect(cloned.deal.details.maker.bank).toEqual(aBarclaysMaker.bank);
+        expect(cloned.deal.details.maker.firstname).toEqual(aBarclaysMaker.firstname);
+        expect(cloned.deal.details.maker.surname).toEqual(aBarclaysMaker.surname);
+        expect(cloned.deal.details.maker._id).toEqual(aBarclaysMaker._id);
+
+        expect(cloned.deal.details.owningBank).toEqual(aBarclaysMaker.bank);
+        expect(cloned.deal.details.status).toEqual('Draft');
+        expect(cloned.deal.editedBy).toEqual([]);
+        expect(cloned.deal.comments).toEqual([]);
+        expect(cloned.deal.ukefComments).toEqual([]);
+        expect(cloned.deal.specialConditions).toEqual([]);
       });
 
       it('should clone eligibility', async () => {
@@ -137,10 +141,13 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
-        expect(body.eligibility.status).toEqual(originalDeal.eligibility.status);
+
+        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+
+        expect(cloned.deal.eligibility.status).toEqual(originalDeal.eligibility.status);
         const criteriaWithoutId = originalDeal.eligibility.criteria.map(({ _id, ...rest }) => rest);
-        expect(body.eligibility.criteria).toMatchObject(criteriaWithoutId);
-        expect(body.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);
+        expect(cloned.deal.eligibility.criteria).toMatchObject(criteriaWithoutId);
+        expect(cloned.deal.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);
       });
 
       it('should clone eligibility agent details', async () => {
@@ -169,13 +176,17 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${dealId}/clone`);
 
-        expect(body.eligibility.agentAddressLine1).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine1);
-        expect(body.eligibility.agentAddressLine2).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine2);
-        expect(body.eligibility.agentAddressLine3).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine3);
-        expect(body.eligibility.agentAddressCountry).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressCountry);
-        expect(body.eligibility.agentName).toEqual(dealToCloneWithEligibilityAgentDetails.agentName);
-        expect(body.eligibility.agentAddressPostcode).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressPostcode);
-        expect(body.eligibility.agentAddressTown).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressTown);
+        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+
+        const { eligibility } = cloned.deal;
+
+        expect(eligibility.agentAddressLine1).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine1);
+        expect(eligibility.agentAddressLine2).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine2);
+        expect(eligibility.agentAddressLine3).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine3);
+        expect(eligibility.agentAddressCountry).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressCountry);
+        expect(eligibility.agentName).toEqual(dealToCloneWithEligibilityAgentDetails.agentName);
+        expect(eligibility.agentAddressPostcode).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressPostcode);
+        expect(eligibility.agentAddressTown).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressTown);
       });
 
       it('should clone submissionDetails', async () => {
@@ -186,10 +197,13 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
-        expect(body.submissionDetails).toEqual(originalDeal.submissionDetails);
+
+        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+
+        expect(cloned.deal.submissionDetails).toEqual(originalDeal.submissionDetails);
       });
 
-      it('should clone summary', async () => {
+      it('should clone summary.totalValue', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
@@ -197,19 +211,10 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
-        expect(body.summary).toEqual(originalDeal.summary);
-      });
 
+        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
-      it('should clone summary', async () => {
-        const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
-          cloneTransactions: 'true',
-        };
-
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
-        expect(body.summary).toEqual(originalDeal.summary);
+        expect(cloned.deal.summary.totalValue).toEqual(originalDeal.summary.totalValue);
       });
 
       describe('when deal submissionType is MIN', () => {
@@ -226,7 +231,9 @@ describe('/v1/deals/:id/clone', () => {
           const { body: minDealBody } = await as(anHSBCMaker).put(minDeal).to(`/v1/deals/${minDeal._id}`);
 
           const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
-          expect(body.details.submissionType).toEqual('Manual Inclusion Application');
+
+          const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+          expect(cloned.deal.details.submissionType).toEqual('Manual Inclusion Application');
         });
       });
 
@@ -362,11 +369,13 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        expect(responseBody.facilities).toEqual([]);
-        expect(responseBody.bondTransactions).toEqual({
+        const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
+
+        expect(cloned.deal.facilities).toEqual([]);
+        expect(cloned.deal.bondTransactions).toEqual({
           items: [],
         });
-        expect(responseBody.loanTransactions).toEqual({
+        expect(cloned.deal.loanTransactions).toEqual({
           items: [],
         });
       });
@@ -378,13 +387,15 @@ describe('/v1/deals/:id/clone', () => {
             bankSupplyContractName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+          const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-          expect(body.facilities).toEqual([]);
-          expect(body.bondTransactions).toEqual({
+          const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
+
+          expect(cloned.deal.facilities).toEqual([]);
+          expect(cloned.deal.bondTransactions).toEqual({
             items: [],
           });
-          expect(body.loanTransactions).toEqual({
+          expect(cloned.deal.loanTransactions).toEqual({
             items: [],
           });
         });

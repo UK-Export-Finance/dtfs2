@@ -153,10 +153,13 @@ describe('/v1/deals', () => {
     });
 
     it('returns the created deal', async () => {
-      const { body, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectAddedFields(newDeal));
+
+      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(dealAfterCreation.deal).toEqual(expectAddedFields(newDeal));
     });
 
     it('creates incremental integer deal IDs', async () => {
@@ -178,14 +181,13 @@ describe('/v1/deals', () => {
           },
         };
 
-        const { body, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
+        const { body: dealPost, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
 
         expect(status).toEqual(400);
-        expect(body.details.bankSupplyContractID).toEqual(postBody.details.bankSupplyContractID);
-        expect(body.details.bankSupplyContractName).toEqual(postBody.details.bankSupplyContractName);
-        expect(body.validationErrors.count).toEqual(2);
-        expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
-        expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
+
+        expect(dealPost.validationErrors.count).toEqual(2);
+        expect(dealPost.validationErrors.errorList.bankSupplyContractID).toBeDefined();
+        expect(dealPost.validationErrors.errorList.bankSupplyContractName).toBeDefined();
       });
     });
   });
@@ -239,8 +241,10 @@ describe('/v1/deals', () => {
     });
 
     it('returns the updated deal', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
+      const { body: dealPost } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${dealPost._id}`);
+
+      const createdDeal = dealAfterCreation.deal;
       const updatedDeal = {
         ...createdDeal,
         details: {
@@ -257,8 +261,10 @@ describe('/v1/deals', () => {
     });
 
     it('handles partial updates', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
+      const { body: dealPost } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${dealPost._id}`);
+
+      const createdDeal = dealAfterCreation.deal;
 
       const partialUpdate = {
         details: {
@@ -284,8 +290,11 @@ describe('/v1/deals', () => {
     });
 
     it('updates the deal', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
+      const { body: dealPost } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${dealPost._id}`);
+
+      const createdDeal = dealAfterCreation.deal;
+
       const updatedDeal = {
         ...createdDeal,
         details: {

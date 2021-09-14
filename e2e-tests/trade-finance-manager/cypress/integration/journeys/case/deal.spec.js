@@ -5,23 +5,20 @@ import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 context('User can view a case deal', () => {
-  let deal;
   let dealId;
-  const dealFacilities = [];
+  let dealFacilities = [];
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = deal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_AIN;
+        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
+          dealFacilities = createdFacilities;
         });
 
         cy.submitDeal(dealId, dealType);
@@ -34,8 +31,8 @@ context('User can view a case deal', () => {
   });
 
   after(() => {
-    dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
     });
   });
 
@@ -53,7 +50,7 @@ context('User can view a case deal', () => {
 
   describe('facilities table', () => {
     it('clicking `Facility ID` link should take user to facility details page', () => {
-      const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+      const facilityId = dealFacilities[0]._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
       facilityRow.facilityId().click();

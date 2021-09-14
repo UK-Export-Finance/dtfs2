@@ -44,30 +44,29 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     let updatedDeal;
     let dealId;
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       const minDeal = completedDeal;
       minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
       minDeal.details.status = 'Accepted by UKEF (without conditions)';
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
 
-      submittedMinDeal = postResult.body;
-      dealId = submittedMinDeal._id;
+      dealId = postResult.body._id;
+
+      const { body: getSubmittedDealBody } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+
+      submittedMinDeal = getSubmittedDealBody.deal;
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
-      if (createdFacilities.length) {
-        completedDeal.mockFacilities = createdFacilities;
+      completedDeal.mockFacilities = createdFacilities;
 
-        const statusUpdate = {
-          status: 'Ready for Checker\'s approval',
-          comments: 'test',
-        };
+      const statusUpdate = {
+        status: 'Ready for Checker\'s approval',
+        comments: 'test',
+      };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
-
-        done();
-      }
+      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
     });
 
     describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {
@@ -122,30 +121,29 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     let submittedMinDeal;
     let updatedDeal;
 
-    beforeEach(async (done) => {
+    beforeEach(async () => {
       const minDeal = completedDeal;
       minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
       minDeal.details.status = 'Accepted by UKEF (with conditions)';
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
 
-      submittedMinDeal = postResult.body;
-      dealId = submittedMinDeal._id;
+      const dealId = postResult.body._id;
+
+      const { body: getSubmittedDealBody } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+
+      submittedMinDeal = getSubmittedDealBody.deal;
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
-      if (createdFacilities.length) {
-        completedDeal.mockFacilities = createdFacilities;
-       
-        const statusUpdate = {
-          status: 'Ready for Checker\'s approval',
-          comments: 'test',
-          confirmSubmit: true,
-        };
+      completedDeal.mockFacilities = createdFacilities;
+      
+      const statusUpdate = {
+        status: 'Ready for Checker\'s approval',
+        comments: 'test',
+        confirmSubmit: true,
+      };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
-
-        done();
-      }
+      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
     });
 
     describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {

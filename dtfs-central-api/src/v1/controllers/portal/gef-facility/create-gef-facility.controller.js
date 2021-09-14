@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require('bson');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
 
@@ -9,9 +9,11 @@ const createFacility = async (newFacility) => {
   facility.applicationId = new ObjectId(facility.applicationId);
 
   const response = await collection.insertOne(facility);
-  const createdFacility = response.ops[0];
+  const { insertedId } = response;
 
-  return createdFacility;
+  return {
+    _id: insertedId,
+  };
 };
 
 exports.createFacilityPost = async (req, res) => {
