@@ -51,7 +51,7 @@ const postSecurityDetails = async (req, res) => {
       {
         id: 'applicationSecurity',
         content: applicationSecurity,
-        description: 'details about the general security your bank holds',
+        description: 'details about the specific security for facilities your bank holds',
       },
     ].forEach(({ id, content, description }) => {
       const errRef = id;
