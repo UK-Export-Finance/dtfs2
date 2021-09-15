@@ -25,7 +25,7 @@ const MockRequestWithIdParam = () => {
   const req = {};
   req.params = { id: '1234' };
   return req;
-}
+};
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
@@ -33,7 +33,7 @@ const MockApplicationResponse = () => {
   res.coverTermsId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.additionalRefName = "additional";
+  res.additionalRefName = 'additional';
   res.status = 'DRAFT';
   res.userId = 'mock-user';
   res.supportingInformation = {
@@ -43,9 +43,9 @@ const MockApplicationResponse = () => {
 };
 
 describe('controllers/name-application', () => {
-
   describe('GET Name Application', () => {
-    let mockRequestWithIdParam, mockResponse, mockApplicationResponse;
+    let mockRequestWithIdParam; let mockResponse; let
+      mockApplicationResponse;
 
     beforeEach(() => {
       mockRequestWithIdParam = MockRequestWithIdParam();
@@ -71,7 +71,6 @@ describe('controllers/name-application', () => {
         additionalRefName: mockApplicationResponse.additionalRefName,
       });
     });
-
   });
 
   describe('Create Application', () => {

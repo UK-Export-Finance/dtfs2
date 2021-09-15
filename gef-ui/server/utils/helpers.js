@@ -53,7 +53,6 @@ const validationErrorHandler = (errs, href = '') => {
   const errors = isObject(errs) ? [errs] : errs;
 
   errors.forEach((el) => {
-    console.log(el, '|||||||||||||||||')
     const errorsForReference = ErrorMessagesMap[el.errRef];
     const mappedErrorMessage = errorsForReference ? errorsForReference[el.errCode] : el.errMsg;
 
