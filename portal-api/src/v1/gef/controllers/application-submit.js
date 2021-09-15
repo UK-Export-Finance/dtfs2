@@ -66,18 +66,13 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
 
   await Promise.all(facilities.map(async (facility) => {
-    const ukefFacilityId = await generateUkefFacilityId(facility);
-  facilities.forEach(async (facility) => {
     const { ukefId } = await generateUkefFacilityId(facility);
 
-    if (ukefFacilityId !== facility.ukefFacilityId) {
     if (ukefId !== facility.ukefFacilityId) {
       const update = {
-        ukefFacilityId,
         ukefFacilityId: ukefId,
       };
       await updateFacility(facility._id, update);
-      updateFacility(facility._id, update);
     }
   }));
 
@@ -86,7 +81,7 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
 
 const addSubmissionData = async (applicationId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
-  const ukefDealId = await generateUkefDealId(existingApplication);
+  const { ukefId } = await generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(applicationId);
   await addUkefFacilityIdToFacilities(applicationId);
@@ -94,7 +89,7 @@ const addSubmissionData = async (applicationId, existingApplication) => {
   return {
     submissionCount: count,
     submissionDate: date,
-    ukefDealId,
+    ukefDealId: ukefId,
   };
 };
 

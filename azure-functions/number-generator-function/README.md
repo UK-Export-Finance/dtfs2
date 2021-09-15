@@ -5,31 +5,13 @@ Azure function to call Number Generator API and check if it already exists in AP
 POST to DOMAIN/api/orchestrators/numbergenerator
 passing the portalIds in the form of
   {
-    "dealId": "123321",
-    "facilities": ["2222", "3333", "4444"]
+    "entityType": deal|facility,
   }
 
 # Outputs
-On completion, the durable function returns the generated IDs:
+On completion, the durable function returns the generated ID:
   {
-    "deal": {
-        "id": 123321,
-        "ukefId": "0030005648"
-    },
-    "facilityTasks": [
-        {
-            "id": 2222,
-            "ukefId": "0030005650"
-        },
-        {
-            "id": 3333,
-            "ukefId": "0030005647"
-        },
-        {
-            "id": 4444,
-            "ukefId": "0030005649"
-        }
-    ]
+    "ukefId": ID
   }
 
   # Errors
@@ -47,7 +29,7 @@ Errors are returned in this format
               "method": "post",
               "url": "https://dev-ukef-tf-ea-v1.uk-e1.cloudhub.io/api/v1/numbers",
               "auth": {
-                  "password": "9be2961393e84a31A1716b71EE0d1573"
+                  "password": "xxx"
               },
               "headers": {
                   "Content-Type": "application/json"
