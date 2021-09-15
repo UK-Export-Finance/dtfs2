@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./update-environment.sh master demo
+./update-environment.sh main demo
