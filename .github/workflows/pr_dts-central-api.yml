@@ -2,7 +2,7 @@ name: PR tests - DTFS Central API
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - 'dtfs-central-api/**'
     - 'utils/mock-data-loader/**'

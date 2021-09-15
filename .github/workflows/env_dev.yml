@@ -2,7 +2,7 @@ name: Dev environment infrastructure
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - '.github/workflows/env_dev.yml'
 

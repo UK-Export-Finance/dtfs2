@@ -164,7 +164,7 @@ npm run lint
 1) Create a branch and PR clearly describing the change, along with Jira ticket number
 2) PR will run tests for the affected services
 3) PR tests are pass, another engineer reviews & approves the PR
-4) PR is merged into master branch
+4) PR is merged into main branch
 
 Github actions will then run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment.
 
@@ -190,7 +190,7 @@ This ensures that the environments are stable, unaffected by CI/CD and the busin
 
 ### Deploying to test
 
-After merging to master, dev environment will be updated.
+After merging to main, dev environment will be updated.
 
 To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
 This will take the latest code in the development environment and deploy to test.

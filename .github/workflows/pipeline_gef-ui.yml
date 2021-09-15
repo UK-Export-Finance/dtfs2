@@ -2,7 +2,7 @@ name: GEF UI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
     - 'gef-ui/**'
     - 'portal-api/**'
