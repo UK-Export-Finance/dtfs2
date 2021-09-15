@@ -1,4 +1,4 @@
-import { nameApplication, createApplication } from './index';
+import { nameApplication, createApplication, updateApplicationReferences } from './index';
 import api from '../../services/api';
 
 jest.mock('../../services/api');
@@ -10,7 +10,7 @@ const MockResponse = () => {
   return res;
 };
 
-const MockRequest = () => {
+const MockPostRequest = () => {
   const req = {};
   req.body = { bankInternalRefName: '1234' };
   req.session = {};
@@ -18,30 +18,75 @@ const MockRequest = () => {
     _id: 'abc',
     bank: { id: 'mock-bank' },
   };
+  req.params = { id: '1234' };
   return req;
+};
+const MockRequestWithIdParam = () => {
+  const req = {};
+  req.params = { id: '1234' };
+  return req;
+}
+const MockApplicationResponse = () => {
+  const res = {};
+  res._id = '1234';
+  res.exporterId = '123';
+  res.coverTermsId = '123';
+  res.bankId = 'BANKID';
+  res.bankInternalRefName = 'My test';
+  res.additionalRefName = "additional";
+  res.status = 'DRAFT';
+  res.userId = 'mock-user';
+  res.supportingInformation = {
+    status: 'NOT_STARTED',
+  };
+  return res;
 };
 
 describe('controllers/name-application', () => {
-  let mockResponse;
-  let mockRequest;
-
-  beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
 
   describe('GET Name Application', () => {
-    it('renders the `name-application` template', async () => {
-      await nameApplication({}, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk');
+    let mockRequestWithIdParam, mockResponse, mockApplicationResponse;
+
+    beforeEach(() => {
+      mockRequestWithIdParam = MockRequestWithIdParam();
+      mockResponse = MockResponse();
+      mockApplicationResponse = MockApplicationResponse();
+      api.getApplication.mockResolvedValue(mockApplicationResponse);
     });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('renders the `name-application` template when no application id is passed', async () => {
+      await nameApplication({}, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {});
+    });
+
+    it('calls the appropriate api and renders the `name-application` template with correct data', async () => {
+      await nameApplication(mockRequestWithIdParam, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
+        bankInternalRefName: mockApplicationResponse.bankInternalRefName,
+        additionalRefName: mockApplicationResponse.additionalRefName,
+      });
+    });
+
   });
 
   describe('Create Application', () => {
+    let mockResponse;
+    let mockRequest;
+
+    beforeEach(() => {
+      mockResponse = MockResponse();
+      mockRequest = MockPostRequest();
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('renders the `application details` page with validation errors if validation fails on server', async () => {
       api.createApplication.mockResolvedValueOnce({
         status: 422,
@@ -49,7 +94,7 @@ describe('controllers/name-application', () => {
       });
 
       await createApplication(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { errors: { errorSummary: [], fieldErrors: {} } });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { bankInternalRefName: mockRequest.body.bankInternalRefName, additionalRefName: undefined, errors: { errorSummary: [], fieldErrors: {} } });
     });
 
     it('redirects user to `application details` page if successful', async () => {
@@ -59,15 +104,61 @@ describe('controllers/name-application', () => {
       });
 
       await createApplication(mockRequest, mockResponse);
-      expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123456');
     });
 
-    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    it('shows user genereic error page if there is an issue with the API', async () => {
+      const mockNext = jest.fn();
+
       api.createApplication.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
 
-      await createApplication(mockRequest, mockResponse);
+      await createApplication(mockRequest, mockResponse, mockNext);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockNext).toHaveBeenCalled();
+    });
+  });
+
+  describe('Update Application References', () => {
+    let mockResponse;
+    let mockRequest;
+
+    beforeEach(() => {
+      mockResponse = MockResponse();
+      mockRequest = MockPostRequest();
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('renders the `application details` page with validation errors if validation fails on server', async () => {
+      api.updateApplication.mockResolvedValueOnce({
+        status: 422,
+        data: [],
+      });
+
+      await updateApplicationReferences(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { bankInternalRefName: mockRequest.body.bankInternalRefName, additionalRefName: '', errors: { errorSummary: [], fieldErrors: {} } });
+    });
+
+    it('redirects user to `application details` page if successful', async () => {
+      api.updateApplication.mockResolvedValueOnce({
+        _id: '123456',
+        bankInternalRefName: 'Ref Name',
+      });
+
+      await updateApplicationReferences(mockRequest, mockResponse);
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123456');
+    });
+
+    it('shows user genereic error page if there is an issue with the API', async () => {
+      const mockNext = jest.fn();
+
+      api.createApplication.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
+
+      await updateApplicationReferences(mockRequest, mockResponse, mockNext);
+
+      expect(mockNext).toHaveBeenCalled();
     });
   });
 });

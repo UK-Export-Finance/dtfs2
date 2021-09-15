@@ -1,14 +1,21 @@
 const { ERROR, STATUS } = require('../../enums');
 
-const validateNameField = (fieldName, fieldValue) => {
-  if (!fieldValue) {
+const validateMandatoryField = (fieldName, fieldValue) => {
+  const value = fieldValue ?? '';
+  if (value.length <= 0) {
     return {
       errCode: ERROR.MANDATORY_FIELD,
       errRef: fieldName,
       errMsg: `${fieldName} is Mandatory`,
     };
   }
-  if (fieldValue.length > 30) {
+
+  return null;
+};
+
+const validateNameFieldValue = (fieldName, fieldValue) => {
+  const value = fieldValue ?? '';
+  if (value.length > 30) {
     return {
       errCode: ERROR.FIELD_TOO_LONG,
       errRef: fieldName,
@@ -28,12 +35,14 @@ const validateNameField = (fieldName, fieldValue) => {
 };
 
 const validateApplicationReferences = (body = {}) => {
-  let validationErrs = [];
-  validationErrs.push(validateNameField('bankInternalRefName', body.bankInternalRefName));
-  if (body.additionalRefName) validationErrs.push(validateNameField('additionalRefName', body.additionalRefName));
+  let validationErrors = [];
 
-  validationErrs = validationErrs.filter((el) => el !== null); // remove nulls
-  return validationErrs.length === 0 ? null : validationErrs;
+  validationErrors.push(validateMandatoryField('bankInternalRefName', body.bankInternalRefName));
+  validationErrors.push(validateNameFieldValue('bankInternalRefName', body.bankInternalRefName));
+  if (body.additionalRefName) validationErrors.push(validateNameFieldValue('additionalRefName', body.additionalRefName));
+
+  validationErrors = validationErrors.filter((el) => el !== null); // remove nulls
+  return validationErrors.length === 0 ? null : validationErrors;
 };
 
 const validatorStatusCheckEnums = (doc) => {

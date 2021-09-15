@@ -112,6 +112,11 @@ exports.getStatus = async (req, res) => {
 exports.update = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const update = new Application(req.body);
+  const validateErrs = validateApplicationReferences(update);
+  if (validateErrs) {
+    return res.status(422).send(validateErrs);
+  }
+
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(req.params.id)) } },
     { $set: update },
@@ -121,7 +126,8 @@ exports.update = async (req, res) => {
   if (result.value) {
     response = result.value;
   }
-  res.status(utils.mongoStatus(result)).send(response);
+
+  return res.status(utils.mongoStatus(result)).send(response);
 };
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
