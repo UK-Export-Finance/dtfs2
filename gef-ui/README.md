@@ -37,6 +37,7 @@ npm run test /path/to/file.test.js
 ### **End to end tests**
 
 See e2e-tests README.md.
+Testing parallel running
 
 ## Basic happy flow behind the scenes
 
