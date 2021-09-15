@@ -2,7 +2,7 @@ name: PR tests - Trade Finance Manager UI
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
     - 'trade-finance-manager-ui/**'
     - 'e2e-tests/trade-finance-manager/cypress/**'

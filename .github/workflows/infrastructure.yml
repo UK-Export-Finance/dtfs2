@@ -2,7 +2,7 @@ name: Supporting infrastructure for environments
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
     - '.github/workflows/infrastructure.yml'
 
