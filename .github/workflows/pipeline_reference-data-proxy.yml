@@ -2,7 +2,7 @@ name: Reference Data proxy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - 'reference-data-proxy/**'
   schedule:

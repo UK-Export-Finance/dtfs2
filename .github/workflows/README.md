@@ -2,7 +2,7 @@
 
 At a high-level, the pipeline works by building container images and promoting them between registries:
 
- * code is pushed to master
+ * code is pushed to main
  * container images are built and pushed to the dev registry
  * api tests and e2e tests are run
  * if tests pass, the images are deployed to the dev environment
@@ -16,7 +16,7 @@ Deployment is triggered by webhooks from the container registries to the App Ser
 
 ### Environments
 
-Workflows for each environment are triggered when the corresponding branch is updated. For the Dev environment this happens on update of master, after tests have passed.
+Workflows for each environment are triggered when the corresponding branch is updated. For the Dev environment this happens on update of main, after tests have passed.
 
 Environment workflows ensure we've got the right infrastructure set up and correctly configured, plus any environment variables and secrets set as needed.
 
