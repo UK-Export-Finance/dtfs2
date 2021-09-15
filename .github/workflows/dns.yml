@@ -2,7 +2,7 @@ name: Production DNS
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
     - '.github/workflows/dns.yml'
 
