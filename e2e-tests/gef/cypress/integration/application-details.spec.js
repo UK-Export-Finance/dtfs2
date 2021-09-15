@@ -42,6 +42,11 @@ context('Application Details Page', () => {
       applicationDetails.mainHeading();
     });
 
+    it('shows a valid link to edit the reference', () => {
+      applicationDetails.editRefNameLink().click();
+      cy.url().should('eq', relative(`/gef/applications/${applications[0]._id}/name`));
+    });
+
     it('displays the correct exporter elements', () => {
       applicationDetails.exporterHeading();
       applicationDetails.exporterStatus().contains('Not started');
