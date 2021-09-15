@@ -13,11 +13,13 @@ const CONSTANTS = require('../../constants');
 
 describe('task emails functions', () => {
   const mockDeal = {
-    dealSnapshot: MOCK_DEAL_MIA_SUBMITTED,
+    _id: MOCK_DEAL_MIA_SUBMITTED._id,
+    ukefDealId: MOCK_DEAL_MIA_SUBMITTED.ukefDealId,
+    exporter: {
+      companyName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
+    },
     tfm: {
-      history: {
-        emails: [],
-      },
+      history: { emails: [] },
     },
   };
 
@@ -39,9 +41,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -62,9 +64,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -85,9 +87,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -108,9 +110,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -131,9 +133,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -155,9 +157,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -178,9 +180,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -201,9 +203,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -224,9 +226,9 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
@@ -247,15 +249,15 @@ describe('task emails functions', () => {
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL),
-        taskUrl: generateTaskUrl(mockUrlOrigin, mockDeal.dealSnapshot._id, mockTask),
-        exporterName: mockDeal.dealSnapshot.submissionDetails['supplier-name'],
-        ukefDealId: mockDeal.dealSnapshot.details.ukefDealId,
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
       };
 
       expect(api.sendEmail).toHaveBeenCalledWith(
         CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
         underwritersTeam.email,
-        expectedEmailVars,
+        expectedEmailVars,  
       );
     });
 

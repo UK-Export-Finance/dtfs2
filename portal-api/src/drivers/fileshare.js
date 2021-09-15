@@ -77,7 +77,7 @@ const getDirectory = async (fileshare, folderPaths = '') => {
 };
 
 const tmpTests = async () => {
-  const tests = ['https://www.bbc.co.uk/news', 'https://tfsandrew.file.core.windows.net/'];
+  const tests = ['https://www.bbc.co.uk/news'];
 
   tests.forEach((uri) => {
     fetch('https://www.bbc.co.uk/news', { method: 'GET' })

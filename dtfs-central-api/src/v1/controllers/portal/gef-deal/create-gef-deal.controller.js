@@ -5,9 +5,11 @@ const createDeal = async (deal) => {
 
   const response = await collection.insertOne(deal);
 
-  const createdDeal = response.ops[0];
+  const { insertedId } = response;
 
-  return createdDeal;
+  return {
+    _id: insertedId,
+  };
 };
 
 exports.createDealPost = async (req, res) => {

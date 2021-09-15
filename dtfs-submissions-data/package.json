@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^3.5.4",
+    "mongodb": "^4.0.0",
     "xml2js": "^0.4.23"
   }
 }

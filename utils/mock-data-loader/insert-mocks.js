@@ -46,7 +46,8 @@ const insertMocks = async () => {
   const insertedDeals = [];
 
   for (deal of MOCKS.DEALS) {
-    const createdDeal = await api.createDeal(deal, tfmMakerToken);
+    const { _id } = await api.createDeal(deal, tfmMakerToken);
+    const { deal: createdDeal } = await api.getDeal(_id, tfmMakerToken);
 
     insertedDeals.push(createdDeal);
   }

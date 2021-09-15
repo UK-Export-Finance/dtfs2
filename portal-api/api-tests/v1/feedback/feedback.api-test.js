@@ -67,13 +67,15 @@ describe('/v1/feedback', () => {
     });
 
     describe('when all required fields provided', () => {
-      it('returns a new feedback with added `created` and `submittedBy` field', async () => {
-        const { status, body } = await postFeedback();
+      it('creates a new feedback, adding `created` and `submittedBy` field', async () => {
+        const { status, body: createdFeedback } = await postFeedback();
 
         expect(status).toEqual(200);
-        expect(body._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+        expect(createdFeedback._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
 
-        expect(body).toEqual({
+        const { body: feedback } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback._id}`); // eslint-disable-line no-underscore-dangle
+
+        expect(feedback).toEqual({
           ...feedbackFormBody,
           _id: expect.any(String), // eslint-disable-line no-underscore-dangle
           submittedBy: aBarclaysMaker.username,
@@ -100,18 +102,22 @@ describe('/v1/feedback', () => {
     });
 
     it('returns all feedback', async () => {
-      const feedback1 = await postFeedback();
-      const feedback2 = await postFeedback();
-      const feedback3 = await postFeedback();
+      const { body: createdFeedback1 } = await postFeedback();
+      const { body: createdFeedback2 } = await postFeedback();
+      const { body: createdFeedback3 } = await postFeedback();
 
-      const { status, body } = await as(aDataAdmin).get(`/v1/feedback`);
+      const { body: feedback1 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback1._id}`);
+      const { body: feedback2 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback2._id}`);
+      const { body: feedback3 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback3._id}`);
+
+      const { status, body } = await as(aDataAdmin).get('/v1/feedback');
 
       expect(status).toEqual(200);
 
       expect(body).toEqual([
-        { ...feedback1.body },
-        { ...feedback2.body },
-        { ...feedback3.body },
+        { ...feedback1 },
+        { ...feedback2 },
+        { ...feedback3 },
       ]);
     });
   });

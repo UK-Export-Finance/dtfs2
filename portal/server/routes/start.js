@@ -83,16 +83,13 @@ router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async 
     errorHref,
   );
 
-  const {
-    validationErrors,
-    details,
-  } = apiResponse;
+  const { validationErrors } = apiResponse;
 
   if (validationErrors) {
     const {
       bankSupplyContractID,
       bankSupplyContractName,
-    } = details;
+    } = req.body;
 
     return res.status(400).render('before-you-start/before-you-start-bank-deal.njk', {
       bankSupplyContractID,

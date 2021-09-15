@@ -13,10 +13,9 @@ context('User can login', () => {
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
-        const { dealType } = insertedDeal;
+        dealId = insertedDeal._id;
 
-        const { mockFacilities } = MOCK_DEAL_AIN;
+        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM);
 

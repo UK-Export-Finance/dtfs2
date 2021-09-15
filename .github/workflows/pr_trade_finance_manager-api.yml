@@ -2,7 +2,7 @@ name: PR tests - Trade Finance Manager API
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - 'trade-finance-manager-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'

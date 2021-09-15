@@ -26,7 +26,7 @@ describe('/v1/bank/:id', () => {
     it('returns a bank', async () => {
       const { body: createdBank } = await api.post(newBank).to('/v1/bank');
 
-      const { body, status } = await api.get(`/v1/bank/${createdBank.id}`);
+      const { body, status } = await api.get(`/v1/bank/${newBank.id}`);
 
       expect(status).toEqual(200);
 

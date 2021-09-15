@@ -172,10 +172,12 @@ describe(baseUrl, () => {
     });
 
     it('deletes the eligibilty-criteria', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
-      const { status, body } = await as(anEditor).remove(`${baseUrl}/${item.body._id}`);
+      const { body: createdItem } = await as(anEditor).post(items[0]).to(baseUrl);
+      const { body: item } = await as(anEditor).get(`${baseUrl}/${createdItem._id}`);
+
+      const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem._id}`);
       expect(status).toEqual(200);
-      expect(body).toEqual(JSON.parse(item.text));
+      expect(body).toEqual(item);
     });
   });
 });

@@ -30,7 +30,10 @@ describe('/v1/portal/gef/deals/:id', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual(createdDeal);
+      expect(body).toEqual({
+        _id: createdDeal._id,
+        ...newDeal,
+      });
     });
   });
 });

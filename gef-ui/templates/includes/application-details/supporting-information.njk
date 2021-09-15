@@ -1,5 +1,6 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
@@ -23,8 +24,14 @@
   <a class="govuk-link" href="/gef/application-details/{{applicationId}}/supporting-information/manual-inclusion-questionnaire" data-cy="supportingInfo-start-link">Add supporting information</a>
 {% else %}
   {% set securityDetailsHtml %}
-    <p>{{ supportingInfo.securityDetails.exporter | truncate(90, false, "...") }}</p>
-    <p>{{ supportingInfo.securityDetails.application | truncate(90, false, "...") }}</p>
+    {{ govukDetails({
+      summaryText: "General security",
+      text: supportingInfo.securityDetails.exporter
+    }) }}
+    {{ govukDetails({
+      summaryText: "Specific security for facilities",
+      text: supportingInfo.securityDetails.application
+    }) }}
   {% endset %}
 
   {{ govukSummaryList({

@@ -62,7 +62,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let dealId;
       let createdFacilities;
 
-      beforeEach(async (done) => {
+      beforeEach(async () => {
         completedDeal.details.status = 'Further Maker\'s input required';
         completedDeal.details.submissionDate = moment().utc().valueOf();
 
@@ -75,18 +75,14 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 
-        if (createdFacilities.length) {
-          completedDeal.mockFacilities = createdFacilities;
+        completedDeal.mockFacilities = createdFacilities;
 
-          const statusUpdate = {
-            status: 'Ready for Checker\'s approval',
-            comments: 'test',
-          };
+        const statusUpdate = {
+          status: 'Ready for Checker\'s approval',
+          comments: 'test',
+        };
 
-          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
-
-          done();
-        }
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
       });
 
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
@@ -258,7 +254,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         let createdDeal;
         let updatedDeal;
 
-        beforeEach(async (done) => {
+        beforeEach(async () => {
           completedDeal.status = 'Accepted by UKEF (without conditions)';
           completedDeal.details.submissionType = 'Manual Inclusion Application';
           completedDeal.details.approvalDate = moment().utc().valueOf().toString();
@@ -272,18 +268,14 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
-          if (createdFacilities.length) {
-            completedDeal.mockFacilities = createdFacilities;
+          completedDeal.mockFacilities = createdFacilities;
 
-            const statusUpdate = {
-              status: 'Ready for Checker\'s approval',
-              comments: 'Nope',
-            };
+          const statusUpdate = {
+            status: 'Ready for Checker\'s approval',
+            comments: 'Nope',
+          };
 
-            updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
-
-            done();
-          }
+          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
         });
 
         describe('any issued bonds that have details provided, but not yet been submitted', () => {
@@ -338,7 +330,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let createdDeal;
       let updatedDeal;
 
-      beforeEach(async (done) => {
+      beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
@@ -349,18 +341,14 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
-        if (createdFacilities.length) {
-          completedDeal.mockFacilities = createdFacilities;
+        completedDeal.mockFacilities = createdFacilities;
 
-          const statusUpdate = {
-            status: 'Further Maker\'s input required',
-            comments: 'Nope',
-          };
+        const statusUpdate = {
+          status: 'Further Maker\'s input required',
+          comments: 'Nope',
+        };
 
-          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-          done();
-        }
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
       const isIssuedFacilityWithFacilityStageChange = (facility) => {
@@ -511,7 +499,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         ...newLoans,
       ];
 
-      beforeEach(async (done) => {
+      beforeEach(async () => {
         const dealInDraftStatus = completedDeal;
         dealInDraftStatus.details.status = 'Draft';
 
@@ -525,13 +513,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, newFacilities);
 
-        if (createdFacilities.length) {
-          completedDeal.mockFacilities = createdFacilities;
+        completedDeal.mockFacilities = createdFacilities;
 
-          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-          done();
-        }
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
       describe('when a deal contains bonds with an `Issued` facilityStage that do NOT have a requestedCoverStartDate', () => {
@@ -621,7 +605,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let expectedFacilitiesSubmittedBy;
       let dealId;
 
-      beforeEach(async (done) => {
+      beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
@@ -637,20 +621,16 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 
-        if (createdFacilities.length) {
-          completedDeal.mockFacilities = createdFacilities;
+        completedDeal.mockFacilities = createdFacilities;
 
-          const statusUpdate = {
-            status: 'Submitted',
-            confirmSubmit: true,
-          };
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
 
-          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-          expectedFacilitiesSubmittedBy = aBarclaysChecker;
-
-          done();
-        }
+        expectedFacilitiesSubmittedBy = aBarclaysChecker;
       });
 
       const isUnsubmittedFacilityWithIssueFacilityDetailsProvided = (facility) => {

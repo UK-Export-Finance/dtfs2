@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./update-environment.sh master test
+./update-environment.sh main test

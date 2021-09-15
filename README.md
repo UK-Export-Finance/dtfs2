@@ -1,5 +1,3 @@
-![Pipeline](https://github.com/notbinary/dtfs2/workflows/Pipeline/badge.svg)
-
 # UKEF Trade Finance Service
 
 This repository contains the code for the UK Export Finance Trade Finance Service.
@@ -45,8 +43,6 @@ Note: If you're on Windows and having issues with MongoDB, install mongosh for c
 ```shell
 docker-compose up
 ```
-
-:warning: If you make changes to a UI server, you'll need to do a build with `docker-compose up --build`. Hot reloading will be in place shortly.
 
 Several services are built:
 
@@ -168,7 +164,7 @@ npm run lint
 1) Create a branch and PR clearly describing the change, along with Jira ticket number
 2) PR will run tests for the affected services
 3) PR tests are pass, another engineer reviews & approves the PR
-4) PR is merged into master branch
+4) PR is merged into main branch
 
 Github actions will then run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment.
 
@@ -194,7 +190,7 @@ This ensures that the environments are stable, unaffected by CI/CD and the busin
 
 ### Deploying to test
 
-After merging to master, dev environment will be updated.
+After merging to main, dev environment will be updated.
 
 To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
 This will take the latest code in the development environment and deploy to test.

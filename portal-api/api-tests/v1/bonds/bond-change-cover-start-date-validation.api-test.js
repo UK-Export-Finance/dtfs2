@@ -62,13 +62,6 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
     const updatedBond = await updateBond(dealId, bondId, modifiedBond);
 
-    deal.bondTransactions = {
-      items: [
-        ...deal.bondTransactions.items,
-        updatedBond.bond,
-      ]
-    };
-
     return updatedBond.body;
   };
 

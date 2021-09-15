@@ -275,6 +275,8 @@ describe('/v1/deals/:id/submission-details', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
+      const { body: dealInOriginalShape } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
       const submissionDetails = {
         supplierCompaniesHouseRegistrationNumber: '12345678',
       };
@@ -285,7 +287,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
       expect(status).toEqual(200);
 
-      expect(body.deal.details.dateOfLastAction).not.toEqual(createdDeal.details.dateOfLastAction);
+      expect(body.deal.details.dateOfLastAction).not.toEqual(dealInOriginalShape.deal.details.dateOfLastAction);
     });
   });
 });

@@ -32,7 +32,9 @@ const createFacilities = async (facilities, dealId) => {
     dealUpdate,
   );
 
-  return result.ops;
+  const flattenedIds = Object.values(result.insertedIds);
+
+  return flattenedIds;
 };
 
 exports.createMultipleFacilitiesPost = async (req, res) => {

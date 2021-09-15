@@ -143,7 +143,6 @@ describe('/graphql query deals', () => {
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
       const { body } = await as(noRoles).post(queryBody).to('/graphql');
-      console.log(JSON.stringify(body.data));
       expect(body.data.allDeals.status.code).toEqual(401);
     });
 

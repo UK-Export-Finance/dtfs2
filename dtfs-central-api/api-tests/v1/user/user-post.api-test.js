@@ -28,17 +28,19 @@ describe('/v1/user', () => {
   });
 
   describe('POST /v1/user', () => {
-    it('returns the created user', async () => {
+    it('creates a user', async () => {
       const { body, status } = await api.post(newUser).to('/v1/user');
 
       expect(status).toEqual(200);
 
-      const expected = {
-        _id: expect.any(String),
-        ...newUser,
-      };
+      expect(body).toEqual({ _id: expect.any(String) });
 
-      expect(body).toEqual(expected);
+      const { body: userAfterCreation } = await api.get(`/v1/user/${body._id}`);
+
+      expect(userAfterCreation).toEqual({
+        _id: body._id,
+        ...newUser,
+      });
     });
   });
 });

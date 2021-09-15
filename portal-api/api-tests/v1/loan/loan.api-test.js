@@ -57,9 +57,11 @@ describe('/v1/deals/:id/loan', () => {
 
   const createLoan = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+
     const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
     const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+
     const { loanId } = createLoanResponse.body;
     return {
       dealId,

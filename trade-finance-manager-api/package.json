@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/notbinary/dtfs2.git"
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
   "keywords": [
     "export",
@@ -29,9 +29,9 @@
   "author": "UK Export Finance",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/notbinary/dtfs2/issues"
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
-  "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@graphql-tools/schema": "^7.1.5",
     "apollo-server-express": "2.18.2",
@@ -47,15 +47,16 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "mongo-dot-notation": "^2.0.0",
-    "mongodb": "^3.6.3",
-    "node-cron": "^3.0.0"
+    "mongodb": "^4.0.0",
+    "node-cron": "^3.0.0",
+    "node-notifier": "^10.0.0"
   },
   "devDependencies": {
     "apollo-server-testing": "^2.19.0",
     "eslint": "6.1.0",
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-plugin-import": "2.20.1",
-    "jest": "26.1.0",
+    "jest": "27.1.0",
     "nodemon": "^2.0.4",
     "supertest": "^6.1.3"
   }
