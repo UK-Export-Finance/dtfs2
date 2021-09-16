@@ -189,17 +189,6 @@ describe(baseUrl, () => {
       expect(body).toEqual(expectMongoId(expected));
     });
 
-    it('it returns a duplicate error in the system the item I created an application of the same reference', async () => {
-      await as(aMaker).post(mockApplications[0]).to(baseUrl); // 1st instance
-      const { status, body } = await as(aMaker).post(mockApplications[0]).to(baseUrl); // 2nd instance
-      expect(body).toEqual([{
-        errCode: 'ALREADY_EXISTS',
-        errRef: 'bankInternalRefName',
-        errMsg: 'The bank reference you have entered already exists.',
-      }]);
-      expect(status).toEqual(422);
-    });
-
     it('it tells me the Bank Internal Ref Name is null', async () => {
       const removeName = {
         ...mockApplications[0],
@@ -209,7 +198,7 @@ describe(baseUrl, () => {
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
-        errMsg: 'Application Reference Name is Mandatory',
+        errMsg: 'bankInternalRefName is Mandator',
       }]);
       expect(status).toEqual(422);
     });
@@ -223,7 +212,7 @@ describe(baseUrl, () => {
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
-        errMsg: 'Application Reference Name is Mandatory',
+        errMsg: 'bankInternalRefName is Mandatory',
       }]);
       expect(status).toEqual(422);
     });
@@ -232,7 +221,7 @@ describe(baseUrl, () => {
   describe(`PUT ${baseUrl}/:id`, () => {
     const updated = {
       ...mockApplications[0],
-      bankInternalRefName: 'Updated Ref Name (Unit Test)',
+      bankInternalRefName: 'Updated Ref Name - Unit Test',
       submissionType: 'Automatic Inclusion Notice',
     };
 
