@@ -58,7 +58,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   */
   if (allRequiredPartiesHaveUrn && deal.dealSnapshot.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
     // Start ACBS process
-    await acbsController.createACBSParty(deal);
+    await acbsController.createACBS(deal);
   }
 
 };
