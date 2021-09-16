@@ -67,7 +67,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_ACBS_FUNCTION_URL=http://localhost:7071
     entrypoint: npx nodemon src/index.js
   
   portal:
@@ -158,7 +158,7 @@ services:
       - MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET
       - MULESOFT_API_EXPOSURE_PERIOD_URL
       - MULESOFT_API_UKEF_MDM_EA_URL
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_ACBS_FUNCTION_URL=http://localhost:7071
     entrypoint: npx nodemon src/index.js
 
   gef-ui:

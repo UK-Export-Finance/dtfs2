@@ -259,6 +259,11 @@ openRouter.route('/acbs')
     acbs.createAcbsRecordPOST,
   );
 
+openRouter.route('/acbs/create/exporter')
+  .post(
+    acbs.createAcbsPartyRecordPOST,
+  );
+
 /**
  * @openapi
  * /acbs/:entityType/:id:

@@ -9,6 +9,8 @@
  *    function app in Kudu
  */
 
+ console.log('HERE****************');
+
 const df = require('durable-functions');
 const mappings = require('../mappings');
 const retryOptions = require('../helpers/retryOptions');

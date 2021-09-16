@@ -433,6 +433,25 @@ const createACBS = async (deal, bank) => {
   }
 };
 
+const createACBSParty = async (deal, exporter) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/acbs/create/exporter`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        deal,
+        exporter,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 const updateACBSfacility = async (facility, supplierName) => {
   try {
     const response = await axios({
@@ -568,6 +587,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
+  createACBSParty,
   updateACBSfacility,
   getFunctionsAPI,
   createEstoreFolders,

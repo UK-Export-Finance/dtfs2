@@ -2,7 +2,7 @@
   "name": "",
   "version": "",
   "description": "",
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
@@ -14,7 +14,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
-    "durable-functions": "^1.4.6",
+    "durable-functions": "^1.5.2",
     "moment": "^2.29.1"
   }
 }

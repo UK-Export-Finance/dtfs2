@@ -82,12 +82,16 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
     return;
   }
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
-  // Only want to submit AIN deals to ACBS initially
-  if (allRequiredPartiesHaveUrn
-    && deal.dealSnapshot.details.submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+
+  /**
+  1. Check whether the exporter has a URN (Company house registration number)
+  2. Ensure submission type is AIN only (0.1)
+  */
+  if (allRequiredPartiesHaveUrn && deal.dealSnapshot.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
     // Start ACBS process
-    await acbsController.createACBS(deal);
+    await acbsController.createACBSParty(deal);
   }
+
 };
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
