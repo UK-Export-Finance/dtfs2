@@ -37,8 +37,10 @@ const validateNameFieldValue = (fieldName, fieldValue) => {
 const validateApplicationReferences = (body = {}) => {
   let validationErrors = [];
 
-  validationErrors.push(validateMandatoryField('bankInternalRefName', body.bankInternalRefName));
-  validationErrors.push(validateNameFieldValue('bankInternalRefName', body.bankInternalRefName));
+  if (Object.keys(body).includes('bankInternalRefName')) {
+    validationErrors.push(validateMandatoryField('bankInternalRefName', body.bankInternalRefName));
+    validationErrors.push(validateNameFieldValue('bankInternalRefName', body.bankInternalRefName));
+  }
   if (body.additionalRefName) validationErrors.push(validateNameFieldValue('additionalRefName', body.additionalRefName));
 
   validationErrors = validationErrors.filter((el) => el !== null); // remove nulls
