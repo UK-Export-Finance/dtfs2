@@ -33,7 +33,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'Barclays 123');
+      applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
     });
 
     it('displays the correct headings', () => {
@@ -108,7 +108,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'UKEF Test 123');
+      applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
     });
 
     it('displays the correct exporter elements', () => {
@@ -142,7 +142,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'HSBC 123');
+      applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
     });
 
     it('displays the correct exporter elements', () => {
