@@ -56,6 +56,21 @@ openRouter.route('/api-docs')
  *     responses:
  *       200:
  *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: 123abc
+ *               dealSnapshot:
+ *                 _id: 123abc
+ *                 dealType: BSS/EWCS
+ *                 status: Submitted
+ *                 submissionCount: 1
+ *                 facilities: ['123', '456']
+ *               tfm:
+ *                 product: BSS & EWCS
+ *                 dateReceived: 16-09-2021
+ *                 stage: Confirmed
+ *                 exporterCreditRating: Acceptable (B+)
  *       404:
  *         description: Not found
  */
@@ -64,7 +79,6 @@ openRouter.route('/deals/submit')
     dealSubmit.submitDealPUT,
   );
 
-// Mock user routes. Not required once active directory login is enabled
 /**
  * @openapi
  * /users/:username:
@@ -82,6 +96,16 @@ openRouter.route('/deals/submit')
  *     responses:
  *       200:
  *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: 123abc
+ *               username: T1_USER_1
+ *               email: test@testing.com
+ *               teams: ['BUSINESS_SUPPORT']
+ *               timezone: Europe/London
+ *               firstName: Joe
+ *               lastName: Bloggs
  *       404:
  *         description: Not found
  */
