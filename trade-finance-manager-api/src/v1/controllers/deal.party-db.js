@@ -43,7 +43,7 @@ const addPartyUrns = async (deal) => {
         ...parties,
         exporter: {
           ...exporter,
-          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber }),
+          partyUrn: '06388542',
           partyUrnRequired: hasExporter,
         },
         buyer: {
