@@ -2,8 +2,6 @@ const bodyParser = require('body-parser');
 // const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
-const swaggerJsdoc = require('swagger-jsdoc');
-// const { SwaggerUIBundle } = require('swagger-ui-dist');
 const swaggerUi = require('swagger-ui-express');
 
 const { ApolloServer } = require('apollo-server-express');
@@ -60,35 +58,9 @@ rootRouter.get('/', async (req, res) => {
   res.status(200).send();
 });
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Trade Finance Manager API',
-    version: '1.0.0',
-    description: 'Consumes deals and integrates with external APIs',
-  },
-  tags: [
-    {
-      name: 'Deals',
-      description: '',
-    },
-    {
-      name: 'Users',
-      description: '',
-    },
-  ],
-};
-const swaggerSpec = swaggerJsdoc({
-  swaggerDefinition,
-  apis: ['./src/v1/routes.js'],
-});
-
-const swaggerUiOptions = {
-  explorer: true,
-};
 
 rootRouter.use('/v1/api-docs', swaggerUi.serve);
-rootRouter.get('/v1/api-docs', swaggerUi.setup(swaggerSpec, swaggerUiOptions));
+// rootRouter.get('/v1/api-docs', swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 app.use('/', rootRouter);
 
