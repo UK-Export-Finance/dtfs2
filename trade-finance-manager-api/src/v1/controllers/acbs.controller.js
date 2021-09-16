@@ -51,16 +51,6 @@ const createACBS = async (deal) => {
   return addToACBSLog({ deal, bank, acbsTaskLinks });
 };
 
-const createACBSParty = async (deal) => {
-
-const exporter = deal.dealSnapshot.exporter;
-
-const { companiesHouseRegistrationNumber, companyName, registeredAddress } = exporter;
-const acbsTaskLinks = await api.createACBSParty(deal, { companiesHouseRegistrationNumber, companyName, registeredAddress });
-
-  return addToACBSLog({ deal, exporter, acbsTaskLinks });
-};
-
 const updateDealAcbs = async (taskOutput) => {
   const { facilities, ...dealAcbs } = taskOutput;
   await tfmController.updateAcbs(taskOutput.portalDealId, dealAcbs);
@@ -136,7 +126,6 @@ module.exports = {
   addToACBSLog,
   clearACBSLog,
   createACBS,
-  createACBSParty,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
 };

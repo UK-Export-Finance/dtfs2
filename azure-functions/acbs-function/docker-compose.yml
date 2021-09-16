@@ -1,4 +1,4 @@
-version: "3" 
+version: "3"
 services:
 
   acbs-function:
@@ -11,9 +11,9 @@ services:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
       - WEBSITE_HOSTNAME=localhost:7071
-      - MULESOFT_API_KEY=da9a6f2f33d7484381a56ba1bd8d9f49
-      - MULESOFT_API_SECRET=9be2961393e84a31A1716b71EE0d1573
-      - MULESOFT_API_UKEF_TF_EA_URL=https://dev-ukef-tf-ea-v1.uk-e1.cloudhub.io/api/v1
-      - MULESOFT_API_UKEF_MDM_EA_URL=https://dev-ukef-mdm-ea-v1.uk-e1.cloudhub.io/api/v1
-      - MULESOFT_API_UKEF_MDM_EA_KEY=612abddc8dd545de9a7dadbe6d70d514
-      - MULESOFT_API_UKEF_MDM_EA_SECRET=a69EC3084b524b97A20DF2f2986B741C
+      - MULESOFT_API_KEY=
+      - MULESOFT_API_SECRET=
+      - MULESOFT_API_UKEF_TF_EA_URL=
+      - MULESOFT_API_UKEF_MDM_EA_URL=
+      - MULESOFT_API_UKEF_MDM_EA_KEY=
+      - MULESOFT_API_UKEF_MDM_EA_SECRET=

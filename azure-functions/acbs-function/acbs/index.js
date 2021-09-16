@@ -9,27 +9,34 @@
  *    function app in Kudu
  */
 
- console.log('HERE****************');
+ const df = require('durable-functions');
+ const mappings = require('../mappings');
+ const retryOptions = require('../helpers/retryOptions');
+ const CONSTANTS = require('../constants');
 
-const df = require('durable-functions');
-const mappings = require('../mappings');
-const retryOptions = require('../helpers/retryOptions');
-
-module.exports = df.orchestrator(function* acbsDeal(context) {
+ module.exports = df.orchestrator(function* acbsDeal(context) {
   const { deal, bank } = context.df.getInput();
   // Get ACBS industry code
-  const industryCode = deal.dealSnapshot.submissionDetails['industry-class']
-                        && deal.dealSnapshot.submissionDetails['industry-class'].code;
+  //const industryCode = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
+  const industryCode = deal.dealSnapshot.exporter.industries[0].code;
+
   const acbsReference = {
     supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, { industryCode }),
   };
 
+  context.log({ deal });
+
   // Create Parties
   const exporterTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.exporter({ deal, acbsReference }) });
+  context.log({ exporterTask });
   const buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.buyer({ deal }) });
+  context.log({ buyerTask });
   const agentTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.agent({ deal }) });
+  context.log({ agentTask });
   const indemnifierTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.indemnifier({ deal }) });
+  context.log({ indemnifierTask });
   const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.bank({ bank }) });
+  context.log({ bankTask });
 
   // Party tasks are run in parallel so wait for them all to be finished.
   yield context.df.Task.all([exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
@@ -42,10 +49,12 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
     bank: bankTask.result,
   };
 
+  context.log({ parties });
+
   // Create Deal
   const acbsDealInput = mappings.deal.deal(
     deal, parties.exporter.partyIdentifier, acbsReference,
-  );
+    );
 
   const dealRecord = yield context.df.callActivityWithRetry('activity-create-deal', retryOptions, { deal: acbsDealInput });
 
@@ -56,7 +65,7 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
 
   // Create Deal Guarantee
   const dealGuaranteeLimitKey = parties.indemnifier.partyIdentifier
-                                || parties.exporter.partyIdentifier;
+  || parties.exporter.partyIdentifier;
 
   const acbsDealGuaranteeInput = mappings.deal.dealGuarantee(deal, dealGuaranteeLimitKey);
   const dealGuaranteeRecord = yield context.df.callActivityWithRetry('activity-create-deal-guarantee', retryOptions, { guarantee: acbsDealGuaranteeInput });
@@ -73,7 +82,7 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
     {
       deal, facility, dealAcbsData, acbsReference, bank,
     },
-  ));
+    ));
 
   yield context.df.Task.all([...facilityTasks]);
 
