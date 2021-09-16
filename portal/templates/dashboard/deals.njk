@@ -37,22 +37,42 @@
 
     <section class="govuk-tabs__panel">
 
-    <form method="GET" autocomplete="off">
-        {{ govukCheckboxes({
-            name: "createdByYou",
-            classes: "govuk-checkboxes--small",
-            items: [
-                {
-                value: "true",
-                text: "Created by you",
-                checked: true,
-                attributes: {"data-cy": "created-by-you"}
-                }
-            ]
-        }) }}
+      <div class="moj-button-menu gov-dashboard_actions">
+         <div class="moj-button-menu__wrapper">
 
-            <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Submit</button>
-    </form>
+            <div class="gov-dashboard_block"></div>
+
+            <div class="gov-dashboard_block">
+               <form method="POST" autocomplete="off">
+                  {{ govukCheckboxes({
+                     name: "createdByYou",
+                     classes: "govuk-checkboxes--small",
+                     items: [
+                           {
+                              value: "true",
+                              text: "Created by you",
+                              checked: createdByYou,
+                              attributes: {
+                                 "data-cy": "created-by-you",
+                                 'onChange': 'this.form.submit()'
+                              }
+                           }
+                     ]
+                  }) }}
+                   <div class="moj-button-action">
+                     {{ govukButton({
+                           text: 'Submit',
+                           classes: 'js-hidden',
+                           attributes: {
+                              'data-cy': 'submit-created-by-you'
+                           }
+                     }) }}
+                  </div>
+
+               </form>
+            </div>
+         </div>
+      </div>
 
       {% set items = [] %}
       {% for deal in deals %}

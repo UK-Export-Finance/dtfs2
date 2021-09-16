@@ -41,16 +41,42 @@
 
       <h2 class="govuk-heading-l">Facilities</h2>
 
-    {{ govukCheckboxes({
-        idPrefix: "waste",
-        name: "waste",
-        items: [
-            {
-            value: "carcasses",
-            text: "Created by you (facility)"
-            }
-        ]
-    }) }}
+      <div class="moj-button-menu gov-dashboard_actions">
+         <div class="moj-button-menu__wrapper">
+
+            <div class="gov-dashboard_block"></div>
+
+            <div class="gov-dashboard_block">
+               <form method="POST" autocomplete="off">
+                  {{ govukCheckboxes({
+                     name: "createdByYou",
+                     classes: "govuk-checkboxes--small",
+                     items: [
+                           {
+                              value: "true",
+                              text: "Created by you",
+                              checked: createdByYou,
+                              attributes: {
+                                 "data-cy": "created-by-you",
+                                 'onChange': 'this.form.submit()'
+                              }
+                           }
+                     ]
+                  }) }}
+
+                   <div class="moj-button-action">
+                     {{ govukButton({
+                           text: 'Submit',
+                           classes: 'js-hidden',
+                           attributes: {
+                              'data-cy': 'submit-created-by-you'
+                           }
+                     }) }}
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
 
       {% set items = [] %}
       {% for facility in facilities %}

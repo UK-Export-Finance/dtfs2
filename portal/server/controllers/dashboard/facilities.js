@@ -11,16 +11,28 @@ const {
 const PAGESIZE = 20;
 const primaryNav = 'home';
 
+const dashboardFilters = (filter, userId) => {
+  const allFilters = [];
+
+  const { createdByYou } = filter;
+
+  if (createdByYou) {
+    allFilters.push({
+      field: 'userId',
+      value: userId,
+    });
+  }
+  return allFilters;
+};
+
 exports.bssFacilities = async (req, res) => {
   const tab = 'bssFacilities';
   const { userToken } = requestParams(req);
 
-  const filters = [];
+  let filters = [];
+  filters = dashboardFilters(req.body, req.session.user._id);
 
-  const { transactions, count } = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
+  const { transactions, count } = await getApiData(api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const facilities = transactions.map((facility) => ({
     _id: facility.transaction_id,
@@ -53,17 +65,17 @@ exports.bssFacilities = async (req, res) => {
     primaryNav,
     tab,
     user: req.session.user,
+    createdByYou: req.body.createdByYou,
   });
 };
 
 exports.gefFacilities = async (req, res) => {
   const tab = 'gefFacilities';
   const { userToken } = requestParams(req);
+  let filters = [];
+  filters = dashboardFilters(req.body, req.session.user._id);
 
-  const { count, facilities: rawFacilities } = await getApiData(
-    api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, [], userToken),
-    res,
-  );
+  const { count, facilities: rawFacilities } = await getApiData(api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const facilities = rawFacilities.map((facility) => ({
     _id: facility._id,
@@ -96,5 +108,6 @@ exports.gefFacilities = async (req, res) => {
     primaryNav,
     tab,
     user: req.session.user,
+    createdByYou: req.body.createdByYou,
   });
 };
