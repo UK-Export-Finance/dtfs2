@@ -58,9 +58,7 @@ rootRouter.get('/', async (req, res) => {
   res.status(200).send();
 });
 
-
 rootRouter.use('/v1/api-docs', swaggerUi.serve);
-// rootRouter.get('/v1/api-docs', swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 app.use('/', rootRouter);
 
