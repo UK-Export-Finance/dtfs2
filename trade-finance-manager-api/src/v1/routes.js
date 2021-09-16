@@ -21,9 +21,9 @@ openRouter.route('/api-docs')
  *   put:
  *     summary: Submit a deal
  *     tags: [Deals]
- *     description: Creates snapshots, calls external APIs, sends status update to internal APIs
+ *     description: Creates snapshots, calls external APIs, sends status update to internal APIs. See README
  *     requestBody:
- *       description: Fields required to find a deal and send updates back to Portal/BSS. Note - the checker object is only required to send an update back to BSS
+ *       description: Fields required to find a deal and send updates to Portal. The checker object is for Portal update
  *       required: true
  *       content:
  *         application/json:
@@ -69,12 +69,19 @@ openRouter.route('/deals/submit')
  * @openapi
  * /users/:username:
  *   get:
- *     summary: Get a user by ID
+ *     summary: Get a user by username
  *     tags: [Users]
- *     description: Get a user by ID
+ *     description: Get a user by username. This will be replaced by Single Sign On authentication
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username of the user to get
  *     responses:
  *       200:
- *         description: user
+ *         description: OK
  *       404:
  *         description: Not found
  */

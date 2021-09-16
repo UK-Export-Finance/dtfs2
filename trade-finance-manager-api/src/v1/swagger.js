@@ -24,7 +24,7 @@ const swaggerSpec = swaggerJsdoc({
 });
 
 const swaggerUiOptions = {
-  explorer: true,
+  // explorer: true,
 };
 
 module.exports = {
