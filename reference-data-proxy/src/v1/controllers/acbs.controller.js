@@ -100,6 +100,7 @@ exports.issueAcbsFacilityPOST = async (req, res) => {
 };
 
 const createAcbsRecord = async (deal, bank) => {
+  console.log({ deal }, { bank });
   const response = await axios({
     method: 'post',
     url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
@@ -108,6 +109,7 @@ const createAcbsRecord = async (deal, bank) => {
       bank,
     },
   }).catch((err) => err);
+  console.log({ response });
   return response;
 };
 
@@ -115,36 +117,6 @@ exports.createAcbsRecordPOST = async (req, res) => {
   const { deal, bank } = req.body;
 
   const { status, data } = await createAcbsRecord(deal, bank);
-  return res.status(status).send(data);
-};
-
-exports.issueAcbsFacilityPOST = async (req, res) => {
-  const { id } = req.params;
-  const { facility, supplierName } = req.body;
-
-  const { status, data } = await issueAcbsFacility(id, facility, supplierName);
-
-  return res.status(status).send(data);
-};
-
-const createAcbsPartyRecord = async (deal, exporter) => {
-  console.log({ deal }, { exporter });
-  const response = await axios({
-    method: 'post',
-    url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
-    data: {
-      deal,
-      exporter,
-    },
-  }).catch((err) => err);
-  console.log({ response });
-  return response;
-};
-
-exports.createAcbsPartyRecordPOST = async (req, res) => {
-  const { deal, exporter } = req.body;
-
-  const { status, data } = await createAcbsPartyRecord(deal, exporter);
   console.log({ status }, { data });
   return res.status(status).send(data);
 };
