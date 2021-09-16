@@ -60,6 +60,11 @@ openRouter.route('/acbs')
     acbs.createAcbsRecordPOST,
   );
 
+openRouter.route('/acbs/create/exporter')
+  .post(
+    acbs.createAcbsPartyRecordPOST,
+  );
+
 openRouter.route('/acbs/:entityType/:id')
   .get(
     acbs.findOne,

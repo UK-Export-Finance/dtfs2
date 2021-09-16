@@ -35,7 +35,8 @@ const clearACBSLog = async () => {
 
 const createACBS = async (deal) => {
   // Add bank's full details so we can reference partyUrn in function
-  const bankId = deal.dealSnapshot.details.owningBank.id;
+  //const bankId = deal.dealSnapshot.details.owningBank.id;
+  const bankId = deal.dealSnapshot.bankId;
 
   const bank = await findOneBank(bankId);
 
@@ -47,6 +48,16 @@ const createACBS = async (deal) => {
 
   const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
   return addToACBSLog({ deal, bank, acbsTaskLinks });
+};
+
+const createACBSParty = async (deal) => {
+
+const exporter = deal.dealSnapshot.exporter;
+
+const { companiesHouseRegistrationNumber, companyName, registeredAddress } = exporter;
+const acbsTaskLinks = await api.createACBSParty(deal, { companiesHouseRegistrationNumber, companyName, registeredAddress });
+
+  return addToACBSLog({ deal, exporter, acbsTaskLinks });
 };
 
 const updateDealAcbs = async (taskOutput) => {
@@ -121,6 +132,7 @@ module.exports = {
   addToACBSLog,
   clearACBSLog,
   createACBS,
+  createACBSParty,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
 };
