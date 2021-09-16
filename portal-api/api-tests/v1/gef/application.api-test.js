@@ -62,7 +62,6 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[12]).to(baseUrl);
       await as(aMaker).post(mockApplications[13]).to(baseUrl);
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
-      await as(aMaker).post(mockApplications[15]).to(baseUrl);
 
       // MW: couldn't get the promise.all running in sequential order
       // await mockApplications.map(async (item) => {
@@ -198,7 +197,7 @@ describe(baseUrl, () => {
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
-        errMsg: 'bankInternalRefName is Mandator',
+        errMsg: 'bankInternalRefName is Mandatory',
       }]);
       expect(status).toEqual(422);
     });
