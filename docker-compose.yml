@@ -69,7 +69,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - AZURE_ACBS_FUNCTION_URL=http://localhost:7071
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
@@ -167,7 +167,7 @@ services:
       - MULESOFT_API_UKEF_ESTORE_EA_URL
       - MULESOFT_API_UKEF_ESTORE_EA_KEY
       - MULESOFT_API_UKEF_ESTORE_EA_SECRET
-      - AZURE_ACBS_FUNCTION_URL=http://localhost:7071
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - GOV_NOTIFY_API_KEY
     entrypoint: npx nodemon src/index.js -L
 
