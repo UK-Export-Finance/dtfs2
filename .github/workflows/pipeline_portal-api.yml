@@ -76,7 +76,7 @@ jobs:
 
       COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-      
+
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
 
@@ -91,7 +91,7 @@ jobs:
     - name: Pull portal-api
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api dtfs/portal-api  
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api dtfs/portal-api
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d portal-api
@@ -200,4 +200,4 @@ jobs:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
 
-  
+
