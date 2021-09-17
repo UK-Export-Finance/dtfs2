@@ -6,21 +6,29 @@ const CONSTANTS = require('../../../constants');
 const createUkefIds = async (entityId, deal, user) => {
   const dealType = CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS;
 
-  const numGenDeal = await refDataApi.numberGenerator.create(
-    {
-      dealType,
-      entityId,
-      entityType: 'deal',
-      dealId: deal._id,
-      user,
-    },
-  );
+
+  let numGenDeal;
+  try {
+    numGenDeal = await refDataApi.numberGenerator.create(
+      {
+        dealType,
+        entityId,
+        entityType: 'deal',
+        dealId: deal._id,
+        user,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+
 
   const updatedDeal = await updateDeal(
     entityId,
     {
       details: {
-        ukefDealId: numGenDeal.ukefId,
+        // eslint-disable-next-line dot-notation
+        ukefDealId: numGenDeal['ukefId'],
       },
     },
     user,
