@@ -2,7 +2,7 @@ name: Portal API
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
     - 'portal-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
