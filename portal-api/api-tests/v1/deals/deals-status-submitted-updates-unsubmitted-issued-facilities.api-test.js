@@ -10,6 +10,7 @@ const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields
 const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
+const externalApis = require('../../../src/reference-data/api');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
