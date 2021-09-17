@@ -18,7 +18,7 @@ const dashboardFilters = (filter, userId) => {
 
   if (createdByYou) {
     allFilters.push({
-      field: 'userId',
+      field: 'details.maker._id',
       value: userId,
     });
   }

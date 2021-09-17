@@ -15,6 +15,7 @@ context('View a deal', () => {
     const dummyDeal = {
       bankId: MAKER_LOGIN.bank.id,
       bankInternalRefName: 'Mock GEF exporter',
+      userId: MAKER_LOGIN._id,
     };
 
     beforeEach(() => {
@@ -26,8 +27,7 @@ context('View a deal', () => {
 
       // same or gef
       cy.deleteGefApplications(MAKER_LOGIN);
-      cy.insertOneGefApplication(dummyDeal, MAKER_LOGIN)
-        .then((insertedDeal) => { deal = insertedDeal; });
+      cy.insertOneGefApplication(dummyDeal, MAKER_LOGIN).then((insertedDeal) => { deal = insertedDeal; });
     });
 
     it('A created GEF deal appears on the dashboard', () => {
@@ -58,6 +58,22 @@ context('View a deal', () => {
       link(id).click();
 
       cy.url().should('eq', relative(`/gef/application-details/${id}`));
+    });
+
+    it('should tick the checkbox and refresh the page', () => {
+      // login and go to dashboard
+      cy.login(MAKER_LOGIN);
+      gefDashboard.visit();
+
+      const id = deal._id;
+
+      cy.get('[data-cy="created-by-you"]').check();
+
+      const { bankRef } = gefDashboard.row;
+
+      bankRef(id).invoke('text').then((text) => {
+        expect(text.trim()).equal('Mock GEF exporter');
+      });
     });
   });
 });
