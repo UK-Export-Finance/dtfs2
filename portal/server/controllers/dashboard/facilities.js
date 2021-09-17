@@ -67,7 +67,7 @@ exports.gefFacilities = async (req, res) => {
   const filters = [];
   if (req.body.createdByYou) {
     filters.push({
-      field: 'details.maker._id',
+      field: 'userId',
       value: req.session.user._id,
     });
   }
