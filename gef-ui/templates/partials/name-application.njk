@@ -30,7 +30,8 @@
       classes: "govuk-!-width-one-half",
       id: "bankInternalRefName",
       name: "bankInternalRefName",
-      errorMessage: errors and {
+      value: bankInternalRefName,
+      errorMessage: errors and errors.fieldErrors.bankInternalRefName and{
         text: errors.fieldErrors.bankInternalRefName.text,
         attributes: {
           'data-cy': 'internal-ref-error'
@@ -48,6 +49,13 @@
       classes: "govuk-!-width-one-half",
       id: "additionalRefName",
       name: "additionalRefName",
+      value: additionalRefName,
+      errorMessage: errors and errors.fieldErrors.additionalRefName and{
+        text: errors.fieldErrors.additionalRefName.text,
+        attributes: {
+          'data-cy': 'internal-ref-error'
+        }
+      },
       attributes: {
         'data-cy': 'additional-ref'
       }

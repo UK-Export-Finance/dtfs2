@@ -70,6 +70,7 @@ function buildBody(app, previewMode) {
       status: app.supportingInfoStatus,
     },
     bankInternalRefName: app.bankInternalRefName,
+    additionalRefName: app.additionalRefName,
     applicationId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,

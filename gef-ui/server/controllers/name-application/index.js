@@ -1,9 +1,24 @@
 const { validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 
-const nameApplication = async (req, res) => res.render('partials/name-application.njk');
+const nameApplication = async (req, res, next) => {
+  const { params } = req;
+  const applicationId = params?.id;
+  const viewProps = {};
 
-const createApplication = async (req, res) => {
+  try {
+    if (applicationId) {
+      const application = await api.getApplication(applicationId);
+      viewProps.bankInternalRefName = application.bankInternalRefName;
+      viewProps.additionalRefName = application.additionalRefName;
+    }
+  } catch (err) {
+    return next(err);
+  }
+  return res.render('partials/name-application.njk', viewProps);
+};
+
+const createApplication = async (req, res, next) => {
   const { body, session } = req;
   const { _id: userId, bank: { id: bankId } } = session.user;
 
@@ -17,18 +32,44 @@ const createApplication = async (req, res) => {
     // Validation errors
     if (application.status === 422) {
       return res.render('partials/name-application.njk', {
+        bankInternalRefName: body.bankInternalRefName,
+        additionalRefName: body.additionalRefName,
         errors: validationErrorHandler(application.data),
       });
     }
 
     // eslint-disable-next-line no-underscore-dangle
-    return res.redirect(`application-details/${application._id}`);
+    return res.redirect(`/gef/application-details/${application._id}`);
   } catch (err) {
-    return res.render('partials/problem-with-service.njk');
+    return next(err);
+  }
+};
+
+const updateApplicationReferences = async (req, res, next) => {
+  const { body, params } = req;
+  const applicationId = params.id;
+
+  body.bankInternalRefName = body.bankInternalRefName ?? '';
+  body.additionalRefName = body.additionalRefName ?? '';
+  try {
+    const application = await api.updateApplication(applicationId, body);
+
+    if (application.status === 422) {
+      return res.render('partials/name-application.njk', {
+        bankInternalRefName: body.bankInternalRefName,
+        additionalRefName: body.additionalRefName,
+        errors: validationErrorHandler(application.data),
+      });
+    }
+
+    return res.redirect(`/gef/application-details/${application._id}`);
+  } catch (err) {
+    return next(err);
   }
 };
 
 module.exports = {
   nameApplication,
   createApplication,
+  updateApplicationReferences,
 };
