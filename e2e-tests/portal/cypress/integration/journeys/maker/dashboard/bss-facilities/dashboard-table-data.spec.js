@@ -56,4 +56,18 @@ context('View a deal', () => {
     facilitiesDashboard.issuedDate(bondId).should('contain', '17 Sep 2020');
     facilitiesDashboard.issuedDate(loanId).should('contain', '-');
   });
+
+  it('should tick the checkbox and refresh the page', () => {
+    // login and go to dashboard
+    cy.login(MAKER_LOGIN);
+    facilitiesDashboard.visit();
+
+    cy.get('[data-cy="created-by-you"]').check();
+
+    const bondId = 'aDealWithOneLoanAndOneBond-bond1';
+    const loanId = 'aDealWithOneLoanAndOneBond-loan1';
+
+    facilitiesDashboard.bankFacilityId(bondId).should('contain', 'aDealWithOneLoanAndOneBond-bond1');
+    facilitiesDashboard.bankFacilityId(loanId).should('contain', 'aDealWithOneLoanAndOneBond-loan1');
+  });
 });

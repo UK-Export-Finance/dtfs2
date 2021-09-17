@@ -177,6 +177,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         type: '$details.submissionType',
         exporter: '$submissionDetails.supplier-name',
         lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
+        userId: '$details.maker._id',
       },
     },
     //     ],
