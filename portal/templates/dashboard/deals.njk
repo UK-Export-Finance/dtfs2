@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
@@ -37,40 +38,45 @@
 
     <section class="govuk-tabs__panel">
 
-      <div class="moj-button-menu gov-dashboard_actions">
-         <div class="moj-button-menu__wrapper">
-
-            <div class="gov-dashboard_block"></div>
-
-            <div class="gov-dashboard_block">
-               <form method="POST" autocomplete="off">
-                  {{ govukCheckboxes({
-                     name: "createdByYou",
-                     classes: "govuk-checkboxes--small",
-                     items: [
-                           {
-                              value: "true",
-                              text: "Created by you",
-                              checked: createdByYou,
-                              attributes: {
-                                 "data-cy": "created-by-you",
-                                 'onChange': 'this.form.submit()'
-                              }
-                           }
-                     ]
+       <div class="govuk-grid-row">
+         <div class="govuk-grid-column-three-quarters">
+                  {{ mojButtonMenu({
+                     items: [{
+                        text: "Show filter",
+                        href: "#",
+                        classes: "govuk-button--secondary"
+                        }]
                   }) }}
-                   <div class="moj-button-action">
-                     {{ govukButton({
-                           text: 'Submit',
-                           classes: 'js-hidden',
-                           attributes: {
-                              'data-cy': 'submit-created-by-you'
-                           }
-                     }) }}
-                  </div>
+         </div>
 
-               </form>
-            </div>
+         <div class="govuk-grid-column-one-quarter">
+            <form method="POST" autocomplete="off">
+               {{ govukCheckboxes({
+                  name: "createdByYou",
+                  classes: "govuk-checkboxes--small",
+                  items: [
+                        {
+                           value: "true",
+                           text: "Created by you",
+                           checked: createdByYou,
+                           attributes: {
+                              "data-cy": "created-by-you",
+                              'onChange': 'this.form.submit()'
+                           }
+                        }
+                  ]
+               }) }}
+               <div class="moj-button-action">
+                  {{ govukButton({
+                        text: 'Submit',
+                        classes: 'moj-js-hidden',
+                        attributes: {
+                           'data-cy': 'submit-created-by-you'
+                        }
+                  }) }}
+               </div>
+
+            </form>
          </div>
       </div>
 
