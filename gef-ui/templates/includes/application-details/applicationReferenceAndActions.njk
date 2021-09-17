@@ -1,14 +1,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-<div class="govuk-width-container" data-cy="application-banner">
+<div class="govuk-width-container {% if not applicationShowSummary %}govuk-!-margin-bottom-7{% endif %}" data-cy="application-banner">
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter">
-      <p class="govuk-body"><strong>Bank's reference</strong></p>
-    </div>
-    <div class="govuk-grid-column-one-quarter">
-      <p class="govuk-body" data-cy="bank-reference">{{ bankInternalRefName }}</b></p>
-    </div>
-    <div class="govuk-grid-column-one-half" style="text-align: right;">
+    <div class="govuk-grid-column-full" style="text-align: right;">
       {%if abandon %}
         {{ govukButton({
           text: "Abandon",
@@ -19,6 +13,24 @@
           href: "/gef/application-details/"+applicationId+"/abandon"
         }) }}
       {% endif %}
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Bank's reference</strong></p></div>
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body" data-cy="bank-reference">
+          <a class="govuk-link" href="/gef/applications/{{applicationId}}/name" data-cy="edit-refname-link">{{ bankInternalRefName }}</a>
+        </p>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body" data-cy="additional-reference">
+          <a class="govuk-link" href="/gef/applications/{{applicationId}}/name" data-cy="edit-addrefname-link">{{ additionalRefName or 'Add' }}</a>
+        </p>
+      </div>
     </div>
   </div>
 </div>

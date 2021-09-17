@@ -3,9 +3,9 @@ const { ObjectID } = require('bson');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
-  validationApplicationCreate,
+  validateApplicationReferences,
   validatorStatusCheckEnums,
-} = require('./validation/applicationExists');
+} = require('./validation/application');
 const {
   supportingInfoStatus,
 } = require('./validation/supportingInfo');
@@ -54,9 +54,8 @@ exports.create = async (req, res) => {
   );
   const exporterCollection = await db.getCollection(exporterCollectionName);
   const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
-  const validateErrs = await validationApplicationCreate(
-    applicationCollection,
-    req.body.bankInternalRefName,
+  const validateErrs = validateApplicationReferences(
+    req.body,
   );
   if (validateErrs) {
     res.status(422).send(validateErrs);
@@ -119,6 +118,11 @@ exports.getStatus = async (req, res) => {
 exports.update = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const update = new Application(req.body);
+  const validateErrs = validateApplicationReferences(update);
+  if (validateErrs) {
+    return res.status(422).send(validateErrs);
+  }
+
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectID(String(req.params.id)) } },
     { $set: update },
@@ -128,7 +132,8 @@ exports.update = async (req, res) => {
   if (result.value) {
     response = result.value;
   }
-  res.status(utils.mongoStatus(result)).send(response);
+
+  return res.status(utils.mongoStatus(result)).send(response);
 };
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
