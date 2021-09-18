@@ -12,14 +12,14 @@ const createUkefIds = async (entityId, deal, user) => {
     numGenDeal = await refDataApi.numberGenerator.create(
       {
         dealType,
-        entityId,
         entityType: 'deal',
+        entityId,
         dealId: deal._id,
         user,
       },
     );
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 
 
@@ -27,8 +27,7 @@ const createUkefIds = async (entityId, deal, user) => {
     entityId,
     {
       details: {
-        // eslint-disable-next-line dot-notation
-        ukefDealId: numGenDeal['ukefId'],
+        ukefDealId: numGenDeal.ukefId,
       },
     },
     user,
