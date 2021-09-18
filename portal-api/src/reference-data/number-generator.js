@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
+console.log({ referenceProxyUrl });
 const create = async ({
   dealType, entityType, entityId, dealId, user,
 }) => {
