@@ -8,11 +8,6 @@ const createUkefIds = async (entityId, deal, user) => {
 
   let numGenDeal;
 
-  console.log('========================= ---------- ========== ');
-  console.log({ dealType }, { entityId }, { deal }, user);
-  console.log(deal._id);
-  console.log('========================= ---------- ========== ');
-
   try {
     numGenDeal = await refDataApi.numberGenerator.create(
       {
@@ -26,10 +21,6 @@ const createUkefIds = async (entityId, deal, user) => {
   } catch (error) {
     console.log({ error });
   }
-
-  console.log('========================= ---------- ========== ');
-  console.log({ numGenDeal });
-  console.log('========================= ---------- ========== ');
 
   const updatedDeal = await updateDeal(
     entityId,
