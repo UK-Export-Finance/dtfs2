@@ -6,8 +6,13 @@ const CONSTANTS = require('../../../constants');
 const createUkefIds = async (entityId, deal, user) => {
   const dealType = CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS;
 
-
   let numGenDeal;
+
+  console.log('========================= ---------- ========== ');
+  console.log({ dealType }, { entityId }, { deal }, user);
+  console.log(deal._id);
+  console.log('========================= ---------- ========== ');
+
   try {
     numGenDeal = await refDataApi.numberGenerator.create(
       {
@@ -22,6 +27,9 @@ const createUkefIds = async (entityId, deal, user) => {
     console.log({ error });
   }
 
+  console.log('========================= ---------- ========== ');
+  console.log({ numGenDeal });
+  console.log('========================= ---------- ========== ');
 
   const updatedDeal = await updateDeal(
     entityId,
@@ -72,6 +80,5 @@ const createUkefIds = async (entityId, deal, user) => {
 
   return updatedDeal;
 };
-
 
 module.exports = createUkefIds;
