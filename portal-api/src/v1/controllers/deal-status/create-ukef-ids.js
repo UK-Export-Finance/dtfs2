@@ -19,18 +19,23 @@ const createUkefIds = async (entityId, deal, user) => {
       },
     );
   } catch (err) {
-    throw new Error(err.response);
+    throw new Error(err);
   }
 
-  const updatedDeal = await updateDeal(
-    entityId,
-    {
-      details: {
-        ukefDealId: numGenDeal.ukefId,
+  let updatedDeal;
+  try {
+    updatedDeal = await updateDeal(
+      entityId,
+      {
+        details: {
+          ukefDealId: numGenDeal.ukefId,
+        },
       },
-    },
-    user,
-  );
+      user,
+    );
+  } catch (error) {
+    throw new Error(error);
+  }
 
   const facilitiesNumGenPromises = [];
   // Kick off function call for each facility
