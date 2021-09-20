@@ -1,4 +1,6 @@
-const faker = require('faker');
+const Chance = require('chance');
+
+const chance = new Chance();
 
 const EXPORTER = [{
   // Not started - the mock inserter will ignore this line as the updatedTime is bumped
@@ -6,7 +8,7 @@ const EXPORTER = [{
 },
 { // Half Completed
   companiesHouseRegistrationNumber: null,
-  companyName: faker.company.companyName(),
+  companyName: chance.company(),
   registeredAddress: null,
   correspondenceAddress: null,
   selectedIndustry: {
@@ -32,13 +34,13 @@ const EXPORTER = [{
   isFinanceIncreasing: false,
 }, { // Completed
   companiesHouseRegistrationNumber: 123456789,
-  companyName: faker.company.companyName(),
+  companyName: chance.company(),
   registeredAddress: {
-    line1: faker.address.streetName(),
-    line2: faker.address.streetAddress(),
-    county: faker.address.county(),
-    country: 'GB',
-    postcode: 'AB1 1AB',
+    line1: chance.street({ syllables: 8 }),
+    line2: chance.address({ short_suffix: true }),
+    county: chance.state({ full: true }),
+    country: chance.country({ full: true }),
+    postcode: chance.postcode(),
   },
   correspondenceAddress: null,
   selectedIndustry: {
