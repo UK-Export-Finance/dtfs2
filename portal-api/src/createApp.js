@@ -7,8 +7,8 @@ const passport = require('passport');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
-const Sentry = require('@sentry/node');
-const Tracing = require('@sentry/tracing');
+// const Sentry = require('@sentry/node');
+// const Tracing = require('@sentry/tracing');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
@@ -43,25 +43,25 @@ app.use('/v1', authRouter);
 
 app.use(graphQlRouter);
 
-Sentry.init({
-  environment: 'development',
-  dsn: SENTRY_DSN,
-  integrations: [
-    // enable HTTP calls tracing
-    new Sentry.Integrations.Http({ tracing: true }),
-    // enable Express.js middleware tracing
-    new Tracing.Integrations.Express({ app }),
-  ],
+// Sentry.init({
+//   environment: 'development',
+//   dsn: SENTRY_DSN,
+//   integrations: [
+//     // enable HTTP calls tracing
+//     new Sentry.Integrations.Http({ tracing: true }),
+//     // enable Express.js middleware tracing
+//     new Tracing.Integrations.Express({ app }),
+//   ],
 
-  // Adjust this value in production, or using tracesSampler for finer control
-  tracesSampleRate: 1.0,
-});
+//   // Adjust this value in production, or using tracesSampler for finer control
+//   tracesSampleRate: 1.0,
+// });
 
 // RequestHandler creates a separate execution context using domains, so that every
 // transaction/span/breadcrumb is attached to its own Hub instance
-app.use(Sentry.Handlers.requestHandler());
-// TracingHandler creates a trace for every incoming request
-app.use(Sentry.Handlers.tracingHandler());
+// app.use(Sentry.Handlers.requestHandler());
+// // TracingHandler creates a trace for every incoming request
+// app.use(Sentry.Handlers.tracingHandler());
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, validateUserMiddleware);
@@ -78,21 +78,21 @@ const server = new ApolloServer({
 server.applyMiddleware({ app });
 
 // The error handler must be before any other error middleware and after all controllers
-app.use(
-  Sentry.Handlers.errorHandler({
-    shouldHandleError(error) {
-      // Capture all 4xx and 5xx errors
-      const errorList = [400, 401, 403, 404, 500, 501, 502, 503, 504, 507];
-      if (errorList.includes(error.status)) {
-        return true;
-      }
-      return false;
-    },
-  }),
-);
+// app.use(
+//   Sentry.Handlers.errorHandler({
+//     shouldHandleError(error) {
+//       // Capture all 4xx and 5xx errors
+//       const errorList = [400, 401, 403, 404, 500, 501, 502, 503, 504, 507];
+//       if (errorList.includes(error.status)) {
+//         return true;
+//       }
+//       return false;
+//     },
+//   }),
+// );
 
 app.use((err, req, res, next) => {
-  throw new Error(err);
+  console.log(err);
 });
 
 // Return 200 on get to / to confirm to Azure that

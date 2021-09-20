@@ -42,8 +42,8 @@ const create = async ({
   const { data } = resp;
   console.log(data);
 
-  Sentry.captureException(new Error({ data }));
-  Sentry.captureException(new Error(referenceProxyUrl));
+  // Sentry.captureException(new Error({ data }));
+  // Sentry.captureException(new Error(referenceProxyUrl));
 
   return data;
 };
