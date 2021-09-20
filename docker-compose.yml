@@ -64,7 +64,6 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
     command: npx nodemon server/index.js -L
-
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
     image: dtfs/trade-finance-manager-api
@@ -83,7 +82,6 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY
@@ -243,21 +241,39 @@ services:
     command: npx nodemon server/index.js -L
 
   # ACBS function is causing an out of memory error on github actions. disable for now
-  acbs-function:
-    build: ./azure-functions/acbs-function
-    image: dtfs/azure-function-acbs
+   acbs-function:
+     build: ./azure-functions/acbs-function
+     image: dtfs/azure-function-acbs
+     restart: always
+     ports:
+       - "7071:80"
+     environment:
+       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+       - WEBSITE_HOSTNAME=localhost:7071
+       - MULESOFT_API_KEY
+       - MULESOFT_API_SECRET
+       - MULESOFT_API_UKEF_TF_EA_URL
+       - MULESOFT_API_UKEF_MDM_EA_URL
+       - MULESOFT_API_UKEF_MDM_EA_KEY
+       - MULESOFT_API_UKEF_MDM_EA_SECRET
+
+  number-generator-function:
+    build: ./azure-functions/number-generator-function
+    image: dtfs/azure-function-number-generator
     restart: always
     ports:
-      - "7071:80"
+      - "7072:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-      - WEBSITE_HOSTNAME=localhost:7071
-      - MULESOFT_API_KEY=
-      - MULESOFT_API_SECRET=
-      - MULESOFT_API_UKEF_TF_EA_URL=
-      - MULESOFT_API_UKEF_MDM_EA_URL=
-      - MULESOFT_API_UKEF_MDM_EA_KEY=
-      - MULESOFT_API_UKEF_MDM_EA_SECRET=
+      - WEBSITE_HOSTNAME=localhost:7072
+      - MULESOFT_API_UKEF_TF_EA_URL
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
 
   number-generator-function:
     build: ./azure-functions/number-generator-function
