@@ -14,8 +14,12 @@
  const retryOptions = require('../helpers/retryOptions');
  const CONSTANTS = require('../constants');
 
- module.exports = df.orchestrator(function* acbsDeal(context) {
+ module.exports = df.orchestrator(function* HDeal(context) {
   const { deal, bank } = context.df.getInput();
+
+  //Get Product Type i.e. GEF
+  const product = deal.hasOwnProperty("dealSnapshot") ? deal.dealSnapshot.dealType : '';
+
   // Get ACBS industry code
   //const industryCode = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
   const industryCode = deal.dealSnapshot.exporter.industries[0].code;
@@ -24,32 +28,27 @@
     supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, { industryCode }),
   };
 
-  context.log({ deal });
-
   // Create Parties
   const exporterTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.exporter({ deal, acbsReference }) });
-  context.log({ exporterTask });
-  const buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.buyer({ deal }) });
-  context.log({ buyerTask });
-  const agentTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.agent({ deal }) });
-  context.log({ agentTask });
-  const indemnifierTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.indemnifier({ deal }) });
-  context.log({ indemnifierTask });
-  const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.bank({ bank }) });
-  context.log({ bankTask });
+
+  if(product !== CONSTANTS.PRODUCT.TYPE.GEF)
+  {
+    const buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.buyer({ deal }) });
+
+    const agentTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.agent({ deal }) });
+
+    const indemnifierTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.indemnifier({ deal }) });
+
+    const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.bank({ bank }) });
+
+  }
 
   // Party tasks are run in parallel so wait for them all to be finished.
-  yield context.df.Task.all([exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
+  yield context.df.Task.all(product === CONSTANTS.PRODUCT.TYPE.GEF ? [exporterTask] : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
 
   const parties = {
-    exporter: exporterTask.result,
-    buyer: buyerTask.result,
-    agent: agentTask.result,
-    indemnifier: indemnifierTask.result,
-    bank: bankTask.result,
+    product === CONSTANTS.PRODUCT.TYPE.GEF ? exporter: exporterTask.result : exporter: exporterTask.result, buyer: buyerTask.result, agent: agentTask.result, indemnifier: indemnifierTask.result, bank: bankTask.result
   };
-
-  context.log({ parties });
 
   // Create Deal
   const acbsDealInput = mappings.deal.deal(
