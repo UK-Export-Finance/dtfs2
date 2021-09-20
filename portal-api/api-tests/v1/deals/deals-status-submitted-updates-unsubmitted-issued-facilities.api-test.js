@@ -123,7 +123,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       api.tfmDealSubmit = () => Promise.resolve();
 
       externalApis.numberGenerator = {
-        create: () => Promise.resolve(),
+        create: () => Promise.resolve({ ukefId: 'TEST-MOCK' }),
       };
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);

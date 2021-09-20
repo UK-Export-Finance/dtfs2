@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Sentry = require('@sentry/node');
+// const Sentry = require('@sentry/node');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
