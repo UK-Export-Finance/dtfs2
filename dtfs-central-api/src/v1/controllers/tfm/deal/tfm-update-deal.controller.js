@@ -63,6 +63,7 @@ exports.updateDealPut = async (req, res) => {
       dealUpdate,
       deal,
     );
+
     return res.status(200).json(updatedDeal);
   }
   return res.status(404).send();
@@ -74,7 +75,10 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
 
   const update = {
     ...deal,
-    dealSnapshot: snapshotChanges,
+    dealSnapshot: {
+      ...deal.dealSnapshot,
+      ...snapshotChanges,
+    },
   };
 
   // eslint-disable-next-line no-underscore-dangle

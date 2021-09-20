@@ -220,7 +220,7 @@ describe('/v1/tfm/deal/:id', () => {
       expect(status).toEqual(404);
     });
 
-    it('updates deal.dealSnapshot whilst retaining deal.tfm', async () => {
+    it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
