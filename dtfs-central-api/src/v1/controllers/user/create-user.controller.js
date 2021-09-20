@@ -15,5 +15,9 @@ const createUser = async (user) => {
 exports.createUserPost = async (req, res) => {
   const user = await createUser(req.body);
 
-  return res.status(200).send(user);
+  if (user) {
+    return res.status(200).send(user);
+  }
+
+  return res.status(404).send();
 };
