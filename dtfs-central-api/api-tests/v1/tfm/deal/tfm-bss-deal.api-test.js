@@ -259,48 +259,4 @@ describe('/v1/tfm/deal/:id', () => {
       expect(dealAfterUpdate.deal.tfm).toEqual(mockTfm.tfm);
     });
   });
-
-  describe('PUT /v1/tfm/deal/:id/stage', () => {
-    const dealStageUpdate = {
-      stage: 'New stage',
-    };
-
-    it('404s if updating an unknown id', async () => {
-      const { status } = await api.put(dealStageUpdate).to('/v1/tfm/deals/12345678/stage');
-      expect(status).toEqual(404);
-    });
-
-    it('updates deal.tfm.stage', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const dealId = portalDeal._id;
-
-      const dealUpdate = {
-        tfm: {
-          submissionDetails: {
-            exporterPartyUrn: '12345',
-          },
-        },
-      };
-
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
-
-      // add some dummy data to deal.tfm
-      await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
-
-      const { status } = await api.put(dealStageUpdate).to(`/v1/tfm/deals/${dealId}/stage`);
-
-      expect(status).toEqual(200);
-
-      const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
-
-      expect(dealAfterUpdate.deal.dealSnapshot).toMatchObject(newDeal);
-      expect(dealAfterUpdate.deal.tfm).toEqual({
-        ...dealUpdate.tfm,
-        stage: dealStageUpdate.stage,
-      });
-    });
-  });
 });
