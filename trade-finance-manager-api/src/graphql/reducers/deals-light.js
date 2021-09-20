@@ -6,7 +6,7 @@ const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 
 const mapDeal = (deal) => {
   const mapped = {
-    _id: deal._id, // eslint-disable-line no-underscore-dangle
+    _id: deal._id,
     dealSnapshot: {
       ...deal.dealSnapshot,
       submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
@@ -20,9 +20,9 @@ const mapDeal = (deal) => {
 
 const mapGefDeal = (deal) => {
   const mapped = {
-    _id: deal._id, // eslint-disable-line no-underscore-dangle
+    _id: deal._id,
     dealSnapshot: {
-      _id: deal._id, // eslint-disable-line no-underscore-dangle
+      _id: deal._id,
       details: mapGefDealDetails(deal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(deal.dealSnapshot),
       isFinanceIncreasing: deal.dealSnapshot.exporter.isFinanceIncreasing,

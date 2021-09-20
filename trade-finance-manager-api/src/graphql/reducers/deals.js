@@ -3,33 +3,17 @@ const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
+const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 
 const mapDeal = (deal) => {
-  // manually merge facilities into facilities array.
-  // this saves performance.
-  // without this, we'd need to do a query for every facility in a deal,
-  // for every single deal in the 'all deals' query.
-
-  const dealWithMappedFacilities = {
-    _id: deal._id, // eslint-disable-line no-underscore-dangle
-    dealSnapshot: {
-      ...deal.dealSnapshot,
-      facilities: [
-        ...deal.dealSnapshot.bondTransactions.items,
-        ...deal.dealSnapshot.loanTransactions.items,
-      ],
-    },
-    tfm: deal.tfm,
-  };
-
   const mapped = {
-    _id: deal._id, // eslint-disable-line no-underscore-dangle
+    _id: deal._id,
     dealSnapshot: {
       ...deal.dealSnapshot,
       submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
       isFinanceIncreasing: false,
     },
-    tfm: mapDealTfm(dealWithMappedFacilities),
+    tfm: mapDealTfm(deal),
   };
 
   return mapped;
@@ -37,11 +21,12 @@ const mapDeal = (deal) => {
 
 const mapGefDeal = (deal) => {
   const mapped = {
-    _id: deal._id, // eslint-disable-line no-underscore-dangle
+    _id: deal._id,
     dealSnapshot: {
-      _id: deal._id, // eslint-disable-line no-underscore-dangle
+      _id: deal._id,
       details: mapGefDealDetails(deal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(deal.dealSnapshot),
+      facilities: mapGefFacilities(deal.dealSnapshot, deal.tfm),
       isFinanceIncreasing: deal.dealSnapshot.exporter.isFinanceIncreasing,
     },
     tfm: mapDealTfm(deal),
