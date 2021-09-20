@@ -144,10 +144,6 @@ const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
 
   const facilityLists = generateFacilityLists(dealType, facilities);
 
-  if (!facilityLists.issued) {
-    return null;
-  }
-
   const { email: sendToEmailAddress } = maker;
 
   const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
