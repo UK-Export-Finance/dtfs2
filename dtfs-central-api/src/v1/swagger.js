@@ -18,7 +18,7 @@ const swaggerDefinition = {
     },
     {
       name: 'TFM',
-      description: 'Create, get and update TFM deals, facilities and users. Consumed by TFM.',
+      description: 'Create, get and update TFM deals, facilities and users. Consumed by TFM (excluding the /submit endpoint which Portal calls).',
     },
     {
       name: 'User',
