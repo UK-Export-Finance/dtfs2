@@ -1,4 +1,4 @@
-FROM node:lts
+FROM node:lts-alpine
 
 WORKDIR /app
 
@@ -10,3 +10,5 @@ ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 
 CMD node src/index.js
+
+

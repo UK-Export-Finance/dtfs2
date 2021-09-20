@@ -1,10 +1,22 @@
 const axios = require('axios');
 const app = require('../../src/createApp');
-const { get } = require('../api')(app);
+const { post } = require('../api')(app);
+const durableFunctionsLogController = require('../../src/v1/controllers/durable-functions-log.controller');
 
 const mockId = '0030007215';
 
 const mockResponses = {
+  numberGeneratorFunction: {
+    status: 202,
+    data: {
+      id: '7b7475ca5c984a808cb56abdc9b75a61',
+      statusQueryGetUri: 'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
+      sendEventPostUri: 'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/raiseEvent/{eventName}?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
+      terminatePostUri: 'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/terminate?reason={text}&taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
+      rewindPostUri: 'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/rewind?reason={text}&taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
+      purgeHistoryDeleteUri: 'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
+    },
+  },
   numberGenerator: {
     status: 201,
     data: {
@@ -14,7 +26,7 @@ const mockResponses = {
       createdBy: 'Portal v2/TFM',
       createdDatetime: '2020-12-16T15:12:28.13Z',
       requestingSystem: 'Portal v2/TFM',
-    }
+    },
   },
   acbs: {
     status: 404,
@@ -24,12 +36,14 @@ const mockResponses = {
   },
 };
 
+jest.mock('../../src/v1/controllers/durable-functions-log.controller');
+
 jest.mock('axios', () => jest.fn((args) => {
   const { method, url } = args;
 
   if (method === 'post') {
-    if (url === process.env.MULESOFT_API_NUMBER_GENERATOR_URL) {
-      return Promise.resolve(mockResponses.numberGenerator);
+    if (url.startsWith(process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL)) {
+      return Promise.resolve(mockResponses.numberGeneratorFunction);
     }
   }
 
@@ -46,38 +60,47 @@ jest.mock('axios', () => jest.fn((args) => {
   }
 }));
 
+const mockNumGenParams = {
+  dealId: 111, dealType: 'dealType', entityId: 222, entityType: 'deal', user: { id: 'userId' },
+};
+
 describe('/number-generator', () => {
-  describe('GET /v1/number-generator/:entityType', () => {
-    describe('when an invalid entityType is provided', () => {
-      it('should return 400', async () => {
+  describe('Trigger Number Generator Function', () => {
+    it('should return 200 and log result if success', async () => {
+      const { status } = await post(mockNumGenParams).to('/number-generator');
+      expect(status).toEqual(200);
 
-        const { status, text } = await get('/number-generator/something');
+      const logCallParams = {
+        data: {
+          ...mockNumGenParams,
+          instanceId: expect.any(String),
+          numberGeneratorFunctionUrls: expect.any(Object),
+        },
+        type: 'NUMBER_GENERATOR',
+      };
 
-        expect(status).toEqual(400);
-        expect(text).toEqual('Invalid entity type - must be deal or facility');
-      });
+      expect(durableFunctionsLogController.addDurableFunctionLog).toHaveBeenCalledWith(logCallParams);
     });
 
-    describe('when entityType is `deal`', () => {
-      it('should return maskedId value', async () => {
-        const { status, body } = await get('/number-generator/deal');
+    it('should return status error and log error if unsuccessful', async () => {
+      const apiError = {
+        toJSON: () => ({
+          msg: 'mockApi Error',
+        }),
+      };
+      axios.mockImplementation(() => Promise.resolve({ status: 404, err: apiError }));
+      const { status } = await post(mockNumGenParams).to('/number-generator');
+      expect(status).toEqual(404);
 
-        expect(status).toEqual(200);
-        expect(body).toEqual({
-          id: mockResponses.numberGenerator.data.maskedId,
-        });
-      });
-    });
+      const logCallParams = {
+        data: {
+          ...mockNumGenParams,
+          error: apiError.toJSON(),
+        },
+        type: 'NUMBER_GENERATOR',
+      };
 
-    describe('when entityType is `facility`', () => {
-      it('should return maskedId value', async () => {
-        const { status, body } = await get('/number-generator/facility');
-
-        expect(status).toEqual(200);
-        expect(body).toEqual({
-          id: mockResponses.numberGenerator.data.maskedId,
-        });
-      });
+      expect(durableFunctionsLogController.addDurableFunctionLog).toHaveBeenCalledWith(logCallParams);
     });
   });
 });

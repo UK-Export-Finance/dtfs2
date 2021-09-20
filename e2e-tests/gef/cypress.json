@@ -12,6 +12,7 @@
   "projectId": "sefntb",
   "testFiles": "**/*.spec.js",
   "pageLoadTimeout": 120000,
+  "responseTimeout": 120000,
   "numTestsKeptInMemory": 1,
   "retries": {
     "runMode": 3,
