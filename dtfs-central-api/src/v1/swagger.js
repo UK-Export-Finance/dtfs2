@@ -10,19 +10,19 @@ const swaggerDefinition = {
   tags: [
     {
       name: 'Bank',
-      description: '',
+      description: 'Get and create banks. This is only used in the central API.',
     },
     {
       name: 'Portal',
-      description: '',
+      description: 'Get and update BSS and GEF deals and facilities. Consumed by TFM and Portal.',
     },
     {
       name: 'TFM',
-      description: '',
+      description: 'Create, get and update TFM deals, facilities and users. Consumed by TFM.',
     },
     {
       name: 'User',
-      description: '',
+      description: 'Get and create users. This is only used in the central API.',
     },
   ],
 };
