@@ -63,7 +63,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
       'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
     });
-    
+
     const mockUnsubmittedUnconditionalLoanWithIssueFacilityDetails = () => ({
       ...mockUnsubmittedUnconditionalLoan(),
       previousFacilityStage: 'Conditional',
@@ -123,7 +123,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       api.tfmDealSubmit = () => Promise.resolve();
 
       externalApis.numberGenerator = {
-        create: () => Promise.resolve(),
+        create: () => Promise.resolve({ ukefId: 'TEST-MOCK' }),
       };
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
@@ -149,8 +149,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         const unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
           facility.facilityType === 'loan'
           && !facility.issueFacilityDetailsSubmitted
-          && !facility.issueFacilityDetailsProvided
-        );
+          && !facility.issueFacilityDetailsProvided);
 
         const loansThatShouldBeUpdated = unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails;
 
@@ -177,14 +176,13 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(updatedDeal.body).toBeDefined();
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
-        const deal = body.deal;
+        const { deal } = body;
 
         // NOTE: aka - issued bonds created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedIssuedBondsNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
           facility.facilityType === 'bond'
           && !facility.issueFacilityDetailsSubmitted
-          && !facility.issueFacilityDetailsProvided
-        );
+          && !facility.issueFacilityDetailsProvided);
 
         const bondsThatShouldBeUpdated = unsubmittedIssuedBondsNotProvidedIssueFacilityDetails;
 
@@ -211,15 +209,14 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(updatedDeal.body).toBeDefined();
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
-        const deal = body.deal;
+        const { deal } = body;
 
         // NOTE: aka - unconditional loans created from Deal Draft, had to complete Issue Facility Form
         const unsubmittedUnconditionalLoansProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
           facility.facilityType === 'loan'
           && facility.issueFacilityDetailsProvided
           && facility.status === 'Ready for check'
-          && !facility.issueFacilityDetailsSubmitted
-        );
+          && !facility.issueFacilityDetailsSubmitted);
 
         const loansThatShouldBeUpdated = unsubmittedUnconditionalLoansProvidedIssueFacilityDetails;
 
@@ -240,15 +237,14 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(updatedDeal.body).toBeDefined();
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
-        const deal = body.deal;
+        const { deal } = body;
 
         // NOTE: aka - unconditional bonds created from Deal Draft, had to complete Issue Facility Form
         const unsubmittedIssuedBondsProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
           facility.facilityType === 'bond'
           && facility.issueFacilityDetailsProvided
           && facility.status === 'Ready for check'
-          && !facility.issueFacilityDetailsSubmitted
-        );
+          && !facility.issueFacilityDetailsSubmitted);
 
         const bondsThatShouldBeUpdated = unsubmittedIssuedBondsProvidedIssueFacilityDetails;
 

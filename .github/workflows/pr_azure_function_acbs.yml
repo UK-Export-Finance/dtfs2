@@ -68,4 +68,4 @@ jobs:
     - name: Pull ACBS Function
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }} dtfs/pazure-function-acbs
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs:${{ github.sha }} dtfs/azure-function-acbs

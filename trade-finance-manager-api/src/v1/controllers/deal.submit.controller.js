@@ -37,7 +37,22 @@ const getDeal = async (dealId, dealType) => {
   return deal;
 };
 
-const submitDeal = async (dealId, dealType, checker) => {
+// Only create the TFM record until UKEFids have been generated, then process the submission
+// This allows a deal in Pending state to be seen in TFM,
+// which indicates to UKEF that a deal has been submitted before UKEFids are generated
+const submitDealBeforeUkefIds = async (dealId, dealType) => {
+  const deal = await getDeal(dealId, dealType);
+
+  if (!deal) {
+    return false;
+  }
+
+  return api.submitDeal(dealType, dealId);
+};
+exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
+
+
+const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
@@ -83,7 +98,6 @@ const submitDeal = async (dealId, dealType, checker) => {
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
-
       return updatedDeal;
     }
 
@@ -125,7 +139,7 @@ const submitDeal = async (dealId, dealType, checker) => {
   return api.updateDeal(dealId, submittedDeal);
 };
 
-exports.submitDeal = submitDeal;
+exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
 const submitDealPUT = async (req, res) => {
   const {
@@ -134,7 +148,7 @@ const submitDealPUT = async (req, res) => {
     checker,
   } = req.body;
 
-  const deal = await submitDeal(dealId, dealType, checker);
+  const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
 
   if (!deal) {
     return res.status(404).send();
@@ -142,4 +156,23 @@ const submitDealPUT = async (req, res) => {
 
   return res.status(200).send(deal);
 };
+
 exports.submitDealPUT = submitDealPUT;
+
+const submitDealAfterUkefIdsPUT = async (req, res) => {
+  const {
+    dealId,
+    dealType,
+    checker,
+  } = req.body;
+
+  const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  return res.status(200).send(deal);
+};
+
+exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
