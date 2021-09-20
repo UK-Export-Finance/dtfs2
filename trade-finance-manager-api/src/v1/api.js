@@ -281,7 +281,28 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
 
     return response.data;
   } catch (err) {
-    return err;// do something proper here, but for now just reject failed logins..
+    return err;
+  }
+};
+
+const queryDealsLight = async ({ queryParams, start = 0, pagesize = 0 }) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/deals/light`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        queryParams,
+        start,
+        pagesize,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
   }
 };
 
@@ -575,6 +596,7 @@ module.exports = {
   findFacilitesByDealId,
   updateFacility,
   queryDeals,
+  queryDealsLight,
   getPartyDbInfo,
   findUser,
   findUserById,
