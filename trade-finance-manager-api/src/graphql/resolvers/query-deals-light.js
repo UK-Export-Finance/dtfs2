@@ -1,14 +1,14 @@
 const { dealsLightReducer } = require('../reducers/deals-light');
-const { queryDeals } = require('../../v1/api');
+const { findTfmDealsLight } = require('../../v1/controllers/deal.controller');
 
 require('dotenv').config();
 
-const getDeals = async (queryParams) => {
-  const { deals } = await queryDeals({ queryParams });
+const getDealsLight = async (queryParams) => {
+  const { deals } = await findTfmDealsLight(queryParams);
 
   const reducedDeals = dealsLightReducer(deals);
 
   return reducedDeals;
 };
 
-module.exports = getDeals;
+module.exports = getDealsLight;

@@ -1,10 +1,10 @@
 const { dealsReducer } = require('../reducers/deals');
-const { queryDeals } = require('../../v1/api');
+const { findTfmDeals } = require('../../v1/controllers/deal.controller');
 
 require('dotenv').config();
 
 const getDeals = async (queryParams) => {
-  const { deals } = await queryDeals({ queryParams });
+  const { deals } = await findTfmDeals({ queryParams });
 
   const reducedDeals = dealsReducer(deals);
 
