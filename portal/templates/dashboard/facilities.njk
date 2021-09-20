@@ -42,48 +42,6 @@
 
       <h2 class="govuk-heading-l">Facilities</h2>
 
-       <div class="govuk-grid-row">
-         <div class="govuk-grid-column-three-quarters">
-                  {{ mojButtonMenu({
-                     items: [{
-                        text: "Show filter",
-                        href: "#",
-                        classes: "govuk-button--secondary"
-                        }]
-                  }) }}
-         </div>
-
-         <div class="govuk-grid-column-one-quarter">
-            <form method="POST" autocomplete="off">
-               {{ govukCheckboxes({
-                  name: "createdByYou",
-                  classes: "govuk-checkboxes--small",
-                  items: [
-                        {
-                           value: "true",
-                           text: "Created by you",
-                           checked: createdByYou,
-                           attributes: {
-                              "data-cy": "created-by-you",
-                              'onChange': 'this.form.submit()'
-                           }
-                        }
-                  ]
-               }) }}
-               <div class="moj-button-action">
-                  {{ govukButton({
-                        text: 'Submit',
-                        classes: 'moj-js-hidden',
-                        attributes: {
-                           'data-cy': 'submit-created-by-you'
-                        }
-                  }) }}
-               </div>
-
-            </form>
-         </div>
-      </div>
-
       {% set items = [] %}
       {% for facility in facilities %}
         {% set linkHtml %}

@@ -17,13 +17,6 @@ exports.bssFacilities = async (req, res) => {
 
   const filters = [];
 
-  if (req.body.createdByYou) {
-    filters.push({
-      field: 'details.maker._id',
-      value: req.session.user._id,
-    });
-  }
-
   const { transactions, count } = await getApiData(api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const facilities = transactions.map((facility) => ({
@@ -57,7 +50,6 @@ exports.bssFacilities = async (req, res) => {
     primaryNav,
     tab,
     user: req.session.user,
-    createdByYou: req.body.createdByYou,
   });
 };
 
@@ -65,12 +57,6 @@ exports.gefFacilities = async (req, res) => {
   const tab = 'gefFacilities';
   const { userToken } = requestParams(req);
   const filters = [];
-  if (req.body.createdByYou) {
-    filters.push({
-      field: 'userId',
-      value: req.session.user._id,
-    });
-  }
 
   const { count, facilities: rawFacilities } = await getApiData(api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
@@ -105,6 +91,5 @@ exports.gefFacilities = async (req, res) => {
     primaryNav,
     tab,
     user: req.session.user,
-    createdByYou: req.body.createdByYou,
   });
 };
