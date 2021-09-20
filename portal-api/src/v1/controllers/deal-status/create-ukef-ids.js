@@ -18,8 +18,8 @@ const createUkefIds = async (entityId, deal, user) => {
         user,
       },
     );
-  } catch (error) {
-    console.log({ error });
+  } catch (err) {
+    throw new Error(err.response);
   }
 
   const updatedDeal = await updateDeal(

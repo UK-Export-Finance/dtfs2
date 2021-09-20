@@ -17,7 +17,7 @@ services:
           memory: 300M
     ports:
       - "27017-27019:27017-27019"
-      
+
   dtfs-central-api:
     build: ./dtfs-central-api
     image: dtfs/dtfs-central-api
@@ -65,7 +65,7 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
     command: node dist/server.js -L
-  
+
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
     image: dtfs/trade-finance-manager-api
@@ -95,7 +95,7 @@ services:
           cpus: '0.2'
           memory: 600M
     entrypoint: npx nodemon src/index.js -L
-  
+
   portal:
     build: ./portal
     image: dtfs/portal
@@ -163,9 +163,10 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
+      - SENTRY_DSN=${SENTRY_DSN}
 
     entrypoint: npx nodemon src/index.js -L
-  
+
   reference-data-proxy:
     build: ./reference-data-proxy
     image: dtfs/reference-data-proxy
@@ -238,7 +239,7 @@ services:
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
     command: npx nodemon server/index.js -L
-  
+
   # ACBS function is causing an out of memory error on github actions. disable for now
   # acbs-function:
   #   build: ./azure-functions/acbs-function

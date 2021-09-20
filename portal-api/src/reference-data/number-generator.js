@@ -5,17 +5,18 @@ const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const create = async ({
   dealType, entityType, entityId, dealId, user,
 }) => {
-  console.log({ referenceProxyUrl });
   const { data } = await axios({
     method: 'POST',
-    url: `${referenceProxyUrl}/number-generator/`,
+    url: `${referenceProxyUrl}/number-generator`,
     headers: {
       'Content-Type': 'application/json',
     },
     data: {
       dealType, entityType, entityId, dealId, user,
     },
-  }).catch((err) => err.response);
+  }).catch((err) => {
+    throw new Error(err.response);
+  });
 
   return data;
 };
