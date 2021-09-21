@@ -24,6 +24,42 @@ tfmRouter.use((req, res, next) => {
 /**
  * @openapi
  * definitions:
+ *   TFMDeal:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: 123abc
+ *       dealSnapshot:
+ *         type: object
+ *         properties:
+ *           _id:
+ *             type: string
+ *             example: 123abc
+ *           dealType:
+ *             type: string
+ *             example: BSS/EWCS
+ *           status:
+ *             type: string
+ *             example: Submitted
+ *           submissionCount:
+ *             type: integer
+ *             example: 1
+ *       tfm:
+ *         type: object
+ *         properties:
+ *           product:
+ *             type: string
+ *             example: BSS
+ *           dateReceived:
+ *             type: string
+ *             example: '16-09-2021'
+ *           stage:
+ *             type: string
+ *             example: Confirmed
+ *           exporterCreditRating:
+ *             type: string
+ *             example: Acceptable (B+)
  *   TFMUser:
  *     type: object
  *     properties:
@@ -70,6 +106,17 @@ tfmRouter.use((req, res, next) => {
  *         lastName:
  *           type: string
  *           example: Bloggs
+ *   TFMTeam:
+ *     type: object
+ *     properties:
+ *       id:
+ *         type: string
+ *         example: BUSINESS_SUPPORT
+ *       name:
+ *         type: string
+ *         example: Business support group
+ *       email:
+ *         type: team@email.com
  */
 
 /**
@@ -99,19 +146,8 @@ tfmRouter.use((req, res, next) => {
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               _id: 123abc
- *               dealSnapshot:
- *                 _id: 123abc
- *                 dealType: BSS/EWCS
- *                 status: Submitted
- *                 submissionCount: 1
- *                 facilities: [{ _id: '123', type: 'CONTINGENT'}, { _id: '456', type: 'CASH' }]
- *               tfm:
- *                 product: GEF
- *                 dateReceived: 16-09-2021
- *                 stage: Confirmed
- *                 exporterCreditRating: Acceptable (B+)
+ *             schema:
+ *               $ref: '#/definitions/TFMDeal'
  *       404:
  *         description: Not found
  */
@@ -139,16 +175,16 @@ tfmRouter.route('/deals/submit')
 *         description: OK
 *         content:
 *           application/json:
-*             example:
-*               _id: 123abc
-*               dealSnapshot:
-*                 _id: 123abc
-*                 dealType: GEF
-*                 facilities: [{ _id: '123', type: 'CONTINGENT'}, { _id: '456', type: 'CASH' }]
-*               tfm:
-*                 product: GEF
-*                 dateReceived: 16-09-2021
-*                 stage: Confirmed
+*             schema:
+*               allOf:
+*                 - $ref: '#/definitions/TFMDeal'
+*                 - type: object
+*                   properties:
+*                     dealSnapshot:
+*                       type: object
+*                       properties:
+*                         facilities:
+*                           example: [ { _id: 123abc, type: CASH }, { _id: 456abc, type: CONTINGENT } ]
 *       404:
 *         description: Not found
 */
@@ -185,17 +221,18 @@ tfmRouter.route('/deals/:id').get(
 *         description: OK
 *         content:
 *           application/json:
-*             example:
-*               _id: 123abc
-*               dealSnapshot:
-*                 _id: 123abc
-*                 dealType: BSS/EWCS
-*               tfm:
-*                 product: GEF
-*                 dateReceived: 16-09-2021
-*                 stage: Confirmed
-*                 lossGivenDefault: 50
-*                 exporterCreditRating: Good (BB-)
+*             schema:
+*               allOf:
+*                 - $ref: '#/definitions/TFMDeal'
+*                 - type: object
+*                   properties:
+*                     tfm:
+*                       type: object
+*                       properties:
+*                         lossGivenDefault:
+*                           example: 50
+*                         exporterCreditRating:
+*                           example: Good (BB-)
 *       404:
 *         description: Not found
 */
@@ -223,26 +260,24 @@ tfmRouter.route('/deals/:id').delete(
  *             type: object
  *             example:
  *               aNewField: true
- *               aChangedField: 'new value'
+ *               aChangedField: New value
  *     responses:
  *       200:
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               _id: 123abc
- *               dealSnapshot:
- *                 _id: 123abc
- *                 dealType: BSS/EWCS
- *                 status: Submitted
- *                 submissionCount: 1
- *                 aNewField: true
- *                 aChangedField: 'new value'
- *               tfm:
- *                 product: GEF
- *                 dateReceived: 16-09-2021
- *                 stage: Confirmed
- *                 exporterCreditRating: Acceptable (B+)
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/TFMDeal'
+ *                 - type: object
+ *                   properties:
+ *                     dealSnapshot:
+ *                       type: object
+ *                       properties:
+ *                         aNewField:
+ *                           example: true
+ *                         aChangedField:
+ *                           example: New value
  *       404:
  *         description: Not found
  */
@@ -286,18 +321,7 @@ tfmRouter.route('/teams').get(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *           example:
- *             id: BUSINESS_SUPPORT
- *             name: Business support group
- *             email: team@email.com
+ *             $ref: '#/definitions/TFMTeam'
  *     responses:
  *       200:
  *         description: OK
@@ -329,11 +353,8 @@ tfmRouter.route('/teams').post(
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               _id: '123456abc'
- *               id: BUSINESS_SUPPORT
- *               name: Business support group
- *               email: team@email.com
+ *             schema:
+ *               $ref: '#/definitions/TFMTeam'
  *       404:
  *         description: Not found
  */
