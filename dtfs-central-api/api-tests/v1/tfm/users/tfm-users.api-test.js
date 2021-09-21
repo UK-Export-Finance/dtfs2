@@ -69,7 +69,7 @@ describe('/v1/tfm/users', () => {
       const { status, body } = await api.get(`/v1/tfm/users/${mockUsers[0].username}`);
 
       expect(status).toEqual(200);
-      expect(body.user).toMatchObject(mockUsers[0]);
+      expect(body).toMatchObject(mockUsers[0]);
     });
   });
 

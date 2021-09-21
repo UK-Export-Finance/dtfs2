@@ -39,9 +39,7 @@ exports.findOneUserGET = async (req, res) => {
   const user = await findOneUser(req.params.username);
 
   if (user) {
-    return res.status(200).send({
-      user,
-    });
+    return res.status(200).send(user);
   }
 
   return res.status(404).send();
