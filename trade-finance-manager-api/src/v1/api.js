@@ -285,27 +285,6 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   }
 };
 
-const queryDealsLight = async ({ queryParams, start = 0, pagesize = 0 }) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/light`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        queryParams,
-        start,
-        pagesize,
-      },
-    });
-
-    return response.data;
-  } catch (err) {
-    return err;
-  }
-};
-
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
@@ -596,7 +575,6 @@ module.exports = {
   findFacilitesByDealId,
   updateFacility,
   queryDeals,
-  queryDealsLight,
   getPartyDbInfo,
   findUser,
   findUserById,
