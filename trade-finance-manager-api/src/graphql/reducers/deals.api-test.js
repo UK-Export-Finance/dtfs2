@@ -2,12 +2,15 @@
 const {
   mapBssDeal,
   mapGefDeal,
-  dealsLightReducer,
-} = require('./deals-light');
+  dealsReducer,
+} = require('./deals');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
+const mapFacilities = require('./mappings/facilities/mapFacilities');
+const mapTotals = require('./mappings/deal/mapTotals');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
+const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 const mapDeals = require('./mappings/deal/mapDeals');
 
 const MOCK_DEAL = require('../../v1/__mocks__/mock-deal-AIN-submitted');
@@ -15,7 +18,19 @@ const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
 
 const mockBssDeal = {
   ...MOCK_DEAL._id,
-  dealSnapshot: MOCK_DEAL,
+  dealSnapshot: {
+    ...MOCK_DEAL,
+    facilities: [
+      {
+        facilitySnapshot: MOCK_DEAL.bondTransactions.items[0],
+        tfm: {},
+      },
+      {
+        facilitySnapshot: MOCK_DEAL.loanTransactions.items[0],
+        tfm: {},
+      },
+    ],
+  },
   tfm: {
     supplyContractValueInGBP: 1234,
   },
@@ -23,7 +38,15 @@ const mockBssDeal = {
 
 const mockGefDeal = {
   _id: MOCK_GEF_DEAL._id,
-  dealSnapshot: MOCK_GEF_DEAL,
+  dealSnapshot: {
+    ...MOCK_GEF_DEAL,
+    facilities: [
+      {
+        facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+        tfm: {},
+      },
+    ],
+  },
   tfm: {},
 };
 
@@ -33,8 +56,16 @@ describe('reducer - deals', () => {
       const expected = {
         _id: mockBssDeal._id,
         dealSnapshot: {
-          details: mockBssDeal.dealSnapshot.details,
+          ...mockBssDeal.dealSnapshot,
           submissionDetails: mapSubmissionDetails(mockBssDeal.dealSnapshot.submissionDetails),
+          facilities: mapFacilities(
+            mockBssDeal.dealSnapshot.facilities,
+            mockBssDeal.dealSnapshot.details,
+            mockBssDeal.tfm,
+          ),
+          dealFiles: mockBssDeal.dealSnapshot.dealFiles,
+          eligibilityCriteria: mockBssDeal.dealSnapshot.eligibility.criteria,
+          totals: mapTotals(mockBssDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockBssDeal),
       };
@@ -49,8 +80,10 @@ describe('reducer - deals', () => {
       const expected = {
         _id: mockGefDeal._id,
         dealSnapshot: {
+          _id: mockGefDeal._id,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
+          facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
         },
         tfm: mapDealTfm(mockGefDeal),
       };
@@ -68,7 +101,7 @@ describe('reducer - deals', () => {
         mockBssDeal,
       ];
 
-      const result = dealsLightReducer(mockDeals);
+      const result = dealsReducer(mockDeals);
 
       const expected = mapDeals(
         mockDeals,
