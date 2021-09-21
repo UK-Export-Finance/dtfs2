@@ -39,44 +39,49 @@
     <section class="govuk-tabs__panel">
 
        <div class="govuk-grid-row">
+
          <div class="govuk-grid-column-three-quarters">
-                  {{ mojButtonMenu({
-                     items: [{
-                        text: "Show filter",
-                        href: "#",
-                        classes: "govuk-button--secondary"
-                        }]
-                  }) }}
+            &nbsp
+            {# TODO - Enable aside filters #}
+            {# {{ mojButtonMenu({
+               items: [{
+                  text: "Show filter",
+                  href: "#",
+                  classes: "govuk-button--secondary"
+                  }]
+            }) }} #}
          </div>
 
-         <div class="govuk-grid-column-one-quarter">
-            <form method="POST" autocomplete="off">
-               {{ govukCheckboxes({
-                  name: "createdByYou",
-                  classes: "govuk-checkboxes--small",
-                  items: [
-                        {
-                           value: "true",
-                           text: "Created by you",
-                           checked: createdByYou,
-                           attributes: {
-                              "data-cy": "created-by-you",
-                              'onChange': 'this.form.submit()'
+         <div class=" govuk-grid-column-one-quarter">
+            <div class="govuk-!-padding-left-2">
+               <form method="POST" autocomplete="off">
+                  {{ govukCheckboxes({
+                     name: "createdByYou",
+                     classes: "govuk-checkboxes--small",
+                     items: [
+                           {
+                              value: "true",
+                              text: "Created by you",
+                              checked: createdByYou,
+                              attributes: {
+                                 "data-cy": "created-by-you",
+                                 'onChange': 'this.form.submit()'
+                              }
                            }
-                        }
-                  ]
-               }) }}
-               <div class="moj-button-action">
-                  {{ govukButton({
-                        text: 'Submit',
-                        classes: 'moj-js-hidden',
-                        attributes: {
-                           'data-cy': 'submit-created-by-you'
-                        }
+                     ]
                   }) }}
-               </div>
+                  <div class="moj-button-action">
+                     {{ govukButton({
+                           text: 'Submit',
+                           classes: 'moj-js-hidden',
+                           attributes: {
+                              'data-cy': 'submit-created-by-you'
+                           }
+                     }) }}
+                  </div>
 
-            </form>
+               </form>
+            </div>
          </div>
       </div>
 
