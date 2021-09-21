@@ -58,6 +58,12 @@ In essence:
 
 All of this starts from the deal submission controller: `/src/v1/controllers/deal.submit.controller.js`
 
+## Documentation
+
+This README is this most useful for understanding what happens with this API. There are only 2 endpoints - deal submission and get user.
+
+Swagger docs can be found on the URL `/v1/api-docs`
+
 ## Snapshots and data structure
 
 When a deal is sent to TFM, the structure will be something like this (very simple example):
@@ -184,3 +190,4 @@ We map the data when:
     - See GraphQL reducer mappings: `/src/graphql/reducers`
 
 When BSS is redesigned, it should share a generic data structure with GEF. TFM should then be refactored to query and render data based on the generic data structure, instead of BSS. The submission mapping is a step towards this.
+

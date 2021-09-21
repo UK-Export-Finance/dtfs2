@@ -4,6 +4,7 @@ const {
   getAllFacilitiesByApplicationId,
   update: updateFacility,
 } = require('./facilities.controller');
+const CONSTANTS = require('../../../constants');
 
 const generateSubmissionData = async (existingApplication) => {
   const result = {
@@ -19,11 +20,29 @@ const generateSubmissionData = async (existingApplication) => {
   return result;
 };
 
-const generateId = async (entityType) => refDataApi.numberGenerator.create(entityType);
+const generateId = async ({
+  entityId, entityType, dealId, user,
+}) => refDataApi.numberGenerator.create({
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+  entityId,
+  entityType,
+  dealId,
+  user,
+});
 
-const generateUkefDealId = async (application) => application.ukefDealId || generateId('deal');
+const generateUkefDealId = async (application) => application.ukefDealId || generateId({
+  entityId: application._id,
+  entityType: 'deal',
+  dealId: application._id,
+  user: application.checkerId,
+});
 
-const generateUkefFacilityId = async (facility) => facility.ukefFacilityId || generateId('facility');
+const generateUkefFacilityId = async (facility) => facility.ukefDealId || generateId({
+  entityId: facility._id,
+  entityType: 'facility',
+  dealId: facility.applicationId,
+});
+
 
 const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
@@ -47,11 +66,11 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
 
   await Promise.all(facilities.map(async (facility) => {
-    const ukefFacilityId = await generateUkefFacilityId(facility);
+    const { ukefId } = await generateUkefFacilityId(facility);
 
-    if (ukefFacilityId !== facility.ukefFacilityId) {
+    if (ukefId !== facility.ukefFacilityId) {
       const update = {
-        ukefFacilityId,
+        ukefFacilityId: ukefId,
       };
       await updateFacility(facility._id, update);
     }
@@ -62,7 +81,7 @@ const addUkefFacilityIdToFacilities = async (applicationId) => {
 
 const addSubmissionData = async (applicationId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
-  const ukefDealId = await generateUkefDealId(existingApplication);
+  const { ukefId } = await generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(applicationId);
   await addUkefFacilityIdToFacilities(applicationId);
@@ -70,7 +89,7 @@ const addSubmissionData = async (applicationId, existingApplication) => {
   return {
     submissionCount: count,
     submissionDate: date,
-    ukefDealId,
+    ukefDealId: ukefId,
   };
 };
 

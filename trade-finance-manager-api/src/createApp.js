@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 // const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
@@ -14,7 +15,7 @@ const {
 } = require('./graphql');
 
 const healthcheck = require('./healthcheck');
-const { openRouter } = require('./v1/routes');
+const openRouter = require('./v1/routes');
 const initScheduler = require('./scheduler');
 
 dotenv.config();
@@ -50,18 +51,14 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-// const errorHandler = (err) => {
-//   console.log(err);
-// };
-
-// app.use(errorHandler);
-
 // Return 200 on get to / to confirm to Azure that
 // the container has started successfully:
 const rootRouter = express.Router();
 rootRouter.get('/', async (req, res) => {
   res.status(200).send();
 });
+
+rootRouter.use('/v1/api-docs', swaggerUi.serve);
 
 app.use('/', rootRouter);
 
