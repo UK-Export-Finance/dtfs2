@@ -1,16 +1,17 @@
-const CONSTANTS = require('../../constants');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
+const mapDeals = require('./mappings/deal/mapDeals');
 
-const mapDeal = (deal) => {
+const mapBssDeal = (deal) => {
+  const { _id, dealSnapshot } = deal;
+
   const mapped = {
-    _id: deal._id,
+    _id,
     dealSnapshot: {
-      ...deal.dealSnapshot,
-      submissionDetails: mapSubmissionDetails(deal.dealSnapshot.submissionDetails),
-      isFinanceIncreasing: false,
+      details: dealSnapshot.details,
+      submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
     },
     tfm: mapDealTfm(deal),
   };
@@ -19,13 +20,13 @@ const mapDeal = (deal) => {
 };
 
 const mapGefDeal = (deal) => {
+  const { _id, dealSnapshot } = deal;
+
   const mapped = {
-    _id: deal._id,
+    _id,
     dealSnapshot: {
-      _id: deal._id,
-      details: mapGefDealDetails(deal.dealSnapshot),
-      submissionDetails: mapGefSubmissionDetails(deal.dealSnapshot),
-      isFinanceIncreasing: deal.dealSnapshot.exporter.isFinanceIncreasing,
+      details: mapGefDealDetails(dealSnapshot),
+      submissionDetails: mapGefSubmissionDetails(dealSnapshot),
     },
     tfm: mapDealTfm(deal),
   };
@@ -33,32 +34,15 @@ const mapGefDeal = (deal) => {
   return mapped;
 };
 
-const mapDeals = (deals) => {
-  const mapped = [];
-
-  deals.forEach((deal) => {
-    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      mapped.push(mapGefDeal(deal));
-    } else {
-      mapped.push(mapDeal(deal));
-    }
-  });
-
-  return mapped;
-};
-
-const dealsLightReducer = (deals) => {
-  const mappedDeals = mapDeals(deals);
-
-  return {
-    count: mappedDeals.length,
-    deals: mappedDeals,
-  };
-};
+const dealsLightReducer = (deals) =>
+  mapDeals(
+    deals,
+    mapBssDeal,
+    mapGefDeal,
+  );
 
 module.exports = {
-  mapDeal,
+  mapBssDeal,
   mapGefDeal,
-  mapDeals,
   dealsLightReducer,
 };
