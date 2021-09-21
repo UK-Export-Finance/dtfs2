@@ -23,6 +23,57 @@ tfmRouter.use((req, res, next) => {
 
 /**
  * @openapi
+ * definitions:
+ *   TFMUser:
+ *     type: object
+ *     properties:
+ *       username:
+ *         type: string
+ *         example: T1_USER_1
+ *       email:
+ *         type: test@testing.com
+ *       teams:
+ *         type: array
+ *         items:
+ *           type: string
+ *         example: ['BUSINESS_SUPPORT']
+ *       timezone:
+ *         type: string
+ *         example: Europe/London
+ *       firstName:
+ *         type: string
+ *         example: Joe
+ *       lastName:
+ *         type: string
+ *         example: Bloggs
+ *   TFMUsers:
+ *     type: array
+ *     items:
+ *       type: object
+ *       properties:
+ *         username:
+ *           type: string
+ *           example: T1_USER_1
+ *         email:
+ *           type: test@testing.com
+ *         teams:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ['BUSINESS_SUPPORT']
+ *         timezone:
+ *           type: string
+ *           example: Europe/London
+ *         firstName:
+ *           type: string
+ *           example: Joe
+ *         lastName:
+ *           type: string
+ *           example: Bloggs
+ */
+
+/**
+ * @openapi
  * /tfm/deals/submit:
  *   put:
  *     summary: Submit a deal. Adds to tfm-deals and tfm-facilities collections
@@ -218,45 +269,258 @@ tfmRouter.route('/facilities/:id')
     tfmUpdateFacilityController.updateFacilityPut,
   );
 
-// User routes for mock teams & users
-tfmRouter.route('/teams')
-  .get(
-    tfmTeamsController.listTeamsGET,
-  )
-  .post(
-    tfmTeamsController.createTeamPOST,
-  );
+tfmRouter.route('/teams').get(
+  tfmTeamsController.listTeamsGET,
+);
 
+/**
+ * @openapi
+ * /tfm/teams:
+ *   post:
+ *     summary: Create a team in tfm-teams collection
+ *     tags: [TFM]
+ *     description: Create a team in tfm-teams collection
+ *     requestBody:
+ *       description: Fields required to create a team. No validation in place.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *           example:
+ *             id: BUSINESS_SUPPORT
+ *             name: Business support group
+ *             email: team@email.com
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ */
+tfmRouter.route('/teams').post(
+  tfmTeamsController.createTeamPOST,
+);
+
+/**
+ * @openapi
+ * /tfm/teams/:id:
+ *   get:
+ *     summary: Get a team by ID
+ *     tags: [TFM]
+ *     description: Get a team by ID. Not MongoDB _id, but the team ID provided when created.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Team ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ *               id: BUSINESS_SUPPORT
+ *               name: Business support group
+ *               email: team@email.com
+ *       404:
+ *         description: Not found
+ */
 tfmRouter.route('/teams/:id')
   .get(
     tfmTeamsController.findOneTeamGET,
-  )
-  .delete(
-    tfmTeamsController.deleteTeamDELETE,
   );
 
-// User routes for mock teams & users
-tfmRouter.route('/users')
-  .get(
-    tfmUsersController.listUsersGET,
-  )
-  .post(
-    tfmUsersController.createUserPOST,
-  );
+/**
+ * @openapi
+ * /tfm/teams/:id:
+ *   delete:
+ *     summary: Delete a team
+ *     tags: [TFM]
+ *     description: Delete a team by ID. Not MongoDB _id, but the team ID provided when created.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Team ID to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               acknowledged: true
+ *               deletedCount: 1
+ */
+tfmRouter.route('/teams/:id').delete(
+  tfmTeamsController.deleteTeamDELETE,
+);
 
+/**
+ * @openapi
+ * /tfm/users:
+ *   get:
+ *     summary: Get all TFM users
+ *     tags: [TFM]
+ *     description: Get all TFM users
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/TFMUsers'
+ */
+tfmRouter.route('/users').get(
+  tfmUsersController.listUsersGET,
+);
+
+/**
+ * @openapi
+ * /tfm/users:
+ *   post:
+ *     summary: Create a user in tfm-users collection
+ *     tags: [TFM]
+ *     description: Create a users in tfm-users collection
+ *     requestBody:
+ *       description: Fields required to create a user. No validation in place.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ */
+tfmRouter.route('/users').post(
+  tfmUsersController.createUserPOST,
+);
+
+/**
+ * @openapi
+ * /tfm/users/:username:
+ *   get:
+ *     summary: Get a TFM user by username
+ *     tags: [TFM]
+ *     description: Get a TFM user by username
+ *     parameters:
+*       - in: path
+*         name: username
+*         schema:
+*           type: string
+*         required: true
+*         description: Username to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/TFMUser'
+ *       404:
+ *         description: Not found
+ */
 tfmRouter.route('/users/:username')
   .get(
     tfmUsersController.findOneUserGET,
-  )
-  .delete(
-    tfmUsersController.deleteUserDELETE,
   );
 
+/**
+* @openapi
+* /tfm/users/:username:
+*   delete:
+*     summary: Delete a user
+*     tags: [TFM]
+*     description: Delete a user by username
+*     parameters:
+*       - in: path
+*         name: username
+*         schema:
+*           type: string
+*         required: true
+*         description: User to delete
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             example:
+*               acknowledged: true
+*               deletedCount: 1
+*/
+tfmRouter.route('/users/:username').delete(
+  tfmUsersController.deleteUserDELETE,
+);
+
+/**
+ * @openapi
+ * /tfm/users/:id:
+ *   get:
+ *     summary: Get a TFM user by ID
+ *     tags: [TFM]
+ *     description: Get a TFM user by ID
+ *     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: User ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/TFMUser'
+ *       404:
+ *         description: Not found
+ */
 tfmRouter.route('/users/id/:userId')
   .get(
     tfmUsersController.findOneUserByIdGET,
   );
 
+/**
+* @openapi
+* /tfm/users/team/:teamId:
+*   get:
+*     summary: Get all TFM users in a team
+*     tags: [TFM]
+*     description: Get all TFM users in a team by team ID
+*     parameters:
+*       - in: path
+*         name: teamId
+*         schema:
+*           type: string
+*         required: true
+*         description: Team ID to get. Not MongoDB _id, but the team ID provided when created.
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/definitions/TFMUsers'
+*/
 tfmRouter.route('/users/team/:teamId')
   .get(
     tfmUsersController.findTeamUsersGET,
