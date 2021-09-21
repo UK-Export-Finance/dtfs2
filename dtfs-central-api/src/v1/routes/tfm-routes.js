@@ -24,7 +24,7 @@ tfmRouter.use((req, res, next) => {
 /**
  * @openapi
  * definitions:
- *   TFMDeal:
+ *   TFMDealBSS:
  *     type: object
  *     properties:
  *       _id:
@@ -60,6 +60,33 @@ tfmRouter.use((req, res, next) => {
  *           exporterCreditRating:
  *             type: string
  *             example: Acceptable (B+)
+ *   TFMFacilityGEF:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: 123abc
+ *       facilitySnapshot:
+ *         type: object
+ *         properties:
+ *           _id:
+ *             type: string
+ *             example: 123abc
+ *           applicationId:
+ *             type: string
+ *             example: 456abc
+ *           type:
+ *             type: string
+ *             example: CASH
+ *           value:
+ *             type: integer
+ *             example: 123
+ *       tfm:
+ *         type: object
+ *         properties:
+ *           ukefExposure:
+ *             type: integer
+ *             example: 100
  *   TFMUser:
  *     type: object
  *     properties:
@@ -147,7 +174,7 @@ tfmRouter.use((req, res, next) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/TFMDeal'
+ *               $ref: '#/definitions/TFMDealBSS'
  *       404:
  *         description: Not found
  */
@@ -177,7 +204,7 @@ tfmRouter.route('/deals/submit')
 *           application/json:
 *             schema:
 *               allOf:
-*                 - $ref: '#/definitions/TFMDeal'
+*                 - $ref: '#/definitions/TFMDealBSS'
 *                 - type: object
 *                   properties:
 *                     dealSnapshot:
@@ -223,7 +250,7 @@ tfmRouter.route('/deals/:id').get(
 *           application/json:
 *             schema:
 *               allOf:
-*                 - $ref: '#/definitions/TFMDeal'
+*                 - $ref: '#/definitions/TFMDealBSS'
 *                 - type: object
 *                   properties:
 *                     tfm:
@@ -240,6 +267,29 @@ tfmRouter.route('/deals/:id').put(
   tfmUpdateDealController.updateDealPut,
 );
 
+/**
+ * @openapi
+ * /tfm/deals/:id:
+ *   delete:
+ *     summary: Delete a TFM deal
+ *     tags: [TFM]
+ *     description: Delete a deal by ID. Also deletes any facilities associated with the deal.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               acknowledged: true
+ *               deletedCount: 1
+ */
 tfmRouter.route('/deals/:id').delete(
   tfmDeleteDealController.deleteDeal,
 );
@@ -268,7 +318,7 @@ tfmRouter.route('/deals/:id').delete(
  *           application/json:
  *             schema:
  *               allOf:
- *                 - $ref: '#/definitions/TFMDeal'
+ *                 - $ref: '#/definitions/TFMDealBSS'
  *                 - type: object
  *                   properties:
  *                     dealSnapshot:
@@ -286,24 +336,152 @@ tfmRouter.route('/deals/:id/snapshot')
     tfmUpdateDealController.updateDealSnapshotPut,
   );
 
+/**
+ * @openapi
+ * /tfm/deals:
+ *   get:
+ *     summary: Get TFM deals
+ *     tags: [TFM]
+ *     description: Get TFM deals
+ *     requestBody:
+ *       description: Search string and sortBy values
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               queryParams:
+ *                 type: object
+ *                 properties:
+ *                   searchString:
+ *                     type: string
+ *                     example: HSBC bank
+ *                   sortBy:
+ *                     type: object
+ *                     example: { order: ascending }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               deals: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
+ */
 tfmRouter.route('/deals')
   .get(
     tfmGetDealsController.findDealsGet,
   );
 
+/**
+ * @openapi
+ * /tfm/deals/:id/facilities:
+ *   get:
+ *     summary: Get TFM facilities associated with a deal ID
+ *     tags: [TFM]
+ *     description: Get TFM facilities associated with a deal ID. This currenty only works for GEF facilities
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get facilities for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
+ */
 tfmRouter.route('/deals/:id/facilities')
   .get(
     tfmGetFacilitiesController.findFacilitiesGet,
   );
 
+/**
+ * @openapi
+ * /tfm/facilities/:id:
+ *   get:
+ *     summary: Get a TFM facility by ID
+ *     tags: [TFM]
+ *     description: Get a TFM facility by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/TFMFacilityGEF'
+ *       404:
+ *         description: Not found
+ */
 tfmRouter.route('/facilities/:id')
   .get(
     tfmGetFacilityController.findOneFacilityGet,
-  )
-  .put(
-    tfmUpdateFacilityController.updateFacilityPut,
   );
 
+/**
+ * @openapi
+ * /tfm/facilities/:id:
+ *   put:
+ *     summary: Update a TFM facility
+ *     tags: [TFM]
+ *     description: Update a TFM facility. Only updates facility.tfm, not facility.facilitySnapshot
+ *     requestBody:
+ *       description: Fields required to update a facility
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               facilityUpdate:
+ *                 type: string
+ *             example:
+ *               facilityUpdate: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/TFMFacilityGEF'
+ *                 - type: object
+ *                   properties:
+ *                     facilitySnapshot:
+ *                       type: object
+ *                       properties:
+ *                         aNewField:
+ *                           example: true
+ *       404:
+ *         description: Not found
+ */
+tfmRouter.route('/facilities/:id').put(
+  tfmUpdateFacilityController.updateFacilityPut,
+);
+
+/**
+ * @openapi
+ * /tfm/teams:
+ *   get:
+ *     summary: Get all teams
+ *     tags: [TFM]
+ *     description: Get all teams
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example: { teams: [ { id: 'TEAM_1' }, { id: 'TEAM_2' }  ] }
+ */
 tfmRouter.route('/teams').get(
   tfmTeamsController.listTeamsGET,
 );
