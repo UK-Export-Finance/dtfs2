@@ -170,14 +170,14 @@ const validateAboutFacility = async (req, res) => {
     });
   }
 
-  if (!saveAndReturn && body.facilityName && body.facilityName.length > 30) {
+  if (body.facilityName && body.facilityName.length > 30) {
     aboutFacilityErrors.push({
       errRef: 'facilityName',
       errMsg: 'Facility name cannot be more than 30 characters in length',
     });
   }
 
-  if (!saveAndReturn && /[^A-Za-z0-9 .,;-]/.test(body.facilityName)) {
+  if (/[^A-Za-z0-9 .,;-]/.test(body.facilityName)) {
     aboutFacilityErrors.push({
       errRef: 'facilityName',
       errMsg: 'Facility name can only contain letters, numbers and punctuation',
@@ -195,7 +195,7 @@ const validateAboutFacility = async (req, res) => {
   }
 
   if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
-    if (!saveAndReturn && (coverEndDate < coverStartDate)) {
+    if (coverEndDate < coverStartDate) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
