@@ -4,7 +4,7 @@ const { findTfmDealsLight } = require('../../v1/controllers/deal.controller');
 require('dotenv').config();
 
 const getDealsLight = async (queryParams) => {
-  const { deals } = await findTfmDealsLight(queryParams);
+  const { deals } = await findTfmDealsLight({ queryParams });
 
   const reducedDeals = dealsLightReducer(deals);
 
