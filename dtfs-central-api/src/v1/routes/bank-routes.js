@@ -18,27 +18,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *                 description: Bank id. Separate MongoDB _id
- *               name:
- *                 type: string
- *               emails:
- *                 type: array
- *                 items:
- *                   type: string
- *               companiesHouseNo:
- *                 type: string
- *               partyUrn:
- *                 type: string
- *           example:
- *             id: '9'
- *             name: UKEF test bank (Delegated)
- *             emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk']
- *             companiesHouseNo: 'UKEF0001'
- *             partyUrn: '00318345'
+ *             $ref: '#/definitions/Bank'
  *     responses:
  *       200:
  *         description: OK
@@ -71,13 +51,12 @@ bankRouter.route('/')
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               _id: '123456abc'
- *               id: '9'
- *               name: UKEF test bank (Delegated)
- *               emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk']
- *               companiesHouseNo: 'UKEF0001'
- *               partyUrn: '00318345'
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/Bank'
+ *                 - type: object
+ *                   properties:
+ *                     _id: '123456abc'
  *       404:
  *         description: Not found
  */
