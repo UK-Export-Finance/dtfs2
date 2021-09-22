@@ -1,10 +1,7 @@
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
-const mapFacilities = require('./mappings/facilities/mapFacilities');
-const mapTotals = require('./mappings/deal/mapTotals');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
-const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 const mapDeals = require('./mappings/deal/mapDeals');
 
 const mapBssDeal = (deal) => {
@@ -13,12 +10,8 @@ const mapBssDeal = (deal) => {
   const mapped = {
     _id,
     dealSnapshot: {
-      ...dealSnapshot,
+      details: dealSnapshot.details,
       submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
-      facilities: mapFacilities(dealSnapshot.facilities, dealSnapshot.details, deal.tfm),
-      dealFiles: dealSnapshot.dealFiles,
-      eligibilityCriteria: dealSnapshot.eligibility.criteria,
-      totals: mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
   };
@@ -32,10 +25,8 @@ const mapGefDeal = (deal) => {
   const mapped = {
     _id,
     dealSnapshot: {
-      _id,
       details: mapGefDealDetails(dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
-      facilities: mapGefFacilities(dealSnapshot, deal.tfm),
     },
     tfm: mapDealTfm(deal),
   };
@@ -43,7 +34,7 @@ const mapGefDeal = (deal) => {
   return mapped;
 };
 
-const dealsReducer = (deals) =>
+const dealsLightReducer = (deals) =>
   mapDeals(
     deals,
     mapBssDeal,
@@ -53,6 +44,5 @@ const dealsReducer = (deals) =>
 module.exports = {
   mapBssDeal,
   mapGefDeal,
-  mapDeals,
-  dealsReducer,
+  dealsLightReducer,
 };

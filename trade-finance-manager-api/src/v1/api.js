@@ -281,7 +281,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
 
     return response.data;
   } catch (err) {
-    return err;// do something proper here, but for now just reject failed logins..
+    return err;
   }
 };
 
