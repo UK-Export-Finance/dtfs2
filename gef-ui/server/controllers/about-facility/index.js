@@ -177,10 +177,10 @@ const validateAboutFacility = async (req, res) => {
     });
   }
 
-  if (/[^A-Za-z0-9 .,;-]/.test(body.facilityName)) {
+  if (/[^A-Za-z0-9 .,:;'-]/.test(body.facilityName)) {
     aboutFacilityErrors.push({
       errRef: 'facilityName',
-      errMsg: 'Facility name can only contain letters, numbers and punctuation',
+      errMsg: 'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
     });
   }
 

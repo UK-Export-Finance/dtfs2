@@ -23,7 +23,7 @@ const validateNameFieldValue = (fieldName, fieldValue) => {
     };
   }
 
-  if (/[^A-Za-z0-9 .,;-]/.test(fieldValue)) {
+  if (/[^A-Za-z0-9 .,:;'-]/.test(fieldValue)) {
     return {
       errCode: ERROR.FIELD_INVALID_CHARACTERS,
       errRef: fieldName,

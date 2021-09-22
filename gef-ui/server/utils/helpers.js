@@ -30,12 +30,12 @@ const ErrorMessagesMap = {
   bankInternalRefName: {
     MANDATORY_FIELD: 'Application reference name is mandatory',
     FIELD_TOO_LONG: 'Application reference name can only be up to 30 characters in length',
-    FIELD_INVALID_CHARACTERS: 'Application reference name can only contain letters, numbers and punctuation',
+    FIELD_INVALID_CHARACTERS: 'Application reference must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
   },
   additionalRefName: {
     MANDATORY_FIELD: 'Additional reference name is mandatory',
     FIELD_TOO_LONG: 'Additional reference name can only be up to 30 characters in length',
-    FIELD_INVALID_CHARACTERS: 'Additional reference name can only contain letters, numbers and punctuation',
+    FIELD_INVALID_CHARACTERS: 'Additional reference name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
   },
 };
 
