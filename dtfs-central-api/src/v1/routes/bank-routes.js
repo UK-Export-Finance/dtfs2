@@ -25,7 +25,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
  *         content:
  *           application/json:
  *             example:
- *               _id: '123456abc'
+ *               _id: 123456abc
  */
 bankRouter.route('/')
   .post(
@@ -56,7 +56,8 @@ bankRouter.route('/')
  *                 - $ref: '#/definitions/Bank'
  *                 - type: object
  *                   properties:
- *                     _id: '123456abc'
+ *                     _id:
+ *                       example: 123456abc
  *       404:
  *         description: Not found
  */
