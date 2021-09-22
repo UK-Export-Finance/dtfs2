@@ -6,7 +6,7 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% import '_macros/success-message.njk' as success %}
-{% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
+{% import '_macros/dashboard-sub-nav.njk' as dashboardSubNav %}
 {% import '_macros/pagination.njk' as pagination %}
 {% import './_macros/deal-filters.njk' as dashboardFilters %}
 
@@ -17,7 +17,7 @@
   {% if successMessage %}
     {{ success.message(
       message = successMessage
-    )}}
+    ) }}
   {% endif %}
 
   {{ mojPageHeaderActions({
@@ -31,151 +31,140 @@
     }]
   }) }}
 
-  <div class="govuk-tabs" data-module="govuk-tabs">
-    <h2 class="govuk-tabs__title">Contents</h2>
+  {{ dashboardSubNav.subnav(selected = tab) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      &nbsp
+      {# TODO - Enable aside filters #}
+      {# {{ mojButtonMenu({
+         items: [{
+            text: "Show filter",
+            href: "#",
+            classes: "govuk-button--secondary"
+            }]
+      }) }} #}
+    </div>
 
-    {{ dashboardTabs.nav(selected = tab) }}
+    <div class=" govuk-grid-column-one-quarter">
+      <div class="govuk-!-padding-left-2">
+        <form method="POST" autocomplete="off">
+          {{ govukCheckboxes({
+            name: "createdByYou",
+            classes: "govuk-checkboxes--small",
+            items: [
+              {
+                value: "true",
+                text: "Created by you",
+                checked: createdByYou,
+                attributes: {
+                "data-cy": "created-by-you",
+                'onChange': 'this.form.submit()'
+              }
+              }
+            ]
+          }) }}
+          <div class="moj-button-action">
+            {{ govukButton({
+              text: 'Submit',
+              classes: 'moj-js-hidden',
+              attributes: {
+                'data-cy': 'submit-created-by-you'
+              }
+            }) }}
+          </div>
 
-    <section class="govuk-tabs__panel">
-
-       <div class="govuk-grid-row">
-
-         <div class="govuk-grid-column-three-quarters">
-            &nbsp
-            {# TODO - Enable aside filters #}
-            {# {{ mojButtonMenu({
-               items: [{
-                  text: "Show filter",
-                  href: "#",
-                  classes: "govuk-button--secondary"
-                  }]
-            }) }} #}
-         </div>
-
-         <div class=" govuk-grid-column-one-quarter">
-            <div class="govuk-!-padding-left-2">
-               <form method="POST" autocomplete="off">
-                  {{ govukCheckboxes({
-                     name: "createdByYou",
-                     classes: "govuk-checkboxes--small",
-                     items: [
-                           {
-                              value: "true",
-                              text: "Created by you",
-                              checked: createdByYou,
-                              attributes: {
-                                 "data-cy": "created-by-you",
-                                 'onChange': 'this.form.submit()'
-                              }
-                           }
-                     ]
-                  }) }}
-                  <div class="moj-button-action">
-                     {{ govukButton({
-                           text: 'Submit',
-                           classes: 'moj-js-hidden',
-                           attributes: {
-                              'data-cy': 'submit-created-by-you'
-                           }
-                     }) }}
-                  </div>
-
-               </form>
-            </div>
-         </div>
+        </form>
       </div>
-
-      {% set items = [] %}
-      {% for deal in deals %}
-        {% set path = '/gef/application-details/' if deal.product === "GEF" else "/contract/" %}
-        {% set linkHtml %}
-          <a
-            href="{{ path }}{{ deal._id }}"
-            class="govuk-link"
-            data-cy="deal__link--{{ deal._id }}"
-          >
-            {{ deal.bankRef }}
-          </a>
-        {% endset %}
-
-        {% set item = [
-          {
-            text: deal.exporter,
-            attributes: { "data-cy": "deal__exporter--" + deal._id  }
-          },
-          {
-            html: linkHtml,
-            attributes: { "data-cy": "deal__bankRef--" + deal._id }
-          },
-          {
-            text: deal.product,
-            attributes: { "data-cy": "deal__product--" + deal._id }
-          },
-          {
-            text: deal.type or "-",
-            attributes: { "data-cy": "deal__type--" + deal._id }
-          },
-          {
-            text: deal.status | getStatusLabel,
-            attributes: { "data-cy": "deal__status--" + deal._id }
-          },
-          {
-            text: deal.lastUpdate | localiseTimestamp("D MMM YYYY", user.timezone),
-            attributes: {
-               'data-cy': 'deal__updated--' + deal._id }
-          }
-        ] %}
-
-        {% set items = (items.push(item), items) %}
-      {% endfor %}
-
-      {{ govukTable({
-        classes: "govuk-table govuk-!-margin-bottom-0",
-        head: [
-          {
-            text: "Exporter",
-            attributes: {
-              "data-cy": "deal__header--exporter"
-            }
-          },
-          {
-            text: "Bank ref",
-            attributes: {
-              "data-cy": "deal__header--bankRef"
-            }
-          },
-          {
-            text: "Product",
-            attributes: {
-              "data-cy": "deal__header--product"
-            }
-          },
-          {
-            text: "Type",
-            attributes: {
-              "data-cy": "deal__header--type"
-            }
-          },
-          {
-            text: "Status",
-            attributes: {
-              "data-cy": "deal__header--status"
-            }
-          },
-          {
-            text: "Last updated",
-            attributes: {
-              "data-cy": "deal__header--updated"
-            }
-          }
-        ],
-        rows: items
-      }) }}
-
-      {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard' if tab === 'bssDeals' else '/dashboard/gef' ) }}
-
-    </section>
-
+    </div>
   </div>
+
+  {% set items = [] %}
+  {% for deal in deals %}
+    {% set path = '/gef/application-details/' if deal.product === "GEF" else "/contract/" %}
+    {% set linkHtml %}
+      <a
+          href="{{ path }}{{ deal._id }}"
+          class="govuk-link"
+          data-cy="deal__link--{{ deal._id }}"
+      >
+        {{ deal.bankRef }}
+      </a>
+    {% endset %}
+
+    {% set item = [
+      {
+        text: deal.exporter,
+        attributes: { "data-cy": "deal__exporter--" + deal._id  }
+      },
+      {
+        html: linkHtml,
+        attributes: { "data-cy": "deal__bankRef--" + deal._id }
+      },
+      {
+        text: deal.product,
+        attributes: { "data-cy": "deal__product--" + deal._id }
+      },
+      {
+        text: deal.type or "-",
+        attributes: { "data-cy": "deal__type--" + deal._id }
+      },
+      {
+        text: deal.status | getStatusLabel,
+        attributes: { "data-cy": "deal__status--" + deal._id }
+      },
+      {
+        text: deal.lastUpdate | localiseTimestamp("D MMM YYYY", user.timezone),
+        attributes: {
+        'data-cy': 'deal__updated--' + deal._id }
+      }
+    ] %}
+
+    {% set items = (items.push(item), items) %}
+  {% endfor %}
+
+  {{ govukTable({
+    classes: "govuk-table govuk-!-margin-bottom-0",
+    head: [
+      {
+        text: "Exporter",
+        attributes: {
+        "data-cy": "deal__header--exporter"
+      }
+      },
+      {
+        text: "Bank ref",
+        attributes: {
+        "data-cy": "deal__header--bankRef"
+      }
+      },
+      {
+        text: "Product",
+        attributes: {
+        "data-cy": "deal__header--product"
+      }
+      },
+      {
+        text: "Type",
+        attributes: {
+        "data-cy": "deal__header--type"
+      }
+      },
+      {
+        text: "Status",
+        attributes: {
+        "data-cy": "deal__header--status"
+      }
+      },
+      {
+        text: "Last updated",
+        attributes: {
+        "data-cy": "deal__header--updated"
+      }
+      }
+    ],
+    rows: items
+  }) }}
+
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard' if tab === 'bssDeals' else '/dashboard/gef' ) }}
 
 {% endblock %}
