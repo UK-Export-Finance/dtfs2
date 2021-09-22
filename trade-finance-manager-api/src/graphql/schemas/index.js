@@ -430,6 +430,7 @@ type User {
 type Query {
   deal(params: DealInput): Deal
   deals(params: DealsInput): DealsQuery
+  dealsLight(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
   teamMembers(teamId: String!): [TeamMember]
   user(userId: String!): User
