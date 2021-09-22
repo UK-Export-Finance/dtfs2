@@ -5,7 +5,7 @@ const swaggerDefinition = {
   info: {
     title: 'Central API',
     version: '1.0.0',
-    description: 'TODO',
+    description: 'API to handle submissions, getting and updating data from one API to another API. (Portal > Central > TFM and vice versa) ',
   },
   tags: [
     {
