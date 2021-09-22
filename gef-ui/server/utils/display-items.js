@@ -80,6 +80,7 @@ const facilityItems = (facilityUrl, {
     {
       label: 'Stage',
       id: 'hasBeenIssued',
+      href: `${facilityUrl}?status=change`,
       method: (callback) => (isTrueSet(callback) ? STAGE.ISSUED : STAGE.UNISSUED),
     },
     {
