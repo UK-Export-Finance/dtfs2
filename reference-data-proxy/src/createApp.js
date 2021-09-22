@@ -10,11 +10,9 @@ dotenv.config();
 
 const { openRouter } = require('./v1/routes');
 
-
 // const { CORS_ORIGIN } = process.env;
 /*
 const configurePassport = require('./v1/users/passport');
-
 
 configurePassport(passport);
 initScheduler();
@@ -33,7 +31,6 @@ app.use(cors({
   origin: CORS_ORIGIN,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
 
 app.use('/v1', authRouter);
 app.use(graphQlRouter);
