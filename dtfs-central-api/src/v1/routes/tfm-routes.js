@@ -23,131 +23,6 @@ tfmRouter.use((req, res, next) => {
 
 /**
  * @openapi
- * definitions:
- *   TFMDealBSS:
- *     type: object
- *     properties:
- *       _id:
- *         type: string
- *         example: 123abc
- *       dealSnapshot:
- *         type: object
- *         properties:
- *           _id:
- *             type: string
- *             example: 123abc
- *           dealType:
- *             type: string
- *             example: BSS/EWCS
- *           status:
- *             type: string
- *             example: Submitted
- *           submissionCount:
- *             type: integer
- *             example: 1
- *       tfm:
- *         type: object
- *         properties:
- *           product:
- *             type: string
- *             example: BSS
- *           dateReceived:
- *             type: string
- *             example: '16-09-2021'
- *           stage:
- *             type: string
- *             example: Confirmed
- *           exporterCreditRating:
- *             type: string
- *             example: Acceptable (B+)
- *   TFMFacilityGEF:
- *     type: object
- *     properties:
- *       _id:
- *         type: string
- *         example: 123abc
- *       facilitySnapshot:
- *         type: object
- *         properties:
- *           _id:
- *             type: string
- *             example: 123abc
- *           applicationId:
- *             type: string
- *             example: 456abc
- *           type:
- *             type: string
- *             example: CASH
- *           value:
- *             type: integer
- *             example: 123
- *       tfm:
- *         type: object
- *         properties:
- *           ukefExposure:
- *             type: integer
- *             example: 100
- *   TFMUser:
- *     type: object
- *     properties:
- *       username:
- *         type: string
- *         example: T1_USER_1
- *       email:
- *         type: test@testing.com
- *       teams:
- *         type: array
- *         items:
- *           type: string
- *         example: ['BUSINESS_SUPPORT']
- *       timezone:
- *         type: string
- *         example: Europe/London
- *       firstName:
- *         type: string
- *         example: Joe
- *       lastName:
- *         type: string
- *         example: Bloggs
- *   TFMUsers:
- *     type: array
- *     items:
- *       type: object
- *       properties:
- *         username:
- *           type: string
- *           example: T1_USER_1
- *         email:
- *           type: test@testing.com
- *         teams:
- *           type: array
- *           items:
- *             type: string
- *           example: ['BUSINESS_SUPPORT']
- *         timezone:
- *           type: string
- *           example: Europe/London
- *         firstName:
- *           type: string
- *           example: Joe
- *         lastName:
- *           type: string
- *           example: Bloggs
- *   TFMTeam:
- *     type: object
- *     properties:
- *       id:
- *         type: string
- *         example: BUSINESS_SUPPORT
- *       name:
- *         type: string
- *         example: Business support group
- *       email:
- *         type: team@email.com
- */
-
-/**
- * @openapi
  * /tfm/deals/submit:
  *   put:
  *     summary: Submit a deal. Adds to tfm-deals and tfm-facilities collections
@@ -310,7 +185,6 @@ tfmRouter.route('/deals/:id').delete(
  *             type: object
  *             example:
  *               aNewField: true
- *               aChangedField: New value
  *     responses:
  *       200:
  *         description: OK
@@ -326,8 +200,6 @@ tfmRouter.route('/deals/:id').delete(
  *                       properties:
  *                         aNewField:
  *                           example: true
- *                         aChangedField:
- *                           example: New value
  *       404:
  *         description: Not found
  */
@@ -480,7 +352,8 @@ tfmRouter.route('/facilities/:id').put(
  *         description: OK
  *         content:
  *           application/json:
- *             example: { teams: [ { id: 'TEAM_1' }, { id: 'TEAM_2' }  ] }
+ *             schema:
+ *               $ref: '#/definitions/TFMTeams'
  */
 tfmRouter.route('/teams').get(
   tfmTeamsController.listTeamsGET,
