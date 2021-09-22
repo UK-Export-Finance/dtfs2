@@ -56,8 +56,7 @@ const createEstore = async (req, res) => {
   });
   result.folderName = createDeal.data.folderName;
 
-  const createFacilities = facilityIdentifiers.map(
-    (facilityIdentifier) => new Promise((resolve, reject) => apiEstore.createFacilityFolder({
+  const createFacilities = facilityIdentifiers.map((facilityIdentifier) => new Promise((resolve, reject) => apiEstore.createFacilityFolder({
       siteName,
       dealIdentifier,
       exporterName,
@@ -67,7 +66,7 @@ const createEstore = async (req, res) => {
       riskMarket,
     }).then(({ status, data }) => {
       if (status !== 201) {
-        reject(Error(data));
+        resolve(data);
       }
       resolve({
         facilityIdentifier,
