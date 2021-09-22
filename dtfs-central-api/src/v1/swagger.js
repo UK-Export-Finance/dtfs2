@@ -14,7 +14,7 @@ const swaggerDefinition = {
     },
     {
       name: 'Portal',
-      description: 'Get and update BSS and GEF deals and facilities. Consumed by TFM and Portal.',
+      description: 'Get and update BSS and GEF deals and facilities. Consumed by Portal and TFM.',
     },
     {
       name: 'TFM',

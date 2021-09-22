@@ -143,16 +143,107 @@ portalRouter.route('/deals').post(
   createDealController.createDealPost,
 );
 
-portalRouter.route('/deals/:id')
-  .get(
-    getDealController.findOneDealGet,
-  )
-  .put(
-    updateDealController.updateDealPut,
-  )
-  .delete(
-    deleteDealController.deleteDeal,
-  );
+/**
+ * @openapi
+ * /portal/deals/:id:
+ *   get:
+ *     summary: Get a Portal BSS deal
+ *     tags: [Portal]
+ *     description: Get a Portal BSS deal. Returns associated facilities in bondTransactions/loanTransactions structure
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/DealBSS'
+ *                 - type: object
+ *                   properties:
+ *                     _id:
+ *                       example: 123456abc
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/deals/:id').get(
+  getDealController.findOneDealGet,
+);
+
+/**
+ * @openapi
+ * /portal/deals/:id:
+ *   put:
+ *     summary: Update a Portal BSS deal
+ *     tags: [Portal]
+ *     description: Update a Portal BSS deal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               user: { _id: '123456abc' }
+ *               dealUpdate: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/DealBSS'
+ *                 - type: object
+ *                   properties:
+ *                     aNewField:
+ *                       example: true
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/deals/:id').put(
+  updateDealController.updateDealPut,
+);
+
+/**
+ * @openapi
+ * /portal/deals/:id:
+ *   delete:
+ *     summary: Delete a Portal BSS deal
+ *     tags: [TFM]
+ *     description: Delete a Portal BSS deal by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               acknowledged: true
+ *               deletedCount: 1
+ */
+portalRouter.route('/deals/:id').delete(
+  deleteDealController.deleteDeal,
+);
 
 portalRouter.route('/deals/:id/status')
   .put(
