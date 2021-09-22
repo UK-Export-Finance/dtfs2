@@ -6,7 +6,6 @@
 // 2) return a PENDING status while Azure function runs indepentantly
 // 3) Create a scheduled job to keep checking the Azure function status
 
-
 const axios = require('axios');
 const dotenv = require('dotenv');
 

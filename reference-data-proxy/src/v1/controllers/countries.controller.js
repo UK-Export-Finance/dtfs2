@@ -16,7 +16,6 @@ const sortCountries = () => {
   return sortedArray;
 };
 
-
 const findOneCountry = (findCode) => COUNTRIES.find(({ code }) => code.toLowerCase() === findCode.toLowerCase());
 exports.findOneCountry = findOneCountry;
 
