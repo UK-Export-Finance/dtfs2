@@ -60,7 +60,6 @@ const queryAllDeals = async (filters, sort, start = 0, pagesize = 0) => {
 
     return response.data;
   } catch (err) {
-    console.log(err);
     return false;
   }
 };
