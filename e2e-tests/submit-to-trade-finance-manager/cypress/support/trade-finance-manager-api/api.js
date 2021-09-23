@@ -36,5 +36,5 @@ module.exports.getUser = (username) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
-  return resp.body.user.user;
+  return resp.body.user;
 });
