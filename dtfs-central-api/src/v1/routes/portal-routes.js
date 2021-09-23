@@ -312,9 +312,9 @@ portalRouter.route('/deals/query')
 * @openapi
 * /portal/facilities:
 *   get:
-*     summary: Get all Portal BSS/EWCS facilities
+*     summary: Get all Portal BSS/EWCS facilities from Portal facilities collection
 *     tags: [Portal]
-*     description: Get all Portal BSS/EWCS facilities
+*     description: Get all Portal BSS/EWCS facilities from Portal facilities collection
 *     responses:
 *       200:
 *         description: OK
@@ -327,6 +327,50 @@ portalRouter.route('/facilities').get(
   getFacilitiesController.findAllGet,
 );
 
+/**
+ * @openapi
+ * /portal/facilities:
+ *   post:
+ *     summary: Create a BSS/EWCS facility in Portal facilities collection
+ *     tags: [Portal]
+ *     description: Create a BSS/EWCS facility in Portal facilities collection
+ *     requestBody:
+ *       description: Fields required to create a facility.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               facilityType:
+ *                 type: string
+ *               associatedDealId:
+ *                 type: string
+ *           example:
+ *             facilityType: 'bond'
+ *             associatedDealId: '123abc'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             example:
+ *               validationErrors:
+ *                 count: 2
+ *                 errorList:
+ *                   facilityType:
+ *                     order: '1'
+ *                     text: 'Facility type must be bond or loan'
+ *                   associatedDealId:
+ *                     order: '2'
+ *                     text: 'Enter the Associated deal id'
+ */
 portalRouter.route('/facilities').post(
   createFacilityController.createFacilityPost,
 );
@@ -336,17 +380,141 @@ portalRouter.route('/multiple-facilities')
     createMultipleFacilitiesController.createMultipleFacilitiesPost,
   );
 
-portalRouter.route('/facilities/:id')
-  .get(
-    getFacilityController.findOneFacilityGet,
-  )
-  .put(
-    updateFacilityController.updateFacilityPut,
-  )
-  .delete(
-    deleteFacilityController.deleteFacility,
-  );
+/**
+* @openapi
+* /portal/facilities/:id:
+*   get:
+*     summary: Get a Portal BSS/EWCS facility
+*     tags: [Portal]
+*     description: Get a Portal BSS/EWCS facility
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: Facility ID to get
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/definitions/FacilityBSS'
+*       404:
+*         description: Not found
+*/
+portalRouter.route('/facilities/:id').get(
+  getFacilityController.findOneFacilityGet,
+);
 
+/**
+ * @openapi
+ * /portal/facilities/:id:
+ *   put:
+ *     summary: Update a Portal BSS/EWCS facility
+ *     tags: [Portal]
+ *     description: Update a Portal BSS/EWCS facility
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/FacilityBSS'
+ *                 - type: object
+ *                   properties:
+ *                     aNewField:
+ *                       example: true
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/facilities/:id').put(
+  updateFacilityController.updateFacilityPut,
+);
+
+/**
+ * @openapi
+ * /portal/facilities/:id:
+ *   delete:
+ *     summary: Delete a Portal BSS/EWCS facility
+ *     tags: [TFM]
+ *     description: Delete a Portal BSS/EWCS facility by ID. Also updates the facilities array in the associated deal.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               acknowledged: true
+ *               deletedCount: 1
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/facilities/:id').delete(
+  deleteFacilityController.deleteFacility,
+);
+
+/**
+ * @openapi
+ * /portal/facilities/:id/status:
+ *   put:
+ *     summary: Update a Portal BSS/EWCS facility status
+ *     tags: [Portal]
+ *     description: Update a Portal BSS/EWCS facility status
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example: { status: Ready for Checker's approval }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/FacilityBSS'
+ *                 - type: object
+ *                   properties:
+ *                     status:
+ *                       example: Ready for Checker's approval
+ *                     previousStatus:
+ *                       example: Draft
+ *       404:
+ *         description: Not found
+ */
 portalRouter.route('/facilities/:id/status')
   .put(
     updateFacilityStatusController.updateFacilityStatusPut,
