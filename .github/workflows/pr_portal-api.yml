@@ -135,7 +135,6 @@ jobs:
       
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-      NODE_OPTIONS: "--max_old_space_size=600"
 
     steps:
     - uses: actions/checkout@v2
