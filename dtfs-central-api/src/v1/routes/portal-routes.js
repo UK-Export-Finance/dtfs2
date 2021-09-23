@@ -309,13 +309,28 @@ portalRouter.route('/deals/query')
     getDealController.queryDealsPost,
   );
 
-portalRouter.route('/facilities')
-  .get(
-    getFacilitiesController.findAllGet,
-  )
-  .post(
-    createFacilityController.createFacilityPost,
-  );
+/**
+* @openapi
+* /portal/facilities:
+*   get:
+*     summary: Get all Portal BSS/EWCS facilities
+*     tags: [Portal]
+*     description: Get all Portal BSS/EWCS facilities
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/definitions/FacilitiesBSS'
+*/
+portalRouter.route('/facilities').get(
+  getFacilitiesController.findAllGet,
+);
+
+portalRouter.route('/facilities').post(
+  createFacilityController.createFacilityPost,
+);
 
 portalRouter.route('/multiple-facilities')
   .post(
