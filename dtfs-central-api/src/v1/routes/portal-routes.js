@@ -85,9 +85,8 @@ portalRouter.route('/banks/:id')
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               deals: [ { _id: '123abc', dealType: 'BSS/EWCS' }, { _id: 456abc, dealType: 'BSS/EWCS' } ]
- *               count: 2
+ *             schema:
+ *               $ref: '#/definitions/DealsBSS'
  *       500:
  *         description: Error querying deals
  */
