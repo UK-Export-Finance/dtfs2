@@ -60,4 +60,3 @@ The GEF UI, API and data structure should be used for other products in order to
 - Reduce data mapping needs in other systems
 
 This has not been thought about as a team. Maybe BSS and GEF could use exactly the same endpoints, but have some flags for any product differences? Maybe they should be seperated? What's the best, most scalable approach?
-  
