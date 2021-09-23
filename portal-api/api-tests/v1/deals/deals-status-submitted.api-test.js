@@ -123,30 +123,26 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const createdDeal = postResult.body;
       const dealId = createdDeal._id;
 
-      await createFacilities(aBarclaysMaker, dealId, originalFacilities);
-
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      // first submit
-      const submitDealCall = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+      const promises = await Promise.all([
+        await createFacilities(aBarclaysMaker, dealId, originalFacilities),
+        await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
+        await as(aSuperuser).get(`/v1/deals/${dealId}`),
+        await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
+        await as(aSuperuser).get(`/v1/deals/${dealId}`),
+      ]);
 
-      expect(submitDealCall.status).toEqual(200);
-      expect(submitDealCall.body).toBeDefined();
-
-      const dealAfterFirstSubmission = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+      const { dealAfterFirstSubmission } = promises[1];
 
       expect(dealAfterFirstSubmission.body.deal.details.submissionCount).toEqual(1);
 
-      // second submit
-      const submitDealCallAgain = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+      const { dealAfterSecondSubmission } = promises[4];
 
-      expect(submitDealCallAgain.status).toEqual(200);
-      expect(submitDealCallAgain.body).toBeDefined();
-
-      const dealAfterSecondSubmission = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+      expect(dealAfterSecondSubmission.status).toEqual(200);
 
       expect(dealAfterSecondSubmission.body.deal.details.submissionCount).toEqual(2);
     });
