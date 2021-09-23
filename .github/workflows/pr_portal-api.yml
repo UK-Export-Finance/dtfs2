@@ -160,7 +160,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T portal-api npm run api-test
+        docker-compose exec -T portal-api node --max_old_space_size=600 npm run api-test
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
