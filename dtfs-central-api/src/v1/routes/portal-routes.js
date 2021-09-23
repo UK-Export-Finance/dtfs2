@@ -45,6 +45,14 @@ portalRouter.route('/banks/:id')
     getBankController.findOneBankGet,
   );
 
+
+// TODO: add these to definition
+// summary
+// comments
+// editedBy
+// bondTransactions
+// loanTransactions
+
 /**
  * @openapi
  * /portal/deals:
@@ -245,6 +253,47 @@ portalRouter.route('/deals/:id').delete(
   deleteDealController.deleteDeal,
 );
 
+/**
+ * @openapi
+ * /portal/deals/:id/status:
+ *   put:
+ *     summary: Update a Portal BSS deal status
+ *     tags: [Portal]
+ *     description: Update a Portal BSS deal status
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               status: Acknowledged by UKEF
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/DealBSS'
+ *                 - type: object
+ *                   properties:
+ *                     details:
+ *                       properties:
+ *                         previousStatus:
+ *                           example: Submitted
+ *                         status:
+ *                           example: Acknowledged by UKEF
+ *       404:
+ *         description: Not found
+ */
 portalRouter.route('/deals/:id/status')
   .put(
     updateDealStatusController.updateDealStatusPut,

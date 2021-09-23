@@ -18,7 +18,7 @@
  *       firstname:
  *         type: string
  *         example: Joe
- *       lastname:
+ *       surname:
  *         type: string
  *         example: Bloggs
  *       bank:
