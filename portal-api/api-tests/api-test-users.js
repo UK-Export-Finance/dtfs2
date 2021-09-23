@@ -228,7 +228,7 @@ module.exports.initialise = async (app) => {
 
       loadedUsers.push({
         ...testUser,
-        _id: body._id,
+        _id: body.user._id,
         token,
       });
     }
