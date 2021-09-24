@@ -25,6 +25,7 @@ const automaticCover = async (req, res) => {
       applicationId,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -93,6 +94,7 @@ const validateAutomaticCover = async (req, res, next) => {
 
     return res.redirect(`/gef/application-details/${applicationId}`);
   } catch (err) {
+    console.error(err);
     return next(err);
   }
 };
