@@ -30,6 +30,7 @@ const facilities = async (req, res) => {
       status,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };

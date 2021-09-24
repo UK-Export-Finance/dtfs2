@@ -13,6 +13,7 @@ const submitToUkef = async (req, res) => {
       maxCommentLength: MAX_COMMENT_LENGTH,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };
