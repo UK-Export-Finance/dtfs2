@@ -503,7 +503,7 @@ jobs:
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }}
 
- number-generator-function:
+  number-generator-function:
     name: Promote Number Generator Functions
     runs-on: ubuntu-latest
     needs: set-environment
