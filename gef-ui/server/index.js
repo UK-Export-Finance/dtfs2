@@ -13,9 +13,11 @@ const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 
 const configureNunjucks = require('./nunjucks-configuration');
+const sentry = require('./utils/sentry');
 
 const app = express();
 
+app.use(sentry);
 const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {
@@ -42,7 +44,7 @@ const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS
 
 redisClient.on('error', (err) => {
   // eslint-disable-next-line no-console
-  console.log(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
 });
 
 redisClient.on('ready', () => {

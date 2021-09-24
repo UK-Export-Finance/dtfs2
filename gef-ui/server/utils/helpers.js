@@ -23,6 +23,7 @@ const apiErrorHandler = ({ code, response }) => {
     return response;
   }
 
+  console.error(response);
   throw httpError(response.status, response.statusText);
 };
 
