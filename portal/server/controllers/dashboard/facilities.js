@@ -56,7 +56,12 @@ exports.bssFacilities = async (req, res) => {
 exports.gefFacilities = async (req, res) => {
   const tab = 'gefFacilities';
   const { userToken } = requestParams(req);
-  const filters = [];
+  const { user } = req.session;
+  const facilityFilters = [];
+
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: 'BANK_CHECK', operator: 'eq' });
+
+  const filters = [...facilityFilters];
 
   const { count, facilities: rawFacilities } = await getApiData(api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
