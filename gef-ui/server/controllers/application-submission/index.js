@@ -48,6 +48,7 @@ const postApplicationSubmission = async (req, res, next) => {
 
     await api.setApplicationStatus(applicationId, PROGRESS.BANK_CHECK);
   } catch (err) {
+    console.error(err);
     return next(err);
   }
 
