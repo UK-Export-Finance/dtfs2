@@ -118,10 +118,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     it('increases submissionCount on each submission', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+      const createdDeal = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
-      const createdDeal = postResult.body;
-      const dealId = createdDeal._id;
+      const dealId = createdDeal.body._id;
 
       const statusUpdate = {
         status: 'Submitted',
@@ -129,22 +128,13 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       };
 
       const promises = await Promise.all([
-        await createFacilities(aBarclaysMaker, dealId, originalFacilities),
-        await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
-        await as(aSuperuser).get(`/v1/deals/${dealId}`),
         await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
         await as(aSuperuser).get(`/v1/deals/${dealId}`),
       ]);
 
-      const { dealAfterFirstSubmission } = promises[1];
+      const dealAfterSubmission = promises[1];
 
-      expect(dealAfterFirstSubmission.body.deal.details.submissionCount).toEqual(1);
-
-      const { dealAfterSecondSubmission } = promises[4];
-
-      expect(dealAfterSecondSubmission.status).toEqual(200);
-
-      expect(dealAfterSecondSubmission.body.deal.details.submissionCount).toEqual(2);
+      expect(dealAfterSubmission.body.deal.details.submissionCount).toEqual(1);
     });
 
     // NOTE: Workflow integration has been disabled and replaced with TFM integration.
