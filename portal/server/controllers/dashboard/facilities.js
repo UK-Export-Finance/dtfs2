@@ -14,8 +14,12 @@ const primaryNav = 'home';
 exports.bssFacilities = async (req, res) => {
   const tab = 'bssFacilities';
   const { userToken } = requestParams(req);
+  const { user } = req.session;
+  const facilityFilters = [];
 
-  const filters = [];
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'details.status', value: "Ready for Checker's approval", operator: 'eq' });
+
+  const filters = [...facilityFilters];
 
   const { transactions, count } = await getApiData(api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
