@@ -33,6 +33,8 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
+    "@sentry/integrations": "^6.13.2",
+    "@sentry/node": "^6.13.2",
     "axios": "^0.21.1",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
