@@ -62,7 +62,7 @@ context('Mandatory Criteria Page', () => {
     it('takes the user back to the dashboard', () => {
       cy.on('uncaught:exception', () => false);
       mandatoryCriteria.cancelButton().click();
-      cy.url().should('eq', relative('/dashboard/gef/0'));
+      cy.url().should('eq', relative('/dashboard/gef'));
     });
   });
 });
