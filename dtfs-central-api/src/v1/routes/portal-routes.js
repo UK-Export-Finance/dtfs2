@@ -520,6 +520,21 @@ portalRouter.route('/facilities/:id/status')
     updateFacilityStatusController.updateFacilityStatusPut,
   );
 
+/**
+ * @openapi
+ * /gef/deals:
+ *   post:
+ *     summary: Create a GEF deal in Portal gef-applications collection
+ *     tags: [Portal]
+ *     description: Create a deal in Portal gef-applications collection
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ */
 portalRouter.route('/gef/deals')
   .post(
     createGefDealController.createDealPost,
@@ -530,6 +545,21 @@ portalRouter.route('/gef/deals/:id')
     getGefDealController.findOneDealGet,
   );
 
+/**
+* @openapi
+* /gef/exporter:
+*   post:
+*     summary: Create a GEF exporter in Portal gef-exporter collection
+*     tags: [Portal]
+*     description: Create a exporter in Portal gef-exporter collection
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             example:
+*               _id: '123456abc'
+*/
 portalRouter.route('/gef/exporter')
   .post(
     createGefExporterController.createExporterPost,
@@ -545,6 +575,23 @@ portalRouter.route('/gef/deals/:id/facilities')
     getGefFacilitiesController.findAllGet,
   );
 
+/**
+* @openapi
+* /gef/facilities:
+*   post:
+*     summary: Create a Cash/Contingent facility in Portal gef-facilities collection
+*     tags: [Portal]
+*     description: Create a facility in Portal gef-facilities collection
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             example:
+*               _id: '123456abc'
+*       404:
+*         description: Deal not found
+*/
 portalRouter.route('/gef/facilities')
   .post(
     createGefFacilityController.createFacilityPost,
