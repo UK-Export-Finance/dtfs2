@@ -93,7 +93,7 @@ context('Name Application Page', () => {
     it('takes the user back to the dashboard', () => {
       cy.on('uncaught:exception', () => false);
       nameApplication.cancelButton().click();
-      cy.url().should('eq', relative('/dashboard/gef/0'));
+      cy.url().should('eq', relative('/dashboard/gef'));
     });
   });
 });
