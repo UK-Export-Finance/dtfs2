@@ -1,5 +1,5 @@
 const page = {
-  visit: () => cy.visit('/dashboard/gef'),
+  visit: () => cy.visit('/dashboard'),
   createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
