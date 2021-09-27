@@ -14,6 +14,8 @@ const retryOptions = require('../helpers/retryOptions');
 const CONSTANTS = require('../constants');
 
 module.exports = df.orchestrator(function* numbergenerator(context) {
+  console.log('Azure functions - Number Generator Orchestrator called');
+
 //  const { dealId, facilities = [] } = context.df.getInput();
   const { entityType } = context.df.getInput();
 
@@ -35,6 +37,7 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
 
     return result;
   } catch (error) {
+    console.error('Azure functions - error calling Number Generator ActivityWithRetry');
     /*
       Regex to extract JSON string from error message
         Error msg is in form of:
