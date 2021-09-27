@@ -13,6 +13,7 @@ const submitToUkef = async (req, res) => {
       maxCommentLength: MAX_COMMENT_LENGTH,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -22,8 +23,20 @@ const createSubmissionToUkef = async (req, res) => {
   const { user, userToken } = req.session;
   const { applicationId } = params;
   const { comment } = body;
-  const application = await api.getApplication(applicationId);
-  const checker = await api.getUserDetails(user._id, userToken);
+  let application;
+  console.error('GEF Application is being submitted to UKEF--TFM');
+  try {
+    application = await api.getApplication(applicationId);
+  } catch (err) {
+    console.error(err);
+  }
+
+  let checker;
+  try {
+    checker = await api.getUserDetails(user._id, userToken);
+  } catch (err) {
+    console.error(err);
+  }
 
   try {
     if (comment.length > MAX_COMMENT_LENGTH) {
@@ -58,6 +71,7 @@ const createSubmissionToUkef = async (req, res) => {
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk');
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };

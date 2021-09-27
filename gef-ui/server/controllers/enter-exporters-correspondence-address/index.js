@@ -34,6 +34,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       backUrl,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -81,6 +82,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     }
     return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };
