@@ -35,7 +35,4 @@
  *       sessionIdentifier:
  *         type: string
  *         example: '81312c393'
- *       hash:
- *         type: string
- *         example: '81312c393'
  */

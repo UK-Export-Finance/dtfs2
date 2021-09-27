@@ -6,7 +6,7 @@ const getDealController = require('../controllers/portal/deal/get-deal.controlle
 const updateDealController = require('../controllers/portal/deal/update-deal.controller');
 const updateDealStatusController = require('../controllers/portal/deal/update-deal-status.controller');
 const deleteDealController = require('../controllers/portal/deal/delete-deal.controller');
-const addDealController = require('../controllers/portal/deal/add-deal-comment.controller');
+const addDealCommentController = require('../controllers/portal/deal/add-deal-comment.controller');
 
 const createFacilityController = require('../controllers/portal/facility/create-facility.controller');
 const createMultipleFacilitiesController = require('../controllers/portal/facility/create-multiple-facilities.controller');
@@ -298,9 +298,54 @@ portalRouter.route('/deals/:id/status')
     updateDealStatusController.updateDealStatusPut,
   );
 
+/**
+ * @openapi
+ * /portal/deals/:id/comment:
+ *   post:
+ *     summary: Add a comment to a BSS deal in Portal deals collection
+ *     tags: [Portal - BSS]
+ *     description: Add a comment to a BSS deal in Portal deals collection
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to add comment
+ *     requestBody:
+ *       description: Required fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               commentType:
+ *                 type: string
+ *                 example: 'comment'
+ *               comment:
+ *                 type: object
+ *                 properties:
+ *                   user:
+ *                     type: object
+ *                     schema:
+ *                       $ref: '#/definitions/User'
+ *                   text:
+ *                     type: string
+ *                     example: Amazing comment
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/DealBSS'
+ *       404:
+ *         description: Deal not found
+ */
 portalRouter.route('/deals/:id/comment')
   .post(
-    addDealController.addDealCommentPost,
+    addDealCommentController.addDealCommentPost,
   );
 
 portalRouter.route('/deals/query')
@@ -309,20 +354,20 @@ portalRouter.route('/deals/query')
   );
 
 /**
-* @openapi
-* /portal/facilities:
-*   get:
-*     summary: Get all Portal BSS/EWCS facilities from Portal facilities collection
-*     tags: [Portal - BSS]
-*     description: Get all Portal BSS/EWCS facilities from Portal facilities collection
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/definitions/FacilitiesBSS'
-*/
+ * @openapi
+ * /portal/facilities:
+ *   get:
+ *     summary: Get all Portal BSS/EWCS facilities from Portal facilities collection
+ *     tags: [Portal - BSS]
+ *     description: Get all Portal BSS/EWCS facilities from Portal facilities collection
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/FacilitiesBSS'
+ */
 portalRouter.route('/facilities').get(
   getFacilitiesController.findAllGet,
 );
@@ -381,29 +426,29 @@ portalRouter.route('/multiple-facilities')
   );
 
 /**
-* @openapi
-* /portal/facilities/:id:
-*   get:
-*     summary: Get a Portal BSS/EWCS facility
-*     tags: [Portal - BSS]
-*     description: Get a Portal BSS/EWCS facility
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: Facility ID to get
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/definitions/FacilityBSS'
-*       404:
-*         description: Not found
-*/
+ * @openapi
+ * /portal/facilities/:id:
+ *   get:
+ *     summary: Get a Portal BSS/EWCS facility
+ *     tags: [Portal - BSS]
+ *     description: Get a Portal BSS/EWCS facility
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/FacilityBSS'
+ *       404:
+ *         description: Not found
+ */
 portalRouter.route('/facilities/:id').get(
   getFacilityController.findOneFacilityGet,
 );
@@ -541,127 +586,127 @@ portalRouter.route('/gef/deals')
   );
 
 /**
-* @openapi
-* /gef/deals/:id:
-*   get:
-*     summary: Get a GEF deal
-*     tags: [Portal - GEF]
-*     description: Get a GEF deal
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: Deal ID to get
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/definitions/DealGEF'
-*       404:
-*         description: Not found
-*/
+ * @openapi
+ * /gef/deals/:id:
+ *   get:
+ *     summary: Get a GEF deal
+ *     tags: [Portal - GEF]
+ *     description: Get a GEF deal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/DealGEF'
+ *       404:
+ *         description: Not found
+ */
 portalRouter.route('/gef/deals/:id')
   .get(
     getGefDealController.findOneDealGet,
   );
 
 /**
-* @openapi
-* /gef/exporter:
-*   post:
-*     summary: Create a GEF exporter in Portal gef-exporter collection
-*     tags: [Portal - GEF]
-*     description: Create a exporter in Portal gef-exporter collection
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             example:
-*               _id: '123456abc'
-*/
+ * @openapi
+ * /gef/exporter:
+ *   post:
+ *     summary: Create a GEF exporter in Portal gef-exporter collection
+ *     tags: [Portal - GEF]
+ *     description: Create a exporter in Portal gef-exporter collection
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ */
 portalRouter.route('/gef/exporter')
   .post(
     createGefExporterController.createExporterPost,
   );
 
 /**
-* @openapi
-* /gef/exporter/:id:
-*   get:
-*     summary: Get a GEF exporter
-*     tags: [Portal - GEF]
-*     description: Get a GEF exporter
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: Exporter ID to get
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/definitions/GEFExporter'
-*       404:
-*         description: Not found
-*/
+ * @openapi
+ * /gef/exporter/:id:
+ *   get:
+ *     summary: Get a GEF exporter
+ *     tags: [Portal - GEF]
+ *     description: Get a GEF exporter
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Exporter ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GEFExporter'
+ *       404:
+ *         description: Not found
+ */
 portalRouter.route('/gef/exporter/:id')
   .get(
     getGefExporterController.findOneExporterGet,
   );
 
 /**
-* @openapi
-* /gef/deals/:id/facilites:
-*   get:
-*     summary: Get all Cash/Contingent facilities associated with a deal
-*     tags: [Portal - GEF]
-*     description: Get all facilities associated with a deal by deal ID
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: Deal ID to get facilities for
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/definitions/FacilitiesGEF'
-*/
+ * @openapi
+ * /gef/deals/:id/facilites:
+ *   get:
+ *     summary: Get all Cash/Contingent facilities associated with a deal
+ *     tags: [Portal - GEF]
+ *     description: Get all facilities associated with a deal by deal ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get facilities for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/FacilitiesGEF'
+ */
 portalRouter.route('/gef/deals/:id/facilities')
   .get(
     getGefFacilitiesController.findAllGet,
   );
 
 /**
-* @openapi
-* /gef/facilities:
-*   post:
-*     summary: Create a Cash/Contingent facility in Portal gef-facilities collection
-*     tags: [Portal - GEF]
-*     description: Create a facility in Portal gef-facilities collection
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             example:
-*               _id: '123456abc'
-*       404:
-*         description: Deal not found
-*/
+ * @openapi
+ * /gef/facilities:
+ *   post:
+ *     summary: Create a Cash/Contingent facility in Portal gef-facilities collection
+ *     tags: [Portal - GEF]
+ *     description: Create a facility in Portal gef-facilities collection
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ *       404:
+ *         description: Deal not found
+ */
 portalRouter.route('/gef/facilities')
   .post(
     createGefFacilityController.createFacilityPost,
