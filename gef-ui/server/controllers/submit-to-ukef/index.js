@@ -24,7 +24,7 @@ const createSubmissionToUkef = async (req, res) => {
   const { applicationId } = params;
   const { comment } = body;
   let application;
-  console.error('GEF Application is being submitted to UKEF--TFM');
+  console.log('GEF Application is being submitted to UKEF--TFM');
   try {
     application = await api.getApplication(applicationId);
   } catch (err) {
