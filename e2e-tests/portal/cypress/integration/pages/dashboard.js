@@ -1,5 +1,5 @@
 const page = {
-  visit: () => cy.visit('/dashboard'),
+  visit: () => cy.visit('/dashboard/bss/0'),
 
   createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
 
