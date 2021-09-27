@@ -338,6 +338,20 @@
  *               loanInGbp:
  *                 type: string
  *                 example: '8,000'
+ *       comments:
+ *         type: array
+ *         items:
+ *           type: object
+ *           properties:
+ *             text:
+ *               type: string
+ *               example: Amazing comment
+ *             timestamp:
+ *               type: string
+ *               example: '1632763411621'
+ *             user:
+ *               type: object
+ *               $ref: '#/definitions/User'
  *   DealsBSS:
  *     type: object
  *     properties:
