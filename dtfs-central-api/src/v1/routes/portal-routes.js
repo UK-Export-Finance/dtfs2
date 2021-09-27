@@ -58,7 +58,7 @@ portalRouter.route('/banks/:id')
  * /portal/deals:
  *   get:
  *     summary: Get, filter and sort multiple deals in Portal deals collection
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     requestBody:
  *       content:
  *         application/json:
@@ -99,7 +99,7 @@ portalRouter.route('/deals').get(
  * /portal/deals:
  *   post:
  *     summary: Create a BSS deal in Portal deals collection
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Create a deal in Portal deals collection
  *     requestBody:
  *       description: Fields required to create a deal. Creates other default fields
@@ -155,7 +155,7 @@ portalRouter.route('/deals').post(
  * /portal/deals/:id:
  *   get:
  *     summary: Get a Portal BSS deal
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Get a Portal BSS deal. Returns associated facilities in bondTransactions/loanTransactions structure
  *     parameters:
  *       - in: path
@@ -188,7 +188,7 @@ portalRouter.route('/deals/:id').get(
  * /portal/deals/:id:
  *   put:
  *     summary: Update a Portal BSS deal
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Update a Portal BSS deal
  *     parameters:
  *       - in: path
@@ -257,7 +257,7 @@ portalRouter.route('/deals/:id').delete(
  * /portal/deals/:id/status:
  *   put:
  *     summary: Update a Portal BSS deal status
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Update a Portal BSS deal status
  *     parameters:
  *       - in: path
@@ -313,7 +313,7 @@ portalRouter.route('/deals/query')
 * /portal/facilities:
 *   get:
 *     summary: Get all Portal BSS/EWCS facilities from Portal facilities collection
-*     tags: [Portal]
+*     tags: [Portal - BSS]
 *     description: Get all Portal BSS/EWCS facilities from Portal facilities collection
 *     responses:
 *       200:
@@ -332,7 +332,7 @@ portalRouter.route('/facilities').get(
  * /portal/facilities:
  *   post:
  *     summary: Create a BSS/EWCS facility in Portal facilities collection
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Create a BSS/EWCS facility in Portal facilities collection
  *     requestBody:
  *       description: Fields required to create a facility.
@@ -385,7 +385,7 @@ portalRouter.route('/multiple-facilities')
 * /portal/facilities/:id:
 *   get:
 *     summary: Get a Portal BSS/EWCS facility
-*     tags: [Portal]
+*     tags: [Portal - BSS]
 *     description: Get a Portal BSS/EWCS facility
 *     parameters:
 *       - in: path
@@ -413,7 +413,7 @@ portalRouter.route('/facilities/:id').get(
  * /portal/facilities/:id:
  *   put:
  *     summary: Update a Portal BSS/EWCS facility
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Update a Portal BSS/EWCS facility
  *     parameters:
  *       - in: path
@@ -482,7 +482,7 @@ portalRouter.route('/facilities/:id').delete(
  * /portal/facilities/:id/status:
  *   put:
  *     summary: Update a Portal BSS/EWCS facility status
- *     tags: [Portal]
+ *     tags: [Portal - BSS]
  *     description: Update a Portal BSS/EWCS facility status
  *     parameters:
  *       - in: path
@@ -525,7 +525,7 @@ portalRouter.route('/facilities/:id/status')
  * /gef/deals:
  *   post:
  *     summary: Create a GEF deal in Portal gef-applications collection
- *     tags: [Portal]
+ *     tags: [Portal - GEF]
  *     description: Create a deal in Portal gef-applications collection
  *     responses:
  *       200:
@@ -540,6 +540,30 @@ portalRouter.route('/gef/deals')
     createGefDealController.createDealPost,
   );
 
+/**
+* @openapi
+* /gef/deals/:id:
+*   get:
+*     summary: Get a GEF deal
+*     tags: [Portal - GEF]
+*     description: Get a GEF deal
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: Deal ID to get
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/definitions/DealGEF'
+*       404:
+*         description: Not found
+*/
 portalRouter.route('/gef/deals/:id')
   .get(
     getGefDealController.findOneDealGet,
@@ -550,7 +574,7 @@ portalRouter.route('/gef/deals/:id')
 * /gef/exporter:
 *   post:
 *     summary: Create a GEF exporter in Portal gef-exporter collection
-*     tags: [Portal]
+*     tags: [Portal - GEF]
 *     description: Create a exporter in Portal gef-exporter collection
 *     responses:
 *       200:
@@ -565,11 +589,57 @@ portalRouter.route('/gef/exporter')
     createGefExporterController.createExporterPost,
   );
 
+/**
+* @openapi
+* /gef/exporter/:id:
+*   get:
+*     summary: Get a GEF exporter
+*     tags: [Portal - GEF]
+*     description: Get a GEF exporter
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: Exporter ID to get
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/definitions/GEFExporter'
+*       404:
+*         description: Not found
+*/
 portalRouter.route('/gef/exporter/:id')
   .get(
     getGefExporterController.findOneExporterGet,
   );
 
+/**
+* @openapi
+* /gef/deals/:id/facilites:
+*   get:
+*     summary: Get all Cash/Contingent facilities associated with a deal
+*     tags: [Portal - GEF]
+*     description: Get all facilities associated with a deal by deal ID
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: Deal ID to get facilities for
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/definitions/FacilitiesGEF'
+*/
 portalRouter.route('/gef/deals/:id/facilities')
   .get(
     getGefFacilitiesController.findAllGet,
@@ -580,7 +650,7 @@ portalRouter.route('/gef/deals/:id/facilities')
 * /gef/facilities:
 *   post:
 *     summary: Create a Cash/Contingent facility in Portal gef-facilities collection
-*     tags: [Portal]
+*     tags: [Portal - GEF]
 *     description: Create a facility in Portal gef-facilities collection
 *     responses:
 *       200:
