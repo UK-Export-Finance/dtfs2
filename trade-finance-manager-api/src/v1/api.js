@@ -553,8 +553,12 @@ const findOneGefDeal = async (dealId) => {
       },
     });
 
+    console.log('TFM API findOneGefDeal response status', response.status);
+    console.log('TFM API findOneGefDeal response body \n', response.body);
+
     return response.data;
-  } catch ({ response }) {
+  } catch (err) {
+    console.log('TFM API findOneGefDeal catch error \n', err);
     return false;
   }
 };
