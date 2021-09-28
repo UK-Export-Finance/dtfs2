@@ -18,29 +18,7 @@ const createUserController = require('../controllers/user/create-user.controller
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               email:
- *                 type: string
- *               teams:
- *                 type: array
- *                 items:
- *                   type: string
- *               timezone:
- *                 type: string
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *           example:
- *             username: T1_USER_1
- *             email: test@testing.com
- *             teams: ['TEAM1', 'TEAM2']
- *             timezone: Europe/London
- *             firstName: Joe
- *             lastName: Bloggs
+ *             $ref: '#/definitions/User'
  *     responses:
  *       200:
  *         description: OK
@@ -73,14 +51,13 @@ userRouter.route('/')
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               _id: '123456abc'
- *               username: T1_USER_1
- *               email: test@testing.com
- *               teams: ['TEAM1', 'TEAM2']
- *               timezone: Europe/London
- *               firstName: Joe
- *               lastName: Bloggs
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/User'
+ *                 - type: object
+ *                   properties:
+ *                     _id:
+ *                       example: 123456abc
  *       404:
  *         description: Not found
  */
