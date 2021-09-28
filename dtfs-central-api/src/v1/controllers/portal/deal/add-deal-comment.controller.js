@@ -37,7 +37,6 @@ exports.addDealCommentPost = async (req, res) => {
 
     if (deal) {
       const { commentType, comment } = req.body;
-      console.log('*** ADD DEAL COMMENT req body \n', req.body);
 
       const updatedDeal = await addDealComment(
         dealId,
@@ -45,8 +44,6 @@ exports.addDealCommentPost = async (req, res) => {
         comment,
         req.routePath,
       );
-
-      console.log('*** ADD DEAL COMMENT RESPONSE updatedDeal \n', updatedDeal);
 
       res.status(200).json(updatedDeal);
     }
