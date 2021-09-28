@@ -3,7 +3,7 @@ import api from '../../api';
 const getLogin = (req, res) => res.render('login.njk');
 
 const postLogin = async (req, res) => {
-  const { user } = await api.login(req.body.email);
+  const user = await api.login(req.body.email);
 
   if (!user) {
     return res.render('login.njk');

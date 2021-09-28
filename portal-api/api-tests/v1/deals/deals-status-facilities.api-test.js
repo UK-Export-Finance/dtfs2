@@ -72,16 +72,25 @@ describe('/v1/deals/:id/status - facilities', () => {
         createdDeal = postResult.body;
         dealId = createdDeal._id;
 
-        createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
-
-        completedDeal.mockFacilities = createdFacilities;
-
         const statusUpdate = {
           status: 'Ready for Checker\'s approval',
           comments: 'test',
         };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+        const promises = await Promise.all([
+          await createFacilities(aBarclaysMaker, dealId, originalFacilities),
+          await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
+        ]);
+
+        const [
+          facilities,
+          deal,
+        ] = promises;
+
+        createdFacilities = facilities;
+        completedDeal.mockFacilities = createdFacilities;
+
+        updatedDeal = deal;
       });
 
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
@@ -252,6 +261,8 @@ describe('/v1/deals/:id/status - facilities', () => {
       describe('when a deal is MIA and has been approved', () => {
         let createdDeal;
         let updatedDeal;
+        let dealId;
+        let createdFacilities;
 
         beforeEach(async () => {
           completedDeal.status = 'Accepted by UKEF (without conditions)';
@@ -265,7 +276,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           createdDeal = postResult.body;
           dealId = createdDeal._id;
 
-          const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
+          createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
           completedDeal.mockFacilities = createdFacilities;
 
@@ -307,7 +318,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
+            const issuedLoansThatShouldBeUpdated = createdFacilities.filter((f) =>
               f.facilityType === 'loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
