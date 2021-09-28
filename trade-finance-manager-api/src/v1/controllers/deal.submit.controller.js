@@ -26,6 +26,8 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const getDeal = async (dealId, dealType) => {
   let deal;
 
+  console.log('TFM API getDeal ', dealId);
+
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
   }
@@ -44,6 +46,8 @@ const submitDealBeforeUkefIds = async (dealId, dealType) => {
   console.log('TFM API submitDealBeforeUkefIds called');
 
   const deal = await getDeal(dealId, dealType);
+
+  console.log('TFM API submitDealBeforeUkefIds - deal ', deal);
 
   if (!deal) {
     console.error('TFM API submitDealBeforeUkefIds - deal not found');
@@ -158,6 +162,8 @@ const submitDealPUT = async (req, res) => {
     dealType,
     checker,
   } = req.body;
+
+  console.log('TFM API submitDealPUT ', req.body);
 
   const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
 
