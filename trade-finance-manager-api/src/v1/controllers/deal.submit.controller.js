@@ -6,11 +6,9 @@ const {
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
-const { addDealProduct } = require('./deal.add-product');
-const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
-const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
-const { addDealDateReceived } = require('./deal.add-date-received');
+
+const addTfmDealData = require('./deal-add-tfm-data');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
@@ -86,19 +84,13 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   if (firstDealSubmission) {
     await updatePortalDealStatus(mappedDeal);
 
-    const updatedDealWithPartyUrn = await addPartyUrns(mappedDeal);
+    const dealWithTfmData = await addTfmDealData(mappedDeal);
 
-    const updatedDealWithProduct = await addDealProduct(updatedDealWithPartyUrn);
+    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
 
-    const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithProduct);
+    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
 
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
-
-    const updatedDealWithTfmDealStage = await addDealStageAndHistory(updatedDealWithDealCurrencyConversions);
-
-    const updatedDealWithTfmDateReceived = await addDealDateReceived(updatedDealWithTfmDealStage);
-
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDateReceived);
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
 
     let updatedDealWithCreateEstore = updatedDealWithUpdatedFacilities;
 

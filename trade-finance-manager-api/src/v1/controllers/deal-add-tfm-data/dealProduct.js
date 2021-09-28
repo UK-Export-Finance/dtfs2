@@ -1,7 +1,6 @@
-const api = require('../api');
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('../../../constants');
 
-const mapDealProduct = (deal) => {
+const dealProduct = (deal) => {
   const { dealType } = deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -33,29 +32,4 @@ const mapDealProduct = (deal) => {
   return null;
 };
 
-const addDealProduct = async (deal) => {
-  const {
-    _id: dealId, // eslint-disable-line no-underscore-dangle
-    tfm,
-  } = deal;
-
-  const dealUpdate = {
-    tfm: {
-      ...tfm,
-      product: mapDealProduct(deal),
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
-
-  return {
-    ...deal,
-    tfm: updatedDeal.tfm,
-  };
-};
-
-
-module.exports = {
-  mapDealProduct,
-  addDealProduct,
-};
+module.exports = dealProduct;

@@ -3,10 +3,10 @@ require('moment-timezone'); // monkey-patch to provide moment().tz(;
 
 const {
   generateDateFromSubmissionDate,
-  addDealDateReceived,
-} = require('./deal.add-date-received');
+  dateReceived,
+} = require('./dateReceived');
 
-describe('deal.add-date-received', () => {
+describe('deal submit - add TFM data - date received', () => {
   const mockSubmissionDate = '1623411666338';
 
   const expectedSubmissionDate = (date) => {
@@ -24,23 +24,11 @@ describe('deal.add-date-received', () => {
     });
   });
 
-  describe('addDealDateReceived', () => {
-    it('should add dateReceived to deal.tfm', async () => {
-      const mockDeal = {
-        submissionDate: mockSubmissionDate,
-        tfm: {
-          test: true,
-        },
-      };
+  it('should return timestmap', async () => {
+    const result = await dateReceived(mockSubmissionDate);
 
-      const result = await addDealDateReceived(mockDeal);
+    const expected = generateDateFromSubmissionDate(mockSubmissionDate);
 
-      const expectedDate = generateDateFromSubmissionDate(mockSubmissionDate);
-
-      expect(result.tfm).toEqual({
-        ...mockDeal.tfm,
-        dateReceived: expectedDate,
-      });
-    });
+    expect(result).toEqual(expected);
   });
 });
