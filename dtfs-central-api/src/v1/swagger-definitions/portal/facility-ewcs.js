@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   FacilityBSS:
+ *   FacilityEWCS:
  *     type: object
  *     properties:
  *       _id:
@@ -12,7 +12,7 @@
  *         example: 456abc
  *       facilityType:
  *         type: string
- *         example: bond
+ *         example: loan
  *       createdDate:
  *         type: string
  *         example: '1632392646415'
@@ -31,6 +31,12 @@
  *       facilityStage:
  *         type: string
  *         example: Issued
+ *       bankReferenceNumber:
+ *         type: string
+ *         example: 123-reference
+ *       disbursementAmount:
+ *         type: string
+ *         example: '80'
  *       requestedCoverStartDate:
  *         type: string
  *         example: 1632392644463.0
@@ -96,43 +102,25 @@
  *       ukefGuaranteeInMonths:
  *         type: string
  *         example: '12'
- *       uniqueIdentificationNumber:
- *         type: string
- *         example: '1234'
  *       guaranteeFeePayableByBank:
  *         type: string
  *         example: '10.8000'
- *       minimumRiskMarginFee:
- *         type: string
- *         example: '10'
- *       riskMarginFee:
+ *       interestMarginFee:
  *         type: string
  *         example: '12'
  *       ukefExposure:
  *         type: string
  *         example: '567.00'
+ *       minimumQuarterlyFee:
+ *         type: string
+ *         example: '20'
  *       dayCountBasis:
  *         type: string
  *         example: '365'
- *       feeType:
+ *       premiumType:
  *         type: string
- *         example: 'In arrear'
- *       feeFrequency:
+ *         example: 'In advance'
+ *       oremiumFrequency:
  *         type: string
  *         example: 'Monthly'
- *       bondType:
- *         type: string
- *         example: Advance payment guarantee
- *       bondBeneficiary:
- *         type: string
- *         example: The beneficiary
- *       bondIssuer:
- *         type: string
- *         example: An issuer
- *
- *   FacilitiesBSS:
- *     type: array
- *     items:
- *       type: object
- *       $ref: '#/definitions/FacilityBSS'
  */

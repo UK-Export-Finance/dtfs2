@@ -45,14 +45,6 @@ portalRouter.route('/banks/:id')
     getBankController.findOneBankGet,
   );
 
-
-// TODO: add these to definition
-// summary
-// comments
-// editedBy
-// bondTransactions
-// loanTransactions
-
 /**
  * @openapi
  * /portal/deals:
