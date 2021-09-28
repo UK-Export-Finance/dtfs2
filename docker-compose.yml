@@ -139,7 +139,7 @@ services:
       resources:
         limits:
           cpus: '0.25'
-          memory: 750M
+          memory: 950M
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
