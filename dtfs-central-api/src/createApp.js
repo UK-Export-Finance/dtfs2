@@ -8,6 +8,7 @@ const {
   PORTAL_ROUTE,
   TFM_ROUTE,
   USER_ROUTE,
+  SWAGGER_ROUTE,
 } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
@@ -19,6 +20,7 @@ const {
   portalRoutes,
   tfmRoutes,
   userRoutes,
+  swaggerRoutes,
 } = require('./v1/routes');
 
 // const { CORS_ORIGIN } = process.env;
@@ -31,7 +33,7 @@ app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
 app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
 app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
 app.use(`/v1/${USER_ROUTE}`, userRoutes);
-
+app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
 // app.use(cors({
 //   origin: CORS_ORIGIN,

@@ -1,6 +1,6 @@
 # dtfs-central-api
 
-Central endpoints to handle submissions from one API to another API.
+Central endpoints to handle submissions, getting and updating data from one API to another API.
 
 ## Why
 

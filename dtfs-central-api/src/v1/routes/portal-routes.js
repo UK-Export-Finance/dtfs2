@@ -45,13 +45,103 @@ portalRouter.route('/banks/:id')
     getBankController.findOneBankGet,
   );
 
-portalRouter.route('/deals')
-  .get(
-    getDealController.queryAllDeals,
-  )
-  .post(
-    createDealController.createDealPost,
-  );
+/**
+ * @openapi
+ * /portal/deals:
+ *   get:
+ *     summary: Get, filter and sort multiple deals in Portal deals collection
+ *     tags: [Portal]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               filters:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               sort:
+ *                 type: object
+ *               start:
+ *                 type: integer
+ *               pagesize:
+ *                 type: integer
+ *           example:
+ *             sort: { lastUpdated: -1, status: 'Draft' }
+ *             filters: { '$and': [ { userId: '123456' }, { bankId: '9' } ] }
+ *             start: 0
+ *             pagesize: 10
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               deals: [ { _id: '123abc', dealType: 'BSS/EWCS' }, { _id: 456abc, dealType: 'BSS/EWCS' } ]
+ *               count: 2
+ *       500:
+ *         description: Error querying deals
+ */
+portalRouter.route('/deals').get(
+  getDealController.queryAllDeals,
+);
+
+/**
+ * @openapi
+ * /portal/deals:
+ *   post:
+ *     summary: Create a BSS deal in Portal deals collection
+ *     tags: [Portal]
+ *     description: Create a deal in Portal deals collection
+ *     requestBody:
+ *       description: Fields required to create a deal. Creates other default fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               deal:
+ *                 type: object
+ *                 properties:
+ *                   details:
+ *                     type: object
+ *           example:
+ *             details:
+ *               bankSupplyContractID: 'a1'
+ *               bankSupplyContractName: 'test'
+ *               maker: { _id: '123abc' }
+ *               owningBank: { id: '9' }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             example:
+ *               deal:
+ *                 _id: '123456abc'
+ *                 details: {}
+ *                 facilities: []
+ *               validationErrors:
+ *                 count: 2
+ *                 errorList:
+ *                   bankSupplyContractID:
+ *                     order: '1'
+ *                     text: 'Enter the Bank deal ID'
+ *                   bankSupplyContractName:
+ *                     order: '2'
+ *                     text: 'Enter the Bank deal name'
+ */
+portalRouter.route('/deals').post(
+  createDealController.createDealPost,
+);
 
 portalRouter.route('/deals/:id')
   .get(
