@@ -7,11 +7,6 @@ on:
     - 'portal-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
     - 'utils/mock-data-loader/**'
-  schedule:
-    # A weekly run to roll up any base image patches,
-    # in office hours, avoiding bank holiday Mondays:
-    # "At 12:00 on Tuesday." - https://crontab.guru/
-    - cron: '0 12 * * 2'
 
 env:
   environment: dev
