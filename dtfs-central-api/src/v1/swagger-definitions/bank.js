@@ -16,6 +16,11 @@
  *         items:
  *           type: string
  *           example: maker1@ukexportfinance.gov.uk
+ *       mga:
+ *         type: array
+ *         items:
+ *           type: string
+ *           example: 'document.pdf'
  *       companiesHouseNo:
  *         type: string
  *         example: UKEF0001
