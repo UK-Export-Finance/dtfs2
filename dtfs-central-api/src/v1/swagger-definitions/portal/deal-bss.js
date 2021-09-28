@@ -314,6 +314,20 @@
  *         items:
  *           type: string
  *           example: 123abc
+ *       bondTransactions:
+ *         type: object
+ *         properties:
+ *           items:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/FacilityBSS'
+ *       loanTransactions:
+ *         type: object
+ *         properties:
+ *           items:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/FacilityEWCS'
  *       summary:
  *         type: object
  *         properties:
@@ -352,6 +366,27 @@
  *             user:
  *               type: object
  *               $ref: '#/definitions/User'
+ *       editedBy:
+ *         type: array
+ *         items:
+ *           type: object
+ *           properties:
+ *             date:
+ *               type: string
+ *               example: '1632233768694'
+ *             username:
+ *               type: string
+ *               example: BANK1_MAKER1
+ *             roles:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ['maker']
+ *             bank:
+ *               $ref: '#/definitions/Bank'
+ *             userId:
+ *               type: string
+ *               example: 123abc
  *   DealsBSS:
  *     type: object
  *     properties:
