@@ -55,6 +55,8 @@ const GET_FACILITY = gql`
         feeType,
         feeFrequency,
         dayCountBasis,
+        providedOn,
+        providedOnOther,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
@@ -129,7 +131,15 @@ describe('graphql query - get facility', () => {
     const reducerResult = facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
 
     expect(data.facility._id).toEqual(MOCK_BSS_FACILITIES[0]._id);
-    expect(data.facility.facilitySnapshot).toEqual(reducerResult.facilitySnapshot);
+
+    const expectedSnapshot = {
+      ...reducerResult.facilitySnapshot,
+      // providedOn is in the query, but only specific to GEF facilities.
+      providedOn: null,
+      providedOnOther: null,
+    };
+
+    expect(data.facility.facilitySnapshot).toEqual(expectedSnapshot);
 
     // remove fields that would be in the data/DB, but not defined in the schema.
     const expectedTfmFacilityShape = reducerResult.tfm;

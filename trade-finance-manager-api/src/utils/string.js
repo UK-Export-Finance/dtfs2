@@ -20,6 +20,8 @@ const capitalizeFirstLetter = (str) =>
 const lowercaseFirstLetter = (str) =>
   str.charAt(0).toLowerCase() + str.slice(1);
 
+const titleCaseString = (str) =>
+  capitalizeFirstLetter(str.toLowerCase());
 
 module.exports = {
   isEmptyString,
@@ -27,4 +29,5 @@ module.exports = {
   stripCommas,
   capitalizeFirstLetter,
   lowercaseFirstLetter,
+  titleCaseString,
 };
