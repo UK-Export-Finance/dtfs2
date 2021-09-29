@@ -333,7 +333,7 @@ openRouter.route('/acbs/facility/:id/issue')
  *   get:
  *     summary: Get a UKEF party
  *     tags: [PartyDB, Mulesoft]
- *     description: We only consume the Party URN (Unique Reference Number). Not all fields are in the response body example.
+ *     description: We only consume the Party URN (Unique Reference Number). Not all fields are in the response example.
  *     parameters:
  *       - in: path
  *         name: companyRegNo
