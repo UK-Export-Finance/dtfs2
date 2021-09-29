@@ -7,6 +7,7 @@ const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
+const mapGefFacilityProvidedOn = require('./mapGefFacilityProvidedOn');
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
@@ -55,6 +56,8 @@ describe('mapGefFacility', () => {
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
         ukefFacilityID: facilitySnapshot.ukefFacilityId,
         ukefExposure: `${facilitySnapshot.currency} ${facilitySnapshot.ukefExposure}`,
+        providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),
+        providedOnOther: facilitySnapshot.detailsOther,
       },
       tfm: mapFacilityTfm(mockFacility.tfm, mockDealTfm),
     };
