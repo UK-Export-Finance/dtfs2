@@ -26,6 +26,8 @@ const facilityQuery = gql`
         feeType,
         feeFrequency,
         dayCountBasis,
+        providedOn,
+        providedOnOther,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,

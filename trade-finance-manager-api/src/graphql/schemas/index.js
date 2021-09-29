@@ -157,6 +157,8 @@ type FacilitySnapshot {
   feeFrequency: String,
   dayCountBasis: String,
   dates: FacilityDates,
+  providedOn: [String],
+  providedOnOther: String,
 }
 
 type Facility {
