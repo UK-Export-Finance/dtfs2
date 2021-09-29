@@ -160,6 +160,34 @@ describe('/v1/portal/deals', () => {
       const { body: deal2 } = await api.get(`/v1/portal/deals/${createdDeal2._id}`);
       const { body: deal3 } = await api.get(`/v1/portal/deals/${createdDeal3._id}`);
 
+      // create some facilities
+      const mockFacility = {
+        associatedDealId: createdDeal1._id,
+        facilityValue: 123456,
+        user: mockUser,
+      };
+
+      const mockBond = {
+        facilityType: 'bond',
+        ...mockFacility,
+      };
+
+      const mockLoan = {
+        facilityType: 'loan',
+        ...mockFacility,
+      };
+
+      const { body: createdBond1 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+      const { body: createdBond2 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+      const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+      const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+
+      const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
+      const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
+      const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
+      const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
+
+
       const { status, body } = await api.post().to('/v1/portal/deals/query');
 
       expect(status).toEqual(200);
@@ -168,6 +196,16 @@ describe('/v1/portal/deals', () => {
         deal3.deal,
         deal2.deal,
         deal1.deal,
+      ]);
+
+      expect(body.deals[2].deal.bondTransactions.items).toEqual([
+        bond1,
+        bond2,
+      ]);
+
+      expect(body.deals[2].deal.loanTransactions.items).toEqual([
+        loan1,
+        loan2,
       ]);
     });
   });
