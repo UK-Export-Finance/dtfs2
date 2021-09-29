@@ -156,10 +156,6 @@ describe('/v1/portal/deals', () => {
       const { body: createdDeal2 } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const { body: createdDeal3 } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
 
-      const { body: deal1 } = await api.get(`/v1/portal/deals/${createdDeal1._id}`);
-      const { body: deal2 } = await api.get(`/v1/portal/deals/${createdDeal2._id}`);
-      const { body: deal3 } = await api.get(`/v1/portal/deals/${createdDeal3._id}`);
-
       // create some facilities
       const mockFacility = {
         associatedDealId: createdDeal1._id,
@@ -186,6 +182,10 @@ describe('/v1/portal/deals', () => {
       const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
       const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
       const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
+
+      const { body: deal1 } = await api.get(`/v1/portal/deals/${createdDeal1._id}`);
+      const { body: deal2 } = await api.get(`/v1/portal/deals/${createdDeal2._id}`);
+      const { body: deal3 } = await api.get(`/v1/portal/deals/${createdDeal3._id}`);
 
 
       const { status, body } = await api.post().to('/v1/portal/deals/query');
