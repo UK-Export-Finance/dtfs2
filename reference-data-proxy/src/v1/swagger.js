@@ -5,7 +5,7 @@ const swaggerDefinition = {
   info: {
     title: 'Reference Data Proxy API',
     version: '1.0.0',
-    description: 'API to call external APIs and handle requests/responses. To see the Mulesoft endpoints we consume, see the "External APIs we call" page in Confluence.',
+    description: 'API to call external APIs and handle requests/responses. To see the Mulesoft endpoints we consume, see the "External APIs we call" page in Confluence. This API also contains some local data instead of integrating with an API.',
   },
   tags: [
     {
