@@ -20,6 +20,5 @@ exports.lookup = async (req, res) => {
 
   const { status, data } = response;
 
-  console.log('THE DATA========= \n', data.results[0]);
   return res.status(status).send(data);
 };
