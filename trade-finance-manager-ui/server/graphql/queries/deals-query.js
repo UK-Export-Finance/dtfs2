@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 // This returns more data than the dealsLight query
 // and will be used be external systems.
 
-const dealQuery = gql`
+const dealsQuery = gql`
 query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
   deals(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize}) {
     count
@@ -150,4 +150,4 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
 }
 `;
 
-export default dealQuery;
+export default dealsQuery;
