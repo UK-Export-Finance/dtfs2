@@ -137,7 +137,7 @@ type FacilityUkefExposure {
 
 type FacilitySnapshot {
   _id: String!
-  ukefFacilityID: String!
+  ukefFacilityID: String
   associatedDealId: String!
   facilityProduct: FacilityProduct!
   facilityType: String
@@ -153,12 +153,12 @@ type FacilitySnapshot {
   bondBeneficiary: String
   ukefExposure: String
   firstDrawdownAmountInExportCurrency: String
-  feeType: String,
-  feeFrequency: String,
-  dayCountBasis: String,
-  dates: FacilityDates,
-  providedOn: [String],
-  providedOnOther: String,
+  feeType: String
+  feeFrequency: String
+  dayCountBasis: String
+  dates: FacilityDates
+  providedOn: [String]
+  providedOnOther: String
 }
 
 type Facility {
