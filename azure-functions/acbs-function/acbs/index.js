@@ -38,7 +38,6 @@ module.exports = df.orchestrator(function* acbsDeal(context) {
     agent: agentTask.result,
     indemnifier: indemnifierTask.result,
     bank: bankTask.result,
-
   };
 
   // Create Deal

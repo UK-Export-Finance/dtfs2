@@ -43,7 +43,9 @@
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "^4.0.0",
     "node-notifier": "^10.0.0",
-    "notifications-node-client": "^5.1.0"
+    "notifications-node-client": "^5.1.0",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "eslint": "6.1.0",
