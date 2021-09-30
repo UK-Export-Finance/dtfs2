@@ -815,6 +815,7 @@ jobs:
         inlineScript: |
           az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
             --settings \
+              FUNCTIONS_WORKER_RUNTIME="node" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
@@ -940,6 +941,7 @@ jobs:
         inlineScript: |
           az functionapp config appsettings set --name tfs-${{ env.environment }}-function-number-generator \
             --settings \
+              FUNCTIONS_WORKER_RUNTIME="node" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
