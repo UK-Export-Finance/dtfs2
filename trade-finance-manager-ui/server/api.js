@@ -1,7 +1,7 @@
 import axios from 'axios';
 import apollo from './graphql/apollo';
 import dealQuery from './graphql/queries/deal-query';
-import dealsQuery from './graphql/queries/deals-query';
+import dealsLightQuery from './graphql/queries/deals-query-light';
 import facilityQuery from './graphql/queries/facility-query';
 import teamMembersQuery from './graphql/queries/team-members-query';
 import userQuery from './graphql/queries/user-query';
@@ -35,16 +35,16 @@ const getDeal = async (id, tasksFilters) => {
 };
 
 const getDeals = async (queryParams) => {
-  const response = await apollo('GET', dealsQuery, queryParams);
+  const response = await apollo('GET', dealsLightQuery, queryParams);
 
   if (response.errors) {
     console.error('TFM UI - GraphQL error querying deals ', response.errors);
   }
 
-  if (response.data && response.data.deals) {
+  if (response.data && response.data.dealsLight) {
     return {
-      deals: response.data.deals,
-      count: response.data.count,
+      deals: response.data.dealsLight.deals,
+      count: response.data.dealsLight.count,
     };
   }
 
