@@ -13,9 +13,7 @@ const mockStartDate = '2017-07-04';
 const mockEndDate = '2018-07-04';
 
 jest.mock('axios', () => jest.fn((args) => {
-  const { method, url } = args;
-
-  const bla = `${process.env.MULESOFT_API_EXPOSURE_PERIOD_URL}?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`;
+  const { url } = args;
 
   if (url === `${process.env.MULESOFT_API_EXPOSURE_PERIOD_URL}?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`) {
     return Promise.resolve(mockResponse);
