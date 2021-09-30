@@ -367,7 +367,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(text).toEqual('');
     });
 
-
     it('returns 404 is requested file doesn\'t exist', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
@@ -403,7 +402,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         filepath: `api-tests/fixtures/${filename}`,
         type,
       }];
-
 
       const uploadedDealRes = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 

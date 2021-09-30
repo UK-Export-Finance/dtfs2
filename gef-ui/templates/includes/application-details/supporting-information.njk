@@ -1,6 +1,7 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "_macros/fileList.njk" import fileList %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
@@ -41,12 +42,31 @@
     rows: [
       {
         key: {
+          text: "Manual inclusion questionnaire"
+        },
+        value: {
+          text: "Required" if not supportingInfo.manualInclusion[0],
+          classes: "has-text-danger" if not supportingInfo.manualInclusion[0],
+          html: fileList(supportingInfo.manualInclusion, "/files/") if supportingInfo.manualInclusion[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/manual-inclusion-questionnaire",
+              text: "Change" if supportingInfo.manualInclusion[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      },
+      {
+        key: {
           text: "Security details"
         },
         value: {
           text: "Required" if not supportingInfo.securityDetails,
           classes: "has-text-danger" if not supportingInfo.securityDetails,
-          html: securityDetailsHtml if supportingInfo
+          html: securityDetailsHtml if supportingInfo.securityDetails
         },
         actions: {
           items: [

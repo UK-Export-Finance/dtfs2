@@ -4,6 +4,10 @@ const { STATUS } = require('../../enums');
 const hasRequiredItems = (doc) => {
   const required = [];
 
+  if (!doc?.manualInclusion?.length) {
+    required.push('manualInclusion');
+  }
+
   if (!doc?.securityDetails?.exporter || !doc?.securityDetails?.application) {
     required.push('securityDetails');
   }
@@ -13,7 +17,7 @@ const hasRequiredItems = (doc) => {
 
 const supportingInfoStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
-  if (requiredCount === 1) {
+  if (requiredCount === 2) {
     return STATUS.NOT_STARTED;
   }
   if (requiredCount > 0) {
