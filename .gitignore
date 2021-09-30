@@ -26,3 +26,5 @@ reference-data-proxy/generated_reports
 .DS_Store
 e2e-tests/trade-finance-manager/cypress/.eslintrc.json
 db-schema/**
+
+temp/
