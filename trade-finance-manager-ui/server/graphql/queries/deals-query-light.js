@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-unresolved
 import gql from 'graphql-tag';
 
-const dealQuery = gql`
+const dealsLightQuery = gql`
 query DealsLight($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
   dealsLight(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize}) {
     count
@@ -30,4 +30,4 @@ query DealsLight($searchString: String, $sortBy: DealsSortBy, $start: Int, $page
 }
 `;
 
-export default dealQuery;
+export default dealsLightQuery;
