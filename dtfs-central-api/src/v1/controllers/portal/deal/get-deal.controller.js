@@ -33,14 +33,15 @@ const extendDealWithFacilities = async (deal) => {
       }
     }
   });
+  if (facilityIds && facilityIds.length > 0) {
+    mappedDeal.bondTransactions = {
+      items: mappedBonds,
+    };
 
-  mappedDeal.bondTransactions = {
-    items: mappedBonds,
-  };
-
-  mappedDeal.loanTransactions = {
-    items: mappedLoans,
-  };
+    mappedDeal.loanTransactions = {
+      items: mappedLoans,
+    };
+  }
 
   return mappedDeal;
 }
