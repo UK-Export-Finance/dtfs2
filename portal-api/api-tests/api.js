@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const request = require('supertest');
 
 module.exports = (app) => ({
@@ -12,20 +13,32 @@ module.exports = (app) => ({
           .send(data),
       }),
 
-      postEach: (list) => ({
+      postMultipartForm: (data, files = []) => ({
         to: async (url) => {
-          const results = [];
+          const apiRequest = request(app)
+            .post(url)
+            .set({ Authorization: token || '' });
 
-          for (const data of list) {
-            const result = await request(app)
-              .post(url)
-              .set({ Authorization: token || '' })
-              .send(data);
-
-            results.push(result);
+          if (files.length) {
+            files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
           }
 
-          return results;
+          Object.entries(data).forEach(([fieldname, value]) => {
+            apiRequest.field(fieldname, value);
+          });
+
+          return apiRequest;
+        },
+      }),
+
+      postEach: (list) => ({
+        to: async (url) => {
+          const results = list.map((data) => request(app)
+            .post(url)
+            .set({ Authorization: token || '' })
+            .send(data));
+
+          return Promise.all(results);
         },
       }),
 
