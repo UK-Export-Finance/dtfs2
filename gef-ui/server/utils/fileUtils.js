@@ -1,4 +1,5 @@
 const { uploadFile, deleteFile, updateApplication } = require('../services/api');
+const Application = require('../models/application');
 
 /**
  * Uploads a file to the API, and saves it against the application.
@@ -6,15 +7,17 @@ const { uploadFile, deleteFile, updateApplication } = require('../services/api')
  *
  * @param {*} files array of files to upload, assumes format from multer
  * @param {*} field field identifier for supplementaryInfo question
- * @param {*} deal application/deal object
+ * @param {*} dealId application/deal ID
  * @param {*} token user token
  * @param {*} maxFileSize (optional) maximum file size to allow (defaults to API limits of 10MB otherwise)
  * @returns array of processed files
  */
-const uploadAndSaveToDeal = async (files, field, deal, token, maxFileSize) => {
-  const uploadedFiles = await uploadFile(files, deal._id, token, maxFileSize);
+const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSize) => {
+  const uploadedFiles = await uploadFile(files, dealId, token, maxFileSize);
 
   return Promise.all(uploadedFiles.map(async (file) => {
+    const deal = await Application.findById(dealId, user, token);
+
     if (!file.error) {
       const updatedField = [
         ...(deal.supportingInformation?.[field] || []),
@@ -25,7 +28,7 @@ const uploadAndSaveToDeal = async (files, field, deal, token, maxFileSize) => {
 
       updatedDeal.supportingInformation[field] = updatedField;
 
-      await updateApplication(updatedDeal._id, updatedDeal);
+      await updateApplication(dealId, updatedDeal);
     }
 
     return file;

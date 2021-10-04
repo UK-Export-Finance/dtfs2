@@ -89,8 +89,9 @@ const postUploadManualInclusion = async (req, res) => {
     const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(
       validFiles,
       FIELD_NAME,
-      application,
+      applicationId,
       userToken,
+      user,
       MAX_FILE_SIZE,
     ) : [];
 
@@ -171,8 +172,9 @@ const uploadManualInclusion = async (req, res) => {
       const [processedFile] = await uploadAndSaveToDeal(
         [file],
         FIELD_NAME,
-        application,
+        applicationId,
         userToken,
+        user,
         MAX_FILE_SIZE,
       );
 

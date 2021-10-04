@@ -1,11 +1,13 @@
 import { uploadAndSaveToDeal, removeFileFromDeal } from './fileUtils';
 import { uploadFile, deleteFile, updateApplication } from '../services/api';
+import Application from '../models/application';
 
 jest.mock('../services/api', () => ({
   uploadFile: jest.fn(),
   deleteFile: jest.fn(),
   updateApplication: jest.fn(),
 }));
+jest.mock('../models/application');
 
 const mockToken = 'mock-token';
 const mockField = 'mockField';
@@ -13,14 +15,17 @@ const mockFile = {
   filename: 'mock-file.pdf',
 };
 
-describe('utils/fileUtils', () => {
-  let mockDeal;
+const mockUser = { roles: ['MAKER'] };
+const mockDealId = 'mock-id';
 
+let mockDeal = {
+  _id: mockDealId,
+  supportingInformation: {},
+};
+
+describe('utils/fileUtils', () => {
   beforeEach(() => {
-    mockDeal = {
-      _id: 'mock-id',
-      supportingInformation: {},
-    };
+    Application.findById.mockResolvedValue(mockDeal);
   });
 
   afterEach(() => {
@@ -31,7 +36,7 @@ describe('utils/fileUtils', () => {
     it('returns file with error if only problem files uploaded', async () => {
       uploadFile.mockResolvedValueOnce([{ ...mockFile, error: 'mock-error' }]);
 
-      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDeal, mockToken));
+      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser));
 
       expect(updateApplication).not.toHaveBeenCalled();
       expect(response).toEqual([{ ...mockFile, error: 'mock-error' }]);
@@ -40,7 +45,7 @@ describe('utils/fileUtils', () => {
     it('adds files to the deal if upload successful', async () => {
       uploadFile.mockResolvedValueOnce([{ ...mockFile, _id: 'mock-file-id' }]);
 
-      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDeal, mockToken));
+      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser));
 
       expect(updateApplication).toHaveBeenCalledWith('mock-id', {
         ...mockDeal,
