@@ -2,9 +2,8 @@
 import gql from 'graphql-tag';
 
 // NOTE: this is not actually used by TFM UI.
-// kept in place as an example.
-// This returns more data than the dealsLight query
-// and will be used be external systems.
+// This returns more data than the dealsLight query that TFM UI does not need.
+// This query is used by external systems.
 
 const dealsQuery = gql`
 query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
