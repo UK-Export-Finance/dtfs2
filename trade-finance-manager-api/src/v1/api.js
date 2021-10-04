@@ -133,6 +133,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
+    console.error('TFM API findOneDeal catch error. dealId: ', dealId);
     return false;
   }
 };
@@ -534,12 +535,9 @@ const findOneGefDeal = async (dealId) => {
       },
     });
 
-    console.log('TFM API findOneGefDeal response status', response.status);
-    console.log('TFM API findOneGefDeal response body \n', response.body);
-
     return response.data;
   } catch (err) {
-    console.log('TFM API findOneGefDeal catch error \n', err);
+    console.error('TFM API findOneGefDeal catch error. dealId: ', dealId);
     return false;
   }
 };
