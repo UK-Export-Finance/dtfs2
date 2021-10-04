@@ -4,11 +4,19 @@ const multer = require('multer');
 const {
   getSecurityDetails,
   postSecurityDetails,
+} = require('../controllers/supporting-information/security-details');
+const {
   getUploadManualInclusion,
   postUploadManualInclusion,
   uploadManualInclusion,
   deleteManualInclusion,
 } = require('../controllers/supporting-information');
+const {
+  getUploadFinancialStatements,
+  postUploadFinancialStatements,
+  uploadFinancialStatements,
+  deleteFinancialStatements,
+} = require('../controllers/supporting-information/financial-statements');
 
 const validateToken = require('../middleware/validateToken');
 
@@ -18,6 +26,11 @@ router.get('/application-details/:applicationId/supporting-information/manual-in
 router.post('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire', [validateToken, multer().array('documents', 20)], postUploadManualInclusion);
 router.post('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire/upload', [validateToken, multer().single('documents')], uploadManualInclusion);
 router.post('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire/delete', [validateToken], deleteManualInclusion);
+
+router.get('/application-details/:applicationId/supporting-information/financial-statements', [validateToken], getUploadFinancialStatements);
+router.post('/application-details/:applicationId/supporting-information/financial-statements', [validateToken, multer().array('documents', 20)], postUploadFinancialStatements);
+router.post('/application-details/:applicationId/supporting-information/financial-statements/upload', [validateToken, multer().single('documents')], uploadFinancialStatements);
+router.post('/application-details/:applicationId/supporting-information/financial-statements/delete', [validateToken], deleteFinancialStatements);
 
 router.get('/application-details/:applicationId/supporting-information/security-details', [validateToken], getSecurityDetails);
 router.post('/application-details/:applicationId/supporting-information/security-details', [validateToken], postSecurityDetails);
