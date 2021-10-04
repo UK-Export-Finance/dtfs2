@@ -82,8 +82,8 @@ describe(component, () => {
         facility: {
           ...params.facility,
           providedOn: [
-            'Other',
-            'Something else',
+            'Revolving or renewing basis',
+            'Committed basis',
           ],
           providedOnOther: 'Mock other details',
         },
@@ -99,10 +99,10 @@ describe(component, () => {
 
       it('should render multiple providedOn basis', () => {
         const basis1 = gefParams.facility.providedOn[0];
-        wrapper.expectText(`[data-cy="facility-provided-${basis1}"]`).toRead(`${basis1} basis`);
+        wrapper.expectText(`[data-cy="facility-provided-${basis1}"]`).toRead(basis1);
 
         const basis2 = gefParams.facility.providedOn[1];
-        wrapper.expectText(`[data-cy="facility-provided-${basis2}"]`).toRead(`${basis2} basis`);
+        wrapper.expectText(`[data-cy="facility-provided-${basis2}"]`).toRead(basis2);
 
         wrapper.expectText('[data-cy="facility-provided-other-details"]').toRead(`Other - ${gefParams.facility.providedOnOther}`);
       });
