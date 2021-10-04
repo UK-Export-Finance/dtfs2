@@ -23,12 +23,18 @@ const findOneTfmDeal = async (dealId) => {
 };
 exports.findOneTfmDeal = findOneTfmDeal;
 
-const findTfmDealsLight = async (queryParams) => {
-  const { deals } = await api.queryDeals({ queryParams });
+const queryDeals = async (queryParams) => {
+  const { deals } = await api.queryDeals({ ...queryParams });
 
   if (!deals) {
     return false;
   }
+
+  return deals;
+};
+
+const findTfmDealsLight = async (queryParams) => {
+  const deals = await queryDeals(queryParams);
 
   return {
     deals,
@@ -37,11 +43,7 @@ const findTfmDealsLight = async (queryParams) => {
 exports.findTfmDealsLight = findTfmDealsLight;
 
 const findTfmDeals = async (queryParams) => {
-  const { deals } = await findTfmDealsLight(queryParams);
-
-  if (!deals) {
-    return false;
-  }
+  const deals = await queryDeals(queryParams);
 
   const mapped = await mapDeals(deals);
 
