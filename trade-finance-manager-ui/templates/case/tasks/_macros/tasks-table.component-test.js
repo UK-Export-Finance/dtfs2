@@ -1,11 +1,9 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
-const filterLocaliseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const localiseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const component = '../templates/case/tasks/_macros/tasks-table.njk';
 
 const render = componentRenderer(component);
-
-const localiseTimestamp = filterLocaliseTimestamp.default;
 
 describe(component, () => {
   let wrapper;
@@ -149,7 +147,7 @@ describe(component, () => {
         });
       });
     });
-    
+
     it('should render status tag', () => {
       params.tasks.forEach((group) => {
         group.groupTasks.forEach((task) => {

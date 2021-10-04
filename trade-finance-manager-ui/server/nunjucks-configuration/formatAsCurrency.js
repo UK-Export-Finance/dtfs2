@@ -11,4 +11,4 @@ const formatAsCurrency = (str) => {
   return isEmpty ? '-' : amount;
 };
 
-export default formatAsCurrency;
+module.exports = formatAsCurrency;

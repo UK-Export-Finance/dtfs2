@@ -1,15 +1,15 @@
-import express from 'express';
-import session from 'express-session';
-import morgan from 'morgan';
+const express = require('express');
+const session = require('express-session');
+const morgan = require('morgan');
 
-import path from 'path';
-import routes from './routes';
-import './azure-env';
+const path = require('path');
+const routes = require('./routes');
+require('./azure-env');
 
-import configureNunjucks from './nunjucks-configuration';
-import sessionOptions from './session-configuration';
+const configureNunjucks = require('./nunjucks-configuration');
+const sessionOptions = require('./session-configuration');
 
-import healthcheck from './healthcheck';
+const healthcheck = require('./healthcheck');
 
 const app = express();
 
@@ -26,21 +26,20 @@ app.use(express.urlencoded());
 app.use(session(sessionOptions()));
 
 app.use(morgan('dev', {
-  // skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  skip: (req) => req.url.startsWith('/assets'),
+  skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
 }));
 
 app.use(healthcheck);
 app.use('/', routes);
 
-app.use(express.static('dist'));
-
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(
+  '/assets',
+  express.static(path.join(__dirname, '..', 'node_modules', 'govuk-frontend', 'govuk', 'assets')),
+  express.static(path.join(__dirname, '..', 'public')),
+);
 
 app.get('/not-found', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
 app.listen(PORT, () => console.log(`TFM UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
-
-export default app;

@@ -1,7 +1,7 @@
-import api from '../../api';
-import { getTask } from './helpers';
-import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
-import CONSTANTS from '../../constants';
+const api = require('../../api');
+const { getTask } = require('./helpers');
+const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
+const CONSTANTS = require('../../constants');
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -224,7 +224,7 @@ const postTfmFacility = async (req, res) => {
   return res.redirect(`/case/${dealId}/parties`);
 };
 
-export default {
+module.exports = {
   getCaseDeal,
   getCaseTasks,
   filterCaseTasks,

@@ -1,8 +1,8 @@
-import api from '../../../../../api';
-import {
+const api = require('../../../../../api');
+const {
   userIsInTeam,
-} from '../../../../../helpers/user';
-import CONSTANTS from '../../../../../constants';
+} = require('../../../../../helpers/user');
+const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -91,7 +91,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
 
-export default {
+module.exports = {
   getUnderWritingProbabilityOfDefault,
   postUnderWritingProbabilityOfDefault,
 };

@@ -1,4 +1,4 @@
-import api from '../../api';
+const api = require('../../api');
 
 const getLogin = (req, res) => res.render('login.njk');
 
@@ -19,7 +19,7 @@ const logout = (req, res) => {
   });
 };
 
-export default {
+module.exports = {
   getLogin,
   postLogin,
   logout,

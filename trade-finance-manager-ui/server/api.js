@@ -1,19 +1,19 @@
-import axios from 'axios';
-import apollo from './graphql/apollo';
-import dealQuery from './graphql/queries/deal-query';
-import dealsLightQuery from './graphql/queries/deals-query-light';
-import facilityQuery from './graphql/queries/facility-query';
-import teamMembersQuery from './graphql/queries/team-members-query';
-import userQuery from './graphql/queries/user-query';
-import updatePartiesMutation from './graphql/mutations/update-parties';
-import updateFacilityMutation from './graphql/mutations/update-facilities';
-import updateFacilityRiskProfileMutation from './graphql/mutations/update-facility-risk-profile';
-import updateTaskMutation from './graphql/mutations/update-task';
-import updateCreditRatingMutation from './graphql/mutations/update-credit-rating';
-import updateLossGivenDefaultMutation from './graphql/mutations/update-loss-given-default';
-import updateProbabilityOfDefaultMutation from './graphql/mutations/update-probability-of-default';
-import postUnderwriterManagersDecision from './graphql/mutations/update-underwriter-managers-decision';
-import updateLeadUnderwriterMutation from './graphql/mutations/update-lead-underwriter';
+const axios = require('axios');
+const apollo = require('./graphql/apollo');
+const dealQuery = require('./graphql/queries/deal-query');
+const dealsLightQuery = require('./graphql/queries/deals-query-light');
+const facilityQuery = require('./graphql/queries/facility-query');
+const teamMembersQuery = require('./graphql/queries/team-members-query');
+const userQuery = require('./graphql/queries/user-query');
+const updatePartiesMutation = require('./graphql/mutations/update-parties');
+const updateFacilityMutation = require('./graphql/mutations/update-facilities');
+const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
+const updateTaskMutation = require('./graphql/mutations/update-task');
+const updateCreditRatingMutation = require('./graphql/mutations/update-credit-rating');
+const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-given-default');
+const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
+const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
+const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 
 require('dotenv').config();
 
@@ -184,7 +184,7 @@ const login = async (username) => {
   }
 };
 
-export default {
+module.exports = {
   getDeal,
   getDeals,
   getFacility,
