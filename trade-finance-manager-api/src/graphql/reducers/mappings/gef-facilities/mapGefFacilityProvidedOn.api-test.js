@@ -31,7 +31,6 @@ describe('mapGefFacilityProvidedOn', () => {
       const result = mapGefFacilityProvidedOn(mockArray);
 
       const expected = [
-        null,
         CONSTANTS.FACILITIES.FACILITY_PROVIDED_ON_GEF.RESOLVING.TEXT,
       ];
 
