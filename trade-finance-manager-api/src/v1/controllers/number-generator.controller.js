@@ -43,12 +43,15 @@ const updateGefApplication = async (input, { ukefId }) => {
 
 const checkAzureNumberGeneratorFunction = async () => {
   // Fetch outstanding functions
+  console.log('TFM API checkAzureNumberGeneratorFunction called');
 
   const collection = await db.getCollection('durable-functions-log');
   const runningTasks = await collection.find({
     status: 'Running',
     type: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
   }).toArray();
+
+  console.log('TFM API checkAzureNumberGeneratorFunction runningTasks ', runningTasks);
 
   const taskResults = runningTasks.map(
     ({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(
@@ -58,6 +61,8 @@ const checkAzureNumberGeneratorFunction = async () => {
 
   const taskResultsList = await Promise.all(taskResults);
 
+  console.log('TFM API checkAzureNumberGeneratorFunction taskResultsList ', taskResultsList);
+
   taskResultsList.forEach(async (task) => {
     if (task.runtimeStatus === 'Completed') {
       // Only process if all tasks for that deals have finished
@@ -66,6 +71,7 @@ const checkAzureNumberGeneratorFunction = async () => {
       }
 
       const { input, output } = task;
+
       // Update portalDeal
       switch (input.dealType) {
         case CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS:
@@ -79,6 +85,8 @@ const checkAzureNumberGeneratorFunction = async () => {
         default:
           return;
       }
+
+      console.log('TFM API checkAzureNumberGeneratorFunction calling submitDealAfterUkefIds');
 
       // Update TFM
       await dealSubmitController.submitDealAfterUkefIds(input.entityId, input.dealType, input.user);
