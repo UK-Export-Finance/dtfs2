@@ -4,7 +4,6 @@ const {
   stripCommas,
   capitalizeFirstLetter,
   lowercaseFirstLetter,
-  titleCaseString,
 } = require('./string');
 
 describe('utils - string', () => {
@@ -50,18 +49,6 @@ describe('utils - string', () => {
     it('should lowercase the first letter of a string', () => {
       const result = lowercaseFirstLetter('Testing');
       expect(result).toEqual('testing');
-    });
-  });
-
-  describe('titleCaseString', () => {
-    it('returns a string with title casing when string is in uppercase', () => {
-      const result = titleCaseString('TESTING');
-      expect(result).toEqual('Testing');
-    });
-
-    it('returns a string with title casing when string is in lowercase', () => {
-      const result = titleCaseString('testing');
-      expect(result).toEqual('Testing');
     });
   });
 });

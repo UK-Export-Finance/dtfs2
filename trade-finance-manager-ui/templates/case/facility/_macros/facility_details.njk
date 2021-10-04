@@ -75,11 +75,11 @@
           <div class="govuk-grid-column-three-quarters">
 
             {% for basis in facility.providedOn %}
-              <p class="govuk-body-s" data-cy="facility-provided-{{ basis }}">{{ basis }} basis</p>
+              <p class="govuk-body-s" data-cy="facility-provided-{{ basis }}">{{ basis }}</p>
             {% endfor %}
 
             {% if facility.providedOnOther %}
-              <p class="govuk-body-s" data-cy="facility-provided-other-details"> Other - {{ facility.providedOnOther }}</p>
+              <p class="govuk-body-s" data-cy="facility-provided-other-details">Other - {{ facility.providedOnOther }}</p>
             {% endif %}
           </div>
         </div>
