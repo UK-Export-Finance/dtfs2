@@ -17,7 +17,7 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
   console.log('Azure functions - Number Generator Orchestrator called');
 
   if (!process.env.MULESOFT_API_UKEF_TF_EA_URL || !process.env.MULESOFT_API_KEY || !process.env.MULESOFT_API_SECRET) {
-    console.error('Environment variables missing from Number Generator');
+    console.error('Environment variables missing for Number Generator');
     return {
       num: 'ERROR_NUM_GENERATOR',
       error: 'Environment variables missing',
