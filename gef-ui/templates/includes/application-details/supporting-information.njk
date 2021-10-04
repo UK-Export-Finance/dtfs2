@@ -61,6 +61,25 @@
       },
       {
         key: {
+          text: "Financial statements"
+        },
+        value: {
+          text: "Required" if not supportingInfo.financialStatements[0],
+          classes: "has-text-danger" if not supportingInfo.financialStatements[0],
+          html: fileList(supportingInfo.financialStatements, "/files/") if supportingInfo.financialStatements[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/financial-statements",
+              text: "Change" if supportingInfo.financialStatements[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      },
+      {
+        key: {
           text: "Security details"
         },
         value: {
