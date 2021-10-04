@@ -1,8 +1,8 @@
-import express from 'express';
-import caseController from '../../controllers/case';
-import partiesController from '../../controllers/case/parties';
-import underwritingController from '../../controllers/case/underwriting';
-import activityController from '../../controllers/case/activity';
+const express = require('express');
+const caseController = require('../../controllers/case');
+const partiesController = require('../../controllers/case/parties');
+const underwritingController = require('../../controllers/case/underwriting');
+const activityController = require('../../controllers/case/activity');
 
 const router = express.Router();
 
@@ -64,4 +64,4 @@ router.post('/:_id/underwriting/managers-decision/edit', underwritingController.
 router.get('/:_id/documents', caseController.getCaseDocuments);
 
 
-export default router;
+module.exports = router;

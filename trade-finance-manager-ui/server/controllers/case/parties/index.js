@@ -1,5 +1,5 @@
-import api from '../../../api';
-import userCanEdit from './helpers';
+const api = require('../../../api');
+const userCanEdit = require('./helpers');
 
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -149,7 +149,7 @@ const postAgentPartyDetails = postPartyDetails('agent');
 const postIndemnifierPartyDetails = postPartyDetails('indemnifier');
 
 
-export default {
+module.exports = {
   getCaseParties,
   getExporterPartyDetails,
   getBuyerPartyDetails,

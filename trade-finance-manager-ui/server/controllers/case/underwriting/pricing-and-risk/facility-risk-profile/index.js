@@ -1,6 +1,6 @@
-import api from '../../../../../api';
-import validateSubmittedValues from './validateSubmittedValues';
-import { userCanEditGeneral } from '../helpers';
+const api = require('../../../../../api');
+const validateSubmittedValues = require('./validateSubmittedValues');
+const { userCanEditGeneral } = require('../helpers');
 
 const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const {
@@ -60,7 +60,7 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
 
-export default {
+module.exports = {
   getUnderWritingFacilityRiskProfileEdit,
   postUnderWritingFacilityRiskProfileEdit,
 };

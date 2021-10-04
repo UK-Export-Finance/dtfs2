@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const dealsLightQuery = gql`
 query DealsLight($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
@@ -30,4 +29,4 @@ query DealsLight($searchString: String, $sortBy: DealsSortBy, $start: Int, $page
 }
 `;
 
-export default dealsLightQuery;
+module.exports = dealsLightQuery;

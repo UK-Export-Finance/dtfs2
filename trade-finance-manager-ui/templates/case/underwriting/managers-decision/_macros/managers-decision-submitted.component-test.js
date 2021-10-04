@@ -1,14 +1,11 @@
 const componentRenderer = require('../../../../../component-tests/componentRenderer');
 
 const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk';
-const filterLocaliseTimestamp = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const localiseTimestamp = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 
-const localiseTimestamp = filterLocaliseTimestamp.default;
-
 describe(component, () => {
-  let wrapper;
   let params = {
     decision: {
       userFullName: 'Joe Bloggs',

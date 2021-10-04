@@ -36,4 +36,4 @@ const generateValidationErrors = (
   return result;
 };
 
-export default generateValidationErrors;
+module.exports = generateValidationErrors;

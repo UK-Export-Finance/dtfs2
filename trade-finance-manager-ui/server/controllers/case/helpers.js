@@ -1,7 +1,7 @@
-export const getGroup = (groupId, allTasks) =>
+const getGroup = (groupId, allTasks) =>
   allTasks.find((group) => group.id === groupId);
 
-export const getTask = (groupId, taskId, tasks) => {
+const getTask = (groupId, taskId, tasks) => {
   const group = getGroup(groupId, tasks);
 
   if (group) {
@@ -15,4 +15,9 @@ export const getTask = (groupId, taskId, tasks) => {
   }
 
   return null;
+};
+
+module.exports = {
+  getGroup,
+  getTask,
 };

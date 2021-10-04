@@ -1,9 +1,10 @@
-import express from 'express';
-import loginRoutes from './login';
-import caseRoutes from './case';
-import dealsRoutes from './deals';
+const express = require('express');
 
-import { validateUser } from '../middleware/user-validation';
+const loginRoutes = require('./login');
+const caseRoutes = require('./case');
+const dealsRoutes = require('./deals');
+
+const { validateUser } = require('../middleware/user-validation');
 
 const router = express.Router();
 
@@ -11,4 +12,4 @@ router.use('/', loginRoutes);
 router.use('/case', validateUser, caseRoutes);
 router.use('/deals', validateUser, dealsRoutes);
 
-export default router;
+module.exports = router;

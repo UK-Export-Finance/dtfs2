@@ -1,8 +1,8 @@
-import {
+const {
   isAssignedToUser,
   userFullName,
-} from './user';
-import { mapTeamMembersSelectOptions } from './team';
+} = require('./user');
+const { mapTeamMembersSelectOptions } = require('./team');
 
 const mapAssignToSelectOptions = (assignedToUserId, currentUser, allTeamMembers) => {
   // eslint-disable-next-line no-underscore-dangle
@@ -75,4 +75,4 @@ const mapAssignToSelectOptions = (assignedToUserId, currentUser, allTeamMembers)
   return mapped;
 };
 
-export default mapAssignToSelectOptions;
+module.exports = mapAssignToSelectOptions;

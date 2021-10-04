@@ -1,10 +1,10 @@
-import { userFullName } from './user';
+const { userFullName } = require('./user');
 
-export const getTeamMembersWithoutCurrentUser = (teamMembers, currentUserId) =>
+const getTeamMembersWithoutCurrentUser = (teamMembers, currentUserId) =>
   teamMembers.filter((teamMember) =>
     teamMember._id !== currentUserId); // eslint-disable-line no-underscore-dangle
 
-export const mapTeamMembersSelectOptions = (members, assignedToUserId, currentUserId) => {
+const mapTeamMembersSelectOptions = (members, assignedToUserId, currentUserId) => {
   const membersWithoutCurrentUser = getTeamMembersWithoutCurrentUser(members, currentUserId);
 
   return membersWithoutCurrentUser.map((member) => {
@@ -17,4 +17,9 @@ export const mapTeamMembersSelectOptions = (members, assignedToUserId, currentUs
       selected: assignedToUserId === memberId,
     };
   });
+};
+
+module.exports = {
+  getTeamMembersWithoutCurrentUser,
+  mapTeamMembersSelectOptions,
 };

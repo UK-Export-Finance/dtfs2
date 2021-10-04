@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const dealQuery = gql`
   query Deal($_id: String! $tasksFilters: TasksFilters) {
@@ -202,4 +202,4 @@ const dealQuery = gql`
   }
 `;
 
-export default dealQuery;
+module.exports = dealQuery;

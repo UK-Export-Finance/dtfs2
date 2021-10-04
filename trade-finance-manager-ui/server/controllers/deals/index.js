@@ -1,6 +1,6 @@
-import api from '../../api';
-import generateHeadingText from './helpers';
-import CONSTANTS from '../../constants';
+const api = require('../../api');
+const generateHeadingText = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 const getDeals = async (req, res) => {
   const queryParams = {
@@ -63,7 +63,7 @@ const queryDeals = async (req, res) => {
   });
 };
 
-export default {
+module.exports = {
   getDeals,
   queryDeals,
 };

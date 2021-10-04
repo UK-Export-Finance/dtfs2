@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateProbabilityOfDefault = gql`
   mutation UpdateProbabilityOfDefault($dealId: ID!, $probabilityOfDefaultUpdate: TFMProbabilityOfDefaultInput) {
@@ -8,4 +8,4 @@ const updateProbabilityOfDefault = gql`
   }
 `;
 
-export default updateProbabilityOfDefault;
+module.exports = updateProbabilityOfDefault;
