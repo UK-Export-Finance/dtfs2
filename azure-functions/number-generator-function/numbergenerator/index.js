@@ -18,16 +18,14 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
 
   if (!process.env.MULESOFT_API_UKEF_TF_EA_URL || !process.env.MULESOFT_API_KEY || !process.env.MULESOFT_API_SECRET) {
     console.error('Environment variables missing for Number Generator');
-    return {
-      num: 'ERROR_NUM_GENERATOR',
-      error: 'Environment variables missing',
-    };
   }
+
 
   //  const { dealId, facilities = [] } = context.df.getInput();
   const { entityType } = context.df.getInput();
 
-  if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
+  if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
+    && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
     return {
       num: 'ERROR_NUM_GENERATOR',
       error: 'No dealId provided',
