@@ -54,11 +54,10 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 
 
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
-  console.log('TFM API submitDealAfterUkefIds called');
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
-    console.error('TFM API submitDealAfterUkefIds - deal not found');
+    console.error('TFM API submitDealAfterUkefIds - deal not found ', dealId);
     return false;
   }
 
