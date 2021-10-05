@@ -53,6 +53,7 @@ class Facility {
       this.createdAt = Date.now();
       this.updatedAt = Date.now();
       this.ukefExposure = 0;
+      this.guaranteeFee = 0;
       this.submittedAsIssuedDate = req.submittedAsIssuedDate || null;
       this.ukefFacilityId = req.ukefFacilityId || null;
       this.feeType = null;
@@ -128,6 +129,10 @@ class Facility {
 
       if (req.ukefExposure != null) {
         this.ukefExposure = req.ukefExposure;
+      }
+
+      if (req.guaranteeFee != null) {
+        this.guaranteeFee = req.guaranteeFee;
       }
 
       if (req.ukefFacilityId !== null) {

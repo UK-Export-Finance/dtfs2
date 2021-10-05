@@ -106,6 +106,20 @@ const calculateUkefExposure = (requestedUpdate, existingFacility) => {
 };
 exports.calculateUkefExposure = calculateUkefExposure;
 
+const calculateGuaranteeFee = (requestedUpdate, existingFacility) => {
+  let latestInterestPercentage = (existingFacility && existingFacility.interestPercentage);
+
+  // make sure we calculate with the latest values.
+  if (requestedUpdate.interestPercentage) {
+    latestInterestPercentage = requestedUpdate.interestPercentage;
+  }
+
+  const calculation = (0.9 * latestInterestPercentage);
+
+  return calculation;
+};
+exports.calculateGuaranteeFee = calculateGuaranteeFee;
+
 const update = async (id, updateBody) => {
   const collection = await db.getCollection(collectionName);
   const facilityId = ObjectID(String(id));
@@ -115,6 +129,7 @@ const update = async (id, updateBody) => {
   const facilityUpdate = new Facility({
     ...updateBody,
     ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+    guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
   });
 
   const result = await collection.findOneAndUpdate(
