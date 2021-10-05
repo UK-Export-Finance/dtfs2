@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateCreditRating = gql`
   mutation UpdateCreditRating($dealId: ID!, $creditRatingUpdate: TFMCreditRatingInput) {
@@ -8,4 +8,4 @@ const updateCreditRating = gql`
   }
 `;
 
-export default updateCreditRating;
+module.exports = updateCreditRating;

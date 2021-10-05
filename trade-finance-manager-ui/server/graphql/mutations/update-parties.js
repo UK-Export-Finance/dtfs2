@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updatePartiesMutation = gql`
   mutation UpdateParties($id: ID!, $partyUpdate: TFMPartiesInput) {
@@ -12,4 +12,4 @@ const updatePartiesMutation = gql`
   }
 `;
 
-export default updatePartiesMutation;
+module.exports = updatePartiesMutation;

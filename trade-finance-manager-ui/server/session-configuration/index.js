@@ -1,8 +1,8 @@
 // Fail-safe fallback to a 256-bit random value:
 
-import crypto from 'crypto';
-import session from 'express-session';
-import redis from 'redis';
+const crypto = require('crypto');
+const session = require('express-session');
+const redis = require('redis');
 
 const RedisStore = require('connect-redis')(session);
 
@@ -51,4 +51,4 @@ const sessionConfig = () => {
   return sessionOptions;
 };
 
-export default sessionConfig;
+module.exports = sessionConfig;

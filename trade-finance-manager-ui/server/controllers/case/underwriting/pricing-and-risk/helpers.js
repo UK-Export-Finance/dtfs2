@@ -1,6 +1,7 @@
-import CONSTANTS from '../../../../constants';
-import { userIsInTeam } from '../../../../helpers/user';
+const CONSTANTS = require('../../../../constants');
+const { userIsInTeam } = require('../../../../helpers/user');
 
-// eslint-disable-next-line import/prefer-default-export
-export const userCanEditGeneral = (user) =>
+const userCanEditGeneral = (user) =>
   userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
+
+module.exports = { userCanEditGeneral };

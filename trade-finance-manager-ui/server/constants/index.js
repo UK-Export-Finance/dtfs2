@@ -1,9 +1,9 @@
-import DEAL from './deal';
-import DEALS from './deals';
-import TASKS from './tasks';
-import TEAMS from './teams';
+const DEAL = require('./deal');
+const DEALS = require('./deals');
+const TASKS = require('./tasks');
+const TEAMS = require('./teams');
 
-export default {
+module.exports = {
   DEAL,
   DEALS,
   TASKS,

@@ -1,14 +1,14 @@
-import api from '../../../../api';
-import {
+const api = require('../../../../api');
+const {
   hasValue,
   containsNumber,
-} from '../../../../helpers/string';
-import lossGivenDefaultControllers from './loss-given-default';
-import probabilityOfDefaultControllers from './probability-of-default';
-import facilityRiskProfileControllers from './facility-risk-profile';
-import {
+} = require('../../../../helpers/string');
+const lossGivenDefaultControllers = require('./loss-given-default');
+const probabilityOfDefaultControllers = require('./probability-of-default');
+const facilityRiskProfileControllers = require('./facility-risk-profile');
+const {
   userCanEditGeneral,
-} from './helpers';
+} = require('./helpers');
 
 const getUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -163,7 +163,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 };
 
 
-export default {
+module.exports = {
   getUnderWritingPricingAndRisk,
   getUnderWritingPricingAndRiskEdit,
   postUnderWritingPricingAndRisk,
