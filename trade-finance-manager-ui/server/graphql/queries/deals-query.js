@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 // NOTE: this is not actually used by TFM UI.
 // This returns more data than the dealsLight query that TFM UI does not need.
@@ -149,4 +148,4 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
 }
 `;
 
-export default dealsQuery;
+module.exports = dealsQuery;

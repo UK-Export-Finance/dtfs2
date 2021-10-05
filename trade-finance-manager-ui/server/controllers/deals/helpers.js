@@ -13,4 +13,4 @@ const generateHeadingText = (count, submittedValue) => {
   return 'All deals';
 };
 
-export default generateHeadingText;
+module.exports = generateHeadingText;

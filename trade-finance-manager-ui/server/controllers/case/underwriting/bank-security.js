@@ -1,4 +1,4 @@
-import api from '../../../api';
+const api = require('../../../api');
 
 const getUnderWritingBankSecurity = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -22,6 +22,6 @@ const getUnderWritingBankSecurity = async (req, res) => {
 };
 
 
-export default {
+module.exports = {
   getUnderWritingBankSecurity,
 };

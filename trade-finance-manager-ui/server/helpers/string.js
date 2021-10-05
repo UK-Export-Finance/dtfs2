@@ -1,21 +1,21 @@
-export const isEmptyString = (str) => {
+const isEmptyString = (str) => {
   if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
     return true;
   }
   return false;
 };
 
-export const hasValue = (str) => {
+const hasValue = (str) => {
   if (str && !isEmptyString(str)) {
     return true;
   }
   return false;
 };
 
-export const containsNumber = (str) =>
+const containsNumber = (str) =>
   /\d/.test(str);
 
-export const isAlphanumeric = (str) => {
+const isAlphanumeric = (str) => {
   // allowed characters:
   // A-Z
   // 0-9
@@ -30,4 +30,11 @@ export const isAlphanumeric = (str) => {
   const arr = str.split(/[\n\r]/g);
 
   return ALPHA_NUMBERIC_ONLY.test(arr);
+};
+
+module.exports = {
+  isEmptyString,
+  hasValue,
+  containsNumber,
+  isAlphanumeric,
 };

@@ -1,4 +1,4 @@
-import api from '../../../api';
+const api = require('../../../api');
 
 const getActivity = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -20,6 +20,6 @@ const getActivity = async (req, res) => {
   });
 };
 
-export default {
+module.exports = {
   getActivity,
 };

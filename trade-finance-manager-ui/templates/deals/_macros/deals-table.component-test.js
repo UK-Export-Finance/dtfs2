@@ -1,11 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 const componentRenderer = require('../../../component-tests/componentRenderer');
-const filterFormatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
+const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const component = '../templates/deals/_macros/deals-table.njk';
 const render = componentRenderer(component);
-
-const formatDateString = filterFormatDateString.default;
 
 describe(component, () => {
   let wrapper;
@@ -125,7 +123,6 @@ describe(component, () => {
 
     describe('dealType table cell', () => {
       it('should render submissionType', () => {
-
         params.deals.forEach((deal) => {
           const cellSelector = `[data-cy="deal-${deal._id}-type"]`;
           wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.details.submissionType);
