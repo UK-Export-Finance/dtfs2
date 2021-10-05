@@ -41,18 +41,12 @@ const getDeal = async (dealId, dealType) => {
 // This allows a deal in Pending state to be seen in TFM,
 // which indicates to UKEF that a deal has been submitted before UKEFids are generated
 const submitDealBeforeUkefIds = async (dealId, dealType) => {
-  console.log('TFM API submitDealBeforeUkefIds called');
-
   const deal = await getDeal(dealId, dealType);
-
-  console.log('TFM API submitDealBeforeUkefIds - deal ', deal);
 
   if (!deal) {
     console.error('TFM API submitDealBeforeUkefIds - deal not found');
     return false;
   }
-
-  console.log('TFM API submitDealBeforeUkefIds calling api.submitDeal');
 
   return api.submitDeal(dealType, dealId);
 };
@@ -60,21 +54,16 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 
 
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
-  console.log('TFM API submitDealAfterUkefIds called');
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
-    console.error('TFM API submitDealAfterUkefIds - deal not found');
+    console.error('TFM API submitDealAfterUkefIds - deal not found ', dealId);
     return false;
   }
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
 
-  console.log('TFM API submitDealAfterUkefIds - calling mapSubmittedDeal');
-
   const mappedDeal = mapSubmittedDeal(submittedDeal);
-
-  console.log('TFM API submitDealAfterUkefIds - got mappedDeal');
 
   const { submissionCount } = mappedDeal;
 
@@ -154,8 +143,6 @@ const submitDealPUT = async (req, res) => {
     dealType,
     checker,
   } = req.body;
-
-  console.log('TFM API submitDealPUT ', req.body);
 
   const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
 

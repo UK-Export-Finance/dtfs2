@@ -10,22 +10,24 @@ const updateGefApplication = async (applicationId, applicationUpdate) => {
     {
       $set: applicationUpdate,
     },
-    { returnOriginal: false },
+    { returnDocument: 'after', returnOriginal: false },
   );
 
   return updatedApplication;
 };
 
-const updateGefFacility = async (applicationId, applicationUpdate) => {
+const updateGefFacility = async (facilityId, facilityUpdate) => {
   const collection = await db.getCollection('gef-facilities');
 
-  await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(applicationId)) } },
+  const updatedFacility = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(String(facilityId)) } },
     {
-      $set: applicationUpdate,
+      $set: facilityUpdate,
     },
-    { returnOriginal: false },
+    { returnDocument: 'after', returnOriginal: false },
   );
+
+  return updatedFacility;
 };
 
 module.exports = {
