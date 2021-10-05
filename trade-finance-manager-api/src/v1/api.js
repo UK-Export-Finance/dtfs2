@@ -133,7 +133,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error('TFM API findOneDeal catch error. dealId: ', dealId);
+    console.error('TFM API error finding BSS deal ', dealId);
     return false;
   }
 };
@@ -207,6 +207,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (err) {
+    console.error('TFM API error finding BSS facility ', facilityId);
     return err;
   }
 };
@@ -537,7 +538,7 @@ const findOneGefDeal = async (dealId) => {
 
     return response.data;
   } catch (err) {
-    console.error('TFM API findOneGefDeal catch error. dealId: ', dealId);
+    console.error('TFM API error finding GEF deal ', dealId);
     return false;
   }
 };
