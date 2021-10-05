@@ -9,6 +9,8 @@ const otherDealTasksStillRunning = (task, taskList) => taskList.some((t) => t.de
 
 const updatePortalDeal = async (input, { ukefId }) => {
   if (input.entityType === 'deal') {
+    console.log('TFM API updating BSS deal after receiving ukefId ', ukefId);
+
     return api.updatePortalDeal(input.entityId, {
       details: {
         ukefDealId: ukefId,
@@ -17,6 +19,8 @@ const updatePortalDeal = async (input, { ukefId }) => {
   }
 
   if (input.entityType === 'facility') {
+    console.log('TFM API updating BSS facility after receiving ukefId ', ukefId);
+
     return api.updatePortalFacility(input.entityId, {
       ukefFacilityID: ukefId,
     });
@@ -27,12 +31,15 @@ const updatePortalDeal = async (input, { ukefId }) => {
 
 const updateGefApplication = async (input, { ukefId }) => {
   if (input.entityType === 'deal') {
+    console.log('TFM API updating GEF deal after receiving ukefId ', ukefId);
     return gefController.updateGefApplication(input.entityId, {
       ukefDealId: ukefId,
     });
   }
 
   if (input.entityType === 'facility') {
+    console.log('TFM API updating GEF facility after receiving ukefId ', ukefId);
+
     return gefController.updateGefFacility(input.entityId, {
       ukefFacilityId: ukefId,
     });
