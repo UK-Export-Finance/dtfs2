@@ -1,5 +1,5 @@
-import CONSTANTS from '../../../../constants';
-import { userIsInTeam } from '../../../../helpers/user';
+const CONSTANTS = require('../../../../constants');
+const { userIsInTeam } = require('../../../../helpers/user');
 
 const canUserEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
@@ -18,4 +18,4 @@ const canUserEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
   return false;
 };
 
-export default canUserEditManagersDecision;
+module.exports = canUserEditManagersDecision;

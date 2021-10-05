@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateTaskMutation = gql`
   mutation UpdateTask($dealId: ID!, $taskUpdate: TFMTaskInput) {
@@ -14,4 +14,4 @@ const updateTaskMutation = gql`
   }
 `;
 
-export default updateTaskMutation;
+module.exports = updateTaskMutation;

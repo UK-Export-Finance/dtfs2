@@ -4,4 +4,4 @@ const bondIssuerFacilities = (facilities) =>
     && facilitySnapshot.ukefFacilityType === 'bond'
     && facilitySnapshot.bondIssuer);
 
-export default bondIssuerFacilities;
+module.exports = bondIssuerFacilities;

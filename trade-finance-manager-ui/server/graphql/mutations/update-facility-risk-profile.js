@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateFacilityRiskProfileMutation = gql`
   mutation UpdateFacilityRiskProfile($id: ID!, $facilityUpdate: TFMFacilityRiskProfileInput) {
@@ -8,4 +8,4 @@ const updateFacilityRiskProfileMutation = gql`
   }
 `;
 
-export default updateFacilityRiskProfileMutation;
+module.exports = updateFacilityRiskProfileMutation;

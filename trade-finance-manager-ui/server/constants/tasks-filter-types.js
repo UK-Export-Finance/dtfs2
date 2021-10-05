@@ -4,4 +4,4 @@ const TASK_FILTER_TYPES = {
   USER: 'user',
 };
 
-export default TASK_FILTER_TYPES;
+module.exports = TASK_FILTER_TYPES;

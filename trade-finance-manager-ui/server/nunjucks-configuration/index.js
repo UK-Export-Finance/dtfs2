@@ -1,14 +1,14 @@
-import nunjucks from 'nunjucks';
-import filterLocaliseTimestamp from './filter-localiseTimestamp';
-import filterFormatDateString from './filter-formatDateString';
-import dashIfEmpty from './filter-dashIfEmpty';
-import displayName from './filter-displayName';
-import formatAsCurrency from './formatAsCurrency';
-import countriesWithEmptyInitialOption from './filter-countriesWithEmptyInitialOption';
-import replaceWhiteSpaceWithDash from './filter-replaceWhiteSpaceWithDash';
-import bondBeneficiaryFacilities from './filter-bondBeneficiaryFacilities';
-import bondIssuerFacilities from './filter-bondIssuerFacilities';
-import formatAsDecimal from './formatAsDecimal';
+const nunjucks = require('nunjucks');
+const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
+const filterFormatDateString = require('./filter-formatDateString');
+const dashIfEmpty = require('./filter-dashIfEmpty');
+const displayName = require('./filter-displayName');
+const formatAsCurrency = require('./formatAsCurrency');
+const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
+const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
+const bondBeneficiaryFacilities = require('./filter-bondBeneficiaryFacilities');
+const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
+const formatAsDecimal = require('./formatAsDecimal');
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -34,4 +34,4 @@ const configureNunjucks = (opts) => {
   return nunjucks;
 };
 
-export default configureNunjucks;
+module.exports = configureNunjucks;

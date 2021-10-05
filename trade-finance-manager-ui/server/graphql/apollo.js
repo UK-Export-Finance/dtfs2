@@ -1,7 +1,7 @@
-import { ApolloClient } from 'apollo-client';
-import fetch from 'node-fetch';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+const { ApolloClient } = require('apollo-client');
+const fetch = require('node-fetch');
+const { createHttpLink } = require('apollo-link-http');
+const { InMemoryCache } = require('apollo-cache-inmemory');
 
 require('dotenv').config();
 
@@ -62,7 +62,7 @@ const doMutate = async (mutation, variables) => {
   }
 };
 
-export const apollo = async (method, query, variables, token) => {
+const apollo = async (method, query, variables, token) => {
   switch (method) {
     case 'POST':
     case 'PUT':
@@ -74,4 +74,4 @@ export const apollo = async (method, query, variables, token) => {
   }
 };
 
-export default apollo;
+module.exports = apollo;

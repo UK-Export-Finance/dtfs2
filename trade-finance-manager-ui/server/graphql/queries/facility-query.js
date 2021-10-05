@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const facilityQuery = gql`
   query Facility($id: ID!) {
@@ -65,4 +65,4 @@ const facilityQuery = gql`
   }
 `;
 
-export default facilityQuery;
+module.exports = facilityQuery;
