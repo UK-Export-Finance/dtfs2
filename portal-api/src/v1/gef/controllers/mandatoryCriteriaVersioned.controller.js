@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 
 const db = require('../../../drivers/db-client');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');

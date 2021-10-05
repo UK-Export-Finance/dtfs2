@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { exporterValidation, exporterStatus, exporterCheckEnums } = require('./validation/exporter');
