@@ -18,7 +18,7 @@ const mockApplications = require('../../fixtures/gef/application');
 const {
   calculateUkefExposure,
   calculateGuaranteeFee,
-} = require('../../../src/v1/gef/controllers/facilities.controller');
+} = require('../../../src/v1/gef/calculations/facility-calculations');
 
 describe(baseUrl, () => {
   // let noRoles;

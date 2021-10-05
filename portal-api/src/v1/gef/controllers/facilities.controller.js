@@ -6,6 +6,10 @@ const {
 } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { isSuperUser } = require('../../users/checks');
+const {
+  calculateUkefExposure,
+  calculateGuaranteeFee,
+} = require('../calculations/facility-calculations');
 
 const collectionName = 'gef-facilities';
 
@@ -86,39 +90,6 @@ exports.getById = async (req, res) => {
     res.status(204).send();
   }
 };
-
-const calculateUkefExposure = (requestedUpdate, existingFacility) => {
-  let latestValue = (existingFacility && existingFacility.value);
-  let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
-
-  // make sure we calculate with the latest values.
-  if (requestedUpdate.value) {
-    latestValue = requestedUpdate.value;
-  }
-
-  if (requestedUpdate.coverPercentage) {
-    latestCoverPercentage = requestedUpdate.coverPercentage;
-  }
-
-  const calculation = (latestValue * latestCoverPercentage);
-
-  return calculation;
-};
-exports.calculateUkefExposure = calculateUkefExposure;
-
-const calculateGuaranteeFee = (requestedUpdate, existingFacility) => {
-  let latestInterestPercentage = (existingFacility && existingFacility.interestPercentage);
-
-  // make sure we calculate with the latest values.
-  if (requestedUpdate.interestPercentage) {
-    latestInterestPercentage = requestedUpdate.interestPercentage;
-  }
-
-  const calculation = (0.9 * latestInterestPercentage);
-
-  return calculation;
-};
-exports.calculateGuaranteeFee = calculateGuaranteeFee;
 
 const update = async (id, updateBody) => {
   const collection = await db.getCollection(collectionName);
