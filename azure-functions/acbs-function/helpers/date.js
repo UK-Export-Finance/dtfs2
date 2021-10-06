@@ -8,5 +8,5 @@ const addYear = (date) => moment(date).add({ years: 20 }).format('YYYY-MM-DD');
 const now = () => moment().format('YYYY-MM-DD');
 
 module.exports = {
-  now, formatDate, formatTimestamp, formatYear, addYear
+  now, formatDate, formatTimestamp, formatYear, addYear,
 };

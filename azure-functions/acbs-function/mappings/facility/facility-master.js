@@ -41,7 +41,6 @@ const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
-
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,

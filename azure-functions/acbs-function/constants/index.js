@@ -5,5 +5,5 @@ const PRODUCT = require('./product');
 module.exports = {
   DEAL,
   FACILITY,
-  PRODUCT
+  PRODUCT,
 };

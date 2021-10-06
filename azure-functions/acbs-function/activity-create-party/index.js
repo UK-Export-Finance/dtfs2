@@ -27,13 +27,13 @@ const createParty = async (context) => {
   const { bindingData } = context;
 
   if (bindingData.party) {
-    const party = context.bindingData.party;
+    const { party } = context.bindingData;
     const missingMandatory = findMissingMandatory(party, mandatoryFields);
-    
+
     if (missingMandatory.length) {
       return Promise.resolve({ missingMandatory });
     }
-    
+
     const submittedToACBS = moment().format();
     const { status, data } = await api.createParty(party);
     if (isHttpErrorStatus(status)) {
@@ -47,7 +47,7 @@ const createParty = async (context) => {
         dataSent: party,
       }, null, 4));
     }
-    
+
     return {
       submittedToACBS,
       receivedFromACBS: moment().format(),
