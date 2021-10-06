@@ -13,6 +13,7 @@
   "limitTypeCode": "00",
   "sectionIdentifier": "00"
  */
+const CONSTANTS = require('../../constants');
 
 const codeValueTransaction = (deal, facility) => {
   const {
@@ -23,14 +24,14 @@ const codeValueTransaction = (deal, facility) => {
     facilityIdentifier: facility.ukefFacilityID !== undefined
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    lenderTypeCode: '100',
-    initialBundleStatusCode: 3,
-    portfolioIdentifier: 'E1',
+    lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
+    initialBundleStatusCode: CONSTANTS.FACILITY.BUNDLE_STATUS.STATUS3,
+    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     effectiveDate,
-    initiatingUserName: 'APIUKEF',
-    facilityTransactionCodeValueCode: 'A',
-    facilityTransactionTypeCode: '2340',
-    limitTypeCode: '00',
+    initiatingUserName: CONSTANTS.FACILITY.API_USER.APIUKEF,
+    facilityTransactionCodeValueCode: CONSTANTS.FACILITY.TRANSACTION_CODE.TYPEA,
+    facilityTransactionTypeCode: CONSTANTS.FACILITY.TRANSACTION_TYPE.TYPE2340,
+    limitTypeCode: CONSTANTS.FACILITY.LIMIT_TYPE.TYPE0,
   };
 };
 
