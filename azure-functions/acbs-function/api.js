@@ -1,18 +1,18 @@
 /**
- * ACBS Functions API Library deals with following HTTP Methods:
- * 1. GET
- * 2. PUT
- * 3. POST
- *
- * All the function have argument validation check and return object verification in
- * case err object does not have expected properties due to network connection, SSL verification or other issues.
- */
+* ACBS Functions API Library deals with following HTTP Methods:
+* 1. GET
+* 2. PUT
+* 3. POST
+*
+* All the function have argument validation check and return object verification in
+* case err object does not have expected properties due to network connection, SSL verification or other issues.
+*/
 const axios = require('axios');
 
 require('dotenv').config();
 
 const getACBS = async (apiRef) => {
-  if (apiRef) {
+  if (!!apiRef) {
     const response = await axios({
       method: 'get',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
@@ -24,20 +24,20 @@ const getACBS = async (apiRef) => {
         'Content-Type': 'application/json',
       },
     }).catch((err) => ({
-      status: err.response
-        ? err.response.status
-        : err,
+      status: !!err.response
+      ? err.response.status
+      : err,
     }));
     return response;
   }
 };
 
 const putToACBS = async (apiRef, acbsInput, etag) => {
-  if (apiRef && acbsInput) {
+  if (!!apiRef && !!acbsInput) {
     const additionalHeader = etag ? {
       'If-Match': etag,
     } : null;
-
+    
     const response = await axios({
       method: 'put',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
@@ -51,13 +51,13 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
       },
       data: acbsInput,
     }).catch((err) => ({
-      status: err.response
-        ? err.response.status
-        : err,
+      status: !!err.response
+      ? err.response.status
+      : err,
       data: {
         error: err.response
-          ? err.response.data
-          : err,
+        ? err.response.data
+        : err,
       },
     }));
     return response;
@@ -65,7 +65,7 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
 };
 
 const postToACBS = async (apiRef, acbsInput) => {
-  if (apiRef && acbsInput) {
+  if (!!apiRef && !!acbsInput) {
     const response = await axios({
       method: 'post',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
@@ -78,13 +78,13 @@ const postToACBS = async (apiRef, acbsInput) => {
       },
       data: [acbsInput],
     }).catch((err) => ({
-      status: err.response
-        ? err.response.status
-        : err,
+      status: !!err.response
+      ? err.response.status
+      : err,
       data: {
         error: err.response
-          ? err.response.data
-          : err,
+        ? err.response.data
+        : err,
       },
     }));
     return response;
@@ -105,20 +105,21 @@ const updateFacility = (facilityId, updateType, acbsInput, etag) => putToACBS(
   `facility/${facilityId}?op=${updateType}`,
   acbsInput,
   etag,
-);
-const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
-
-module.exports = {
-  createParty,
-  createDeal,
-  createDealInvestor,
-  createDealGuarantee,
-  createFacility,
-  createFacilityInvestor,
-  createFacilityCovenantId,
-  createFacilityCovenant,
-  createFacilityGuarantee,
-  createCodeValueTransaction,
-  updateFacility,
-  getFacility,
-};
+  );
+  const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
+  
+  module.exports = {
+    createParty,
+    createDeal,
+    createDealInvestor,
+    createDealGuarantee,
+    createFacility,
+    createFacilityInvestor,
+    createFacilityCovenantId,
+    createFacilityCovenant,
+    createFacilityGuarantee,
+    createCodeValueTransaction,
+    updateFacility,
+    getFacility,
+  };
+  
