@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateLossGivenDefault = gql`
   mutation UpdateLossGivenDefault($dealId: ID!, $lossGivenDefaultUpdate: TFMLossGivenDefaultInput) {
@@ -8,4 +8,4 @@ const updateLossGivenDefault = gql`
   }
 `;
 
-export default updateLossGivenDefault;
+module.exports = updateLossGivenDefault;

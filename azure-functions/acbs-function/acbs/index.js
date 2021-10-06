@@ -84,28 +84,37 @@ module.exports = df.orchestrator(function* HDeal(context) {
     };
   }
 
-  const dealRecord = {
-    submittedToACBS: '2021-10-05T12:25:24+00:00',
-    receivedFromACBS: '2021-10-05T12:25:30+00:00',
-    dealIdentifier: '0510',
-  };
+   // 2. Create Deal
+  const acbsDealInput = mappings.deal.deal(
+    deal, parties.exporter.partyIdentifier, acbsReference,
+  );
+  const dealRecord = yield context.df.callActivityWithRetry(
+    'activity-create-deal',
+    retryOptions,
+    { deal: acbsDealInput },
+  );
 
-  const dealInvestorRecord = {
-    dealIdentifier: '0510',
-    effectiveDate: '2021-10-05',
-    currency: 'GBP',
-    maximumLiability: 79000000,
-  };
+  // 3. Create Deal investor
+  const acbsDealInvestorInput = mappings.deal.dealInvestor(deal);
+  const dealInvestorRecord = yield context.df.callActivityWithRetry(
+    'activity-create-deal-investor',
+    retryOptions,
+    { investor: acbsDealInvestorInput },
+  );
 
-  const dealGuaranteeRecord = {
-    dealIdentifier: '0510',
-    guarantorParty: '00000141',
-    limitKey: '00290325',
-    guaranteeExpiryDate: '2041-10-05',
-    effectiveDate: '2021-10-05',
-    maximumLiability: 79000000,
-  };
-
+  // 4. Create Deal Guarantee
+  const acbsDealGuaranteeInput = mappings.deal.dealGuarantee(
+    deal,
+    parties.indemnifier !== undefined
+      ? parties.indemnifier.partyIdentifier
+      : parties.exporter.partyIdentifier,
+  );
+  const dealGuaranteeRecord = yield context.df.callActivityWithRetry(
+    'activity-create-deal-guarantee',
+    retryOptions,
+    { guarantee: acbsDealGuaranteeInput },
+  );
+  
   const dealAcbsData = {
     parties,
     deal: dealRecord,

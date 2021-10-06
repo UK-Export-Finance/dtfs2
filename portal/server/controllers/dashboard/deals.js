@@ -21,12 +21,28 @@ const getRoles = (roles) => {
   };
 };
 
+
+const dashboardFilters = (filter, userId) => {
+  const allFilters = [];
+
+  const { createdByYou } = filter;
+
+  if (createdByYou) {
+    allFilters.push({
+      field: 'userId',
+      value: userId,
+    });
+  }
+  return allFilters;
+};
+
 exports.bssDeals = async (req, res) => {
   const tab = 'bssDeals';
   const { userToken } = requestParams(req);
   const { isMaker, isChecker } = getRoles(req.session.user.roles);
 
-  const filters = [];
+  let filters = [];
+  filters = dashboardFilters(req.body, req.session.user._id);
 
   if (isChecker && !isMaker) {
     filters.push({
@@ -35,10 +51,8 @@ exports.bssDeals = async (req, res) => {
     });
   }
 
-  const { count, deals } = await getApiData(
-    api.allDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
+  // eslint-disable-next-line max-len
+  const { count, deals } = await getApiData(api.allDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -53,6 +67,7 @@ exports.bssDeals = async (req, res) => {
     primaryNav,
     tab,
     user: req.session.user,
+    createdByYou: req.body.createdByYou,
   });
 };
 
@@ -61,7 +76,8 @@ exports.gefDeals = async (req, res) => {
   const { userToken } = requestParams(req);
   const { isMaker, isChecker } = getRoles(req.session.user.roles);
 
-  const filters = [];
+  let filters = [];
+  filters = dashboardFilters(req.body, req.session.user._id);
 
   if (isChecker && !isMaker) {
     filters.push({
@@ -99,5 +115,6 @@ exports.gefDeals = async (req, res) => {
     primaryNav,
     tab,
     user: req.session.user,
+    createdByYou: req.body.createdByYou,
   });
 };

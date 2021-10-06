@@ -3,6 +3,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-faciliti
 const MOCK_GEF_DEAL = {
   _id: 'MOCK_GEF_DEAL',
   dealType: 'GEF',
+  applicationId: 'MOCK_GEF_DEAL',
   additionalRefName: 'Additional Reference 001',
   bankInternalRefName: 'Internal Reference 001',
   submissionDate: '1626169888809',

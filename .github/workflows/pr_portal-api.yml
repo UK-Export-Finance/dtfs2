@@ -7,11 +7,6 @@ on:
     - 'portal-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
     - 'utils/mock-data-loader/**'
-  schedule:
-    # A weekly run to roll up any base image patches,
-    # in office hours, avoiding bank holiday Mondays:
-    # "At 12:00 on Tuesday." - https://crontab.guru/
-    - cron: '0 12 * * 2'
 
 env:
   environment: dev
@@ -83,6 +78,28 @@ jobs:
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
+    - name: Build and push reference-data-proxy
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: reference-data-proxy
+        path: reference-data-proxy
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true 
+    - name: Build and push Number-Generator
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: azure-function-number-generator
+        path: azure-functions/number-generator-function
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true   
 
   test:
     name: "Run PR tests"
@@ -128,7 +145,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api  
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh && docker-compose up -d
+        source secrets/set_jwt_keypair.sh && docker-compose up -d portal-api
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -138,7 +155,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T portal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand --forceExit
+        docker-compose exec -T portal-api npm run api-test
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
@@ -219,6 +236,14 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui:${{ github.sha }} dtfs/trade-finance-manager-ui
+    - name: Pull Azure Number Generator function
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
+    - name: Pull reference-data-proxy
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }} dtfs/reference-data-proxy
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh

@@ -36,3 +36,4 @@ Therefore, every API called on submission should be moved to azure-functions and
 - Block any calls that rely on previous API calls until the previous API call is successful
 - The end user (and our e2e tests) will have a very quick submission process. This is not the case in BSS in particular
 - In TFM, we can have a "pending deals" table. Showing which deals are pending API calls, and which API calls are causing issues
+

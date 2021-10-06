@@ -158,6 +158,7 @@ exports.update = (req, res) => {
         );
       }
 
+      console.log('Portal BSS API submitting to TFM');
       await api.tfmDealSubmit(
         deal._id, // eslint-disable-line no-underscore-dangle
         CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,

@@ -42,5 +42,11 @@ describe('/v1/user/:id', () => {
 
       expect(body).toEqual(expected);
     });
+
+    it('returns 404 when there is no user', async () => {
+      const { status } = await api.get('/v1/user/123456789101');
+
+      expect(status).toEqual(404);
+    });
   });
 });

@@ -33,13 +33,18 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'Barclays 123');
+      applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
     });
 
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
       applicationDetails.captionHeading();
       applicationDetails.mainHeading();
+    });
+
+    it('shows a valid link to edit the reference', () => {
+      applicationDetails.editRefNameLink().click();
+      cy.url().should('eq', relative(`/gef/applications/${applications[0]._id}/name`));
     });
 
     it('displays the correct exporter elements', () => {
@@ -103,7 +108,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'UKEF Test 123');
+      applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
     });
 
     it('displays the correct exporter elements', () => {
@@ -137,7 +142,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.bankRefName().should('have.text', 'HSBC 123');
+      applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
     });
 
     it('displays the correct exporter elements', () => {

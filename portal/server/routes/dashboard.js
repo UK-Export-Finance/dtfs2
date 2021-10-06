@@ -16,9 +16,10 @@ router.get('/dashboard', async (req, res) => {
   res.redirect('/dashboard/0');
 });
 
-router.get('/dashboard/gef', async (req, res) => res.redirect('/dashboard/gef/0'));
+router.get('/dashboard/bss', async (req, res) => res.redirect('/dashboard/bss/0'));
 
-router.get('/dashboard/gef/:page', gefDeals);
+router.get('/dashboard/bss/:page', bssDeals);
+router.post('/dashboard/bss/:page', bssDeals);
 
 router.get('/dashboard/facilities/gef', async (req, res) => res.redirect('/dashboard/facilities/gef/0'));
 
@@ -29,6 +30,7 @@ router.get('/dashboard/facilities', async (req, res) => res.redirect('/dashboard
 router.get('/dashboard/facilities/:page', bssFacilities);
 
 // needs to be ordered last to avoid issues with taking priority over transaction routes
-router.get('/dashboard/:page', bssDeals);
+router.get('/dashboard/:page', gefDeals);
+router.post('/dashboard/:page', gefDeals);
 
 module.exports = router;

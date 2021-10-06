@@ -1,24 +1,20 @@
 import { bssFacilities, gefFacilities } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
+import api from '../../api';
 
-jest.mock('../../api', () => ({
-  transactions: jest.fn(),
-  gefFacilities: jest.fn(),
-}));
 jest.mock('../../helpers', () => ({
   __esModule: true,
-  getApiData: jest.fn(() => ({
-    count: 2,
-    facilities: ['mock facility 1', 'mock facility 2'],
-  })),
+  getApiData: jest.fn(),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
 }));
 
 describe('controllers/facilities', () => {
   let req;
+  let checkerReq;
   let res;
+
   beforeEach(() => {
     req = {
       body: {},
@@ -32,11 +28,26 @@ describe('controllers/facilities', () => {
       },
     };
 
+    checkerReq = {
+      body: {},
+      params: { page: 1 },
+      session: {
+        dashboardFilters: 'mock-filters',
+        user: {
+          id: 'mock-user',
+          roles: ['checker'],
+        },
+      },
+    };
+
+    api.transactions = jest.fn();
+    api.gefFacilities = jest.fn();
+
     res = mockResponse();
   });
 
   describe('bssFacilities', () => {
-    it('renders the correct template', async () => {
+    beforeEach(() => {
       getApiData.mockResolvedValue({
         count: 2,
         transactions: [
@@ -55,7 +66,25 @@ describe('controllers/facilities', () => {
           },
         ],
       });
+    });
 
+    afterEach(() => {
+      getApiData.mockReset();
+    });
+
+    it('passes the expected filter for maker', async () => {
+      await bssFacilities(req, res);
+
+      expect(api.transactions).toHaveBeenCalledWith(20, 20, [], 'mock-token');
+    });
+
+    it('passes the expected filter for checker', async () => {
+      await bssFacilities(checkerReq, res);
+
+      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'details.status', operator: 'eq', value: "Ready for Checker's approval" }], 'mock-token');
+    });
+
+    it('renders the correct template', async () => {
       await bssFacilities(req, res);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/facilities.njk', {
@@ -97,7 +126,7 @@ describe('controllers/facilities', () => {
   });
 
   describe('gefFacilities', () => {
-    it('renders the correct template', async () => {
+    beforeEach(() => {
       getApiData.mockResolvedValue({
         count: 2,
         facilities: [
@@ -117,7 +146,25 @@ describe('controllers/facilities', () => {
           },
         ],
       });
+    });
 
+    afterEach(() => {
+      getApiData.mockReset();
+    });
+
+    it('passes the expected filter for maker', async () => {
+      await gefFacilities(req, res);
+
+      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [], 'mock-token');
+    });
+
+    it('passes the expected filter for checker', async () => {
+      await gefFacilities(checkerReq, res);
+
+      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: 'BANK_CHECK' }], 'mock-token');
+    });
+
+    it('renders the correct template', async () => {
       await gefFacilities(req, res);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/facilities.njk', {

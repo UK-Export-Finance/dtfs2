@@ -3,7 +3,6 @@ const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const db = require('../../../../drivers/db-client');
 const now = require('../../../../now');
-const getUpdateFacilityErrors = require('../../../validation/update-facility');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 
 const withoutId = (obj) => {
@@ -52,14 +51,6 @@ exports.updateFacilityPut = async (req, res) => {
     facilityUpdate = req.body;
   } else {
     facilityUpdate = req.body;
-  }
-
-  const validationErrors = getUpdateFacilityErrors(facilityUpdate);
-
-  if (validationErrors.count !== 0) {
-    return res.status(400).send({
-      validationErrors,
-    });
   }
 
   const facility = await findOneFacility(facilityId);

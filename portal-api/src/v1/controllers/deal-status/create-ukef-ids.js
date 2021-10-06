@@ -1,42 +1,80 @@
 const refDataApi = require('../../../reference-data/api');
 const { updateDeal } = require('../deal.controller');
 const facilitiesController = require('../facilities.controller');
+const CONSTANTS = require('../../../constants');
 
-const createUkefIds = async (dealId, deal, user) => {
-  const ukefDealId = await refDataApi.numberGenerator.create('deal');
+const createUkefIds = async (entityId, deal, user) => {
+  const dealType = CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS;
 
-  const totalFacilities = deal.facilities.length;
-  let updatedFacilitiesCount = 0;
+  let numGenDeal;
 
-  return new Promise(async (resolve) => { // eslint-disable-line no-async-promise-executor
-    const updatedDeal = await updateDeal(
-      dealId,
+  try {
+    numGenDeal = await refDataApi.numberGenerator.create(
+      {
+        dealType,
+        entityType: 'deal',
+        entityId,
+        dealId: deal._id,
+        user,
+      },
+    );
+  } catch (err) {
+    throw new Error(err);
+  }
+
+  let updatedDeal;
+  try {
+    updatedDeal = await updateDeal(
+      entityId,
       {
         details: {
-          ukefDealId,
+          ukefDealId: numGenDeal.ukefId,
         },
       },
       user,
     );
+  } catch (error) {
+    throw new Error(error);
+  }
 
-    deal.facilities.forEach(async (facilityId) => {
-      const ukefFacilityID = await refDataApi.numberGenerator.create('facility');
-
-      const modifiedFacility = {
-        ukefFacilityID,
-      };
-
-      await facilitiesController.update(facilityId, modifiedFacility, user);
-
-      updatedFacilitiesCount += 1;
-
-      if (updatedFacilitiesCount === totalFacilities) {
-        return resolve(updatedDeal);
-      }
-
-      return facilityId;
-    });
+  const facilitiesNumGenPromises = [];
+  // Kick off function call for each facility
+  deal.facilities.forEach(async (facilityId) => {
+    facilitiesNumGenPromises.push(
+      refDataApi.numberGenerator.create(
+        {
+          dealType,
+          entityId: facilityId,
+          entityType: 'facility',
+          dealId: deal._id,
+          user,
+        },
+      ),
+    );
   });
+
+  const facilitiesNumGenRes = await Promise.all(facilitiesNumGenPromises);
+
+  const facilitiesUpdatePromises = [];
+
+  // Assign the generated ukefIds to each facility and update
+  deal.facilities.forEach((facilityId) => {
+    const { ukefId } = facilitiesNumGenRes.pop();
+
+    const modifiedFacility = {
+      ukefFacilityID: ukefId,
+    };
+
+    facilitiesUpdatePromises.push(
+      facilitiesController.update(facilityId, modifiedFacility, user),
+    );
+
+    return facilityId;
+  });
+
+  await Promise.all(facilitiesUpdatePromises);
+
+  return updatedDeal;
 };
 
 module.exports = createUkefIds;

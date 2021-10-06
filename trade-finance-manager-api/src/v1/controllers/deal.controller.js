@@ -1,4 +1,5 @@
 const mapDeal = require('../mappings/map-deal');
+const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
@@ -21,6 +22,36 @@ const findOneTfmDeal = async (dealId) => {
   };
 };
 exports.findOneTfmDeal = findOneTfmDeal;
+
+const queryDeals = async (queryParams) => {
+  const { deals } = await api.queryDeals({ ...queryParams });
+
+  if (!deals) {
+    return false;
+  }
+
+  return deals;
+};
+
+const findTfmDealsLight = async (queryParams) => {
+  const deals = await queryDeals(queryParams);
+
+  return {
+    deals,
+  };
+};
+exports.findTfmDealsLight = findTfmDealsLight;
+
+const findTfmDeals = async (queryParams) => {
+  const deals = await queryDeals(queryParams);
+
+  const mapped = await mapDeals(deals);
+
+  return {
+    deals: mapped,
+  };
+};
+exports.findTfmDeals = findTfmDeals;
 
 const findOnePortalDeal = async (dealId) => {
   const deal = await api.findOnePortalDeal(dealId).catch(() => false);

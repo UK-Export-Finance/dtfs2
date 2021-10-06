@@ -16,9 +16,7 @@ exports.findOneFacilityGet = async (req, res) => {
   const facility = await findOneFacility(req.params.id);
 
   if (facility) {
-    return res.status(200).send({
-      ...facility,
-    });
+    return res.status(200).send(facility);
   }
 
   return res.status(404).send();

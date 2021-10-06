@@ -7,4 +7,4 @@ const displayName = (person) => {
   return response;
 };
 
-export default displayName;
+module.exports = displayName;

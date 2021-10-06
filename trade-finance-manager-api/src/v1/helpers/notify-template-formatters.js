@@ -93,7 +93,10 @@ const generateGefFacilityLists = (facilities) => {
   const unissuedCashList = generateFacilitiesListString(unissuedCash);
   const unissuedContingentList = generateFacilitiesListString(unissuedContingent);
 
-  const issued = `${issuedCashList}\n${issuedContingentList}`;
+  let issued = '';
+  if (issuedCashList.length || issuedContingentList.length) {
+    issued = `${issuedCashList}\n${issuedContingentList}`;
+  }
 
   let unissued = '';
   if (unissuedCashList.length || unissuedContingentList.length) {

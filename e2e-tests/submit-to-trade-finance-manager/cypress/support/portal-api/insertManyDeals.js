@@ -1,9 +1,9 @@
 const { insertDeal, getDeal, logIn } = require('./api');
 
-module.exports =  (deals, opts) => {
-  console.log(`createManyDeals::`);
+module.exports = (deals, opts) => {
+  console.log('createManyDeals::');
 
-  logIn(opts).then( (token) => {
+  logIn(opts).then((token) => {
     const persisted = [];
 
     for (const dealToInsert of deals) {
@@ -15,6 +15,6 @@ module.exports =  (deals, opts) => {
           }
         });
       });
-    };
+    }
   });
-}
+};

@@ -9,3 +9,20 @@ exports.mongoStatus = (response) => {
   }
   return status;
 };
+
+const isSuperUser = (user) => user && user.bank && user.bank.id === '*';
+
+exports.userHasAccess = (user, deal, roles = []) => {
+  // super-users can get at anything
+  if (isSuperUser(user)) return true;
+
+  // if we've somehow got a user that doesn't have bank details; reject
+  if (!user?.bank?.id) return false;
+
+  // if the deal has no bank ID for some reason
+  if (!deal?.bankId) return false;
+
+  const hasRole = roles.some((role) => user.roles.includes(role));
+
+  return user.bank.id === deal.bankId && (!roles.length || hasRole);
+};

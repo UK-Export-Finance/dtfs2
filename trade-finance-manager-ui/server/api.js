@@ -1,19 +1,19 @@
-import axios from 'axios';
-import apollo from './graphql/apollo';
-import dealQuery from './graphql/queries/deal-query';
-import dealsQuery from './graphql/queries/deals-query';
-import facilityQuery from './graphql/queries/facility-query';
-import teamMembersQuery from './graphql/queries/team-members-query';
-import userQuery from './graphql/queries/user-query';
-import updatePartiesMutation from './graphql/mutations/update-parties';
-import updateFacilityMutation from './graphql/mutations/update-facilities';
-import updateFacilityRiskProfileMutation from './graphql/mutations/update-facility-risk-profile';
-import updateTaskMutation from './graphql/mutations/update-task';
-import updateCreditRatingMutation from './graphql/mutations/update-credit-rating';
-import updateLossGivenDefaultMutation from './graphql/mutations/update-loss-given-default';
-import updateProbabilityOfDefaultMutation from './graphql/mutations/update-probability-of-default';
-import postUnderwriterManagersDecision from './graphql/mutations/update-underwriter-managers-decision';
-import updateLeadUnderwriterMutation from './graphql/mutations/update-lead-underwriter';
+const axios = require('axios');
+const apollo = require('./graphql/apollo');
+const dealQuery = require('./graphql/queries/deal-query');
+const dealsLightQuery = require('./graphql/queries/deals-query-light');
+const facilityQuery = require('./graphql/queries/facility-query');
+const teamMembersQuery = require('./graphql/queries/team-members-query');
+const userQuery = require('./graphql/queries/user-query');
+const updatePartiesMutation = require('./graphql/mutations/update-parties');
+const updateFacilityMutation = require('./graphql/mutations/update-facilities');
+const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
+const updateTaskMutation = require('./graphql/mutations/update-task');
+const updateCreditRatingMutation = require('./graphql/mutations/update-credit-rating');
+const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-given-default');
+const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
+const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
+const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 
 require('dotenv').config();
 
@@ -26,22 +26,40 @@ const getDeal = async (id, tasksFilters) => {
   };
 
   const response = await apollo('GET', dealQuery, queryParams);
+
+  if (response.errors) {
+    console.error('TFM UI - GraphQL error querying deal ', response.errors);
+  }
+
   return response.data.deal;
 };
 
 const getDeals = async (queryParams) => {
-  const response = await apollo('GET', dealsQuery, queryParams);
+  const response = await apollo('GET', dealsLightQuery, queryParams);
 
-  const { deals: dealsObj } = response.data;
+  if (response.errors) {
+    console.error('TFM UI - GraphQL error querying deals ', response.errors);
+  }
+
+  if (response.data && response.data.dealsLight) {
+    return {
+      deals: response.data.dealsLight.deals,
+      count: response.data.dealsLight.count,
+    };
+  }
 
   return {
-    deals: dealsObj.deals,
-    count: dealsObj.count,
+    deals: [],
+    count: 0,
   };
 };
 
 const getFacility = async (id) => {
   const response = await apollo('GET', facilityQuery, { id });
+
+  if (response.errors) {
+    console.error('TFM UI - GraphQL error querying facility ', response.errors);
+  }
 
   return response.data.facility;
 };
@@ -166,7 +184,7 @@ const login = async (username) => {
   }
 };
 
-export default {
+module.exports = {
   getDeal,
   getDeals,
   getFacility,

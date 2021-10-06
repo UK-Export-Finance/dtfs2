@@ -14,21 +14,18 @@ context('View a deal', () => {
     const dummyDeal = {
       details: {
         bankSupplyContractID: 'abc-1-def',
-        bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+        bankSupplyContractName: 'Tibetan submarine acquisition scheme',
       },
     };
 
     beforeEach(() => {
       // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-      cy.on('uncaught:exception', (err) => {
-        console.log(err.stack);
-        return false;
-      });
+      cy.on('uncaught:exception', () => false);
 
       // clear down our test users old deals, and insert new ones - updating our deal object
       cy.deleteDeals(MAKER_LOGIN);
-      cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
-        .then((insertedDeal) => { deal = insertedDeal; });
+
+      cy.insertOneDeal(dummyDeal, MAKER_LOGIN).then((insertedDeal) => { deal = insertedDeal; });
     });
 
     it('A created BSS deal appears on the dashboard', () => {
@@ -43,7 +40,7 @@ context('View a deal', () => {
       } = dashboard.row;
 
       bankRef(id).invoke('text').then((text) => {
-        expect(text.trim()).equal('Tibettan submarine acquisition scheme');
+        expect(text.trim()).equal('Tibetan submarine acquisition scheme');
       });
 
       product(id).invoke('text').then((text) => {
@@ -61,6 +58,21 @@ context('View a deal', () => {
       link(id).click();
 
       cy.url().should('eq', relative(`/contract/${id}`));
+    });
+
+    it('should tick the checkbox and refresh the page', () => {
+      // login and go to dashboard
+      cy.login(MAKER_LOGIN);
+      dashboard.visit();
+
+      const id = deal._id;
+      cy.get('[data-cy="created-by-you"]').check();
+
+      const { bankRef } = dashboard.row;
+
+      bankRef(id).invoke('text').then((text) => {
+        expect(text.trim()).equal('Tibetan submarine acquisition scheme');
+      });
     });
   });
 });

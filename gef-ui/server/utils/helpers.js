@@ -23,7 +23,21 @@ const apiErrorHandler = ({ code, response }) => {
     return response;
   }
 
+  console.error(response);
   throw httpError(response.status, response.statusText);
+};
+
+const ErrorMessagesMap = {
+  bankInternalRefName: {
+    MANDATORY_FIELD: 'Application reference name is mandatory',
+    FIELD_TOO_LONG: 'Application reference name can only be up to 30 characters in length',
+    FIELD_INVALID_CHARACTERS: 'Application reference must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
+  },
+  additionalRefName: {
+    MANDATORY_FIELD: 'Additional reference name is mandatory',
+    FIELD_TOO_LONG: 'Additional reference name can only be up to 30 characters in length',
+    FIELD_INVALID_CHARACTERS: 'Additional reference name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
+  },
 };
 
 /*
@@ -40,17 +54,20 @@ const validationErrorHandler = (errs, href = '') => {
   const errors = isObject(errs) ? [errs] : errs;
 
   errors.forEach((el) => {
+    const errorsForReference = ErrorMessagesMap[el.errRef];
+    const mappedErrorMessage = errorsForReference ? errorsForReference[el.errCode] : el.errMsg;
+
     errorSummary.push({
-      text: el.errMsg,
+      text: mappedErrorMessage,
       href: `${href}#${el.errRef}`,
     });
     fieldErrors[el.errRef] = {
-      text: el.errMsg,
+      text: mappedErrorMessage,
     };
     if (el.subFieldErrorRefs) {
       el.subFieldErrorRefs.forEach((subFieldRef) => {
         fieldErrors[subFieldRef] = {
-          text: el.errMsg,
+          text: mappedErrorMessage,
         };
       });
     }

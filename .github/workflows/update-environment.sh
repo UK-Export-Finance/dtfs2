@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ]; then
-    echo "Please specify a source environment branch, e.g. master, test or staging."
+    echo "Please specify a source environment branch, e.g. main, test or staging."
     exit 1
 fi
 
@@ -22,9 +22,9 @@ git push -f --set-upstream origin $environment_destination
 git log -n 1 --pretty | sort
 
 # Clean up
-git checkout master
+git checkout main
 
-if [ $environment_source != "master" ]; then
+if [ $environment_source != "main" ]; then
     git branch -d $environment_source
 fi
 

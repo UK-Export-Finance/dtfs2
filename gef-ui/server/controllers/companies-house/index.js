@@ -17,6 +17,7 @@ const companiesHouse = async (req, res) => {
       status,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -64,6 +65,7 @@ const validateCompaniesHouse = async (req, res) => {
 
     return res.redirect('exporters-address');
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };

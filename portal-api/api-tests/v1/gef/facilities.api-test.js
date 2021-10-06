@@ -15,7 +15,10 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 const applicationCollectionName = 'gef-application';
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../fixtures/gef/application');
-const { calculateUkefExposure } = require('../../../src/v1/gef/controllers/facilities.controller');
+const {
+  calculateUkefExposure,
+  calculateGuaranteeFee,
+} = require('../../../src/v1/gef/calculations/facility-calculations');
 
 describe(baseUrl, () => {
   // let noRoles;
@@ -56,6 +59,7 @@ describe(baseUrl, () => {
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
         ukefExposure: 0,
+        guaranteeFee: 0,
         submittedAsIssuedDate: null,
         ukefFacilityId: null,
         dayCountBasis: null,
@@ -281,6 +285,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
+          guaranteeFee: calculateGuaranteeFee(update, {}),
         },
         validation: {
           required: [],
@@ -321,6 +326,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
+          guaranteeFee: calculateGuaranteeFee(update, {}),
         },
         validation: {
           required: ['name'],
@@ -334,7 +340,7 @@ describe(baseUrl, () => {
     it('other description is required if I select the other checkmark', async () => {
       const { details } = newFacility;
       const update = {
-        details: ['other'],
+        details: ['OTHER'],
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
@@ -367,6 +373,7 @@ describe(baseUrl, () => {
           coverEndDate: null,
           updatedAt: expect.any(Number),
           ukefExposure: calculateUkefExposure(completeUpdate, {}),
+          guaranteeFee: calculateGuaranteeFee(completeUpdate, {}),
         },
         validation: {
           required: [],
@@ -545,6 +552,36 @@ describe(baseUrl, () => {
         const result = calculateUkefExposure(update, existingFacility);
 
         const expected = (existingFacility.value * existingFacility.coverPercentage);
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('calculateGuaranteeFee', () => {
+    describe('when interestPercentage is present in the requested update', () => {
+      it('should calculate using the the provided interestPercentage', () => {
+        const update = {
+          interestPercentage: 25,
+        };
+        const existingFacility = {};
+
+        const result = calculateGuaranteeFee(update, existingFacility);
+
+        const expected = (0.9 * update.interestPercentage);
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when interestPercentage is NOT present in the requested update', () => {
+      it('should calculate with existing interestPercentage', () => {
+        const update = {};
+        const existingFacility = {
+          interestPercentage: 25,
+        };
+
+        const result = calculateGuaranteeFee(update, existingFacility);
+
+        const expected = (0.9 * existingFacility.interestPercentage);
         expect(result).toEqual(expected);
       });
     });

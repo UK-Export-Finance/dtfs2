@@ -1,7 +1,7 @@
-import CONSTANTS from '../../../../constants';
-import { userIsInTeam } from '../../../../helpers/user';
+const CONSTANTS = require('../../../../constants');
+const { userIsInTeam } = require('../../../../helpers/user');
 
 const canUserEditLeadUnderwriter = (user) =>
   userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
-export default canUserEditLeadUnderwriter;
+module.exports = canUserEditLeadUnderwriter;

@@ -5,7 +5,6 @@ const redis = require('redis');
 
 const flash = require('connect-flash');
 const path = require('path');
-const json2csv = require('express-json2csv');
 require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
@@ -13,9 +12,11 @@ const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 
 const configureNunjucks = require('./nunjucks-configuration');
+const sentry = require('./utils/sentry');
 
 const app = express();
 
+app.use(sentry);
 const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {
@@ -42,7 +43,7 @@ const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS
 
 redisClient.on('error', (err) => {
   // eslint-disable-next-line no-console
-  console.log(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
 });
 
 redisClient.on('ready', () => {
@@ -63,7 +64,6 @@ app.set('trustproxy', true);
 app.use(session(sessionOptions));
 
 app.use(flash());
-app.use(json2csv);
 
 configureNunjucks({
   autoescape: true,
@@ -84,7 +84,7 @@ app.use('/', routes);
 
 app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
-app.get('*', (req, res) => res.render('partials/page-not-found.njk', { user: req.session.user }));
+app.get('*', (req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
 // eslint-disable-next-line no-console
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);

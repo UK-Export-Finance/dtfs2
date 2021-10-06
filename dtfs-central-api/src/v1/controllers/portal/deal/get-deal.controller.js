@@ -6,9 +6,49 @@ const { findOneExporter } = require('../gef-exporter/get-gef-exporter.controller
 const { findOneBank } = require('../../bank/get-bank.controller');
 const { findOneUser } = require('../../user/get-user.controller');
 
+const extendDealWithFacilities = async (deal) => {
+  const facilitiesCollection = await db.getCollection('facilities');
+  const mappedDeal = { ...deal };
+  const mappedBonds = [];
+  const mappedLoans = [];
+  const facilityIds = deal.facilities;
+  const facilities = await facilitiesCollection.find({
+    _id: {
+      $in: facilityIds,
+    },
+  }).toArray();
+
+  facilityIds.forEach((id) => {
+    const facilityObj = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
+
+    if (facilityObj) {
+      const { facilityType } = facilityObj;
+
+      if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+        mappedBonds.push(facilityObj);
+      }
+
+      if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+        mappedLoans.push(facilityObj);
+      }
+    }
+  });
+  if (facilityIds && facilityIds.length > 0) {
+    mappedDeal.bondTransactions = {
+      items: mappedBonds,
+    };
+
+    mappedDeal.loanTransactions = {
+      items: mappedLoans,
+    };
+  }
+
+  return mappedDeal;
+}
+
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
-  const dealResults = collection.find(query);
+  const dealResults = await collection.find(query);
   const count = await dealResults.count();
   const deals = await dealResults
     .sort({ 'details.dateOfLastAction': -1 })
@@ -16,10 +56,15 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
     .limit(pagesize)
     .toArray();
 
+  const extendedDeals = []
+  for await (deal of deals) {
+    const extendedDeal = await extendDealWithFacilities(deal);
+    extendedDeals.push(extendedDeal);
+  }
 
   return {
     count,
-    deals,
+    deals: extendedDeals,
   };
 };
 exports.queryDeals = queryDeals;
@@ -31,53 +76,19 @@ exports.queryDealsPost = async (req, res) => {
 
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
-  const facilitiesCollection = await db.getCollection('facilities');
-
+  
   const deal = await dealsCollection.findOne({ _id });
 
   if (deal && deal.facilities) {
     const facilityIds = deal.facilities;
 
     if (facilityIds && facilityIds.length > 0) {
-      const mappedDeal = deal;
-      const mappedBonds = [];
-      const mappedLoans = [];
-
-      const facilities = await facilitiesCollection.find({
-        _id: {
-          $in: facilityIds,
-        },
-      }).toArray();
-
-      facilityIds.forEach((id) => {
-        const facilityObj = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
-
-        if (facilityObj) {
-          const { facilityType } = facilityObj;
-
-          if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
-            mappedBonds.push(facilityObj);
-          }
-
-          if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
-            mappedLoans.push(facilityObj);
-          }
-        }
-      });
-
-      mappedDeal.bondTransactions = {
-        items: mappedBonds,
-      };
-
-      mappedDeal.loanTransactions = {
-        items: mappedLoans,
-      };
-
+      const extendedDeal = await extendDealWithFacilities(deal);
       if (callback) {
-        callback(mappedDeal);
+        callback(extendedDeal);
       }
 
-      return mappedDeal;
+      return extendedDeal;
     }
   }
 
@@ -177,6 +188,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         type: '$details.submissionType',
         exporter: '$submissionDetails.supplier-name',
         lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
+        userId: '$details.maker._id',
       },
     },
     //     ],

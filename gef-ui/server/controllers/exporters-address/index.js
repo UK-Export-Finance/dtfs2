@@ -15,6 +15,7 @@ const exportersAddress = async (req, res) => {
       applicationId,
     });
   } catch (err) {
+    console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
 };

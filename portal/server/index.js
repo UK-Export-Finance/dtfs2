@@ -5,7 +5,6 @@ const redis = require('redis');
 
 const flash = require('connect-flash');
 const path = require('path');
-const json2csv = require('express-json2csv');
 require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
@@ -14,10 +13,11 @@ const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
 const configureNunjucks = require('./nunjucks-configuration');
-
+const sentry = require('./utils/sentry');
 
 const app = express();
 
+app.use(sentry);
 const PORT = process.env.PORT || 5000;
 
 if (!process.env.SESSION_SECRET) {
@@ -44,7 +44,7 @@ if (process.env.REDIS_KEY) {
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
 redisClient.on('error', (err) => {
-  console.log(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
 });
 
 redisClient.on('ready', () => {
@@ -62,7 +62,6 @@ sessionOptions.store = sessionStore;
 app.use(session(sessionOptions));
 
 app.use(flash());
-app.use(json2csv);
 
 configureNunjucks({
   autoescape: true,

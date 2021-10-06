@@ -57,31 +57,36 @@ const createEstore = async (req, res) => {
   result.folderName = createDeal.data.folderName;
 
   const createFacilities = facilityIdentifiers.map(
-    (facilityIdentifier) => new Promise((resolve, reject) => apiEstore.createFacilityFolder({
-      siteName,
-      dealIdentifier,
-      exporterName,
-      buyerName,
-      facilityIdentifier,
-      destinationMarket,
-      riskMarket,
-    }).then(({ status, data }) => {
-      if (status !== 201) {
-        reject(Error(data));
-      }
-      resolve({
-        facilityIdentifier,
-        ...data,
-      });
-    },
-    (err) => reject(err))),
+    (facilityIdentifier) =>
+      new Promise((resolve, reject) =>
+        apiEstore
+          .createFacilityFolder({
+            siteName,
+            dealIdentifier,
+            exporterName,
+            buyerName,
+            facilityIdentifier,
+            destinationMarket,
+            riskMarket,
+          })
+          .then(
+            ({ status, data }) => {
+              if (status !== 201) {
+                resolve(data);
+              }
+              resolve({
+                facilityIdentifier,
+                ...data,
+              });
+            },
+            (err) => reject(err),
+          )),
   );
 
   result.facilities = await Promise.all(createFacilities);
 
   return res.status(200).send(result);
 };
-
 
 module.exports = {
   createEstore,
