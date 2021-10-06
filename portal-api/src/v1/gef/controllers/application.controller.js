@@ -126,7 +126,7 @@ exports.update = async (req, res) => {
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectID(String(req.params.id)) } },
     { $set: update },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
   let response;
   if (result.value) {
@@ -210,7 +210,7 @@ exports.changeStatus = async (req, res) => {
     {
       $set: applicationUpdate,
     },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
 
   let response;

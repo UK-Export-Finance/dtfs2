@@ -32,7 +32,7 @@ exports.update = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const update = new CoverTerms(req.body);
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(String(req.params.id)) } }, { $set: update }, { returnDocument: 'after', returnOriginal: false },
+    { _id: { $eq: ObjectID(String(req.params.id)) } }, { $set: update }, { returnOriginal: false },
   );
   let response;
   if (result.value) {
