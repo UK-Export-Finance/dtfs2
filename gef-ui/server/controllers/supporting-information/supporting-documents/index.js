@@ -5,7 +5,7 @@ const { uploadAndSaveToDeal, removeFileFromDeal } = require('../../../utils/file
 
 const MAX_FILE_SIZE = 1024 * 1024 * 12;
 
-const mapDocTypeParemeterToKeys = (docType) => {
+const mapDocTypeParemeterToProps = (docType) => {
   const map = {
     'management-accounts': {
       fieldName: 'managementAccounts',
@@ -85,14 +85,14 @@ const getUploadSupportingDocument = async (req, res, next) => {
 
   try {
     application = await getApplication(applicationId, user, userToken);
-    const mappedValues = mapDocTypeParemeterToKeys(documentType);
+    const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
 
     return res.render('partials/upload-supporting-documents.njk', {
-      title: mappedValues.title,
-      formHeaderFragment: mappedValues.fieldName,
+      title,
+      formHeaderFragment: fieldName,
       user,
       applicationId,
-      files: application.supportingInformation?.[mappedValues.fieldName],
+      files: application.supportingInformation?.[fieldName],
     });
   } catch (err) {
     return handleError(err, req, res, next);
@@ -108,7 +108,7 @@ const postUploadSupportingDocument = async (req, res, next) => {
   } = req;
   const errRef = 'documents';
   try {
-    const mappedValues = mapDocTypeParemeterToKeys(documentType);
+    const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
 
     let errors = [];
     let processedFiles = [];
@@ -135,7 +135,7 @@ const postUploadSupportingDocument = async (req, res, next) => {
 
       const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(
         validFiles,
-        mappedValues.fieldName,
+        fieldName,
         applicationId,
         userToken,
         user,
@@ -164,7 +164,7 @@ const postUploadSupportingDocument = async (req, res, next) => {
 
     if (fileToDelete) {
       try {
-        await removeFileFromDeal(fileToDelete, mappedValues.fieldName, application, userToken);
+        await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
       } catch (err) {
         const errMsg = `Error deleting file ${fileToDelete}: ${err.message}`;
         console.error(errMsg);
@@ -175,19 +175,20 @@ const postUploadSupportingDocument = async (req, res, next) => {
     if (!fileToDelete) {
       errors = [
         ...errors,
-        ...validateFileQuestion(application, mappedValues.fieldName, errRef),
+        ...validateFileQuestion(application, fieldName, errRef),
       ];
     }
 
     if (errors.length || !submit) {
       return res.render('partials/upload-supporting-documents.njk', {
-        formHeaderFragment: mappedValues.fieldName,
+        title,
+        formHeaderFragment: fieldName,
         errors: errors.length && validationErrorHandler(errors),
         user,
         applicationId,
         files: [
           ...processedFiles,
-          ...(application.supportingInformation?.managementAccounts || []),
+          ...(application.supportingInformation?.[fieldName] || []),
         ],
       });
     }
@@ -205,7 +206,7 @@ const uploadSupportingDocument = async (req, res, next) => {
     session: { user, userToken },
   } = req;
   try {
-    const mappedValues = mapDocTypeParemeterToKeys(documentType);
+    const { fieldName } = mapDocTypeParemeterToProps(documentType);
 
     if (!file) return res.status(400).send('Missing file');
 
@@ -216,7 +217,7 @@ const uploadSupportingDocument = async (req, res, next) => {
     if (isValid) {
       const [processedFile] = await uploadAndSaveToDeal(
         [file],
-        mappedValues.fieldName,
+        fieldName,
         applicationId,
         userToken,
         user,
@@ -249,13 +250,13 @@ const deleteSupportingDocument = async (req, res, next) => {
     session: { user, userToken },
   } = req;
   try {
-    const mappedValues = mapDocTypeParemeterToKeys(documentType);
+    const { fieldName } = mapDocTypeParemeterToProps(documentType);
 
     if (!fileToDelete) return res.status(400).send('Missing file to delete');
 
     const application = await getApplication(applicationId, user, userToken);
 
-    await removeFileFromDeal(fileToDelete, mappedValues.fieldName, application, userToken);
+    await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
 
     return res.status(200).send({
       file: fileToDelete,
