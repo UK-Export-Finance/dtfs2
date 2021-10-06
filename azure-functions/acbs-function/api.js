@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 /**
 * ACBS Functions API Library deals with following HTTP Methods:
 * 1. GET
@@ -25,11 +26,12 @@ const getACBS = async (apiRef) => {
       },
     }).catch((err) => ({
       status: !!err.response
-      ? err.response.status
-      : err,
+        ? err.response.status
+        : err,
     }));
     return response;
   }
+  return {};
 };
 
 const putToACBS = async (apiRef, acbsInput, etag) => {
@@ -37,7 +39,7 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
     const additionalHeader = etag ? {
       'If-Match': etag,
     } : null;
-    
+
     const response = await axios({
       method: 'put',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
@@ -52,16 +54,17 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
       data: acbsInput,
     }).catch((err) => ({
       status: !!err.response
-      ? err.response.status
-      : err,
+        ? err.response.status
+        : err,
       data: {
         error: err.response
-        ? err.response.data
-        : err,
+          ? err.response.data
+          : err,
       },
     }));
     return response;
   }
+  return {};
 };
 
 const postToACBS = async (apiRef, acbsInput) => {
@@ -79,16 +82,17 @@ const postToACBS = async (apiRef, acbsInput) => {
       data: [acbsInput],
     }).catch((err) => ({
       status: !!err.response
-      ? err.response.status
-      : err,
+        ? err.response.status
+        : err,
       data: {
         error: err.response
-        ? err.response.data
-        : err,
+          ? err.response.data
+          : err,
       },
     }));
     return response;
   }
+  return {};
 };
 
 const createParty = (acbsInput) => postToACBS('party', acbsInput);
@@ -105,21 +109,20 @@ const updateFacility = (facilityId, updateType, acbsInput, etag) => putToACBS(
   `facility/${facilityId}?op=${updateType}`,
   acbsInput,
   etag,
-  );
-  const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
-  
-  module.exports = {
-    createParty,
-    createDeal,
-    createDealInvestor,
-    createDealGuarantee,
-    createFacility,
-    createFacilityInvestor,
-    createFacilityCovenantId,
-    createFacilityCovenant,
-    createFacilityGuarantee,
-    createCodeValueTransaction,
-    updateFacility,
-    getFacility,
-  };
-  
+);
+const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
+
+module.exports = {
+  createParty,
+  createDeal,
+  createDealInvestor,
+  createDealGuarantee,
+  createFacility,
+  createFacilityInvestor,
+  createFacilityCovenantId,
+  createFacilityCovenant,
+  createFacilityGuarantee,
+  createCodeValueTransaction,
+  updateFacility,
+  getFacility,
+};

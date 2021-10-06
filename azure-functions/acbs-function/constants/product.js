@@ -2,9 +2,9 @@ const TYPE = {
   GEF: 'GEF',
   BSS: 'BSS',
   EWCS: 'EWCS',
-  WCS: 'WCS'
+  WCS: 'WCS',
 };
 
 module.exports = {
-  TYPE
+  TYPE,
 };

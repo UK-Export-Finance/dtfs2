@@ -55,45 +55,45 @@ const FORECAST_PERCENTAGE = {
 const LENDER_TYPE = {
   TYPE1: '100',
   TYPE5: '500',
-}
+};
 
 const BUNDLE_STATUS = {
   STATUS2: 2,
   STATUS3: 3,
-}
+};
 
 const PORTFOLIO = {
   E1: 'E1',
-}
+};
 
 const TRANSACTION_CODE = {
   TYPEA: 'A',
-}
+};
 
 const TRANSACTION_TYPE = {
   TYPE2340: '2340',
-}
+};
 
 const LIMIT_TYPE = {
   TYPE0: '00',
-}
+};
 
 const CREDIT_RATING = {
-  CODE14: '14', 
-}
+  CODE14: '14',
+};
 
 const RISK = {
-  COUNTRY = {
+  COUNTRY: {
     UNITED_KINGDOM: 'GBR',
   },
-  STATUS = {
+  STATUS: {
     TYPE03: '03',
-  }
-}
+  },
+};
 
 const API_USER = {
   APIUKEF: 'APIUKEF',
-}
+};
 
 module.exports = {
   FACILITY_TYPE,

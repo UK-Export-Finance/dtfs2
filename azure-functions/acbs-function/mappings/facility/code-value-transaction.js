@@ -1,7 +1,8 @@
 /*
   "portfolioIdentifier": "E1",
   "facilityIdentifier":  UKEF facilityId,
-  "lenderTypeCode": "100" or "500" *Ensure code we are using 100 as 500 will not activate the facility confirmed with IJ,
+  "lenderTypeCode": "100" or "500" *Ensure code we are using 100 as 500
+   will not activate the facility confirmed with IJ,
   "initialBundleStatusCode": 2 or 3, Should now be set to 3
   "initiatingUserName": "APIUKEF",
   "accountOwnerIdentifier": "00000000",
