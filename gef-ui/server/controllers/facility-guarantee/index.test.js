@@ -66,7 +66,7 @@ describe('controllers/facility-guarantee', () => {
   describe('GET Facility Guarantee', () => {
     it('renders the `Facility Guarantee` template', async () => {
       mockRequest.query.status = 'change';
-      mockFacilityResponse.details.frequency = 'Monthly';
+      mockFacilityResponse.details.feeFrequency = 'Monthly';
       mockFacilityResponse.details.dayCountBasis = '365';
       mockFacilityResponse.details.feeType = 'in advance';
 
@@ -108,7 +108,7 @@ describe('controllers/facility-guarantee', () => {
       jest.resetAllMocks();
 
       mockRequest.body.feeType = 'in advance';
-      mockRequest.body.frequency = 'Monthly';
+      mockRequest.body.feeFrequency = 'Monthly';
       mockRequest.body.dayCountBasis = '';
 
       await updateFacilityGuarantee(mockRequest, mockResponse);
@@ -130,7 +130,7 @@ describe('controllers/facility-guarantee', () => {
       expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
         feeType: 'in advance',
         dayCountBasis: '365',
-        frequency: 'Monthly',
+        feeFrequency: 'Monthly',
       });
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');

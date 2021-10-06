@@ -57,7 +57,7 @@ class Facility {
       this.submittedAsIssuedDate = req.submittedAsIssuedDate || null;
       this.ukefFacilityId = req.ukefFacilityId || null;
       this.feeType = null;
-      this.frequency = null;
+      this.feeFrequency = null;
       this.dayCountBasis = null;
     } else {
       // update application
@@ -115,8 +115,8 @@ class Facility {
         this.feeType = req.feeType;
       }
 
-      if (req.frequency) {
-        this.frequency = req.frequency;
+      if (req.feeFrequency) {
+        this.feeFrequency = req.feeFrequency;
       }
 
       if (req.dayCountBasis) {
