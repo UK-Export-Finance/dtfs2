@@ -36,8 +36,6 @@ const createFacilityInvestor = async (context) => {
   const { status, data } = await api.createFacilityInvestor(acbsFacilityInvestorInput);
 
   if (isHttpErrorStatus(status)) {
-    console.log('XXXX');
-    console.log({ data });
     throw new Error(
       JSON.stringify({
         name: 'ACBS Facility Investor create error',

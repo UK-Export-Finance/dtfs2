@@ -1,5 +1,5 @@
 const { to2Decimals } = require('../../helpers/currency');
-const { getDealEffectiveDate, getDealGuaranteeExpiryDate } = require('./helpers');
+const { getDealValue, getDealEffectiveDate, getDealGuaranteeExpiryDate } = require('./helpers');
 
 /*
   "dealIdentifier":       Deal ACBS ID
@@ -10,18 +10,14 @@ const { getDealEffectiveDate, getDealGuaranteeExpiryDate } = require('./helpers'
   "maximumLiability":     Contract Value
 */
 
-
 const dealInvestor = (deal, limitKey) => {
-  const { details, submissionDetails } = deal.dealSnapshot;
-
-
   return {
-    dealIdentifier: details.ukefDealId.padStart(10, 0),
+    dealIdentifier: deal.dealSnapshot.ukefDealId.padStart(10, 0),
     guarantorParty: '00000141',
     limitKey,
     guaranteeExpiryDate: getDealGuaranteeExpiryDate(deal),
     effectiveDate: getDealEffectiveDate(deal),
-    maximumLiability: to2Decimals(submissionDetails.supplyContractValue),
+    maximumLiability: to2Decimals(getDealValue(deal)),
   };
 };
 

@@ -1,24 +1,24 @@
 /*
  yyyy-MM-dd
 ACBS guaranteeCommencementDate algorithm
-provided by darren McGuirk 23/03/2021
+provided by DM 23/03/2021
                               ACBS Effective Date     ACBS Issued Date
 Commitment                    Portal Submission Date  (we don’t send)
 Switch Commitment to Issued   Portal Submission Date  Cover Start Date
 Issued (straight to Issued    Cover Start Date        Cover Start Date
 */
-const { formatTimestamp } = require('../../../helpers/date');
+const { formatTimestamp, addYear } = require('../../../helpers/date');
+const CONSTANT = require('../../../constants/product');
 
-const getDealGuaranteeExpiryDate = ({ dealSnapshot }) => {
-  const { facilities } = dealSnapshot;
+const getDealGuaranteeExpiryDate = (deal) => {
+  if (deal.dealSnapshot.dealType === CONSTANT.TYPE.GEF) {
+    return addYear(formatTimestamp(deal.dealSnapshot.submissionDate), 20);
+  }
 
-  const { submissionDate } = dealSnapshot.details;
-
-  const latestGuaranteeExpiry = facilities.reduce((latestDate, facility) => {
+  const latestGuaranteeExpiry = deal.reduce((latestDate, facility) => {
     const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
-
     return guaranteeExpiryDate > latestDate ? guaranteeExpiryDate : latestDate;
-  }, formatTimestamp(submissionDate));
+  }, formatTimestamp(deal.submittedDate));
 
   return latestGuaranteeExpiry;
 };

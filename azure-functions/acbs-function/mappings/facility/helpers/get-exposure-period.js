@@ -1,10 +1,17 @@
 /* calculating exposure period based on Portal V2 algorithm */
 const moment = require('moment');
+const CONSTANTS = require('../../../constants');
 const { formatYear, formatTimestamp } = require('../../../helpers/date');
 
-const getExposurePeriod = (facility) => {
+const getExposurePeriod = (facility, dealType) => {
   let coverStartDate;
   const { facilitySnapshot } = facility;
+
+  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+    return facility.tfm.exposurePeriodInMonths === undefined
+      ? 0
+      : facility.tfm.exposurePeriodInMonths;
+  }
 
   if (facilitySnapshot.requestedCoverStartDate) {
     const startDate = moment(formatTimestamp(facilitySnapshot.requestedCoverStartDate));
@@ -41,6 +48,5 @@ const getExposurePeriod = (facility) => {
 
   return durationMonths + monthOffset;
 };
-
 
 module.exports = getExposurePeriod;

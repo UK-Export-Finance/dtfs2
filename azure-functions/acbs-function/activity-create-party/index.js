@@ -24,8 +24,8 @@ const mandatoryFields = [
 ];
 
 const createParty = async (context) => {
-  const { party } = context.bindingData;
-
+  // eslint-disable-next-line prefer-destructuring
+  const party = context.bindingData.party;
   const missingMandatory = findMissingMandatory(party, mandatoryFields);
 
   if (missingMandatory.length) {
@@ -34,7 +34,6 @@ const createParty = async (context) => {
 
   const submittedToACBS = moment().format();
   const { status, data } = await api.createParty(party);
-
   if (isHttpErrorStatus(status)) {
     throw new Error(JSON.stringify({
       name: 'ACBS Party create error',

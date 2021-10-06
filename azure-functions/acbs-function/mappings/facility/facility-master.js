@@ -38,49 +38,63 @@
   */
 
 const helpers = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
-  const { details, submissionDetails } = deal.dealSnapshot;
-  const { facilitySnapshot } = facility;
 
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
   } = facility.tfm.facilityGuaranteeDates;
-  const issueDate = helpers.getIssueDate(facility, details.submissionDate);
+
+  const issueDate = helpers.getIssueDate(facility, deal.dealSnapshot.submissionDate);
 
   return {
-    dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
-    facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
+    dealIdentifier: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+      ? acbsData.investor.dealIdentifier.padStart(10, 0)
+      : acbsData.deal.dealIdentifier.padStart(10, 0),
+    facilityIdentifier: facility.ukefFacilityID !== undefined
+      ? facility.ukefFacilityID.padStart(10, 0)
+      : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: 'E1',
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
-    maximumLiability: helpers.getMaximumLiability(facility),
-    productTypeId: helpers.getProductTypeId(facilitySnapshot.facilityType),
-    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facilitySnapshot.facilityType),
-    productTypeName: facilitySnapshot.facilityType,
-    currency: facilitySnapshot.currency.id,
+    maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
+    productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
+    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
+    productTypeName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+      ? facility.facilitySnapshot.type
+      : facility.facilitySnapshot.facilityType,
+    currency: facility.facilitySnapshot.currency.id !== undefined
+      ? facility.facilitySnapshot.currency.id
+      : facility.facilitySnapshot.currency,
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
-    delegationType: helpers.getDelegationType(details.submissionType),
-    intrestOrFeeRate: helpers.getInterestOrFeeRate(facility),
-    facilityStageCode: helpers.getFacilityStageCode(facility),
-    exposurePeriod: String(helpers.getExposurePeriod(facility)),
+    delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
+    intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
+    facilityStageCode: helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType),
+    exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
     creditRatingCode: '14',
-    guaranteePercentage: Number(facilitySnapshot.coveredPercentage),
-    premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility),
+    guaranteePercentage: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+      ? Number(facility.facilitySnapshot.coverPercentage)
+      : Number(facility.facilitySnapshot.coveredPercentage),
+    premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
     riskCountryCode: 'GBR',
     riskStatusCode: '03',
     effectiveDate,
-    foreCastPercentage: helpers.getForecastPercentage(facilitySnapshot.facilityStage),
+    foreCastPercentage: helpers.getForecastPercentage(
+      facility.facilitySnapshot,
+      deal.dealSnapshot.dealType,
+    ),
     issueDate,
-    description: helpers.getDescription(facility),
+    description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
     agentBankIdentifier: '00000000',
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorName: submissionDetails['supplier-name'].substring(0, 35),
+    obligorName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+      ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
+      : deal.dealSnapshot['supplier-name'].substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
-
   };
 };
 
