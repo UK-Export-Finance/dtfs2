@@ -20,13 +20,6 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     loans: [],
   };
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MIADealAcceptedStatusWithUnissuedFacilities, { ...MAKER_LOGIN })

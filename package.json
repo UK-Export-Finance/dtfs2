@@ -7,11 +7,8 @@
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
   },
-  "dependencies": {
-    "moment": "^2.27.0"
-  },
   "devDependencies": {
-    "cypress": "^8.4.0",
+    "cypress": "^8.5.0",
     "cypress-audit": "^1.0.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
