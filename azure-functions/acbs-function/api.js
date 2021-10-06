@@ -12,7 +12,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const getACBS = async (apiRef) => {
-  if (apiRef !== undefined) {
+  if (apiRef) {
     const response = await axios({
       method: 'get',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
@@ -24,7 +24,7 @@ const getACBS = async (apiRef) => {
         'Content-Type': 'application/json',
       },
     }).catch((err) => ({
-      status: err.response !== undefined
+      status: err.response
         ? err.response.status
         : err,
     }));
@@ -33,7 +33,7 @@ const getACBS = async (apiRef) => {
 };
 
 const putToACBS = async (apiRef, acbsInput, etag) => {
-  if (apiRef !== undefined && acbsInput !== undefined) {
+  if (apiRef && acbsInput) {
     const additionalHeader = etag ? {
       'If-Match': etag,
     } : null;
@@ -51,11 +51,11 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
       },
       data: acbsInput,
     }).catch((err) => ({
-      status: err.response !== undefined
+      status: err.response
         ? err.response.status
         : err,
       data: {
-        error: err.response !== undefined
+        error: err.response
           ? err.response.data
           : err,
       },
@@ -65,7 +65,7 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
 };
 
 const postToACBS = async (apiRef, acbsInput) => {
-  if (apiRef !== undefined && acbsInput !== undefined) {
+  if (apiRef && acbsInput) {
     const response = await axios({
       method: 'post',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
@@ -78,11 +78,11 @@ const postToACBS = async (apiRef, acbsInput) => {
       },
       data: [acbsInput],
     }).catch((err) => ({
-      status: err.response !== undefined
+      status: err.response
         ? err.response.status
         : err,
       data: {
-        error: err.response !== undefined
+        error: err.response
           ? err.response.data
           : err,
       },
