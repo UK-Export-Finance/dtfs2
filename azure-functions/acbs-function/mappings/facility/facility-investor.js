@@ -8,6 +8,7 @@
   */
 
 const helpers = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 const facilityInvestor = (deal, facility) => {
   const {
@@ -20,7 +21,7 @@ const facilityInvestor = (deal, facility) => {
     facilityIdentifier: facility.ukefFacilityID !== undefined
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    portfolioIdentifier: 'E1',
+    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     currency: facility.facilitySnapshot.currency.id !== undefined
       ? facility.facilitySnapshot.currency.id

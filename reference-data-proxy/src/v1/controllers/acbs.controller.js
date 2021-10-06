@@ -100,7 +100,6 @@ exports.issueAcbsFacilityPOST = async (req, res) => {
 };
 
 const createAcbsRecord = async (deal, bank) => {
-  console.log({ deal }, { bank });
   const response = await axios({
     method: 'post',
     url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
@@ -109,14 +108,11 @@ const createAcbsRecord = async (deal, bank) => {
       bank,
     },
   }).catch((err) => err);
-  console.log({ response });
   return response;
 };
 
 exports.createAcbsRecordPOST = async (req, res) => {
   const { deal, bank } = req.body;
-
   const { status, data } = await createAcbsRecord(deal, bank);
-  console.log({ status }, { data });
   return res.status(status).send(data);
 };

@@ -38,7 +38,6 @@
   */
 
 const helpers = require('./helpers');
-
 const CONSTANTS = require('../../constants');
 
 const facilityUpdate = (facility, acbsFacility, obligorName) => {
