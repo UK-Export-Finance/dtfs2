@@ -46,7 +46,7 @@ const facilityUpdate = (facility, acbsFacility, obligorName) => {
 
   return {
     ...acbsFacility,
-    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facilitySnapshot.facilityType),
+    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facilitySnapshot),
     issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
     facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
     foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,

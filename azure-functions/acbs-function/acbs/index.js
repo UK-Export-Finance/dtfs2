@@ -1,83 +1,110 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /*
- * This function is not intended to be invoked directly. Instead it will be
- * triggered by an HTTP starter function.
- *
- * Before running this sample, please:
- * - create a Durable activity function (default name is "Hello")
- * - create a Durable HTTP starter function
- * - run 'npm install durable-functions' from the wwwroot folder of your
- *    function app in Kudu
- */
+* This function is not intended to be invoked directly. Instead it will be
+* triggered by an HTTP starter function.
+*
+* Before running this sample, please:
+* - create a Durable activity function (default name is "Hello")
+* - create a Durable HTTP starter function
+* - run 'npm install durable-functions' from the wwwroot folder of your
+*    function app in Kudu
+*/
 
- const df = require('durable-functions');
- const mappings = require('../mappings');
- const retryOptions = require('../helpers/retryOptions');
- const CONSTANTS = require('../constants');
+const df = require('durable-functions');
+const mappings = require('../mappings');
+const retryOptions = require('../helpers/retryOptions');
+const CONSTANTS = require('../constants');
 
- module.exports = df.orchestrator(function* HDeal(context) {
+module.exports = df.orchestrator(function* HDeal(context) {
+
   const { deal, bank } = context.df.getInput();
 
-  console.log("*****************HERE****************");
-
-  //Get Product Type i.e. GEF
-  const product = deal.hasOwnProperty("dealSnapshot") ? deal.dealSnapshot.dealType : '';
-
-  console.log({ product });
+  // Get Product Type
+  const product = deal.dealSnapshot.dealType;
 
   // Get ACBS industry code
-  //const industryCode = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
-  const industryCode = deal.dealSnapshot.exporter.industries[0].code;
-
-  console.log({ industryCode });
+  const industryCode = deal.dealSnapshot.submissionDetails['industry-class'] !== undefined
+    ? deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code
+    : deal.dealSnapshot.exporter.industries[0].code;
 
   const acbsReference = {
     supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, { industryCode }),
   };
 
-  console.log({ product }, { acbsReference });
-  // Create Parties
-  const exporterTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.exporter({ deal, acbsReference }) });
-  console.log({ exporterTask });
+  // 1. Create Parties
+  const exporterTask = context.df.callActivityWithRetry(
+    'activity-create-party',
+    retryOptions,
+    { party: mappings.party.exporter({ deal, acbsReference }) },
+  );
+  const bankTask = context.df.callActivityWithRetry(
+    'activity-create-party',
+    retryOptions,
+    { party: mappings.party.bank({ bank }) },
+  );
 
-  if(product !== CONSTANTS.PRODUCT.TYPE.GEF)
-  {
-    const buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.buyer({ deal }) });
-    console.log({ buyerTask });
-    const agentTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.agent({ deal }) });
-    console.log({ agentTask });
-    const indemnifierTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.indemnifier({ deal }) });
-    console.log({ indemnifierTask });
-    const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.bank({ bank }) });
-    console.log({ bankTask });
+  if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
+    const buyerTask = context.df.callActivityWithRetry(
+      'activity-create-party',
+      retryOptions,
+      { party: mappings.party.buyer({ deal }) },
+    );
+    const agentTask = context.df.callActivityWithRetry(
+      'activity-create-party',
+      retryOptions,
+      { party: mappings.party.agent({ deal }) },
+    );
+    const indemnifierTask = context.df.callActivityWithRetry(
+      'activity-create-party',
+      retryOptions,
+      { party: mappings.party.indemnifier({ deal }) },
+    );
   }
 
-  // Party tasks are run in parallel so wait for them all to be finished.
-  yield context.df.Task.all(product === CONSTANTS.PRODUCT.TYPE.GEF ? [exporterTask] : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
+  // 1.1. Party tasks are run in parallel so wait for them all to be finished.
+  yield context.df.Task.all(product === CONSTANTS.PRODUCT.TYPE.GEF
+    ? [exporterTask, bankTask]
+    : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]);
 
-  const parties = {
-    product === CONSTANTS.PRODUCT.TYPE.GEF ? exporter: exporterTask.result : exporter: exporterTask.result, buyer: buyerTask.result, agent: agentTask.result, indemnifier: indemnifierTask.result, bank: bankTask.result
+  let parties;
+
+  if (product === CONSTANTS.PRODUCT.TYPE.GEF) {
+    parties = {
+      exporter: exporterTask.result,
+      bank: bankTask.result,
+    };
+  } else {
+    parties = {
+      exporter: exporterTask.result,
+      buyer: buyerTask.result,
+      agent: agentTask.result,
+      indemnifier: indemnifierTask.result,
+      bank: bankTask.result,
+    };
+  }
+
+  const dealRecord = {
+    submittedToACBS: '2021-10-05T12:25:24+00:00',
+    receivedFromACBS: '2021-10-05T12:25:30+00:00',
+    dealIdentifier: '0510',
   };
 
-  console.log({ parties });
+  const dealInvestorRecord = {
+    dealIdentifier: '0510',
+    effectiveDate: '2021-10-05',
+    currency: 'GBP',
+    maximumLiability: 79000000,
+  };
 
-  // Create Deal
-  const acbsDealInput = mappings.deal.deal(
-    deal, parties.exporter.partyIdentifier, acbsReference,
-    );
-
-  const dealRecord = yield context.df.callActivityWithRetry('activity-create-deal', retryOptions, { deal: acbsDealInput });
-
-  // Create Deal investor
-  const acbsDealInvestorInput = mappings.deal.dealInvestor(deal);
-
-  const dealInvestorRecord = yield context.df.callActivityWithRetry('activity-create-deal-investor', retryOptions, { investor: acbsDealInvestorInput });
-
-  // Create Deal Guarantee
-  const dealGuaranteeLimitKey = parties.indemnifier.partyIdentifier
-  || parties.exporter.partyIdentifier;
-
-  const acbsDealGuaranteeInput = mappings.deal.dealGuarantee(deal, dealGuaranteeLimitKey);
-  const dealGuaranteeRecord = yield context.df.callActivityWithRetry('activity-create-deal-guarantee', retryOptions, { guarantee: acbsDealGuaranteeInput });
+  const dealGuaranteeRecord = {
+    dealIdentifier: '0510',
+    guarantorParty: '00000141',
+    limitKey: '00290325',
+    guaranteeExpiryDate: '2041-10-05',
+    effectiveDate: '2021-10-05',
+    maximumLiability: 79000000,
+  };
 
   const dealAcbsData = {
     parties,
@@ -91,14 +118,16 @@
     {
       deal, facility, dealAcbsData, acbsReference, bank,
     },
-    ));
+  ));
 
   yield context.df.Task.all([...facilityTasks]);
-  console.log('**********************');
+
   return {
     // eslint-disable-next-line no-underscore-dangle
     portalDealId: deal._id,
-    ukefDealId: deal.dealSnapshot.details.ukefDealId,
+    ukefDealId: product === CONSTANTS.PRODUCT.TYPE.GEF
+      ? deal.dealSnapshot.ukefDealId
+      : deal.dealSnapshot.details.ukefDealId,
     deal: dealAcbsData,
     facilities: facilityTasks.map(({ result }) => result),
   };

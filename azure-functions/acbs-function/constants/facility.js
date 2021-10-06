@@ -1,6 +1,14 @@
 const FACILITY_TYPE = {
   BOND: 'bond',
   LOAN: 'loan',
+  CASH: 'CASH',
+  CONTINGENT: 'CONTINGENT',
+};
+
+const FACILITY_TYPE_CODE = {
+  BSS: '250',
+  EWCS: '260',
+  GEF: '280',
 };
 
 const FACILITIES_STAGE = {
@@ -46,6 +54,7 @@ const FORECAST_PERCENTAGE = {
 
 module.exports = {
   FACILITY_TYPE,
+  FACILITY_TYPE_CODE,
   FACILITIES_STAGE,
   FEE_FREQUENCY,
   COVENANT_TYPE,

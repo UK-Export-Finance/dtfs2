@@ -1,5 +1,8 @@
 const { to2Decimals } = require('../../helpers/currency');
 const { getDealEffectiveDate, getDealValue } = require('./helpers');
+const CONSTANTS = require('../../constants');
+
+const GEF_CURRENCY = 'GBP';
 
 /*
   dealIdentifier                  string    UKEF ID
@@ -20,18 +23,18 @@ Switch Commitment to Issued   Portal Submission Date  Cover Start Date
 Issued (straight to Issued)   Cover Start Date        Cover Start Date
 */
 
-const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => {
-  const { details, submissionDetails } = deal.dealSnapshot;
-
-  return {
-    dealIdentifier: details.ukefDealId.padStart(10, 0),
-    currency: submissionDetails.supplyContractCurrency && submissionDetails.supplyContractCurrency.id,
-    dealValue: to2Decimals(getDealValue(deal)),
-    guaranteeCommencementDate: getDealEffectiveDate(deal),
-    obligorPartyIdentifier,
-    obligorName: submissionDetails['supplier-name'].substring(0, 35),
-    obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
-  };
-};
+const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
+  dealIdentifier: deal.dealSnapshot.ukefDealId.padStart(10, 0),
+  currency: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+    ? GEF_CURRENCY
+    : deal.dealSnapshot.supplyContractCurrency && deal.dealSnapshot.supplyContractCurrency.id,
+  dealValue: to2Decimals(getDealValue(deal)),
+  guaranteeCommencementDate: getDealEffectiveDate(deal),
+  obligorPartyIdentifier,
+  obligorName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+    ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
+    : deal.dealSnapshot['supplier-name'].substring(0, 35),
+  obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
+});
 
 module.exports = initialDeal;
