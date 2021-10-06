@@ -11,6 +11,7 @@
   */
 
 const helpers = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 const facilityCovenant = (deal, facility, covenantType) => {
   const {
@@ -23,7 +24,7 @@ const facilityCovenant = (deal, facility, covenantType) => {
     facilityIdentifier: facility.ukefFacilityID !== undefined
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    portfolioIdentifier: 'E1',
+    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     covenantType,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     currency: facility.facilitySnapshot.currency.id !== undefined

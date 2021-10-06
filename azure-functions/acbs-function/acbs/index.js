@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
 /*
 * This function is not intended to be invoked directly. Instead it will be
 * triggered by an HTTP starter function.

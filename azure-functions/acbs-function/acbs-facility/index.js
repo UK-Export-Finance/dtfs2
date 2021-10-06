@@ -63,7 +63,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-loan', {
           deal, facility, dealAcbsData,
         });
-      } else {
+      } else if (facility.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
         facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-bond', {
           deal, facility, dealAcbsData,
         });
@@ -90,7 +90,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     };
   } catch ({ message }) {
     const [type, errorDetails] = message.split('Error: ');
-    console.error(errorDetails);
+    console.error('Facility record error\n\r**************************\n\r\n\r', errorDetails);
     return {
       error: {
         type,

@@ -57,7 +57,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     facilityIdentifier: facility.ukefFacilityID !== undefined
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    portfolioIdentifier: 'E1',
+    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
@@ -75,13 +75,13 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     facilityStageCode: helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
-    creditRatingCode: '14',
+    creditRatingCode: CONSTANTS.FACILITY.CREDIT_RATING.CODE14,
     guaranteePercentage: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
       ? Number(facility.facilitySnapshot.coverPercentage)
       : Number(facility.facilitySnapshot.coveredPercentage),
     premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
-    riskCountryCode: 'GBR',
-    riskStatusCode: '03',
+    riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
+    riskStatusCode: CONSTANTS.FACILITY.RISK.STATUS.TYPE03,
     effectiveDate,
     foreCastPercentage: helpers.getForecastPercentage(
       facility.facilitySnapshot,
