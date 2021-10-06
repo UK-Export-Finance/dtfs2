@@ -1,9 +1,8 @@
 /*
   "portfolioIdentifier": "E1",
-  "facilityIdentifier":             UKEF facilityId,
-  "lenderTypeCode": "100" or "500",
-  "initialBundleStatusCode": 2 or 3,
-
+  "facilityIdentifier":  UKEF facilityId,
+  "lenderTypeCode": "100" or "500" *Ensure code we are using 100 as 500 will not activate the facility confirmed with IJ,
+  "initialBundleStatusCode": 2 or 3, Should now be set to 3
   "initiatingUserName": "APIUKEF",
   "accountOwnerIdentifier": "00000000",
   "effectiveDate": "2020-06-01",
@@ -16,16 +15,16 @@
  */
 
 const codeValueTransaction = (deal, facility) => {
-  const { facilitySnapshot } = facility;
-
   const {
     effectiveDate,
   } = facility.tfm.facilityGuaranteeDates;
 
   return {
-    facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
-    lenderTypeCode: '500',
-    initialBundleStatusCode: 2,
+    facilityIdentifier: facility.ukefFacilityID !== undefined
+      ? facility.ukefFacilityID.padStart(10, 0)
+      : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+    lenderTypeCode: '100',
+    initialBundleStatusCode: 3,
     portfolioIdentifier: 'E1',
     effectiveDate,
     initiatingUserName: 'APIUKEF',

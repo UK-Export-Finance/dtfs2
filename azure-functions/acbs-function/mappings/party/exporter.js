@@ -2,6 +2,9 @@ const { now } = require('../../helpers/date');
 const { getSmeType, getPartyNames } = require('./helpers');
 const CONSTANTS = require('../../constants');
 
+let countryCode;
+let dealCountry;
+
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
   partyAlternateIdentifier  string  UKEF Party URN
@@ -14,29 +17,37 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   officerRiskDate           date    yyyy-MM-dd i.e. 2019-10-21, Date of creation (we use current date)
   */
 
-  const exporter = ({ deal, acbsReference }) => {
-  //Get Deal's Snapshot
-  const { submissionDetails } = deal.hasOwnProperty("dealSnapshot") ? deal.dealSnapshot : '';
+const exporter = ({ deal, acbsReference }) => {
+  // Get Deal's Snapshot
+  const submissionDetails = deal.dealSnapshot;
 
-  //Get Product Type i.e. GEF
-  const product = deal.hasOwnProperty("dealSnapshot") ? deal.dealSnapshot.dealType : '';
+  // Get Product Type i.e. GEF
+  const product = deal.dealSnapshot.dealType;
 
-  if(submissionDetails !== "")
-  {
-    const countryCode = if(product === CONSTANTS.PRODUCT.TYPE.GEF) ? submissionDetails.exporter.registeredAddress.country : submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
-    const citizenshipClass = countryCode === (product === CONSTANTS.PRODUCT.TYPE.GEF ? 'GB' : 'GBR') ? '1' : '2';
-    const partyNames = getPartyNames(product === CONSTANTS.PRODUCT.TYPE.GEF ?  submissionDetails.exporter.companyName : submissionDetails['supplier-name']);
-
-    return {
-      alternateIdentifier: deal.tfm.parties.exporter.partyUrn,
-      industryClassification: acbsReference.supplierAcbsIndustryCode,
-      smeType: getSmeType(product === CONSTANTS.PRODUCT.TYPE.GEF ? submissionDetails.exporter.smeType : submissionDetails['sme-type']),
-      citizenshipClass,
-      officerRiskDate: now(),
-      countryCode,
-      ...partyNames,
-    };
+  if (product === CONSTANTS.PRODUCT.TYPE.GEF) {
+    countryCode = submissionDetails.exporter.registeredAddress.country;
+    dealCountry = 'GB';
+  } else {
+    countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
+    dealCountry = 'GBR';
   }
+
+  const citizenshipClass = countryCode === dealCountry ? '1' : '2';
+  const partyNames = getPartyNames(product === CONSTANTS.PRODUCT.TYPE.GEF
+    ? submissionDetails.exporter.companyName
+    : submissionDetails['supplier-name']);
+
+  return {
+    alternateIdentifier: deal.tfm.parties.exporter.partyUrn,
+    industryClassification: acbsReference.supplierAcbsIndustryCode,
+    ...partyNames,
+    smeType: getSmeType(product === CONSTANTS.PRODUCT.TYPE.GEF
+      ? submissionDetails.exporter.smeType
+      : submissionDetails['sme-type']),
+    citizenshipClass,
+    officerRiskDate: now(),
+    countryCode,
+  };
 };
 
 module.exports = exporter;

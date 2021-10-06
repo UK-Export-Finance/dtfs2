@@ -1,10 +1,10 @@
 const getFacilityValue = (facility) => {
-  const { facilitySnapshot } = facility;
+  const facilitySnapshot = facility;
 
-  if (facilitySnapshot.conversionRate) {
+  if (facilitySnapshot.conversionRate !== undefined) {
     return Number(facilitySnapshot.facilityValue) / Number(facilitySnapshot.conversionRate);
   }
-  return Number(facilitySnapshot.facilityValue);
+  return facilitySnapshot.facilityValue ? Number(facilitySnapshot.facilityValue) : Number(facilitySnapshot.value);
 };
 
 module.exports = getFacilityValue;

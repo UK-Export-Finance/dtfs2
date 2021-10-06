@@ -1,7 +1,9 @@
 const CONSTANTS = require('../../../constants');
 
-const getPremiumFrequencyCode = ({ facilitySnapshot }) => {
-  const feeFrequency = facilitySnapshot.feeFrequency || facilitySnapshot.premiumFrequency;
+const getPremiumFrequencyCode = (facilitySnapshot) => {
+  const feeFrequency = facilitySnapshot.frequency !== undefined
+    ? facilitySnapshot.frequency
+    : facilitySnapshot.feeFrequency || facilitySnapshot.premiumFrequency;
 
   switch (feeFrequency) {
     case CONSTANTS.FACILITY.FEE_FREQUENCY.MONTHLY:

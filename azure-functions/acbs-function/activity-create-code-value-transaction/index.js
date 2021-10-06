@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+
 const moment = require('moment');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -33,7 +34,7 @@ const createCodeValueTransaction = async (context) => {
 
   if (isHttpErrorStatus(status)) {
     throw new Error(JSON.stringify({
-      name: 'ACBS Party create error',
+      name: 'ACBS code create value transaction error',
       status,
       dealIdentifier: acbsCodeValueTransactionInput.dealIdentifier,
       submittedToACBS,

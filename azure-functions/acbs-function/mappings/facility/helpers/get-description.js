@@ -4,8 +4,12 @@ const getExposurePeriod = require('./get-exposure-period');
 /*
   "description": FacilityType + Workflow Exposure Period i.e. EWCS 15 Months,
 */
-const getDescription = (facility) => {
-  const exposurePeriod = getExposurePeriod(facility);
+const getDescription = (facility, dealType) => {
+  const exposurePeriod = getExposurePeriod(facility, dealType);
+
+  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+    return `GEF ${exposurePeriod} Months`;
+  }
 
   switch (facility.facilitySnapshot.facilityType) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
