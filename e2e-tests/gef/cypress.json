@@ -1,4 +1,5 @@
 {
+  "defaultCommandTimeout": 60000,
   "baseUrl": "http://localhost",
   "dealApiProtocol": "http://",
   "dealApiHost": "localhost",
