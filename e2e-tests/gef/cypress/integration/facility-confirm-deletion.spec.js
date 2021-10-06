@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import facilityConfirmDeletion from './pages/facility-confirm-deletion';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -27,8 +25,6 @@ context('Facility Confirm Deletion Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

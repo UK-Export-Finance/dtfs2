@@ -9,7 +9,8 @@ const { errorSummary, taskListHeader } = require('../../partials');
 const criteriaCount = 8;
 
 const mockUsers = require('../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Eligibility Criteria', () => {
   beforeEach(() => {

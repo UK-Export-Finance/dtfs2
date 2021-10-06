@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
@@ -20,8 +18,6 @@ context('Submit to UKEF', () => {
       });
 
     cy.login(CREDENTIALS.CHECKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

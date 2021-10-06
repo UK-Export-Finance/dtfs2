@@ -1,5 +1,5 @@
 const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview, defaults,
+  contract, contractAboutFinancial, contractAboutPreview, defaults,
 } = require('../../../pages');
 const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -11,14 +11,6 @@ const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json')
 
 context('about-supply-contract', () => {
   let deal;
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     console.log(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
@@ -41,7 +33,7 @@ context('about-supply-contract', () => {
     cy.title().should('eq', `Financial information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
 
     // prove the exchange-rate fields start hidden..
-    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
+    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.exist');
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
     contractAboutFinancial.supplyContractValue().type('10000');
@@ -50,7 +42,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.supplyContractCurrency().select('GBP');
 
     // prove the exchange-rate fields stay hidden..
-    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
+    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.exist');
 
     contractAboutFinancial.saveAndGoBack().click();
 
