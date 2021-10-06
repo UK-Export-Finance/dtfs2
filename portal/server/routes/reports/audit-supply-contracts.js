@@ -6,6 +6,7 @@ const {
   getApiData,
   requestParams,
 } = require('../../helpers');
+const downloadCsv = require('../../utils/downloadCsv');
 
 
 const PAGESIZE = 20;
@@ -85,7 +86,7 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
     return rows.push(row);
   });
 
-  return res.csv('supply_contracts', rows, columns);
+  return downloadCsv(res, 'supply_contracts', columns, rows);
 }
 
 router.get('/reports/audit-supply-contracts', async (req, res) => res.redirect('/reports/audit-supply-contracts/0'));

@@ -159,6 +159,54 @@ describe('controllers/about-facility', () => {
       }));
     });
 
+    it('shows error message if facility name is more than 30 characters', async () => {
+      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityName = 'name';
+      mockRequest.body.hasBeenIssued = 'true';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+        }),
+      }));
+
+      mockRequest.body.facilityName = 'A string that is more than 30 characters in length to prove the point';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('shows error message if facility name has disallowed characters', async () => {
+      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityName = 'name .,;-';
+      mockRequest.body.hasBeenIssued = 'true';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+        }),
+      }));
+
+      mockRequest.body.facilityName = 'name .,;-   *';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
     it('shows error message if no shouldCoverStartOnSubmission radio button has been selected', async () => {
       mockRequest.body.facilityType = 'CASH';
       mockRequest.body.hasBeenIssued = 'true';
@@ -272,10 +320,58 @@ describe('controllers/about-facility', () => {
       }));
     });
 
+    it('shows error message if coverStartDate is after coverEndDate is in the past', async () => {
+      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-end-date-day'] = format(now, 'd');
+      mockRequest.body['cover-end-date-month'] = format(now, 'M');
+      mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
     it('shows error message if no monthsOfcover has been provided', async () => {
       mockRequest.body.facilityType = 'CASH';
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('shows error message if monthsOfcover is not a number', async () => {
+      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.hasBeenIssued = 'false';
+      mockRequest.body.monthsOfCover = '1ab';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('shows error message if monthsOfcover is greater than 999 months', async () => {
+      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.hasBeenIssued = 'false';
+      mockRequest.body.monthsOfCover = '1000';
 
       await validateAboutFacility(mockRequest, mockResponse);
 

@@ -1,7 +1,10 @@
-// eslint-disable-next-line import/no-unresolved
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
-const dealQuery = gql`
+// NOTE: this is not actually used by TFM UI.
+// This returns more data than the dealsLight query that TFM UI does not need.
+// This query is used by external systems.
+
+const dealsQuery = gql`
 query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
   deals(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize}) {
     count
@@ -17,9 +20,9 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
           }
         }
       }
-      dealSnapshot{
+      dealSnapshot {
         _id
-        details{
+        details {
           status
           bankSupplyContractID
           bankSupplyContractName
@@ -35,11 +38,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
             firstname
             surname
           }
-          checkerMIN {
-            username
-            firstname
-            surname
-          }
           dateOfLastAction
           submissionDate
           approvalDate
@@ -47,7 +45,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
           owningBank{
             name
           }
-          workflowStatus
         }
         submissionDetails {
           supplierName
@@ -92,14 +89,63 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize:
           supplierCorrespondenceAddressTown
           smeType
         }
+        eligibility {
+          agentAddressCountry {
+            code
+            name
+          }
+          agentAddressLine1
+          agentAddressLine2
+          agentAddressLine3
+          agentAddressPostcode
+          agentAddressTown
+        }
+        eligibilityCriteria {
+          id
+          answer
+          description
+        }
         dealFiles {
           security
         }
-        isFinanceIncreasing
+        totals {
+          facilitiesValueInGBP
+          facilitiesUkefExposure
+        }
+        facilities {
+          facilitySnapshot {
+            ukefFacilityID
+            bankFacilityReference
+            facilityValue
+            facilityStage
+            bondIssuer
+            facilityProduct {
+              code,
+              name
+            }
+            facilityType
+            facilityStage
+            banksInterestMargin
+            ukefExposure
+            coveredPercentage
+            firstDrawdownAmountInExportCurrency
+            dates {
+              inclusionNoticeReceived
+              bankIssueNoticeReceived
+              coverStartDate
+              coverEndDate
+              tenor
+            }
+          }
+          tfm {
+            bondBeneficiaryPartyUrn
+            riskProfile
+          }
+        }
       }
     }
   }
 }
 `;
 
-export default dealQuery;
+module.exports = dealsQuery;

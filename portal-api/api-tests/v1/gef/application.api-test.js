@@ -62,7 +62,6 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[12]).to(baseUrl);
       await as(aMaker).post(mockApplications[13]).to(baseUrl);
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
-      await as(aMaker).post(mockApplications[15]).to(baseUrl);
 
       // MW: couldn't get the promise.all running in sequential order
       // await mockApplications.map(async (item) => {
@@ -189,17 +188,6 @@ describe(baseUrl, () => {
       expect(body).toEqual(expectMongoId(expected));
     });
 
-    it('it returns a duplicate error in the system the item I created an application of the same reference', async () => {
-      await as(aMaker).post(mockApplications[0]).to(baseUrl); // 1st instance
-      const { status, body } = await as(aMaker).post(mockApplications[0]).to(baseUrl); // 2nd instance
-      expect(body).toEqual([{
-        errCode: 'ALREADY_EXISTS',
-        errRef: 'bankInternalRefName',
-        errMsg: 'The bank reference you have entered already exists.',
-      }]);
-      expect(status).toEqual(422);
-    });
-
     it('it tells me the Bank Internal Ref Name is null', async () => {
       const removeName = {
         ...mockApplications[0],
@@ -209,7 +197,7 @@ describe(baseUrl, () => {
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
-        errMsg: 'Application Reference Name is Mandatory',
+        errMsg: 'bankInternalRefName is Mandatory',
       }]);
       expect(status).toEqual(422);
     });
@@ -223,7 +211,7 @@ describe(baseUrl, () => {
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
-        errMsg: 'Application Reference Name is Mandatory',
+        errMsg: 'bankInternalRefName is Mandatory',
       }]);
       expect(status).toEqual(422);
     });
@@ -232,7 +220,7 @@ describe(baseUrl, () => {
   describe(`PUT ${baseUrl}/:id`, () => {
     const updated = {
       ...mockApplications[0],
-      bankInternalRefName: 'Updated Ref Name (Unit Test)',
+      bankInternalRefName: 'Updated Ref Name - Unit Test',
       submissionType: 'Automatic Inclusion Notice',
     };
 
@@ -284,18 +272,6 @@ describe(baseUrl, () => {
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
         expect(putResponse.body.ukefDealId).toEqual(expect.any(String));
-      });
-
-      it('does not add the ukef deal id if already exists', async () => {
-        const application = mockApplications[1];
-        const { body } = await as(aMaker).post(application).to(baseUrl);
-
-        const updateResponse = await as(aMaker).put({ ukefDealId: 'TestDealId274' }).to(`${baseUrl}/${body._id}`);
-        expect(updateResponse.status).toEqual(200);
-
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
-        expect(putResponse.status).toEqual(200);
-        expect(putResponse.body.ukefDealId).toEqual('TestDealId274');
       });
 
       it('increases submissionCount', async () => {

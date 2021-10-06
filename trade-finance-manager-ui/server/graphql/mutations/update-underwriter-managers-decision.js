@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateUnderwriterManagersDecision = gql`
   mutation UpdateUnderwriterManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
@@ -13,4 +13,4 @@ const updateUnderwriterManagersDecision = gql`
   }
 `;
 
-export default updateUnderwriterManagersDecision;
+module.exports = updateUnderwriterManagersDecision;

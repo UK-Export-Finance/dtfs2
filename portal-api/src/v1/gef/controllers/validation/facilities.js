@@ -21,10 +21,12 @@ const hasRequiredItems = (doc) => {
   if (doc.hasBeenIssued === false && !doc.monthsOfCover) {
     required.push('monthsOfCover');
   }
-  if (!doc.details) {
+  // doc.details[] sometimes comes through with nulls so strip them out
+  const strippedDetails = doc.details ? doc.details.filter((n) => n) : [];
+  if (!strippedDetails.length) {
     required.push('details');
   }
-  if (doc.details && doc.details.length > 0 && doc.details.includes('other') && !doc.detailsOther) {
+  if (strippedDetails && strippedDetails.includes('OTHER') && !doc.detailsOther) {
     required.push('detailsOther');
   }
   if (!doc.currency) {

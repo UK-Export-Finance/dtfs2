@@ -20,7 +20,6 @@ const capitalizeFirstLetter = (str) =>
 const lowercaseFirstLetter = (str) =>
   str.charAt(0).toLowerCase() + str.slice(1);
 
-
 module.exports = {
   isEmptyString,
   hasValue,

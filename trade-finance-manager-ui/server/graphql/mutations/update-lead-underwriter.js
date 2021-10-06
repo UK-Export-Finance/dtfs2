@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const updateLeadUnderwriter = gql`
   mutation UpdateLeadUnderwriter($dealId: ID!, $leadUnderwriterUpdate: TFMLeadUnderwriterInput) {
@@ -8,4 +8,4 @@ const updateLeadUnderwriter = gql`
   }
 `;
 
-export default updateLeadUnderwriter;
+module.exports = updateLeadUnderwriter;

@@ -8,6 +8,7 @@ const {
   requestParams,
 } = require('../../helpers');
 const { FACILITY_STAGE } = require('../../constants');
+const downloadCsv = require('../../utils/downloadCsv');
 
 require('moment-timezone');// monkey-patch to provide moment().tz()
 
@@ -92,7 +93,7 @@ function downloadTransactions(transactions, timezone, res) {
     return rows.push(row);
   });
 
-  return res.csv('transactions', rows, columns);
+  return downloadCsv(res, 'transactions', columns, rows);
 }
 
 router.get('/reports/audit-transactions', async (req, res) => res.redirect('/reports/audit-transactions/0'));

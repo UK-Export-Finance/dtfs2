@@ -78,6 +78,28 @@ jobs:
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true   
+    - name: Build and push reference-data-proxy
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: reference-data-proxy
+        path: reference-data-proxy
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true 
+    - name: Build and push Number-Generator
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: azure-function-number-generator
+        path: azure-functions/number-generator-function
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true   
 
   test:
     name: "Run PR tests"
@@ -111,6 +133,7 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
+      MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
 
@@ -142,6 +165,18 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }} dtfs/gef-ui
+    - name: Pull Azure Number Generator function
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
+    - name: Pull tfm-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+    - name: Pull reference-data-proxy
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }} dtfs/reference-data-proxy
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -154,6 +189,10 @@ jobs:
         npm install
         node ./re-insert-mocks.js
         pwd
+    - name: Wake up Azure Function
+      run: |
+        sleep 30
+        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

@@ -73,6 +73,7 @@ const validateAboutFacility = async (req, res) => {
         errMsg: `Enter a name for this ${facilityTypeString} facility`,
       });
     }
+
     if (!body.shouldCoverStartOnSubmission && !saveAndReturn) {
       aboutFacilityErrors.push({
         errRef: 'shouldCoverStartOnSubmission',
@@ -169,6 +170,20 @@ const validateAboutFacility = async (req, res) => {
     });
   }
 
+  if (body.facilityName && body.facilityName.length > 30) {
+    aboutFacilityErrors.push({
+      errRef: 'facilityName',
+      errMsg: 'Facility name cannot be more than 30 characters in length',
+    });
+  }
+
+  if (/[^A-Za-z0-9 .,:;'-]/.test(body.facilityName)) {
+    aboutFacilityErrors.push({
+      errRef: 'facilityName',
+      errMsg: 'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
+    });
+  }
+
   if (coverStartDateIsFullyComplete) {
     coverStartDate = set(new Date(),
       { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
@@ -179,13 +194,30 @@ const validateAboutFacility = async (req, res) => {
       { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
   }
 
+  if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
+    if (coverEndDate < coverStartDate) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before cover start date',
+      });
+    }
+  }
+
   // Regex tests to see if value is a number only
   const digitsRegex = /^[0-9]*$/;
-  if (body.monthsOfCover && !digitsRegex.test(body.monthsOfCover)) {
-    aboutFacilityErrors.push({
-      errRef: 'monthsOfCover',
-      errMsg: 'You can only enter numbers',
-    });
+  if (body.monthsOfCover) {
+    if (!digitsRegex.test(body.monthsOfCover)) {
+      aboutFacilityErrors.push({
+        errRef: 'monthsOfCover',
+        errMsg: 'You can only enter numbers',
+      });
+    }
+    if (body.monthsOfCover > 999) {
+      aboutFacilityErrors.push({
+        errRef: 'monthsOfCover',
+        errMsg: 'You can only enter a maximum of 999 months cover',
+      });
+    }
   }
 
   if (aboutFacilityErrors.length > 0) {

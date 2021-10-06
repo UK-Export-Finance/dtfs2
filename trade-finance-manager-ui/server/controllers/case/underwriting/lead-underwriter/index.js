@@ -1,8 +1,8 @@
-import api from '../../../../api';
-import CONSTANTS from '../../../../constants';
-import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
-import canUserEditLeadUnderwriter from './helpers';
-import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
+const api = require('../../../../api');
+const CONSTANTS = require('../../../../constants');
+const mapAssignToSelectOptions = require('../../../../helpers/map-assign-to-select-options');
+const canUserEditLeadUnderwriter = require('./helpers');
+const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
 
 const getLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -113,7 +113,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
 };
 
 
-export default {
+module.exports = {
   getLeadUnderwriter,
   getAssignLeadUnderwriter,
   postAssignLeadUnderwriter,

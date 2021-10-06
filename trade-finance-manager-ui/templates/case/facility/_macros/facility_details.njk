@@ -2,6 +2,7 @@
 {% import './credit-rating.njk' as creditRating %}
 
 {% macro render(params) %}
+  {% set deal = params.deal %}
   {% set facility = params.facility %}
   {% set user = params.user %}
   {% set facilityTfm = params.facilityTfm %}
@@ -65,6 +66,24 @@
           <p class="govuk-body-s" data-cy="bank-facility-reference">{{ facility.bankFacilityReference | dashIfEmpty }}</p>
         </div>
       </div>
+
+      {% if deal.dealType === 'GEF'%}
+        <div class="govuk-grid-row" data-cy="facility-provided">
+          <div class="govuk-grid-column-one-quarter">
+            <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="facility-provided-heading">Facility provided on</h4>
+          </div>
+          <div class="govuk-grid-column-three-quarters">
+
+            {% for basis in facility.providedOn %}
+              <p class="govuk-body-s" data-cy="facility-provided-{{ basis }}">{{ basis }}</p>
+            {% endfor %}
+
+            {% if facility.providedOnOther %}
+              <p class="govuk-body-s" data-cy="facility-provided-other-details">Other - {{ facility.providedOnOther }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
 
     </div>
   </div>

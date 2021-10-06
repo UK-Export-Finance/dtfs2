@@ -13,7 +13,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     ports:
       - "27017-27019:27017-27019"
@@ -32,7 +32,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5005
@@ -49,14 +49,13 @@ services:
     ports:
       - "5003:5003"
     volumes:
-      - ./trade-finance-manager-ui/scripts:/app/scripts:ro
-      - ./trade-finance-manager-ui/styles:/app/styles:ro
-      - ./trade-finance-manager-ui/templates:/app/templates:ro
       - ./trade-finance-manager-ui/server:/app/server:ro
+      - ./trade-finance-manager-ui/public:/app/public:ro
+      - ./trade-finance-manager-ui/templates:/app/templates:ro
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5003
@@ -64,7 +63,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
-    command: node dist/server.js -L
+    command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
@@ -89,10 +88,11 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
+      - SENTRY_DSN=${SENTRY_DSN}
     deploy:
       resources:
         limits:
-          cpus: '0.2'
+          cpus: "0.2"
           memory: 600M
     entrypoint: npx nodemon src/index.js -L
 
@@ -112,7 +112,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
+          cpus: "0.2"
           memory: 700M
     environment:
       - DEAL_API_URL=http://portal-api:5001
@@ -137,8 +137,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: 750M
+          cpus: "0.25"
+          memory: 950M
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
@@ -180,7 +180,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5002
@@ -211,6 +211,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - SENTRY_DSN=${SENTRY_DSN}
     entrypoint: npx nodemon src/index.js -L
 
   gef-ui:
@@ -229,7 +230,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - DEAL_API_URL=http://portal-api:5001
@@ -241,21 +242,22 @@ services:
     command: npx nodemon server/index.js -L
 
   # ACBS function is causing an out of memory error on github actions. disable for now
-   acbs-function:
-     build: ./azure-functions/acbs-function
-     image: dtfs/azure-function-acbs
-     restart: always
-     ports:
-       - "7071:80"
-     environment:
-       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-       - WEBSITE_HOSTNAME=localhost:7071
-       - MULESOFT_API_KEY
-       - MULESOFT_API_SECRET
-       - MULESOFT_API_UKEF_TF_EA_URL
-       - MULESOFT_API_UKEF_MDM_EA_URL
-       - MULESOFT_API_UKEF_MDM_EA_KEY
-       - MULESOFT_API_UKEF_MDM_EA_SECRET
+  # acbs-function:
+  #   build: ./azure-functions/acbs-function
+  #   image: dtfs/azure-function-acbs
+  #   restart: always
+  #   ports:
+  #     - "7071:80"
+  #   environment:
+  #     - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+  #     - FUNCTIONS_WORKER_RUNTIME=node
+  #     - WEBSITE_HOSTNAME=localhost:7071
+  #     - MULESOFT_API_KEY
+  #     - MULESOFT_API_SECRET
+  #     - MULESOFT_API_UKEF_TF_EA_URL
+  #     - MULESOFT_API_UKEF_MDM_EA_URL
+  #     - MULESOFT_API_UKEF_MDM_EA_KEY
+  #     - MULESOFT_API_UKEF_MDM_EA_SECRET
 
   number-generator-function:
     build: ./azure-functions/number-generator-function
@@ -266,10 +268,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - FUNCTIONS_WORKER_RUNTIME=node
       - WEBSITE_HOSTNAME=localhost:7072
       - MULESOFT_API_UKEF_TF_EA_URL
       - MULESOFT_API_KEY
@@ -282,7 +285,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
 
   reverse-proxy:
@@ -299,7 +302,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.01'
+          cpus: "0.01"
           memory: 150M
 
   test-hook-api:
@@ -315,7 +318,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5069
@@ -334,4 +337,3 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
 
     entrypoint: npx nodemon src/index.js -L
-    

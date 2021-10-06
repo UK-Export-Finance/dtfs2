@@ -25,13 +25,6 @@ const addPartyUrns = async (deal) => {
     return false;
   }
 
-  const { tfm = {} } = deal;
-  const { parties = {} } = tfm;
-
-  const {
-    exporter,
-  } = parties;
-
   const {
     hasExporter, hasIndemnifier, hasAgent, hasBuyer,
   } = identifyDealParties(deal);
@@ -40,10 +33,8 @@ const addPartyUrns = async (deal) => {
     tfm: {
       ...deal.tfm,
       parties: {
-        ...parties,
         exporter: {
-          ...exporter,
-          partyUrn: '06388542',
+          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber }),
           partyUrnRequired: hasExporter,
         },
         buyer: {

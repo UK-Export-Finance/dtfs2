@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 const facilityQuery = gql`
   query Facility($id: ID!) {
@@ -26,6 +26,8 @@ const facilityQuery = gql`
         feeType,
         feeFrequency,
         dayCountBasis,
+        providedOn,
+        providedOnOther,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
@@ -63,4 +65,4 @@ const facilityQuery = gql`
   }
 `;
 
-export default facilityQuery;
+module.exports = facilityQuery;

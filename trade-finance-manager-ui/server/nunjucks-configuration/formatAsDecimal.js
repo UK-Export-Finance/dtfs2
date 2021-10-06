@@ -8,4 +8,4 @@ const formatAsDecimal = (str) => {
   return isEmpty ? '-' : amount;
 };
 
-export default formatAsDecimal;
+module.exports = formatAsDecimal;

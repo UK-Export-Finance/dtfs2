@@ -1,13 +1,13 @@
-import {
+const {
   hasValue,
   isAlphanumeric,
-} from '../../../../helpers/string';
-import increment from '../../../../helpers/number';
-import generateValidationErrors from '../../../../helpers/validation';
+} = require('../../../../helpers/string');
+const increment = require('../../../../helpers/number');
+const generateValidationErrors = require('../../../../helpers/validation');
 
 const MAX_COMMENTS_LENGTH = 1000;
 
-export const validateCommentField = (
+const validateCommentField = (
   validationErrors,
   errorsCount,
   fieldLabel,
@@ -51,7 +51,7 @@ export const validateCommentField = (
   };
 };
 
-export const validateSubmittedValues = (submittedValues) => {
+const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};
   let errorsCount = 0;
 
@@ -143,4 +143,9 @@ export const validateSubmittedValues = (submittedValues) => {
   }
 
   return false;
+};
+
+module.exports = {
+  validateCommentField,
+  validateSubmittedValues,
 };

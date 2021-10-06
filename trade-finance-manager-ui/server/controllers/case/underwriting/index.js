@@ -1,9 +1,9 @@
-import leadUnderwriter from './lead-underwriter';
-import pricingAndRisk from './pricing-and-risk';
-import bankSecurity from './bank-security';
-import underwriterManagersDecision from './underwriter-managers-decision';
+const leadUnderwriter = require('./lead-underwriter');
+const pricingAndRisk = require('./pricing-and-risk');
+const bankSecurity = require('./bank-security');
+const underwriterManagersDecision = require('./underwriter-managers-decision');
 
-export default {
+module.exports = {
   ...leadUnderwriter,
   ...pricingAndRisk,
   ...bankSecurity,

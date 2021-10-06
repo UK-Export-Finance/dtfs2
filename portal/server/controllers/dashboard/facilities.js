@@ -14,13 +14,14 @@ const primaryNav = 'home';
 exports.bssFacilities = async (req, res) => {
   const tab = 'bssFacilities';
   const { userToken } = requestParams(req);
+  const { user } = req.session;
+  const facilityFilters = [];
 
-  const filters = [];
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'details.status', value: "Ready for Checker's approval", operator: 'eq' });
 
-  const { transactions, count } = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
+  const filters = [...facilityFilters];
+
+  const { transactions, count } = await getApiData(api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const facilities = transactions.map((facility) => ({
     _id: facility.transaction_id,
@@ -59,11 +60,14 @@ exports.bssFacilities = async (req, res) => {
 exports.gefFacilities = async (req, res) => {
   const tab = 'gefFacilities';
   const { userToken } = requestParams(req);
+  const { user } = req.session;
+  const facilityFilters = [];
 
-  const { count, facilities: rawFacilities } = await getApiData(
-    api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, [], userToken),
-    res,
-  );
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: 'BANK_CHECK', operator: 'eq' });
+
+  const filters = [...facilityFilters];
+
+  const { count, facilities: rawFacilities } = await getApiData(api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
 
   const facilities = rawFacilities.map((facility) => ({
     _id: facility._id,

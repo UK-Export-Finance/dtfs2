@@ -2,9 +2,13 @@ const axios = require('axios');
 
 require('dotenv').config();
 
+const CONSTANTS = require('../constants');
+
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
+const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+
 
 const findOnePortalDeal = async (dealId) => {
   try {
@@ -129,6 +133,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
+    console.error('TFM API error finding BSS deal ', dealId);
     return false;
   }
 };
@@ -143,25 +148,6 @@ const updateDeal = async (dealId, dealUpdate) => {
       },
       data: {
         dealUpdate,
-      },
-    });
-
-    return response.data;
-  } catch (err) {
-    return err;
-  }
-};
-
-const updateDealStage = async (dealId, stage) => {
-  try {
-    const response = await axios({
-      method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/stage`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        stage,
       },
     });
 
@@ -221,6 +207,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (err) {
+    console.error('TFM API error finding BSS facility ', facilityId);
     return err;
   }
 };
@@ -277,7 +264,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
 
     return response.data;
   } catch (err) {
-    return err;// do something proper here, but for now just reject failed logins..
+    return err;
   }
 };
 
@@ -466,9 +453,22 @@ const updateACBSfacility = async (facility, supplierName) => {
   }
 };
 
-const getFunctionsAPI = async (url = '') => {
+const getFunctionsAPI = async (type = 'ACBS', url = '') => {
   // Need to refer to docker internal to work on localhost
-  const modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, azureAcbsFunctionUrl);
+  let functionUrl;
+  switch (type) {
+    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS:
+      functionUrl = azureAcbsFunctionUrl;
+      break;
+
+    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
+      functionUrl = azureNumberGeneratorUrl;
+      break;
+
+    default:
+  }
+
+  const modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
 
   try {
     const response = await axios({
@@ -478,7 +478,6 @@ const getFunctionsAPI = async (url = '') => {
         'Content-Type': 'application/json',
       },
     });
-
     return response.data;
   } catch (err) {
     return err.response.data;
@@ -538,7 +537,8 @@ const findOneGefDeal = async (dealId) => {
     });
 
     return response.data;
-  } catch ({ response }) {
+  } catch (err) {
+    console.error('TFM API error finding GEF deal ', dealId);
     return false;
   }
 };
@@ -552,7 +552,6 @@ module.exports = {
   updatePortalFacilityStatus,
   updatePortalFacility,
   updateDeal,
-  updateDealStage,
   updateDealSnapshot,
   submitDeal,
   findOneFacility,

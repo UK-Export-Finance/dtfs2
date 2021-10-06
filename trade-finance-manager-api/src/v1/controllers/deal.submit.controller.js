@@ -6,11 +6,9 @@ const {
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
-const { addDealProduct } = require('./deal.add-product');
-const { addDealPricingAndRisk } = require('./deal.pricing-and-risk');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
-const { addDealStageAndHistory } = require('./deal.add-deal-stage-and-history');
-const { addDealDateReceived } = require('./deal.add-date-received');
+
+const addTfmDealData = require('./deal-add-tfm-data');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
@@ -26,6 +24,8 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const getDeal = async (dealId, dealType) => {
   let deal;
 
+  console.log('TFM API getDeal ', dealId);
+
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
   }
@@ -37,10 +37,27 @@ const getDeal = async (dealId, dealType) => {
   return deal;
 };
 
-const submitDeal = async (dealId, dealType, checker) => {
+// Only create the TFM record until UKEFids have been generated, then process the submission
+// This allows a deal in Pending state to be seen in TFM,
+// which indicates to UKEF that a deal has been submitted before UKEFids are generated
+const submitDealBeforeUkefIds = async (dealId, dealType) => {
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
+    console.error('TFM API submitDealBeforeUkefIds - deal not found');
+    return false;
+  }
+
+  return api.submitDeal(dealType, dealId);
+};
+exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
+
+
+const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
+  const deal = await getDeal(dealId, dealType);
+
+  if (!deal) {
+    console.error('TFM API submitDealAfterUkefIds - deal not found ', dealId);
     return false;
   }
 
@@ -56,19 +73,13 @@ const submitDeal = async (dealId, dealType, checker) => {
   if (firstDealSubmission) {
     await updatePortalDealStatus(mappedDeal);
 
-    const updatedDealWithPartyUrn = await addPartyUrns(mappedDeal);
+    const dealWithTfmData = await addTfmDealData(mappedDeal);
 
-    const updatedDealWithProduct = await addDealProduct(updatedDealWithPartyUrn);
+    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
 
-    const updatedDealWithPricingAndRisk = await addDealPricingAndRisk(updatedDealWithProduct);
+    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
 
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPricingAndRisk);
-
-    const updatedDealWithTfmDealStage = await addDealStageAndHistory(updatedDealWithDealCurrencyConversions);
-
-    const updatedDealWithTfmDateReceived = await addDealDateReceived(updatedDealWithTfmDealStage);
-
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTfmDateReceived);
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
 
     let updatedDealWithCreateEstore = updatedDealWithUpdatedFacilities;
 
@@ -86,7 +97,6 @@ const submitDeal = async (dealId, dealType, checker) => {
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
-
       return updatedDeal;
     }
 
@@ -128,7 +138,7 @@ const submitDeal = async (dealId, dealType, checker) => {
   return api.updateDeal(dealId, submittedDeal);
 };
 
-exports.submitDeal = submitDeal;
+exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
 const submitDealPUT = async (req, res) => {
   const {
@@ -137,7 +147,7 @@ const submitDealPUT = async (req, res) => {
     checker,
   } = req.body;
 
-  const deal = await submitDeal(dealId, dealType, checker);
+  const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
 
   if (!deal) {
     return res.status(404).send();
@@ -145,4 +155,23 @@ const submitDealPUT = async (req, res) => {
 
   return res.status(200).send(deal);
 };
+
 exports.submitDealPUT = submitDealPUT;
+
+const submitDealAfterUkefIdsPUT = async (req, res) => {
+  const {
+    dealId,
+    dealType,
+    checker,
+  } = req.body;
+
+  const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  return res.status(200).send(deal);
+};
+
+exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;

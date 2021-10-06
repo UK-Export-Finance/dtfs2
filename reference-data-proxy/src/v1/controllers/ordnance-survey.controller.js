@@ -10,9 +10,6 @@ exports.lookup = async (req, res) => {
 
   const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${postcode}&key=${ordnanceSurveyApiKey}`;
 
-  // TEMP for debugging
-  console.log('Calling Ordnance Survey API - URL \n', url);
-
   const response = await axios({
     method: 'get',
     url,

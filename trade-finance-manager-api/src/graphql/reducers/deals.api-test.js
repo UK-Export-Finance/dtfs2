@@ -1,23 +1,35 @@
 /* eslint-disable no-underscore-dangle */
 const {
-  mapDeal,
+  mapBssDeal,
   mapGefDeal,
-  mapDeals,
   dealsReducer,
 } = require('./deals');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
+const mapFacilities = require('./mappings/facilities/mapFacilities');
+const mapTotals = require('./mappings/deal/mapTotals');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
+const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
+const mapDeals = require('./mappings/deal/mapDeals');
 
 const MOCK_DEAL = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
 
-const mockDeal = {
+const mockBssDeal = {
   ...MOCK_DEAL._id,
   dealSnapshot: {
     ...MOCK_DEAL,
-    details: MOCK_DEAL.details,
+    facilities: [
+      {
+        facilitySnapshot: MOCK_DEAL.bondTransactions.items[0],
+        tfm: {},
+      },
+      {
+        facilitySnapshot: MOCK_DEAL.loanTransactions.items[0],
+        tfm: {},
+      },
+    ],
   },
   tfm: {
     supplyContractValueInGBP: 1234,
@@ -26,36 +38,39 @@ const mockDeal = {
 
 const mockGefDeal = {
   _id: MOCK_GEF_DEAL._id,
-  dealSnapshot: MOCK_GEF_DEAL,
+  dealSnapshot: {
+    ...MOCK_GEF_DEAL,
+    facilities: [
+      {
+        facilitySnapshot: MOCK_GEF_DEAL.facilities[0],
+        tfm: {},
+      },
+    ],
+  },
   tfm: {},
 };
 
 describe('reducer - deals', () => {
-  describe('mapDeal', () => {
+  describe('mapBssDeal', () => {
     it('should return a mapped deal', () => {
-      const mockDealWithMappedFacilities = (deal) => ({
-        _id: MOCK_DEAL._id, // eslint-disable-line no-underscore-dangle
-        dealSnapshot: {
-          ...MOCK_DEAL,
-          facilities: [
-            ...MOCK_DEAL.bondTransactions.items,
-            ...MOCK_DEAL.loanTransactions.items,
-          ],
-        },
-        tfm: deal.tfm,
-      });
-
       const expected = {
-        _id: mockDeal._id,
+        _id: mockBssDeal._id,
         dealSnapshot: {
-          ...mockDeal.dealSnapshot,
-          submissionDetails: mapSubmissionDetails(mockDeal.dealSnapshot.submissionDetails),
-          isFinanceIncreasing: false,
+          ...mockBssDeal.dealSnapshot,
+          submissionDetails: mapSubmissionDetails(mockBssDeal.dealSnapshot.submissionDetails),
+          facilities: mapFacilities(
+            mockBssDeal.dealSnapshot.facilities,
+            mockBssDeal.dealSnapshot.details,
+            mockBssDeal.tfm,
+          ),
+          dealFiles: mockBssDeal.dealSnapshot.dealFiles,
+          eligibilityCriteria: mockBssDeal.dealSnapshot.eligibility.criteria,
+          totals: mapTotals(mockBssDeal.dealSnapshot.facilities),
         },
-        tfm: mapDealTfm(mockDealWithMappedFacilities(mockDeal)),
+        tfm: mapDealTfm(mockBssDeal),
       };
 
-      const result = mapDeal(mockDeal);
+      const result = mapBssDeal(mockBssDeal);
       expect(result).toEqual(expected);
     });
   });
@@ -68,7 +83,7 @@ describe('reducer - deals', () => {
           _id: mockGefDeal._id,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
-          isFinanceIncreasing: mockGefDeal.dealSnapshot.exporter.isFinanceIncreasing,
+          facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
         },
         tfm: mapDealTfm(mockGefDeal),
       };
@@ -78,41 +93,23 @@ describe('reducer - deals', () => {
     });
   });
 
-  describe('mapDeals', () => {
-    it('should return array of mapped deal and gef deals', () => {
+  describe('dealsLightReducer', () => {
+    it('should return mapDeals result', () => {
       const mockDeals = [
-        mockDeal,
-        mockGefDeal,
-      ];
-
-      const result = mapDeals(mockDeals);
-
-      const expected = [
-        mapDeal(mockDeals[0]),
-        mapGefDeal(mockDeals[1]),
-      ];
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('dealsReducer', () => {
-    it('should return deals', () => {
-      const mockDeals = [
-        mockDeal,
-        mockDeal,
-        mockDeal,
+        mockBssDeal,
+        mockBssDeal,
+        mockBssDeal,
       ];
 
       const result = dealsReducer(mockDeals);
 
-      const expected = {
-        count: mapDeals(mockDeals).length,
-        deals: mapDeals(mockDeals),
-      };
+      const expected = mapDeals(
+        mockDeals,
+        mapBssDeal,
+        mapGefDeal,
+      );
 
-      expect(result.count).toEqual(expected.count);
-      expect(result.deals).toEqual(expected.deals);
+      expect(result).toEqual(expected);
     });
   });
 });

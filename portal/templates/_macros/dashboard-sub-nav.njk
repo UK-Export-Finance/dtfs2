@@ -1,0 +1,36 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+{% macro subnav(selected) %}
+  {% set items = [
+    {
+      id: 'gefDeals',
+      href: '/dashboard',
+      text: 'GEF Deal view',
+      active: 'gefDeals' === selected
+    },
+    {
+      id: 'gefFacilities',
+      href: '/dashboard/facilities/gef',
+      text: 'GEF Facilities',
+      active: 'gefFacilities' === selected
+    },
+    {
+      id: 'bssDeals',
+      href: '/dashboard/bss',
+      text: 'BSS / EWCS Deal view',
+      active: 'bssDeals' === selected
+    },
+    {
+      id: 'bssFacilities',
+      href: '/dashboard/facilities',
+      text: 'BSS / EWCS Facilities',
+      active: 'bssFacilities' === selected
+    }
+  ] %}
+
+  {{ mojSubNavigation({
+    label: 'Sub navigation',
+    items: items
+  }) }}
+
+{% endmacro %}

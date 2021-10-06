@@ -3,9 +3,7 @@ const componentRenderer = require('../../../component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/case-summary.njk';
 
-const filterFormatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
-
-const formatDateString = filterFormatDateString.default;
+const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const render = componentRenderer(component);
 

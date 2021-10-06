@@ -1,7 +1,7 @@
-import api from '../../../../api';
-import canUserEditManagersDecision from './helpers';
-import { validateSubmittedValues } from './validateSubmittedValues';
-import { mapDecisionObject } from './mapDecisionObject';
+const api = require('../../../../api');
+const canUserEditManagersDecision = require('./helpers');
+const { validateSubmittedValues } = require('./validateSubmittedValues');
+const { mapDecisionObject } = require('./mapDecisionObject');
 
 const getUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -119,7 +119,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
   return res.redirect(`/case/${dealId}/underwriting/managers-decision`);
 };
 
-export default {
+module.exports = {
   getUnderwriterManagersDecision,
   getUnderwriterManagersDecisionEdit,
   postUnderwriterManagersDecision,

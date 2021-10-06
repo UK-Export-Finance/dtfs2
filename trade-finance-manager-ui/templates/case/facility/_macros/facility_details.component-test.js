@@ -1,11 +1,9 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
 
 const component = '../templates/case/facility/_macros/facility_details.njk';
-const filterLocaliseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const localiseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
-
-const localiseTimestamp = filterLocaliseTimestamp.default;
 
 describe(component, () => {
   let wrapper;
@@ -69,6 +67,43 @@ describe(component, () => {
 
     it('should render bankFacilityReference', () => {
       wrapper.expectText('[data-cy="bank-facility-reference"]').toRead(params.facility.bankFacilityReference);
+    });
+
+    it('should NOT render facility provided section', () => {
+      wrapper.expectElement('[data-cy="facility-provided"]').notToExist();
+    });
+
+    describe('when dealType is GEF', () => {
+      const gefParams = {
+        ...params,
+        deal: { dealType: 'GEF' },
+        facility: {
+          ...params.facility,
+          providedOn: [
+            'Revolving or renewing basis',
+            'Committed basis',
+          ],
+          providedOnOther: 'Mock other details',
+        },
+      };
+
+      beforeEach(() => {
+        wrapper = render(gefParams);
+      });
+
+      it('should render facility provided heading', () => {
+        wrapper.expectText('[data-cy="facility-provided-heading"]').toRead('Facility provided on');
+      });
+
+      it('should render multiple providedOn basis', () => {
+        const basis1 = gefParams.facility.providedOn[0];
+        wrapper.expectText(`[data-cy="facility-provided-${basis1}"]`).toRead(basis1);
+
+        const basis2 = gefParams.facility.providedOn[1];
+        wrapper.expectText(`[data-cy="facility-provided-${basis2}"]`).toRead(basis2);
+
+        wrapper.expectText('[data-cy="facility-provided-other-details"]').toRead(`Other - ${gefParams.facility.providedOnOther}`);
+      });
     });
   });
 

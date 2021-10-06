@@ -66,6 +66,7 @@ describe('controllers/facilities', () => {
 
     it('renders the `Facilities` template when there is a facility ID', async () => {
       mockRequest.params.facilityId = 'xyz';
+      mockRequest.query.status = 'change';
 
       await facilities(mockRequest, mockResponse);
 
@@ -73,7 +74,7 @@ describe('controllers/facilities', () => {
         facilityType: 'cash',
         applicationId: '123',
         hasBeenIssued: 'true',
-        status: undefined,
+        status: 'change',
       }));
     });
 

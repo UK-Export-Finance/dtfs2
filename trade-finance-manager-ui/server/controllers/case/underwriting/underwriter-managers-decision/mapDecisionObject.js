@@ -1,8 +1,8 @@
-import { hasValue } from '../../../../helpers/string';
-import { userFullName } from '../../../../helpers/user';
-import CONSTANTS from '../../../../constants';
+const { hasValue } = require('../../../../helpers/string');
+const { userFullName } = require('../../../../helpers/user');
+const CONSTANTS = require('../../../../constants');
 
-export const mapDecisionValue = (decision) => {
+const mapDecisionValue = (decision) => {
   if (decision === CONSTANTS.DEAL.UNDERWRITING_MANAGERS_DECISION_INPUT.APPROVE_WITHOUT_CONDITIONS) {
     return CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS;
   }
@@ -18,7 +18,7 @@ export const mapDecisionValue = (decision) => {
   return null;
 };
 
-export const mapDecisionObject = (submittedValues, user) => {
+const mapDecisionObject = (submittedValues, user) => {
   const {
     decision,
     approveWithConditionsComments,
@@ -42,4 +42,9 @@ export const mapDecisionObject = (submittedValues, user) => {
   mapped.decision = mapDecisionValue(decision);
 
   return mapped;
+};
+
+module.exports = {
+  mapDecisionObject,
+  mapDecisionValue,
 };

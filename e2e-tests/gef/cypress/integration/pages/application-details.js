@@ -3,6 +3,7 @@ const applicationDetails = {
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
   applicationBanner: () => cy.get('[data-cy="application-banner"]'),
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),
+  editRefNameLink: () => cy.get('[data-cy="edit-refname-link"]'),
   abandonLink: () => cy.get('[data-cy="abandon-link"]'),
   captionHeading: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
