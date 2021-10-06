@@ -22,7 +22,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
   const product = deal.dealSnapshot.dealType;
 
   // Get ACBS industry code
-  const industryCode = deal.dealSnapshot.submissionDetails['industry-class'] !== undefined
+  const industryCode = deal.dealSnapshot.submissionDetails !== undefined
     ? deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code
     : deal.dealSnapshot.exporter.industries[0].code;
 
