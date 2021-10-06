@@ -2,9 +2,9 @@ const template = require('./template.json');
 
 let counter = 0;
 const id = () => {
-  counter = counter + 1;
+  counter += 1;
   return counter;
-}
+};
 
 module.exports = () => {
   const deal = JSON.parse(JSON.stringify(template));
@@ -13,4 +13,4 @@ module.exports = () => {
   deal.bondTransactions.items[0]._id = id();
 
   return deal;
-}
+};
