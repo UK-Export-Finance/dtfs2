@@ -23,6 +23,7 @@ const facilityGuarantee = async (req, res) => {
       inAdvanceFrequency: facility.feeType === 'in advance' ? facility.frequency : '',
       inArrearsFrequency: facility.feeType === 'in arrears' ? facility.frequency : '',
       dayCountBasis: facility.dayCountBasis,
+      status,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -7,8 +6,6 @@ context('Mandatory Criteria Page', () => {
   before(() => {
     cy.reinsertMocks();
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

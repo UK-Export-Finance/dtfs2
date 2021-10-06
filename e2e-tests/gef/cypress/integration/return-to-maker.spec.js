@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import returnToMaker from './pages/return-to-maker';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -29,7 +27,6 @@ context('Return to Maker', () => {
 
     cy.login(CREDENTIALS.MAKER);
     cy.visit(relative(`/gef/application-details/${applicationIds[2]}/return-to-maker`));
-    cy.on('uncaught:exception', () => false);
   });
 
   describe('Return to maker', () => {

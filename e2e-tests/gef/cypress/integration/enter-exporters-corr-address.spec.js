@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import enterExportersCorAddress from './pages/enter-exporters-corr-address';
 import applicationDetails from './pages/application-details';
@@ -7,7 +5,6 @@ import exportersAddress from './pages/exporters-address';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 let applicationIds = [];
-let exporterId;
 let token;
 
 context('Enter Exporters Correspondence Address Page', () => {
@@ -25,8 +22,6 @@ context('Enter Exporters Correspondence Address Page', () => {
         // exporterId = body.items[0].exporterId;
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -50,7 +45,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     });
 
     // Skipping test until cy Referer not being passed bug is fixed
-    xit('redirects user to select exporters address page when clicking on `Back` Link', () => {
+    it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0].id}`));
 
       enterExportersCorAddress.backLink().click();
@@ -137,7 +132,7 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address?status=change`));
-      enterExportersCorAddress.backLink().should('not.be.visible');
+      enterExportersCorAddress.backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {

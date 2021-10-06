@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import facilities from './pages/facilities';
@@ -20,8 +18,6 @@ context('Application Details Page', () => {
       });
 
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   describe('Visiting page for the first time - NOT STARTED', () => {
