@@ -83,8 +83,12 @@ app.use(healthcheck);
 app.use('/', routes);
 
 app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500);
+  res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
+});
 
-app.get('*', (req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
+app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
 // eslint-disable-next-line no-console
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
