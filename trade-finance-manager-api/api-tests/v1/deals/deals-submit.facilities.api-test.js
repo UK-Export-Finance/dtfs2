@@ -159,7 +159,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(2);
+          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(1);
         });
 
         it('does not gets the premium scheduler info for unissued facility', async () => {

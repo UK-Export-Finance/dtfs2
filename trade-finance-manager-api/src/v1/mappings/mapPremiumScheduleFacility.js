@@ -7,42 +7,42 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
     return null;
   }
-  const map = {};
 
-  let premiumFrequencyId = 0;
-  let premiumTypeId = 0;
+  const mapped = {};
 
-  premiumFrequencyId = getPremiumFrequencyId(facility);
-  premiumTypeId = getPremiumTypeId(facility, premiumTypeId);
+  mapped.premiumTypeId = getPremiumTypeId(facility);
+  mapped.premiumFrequencyId = getPremiumFrequencyId(facility);
 
-  const cumulativeAmount = facility.disbursementAmount ? Number(stripCommas(facility.disbursementAmount)) : 0;
+  mapped.cumulativeAmount = 0;
+  if (facility.disbursementAmount) {
+    mapped.cumulativeAmount = Number(stripCommas(facility.disbursementAmount));
+  }
 
-  map.facilityURN = Number(facility.ukefFacilityID);
+  mapped.facilityURN = facility.ukefFacilityID;
 
-  map.productGroup = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
+  mapped.productGroup = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
     ? CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.BOND
     : CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.LOAN;
 
-  map.premiumTypeId = premiumTypeId;
-  map.premiumFrequencyId = premiumFrequencyId;
 
-  map.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
-  map.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;
-  map.guaranteeFeePercentage = Number(facility.guaranteeFeePayableByBank);
-  map.guaranteePercentage = Number(facility.coverPercentage);
+  mapped.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
+  mapped.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;
+  mapped.guaranteeFeePercentage = facility.guaranteeFee;
+  mapped.guaranteePercentage = facility.coverPercentage;
 
-  map.dayBasis = facility.dayCountBasis;
+  mapped.dayBasis = facility.dayCountBasis;
 
-  map.exposurePeriod = facilityExposurePeriod
-    ? facilityExposurePeriod.exposurePeriodInMonths
-    : 0;
+  mapped.exposurePeriod = 0;
+  if (facilityExposurePeriod) {
+    mapped.exposurePeriod = facilityExposurePeriod;
+  }
 
-  map.cumulativeAmount = cumulativeAmount;
+  mapped.maximumLiability = 0;
+  if (facility.ukefExposure) {
+    mapped.maximumLiability = facility.ukefExposure;
+  }
 
-  map.maximumLiability = facility.ukefExposure
-    ? Number(facility.ukefExposure.split('.')[0].replace(/,/g, ''))
-    : 0;
-  return map;
+  return mapped;
 };
 
 module.exports = mapPremiumScheduleFacility;
