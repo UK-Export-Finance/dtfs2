@@ -23,7 +23,7 @@ function validateFacilityGuarantee({
     errMsg: 'Select how often your bank will pay the fee to UKEF',
   };
 
-  if (!['in advance', 'in arrears', 'At maturity'].includes(feeType)) {
+  if (!['in advance', 'in arrears', 'at maturity'].includes(feeType)) {
     facilityGuaranteeErrors.push(feeTypeError);
   }
   const FREQUENCIES = ['Monthly', 'Quarterly', 'Semi-annually', 'Annually'];

@@ -44,7 +44,7 @@ const hasRequiredItems = (doc) => {
   if (!doc.feeType) {
     required.push('feeType');
   }
-  if (doc.feeType !== 'At maturity' && !doc.feeFrequency) {
+  if (doc.feeType !== 'at maturity' && !doc.feeFrequency) {
     required.push('feeFrequency');
   }
   if (!doc.dayCountBasis) {
@@ -95,8 +95,15 @@ const facilitiesCheckEnums = (doc) => {
       break;
   }
   switch (doc.paymentType) {
+    case PAYMENT_TYPE.IN_ARREARS_MONTHLY:
     case PAYMENT_TYPE.IN_ARREARS_QUARTLY:
+    case PAYMENT_TYPE.IN_ARREARS_SEMI_ANNUALLY:
+    case PAYMENT_TYPE.IN_ARREARS_ANNUALLY:
     case PAYMENT_TYPE.IN_ADVANCE_QUARTERLY:
+    case PAYMENT_TYPE.IN_ADVANCE_MONTHLY:
+    case PAYMENT_TYPE.IN_ADVANCE_SEMI_ANNUALLY:
+    case PAYMENT_TYPE.IN_ADVANCE_ANNUALLY:
+    case PAYMENT_TYPE.AT_MATURITY:
     case null:
     case undefined:
       break;
