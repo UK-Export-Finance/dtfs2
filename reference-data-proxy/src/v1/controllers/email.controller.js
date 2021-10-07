@@ -18,13 +18,9 @@ exports.sendEmail = async (req, res) => {
       personalisation,
       reference: null,
     })
-    .then((response) => {
-      console.log(`Sent Notify email to ${sendToEmailAddress} with templateId ${templateId}`);
-      return response;
-    })
+    .then((response) => response)
     .catch((err) => {
-      console.log('Error calling Notify API');
-      console.log(err.response);
+      console.error('Error calling Notify API ', err.response);
       return err.response;
     });
 
