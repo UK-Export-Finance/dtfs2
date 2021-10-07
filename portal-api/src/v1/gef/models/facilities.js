@@ -17,9 +17,16 @@ function checkType(type) {
 function checkPaymentType(paymentType) {
   if (paymentType) {
     switch (paymentType.toUpperCase()) {
+      case 'IN_ARREARS_MONTHLY':
       case 'IN_ARREARS_QUARTLY':
+      case 'IN_ARREARS_SEMI_ANNUALLY':
+      case 'IN_ARREARS_ANNUALLY':
       case 'IN_ADVANCE_QUARTERLY':
-        return paymentType.toUpperCase();
+      case 'IN_ADVANCE_MONTHLY':
+      case 'IN_ADVANCE_SEMI_ANNUALLY':
+      case 'IN_ADVANCE_ANNUALLY':
+      case 'AT_MATURITY':
+        return paymentType;
       default:
         return null;
     }

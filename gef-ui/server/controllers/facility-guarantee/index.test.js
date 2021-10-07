@@ -129,6 +129,7 @@ describe('controllers/facility-guarantee', () => {
 
       expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
         feeType: 'in advance',
+        paymentType: 'IN_ADVANCE_MONTHLY',
         dayCountBasis: '365',
         feeFrequency: 'Monthly',
       });
