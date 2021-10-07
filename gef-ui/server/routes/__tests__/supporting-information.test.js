@@ -29,10 +29,10 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire', [validateToken], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire', [validateToken, multer().array('documents', 2)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire/upload', [validateToken, multer().single('documents')], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/manual-inclusion-questionnaire/delete', [validateToken], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType', [validateToken], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType', [validateToken, multer().array('documents', 2)], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType/upload', [validateToken, multer().single('documents')], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType/delete', [validateToken], expect.any(Function));
 
     expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/security-details', [validateToken], expect.any(Function));
     expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/security-details', [validateToken], expect.any(Function));
