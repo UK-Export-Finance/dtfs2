@@ -215,6 +215,9 @@ const uploadSupportingDocument = async (req, res, next) => {
     file.error = error;
 
     if (isValid) {
+      // check user has access
+      await getApplication(applicationId, user, userToken);
+
       const [processedFile] = await uploadAndSaveToDeal(
         [file],
         fieldName,

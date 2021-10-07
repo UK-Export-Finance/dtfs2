@@ -83,6 +83,7 @@ app.use(healthcheck);
 app.use('/', routes);
 
 app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+// eslint-disable-next-line
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500);
   res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
