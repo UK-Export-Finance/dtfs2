@@ -33,7 +33,7 @@ context('about-supply-contract', () => {
     cy.title().should('eq', `Financial information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
 
     // prove the exchange-rate fields start hidden..
-    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.exist');
+    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
     contractAboutFinancial.supplyContractValue().type('10000');
@@ -42,7 +42,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.supplyContractCurrency().select('GBP');
 
     // prove the exchange-rate fields stay hidden..
-    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.exist');
+    contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
 
     contractAboutFinancial.saveAndGoBack().click();
 

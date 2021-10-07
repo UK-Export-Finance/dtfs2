@@ -1,11 +1,11 @@
 const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
+  contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
 
 const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker')) );
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 // test data we want to set up + work with..
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
@@ -13,18 +13,10 @@ const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplet
 context('about-buyer', () => {
   let deal;
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealWithAboutSupplyContractComplete, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
