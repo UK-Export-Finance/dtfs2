@@ -1,6 +1,6 @@
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('../../../constants');
 
-const getPremiumFrequencyId = (facility) => {
+const mapPremiumFrequencyId = (facility) => {
   switch (facility.feeFrequency) {
     case CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.MONTHLY:
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.MONTHLY;
@@ -19,7 +19,7 @@ const getPremiumFrequencyId = (facility) => {
   }
 };
 
-const getPremiumTypeId = (facility) => {
+const mapPremiumTypeId = (facility) => {
   switch (facility.feeType) {
     case CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ADVANCE:
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.IN_ADVANCE;
@@ -36,6 +36,6 @@ const getPremiumTypeId = (facility) => {
 };
 
 module.exports = {
-  getPremiumFrequencyId,
-  getPremiumTypeId,
+  mapPremiumFrequencyId,
+  mapPremiumTypeId,
 };

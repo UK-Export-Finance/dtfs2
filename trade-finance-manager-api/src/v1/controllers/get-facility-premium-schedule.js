@@ -1,5 +1,5 @@
 const api = require('../api');
-const mapPremiumScheduleFacility = require('../mappings/mapPremiumScheduleFacility');
+const mapPremiumScheduleFacility = require('../mappings/premium-schedule');
 
 const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   if (facility.hasBeenIssued && facilityExposurePeriod) {
