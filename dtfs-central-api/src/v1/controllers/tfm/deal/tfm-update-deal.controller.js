@@ -45,7 +45,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: dealId },
     $.flatten(withoutId(tfmUpdate)),
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
 
   return findAndUpdateResponse.value;
@@ -87,7 +87,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: dealId },
     $.flatten(withoutId(update)),
-    { returnDocument: 'after', returnOriginal: false, upsert: true },
+    { returnOriginal: false, upsert: true },
   );
 
   return findAndUpdateResponse.value;

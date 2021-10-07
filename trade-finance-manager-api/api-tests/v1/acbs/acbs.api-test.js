@@ -28,22 +28,18 @@ describe('acbs controller', () => {
 
   describe('addToACBSLog', () => {
     it('should add entry to acbs log', async () => {
-      const result = await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: {} });
-      expect(result).toEqual({
-        acknowledged: true,
-        insertedId: expect.any(Object),
-      });
+      const { result } = await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: {} });
+      expect(result.n).toEqual(1);
+      expect(result.ok).toEqual(1);
     });
   });
 
   describe('clearACBSLog', () => {
     it('should clear acbs log', async () => {
       await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: {} });
-      const result = await acbsController.clearACBSLog();
-      expect(result).toEqual({
-        acknowledged: true,
-        deletedCount: 1,
-      });
+      const { result } = await acbsController.clearACBSLog();
+      expect(result.n).toEqual(1);
+      expect(result.ok).toEqual(1);
     });
   });
 

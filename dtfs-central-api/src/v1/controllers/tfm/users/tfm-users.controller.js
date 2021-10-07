@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 
 /* eslint-disable no-underscore-dangle */
 const db = require('../../../../drivers/db-client');

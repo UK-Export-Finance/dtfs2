@@ -1,4 +1,4 @@
-const { ObjectId } = require('bson');
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
 

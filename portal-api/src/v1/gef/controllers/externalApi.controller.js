@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { companiesHouseError } = require('./validation/external');
 require('dotenv').config();
@@ -81,7 +81,7 @@ exports.getByRegistrationNumber = async (req, res) => {
             selectedIndustry,
             industries,
           },
-        }, { returnDocument: 'after', returnOriginal: false },
+        }, { returnOriginal: false },
       );
     }
     return res.status(200).send(response.data);

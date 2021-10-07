@@ -22,7 +22,7 @@ const updateFacility = async (facilityId, facilityBody, associatedDealId, user, 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: facilityId },
     $.flatten(withoutId(update)),
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
 
   const { value: updatedFacility } = findAndUpdateResponse;

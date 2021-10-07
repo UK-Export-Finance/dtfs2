@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
@@ -44,7 +44,7 @@ const extendDealWithFacilities = async (deal) => {
   }
 
   return mappedDeal;
-}
+};
 
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
@@ -56,7 +56,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
     .limit(pagesize)
     .toArray();
 
-  const extendedDeals = []
+  const extendedDeals = [];
   for await (deal of deals) {
     const extendedDeal = await extendDealWithFacilities(deal);
     extendedDeals.push(extendedDeal);
@@ -76,7 +76,7 @@ exports.queryDealsPost = async (req, res) => {
 
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
-  
+
   const deal = await dealsCollection.findOne({ _id });
 
   if (deal && deal.facilities) {

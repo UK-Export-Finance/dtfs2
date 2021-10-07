@@ -10,7 +10,7 @@ const updateGefApplication = async (applicationId, applicationUpdate) => {
     {
       $set: applicationUpdate,
     },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
 
   return updatedApplication;
@@ -24,7 +24,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     {
       $set: facilityUpdate,
     },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
 
   return updatedFacility;

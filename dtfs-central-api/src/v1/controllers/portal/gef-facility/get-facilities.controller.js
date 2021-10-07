@@ -1,4 +1,4 @@
-const { ObjectId } = require('bson');
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const findAllGefFacilitiesByDealId = async (dealId) => {
