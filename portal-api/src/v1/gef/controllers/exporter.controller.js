@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { exporterValidation, exporterStatus, exporterCheckEnums } = require('./validation/exporter');
@@ -28,7 +28,7 @@ exports.update = async (req, res) => {
   } else {
     const collection = await db.getCollection(collectionName);
     const result = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectID(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnDocument: 'after', returnOriginal: false },
+      { _id: { $eq: ObjectID(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnOriginal: false },
     );
     let response;
     if (result.value) {

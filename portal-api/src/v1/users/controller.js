@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 const now = require('../../now');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
