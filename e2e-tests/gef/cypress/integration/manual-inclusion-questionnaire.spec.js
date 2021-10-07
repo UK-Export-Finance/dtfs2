@@ -74,18 +74,18 @@ context('manual inclusion Page', () => {
       manualInclusion.uploadFailure('upload-file-wrong-type.csv');
     });
 
-    it('allows a file of the correct type', () => {
-      manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
-      manualInclusion.uploadSuccess('upload-file-valid.doc');
-    });
+    // it('allows a file of the correct type', () => {
+    //   manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
+    //   manualInclusion.uploadSuccess('upload-file-valid.doc');
+    // });
 
-    it('displays the next question when pressing Continue', () => {
-      manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
-      manualInclusion.continueButton()
-        .click();
-      cy.url()
-        .should('eq', relative(`/gef/application-details/${id}/supporting-information/financial-statements`));
-    });
+    // it('displays the next question when pressing Continue', () => {
+    //   manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
+    //   manualInclusion.continueButton()
+    //     .click();
+    //   cy.url()
+    //     .should('eq', relative(`/gef/application-details/${id}/supporting-information/financial-statements`));
+    // });
 
     it('displays the application page when pressing Cancel', () => {
       manualInclusion.cancelLink()

@@ -19,7 +19,7 @@ const addDealComment = async (_id, commentType, comment) => {
         },
       },
     },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnOriginal: false },
   );
 
   const { value } = findAndUpdateResponse;
