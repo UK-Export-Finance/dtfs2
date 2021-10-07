@@ -1,11 +1,12 @@
-const mapPremiumScheduleFacility = require('./mapPremiumScheduleFacility');
-const { getPremiumFrequencyId, getPremiumTypeId } = require('../helpers/get-premium-frequency-values');
-const { mapBssEwcsFacility } = require('./map-submitted-deal/map-bss-ewcs-facility');
+const mapPremiumScheduleFacility = require('.');
+const { mapPremiumFrequencyId, mapPremiumTypeId } = require('./map-premium-ids');
+const mapProductGroup = require('./map-product-group');
+const { mapBssEwcsFacility } = require('../map-submitted-deal/map-bss-ewcs-facility');
 
-const MOCK_FACILIIES = require('../__mocks__/mock-facilities');
+const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
 
 describe('mapPremiumScheduleFacility', () => {
-  const mockFacility = mapBssEwcsFacility(MOCK_FACILIIES[0]);
+  const mockFacility = mapBssEwcsFacility(MOCK_FACILIIES[1]);
 
   const mockExposurePeriod = 25;
 
@@ -25,7 +26,7 @@ describe('mapPremiumScheduleFacility', () => {
     const result = mapPremiumScheduleFacility(facility, mockExposurePeriod, mockGuaranteeDates);
 
     const expected = {
-      cumulativeAmount: 0,
+      cumulativeAmount: mockFacility.disbursementAmount,
       dayBasis: mockFacility.dayCountBasis,
       exposurePeriod: mockExposurePeriod,
       facilityURN: mockFacility.ukefFacilityID,
@@ -34,20 +35,21 @@ describe('mapPremiumScheduleFacility', () => {
       guaranteeFeePercentage: mockFacility.guaranteeFee,
       guaranteePercentage: mockFacility.coverPercentage,
       maximumLiability: mockFacility.ukefExposure,
-      premiumTypeId: getPremiumTypeId(mockFacility),
-      premiumFrequencyId: getPremiumFrequencyId(mockFacility),
-      productGroup: 'BS',
+      premiumTypeId: mapPremiumTypeId(mockFacility),
+      premiumFrequencyId: mapPremiumFrequencyId(mockFacility),
+      productGroup: mapProductGroup(mockFacility.facilityType),
     };
     expect(result).toEqual(expected);
   });
 
-  // describe('Loan', () => {
-  //   it('should map cumulativeAmount', () => {
-  //     const result = mapPremiumScheduleFacility(mockLoan, mockFacilityExposurePeriod, mockFacilityGuaranteeDates);
+  it('should default cumulativeAmount to 0 when disbursementAmount does not exist', () => {
+    const facility = {
+      ...mockFacility,
+      disbursementAmount: null,
+    };
 
-  //     const expected = Number(stripCommas(mockLoan.disbursementAmount));
+    const result = mapPremiumScheduleFacility(facility, mockExposurePeriod, mockGuaranteeDates);
 
-  //     expect(result.cumulativeAmount).toEqual(expected);
-  //   });
-  // });
+    expect(result.cumulativeAmount).toEqual(0);
+  });
 });

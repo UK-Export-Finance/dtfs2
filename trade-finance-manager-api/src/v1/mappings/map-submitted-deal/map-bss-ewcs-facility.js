@@ -1,5 +1,6 @@
 const moment = require('moment');
 const isIssued = require('../../helpers/is-issued');
+const { stripCommas } = require('../../../utils/string');
 
 const hasCoverEndDate = (day, month, year) => {
   if (day && month && year) {
@@ -47,6 +48,7 @@ const mapBssEwcsFacility = (facility) => {
     premiumFrequency,
     bankReferenceNumber,
     uniqueIdentificationNumber,
+    disbursementAmount,
     bondType,
     facilityStage,
   } = facility;
@@ -70,6 +72,7 @@ const mapBssEwcsFacility = (facility) => {
     feeType: feeType || premiumType,
     feeFrequency: feeFrequency || premiumFrequency,
     dayCountBasis,
+    disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
     bankReference: bankReferenceNumber,
     uniqueIdentificationNumber,
     bondType,

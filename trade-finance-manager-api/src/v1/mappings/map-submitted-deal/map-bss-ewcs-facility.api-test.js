@@ -4,6 +4,7 @@ const {
   mapBssEwcsFacility,
 } = require('./map-bss-ewcs-facility');
 const isIssued = require('../../helpers/is-issued');
+const { stripCommas } = require('../../../utils/string');
 const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
 
 describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
@@ -53,7 +54,8 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         feeFrequency,
         bankReferenceNumber,
         uniqueIdentificationNumber,
-        bondType,
+        bondType, // TODO: is this needed?
+        disbursementAmount,
         facilityStage,
       } = mockFacility;
 
@@ -74,6 +76,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         feeType: premiumType,
         feeFrequency,
         dayCountBasis,
+        disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
         bankReference: bankReferenceNumber,
         uniqueIdentificationNumber,
         bondType,
