@@ -53,7 +53,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     dealIdentifier: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
       ? acbsData.investor.dealIdentifier.padStart(10, 0)
       : acbsData.deal.dealIdentifier.padStart(10, 0),
-    facilityIdentifier: facility.ukefFacilityID !== undefined
+    facilityIdentifier: facility.ukefFacilityID
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
@@ -64,7 +64,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     productTypeName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
       ? facility.facilitySnapshot.type
       : facility.facilitySnapshot.facilityType,
-    currency: facility.facilitySnapshot.currency.id !== undefined
+    currency: facility.facilitySnapshot.currency.id
       ? facility.facilitySnapshot.currency.id
       : facility.facilitySnapshot.currency,
     guaranteeCommencementDate,
