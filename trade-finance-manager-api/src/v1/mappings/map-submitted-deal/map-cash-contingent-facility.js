@@ -1,4 +1,5 @@
 const { convertDateToTimestamp } = require('../../../utils/date');
+const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
 
 const mapCoverStartDate = (facility) => {
   const {
@@ -31,12 +32,16 @@ const mapCashContingentFacility = (facility) => {
     ukefExposure,
     coverEndDate,
     name,
+    guaranteeFee,
+    paymentType,
+    feeFrequency,
+    dayCountBasis,
     tfm,
   } = facility;
 
   return {
     _id,
-    ukefFacilityID: ukefFacilityId,
+    ukefFacilityID: Number(ukefFacilityId),
     facilityType: type,
     currencyCode: currency,
     value,
@@ -47,6 +52,10 @@ const mapCashContingentFacility = (facility) => {
     coverStartDate: mapCoverStartDate(facility),
     coverEndDate,
     bankReference: name,
+    guaranteeFee,
+    feeType: mapGefFacilityFeeType(paymentType),
+    feeFrequency,
+    dayCountBasis,
     tfm,
   };
 };

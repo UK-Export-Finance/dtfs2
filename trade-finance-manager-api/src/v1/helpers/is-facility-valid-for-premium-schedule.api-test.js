@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 
 const facility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-  premiumType: '2',
+  feeType: 'At maturity',
   ukefFacilityID: '0001',
   guaranteeFeePayableByBank: '10',
   coverPercentage: '80',
@@ -40,23 +40,11 @@ describe('is valid for premium schedule?', () => {
       });
     });
 
-    describe('feeType/premiumType', () => {
-      it('should be invalid if bond and no fee type', () => {
+    describe('feeType', () => {
+      it('should be invalid if no feeType', () => {
         const invalidFacility = {
           ...facility,
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           feeType: '',
-        };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
-        expect(isValidForPremiumSchedule).toEqual(false);
-      });
-
-      it('should be invalid if loan and no premium type', () => {
-        const invalidFacility = {
-          ...facility,
-          premiumType: '',
         };
         const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
@@ -102,11 +90,11 @@ describe('is valid for premium schedule?', () => {
       });
     });
 
-    describe('guaranteeFeePayableByBank', () => {
-      it('should be invalid if no guaranteeFeePayableByBank', () => {
+    describe('guaranteeFee', () => {
+      it('should be invalid if no guaranteeFee', () => {
         const invalidFacility = {
           ...facility,
-          guaranteeFeePayableByBank: '',
+          guaranteeFee: '',
         };
         const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,

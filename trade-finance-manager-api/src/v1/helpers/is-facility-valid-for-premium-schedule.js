@@ -1,5 +1,3 @@
-const CONSTANTS = require('../../constants');
-
 const isFacilityValidForPremiumSchedule = (
   facility,
   facilityExposurePeriod,
@@ -8,11 +6,7 @@ const isFacilityValidForPremiumSchedule = (
   if (!facilityExposurePeriod || facilityExposurePeriod < 1) {
     return false;
   }
-  if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
-    if (!facility.feeType) {
-      return false;
-    }
-  } else if (!facility.premiumType) {
+  if (!facility.feeType) {
     return false;
   }
   if (!facility.ukefFacilityID) {
@@ -24,7 +18,7 @@ const isFacilityValidForPremiumSchedule = (
   if (!facilityGuaranteeDates.guaranteeExpiryDate) {
     return false;
   }
-  if (!facility.guaranteeFeePayableByBank) {
+  if (!facility.guaranteeFee) {
     return false;
   }
   if (!facility.coverPercentage) {

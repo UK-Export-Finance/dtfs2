@@ -67,7 +67,7 @@ describe('get-premium-frequency-values', () => {
       it('should return monthly frequencyId', () => {
         const frequencyFacility = {
           ...facility,
-          premiumFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.MONTHLY,
+          feeFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.MONTHLY,
         };
 
         const frequencyId = getPremiumFrequencyId(frequencyFacility);
@@ -77,7 +77,7 @@ describe('get-premium-frequency-values', () => {
       it('should return quartely frequencyId', () => {
         const frequencyFacility = {
           ...facility,
-          premiumFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.QUARTERLY,
+          feeFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.QUARTERLY,
         };
 
         const frequencyId = getPremiumFrequencyId(frequencyFacility);
@@ -87,7 +87,7 @@ describe('get-premium-frequency-values', () => {
       it('should return semi-annual frequencyId', () => {
         const frequencyFacility = {
           ...facility,
-          premiumFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.SEMI_ANNUALLY,
+          feeFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.SEMI_ANNUALLY,
         };
 
         const frequencyId = getPremiumFrequencyId(frequencyFacility);
@@ -97,7 +97,7 @@ describe('get-premium-frequency-values', () => {
       it('should return annual frequencyId', () => {
         const frequencyFacility = {
           ...facility,
-          premiumFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.ANNUALLY,
+          feeFrequency: CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.ANNUALLY,
         };
 
         const frequencyId = getPremiumFrequencyId(frequencyFacility);
@@ -107,7 +107,7 @@ describe('get-premium-frequency-values', () => {
       it('should return undefined if frequency not recognised', () => {
         const frequencyFacility = {
           ...facility,
-          premiumFrequency: '999',
+          feeFrequency: '999',
         };
 
         const frequencyId = getPremiumFrequencyId(frequencyFacility);
@@ -171,7 +171,7 @@ describe('get-premium-frequency-values', () => {
       it('should return In Advance fee type', () => {
         const frequencyFacility = {
           ...facility,
-          premiumType: CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ADVANCE,
+          feeType: CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ADVANCE,
         };
 
         const frequencyType = getPremiumTypeId(frequencyFacility);
@@ -181,7 +181,7 @@ describe('get-premium-frequency-values', () => {
       it('should return In Arrears fee type', () => {
         const frequencyFacility = {
           ...facility,
-          premiumType: CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ARREARS,
+          feeType: CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ARREARS,
         };
 
         const frequencyType = getPremiumTypeId(frequencyFacility);
@@ -191,7 +191,7 @@ describe('get-premium-frequency-values', () => {
       it('should return At Maturity fee type', () => {
         const frequencyFacility = {
           ...facility,
-          premiumType: CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.AT_MATURITY,
+          feeType: CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.AT_MATURITY,
         };
 
         const frequencyType = getPremiumTypeId(frequencyFacility);
@@ -201,7 +201,7 @@ describe('get-premium-frequency-values', () => {
       it('should return 0 if frequency type not recognised', () => {
         const frequencyFacility = {
           ...facility,
-          premiumType: '999',
+          feeType: '999',
         };
 
         const frequencyId = getPremiumTypeId(frequencyFacility);
