@@ -4,6 +4,8 @@ Also known as TFM, TFM API is primarily responsible for handling deal submission
 
 Once TFM has successfully received a deal, graphQL is used to query and mutate TFM data.
 
+In TFM, a deal is part of a 'case'. A case contains the deal and facilities, amongst other TFM specific areas.
+
 ## Prerequisite
 
 Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.

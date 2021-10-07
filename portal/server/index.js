@@ -5,7 +5,6 @@ const redis = require('redis');
 
 const flash = require('connect-flash');
 const path = require('path');
-const json2csv = require('express-json2csv');
 require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
@@ -63,7 +62,6 @@ sessionOptions.store = sessionStore;
 app.use(session(sessionOptions));
 
 app.use(flash());
-app.use(json2csv);
 
 configureNunjucks({
   autoescape: true,

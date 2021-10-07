@@ -6,6 +6,10 @@ const {
 } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { isSuperUser } = require('../../users/checks');
+const {
+  calculateUkefExposure,
+  calculateGuaranteeFee,
+} = require('../calculations/facility-calculations');
 
 const collectionName = 'gef-facilities';
 
@@ -87,25 +91,6 @@ exports.getById = async (req, res) => {
   }
 };
 
-const calculateUkefExposure = (requestedUpdate, existingFacility) => {
-  let latestValue = (existingFacility && existingFacility.value);
-  let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
-
-  // make sure we calculate with the latest values.
-  if (requestedUpdate.value) {
-    latestValue = requestedUpdate.value;
-  }
-
-  if (requestedUpdate.coverPercentage) {
-    latestCoverPercentage = requestedUpdate.coverPercentage;
-  }
-
-  const calculation = (latestValue * latestCoverPercentage);
-
-  return calculation;
-};
-exports.calculateUkefExposure = calculateUkefExposure;
-
 const update = async (id, updateBody) => {
   const collection = await db.getCollection(collectionName);
   const facilityId = ObjectID(String(id));
@@ -115,6 +100,7 @@ const update = async (id, updateBody) => {
   const facilityUpdate = new Facility({
     ...updateBody,
     ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+    guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
   });
 
   const result = await collection.findOneAndUpdate(
