@@ -19,7 +19,7 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
     effectiveDate,
   } = facility.tfm.facilityGuaranteeDates;
   return {
-    facilityIdentifier: facility.ukefFacilityID !== undefined
+    facilityIdentifier: facility.ukefFacilityID
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     guaranteeCommencementDate,

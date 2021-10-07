@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../constants');
 
 const getCapitalConversionFactorCode = (facility) => {
-  const type = facility.facilitySnapshot.type !== undefined
+  const type = facility.facilitySnapshot.type
     ? facility.facilitySnapshot.type
     : facility.facilitySnapshot.facilityType;
 
