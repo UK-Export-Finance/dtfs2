@@ -16,7 +16,6 @@ const facilityGuarantee = async (req, res) => {
       console.log('Facility not found, or not authorised');
       return res.redirect('/');
     }
-    console.log('==========the facility \n', facility);
     return res.render('partials/facility-guarantee.njk', {
       applicationId: facility.applicationId,
       facilityId: facility.facilityId,
@@ -41,10 +40,31 @@ const updateFacilityGuarantee = async (req, res) => {
   const facilityGuaranteeErrors = [];
 
   async function update() {
+    const feeTypeIsInAdvance = feeType === 'in advance';
+    const feeTypeIsInArrears = feeType === 'in arrears';
+    const feeTypeIsInAtMaturity = feeType === 'at maturity';
+
+    const cleanFrequencyValue = (str) => str.replace('-', '_').toUpperCase();
+
+    let paymentType;
+
+    if (feeTypeIsInAdvance) {
+      paymentType = `IN_ADVANCE_${cleanFrequencyValue(inAdvanceFrequency)}`;
+    }
+
+    if (feeTypeIsInArrears) {
+      paymentType = `IN_ARREARS_${cleanFrequencyValue(inAdvanceFrequency)}`;
+    }
+
+    if (feeTypeIsInAtMaturity) {
+      paymentType = 'AT_MATURITY';
+    }
+
     try {
       await api.updateFacility(facilityId, {
         feeType,
-        feeFrequency: feeType === 'in advance' ? inAdvanceFrequency : inArrearsFrequency,
+        paymentType,
+        feeFrequency: feeTypeIsInAdvance ? inAdvanceFrequency : inArrearsFrequency,
         dayCountBasis,
       });
       return res.redirect(`/gef/application-details/${applicationId}`);
