@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
@@ -6,6 +5,8 @@ const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+
+const now = new Date().valueOf();
 
 const MOCK_DEAL = {
   details: {
@@ -21,7 +22,7 @@ const MOCK_DEAL = {
   mockFacilities: [
     {
       facilityType: 'bond',
-      createdDate: moment().utc().valueOf(),
+      createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -43,7 +44,7 @@ const MOCK_DEAL = {
     },
     {
       facilityType: 'bond',
-      createdDate: moment().utc().valueOf(),
+      createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -65,7 +66,7 @@ const MOCK_DEAL = {
     },
     {
       facilityType: 'bond',
-      createdDate: moment().utc().valueOf(),
+      createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -97,11 +98,6 @@ context('Delete a Bond', () => {
   };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => {

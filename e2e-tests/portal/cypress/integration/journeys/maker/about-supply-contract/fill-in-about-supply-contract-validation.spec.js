@@ -1,43 +1,35 @@
 const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
+  contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
 const partials = require('../../../partials');
-
 const relative = require('../../../relativeURL');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
-
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('about-supply-contract', () => {
   let deal;
   let dealId;
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.deleteDeals(MAKER_LOGIN);
 
-    const aDealWith_AboutSupplyContract_InStatus = (status) => {
+    const aDealWithAboutSupplyContractInStatus = (status) => {
       const candidates = twentyOneDeals
-        .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
-        .filter((deal) => (deal.details && deal.details.status === 'Draft'));
+        .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
+        && (aDeal.details && aDeal.details.status === 'Draft'));
 
-      const deal = candidates[0];
-      if (!deal) {
+      const aDeal = candidates[0];
+      if (!aDeal) {
         throw new Error('no suitable test data found');
       } else {
-        return deal;
+        return aDeal;
       }
     };
 
-    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Incomplete'), MAKER_LOGIN)
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = insertedDeal._id;
