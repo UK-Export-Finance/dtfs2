@@ -29,7 +29,7 @@ class Facility {
         applicationId,
         facilityId,
         status,
-        frequency: details.frequency,
+        feeFrequency: details.feeFrequency,
         dayCountBasis: details.dayCountBasis,
         feeType: details.feeType,
       };

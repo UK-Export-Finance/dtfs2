@@ -16,6 +16,7 @@ const facilityGuarantee = async (req, res) => {
       console.log('Facility not found, or not authorised');
       return res.redirect('/');
     }
+    console.log('==========the facility \n', facility);
     return res.render('partials/facility-guarantee.njk', {
       applicationId: facility.applicationId,
       facilityId: facility.facilityId,
