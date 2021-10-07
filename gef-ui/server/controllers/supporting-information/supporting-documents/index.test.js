@@ -1,5 +1,5 @@
 import {
-  getUploadSupportingDocument, postUploadSupportingDocument, uploadSupportingDocument, deleteSupportingDocument,
+  getSupportingDocuments, postSupportingDocuments, uploadSupportingDocument, deleteSupportingDocument,
 } from '.';
 import Application from '../../../models/application';
 import validateFile from '../../../utils/validateFile';
@@ -35,7 +35,7 @@ describe('controllers/supporting-documents', () => {
     jest.clearAllMocks();
   });
 
-  describe('getUploadSupportingDocument', () => {
+  describe('getSupportingDocuments', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
@@ -51,7 +51,7 @@ describe('controllers/supporting-documents', () => {
     it('passes error to next() if user cannot access application', async () => {
       Application.findById.mockResolvedValueOnce();
 
-      await getUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+      await getSupportingDocuments(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.render).not.toHaveBeenCalled();
       expect(mockNext).toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('controllers/supporting-documents', () => {
         },
       });
 
-      await getUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+      await getSupportingDocuments(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', {
@@ -87,7 +87,7 @@ describe('controllers/supporting-documents', () => {
     });
   });
 
-  describe('postUploadSupportingDocument', () => {
+  describe('postSupportingDocuments', () => {
     beforeEach(() => {
       mockRequest = {
         body: {},
@@ -104,7 +104,7 @@ describe('controllers/supporting-documents', () => {
     it('passes error to next() if user cannot access application', async () => {
       Application.findById.mockResolvedValueOnce();
 
-      await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+      await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.render).not.toHaveBeenCalled();
       expect(mockNext).toHaveBeenCalled();
@@ -121,7 +121,7 @@ describe('controllers/supporting-documents', () => {
       it('handles file errors without calling upload', async () => {
         validateFile.mockReturnValueOnce([false, 'mock error']);
 
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(uploadAndSaveToDeal).not.toHaveBeenCalled();
         expect(mockResponse.redirect).not.toHaveBeenCalled();
@@ -159,7 +159,7 @@ describe('controllers/supporting-documents', () => {
           originalname: 'another-file.pdf',
         }]);
 
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
@@ -201,7 +201,7 @@ describe('controllers/supporting-documents', () => {
 
         removeFileFromDeal.mockRejectedValueOnce(new Error('mock thrown error'));
 
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
@@ -226,7 +226,7 @@ describe('controllers/supporting-documents', () => {
 
         removeFileFromDeal.mockResolvedValueOnce();
 
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.not.objectContaining({
           errors: expect.objectContaining({
@@ -244,7 +244,7 @@ describe('controllers/supporting-documents', () => {
       });
 
       it('returns error if uploads are empty', async () => {
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
@@ -267,7 +267,7 @@ describe('controllers/supporting-documents', () => {
           },
         });
 
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
@@ -290,7 +290,7 @@ describe('controllers/supporting-documents', () => {
           },
         });
 
-        await postUploadSupportingDocument(mockRequest, mockResponse, mockNext);
+        await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.render).not.toHaveBeenCalled();
         expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/mock-id');

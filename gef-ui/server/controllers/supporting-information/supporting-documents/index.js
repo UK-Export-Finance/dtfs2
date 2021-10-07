@@ -76,7 +76,7 @@ const handleError = (err, req, res, next) => {
   return next(err);
 };
 
-const getUploadSupportingDocument = async (req, res, next) => {
+const getSupportingDocuments = async (req, res, next) => {
   const {
     session: { user, userToken },
     params: { applicationId, documentType },
@@ -99,7 +99,7 @@ const getUploadSupportingDocument = async (req, res, next) => {
   }
 };
 
-const postUploadSupportingDocument = async (req, res, next) => {
+const postSupportingDocuments = async (req, res, next) => {
   const {
     body: { delete: fileToDelete, submit },
     files,
@@ -273,8 +273,8 @@ const deleteSupportingDocument = async (req, res, next) => {
 };
 
 module.exports = {
-  getUploadSupportingDocument,
-  postUploadSupportingDocument,
+  getSupportingDocuments,
+  postSupportingDocuments,
   uploadSupportingDocument,
   deleteSupportingDocument,
 };
