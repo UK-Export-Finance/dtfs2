@@ -41,6 +41,8 @@ const updatePortalDeal = async (dealId, update) => {
 
     return response.data;
   } catch ({ response }) {
+    console.error(`TFM API - error updating BSS deal ${dealId}`);
+
     return false;
   }
 };
@@ -60,6 +62,8 @@ const updatePortalDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch ({ response }) {
+    console.error(`TFM API - error updating BSS deal status ${dealId}`);
+
     return false;
   }
 };
@@ -100,6 +104,8 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
 
     return response.data;
   } catch ({ response }) {
+    console.error(`TFM API - error updating BSS facility status ${facilityId}`);
+
     return false;
   }
 };
@@ -117,6 +123,8 @@ const updatePortalFacility = async (facilityId, update) => {
 
     return response.data;
   } catch ({ response }) {
+    console.error(`TFM API - error updating BSS facility ${facilityId}`);
+
     return false;
   }
 };
@@ -133,7 +141,8 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error('TFM API error finding BSS deal ', dealId);
+    console.error(`TFM API - error finding BSS deal ${dealId}`);
+
     return false;
   }
 };
@@ -207,7 +216,8 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (err) {
-    console.error('TFM API error finding BSS facility ', facilityId);
+    console.error(`TFM API - error finding BSS facility ${facilityId}`);
+
     return err;
   }
 };
@@ -407,7 +417,6 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     if (response.status === 200 || response.status === 201) {
       return response.data;
     }
-    console.log('No premium schedule returned from reference data api.');
     return null;
   } catch ({ response }) {
     return null;
@@ -538,7 +547,8 @@ const findOneGefDeal = async (dealId) => {
 
     return response.data;
   } catch (err) {
-    console.error('TFM API error finding GEF deal ', dealId);
+    console.error(`TFM API - error finding GEF deal ${dealId}`);
+
     return false;
   }
 };
