@@ -8,9 +8,7 @@ const getExposurePeriod = (facility, dealType) => {
   const { facilitySnapshot } = facility;
 
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return facility.tfm.exposurePeriodInMonths === undefined
-      ? 0
-      : facility.tfm.exposurePeriodInMonths;
+    return facility.tfm.exposurePeriodInMonths || 0;
   }
 
   if (facilitySnapshot.requestedCoverStartDate) {

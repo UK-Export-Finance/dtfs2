@@ -32,7 +32,9 @@ const exporter = ({ deal, acbsReference }) => {
     dealCountry = 'GBR';
   }
 
-  const citizenshipClass = countryCode === dealCountry ? '1' : '2';
+  const citizenshipClass = countryCode === dealCountry
+    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
+    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(product === CONSTANTS.PRODUCT.TYPE.GEF
     ? submissionDetails.exporter.companyName
     : submissionDetails['supplier-name']);

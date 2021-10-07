@@ -1,9 +1,8 @@
+const mapFeeFrequency = require('./map-fee-frequency');
 const CONSTANTS = require('../../../constants');
 
 const getPremiumFrequencyCode = (facilitySnapshot) => {
-  const feeFrequency = facilitySnapshot.frequency !== undefined
-    ? facilitySnapshot.frequency
-    : facilitySnapshot.feeFrequency || facilitySnapshot.premiumFrequency;
+  const feeFrequency = mapFeeFrequency(facilitySnapshot);
 
   switch (feeFrequency) {
     case CONSTANTS.FACILITY.FEE_FREQUENCY.MONTHLY:
@@ -23,6 +22,5 @@ const getPremiumFrequencyCode = (facilitySnapshot) => {
       return '1';
   }
 };
-
 
 module.exports = getPremiumFrequencyCode;
