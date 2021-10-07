@@ -1,21 +1,25 @@
-const moment = require('moment');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmit');
 
 module.exports = () => {
-  const aMonthInTheFuture = moment().add(1, 'month');
-  const invalidCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+  const aMonthInTheFuture = () => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 2);
+    return date;
+  };
+  const invalidCoverStartDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    return date;
+  };
 
-  // doing a complete serialize+deserialize here...
-  // ran into issues destructuring things into our new object; cypress was keeping references
-  // between my bits of test data, so updating 1 deal would cause the other to update..
-  const dealWithBadCoverStartDate = JSON.parse(JSON.stringify(dealReadyToSubmitForReview()));
+  const dealWithBadCoverStartDate = { ...dealReadyToSubmitForReview() };
 
-  dealWithBadCoverStartDate.loanTransactions.items[0].requestedCoverStartDate = invalidCoverStartDate;
+  dealWithBadCoverStartDate.loanTransactions.items[0].requestedCoverStartDate = invalidCoverStartDate().valueOf();
 
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-day'] = moment(aMonthInTheFuture).format('DD');
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-month'] = moment(aMonthInTheFuture).format('MM');
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
+  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture().getDate();
+  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture().getMonth() + 1;
+  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-year'] = aMonthInTheFuture().getFullYear();
   dealWithBadCoverStartDate.loanTransactions.items[0].facilityStage = 'Unconditional';
 
-  return dealWithBadCoverStartDate
-}
+  return dealWithBadCoverStartDate;
+};

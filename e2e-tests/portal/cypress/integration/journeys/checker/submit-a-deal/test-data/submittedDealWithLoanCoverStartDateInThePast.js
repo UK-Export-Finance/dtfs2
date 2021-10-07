@@ -1,23 +1,31 @@
-const moment = require('moment');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmit');
 
 module.exports = () => {
-  const aMonthInTheFuture = moment().add(1, 'month');
-  const dealSubmissionDate = moment().subtract(1, 'day').utc().valueOf();
-  const coverStartDateBeforeDealSubmissionDate = moment(dealSubmissionDate).subtract(1, 'week').utc().valueOf();
+  const aMonthInTheFuture = () => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 2);
+    return date;
+  };
+  const dealSubmissionDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    return date;
+  };
+  const coverStartDateBeforeDealSubmissionDate = () => {
+    const date = new Date(dealSubmissionDate());
+    date.setDate(date.getDate() - 7);
+    return date;
+  };
 
-  // doing a complete serialize+deserialize here...
-  // ran into issues destructuring things into our new object; cypress was keeping references
-  // between my bits of test data, so updating 1 deal would cause the other to update..
-  const deal = JSON.parse(JSON.stringify(dealReadyToSubmitForReview()));
+  const deal = { ...dealReadyToSubmitForReview() };
 
-  deal.details.submissionDate = dealSubmissionDate;
+  deal.details.submissionDate = dealSubmissionDate().valueOf();
 
-  deal.loanTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
+  deal.loanTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate().valueOf();
 
-  deal.loanTransactions.items[0]['coverEndDate-day'] = moment(aMonthInTheFuture).format('DD');
-  deal.loanTransactions.items[0]['coverEndDate-month'] = moment(aMonthInTheFuture).format('MM');
-  deal.loanTransactions.items[0]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
+  deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture().getDate();
+  deal.loanTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture().getMonth() + 1;
+  deal.loanTransactions.items[0]['coverEndDate-year'] = aMonthInTheFuture().getFullYear();
   deal.loanTransactions.items[0].facilityStage = 'Unconditional';
 
   return deal;
