@@ -79,12 +79,12 @@ context('manual inclusion Page', () => {
     //   manualInclusion.uploadSuccess('upload-file-valid.doc');
     // });
 
-    // it('displays the next question when pressing Continue', () => {
+    // it('displays the application details screen when pressing Continue', () => {
     //   manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
     //   manualInclusion.continueButton()
     //     .click();
     //   cy.url()
-    //     .should('eq', relative(`/gef/application-details/${id}/supporting-information/financial-statements`));
+    //     .should('eq', relative(`/gef/application-details/${id}`));
     // });
 
     it('displays the application page when pressing Cancel', () => {
