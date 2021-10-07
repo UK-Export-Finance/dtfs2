@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
@@ -104,7 +104,7 @@ const update = async (id, updateBody) => {
   });
 
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnDocument: 'after', returnOriginal: false },
+    { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnOriginal: false },
   );
 
   return result;
