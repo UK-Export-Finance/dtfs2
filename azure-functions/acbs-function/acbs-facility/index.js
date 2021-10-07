@@ -91,7 +91,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   } catch ({ message }) {
     const [type, errorDetails] = message.split('Error: ');
     // eslint-disable-next-line no-console
-    console.error('Facility record error\n\r**************************\n\r\n\r', errorDetails);
+    console.error('Facility record error\n\r', errorDetails);
     return {
       error: {
         type,
