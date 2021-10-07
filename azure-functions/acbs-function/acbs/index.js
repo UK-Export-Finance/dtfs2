@@ -20,9 +20,8 @@ module.exports = df.orchestrator(function* HDeal(context) {
   // Get Product Type
   const product = deal.dealSnapshot.dealType;
   // Get ACBS industry code
-  const industryCode = deal.dealSnapshot.submissionDetails !== undefined
-    ? deal.dealSnapshot.submissionDetails['industry-class']
-    && deal.dealSnapshot.submissionDetails['industry-class'].code
+  const industryCode = deal.dealSnapshot.submissionDetails
+    ? deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code
     : deal.dealSnapshot.exporter.industries[0].code;
   const acbsReference = {
     supplierAcbsIndustryCode: yield context.df.callActivityWithRetry(
@@ -107,7 +106,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
   // 4. Create Deal Guarantee
   const acbsDealGuaranteeInput = mappings.deal.dealGuarantee(
     deal,
-    parties.indemnifier !== undefined
+    parties.indemnifier
       ? parties.indemnifier.partyIdentifier
       // eslint-disable-next-line comma-dangle
       : parties.exporter.partyIdentifier

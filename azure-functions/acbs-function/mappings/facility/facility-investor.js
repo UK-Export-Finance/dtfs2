@@ -18,12 +18,12 @@ const facilityInvestor = (deal, facility) => {
   } = facility.tfm.facilityGuaranteeDates;
 
   return {
-    facilityIdentifier: facility.ukefFacilityID !== undefined
+    facilityIdentifier: facility.ukefFacilityID
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
-    currency: facility.facilitySnapshot.currency.id !== undefined
+    currency: facility.facilitySnapshot.currency.id
       ? facility.facilitySnapshot.currency.id
       : facility.facilitySnapshot.currency,
     guaranteeCommencementDate,
