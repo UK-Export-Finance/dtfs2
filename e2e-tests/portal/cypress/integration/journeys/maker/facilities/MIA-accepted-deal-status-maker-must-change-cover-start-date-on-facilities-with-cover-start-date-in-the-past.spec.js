@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
@@ -15,13 +14,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     bonds: [],
     loans: [],
   };
-
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
@@ -76,13 +68,17 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedSubmittedBondId}/confirm-requested-cover-start-date`));
 
-    const NEW_BOND_COVER_START_DATE = moment(dealSubmissionDate).add(1, 'week');
+    const NEW_BOND_COVER_START_DATE = () => {
+      const date = new Date(dealSubmissionDate);
+      date.setDate(date.getDate() + 7);
+      return date;
+    };
 
-    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.be.visible');
-    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.be.visible');
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE.format('DD'));
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE.format('MM'));
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE.format('YYYY'));
+    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
+    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
@@ -93,13 +89,17 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalSubmittedLoanId}/confirm-requested-cover-start-date`));
 
-    const NEW_LOAN_COVER_START_DATE = moment(dealSubmissionDate).add(1, 'month');
+    const NEW_LOAN_COVER_START_DATE = () => {
+      const date = new Date(dealSubmissionDate);
+      date.setMonth(date.getMonth() + 2);
+      return date;
+    };
 
-    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.be.visible');
-    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.be.visible');
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.format('DD'));
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.format('MM'));
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.format('YYYY'));
+    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
+    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE().getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE().getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE().getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
