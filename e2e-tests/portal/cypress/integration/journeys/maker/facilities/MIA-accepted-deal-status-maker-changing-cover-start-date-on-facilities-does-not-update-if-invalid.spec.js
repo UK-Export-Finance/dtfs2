@@ -1,10 +1,10 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const { formattedTimestamp } = require('../../../../../../../portal-api/src/v1/facility-dates/timestamp');
 
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const mockUsers = require('../../../../fixtures/mockUsers');
+const { formatDate } = require('../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
@@ -15,13 +15,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     bonds: [],
     loans: [],
   };
-
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
@@ -69,16 +62,20 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id; // eslint-disable-line no-underscore-dangle
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const INVALID_DATE = moment().subtract(1, 'week');
+    const INVALID_DATE = () => {
+      const date = new Date();
+      date.setDate(date.getDate() - 7);
+      return date;
+    };
 
     //---------------------------------------------------------------
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.format('DD'));
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.format('MM'));
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.format('YYYY'));
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE().getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE().getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE().getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
@@ -94,9 +91,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.format('DD'));
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.format('MM'));
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.format('YYYY'));
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE().getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE().getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE().getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
@@ -112,16 +109,16 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // facility tables should display original dates
     // the date submitted in 'Confirm start date' form should not be displayed
     //---------------------------------------------------------------
-    const originalBondCoverStartDate = formattedTimestamp(issuedSubmittedBond.requestedCoverStartDate);
+    const originalBondCoverStartDate = new Date(formattedTimestamp(issuedSubmittedBond.requestedCoverStartDate));
 
     issuedSubmittedBondRow.requestedCoverStartDate().invoke('text').then((text) => {
-      expect(text.trim()).equal(moment(originalBondCoverStartDate).format('DD/MM/YYYY'));
+      expect(text.trim()).equal(formatDate(originalBondCoverStartDate));
     });
 
-    const originalLoanCoverStartDate = formattedTimestamp(unconditionalSubmittedLoan.requestedCoverStartDate);
+    const originalLoanCoverStartDate = new Date(formattedTimestamp(unconditionalSubmittedLoan.requestedCoverStartDate));
 
     unconditionalSubmittedLoanRow.requestedCoverStartDate().invoke('text').then((text) => {
-      expect(text.trim()).equal(moment(originalLoanCoverStartDate).format('DD/MM/YYYY'));
+      expect(text.trim()).equal(formatDate(originalLoanCoverStartDate));
     });
 
     //---------------------------------------------------------------
