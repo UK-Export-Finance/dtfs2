@@ -19,6 +19,26 @@ const mapDocTypeParemeterToProps = (docType) => {
       fieldName: 'financialStatements',
       title: 'Add financial statements for the last 3 years',
     },
+    'financial-forecasts': {
+      fieldName: 'financialForecasts',
+      title: 'Add financial forecasts for the  facility cover period',
+    },
+    'financial-commentary': {
+      fieldName: 'financialCommentary',
+      title: 'Add a brief commentary on the financial information',
+    },
+    'corporate-structure': {
+      fieldName: 'corporateStructure',
+      title: 'Add a corporate structure diagram',
+    },
+    'debtor-creditor-reports': {
+      fieldName: 'debtorAndCreditorReports',
+      title: 'Add aged debtor and aged creditor reports',
+    },
+    'export-licence': {
+      fieldName: 'exportLicence',
+      title: 'Add export licence',
+    },
   };
   const mappedValues = map[docType];
   if (!mappedValues) throw new Error('NOT_SUPPORTED');
