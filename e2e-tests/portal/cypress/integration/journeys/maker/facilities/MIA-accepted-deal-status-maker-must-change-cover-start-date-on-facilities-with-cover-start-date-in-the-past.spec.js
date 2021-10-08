@@ -1,9 +1,9 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
 const { formattedTimestamp } = require('../../../../../../../portal-api/src/v1/facility-dates/timestamp');
+const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
@@ -89,17 +89,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalSubmittedLoanId}/confirm-requested-cover-start-date`));
 
-    const NEW_LOAN_COVER_START_DATE = () => {
-      const date = new Date(dealSubmissionDate);
-      date.setMonth(date.getMonth() + 1);
-      return date;
-    };
+    const NEW_LOAN_COVER_START_DATE = nowPlusMonths(1);
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE().getFullYear());
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 

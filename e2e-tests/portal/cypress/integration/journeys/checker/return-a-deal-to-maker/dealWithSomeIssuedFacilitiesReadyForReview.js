@@ -1,12 +1,8 @@
+const { nowPlusDays, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
+
 const date = new Date();
-const datePlusDay = () => {
-  date.setDate(date.getDate() + 1);
-  return date;
-};
-const datePlusMonth = () => {
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
+const datePlusDay = nowPlusDays(1);
+const datePlusMonth = nowPlusMonths(1);
 
 const deal = {
   details: {
@@ -196,10 +192,10 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      issuedDate: datePlusDay().valueOf(),
-      'coverEndDate-day': datePlusMonth().getDate(),
-      'coverEndDate-month': datePlusMonth().getMonth() + 1,
-      'coverEndDate-year': datePlusMonth().getFullYear(),
+      issuedDate: datePlusDay.valueOf(),
+      'coverEndDate-day': datePlusMonth.getDate(),
+      'coverEndDate-month': datePlusMonth.getMonth() + 1,
+      'coverEndDate-year': datePlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       uniqueIdentificationNumberRequiredForIssuance: true,
       issueFacilityDetailsStarted: true,
@@ -215,9 +211,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': datePlusMonth().getDate(),
-      'coverEndDate-month': datePlusMonth().getMonth() + 1,
-      'coverEndDate-year': datePlusMonth().getFullYear(),
+      'coverEndDate-day': datePlusMonth.getDate(),
+      'coverEndDate-month': datePlusMonth.getMonth() + 1,
+      'coverEndDate-year': datePlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -251,10 +247,10 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      issuedDate: datePlusDay().valueOf(),
-      'coverEndDate-day': datePlusMonth().getDate(),
-      'coverEndDate-month': datePlusMonth().getMonth() + 1,
-      'coverEndDate-year': datePlusMonth().getFullYear(),
+      issuedDate: datePlusDay.valueOf(),
+      'coverEndDate-day': datePlusMonth.getDate(),
+      'coverEndDate-month': datePlusMonth.getMonth() + 1,
+      'coverEndDate-year': datePlusMonth.getFullYear(),
       bankReferenceNumberRequiredForIssuance: true,
       issueFacilityDetailsStarted: true,
       issueFacilityDetailsProvided: true,
@@ -269,9 +265,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': datePlusMonth().getDate(),
-      'coverEndDate-month': datePlusMonth().getMonth() + 1,
-      'coverEndDate-year': datePlusMonth().getFullYear(),
+      'coverEndDate-day': datePlusMonth.getDate(),
+      'coverEndDate-month': datePlusMonth.getMonth() + 1,
+      'coverEndDate-year': datePlusMonth.getFullYear(),
       bankReferenceNumber: '12345678',
       guaranteeFeePayableByBank: '45.0000',
       lastEdited: '1597082596884',

@@ -1,12 +1,8 @@
 const { roundNumber } = require('../../../../../../../portal-api/src/utils/number');
-const { padDate } = require('../../../../support/utils/dateFuncs');
+const { padDate, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
 const now = new Date();
-const coverEndDate = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
+const coverEndDate = nowPlusMonths(1);
 
 const DETAILS = {
   bondIssuer: 'mock issuer',
@@ -19,9 +15,9 @@ const DETAILS = {
   requestedCoverStartDateDay: padDate(now.getDate()),
   requestedCoverStartDateMonth: padDate(now.getMonth() + 1),
   requestedCoverStartDateYear: now.getFullYear(),
-  coverEndDateDay: padDate(coverEndDate().getDate()),
-  coverEndDateMonth: padDate(coverEndDate().getMonth() + 1),
-  coverEndDateYear: coverEndDate().getFullYear(),
+  coverEndDateDay: padDate(coverEndDate.getDate()),
+  coverEndDateMonth: padDate(coverEndDate.getMonth() + 1),
+  coverEndDateYear: coverEndDate.getFullYear(),
   uniqueIdentificationNumber: '123456',
   bondBeneficiary: 'mock beneficiary',
 

@@ -1,11 +1,7 @@
-const { padDate } = require('../../../../support/utils/dateFuncs');
+const { padDate, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
 const now = new Date();
-const nowPlusMonth = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
+const nowPlusMonth = nowPlusMonths(1);
 
 const GUARANTEE_DETAILS = {
   // 'Conditional' facility stage specifics
@@ -16,9 +12,9 @@ const GUARANTEE_DETAILS = {
   requestedCoverStartDateDay: padDate(now.getDate()),
   requestedCoverStartDateMonth: padDate(now.getMonth() + 1),
   requestedCoverStartDateYear: now.getFullYear(),
-  coverEndDateDay: padDate(nowPlusMonth().getDate()),
-  coverEndDateMonth: padDate(nowPlusMonth().getMonth() + 1),
-  coverEndDateYear: nowPlusMonth().getFullYear(),
+  coverEndDateDay: padDate(nowPlusMonth.getDate()),
+  coverEndDateMonth: padDate(nowPlusMonth.getMonth() + 1),
+  coverEndDateYear: nowPlusMonth.getFullYear(),
 };
 
 const FINANCIAL_DETAILS = {

@@ -1,9 +1,7 @@
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+
 const now = new Date().valueOf();
-const nowPlusMonth = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
+const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
   details: {
@@ -211,9 +209,9 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       issueFacilityDetailsStarted: true,
       uniqueIdentificationNumberRequiredForIssuance: true,
@@ -246,9 +244,9 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       requestedCoverStartDate: now,
       issueFacilityDetailsSubmitted: true,
@@ -298,9 +296,9 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       issueFacilityDetailsStarted: true,
       uniqueIdentificationNumberRequiredForIssuance: true,
@@ -327,9 +325,9 @@ const deal = {
       ukefExposure: '246.80',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       bankReferenceNumberRequiredForIssuance: true,
@@ -356,9 +354,9 @@ const deal = {
       ukefExposure: '246.80',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       disbursementAmount: '1,234.00',
       requestedCoverStartDate: now,
       issueFacilityDetailsSubmitted: true,
@@ -400,9 +398,9 @@ const deal = {
       ukefExposure: '246.80',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       bankReferenceNumberRequiredForIssuance: true,
