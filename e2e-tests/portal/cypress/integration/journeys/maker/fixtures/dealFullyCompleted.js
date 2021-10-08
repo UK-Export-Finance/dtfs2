@@ -1,6 +1,14 @@
-const moment = require('moment');
-
-const now = moment();
+const now = new Date();
+const nowPlusMonth = () => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 1);
+  return date;
+};
+const nowMinusDay = () => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 1);
+  return date;
+};
 
 const deal = {
   details: {
@@ -26,12 +34,12 @@ const deal = {
       bondType: 'Retention bond',
       facilityStage: 'Issued',
       ukefGuaranteeInMonths: '12',
-      'requestedCoverStartDate-day': `${now.format('DD')}`,
-      'requestedCoverStartDate-month': `${now.format('MM')}`,
-      'requestedCoverStartDate-year': `${now.format('YYYY')}`,
-      'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,
+      'requestedCoverStartDate-day': now.getDate(),
+      'requestedCoverStartDate-month': now.getMonth() + 1,
+      'requestedCoverStartDate-year': now.getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234567890',
       bondBeneficiary: 'test',
       facilityValue: '1234',
@@ -59,12 +67,12 @@ const deal = {
       bondType: 'Retention bond',
       facilityStage: 'Issued',
       ukefGuaranteeInMonths: '12',
-      'requestedCoverStartDate-day': `${now.format('DD')}`,
-      'requestedCoverStartDate-month': `${now.format('MM')}`,
-      'requestedCoverStartDate-year': `${now.format('YYYY')}`,
-      'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,
+      'requestedCoverStartDate-day': now.getDate(),
+      'requestedCoverStartDate-month': now.getMonth() + 1,
+      'requestedCoverStartDate-year': now.getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234567890',
       bondBeneficiary: 'test',
       facilityValue: '5678',
@@ -105,12 +113,12 @@ const deal = {
     {
       facilityType: 'loan',
       facilityStage: 'Unconditional',
-      'requestedCoverStartDate-day': `${now.format('DD')}`,
-      'requestedCoverStartDate-month': `${now.format('MM')}`,
-      'requestedCoverStartDate-year': `${now.format('YYYY')}`,
-      'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,
+      'requestedCoverStartDate-day': now.getDate(),
+      'requestedCoverStartDate-month': now.getMonth() + 1,
+      'requestedCoverStartDate-year': now.getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       bankReferenceNumber: '12345678',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '3,703,703.40',
@@ -121,9 +129,9 @@ const deal = {
         id: 'AUD',
       },
       conversionRate: '80',
-      'conversionRateDate-day': `${now.subtract(1, 'day').format('DD')}`,
-      'conversionRateDate-month': `${now.subtract(1, 'day').format('MM')}`,
-      'conversionRateDate-year': `${now.subtract(1, 'day').format('YYYY')}`,
+      'conversionRateDate-day': nowMinusDay.getDate(),
+      'conversionRateDate-month': nowMinusDay.getMonth() + 1,
+      'conversionRateDate-year': nowMinusDay.getFullYear(),
       disbursementAmount: '10',
       interestMarginFee: '12',
       coveredPercentage: '30',
@@ -259,9 +267,9 @@ const deal = {
       id: 'USD',
     },
     supplyContractValue: '10,000',
-    'supplyContractConversionDate-day': `${moment().subtract(1, 'day').format('DD')}`,
-    'supplyContractConversionDate-month': `${moment().subtract(1, 'day').format('MM')}`,
-    'supplyContractConversionDate-year': `${moment().subtract(1, 'day').format('YYYY')}`,
+    'supplyContractConversionDate-day': nowMinusDay.getDate(),
+    'supplyContractConversionDate-month': nowMinusDay.getMonth() + 1,
+    'supplyContractConversionDate-year': nowMinusDay.getFullYear(),
   },
   summary: {
     totalValue: {

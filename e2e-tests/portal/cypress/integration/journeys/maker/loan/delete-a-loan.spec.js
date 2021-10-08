@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
@@ -6,6 +5,8 @@ const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+
+const now = new Date().valueOf();
 
 const MOCK_DEAL = {
   details: {
@@ -20,58 +21,58 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      "facilityType": "loan",
-      "_id": "1000210",
-      "createdDate": moment().utc().valueOf(),
-      "facilityStage": "Conditional",
-      "ukefGuaranteeInMonths": "12",
-      "bankReferenceNumber": "",
-      "guaranteeFeePayableByBank": "18.0000",
-      "lastEdited": moment().utc().valueOf(),
-      "facilityValue": "1234.00",
-      "currencySameAsSupplyContractCurrency": "true",
-      "interestMarginFee": "20",
-      "coveredPercentage": "40",
-      "minimumQuarterlyFee": "",
-      "ukefExposure": "493.60",
-      "premiumType": "At maturity",
-      "dayCountBasis": "365"
+      facilityType: 'loan',
+      _id: '1000210',
+      createdDate: now,
+      facilityStage: 'Conditional',
+      ukefGuaranteeInMonths: '12',
+      bankReferenceNumber: '',
+      guaranteeFeePayableByBank: '18.0000',
+      lastEdited: now,
+      facilityValue: '1234.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '20',
+      coveredPercentage: '40',
+      minimumQuarterlyFee: '',
+      ukefExposure: '493.60',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
     },
     {
-      "facilityType": "loan",
-      "_id": "1000210",
-      "createdDate": moment().utc().valueOf(),
-      "facilityStage": "Conditional",
-      "ukefGuaranteeInMonths": "12",
-      "bankReferenceNumber": "",
-      "guaranteeFeePayableByBank": "18.0000",
-      "lastEdited": moment().utc().valueOf(),
-      "facilityValue": "1234.00",
-      "currencySameAsSupplyContractCurrency": "true",
-      "interestMarginFee": "20",
-      "coveredPercentage": "40",
-      "minimumQuarterlyFee": "",
-      "ukefExposure": "493.60",
-      "premiumType": "At maturity",
-      "dayCountBasis": "365"
+      facilityType: 'loan',
+      _id: '1000210',
+      createdDate: now,
+      facilityStage: 'Conditional',
+      ukefGuaranteeInMonths: '12',
+      bankReferenceNumber: '',
+      guaranteeFeePayableByBank: '18.0000',
+      lastEdited: now,
+      facilityValue: '1234.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '20',
+      coveredPercentage: '40',
+      minimumQuarterlyFee: '',
+      ukefExposure: '493.60',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
     },
     {
-      "facilityType": "loan",
-      "_id": "1000210",
-      "createdDate": moment().utc().valueOf(),
-      "facilityStage": "Conditional",
-      "ukefGuaranteeInMonths": "12",
-      "bankReferenceNumber": "",
-      "guaranteeFeePayableByBank": "18.0000",
-      "lastEdited": moment().utc().valueOf(),
-      "facilityValue": "1234.00",
-      "currencySameAsSupplyContractCurrency": "true",
-      "interestMarginFee": "20",
-      "coveredPercentage": "40",
-      "minimumQuarterlyFee": "",
-      "ukefExposure": "493.60",
-      "premiumType": "At maturity",
-      "dayCountBasis": "365"
+      facilityType: 'loan',
+      _id: '1000210',
+      createdDate: now,
+      facilityStage: 'Conditional',
+      ukefGuaranteeInMonths: '12',
+      bankReferenceNumber: '',
+      guaranteeFeePayableByBank: '18.0000',
+      lastEdited: now,
+      facilityValue: '1234.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '20',
+      coveredPercentage: '40',
+      minimumQuarterlyFee: '',
+      ukefExposure: '493.60',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
     },
   ],
 };
@@ -85,11 +86,6 @@ context('Delete a Loan', () => {
   };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => {
