@@ -1,9 +1,6 @@
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+
 const now = new Date().valueOf();
-const nowPlusMonth = (numMonths) => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1 + numMonths);
-  return date;
-};
 
 const deal = {
   details: {
@@ -203,9 +200,9 @@ const deal = {
         'requestedCoverStartDate-day': '',
         'requestedCoverStartDate-month': '',
         'requestedCoverStartDate-year': '',
-        'coverEndDate-day': nowPlusMonth(2).getDate(),
-        'coverEndDate-month': nowPlusMonth(2).getMonth() + 1,
-        'coverEndDate-year': nowPlusMonth(2).getFullYear(),
+        'coverEndDate-day': nowPlusMonths(2).getDate(),
+        'coverEndDate-month': nowPlusMonths(2).getMonth() + 1,
+        'coverEndDate-year': nowPlusMonths(2).getFullYear(),
         uniqueIdentificationNumber: '1234',
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '18.0000',
@@ -222,7 +219,7 @@ const deal = {
           text: 'GBP - UK Sterling',
           id: 'GBP',
         },
-        requestedCoverStartDate: nowPlusMonth(1).valueOf(),
+        requestedCoverStartDate: nowPlusMonths(1).valueOf(),
       },
     ],
   },
@@ -235,9 +232,9 @@ const deal = {
         'requestedCoverStartDate-day': '',
         'requestedCoverStartDate-month': '',
         'requestedCoverStartDate-year': '',
-        'coverEndDate-day': nowPlusMonth(2).getDate(),
-        'coverEndDate-month': nowPlusMonth(2).getMonth() + 1,
-        'coverEndDate-year': nowPlusMonth(2).getFullYear(),
+        'coverEndDate-day': nowPlusMonths(2).getDate(),
+        'coverEndDate-month': nowPlusMonths(2).getMonth() + 1,
+        'coverEndDate-year': nowPlusMonths(2).getFullYear(),
         bankReferenceNumber: '12345678',
         guaranteeFeePayableByBank: '10.8000',
         lastEdited: now,
@@ -254,7 +251,7 @@ const deal = {
           text: 'GBP - UK Sterling',
           id: 'GBP',
         },
-        requestedCoverStartDate: nowPlusMonth(1).valueOf(),
+        requestedCoverStartDate: nowPlusMonths(1).valueOf(),
       },
     ],
   },

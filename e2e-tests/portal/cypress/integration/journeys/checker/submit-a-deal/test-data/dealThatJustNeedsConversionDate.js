@@ -7,7 +7,7 @@ const id = () => {
 };
 
 module.exports = () => {
-  const deal = JSON.parse(JSON.stringify(template));
+  const deal = { ...template };
 
   deal.loanTransactions.items[0]._id = id();
   deal.bondTransactions.items[0]._id = id();

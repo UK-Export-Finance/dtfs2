@@ -9,6 +9,7 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 // test data we want to set up + work with..
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
+const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
 
 context('about-buyer', () => {
   let deal;
@@ -90,15 +91,11 @@ context('about-buyer', () => {
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = () => {
-      const date = new Date();
-      date.setDate(date.getDate() - 32);
-      return date;
-    };
+    const dateTooFarInThePast = nowPlusDays(-31);
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${dateTooFarInThePast().getDate()}`);
-    contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${dateTooFarInThePast().getMonth() + 1}`);
-    contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${dateTooFarInThePast().getFullYear()}`);
+    contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
+    contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+    contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');
   });

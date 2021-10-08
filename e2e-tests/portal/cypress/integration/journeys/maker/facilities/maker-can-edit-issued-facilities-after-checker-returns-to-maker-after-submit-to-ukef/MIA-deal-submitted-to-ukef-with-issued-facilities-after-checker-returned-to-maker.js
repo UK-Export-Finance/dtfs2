@@ -1,14 +1,8 @@
+const { nowPlusMonths, nowPlusDays } = require('../../../../../support/utils/dateFuncs');
+
 const now = new Date();
-const nowPlusMonth = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
-const nowPlusWeek = () => {
-  const date = new Date();
-  date.setDate(date.getDate() + 7);
-  return date.valueOf();
-};
+const nowPlusMonth = nowPlusMonths(1);
+const nowPlusWeek = nowPlusDays(7);
 
 const deal = {
   _id: '1001349',
@@ -229,9 +223,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       issueFacilityDetailsStarted: true,
       uniqueIdentificationNumberRequiredForIssuance: true,
@@ -266,9 +260,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       bankReferenceNumberRequiredForIssuance: true,

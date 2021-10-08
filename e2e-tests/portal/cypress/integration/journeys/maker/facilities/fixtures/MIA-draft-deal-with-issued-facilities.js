@@ -1,9 +1,7 @@
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+
 const now = new Date().valueOf();
-const nowPlusMonth = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
+const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
   details: {
@@ -190,9 +188,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
@@ -217,9 +215,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': nowPlusMonth().getDate(),
-      'coverEndDate-month': nowPlusMonth().getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth().getFullYear(),
+      'coverEndDate-day': nowPlusMonth.getDate(),
+      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
+      'coverEndDate-year': nowPlusMonth.getFullYear(),
       bankReferenceNumber: '1234',
       guaranteeFeePayableByBank: '21.6000',
       lastEdited: now,

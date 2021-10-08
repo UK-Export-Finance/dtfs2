@@ -1,14 +1,8 @@
+const { nowPlusMonths, nowPlusDays } = require('../../../../support/utils/dateFuncs');
+
 const now = new Date();
-const nowPlusMonth = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
-const nowMinusDay = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + 1);
-  return date;
-};
+const nowPlusMonth = nowPlusMonths(1);
+const nowMinusDay = nowPlusDays(-1);
 
 const deal = {
   details: {

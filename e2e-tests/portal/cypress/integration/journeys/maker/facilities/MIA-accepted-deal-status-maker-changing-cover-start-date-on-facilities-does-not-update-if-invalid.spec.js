@@ -4,7 +4,7 @@ const { formattedTimestamp } = require('../../../../../../../portal-api/src/v1/f
 
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const { formatDate } = require('../../../../support/utils/dateFuncs');
+const { formatDate, nowPlusDays } = require('../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
@@ -62,20 +62,16 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id; // eslint-disable-line no-underscore-dangle
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const INVALID_DATE = () => {
-      const date = new Date();
-      date.setDate(date.getDate() - 7);
-      return date;
-    };
+    const INVALID_DATE = nowPlusDays(-7);
 
     //---------------------------------------------------------------
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE().getFullYear());
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
@@ -91,9 +87,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE().getFullYear());
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
     pages.facilityConfirmCoverStartDate.submit().click();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
