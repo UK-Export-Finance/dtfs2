@@ -1,23 +1,12 @@
-const { reports } = require('../../../../pages');
-const { auditSupplyContracts } = reports;
-
+const { reports: { auditSupplyContracts } } = require('../../../../pages');
 const relative = require('../../../../relativeURL');
-
-const mockUsers = require('../../../../../fixtures/mockUsers');
-const BANK_MAKER_1 = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-
 const { aDealWithOneLoan } = require('../../../../../fixtures/transaction-dashboard-data');
+const mockUsers = require('../../../../../fixtures/mockUsers');
+
+const BANK_MAKER_1 = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('Audit - Report', () => {
   const submittedDeals = [];
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     cy.deleteDeals(BANK_MAKER_1);

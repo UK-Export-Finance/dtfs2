@@ -1,6 +1,6 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
+const { formatDate } = require('../../../../support/utils/dateFuncs');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const {
@@ -21,14 +21,6 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     bonds: [],
     loans: [],
   };
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
@@ -92,13 +84,13 @@ context('Maker fills in bond & loan issue facility forms without requested cover
 
     // expect bond requested cover start date to default to issued date
     bondRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = moment(ISSUED_BOND_DATE_VALUE).format('DD/MM/YYYY');
+      const expected = formatDate(ISSUED_BOND_DATE_VALUE);
       expect(text.trim()).to.equal(expected);
     });
 
     // expect loan requested cover start date to default to issued date
     loanRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = moment(ISSUED_LOAN_DATE_VALUE).format('DD/MM/YYYY');
+      const expected = formatDate(ISSUED_LOAN_DATE_VALUE);
       expect(text.trim()).to.equal(expected);
     });
   });

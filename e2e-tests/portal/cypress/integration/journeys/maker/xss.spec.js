@@ -10,20 +10,12 @@ const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 context('Input is cleaned to avoid Cross Site Scripting', () => {
   let deal;
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((deal) => status === deal.details.status)[0];
+    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.details.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
 

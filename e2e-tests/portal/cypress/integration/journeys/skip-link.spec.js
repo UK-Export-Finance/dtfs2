@@ -5,14 +5,6 @@ const mockUsers = require('../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('Skip link should take user to the main content of a page', () => {
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   it('When a user keyboard tabs from the html body, skip link should be focused and take the user to the page\'s #main-content', () => {
     cy.login(MAKER_LOGIN);
     cy.url().should('eq', relative('/dashboard/0'));

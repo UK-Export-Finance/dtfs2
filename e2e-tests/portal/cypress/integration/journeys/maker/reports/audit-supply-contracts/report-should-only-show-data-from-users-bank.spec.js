@@ -1,28 +1,18 @@
-const { reports } = require('../../../../pages');
-const { auditSupplyContracts } = reports;
-
-const mockUsers = require('../../../../../fixtures/mockUsers');
-const BANK1_MAKER = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const BANK1_MAKER_CHECKER = mockUsers.find((user) => (user.roles.includes('maker') && user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const BANK2_MAKER = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2'));
-
+const { reports: { auditSupplyContracts } } = require('../../../../pages');
 const {
   aDealWithOneBond,
   aDealWithOneLoan,
   aDealWithTenLoans,
   aDealWithTenLoansAndTenBonds,
 } = require('../../../../../fixtures/transaction-dashboard-data');
+const mockUsers = require('../../../../../fixtures/mockUsers');
+
+const BANK1_MAKER = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const BANK1_MAKER_CHECKER = mockUsers.find((user) => (user.roles.includes('maker') && user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const BANK2_MAKER = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2'));
 
 context('Audit - Report', () => {
   let bank1Deals = [];
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     cy.deleteDeals(BANK1_MAKER);
