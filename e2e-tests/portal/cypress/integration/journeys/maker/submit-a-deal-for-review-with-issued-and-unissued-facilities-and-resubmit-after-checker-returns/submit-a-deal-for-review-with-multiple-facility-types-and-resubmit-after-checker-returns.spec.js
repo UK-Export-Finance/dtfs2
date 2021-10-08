@@ -13,13 +13,6 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     loans: [],
   };
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertOneDeal(dealReadyToSubmitToChecker, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
@@ -61,7 +54,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
       bondRow.deleteLink().should('be.visible');
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
     });
 
     dealFacilities.loans.forEach((loan) => {
@@ -77,7 +70,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       });
 
       loanRow.deleteLink().should('be.visible');
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
     });
   };
 
@@ -100,7 +93,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
     });
 
@@ -116,7 +109,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
     });
 
@@ -132,7 +125,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
     });
 
@@ -148,7 +141,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
     });
   };
@@ -172,8 +165,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
-      bondRow.deleteLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
+      bondRow.deleteLink().should('not.exist');
     });
 
     issuedBonds.forEach((bond) => {
@@ -188,8 +181,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
-      bondRow.deleteLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
+      bondRow.deleteLink().should('not.exist');
     });
 
     conditionalLoans.forEach((loan) => {
@@ -204,8 +197,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
-      loanRow.deleteLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
+      loanRow.deleteLink().should('not.exist');
     });
 
     unconditionalLoans.forEach((loan) => {
@@ -220,8 +213,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
-      loanRow.deleteLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
+      loanRow.deleteLink().should('not.exist');
     });
   };
 

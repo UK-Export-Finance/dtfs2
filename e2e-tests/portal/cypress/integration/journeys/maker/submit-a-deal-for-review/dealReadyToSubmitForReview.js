@@ -1,14 +1,13 @@
-const moment = require('moment');
 const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate.json');
 
-const now = moment();
+const now = new Date();
 
-module.exports ={
+module.exports = {
   ...dealThatJustNeedsConversionDate,
   submissionDetails: {
     ...dealThatJustNeedsConversionDate.submissionDetails,
-    "supplyContractConversionDate-day" : `${now.format('DD')}`,
-    "supplyContractConversionDate-month" : `${now.format('MM')}`,
-    "supplyContractConversionDate-year" : `${now.format('YYYY')}`,
-  }
+    'supplyContractConversionDate-day': now.getDate(),
+    'supplyContractConversionDate-month': now.getMonth() + 1,
+    'supplyContractConversionDate-year': now.getFullYear(),
+  },
 };

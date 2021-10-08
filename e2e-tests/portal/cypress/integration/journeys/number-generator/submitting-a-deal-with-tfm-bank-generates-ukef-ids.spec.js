@@ -15,18 +15,10 @@ context.skip('A TFM checker submits a deal', () => {
     loans: [],
   };
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([dealReadyToSubmit()], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
+        [deal] = insertedDeals;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
         const { mockFacilities } = dealReadyToSubmit();

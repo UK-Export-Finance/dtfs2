@@ -14,12 +14,6 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Eligibility Criteria', () => {
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.createADeal({
       ...MAKER_LOGIN,
       bankDealId: 'someDealId',
@@ -104,7 +98,7 @@ context('Eligibility Criteria', () => {
 
   it('should redirect to supporting docs page when all criteria answered and display submission type on deal page', () => {
     eligibilityCriteria.saveGoBackButton().click();
-    contract.eligibilitySubmissionType().should('not.be.visible');
+    contract.eligibilitySubmissionType().should('not.exist');
 
     contract.eligibilityCriteriaLink().click();
 
