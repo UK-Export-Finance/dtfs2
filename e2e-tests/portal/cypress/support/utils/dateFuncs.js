@@ -8,4 +8,9 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-module.exports = { formatDate };
+const padDate = (dayOrMonth) => String(dayOrMonth).padStart(2, 0);
+
+module.exports = {
+  formatDate,
+  padDate,
+};

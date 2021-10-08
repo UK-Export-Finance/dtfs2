@@ -18,7 +18,7 @@ module.exports = () => {
 
   const aMonthInTheFuture = () => {
     const date = new Date();
-    date.setMonth(date.getMonth() + 2);
+    date.setMonth(date.getMonth() + 1);
     return date;
   };
   deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture().getDate();

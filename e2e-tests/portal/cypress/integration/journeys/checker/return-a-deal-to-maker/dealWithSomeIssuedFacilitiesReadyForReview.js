@@ -4,7 +4,7 @@ const datePlusDay = () => {
   return date;
 };
 const datePlusMonth = () => {
-  date.setMonth(date.getMonth() + 2);
+  date.setMonth(date.getMonth() + 1);
   return date;
 };
 

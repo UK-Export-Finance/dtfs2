@@ -1,7 +1,7 @@
 const now = new Date();
 const nowPlusMonth = () => {
   const date = new Date();
-  date.setMonth(date.getMonth() + 2);
+  date.setMonth(date.getMonth() + 1);
   return date;
 };
 const nowPlusWeek = () => {

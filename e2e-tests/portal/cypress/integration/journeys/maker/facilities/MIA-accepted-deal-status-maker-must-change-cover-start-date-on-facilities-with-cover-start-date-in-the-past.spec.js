@@ -91,7 +91,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     const NEW_LOAN_COVER_START_DATE = () => {
       const date = new Date(dealSubmissionDate);
-      date.setMonth(date.getMonth() + 2);
+      date.setMonth(date.getMonth() + 1);
       return date;
     };
 
