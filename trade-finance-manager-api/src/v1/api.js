@@ -553,6 +553,27 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
+const updateGefDealStatus = async (dealId, status) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        status,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error(`TFM API - error updating GEF deal status ${dealId}`);
+
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -583,4 +604,5 @@ module.exports = {
   createEstoreFolders,
   sendEmail,
   findOneGefDeal,
+  updateGefDealStatus,
 };
