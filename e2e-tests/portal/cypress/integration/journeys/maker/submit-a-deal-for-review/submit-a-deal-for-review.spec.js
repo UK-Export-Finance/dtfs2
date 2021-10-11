@@ -1,7 +1,6 @@
 const {
   contract, contractReadyForReview, contractComments, defaults,
 } = require('../../../pages');
-const { formatDate } = require('../../../../support/utils/dateFuncs');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -293,7 +292,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       const bondId = dealFacilities.dealWithNoBondCoverStartDate.bonds[0]._id;
       const row = contract.bondTransactionsTable.row(bondId);
 
-      const expectedDate = formatDate(new Date());
+      const expectedDate = new Date().toLocaleDateString('en-GB');
       row.requestedCoverStartDate().should('contain.text', expectedDate);
     });
   });
@@ -321,7 +320,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       const loanId = dealFacilities.dealWithNoLoanCoverStartDate.loans[0]._id;
       const row = contract.loansTransactionsTable.row(loanId);
 
-      const expectedDate = formatDate(new Date());
+      const expectedDate = new Date().toLocaleDateString('en-GB');
       row.requestedCoverStartDate().should('contain.text', expectedDate);
     });
   });

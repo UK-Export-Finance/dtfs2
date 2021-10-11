@@ -2,7 +2,6 @@ import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
-import { formatDate } from '../../../../support/utils/dateFuncs';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
@@ -195,7 +194,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().invoke('text').then((text) => {
-      const todayFormatted = formatDate(new Date());
+      const todayFormatted = new Date().toLocaleDateString('en-GB');
 
       expect(text.trim()).to.contain(todayFormatted);
     });
