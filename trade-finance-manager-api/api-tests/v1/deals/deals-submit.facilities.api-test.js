@@ -163,7 +163,12 @@ describe('/v1/deals', () => {
         });
 
         it('does NOT call premium schedule for an unissued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const mockDeal = {
+            ...MOCK_DEAL,
+            submissionCount: 0,
+          };
+
+          const { status } = await submitDeal(createSubmitBody(mockDeal));
 
           expect(status).toEqual(200);
 
