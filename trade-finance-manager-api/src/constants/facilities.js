@@ -42,10 +42,10 @@ const FACILITY_FEE_TYPE_GEF = {
   AT_MATURITY: 'AT_MATURITY',
 };
 
-// NOTE: subject to change
 const FACILITY_FEE_TYPE = {
   IN_ADVANCE: 'In advance',
   IN_ARREARS: 'In arrear',
+  AT_MATURITY: 'At maturity',
 };
 
 const FACILITY_FEE_FREQUENCY_PORTAL = {
