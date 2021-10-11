@@ -2,6 +2,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
+const { FACILITY_PAYMENT_TYPE } = require('../../../constants');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
@@ -49,15 +50,15 @@ const updateFacilityGuarantee = async (req, res) => {
     let paymentType;
 
     if (feeTypeIsInAdvance) {
-      paymentType = `IN_ADVANCE_${cleanFrequencyValue(inAdvanceFrequency)}`;
+      paymentType = `${FACILITY_PAYMENT_TYPE.IN_ADVANCE}_${cleanFrequencyValue(inAdvanceFrequency)}`;
     }
 
     if (feeTypeIsInArrears) {
-      paymentType = `IN_ARREARS_${cleanFrequencyValue(inAdvanceFrequency)}`;
+      paymentType = `${FACILITY_PAYMENT_TYPE.IN_ARREARS}_${cleanFrequencyValue(inAdvanceFrequency)}`;
     }
 
     if (feeTypeIsInAtMaturity) {
-      paymentType = 'AT_MATURITY';
+      paymentType = FACILITY_PAYMENT_TYPE.AT_MATURITY;
     }
 
     try {
