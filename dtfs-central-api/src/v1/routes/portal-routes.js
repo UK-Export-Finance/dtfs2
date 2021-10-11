@@ -607,11 +607,49 @@ portalRouter.route('/gef/deals/:id')
     getGefDealController.findOneDealGet,
   );
 
+/**
+ * @openapi
+ * /gef/deals/:id/status:
+ *   put:
+ *     summary: Update a Portal GEF deal status
+ *     tags: [Portal - GEF]
+ *     description: Update a Portal GEF deal status
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               status: UKEF_ACKNOWLEDGED
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/DealGEF'
+ *                 - type: object
+ *                   properties:
+ *                     previousStatus:
+ *                       example: SUBMITTED_TO_UKEF
+ *                     status:
+ *                       example: UKEF_ACKNOWLEDGED
+ *       404:
+ *         description: Not found
+ */
 portalRouter.route('/gef/deals/:id/status')
   .put(
     putGefDealStatusController.updateDealStatusPut,
   );
-
 
 /**
  * @openapi
