@@ -193,7 +193,6 @@ context('Application Details Page', () => {
         });
 
       cy.login(CREDENTIALS.MAKER);
-      cy.on('uncaught:exception', () => false);
     });
 
     beforeEach(() => {
