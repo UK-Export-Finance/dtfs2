@@ -74,7 +74,7 @@ context('Security Details Page', () => {
       securityDetails.exporterSecurity().type('Valid security details');
       securityDetails.applicationSecurity().type('Valid security details');
       securityDetails.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/export-license`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/export-licence`));
     });
 
     it('redirects user to application page when clicking on `Return to application` button', () => {
