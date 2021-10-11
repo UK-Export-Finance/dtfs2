@@ -2,7 +2,7 @@ const { nowPlusMonths, nowPlusDays } = require('../../../../../support/utils/dat
 
 const now = new Date();
 const nowPlusMonth = nowPlusMonths(1);
-const nowPlusWeek = nowPlusDays(7).toValue();
+const nowPlusWeek = nowPlusDays(7).valueOf();
 
 const deal = {
   _id: '1001349',
