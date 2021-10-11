@@ -15,7 +15,7 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
 
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
@@ -45,7 +45,7 @@ context('Case tasks - AIN deal', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 

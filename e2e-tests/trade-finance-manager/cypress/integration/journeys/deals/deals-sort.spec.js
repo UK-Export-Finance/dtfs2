@@ -1,6 +1,6 @@
-import moment from 'moment';
 import relative from '../../relativeURL';
 import pages from '../../pages';
+import { nowPlusDays } from '../../../support/utils/dateFuncs';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
@@ -11,20 +11,20 @@ context('User can view and sort deals', () => {
   let dealMostRecent;
   let dealNotRecent;
 
-  const twoDaysAgo = moment().subtract(2, 'day');
-  const yesterday = moment().subtract(1, 'day');
+  const twoDaysAgo = nowPlusDays(-2);
+  const yesterday = nowPlusDays(-1);
 
   const DEAL_NOT_RECENT = createMockDeal({
     details: {
       ukefDealId: 1,
-      submissionDate: moment(twoDaysAgo).utc().valueOf().toString(),
+      submissionDate: twoDaysAgo.valueOf().toString(),
     },
   });
 
   const DEAL_MOST_RECENT = createMockDeal({
     details: {
       ukefDealId: 2,
-      submissionDate: moment(yesterday).utc().valueOf().toString(),
+      submissionDate: yesterday.valueOf().toString(),
     },
   });
 
@@ -71,7 +71,7 @@ context('User can view and sort deals', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(_id, MOCK_MAKER_TFM);
     });
     cy.deleteTfmDeals();
   });
