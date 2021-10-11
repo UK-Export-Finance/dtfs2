@@ -1,6 +1,5 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const { formatDate } = require('../../../../support/utils/dateFuncs');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const {
@@ -84,13 +83,13 @@ context('Maker fills in bond & loan issue facility forms without requested cover
 
     // expect bond requested cover start date to default to issued date
     bondRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = formatDate(ISSUED_BOND_DATE_VALUE);
+      const expected = ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB');
       expect(text.trim()).to.equal(expected);
     });
 
     // expect loan requested cover start date to default to issued date
     loanRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = formatDate(ISSUED_LOAN_DATE_VALUE);
+      const expected = ISSUED_LOAN_DATE_VALUE.toLocaleDateString('en-GB');
       expect(text.trim()).to.equal(expected);
     });
   });

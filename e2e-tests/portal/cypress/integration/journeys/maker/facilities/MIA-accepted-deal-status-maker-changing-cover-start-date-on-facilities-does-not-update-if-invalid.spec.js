@@ -4,7 +4,7 @@ const { formattedTimestamp } = require('../../../../../../../portal-api/src/v1/f
 
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const { formatDate, nowPlusDays } = require('../../../../support/utils/dateFuncs');
+const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
@@ -108,13 +108,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const originalBondCoverStartDate = new Date(formattedTimestamp(issuedSubmittedBond.requestedCoverStartDate));
 
     issuedSubmittedBondRow.requestedCoverStartDate().invoke('text').then((text) => {
-      expect(text.trim()).equal(formatDate(originalBondCoverStartDate));
+      expect(text.trim()).equal(originalBondCoverStartDate.toLocaleDateString('en-GB'));
     });
 
     const originalLoanCoverStartDate = new Date(formattedTimestamp(unconditionalSubmittedLoan.requestedCoverStartDate));
 
     unconditionalSubmittedLoanRow.requestedCoverStartDate().invoke('text').then((text) => {
-      expect(text.trim()).equal(formatDate(originalLoanCoverStartDate));
+      expect(text.trim()).equal(originalLoanCoverStartDate.toLocaleDateString('en-GB'));
     });
 
     //---------------------------------------------------------------

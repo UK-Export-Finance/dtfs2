@@ -3,7 +3,7 @@ const relative = require('../../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilities = require('./MIA-deal-with-accepted-status-issued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const { formattedTimestamp } = require('../../../../../../../../portal-api/src/v1/facility-dates/timestamp');
-const { formatDate, nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));
@@ -232,14 +232,14 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // - Cover start date changes are rendered in the table
     // - `confirm start date` link/text should be updated
     //---------------------------------------------------------------
-    const expectedBondDate = formatDate(NEW_BOND_COVER_START_DATE());
+    const expectedBondDate = NEW_BOND_COVER_START_DATE().toLocaleDateString('en-GB');
     issuedSubmittedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     issuedCompletedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    const expectedLoanDate = formatDate(NEW_LOAN_COVER_START_DATE);
+    const expectedLoanDate = NEW_LOAN_COVER_START_DATE.toLocaleDateString('en-GB');
     unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
@@ -252,12 +252,12 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
 
     secondIssuedSubmittedBondRow.requestedCoverStartDate().should('contain.text',
-      formatDate(new Date(issuedSubmittedBond.requestedCoverStartDate)));
+      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'));
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     secondUnconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text',
-      formatDate(new Date(issuedSubmittedBond.requestedCoverStartDate)));
+      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'));
 
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
