@@ -14,7 +14,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   let facilityId;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
@@ -23,7 +23,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
         const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          facilityId = createdFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+          facilityId = createdFacilities[0]._id;
 
           dealFacilities.push(...createdFacilities);
         });
@@ -34,7 +34,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -54,7 +54,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
       // change link should not be visible
       const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
-      facilityRow.changeRiskProfileLink().should('not.be.visible');
+      facilityRow.changeRiskProfileLink().should('not.exist');
 
       // user cannot manually navigate to the page
       cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${dealFacilities[0]._id}/risk-profile`));

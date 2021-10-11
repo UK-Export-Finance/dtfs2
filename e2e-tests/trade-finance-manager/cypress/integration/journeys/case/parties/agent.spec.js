@@ -11,7 +11,7 @@ context('Parties - user can view and edit agent', () => {
   const nonBusinessSupportUser = MOCK_USERS.find((user) => !user.teams.includes('BUSINESS_SUPPORT'));
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
@@ -29,7 +29,7 @@ context('Parties - user can view and edit agent', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
