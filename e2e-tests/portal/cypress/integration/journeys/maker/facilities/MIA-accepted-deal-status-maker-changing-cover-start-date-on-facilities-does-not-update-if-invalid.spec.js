@@ -21,7 +21,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
 
@@ -37,11 +37,11 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -53,13 +53,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const issuedSubmittedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Issued' && b.status === 'Submitted');
 
-    const issuedSubmittedBondId = issuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
+    const issuedSubmittedBondId = issuedSubmittedBond._id;
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);
 
     const unconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Unconditional' && l.status === 'Submitted');
 
-    const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id; // eslint-disable-line no-underscore-dangle
+    const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id;
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
     const INVALID_DATE = nowPlusDays(-7);

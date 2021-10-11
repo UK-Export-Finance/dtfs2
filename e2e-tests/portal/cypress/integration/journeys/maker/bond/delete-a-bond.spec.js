@@ -102,7 +102,7 @@ context('Delete a Bond', () => {
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = MOCK_DEAL;
 
@@ -117,7 +117,7 @@ context('Delete a Bond', () => {
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
       if (facility._id !== bondToDeleteId) {
-        cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+        cy.deleteFacility(facility._id, MAKER_LOGIN);
       }
     });
   });
@@ -128,7 +128,7 @@ context('Delete a Bond', () => {
 
     pages.contract.bondTransactionsTableRows().should('have.length', 3);
 
-    bondToDeleteId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    bondToDeleteId = dealFacilities.bonds[0]._id;
     const bondToDeleteRow = pages.contract.bondTransactionsTable.row(bondToDeleteId);
 
     bondToDeleteRow.deleteLink().click();

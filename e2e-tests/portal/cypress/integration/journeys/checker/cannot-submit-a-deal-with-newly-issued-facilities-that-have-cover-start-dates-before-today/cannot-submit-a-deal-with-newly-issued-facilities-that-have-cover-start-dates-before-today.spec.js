@@ -17,7 +17,7 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
     cy.insertOneDeal(theDeal, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
       });
   });
 

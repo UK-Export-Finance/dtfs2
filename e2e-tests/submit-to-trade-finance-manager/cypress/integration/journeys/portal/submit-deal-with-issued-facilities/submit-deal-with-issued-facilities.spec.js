@@ -79,7 +79,7 @@ context('Portal to TFM deal submission', () => {
       facility.facilityType === 'bond'
       && facility.facilityStage === 'Issued');
 
-    const issuedBondId = issuedBond._id; // eslint-disable-line no-underscore-dangle
+    const issuedBondId = issuedBond._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
 
     facilityRow.facilityId().click();
@@ -103,7 +103,7 @@ context('Portal to TFM deal submission', () => {
       facility.facilityType === 'loan'
       && facility.facilityStage === 'Unconditional');
 
-    const issuedLoanId = issuedLoan._id; // eslint-disable-line no-underscore-dangle
+    const issuedLoanId = issuedLoan._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);
 
     facilityRow.facilityId().click();

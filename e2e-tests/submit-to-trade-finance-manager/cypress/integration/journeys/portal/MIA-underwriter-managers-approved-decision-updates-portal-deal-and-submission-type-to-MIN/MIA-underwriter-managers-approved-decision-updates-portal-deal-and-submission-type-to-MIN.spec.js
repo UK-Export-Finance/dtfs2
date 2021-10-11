@@ -136,7 +136,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker confirms bond start date
     //---------------------------------------------------------------
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.changeOrConfirmCoverStartDateLink().click();
@@ -146,7 +146,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker confirms loan start date
     //---------------------------------------------------------------
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.changeOrConfirmCoverStartDateLink().click();

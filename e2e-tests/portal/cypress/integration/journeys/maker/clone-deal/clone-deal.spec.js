@@ -34,7 +34,7 @@ context('Clone a deal', () => {
     cy.insertOneDeal(fullyCompletedDeal, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = fullyCompletedDeal;
 
@@ -50,11 +50,11 @@ context('Clone a deal', () => {
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 

@@ -16,7 +16,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
     cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
@@ -30,7 +30,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
 
   after(() => {
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -39,7 +39,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.loanStatus().invoke('text').then((text) => {
