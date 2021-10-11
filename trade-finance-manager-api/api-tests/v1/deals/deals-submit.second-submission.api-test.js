@@ -521,7 +521,7 @@ describe('/v1/deals', () => {
       it('does NOT call premium schedule when dealType is GEF', async () => {
         const mockDeal = {
           ...MOCK_GEF_DEAL,
-          submissionCount: 0,
+          submissionCount: 1,
         };
 
         const { status } = await submitDeal(createSubmitBody(mockDeal));
