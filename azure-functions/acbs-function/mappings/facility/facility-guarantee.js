@@ -13,22 +13,21 @@
 const helpers = require('./helpers');
 
 const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
-  const { facilitySnapshot } = facility;
-
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
   } = facility.tfm.facilityGuaranteeDates;
-
   return {
-    facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
+    facilityIdentifier: facility.ukefFacilityID
+      ? facility.ukefFacilityID.padStart(10, 0)
+      : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     guaranteeCommencementDate,
     guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
     limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
     guaranteeExpiryDate,
     effectiveDate,
-    maximumLiability: helpers.getMaximumLiability(facility),
+    maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     guaranteeTypeCode,
   };
 };

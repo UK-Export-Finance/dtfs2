@@ -91,6 +91,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
 
+      //Submit Exporter detail to ACBS for AIN under GEF
+      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+
       await sendDealSubmitEmails(updatedDealWithTasks);
       return updatedDeal;
     }
