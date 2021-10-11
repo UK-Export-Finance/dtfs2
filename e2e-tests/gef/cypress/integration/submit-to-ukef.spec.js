@@ -50,8 +50,6 @@ context('Submit to UKEF', () => {
     });
 
     it('takes checker to dashboard from the confirmation page', () => {
-      // the portal throws an exception on the dashboard page; this stops cypress caring
-      cy.on('uncaught:exception', () => false);
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.dashboardLink().click();
       cy.location('pathname').should('contain', 'dashboard');

@@ -84,8 +84,6 @@ context('Enter Exporters Correspondence Address Page', () => {
           });
         });
       cy.login(CREDENTIALS.MAKER);
-      cy.on('uncaught:exception', () => false);
-
 
       cy.visit(relative(`/gef/application-details/${applicationIds[1].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.addressLine1().should('have.value', 'Line 1');
