@@ -81,7 +81,7 @@ context('Portal to TFM deal submission', () => {
     cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);
 
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.issueFacilityLink().click();
@@ -94,7 +94,7 @@ context('Portal to TFM deal submission', () => {
     cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);
 
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.issueFacilityLink().click();

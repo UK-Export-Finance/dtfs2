@@ -74,7 +74,7 @@ context('Portal to TFM deal submission', () => {
     // deal facilities with non-GBP currency display GBP and non-GBP currency values
     //---------------------------------------------------------------
     const facilityWithNonGBPCurrency = dealFacilities.find((facility) => facility.currency.code !== 'GBP');
-    const facilityId = facilityWithNonGBPCurrency._id; // eslint-disable-line no-underscore-dangle
+    const facilityId = facilityWithNonGBPCurrency._id;
     const facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
     facilityRow.facilityId().click();

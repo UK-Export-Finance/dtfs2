@@ -41,7 +41,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteBonds, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteBonds = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteBonds;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -52,7 +52,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteLoans, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteLoans = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteLoans;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -63,7 +63,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteAbout, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteAbout = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteAbout;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -74,7 +74,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteEligibility, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteEligibility = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteEligibility;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -85,7 +85,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealReadyToSubmitForReview, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealReadyToSubmitForReview = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealReadyToSubmitForReview;
 
@@ -103,7 +103,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithNoBondCoverStartDate, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithNoBondCoverStartDate = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoBondCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -120,7 +120,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithNoLoanCoverStartDate, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithNoLoanCoverStartDate = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoLoanCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -137,7 +137,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   after(() => {
     allCreatedFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 

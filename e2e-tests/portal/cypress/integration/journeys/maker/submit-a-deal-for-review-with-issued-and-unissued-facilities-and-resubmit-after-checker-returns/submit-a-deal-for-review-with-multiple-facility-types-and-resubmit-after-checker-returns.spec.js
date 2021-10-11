@@ -17,7 +17,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     cy.insertOneDeal(dealReadyToSubmitToChecker, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealReadyToSubmitToChecker;
 
@@ -33,17 +33,17 @@ context('A maker and checker can submit and re-submit a deal to each other mult
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
   const assertFacilityTableValuesWithDealStatusInDraft = () => {
     dealFacilities.bonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -58,7 +58,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     dealFacilities.loans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -82,7 +82,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     const unconditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Unconditional');
 
     unissuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -98,7 +98,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     issuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -114,7 +114,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     conditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -130,7 +130,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     unconditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -154,7 +154,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     const unconditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Unconditional');
 
     unissuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -170,7 +170,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     issuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -186,7 +186,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     conditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -202,7 +202,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     });
 
     unconditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {

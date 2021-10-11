@@ -21,7 +21,7 @@ context('Case tasks - AIN deal', () => {
       userId = userObj._id;
     });
 
-    loggedInUserTeamName = businessSupportUser.teams[0]; // eslint-disable-line
+    [loggedInUserTeamName] = businessSupportUser.teams;
     usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
   });
 

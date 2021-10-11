@@ -19,7 +19,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
@@ -35,11 +35,11 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -48,10 +48,10 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const firstBondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const firstBondId = dealFacilities.bonds[0]._id;
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
 
-    const firstLoanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const firstLoanId = dealFacilities.loans[0]._id;
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
     //---------------------------------------------------------------
@@ -145,7 +145,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Maker starts, but doesn't finish, a different Issue Facility form (Bond)
     //---------------------------------------------------------------
-    const incompleteIssueFacilityBondId = dealFacilities.bonds[1]._id; // eslint-disable-line no-underscore-dangle
+    const incompleteIssueFacilityBondId = dealFacilities.bonds[1]._id;
     const incompleteIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(incompleteIssueFacilityBondId);
 
     incompleteIssueFacilityBondRow.issueFacilityLink().click();
@@ -172,7 +172,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Maker starts, but doesn't finish, a different Issue Facility form (Loan)
     //---------------------------------------------------------------
-    const incompleteIssueFacilityLoanId = dealFacilities.loans[1]._id; // eslint-disable-line no-underscore-dangle
+    const incompleteIssueFacilityLoanId = dealFacilities.loans[1]._id;
     const incompleteIssueFacilityLoanRow = pages.contract.loansTransactionsTable.row(incompleteIssueFacilityLoanId);
 
     incompleteIssueFacilityLoanRow.issueFacilityLink().click();
@@ -287,7 +287,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Facilities that have NOT started should not be updated
     //---------------------------------------------------------------
-    const notStartedIssueFacilityBondId = dealFacilities.bonds[2]._id; // eslint-disable-line no-underscore-dangle
+    const notStartedIssueFacilityBondId = dealFacilities.bonds[2]._id;
     const notStartedIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(notStartedIssueFacilityBondId);
 
     notStartedIssueFacilityBondRow.bondStatus().invoke('text').then((text) => {
@@ -301,7 +301,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     notStartedIssueFacilityBondRow.issueFacilityLink().should('not.exist');
 
 
-    const notStartedFacilityLoanId = dealFacilities.loans[2]._id; // eslint-disable-line no-underscore-dangle
+    const notStartedFacilityLoanId = dealFacilities.loans[2]._id;
     const notStartedFacilityLoanRow = pages.contract.loansTransactionsTable.row(notStartedFacilityLoanId);
 
     notStartedFacilityLoanRow.loanStatus().invoke('text').then((text) => {

@@ -20,7 +20,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     cy.insertOneDeal(mockDeal, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = mockDeal;
 
@@ -36,11 +36,11 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -65,7 +65,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     //---------------------------------------------------------------
 
     dealFacilities.bonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.uniqueNumberLink().should('not.exist');
@@ -87,7 +87,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     });
 
     dealFacilities.loans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.bankReferenceNumberLink().should('not.exist');

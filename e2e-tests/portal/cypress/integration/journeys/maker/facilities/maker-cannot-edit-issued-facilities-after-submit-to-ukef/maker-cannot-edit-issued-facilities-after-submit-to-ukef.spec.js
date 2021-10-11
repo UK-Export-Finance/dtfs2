@@ -18,7 +18,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     cy.insertOneDeal(dealWithMultipleFacilityTypesReadyToSubmitToUkef, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const facilitiesToCreate = [
           ...deal.bondTransactions.items,
@@ -61,7 +61,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     });
 
     dealFacilities.loans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.bankReferenceNumberLink().should('not.exist');
