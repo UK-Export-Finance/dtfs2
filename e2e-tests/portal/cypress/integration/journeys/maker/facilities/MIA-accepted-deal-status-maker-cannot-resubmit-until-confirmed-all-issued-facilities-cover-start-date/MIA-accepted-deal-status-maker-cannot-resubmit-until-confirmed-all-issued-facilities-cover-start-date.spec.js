@@ -2,7 +2,6 @@ const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilities = require('./MIA-deal-with-accepted-status-issued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const { formattedTimestamp } = require('../../../../../../../../portal-api/src/v1/facility-dates/timestamp');
 const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
@@ -133,13 +132,11 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     // Maker can change Cover start date for an Issued facility with 'Submitted' status
     //---------------------------------------------------------------
-    const dealSubmissionDate = formattedTimestamp(deal.details.submissionDate);
-
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedSubmittedBondId}/confirm-requested-cover-start-date`));
 
     const NEW_BOND_COVER_START_DATE = () => {
-      const date = new Date(dealSubmissionDate);
+      const date = new Date(parseInt(deal.details.submissionDate, 10));
       date.setDate(date.getDate() + 7);
       return date;
     };

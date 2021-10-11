@@ -1,6 +1,5 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const { formattedTimestamp } = require('../../../../../../../portal-api/src/v1/facility-dates/timestamp');
 
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -105,13 +104,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // facility tables should display original dates
     // the date submitted in 'Confirm start date' form should not be displayed
     //---------------------------------------------------------------
-    const originalBondCoverStartDate = new Date(formattedTimestamp(issuedSubmittedBond.requestedCoverStartDate));
+    const originalBondCoverStartDate = new Date(parseInt(issuedSubmittedBond.requestedCoverStartDate, 10));
 
     issuedSubmittedBondRow.requestedCoverStartDate().invoke('text').then((text) => {
       expect(text.trim()).equal(originalBondCoverStartDate.toLocaleDateString('en-GB'));
     });
 
-    const originalLoanCoverStartDate = new Date(formattedTimestamp(unconditionalSubmittedLoan.requestedCoverStartDate));
+    const originalLoanCoverStartDate = new Date(parseInt(unconditionalSubmittedLoan.requestedCoverStartDate, 10));
 
     unconditionalSubmittedLoanRow.requestedCoverStartDate().invoke('text').then((text) => {
       expect(text.trim()).equal(originalLoanCoverStartDate.toLocaleDateString('en-GB'));
