@@ -11,6 +11,7 @@ const updatedIssuedFacilities = async (deal) => {
 
   const {
     submissionDate: dealSubmissionDate,
+    dealType,
   } = deal;
 
   const updatedFacilities = [];
@@ -43,11 +44,14 @@ const updatedIssuedFacilities = async (deal) => {
 
       const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
 
-      const facilityPremiumSchedule = await getFacilityPremiumSchedule(
-        facility,
-        facilityExposurePeriod,
-        facilityGuaranteeDates,
-      );
+      let facilityPremiumSchedule;
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        facilityPremiumSchedule = await getFacilityPremiumSchedule(
+          facility,
+          facilityExposurePeriod,
+          facilityGuaranteeDates,
+        );
+      }
 
       const facilityUpdate = {
         ...portalFacilityUpdate,
