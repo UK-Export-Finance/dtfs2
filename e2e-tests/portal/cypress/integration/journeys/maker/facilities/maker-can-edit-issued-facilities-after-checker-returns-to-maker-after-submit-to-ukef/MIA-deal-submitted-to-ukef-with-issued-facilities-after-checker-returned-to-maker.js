@@ -2,7 +2,7 @@ const { nowPlusMonths, nowPlusDays } = require('../../../../../support/utils/dat
 
 const now = new Date();
 const nowPlusMonth = nowPlusMonths(1);
-const nowPlusWeek = nowPlusDays(7);
+const nowPlusWeek = nowPlusDays(7).toValue();
 
 const deal = {
   _id: '1001349',
@@ -230,7 +230,7 @@ const deal = {
       issueFacilityDetailsStarted: true,
       uniqueIdentificationNumberRequiredForIssuance: true,
       requestedCoverStartDate: nowPlusMonth.valueOf(),
-      issuedDate: nowPlusWeek(),
+      issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Issued',
@@ -266,7 +266,7 @@ const deal = {
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       bankReferenceNumberRequiredForIssuance: true,
-      issuedDate: nowPlusWeek(),
+      issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
