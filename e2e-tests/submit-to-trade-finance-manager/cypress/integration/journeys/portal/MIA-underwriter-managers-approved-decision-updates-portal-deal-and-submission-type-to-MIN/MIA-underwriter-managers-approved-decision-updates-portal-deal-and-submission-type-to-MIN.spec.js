@@ -1,8 +1,8 @@
-import moment from 'moment';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
+import { formatDate } from '../../../../support/utils/dateFuncs';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
@@ -15,20 +15,13 @@ context('Portal to TFM deal submission', () => {
   let dealId;
   const dealFacilities = [];
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       MOCK_MIA_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
@@ -202,7 +195,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().invoke('text').then((text) => {
-      const todayFormatted = moment().format('DD/MM/YYYY');
+      const todayFormatted = formatDate(new Date());
 
       expect(text.trim()).to.contain(todayFormatted);
     });

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
@@ -30,20 +29,13 @@ context('Portal to TFM deal submission', () => {
   let dealId;
   const dealFacilities = [];
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
@@ -177,17 +169,17 @@ context('Portal to TFM deal submission', () => {
     tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
       // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
       // but in this e2e test it will always be today so to simplify..
-      const expectedDate = moment().format('D MMMM YYYY');
+      const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
     tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      const expectedDate = moment(BOND_COVER_START_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = new Date(BOND_COVER_START_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
     tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      const expectedDate = moment(BOND_COVER_END_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = new Date(BOND_COVER_END_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
@@ -225,7 +217,7 @@ context('Portal to TFM deal submission', () => {
     tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
       // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
       // but in this e2e test it will always be today so to simplify..
-      const expectedDate = moment().format('D MMMM YYYY');
+      const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
@@ -241,12 +233,12 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      const expectedDate = moment(LOAN_COVER_START_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = new Date(LOAN_COVER_START_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
     tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      const expectedDate = moment(LOAN_COVER_END_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = new Date(LOAN_COVER_END_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 

@@ -13,20 +13,13 @@ context('Portal to TFM deal submission', () => {
   let deal;
   let dealId;
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       MOCK_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
@@ -88,6 +81,5 @@ context('Portal to TFM deal submission', () => {
     tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
       expect(text.trim()).to.eq('Less than 14.1%');
     });
-
   });
 });
