@@ -58,7 +58,121 @@
             }
           ] if not previewMode
         }
-      },
+      } if supportingInfo.requiredFields.includes('manualInclusion'),
+      {
+        key: {
+          text: "Year-to-date management accounts"
+        },
+        value: {
+          text: "Required" if not supportingInfo.managementAccounts[0],
+          classes: "has-text-danger" if not supportingInfo.managementAccounts[0],
+          html: fileList(supportingInfo.managementAccounts, "/files/") if supportingInfo.managementAccounts[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.managementAccounts[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('managementAccounts'),
+      {
+        key: {
+          text: "Financial statements for the past 3 years"
+        },
+        value: {
+          text: "Required" if not supportingInfo.financialStatements[0],
+          classes: "has-text-danger" if not supportingInfo.financialStatements[0],
+          html: fileList(supportingInfo.financialStatements, "/files/") if supportingInfo.financialStatements[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.financialStatements[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('financialStatements'),
+      {
+        key: {
+          text: "Financial forecasts"
+        },
+        value: {
+          text: "Required" if not supportingInfo.financialForecasts[0],
+          classes: "has-text-danger" if not supportingInfo.financialForecasts[0],
+          html: fileList(supportingInfo.manualInclusion, "/files/") if supportingInfo.financialForecasts[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.financialForecasts[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('financialForecasts'),
+      {
+        key: {
+          text: "Brief commentary on the financial information"
+        },
+        value: {
+          text: "Required" if not supportingInfo.financialCommentary[0],
+          classes: "has-text-danger" if not supportingInfo.financialCommentary[0],
+          html: fileList(supportingInfo.financialCommentary, "/files/") if supportingInfo.financialCommentary[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.financialCommentary[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('financialCommentary'),
+      {
+        key: {
+          text: "Corporate structure diagram"
+        },
+        value: {
+          text: "Required" if not supportingInfo.corporateStructure[0],
+          classes: "has-text-danger" if not supportingInfo.corporateStructure[0],
+          html: fileList(supportingInfo.corporateStructure, "/files/") if supportingInfo.corporateStructure[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.corporateStructure[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('corporateStructure'),
+      {
+        key: {
+          text: "Aged debtor and aged creditor listing"
+        },
+        value: {
+          text: "Required" if not supportingInfo.debtorAndCreditorReports[0],
+          classes: "has-text-danger" if not supportingInfo.debtorAndCreditorReports[0],
+          html: fileList(supportingInfo.debtorAndCreditorReports, "/files/") if supportingInfo.debtorAndCreditorReports[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.debtorAndCreditorReports[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('debtorAndCreditorReports'),
       {
         key: {
           text: "Security details"
@@ -77,7 +191,26 @@
             }
           ] if not previewMode
         }
-      }
+      },
+      {
+        key: {
+          text: "Exporter licence"
+        },
+        value: {
+          text: "Required" if not supportingInfo.exportLicence[0],
+          classes: "has-text-danger" if not supportingInfo.exportLicence[0],
+          html: fileList(supportingInfo.exportLicence, "/files/") if supportingInfo.exportLicence[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              text: "Change" if supportingInfo.exportLicence[0] else "Add",
+              visuallyHiddenText: "security details"
+            }
+          ] if not previewMode
+        }
+      } if supportingInfo.requiredFields.includes('exportLicence')
     ]
   }) }}
 {% endif %}
