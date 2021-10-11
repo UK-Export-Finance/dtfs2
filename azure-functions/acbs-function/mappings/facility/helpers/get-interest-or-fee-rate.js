@@ -1,6 +1,9 @@
 const CONSTANTS = require('../../../constants');
 
-const getInterestOrFeeRate = ({ facilitySnapshot }) => {
+const getInterestOrFeeRate = (facilitySnapshot, dealType) => {
+  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+    return facilitySnapshot.interestPercentage;
+  }
   switch (facilitySnapshot.facilityType) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return Number(facilitySnapshot.riskMarginFee);

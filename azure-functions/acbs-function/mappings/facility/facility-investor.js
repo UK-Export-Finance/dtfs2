@@ -8,22 +8,24 @@
   */
 
 const helpers = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 const facilityInvestor = (deal, facility) => {
-  const { facilitySnapshot } = facility;
-
   const {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
   } = facility.tfm.facilityGuaranteeDates;
 
-
   return {
-    facilityIdentifier: facilitySnapshot.ukefFacilityID.padStart(10, 0),
-    portfolioIdentifier: 'E1',
-    maximumLiability: helpers.getMaximumLiability(facility),
-    currency: facilitySnapshot.currency.id,
+    facilityIdentifier: facility.ukefFacilityID
+      ? facility.ukefFacilityID.padStart(10, 0)
+      : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
+    maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
+    currency: facility.facilitySnapshot.currency.id
+      ? facility.facilitySnapshot.currency.id
+      : facility.facilitySnapshot.currency,
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,

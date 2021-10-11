@@ -19,7 +19,6 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     deal, facility, dealAcbsData,
   } = context.df.getInput();
 
-  // EWCS route
   // Create Guarantee (Facility Provider)
   const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
@@ -27,11 +26,14 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     { dealAcbsData },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
   );
+
   const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
     { dealAcbsData },
-    CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
+    deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+      ? CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER
+      : CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
   );
 
   const facilityProviderTask = context.df.callActivityWithRetry(
@@ -45,6 +47,7 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     retryOptions,
     { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
   );
+
   yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
 
   return {

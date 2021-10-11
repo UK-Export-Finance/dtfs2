@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+
 const moment = require('moment');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -23,7 +24,6 @@ const mandatoryFields = [
   'maximumLiability',
   'guaranteeTypeCode',
 ];
-
 const createFacilityGuarantee = async (context) => {
   const { acbsFacilityGuaranteeInput } = context.bindingData;
 
@@ -34,7 +34,6 @@ const createFacilityGuarantee = async (context) => {
   }
 
   const submittedToACBS = moment().format();
-
   const { status, data } = await api.createFacilityGuarantee(acbsFacilityGuaranteeInput);
 
   if (isHttpErrorStatus(status)) {

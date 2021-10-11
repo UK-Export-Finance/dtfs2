@@ -16,7 +16,7 @@ const getAPI = async (type) => {
   }).catch((err) => ({
     status: err.response.status,
     data: {
-      error: err.response.data.error.errorDescription,
+      error: err.response.data.error,
     },
   }));
 
