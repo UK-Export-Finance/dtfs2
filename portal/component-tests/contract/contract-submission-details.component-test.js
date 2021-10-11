@@ -32,10 +32,6 @@ describe(page, () => {
     it('should render `Comments` link', () => {
       wrapper.expectLink('[data-cy="comments-tab"]').toLinkTo(`/contract/${deal._id}/comments`, 'Comments');
     });
-
-    it('should render (active) `Check deal details` link', () => {
-      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo('#', 'Check deal details');
-    });
   });
 
   it('should render contract overview table', () => {
