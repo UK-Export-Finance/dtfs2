@@ -15,13 +15,13 @@ const updatePortalDealStatus = async (deal) => {
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMISSION_ACKNOWLEDGED;
 
-      await api.updatePortalDealStatus(dealId, newStatus);
+      await api.updatePortalBssDealStatus(dealId, newStatus);
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
       newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.UKEF_ACKNOWLEDGED;
 
-      await api.updateGefDealStatus(dealId, newStatus);
+      await api.updatePortalGefDealStatus(dealId, newStatus);
     }
   }
 
@@ -29,14 +29,15 @@ const updatePortalDealStatus = async (deal) => {
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.IN_PROGRESS;
 
-      await api.updatePortalDealStatus(dealId, newStatus);
+      await api.updatePortalBssDealStatus(dealId, newStatus);
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
       newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.UKEF_IN_PROGRESS;
-      await api.updateGefDealStatus(dealId, newStatus);
+      await api.updatePortalGefDealStatus(dealId, newStatus);
     }
   }
+
   return deal;
 };
 
