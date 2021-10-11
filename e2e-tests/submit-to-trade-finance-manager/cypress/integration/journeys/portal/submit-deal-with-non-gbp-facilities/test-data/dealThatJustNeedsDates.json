@@ -133,7 +133,8 @@
         "coveredPercentage": "2",
         "feeType": "test",
         "feeFrequency": "test",
-        "dayCountBasis": "test"
+        "dayCountBasis": "test",
+        "ukefExposure": "80,000.00"
     },
     {
       "facilityType": "loan",
@@ -154,7 +155,8 @@
       "interestMarginFee": "5",
       "coveredPercentage": "40",
       "premiumType": "At maturity",
-      "dayCountBasis": "365"
+      "dayCountBasis": "365",
+      "ukefExposure": "80,000.00"
     }
   ]
 }
