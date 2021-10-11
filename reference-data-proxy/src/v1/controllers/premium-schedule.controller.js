@@ -9,7 +9,6 @@ const { objectIsEmpty } = require('../../utils/object');
 
 const postPremiumSchedule = async (premiumScheduleParameters) => {
   if (objectIsEmpty(premiumScheduleParameters)) {
-    console.log('Unable to call Premium schedule - no facility data provided');
     return null;
   }
 
@@ -28,7 +27,7 @@ const postPremiumSchedule = async (premiumScheduleParameters) => {
 
   return axios(config)
     .catch((catchErr) => {
-      console.log(`Error calling Post Premium schedule with facilityURN: ${premiumScheduleParameters.facilityURN} \n`, catchErr.response);
+      console.error(`Error calling Post Premium schedule with facilityURN: ${premiumScheduleParameters.facilityURN} \n`, catchErr.response);
     }).then((response) => {
       if (response && response.status) {
         return response.status;
@@ -63,7 +62,7 @@ const getPremiumSchedule = async (req, res) => {
   );
 
   if (!postPremiumScheduleResponse) {
-    console.log('Error calling Premium schedule API');
+    console.error('Error calling Premium schedule API');
     return res.status(400).send();
   }
 

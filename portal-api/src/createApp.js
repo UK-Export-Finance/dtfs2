@@ -56,7 +56,7 @@ Sentry.init({
       {
         // array of methods that should be captured
         // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
-        levels: ['log', 'error'],
+        levels: ['error'],
       },
     ),
   ],
