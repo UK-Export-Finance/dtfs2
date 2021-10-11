@@ -54,7 +54,6 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         feeFrequency,
         bankReferenceNumber,
         uniqueIdentificationNumber,
-        bondType, // TODO: is this needed?
         disbursementAmount,
         facilityStage,
       } = mockFacility;
@@ -79,7 +78,6 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
         bankReference: bankReferenceNumber,
         uniqueIdentificationNumber,
-        bondType,
         tfm: mockFacility.tfm,
       };
 

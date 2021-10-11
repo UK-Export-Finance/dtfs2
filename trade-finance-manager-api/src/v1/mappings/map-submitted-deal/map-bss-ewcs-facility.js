@@ -49,7 +49,6 @@ const mapBssEwcsFacility = (facility) => {
     bankReferenceNumber,
     uniqueIdentificationNumber,
     disbursementAmount,
-    bondType,
     facilityStage,
   } = facility;
 
@@ -75,7 +74,6 @@ const mapBssEwcsFacility = (facility) => {
     disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
     bankReference: bankReferenceNumber,
     uniqueIdentificationNumber,
-    bondType,
     tfm: facility.tfm,
   };
 };
