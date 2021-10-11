@@ -19,7 +19,6 @@ Alternatively, every service can be started from the root directory (`docker-com
 
 See mock users: utils/mock-data-loader/portal/users.js
 
-
 ## Testing
 
 ### **Run a UI test suite**
