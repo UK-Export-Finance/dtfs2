@@ -46,11 +46,10 @@ context('Enter Exporters Correspondence Address Page', () => {
 
     // Skipping test until cy Referer not being passed bug is fixed
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}`));
-
       enterExportersCorAddress.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
+
     // Next test is a fudge while Referer cant be set in cy.visit({headers}) (test above) replace when possible
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
