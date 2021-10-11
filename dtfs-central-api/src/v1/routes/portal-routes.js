@@ -21,6 +21,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
 
 const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
 const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
+const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
 
 const createGefExporterController = require('../controllers/portal/gef-exporter/create-gef-exporter.controller');
 const getGefExporterController = require('../controllers/portal/gef-exporter/get-gef-exporter.controller');
@@ -605,6 +606,12 @@ portalRouter.route('/gef/deals/:id')
   .get(
     getGefDealController.findOneDealGet,
   );
+
+portalRouter.route('/gef/deals/:id/status')
+  .put(
+    putGefDealStatusController.updateDealStatusPut,
+  );
+
 
 /**
  * @openapi
