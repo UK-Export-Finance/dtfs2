@@ -54,8 +54,8 @@ describe('/v1/deals', () => {
 
     updatePortalBssDealStatusSpy.mockClear();
     updatePortalGefDealStatusSpy.mockClear();
-    externalApis.updatePortalDealStatus = updatePortalBssDealStatusSpy;
-    externalApis.updateGefDealStatus = updatePortalGefDealStatusSpy;
+    externalApis.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
+    externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {

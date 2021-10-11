@@ -47,7 +47,7 @@ const updatePortalDeal = async (dealId, update) => {
   }
 };
 
-const updatePortalDealStatus = async (dealId, status) => {
+const updatePortalBssDealStatus = async (dealId, status) => {
   try {
     const response = await axios({
       method: 'put',
@@ -579,7 +579,7 @@ module.exports = {
   findOnePortalDeal,
   addPortalDealComment,
   updatePortalDeal,
-  updatePortalDealStatus,
+  updatePortalBssDealStatus,
   updatePortalFacilityStatus,
   updatePortalFacility,
   updateDeal,
