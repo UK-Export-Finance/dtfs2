@@ -1,4 +1,3 @@
-import moment from 'moment';
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../../trade-finance-manager/cypress/integration/pages';
@@ -25,26 +24,19 @@ context('Portal to TFM deal submission', () => {
   let loan;
   let loanId;
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
-          loan = createdFacilities[0];
+          [loan] = createdFacilities;
           loanId = loan._id;
         });
       });
@@ -165,7 +157,7 @@ context('Portal to TFM deal submission', () => {
     tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
       // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
       // but in this e2e test it will always be today so to simplify..
-      const expectedDate = moment().format('D MMMM YYYY');
+      const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
@@ -181,12 +173,12 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      const expectedDate = moment(COVER_START_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = new Date(COVER_START_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
     tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      const expectedDate = moment(COVER_END_DATE_VALUE).format('D MMMM YYYY');
+      const expectedDate = new Date(COVER_END_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
     });
 
