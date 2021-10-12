@@ -157,6 +157,7 @@ describe('controllers/about-exporter', () => {
             data: expect.any(Array),
           },
           supportingInfo: {
+            requiredFields: expect.any(Array),
             status: expect.any(Object),
           },
           submit: expect.any(Boolean),
