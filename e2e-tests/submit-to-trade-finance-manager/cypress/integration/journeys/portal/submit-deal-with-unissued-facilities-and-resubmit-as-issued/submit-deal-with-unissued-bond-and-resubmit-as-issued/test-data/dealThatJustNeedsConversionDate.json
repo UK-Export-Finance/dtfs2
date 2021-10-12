@@ -132,7 +132,8 @@
         "coveredPercentage": "24",
         "feeType": "test",
         "feeFrequency": "test",
-        "dayCountBasis": "test"
+        "dayCountBasis": "test",
+        "ukefExposure": "80,000.00"
     }
   ]
 }

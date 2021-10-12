@@ -13,6 +13,7 @@ const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
 const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
+const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const submitDeal = require('../utils/submitDeal');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
@@ -513,6 +514,21 @@ describe('/v1/deals', () => {
           expected.sendToEmailAddress,
           expected.emailVariables,
         );
+      });
+    });
+
+    describe('GEF deal - on second submission', () => {
+      it('does NOT call premium schedule when dealType is GEF', async () => {
+        const mockDeal = {
+          ...MOCK_GEF_DEAL,
+          submissionCount: 1,
+        };
+
+        const { status } = await submitDeal(createSubmitBody(mockDeal));
+
+        expect(status).toEqual(200);
+
+        expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
       });
     });
   });
