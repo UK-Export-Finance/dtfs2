@@ -27,7 +27,6 @@ const completeSubmissionDetails = { status: 'Completed' };
 const incompleteEligibility = { status: 'not completed' };
 const completeEligibility = { status: 'Completed' };
 
-
 describe('dealHasIncompleteTransactions', () => {
   it('should return true if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
     const deal = {

@@ -20,7 +20,6 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     res.redirect('/');
   }
 
-
   // need to query mongo and filter on multiple fields:
   // I've filtered the deals (MIA/MIN) on the main record submission type
   // then filtered the array locally

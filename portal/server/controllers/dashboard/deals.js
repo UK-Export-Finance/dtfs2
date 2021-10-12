@@ -21,7 +21,6 @@ const getRoles = (roles) => {
   };
 };
 
-
 const dashboardFilters = (filter, userId) => {
   const allFilters = [];
 

@@ -89,7 +89,6 @@ const getBondIssuerPartyDetails = async (req, res) => {
   });
 };
 
-
 const getBondBeneficiaryPartyDetails = async (req, res) => {
   const { user } = req.session;
 
@@ -147,7 +146,6 @@ const postExporterPartyDetails = postPartyDetails('exporter');
 const postBuyerPartyDetails = postPartyDetails('buyer');
 const postAgentPartyDetails = postPartyDetails('agent');
 const postIndemnifierPartyDetails = postPartyDetails('indemnifier');
-
 
 module.exports = {
   getCaseParties,

@@ -18,7 +18,6 @@ describe('schemeType', () => {
     res = mockResponse();
   });
 
-
   describe('getSchemeType', () => {
     it('renders the expected template', () => {
       getSchemeType(req, res);
