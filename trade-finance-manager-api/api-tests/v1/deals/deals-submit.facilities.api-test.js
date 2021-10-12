@@ -153,17 +153,30 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('premium scheduler', () => {
-        it('gets the premium scheduler info for issued facility', async () => {
+      describe('premium schedule', () => {
+        it('calls premium schedule for an issued facility', async () => {
           const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
 
           expect(status).toEqual(200);
 
-          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(2);
+          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(1);
         });
 
-        it('does not gets the premium scheduler info for unissued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL));
+        it('does NOT call premium schedule for an unissued facility', async () => {
+          const mockDeal = {
+            ...MOCK_DEAL,
+            submissionCount: 0,
+          };
+
+          const { status } = await submitDeal(createSubmitBody(mockDeal));
+
+          expect(status).toEqual(200);
+
+          expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
+        });
+
+        it('does NOT call premium schedule when dealType is GEF', async () => {
+          const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
           expect(status).toEqual(200);
 

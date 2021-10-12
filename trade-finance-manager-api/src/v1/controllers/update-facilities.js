@@ -4,6 +4,7 @@ const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const DEFAULTS = require('../defaults');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
+const CONSTANTS = require('../../constants');
 
 const updateFacilities = async (deal) => {
   // Create deep clone
@@ -11,6 +12,7 @@ const updateFacilities = async (deal) => {
 
   const {
     submissionDate: dealSubmissionDate,
+    dealType,
   } = modifiedDeal;
 
   modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
@@ -22,11 +24,15 @@ const updateFacilities = async (deal) => {
 
     const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
     const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-    const facilityPremiumSchedule = await getFacilityPremiumSchedule(
-      facility,
-      facilityExposurePeriod,
-      facilityGuaranteeDates,
-    );
+
+    let facilityPremiumSchedule;
+    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+      facilityPremiumSchedule = await getFacilityPremiumSchedule(
+        facility,
+        facilityExposurePeriod,
+        facilityGuaranteeDates,
+      );
+    }
 
     const facilityUpdate = {
       ...facilityCurrencyConversion,

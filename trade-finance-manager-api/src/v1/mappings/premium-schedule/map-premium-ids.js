@@ -1,11 +1,7 @@
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('../../../constants');
 
-const getPremiumFrequencyId = (facility) => {
-  const frequency = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
-    ? facility.feeFrequency
-    : facility.premiumFrequency;
-
-  switch (frequency) {
+const mapPremiumFrequencyId = (facility) => {
+  switch (facility.feeFrequency) {
     case CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.MONTHLY:
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.MONTHLY;
 
@@ -23,13 +19,8 @@ const getPremiumFrequencyId = (facility) => {
   }
 };
 
-
-const getPremiumTypeId = (facility) => {
-  const frequencyType = facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND
-    ? facility.feeType
-    : facility.premiumType;
-
-  switch (frequencyType) {
+const mapPremiumTypeId = (facility) => {
+  switch (facility.feeType) {
     case CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ADVANCE:
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.IN_ADVANCE;
 
@@ -40,11 +31,11 @@ const getPremiumTypeId = (facility) => {
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.AT_MATURITY;
 
     default:
-      return 0;
+      return CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.UNDEFINED;
   }
 };
 
 module.exports = {
-  getPremiumFrequencyId,
-  getPremiumTypeId,
+  mapPremiumFrequencyId,
+  mapPremiumTypeId,
 };

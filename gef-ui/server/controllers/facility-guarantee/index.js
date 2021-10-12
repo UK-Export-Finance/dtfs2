@@ -2,6 +2,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
+const { FACILITY_PAYMENT_TYPE } = require('../../../constants');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
@@ -20,8 +21,8 @@ const facilityGuarantee = async (req, res) => {
       applicationId: facility.applicationId,
       facilityId: facility.facilityId,
       feeType: facility.feeType,
-      inAdvanceFrequency: facility.feeType === 'in advance' ? facility.frequency : '',
-      inArrearsFrequency: facility.feeType === 'in arrears' ? facility.frequency : '',
+      inAdvanceFrequency: facility.feeType === 'in advance' ? facility.feeFrequency : '',
+      inArrearsFrequency: facility.feeType === 'in arrears' ? facility.feeFrequency : '',
       dayCountBasis: facility.dayCountBasis,
       status,
     });
@@ -40,10 +41,31 @@ const updateFacilityGuarantee = async (req, res) => {
   const facilityGuaranteeErrors = [];
 
   async function update() {
+    const feeTypeIsInAdvance = feeType === 'in advance';
+    const feeTypeIsInArrears = feeType === 'in arrears';
+    const feeTypeIsInAtMaturity = feeType === 'at maturity';
+
+    const cleanFrequencyValue = (str) => str.replace('-', '_').toUpperCase();
+
+    let paymentType;
+
+    if (feeTypeIsInAdvance) {
+      paymentType = `${FACILITY_PAYMENT_TYPE.IN_ADVANCE}_${cleanFrequencyValue(inAdvanceFrequency)}`;
+    }
+
+    if (feeTypeIsInArrears) {
+      paymentType = `${FACILITY_PAYMENT_TYPE.IN_ARREARS}_${cleanFrequencyValue(inAdvanceFrequency)}`;
+    }
+
+    if (feeTypeIsInAtMaturity) {
+      paymentType = FACILITY_PAYMENT_TYPE.AT_MATURITY;
+    }
+
     try {
       await api.updateFacility(facilityId, {
         feeType,
-        frequency: feeType === 'in advance' ? inAdvanceFrequency : inArrearsFrequency,
+        paymentType,
+        feeFrequency: feeTypeIsInAdvance ? inAdvanceFrequency : inArrearsFrequency,
         dayCountBasis,
       });
       return res.redirect(`/gef/application-details/${applicationId}`);
