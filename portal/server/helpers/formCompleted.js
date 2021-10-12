@@ -22,7 +22,6 @@ const isCompleted = (validationErrors, fields) => {
   return false;
 };
 
-
 module.exports = {
   isCompleted,
   validationErrorsCount,

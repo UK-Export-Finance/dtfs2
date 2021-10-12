@@ -21,7 +21,6 @@ describe('nunjuck filters - bondBeneficiaryFacilities', () => {
       },
     ];
 
-
     const mockBondsWithoutBondBeneficiary = [
       {
         _id: '3',

@@ -61,5 +61,4 @@ router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
   });
 });
 
-
 module.exports = router;

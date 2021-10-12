@@ -425,7 +425,6 @@ describe('controllers - case', () => {
       });
     });
 
-
     describe('when task cannot be edited', () => {
       const mockDeal = {
         _id: '1000023',
@@ -464,7 +463,6 @@ describe('controllers - case', () => {
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
       });
     });
-
 
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
@@ -574,7 +572,6 @@ describe('controllers - case', () => {
       });
     });
   });
-
 
   describe('GET case facility', () => {
     describe('when facility exists', () => {

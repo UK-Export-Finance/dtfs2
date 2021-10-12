@@ -62,7 +62,6 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 
-
     // POST routes
     expect(post).toHaveBeenCalledTimes(14);
 

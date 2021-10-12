@@ -41,7 +41,6 @@ const submittedEligibilityMatchesOriginalData = (formData, originalData) => {
   return false;
 };
 
-
 module.exports = {
   submittedEligibilityMatchesOriginalData,
   originalCriteriaAnswersAsStrings,
