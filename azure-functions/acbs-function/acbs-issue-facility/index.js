@@ -18,26 +18,34 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
     facilityId, facility, supplierName,
   } = context.df.getInput();
 
-  // Facility Master
-  const { acbsFacility, etag } = yield context.df.callActivityWithRetry(
-    'activity-get-facility-master',
-    retryOptions,
-    { facilityId },
-  );
+  if (facilityId) {
+    // 1. GET Facility master record object
+    const { acbsFacility, etag } = yield context.df.callActivityWithRetry(
+      'activity-get-facility-master',
+      retryOptions,
+      { facilityId },
+    );
 
-  const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facility, acbsFacility, supplierName);
+    if (acbsFacility && etag) {
+      // 2. Create updated facility master record object
+      const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facility, acbsFacility, supplierName);
 
-  const issuedFacilityMaster = yield context.df.callActivityWithRetry(
-    'activity-update-facility-master',
-    retryOptions,
-    {
-      facilityId, acbsFacilityMasterInput, updateType: 'issue', etag,
-    },
-  );
+      // 3. PUT updated facility master record object
+      const issuedFacilityMaster = yield context.df.callActivityWithRetry(
+        'activity-update-facility-master',
+        retryOptions,
+        {
+          facilityId, acbsFacilityMasterInput, updateType: 'issue', etag,
+        },
+      );
 
-  return {
-    // eslint-disable-next-line no-underscore-dangle
-    facilityId: facility._id,
-    issuedFacilityMaster,
-  };
+      return {
+        // eslint-disable-next-line no-underscore-dangle
+        facilityId: facility._id,
+        issuedFacilityMaster,
+      };
+    }
+  }
+
+  return {};
 });

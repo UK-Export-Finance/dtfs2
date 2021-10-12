@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const {
   findOneTfmDeal,
   findOnePortalDeal,
@@ -91,7 +92,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
 
-      //Submit Exporter detail to ACBS for AIN under GEF
+      // Submit Exporter detail to ACBS for AIN under GEF
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
@@ -105,6 +106,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+
+    // Update facility stage code to Issued
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN

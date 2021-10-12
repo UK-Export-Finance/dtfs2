@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // ACBS API is used to check that deal/facility ids are not already being used.
 //
 // the flow is:
@@ -78,41 +79,51 @@ exports.findOne = async (req, res) => {
 };
 
 const issueAcbsFacility = async (id, facility, supplierName) => {
-  const response = await axios({
-    method: 'post',
-    url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
-    data: {
-      facilityId: id,
-      facility,
-      supplierName,
-    },
-  }).catch((err) => err);
-  return response;
+  if (id && facility && supplierName) {
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
+      data: {
+        facilityId: id,
+        facility,
+        supplierName,
+      },
+    }).catch((err) => err);
+    return response;
+  }
+  return {};
 };
 
 exports.issueAcbsFacilityPOST = async (req, res) => {
-  const { id } = req.params;
-  const { facility, supplierName } = req.body;
-
-  const { status, data } = await issueAcbsFacility(id, facility, supplierName);
-
-  return res.status(status).send(data);
+  if (req) {
+    const { id } = req.params;
+    const { facility, supplierName } = req.body;
+    const { status, data } = await issueAcbsFacility(id, facility, supplierName);
+    return res.status(status).send(data);
+  }
+  return {};
 };
 
 const createAcbsRecord = async (deal, bank) => {
-  const response = await axios({
-    method: 'post',
-    url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
-    data: {
-      deal,
-      bank,
-    },
-  }).catch((err) => err);
-  return response;
+  if (deal) {
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+      data: {
+        deal,
+        bank,
+      },
+    }).catch((err) => err);
+    return response;
+  }
+  return {};
 };
 
 exports.createAcbsRecordPOST = async (req, res) => {
-  const { deal, bank } = req.body;
-  const { status, data } = await createAcbsRecord(deal, bank);
-  return res.status(status).send(data);
+  if (req) {
+    const { deal, bank } = req.body;
+    const { status, data } = await createAcbsRecord(deal, bank);
+    return res.status(status).send(data);
+  }
+  return {};
 };

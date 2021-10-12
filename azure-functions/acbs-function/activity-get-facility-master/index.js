@@ -15,22 +15,26 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const getFacilityMaster = async (context) => {
   const { facilityId } = context.bindingData;
 
-  const { status, data, headers: { etag } } = await api.getFacility(facilityId);
+  if (facilityId) {
+    const { status, data, headers: { etag } } = await api.getFacility(facilityId);
 
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility fetch error',
-        facilityId,
-        dataReceived: data,
-      }, null, 4),
-    );
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify({
+          name: 'ACBS Facility fetch error',
+          facilityId,
+          dataReceived: data,
+        }, null, 4),
+      );
+    }
+
+    return {
+      acbsFacility: data,
+      etag,
+    };
   }
 
-  return {
-    acbsFacility: data,
-    etag,
-  };
+  return {};
 };
 
 module.exports = getFacilityMaster;
