@@ -1,30 +1,22 @@
-const moment = require('moment');
-
 const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
+  contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
 const partials = require('../../../partials');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 // test data we want to set up + work with..
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
+const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
 
 context('about-buyer', () => {
   let deal;
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
-  before( () => {
+  before(() => {
     cy.insertOneDeal(aDealWithAboutBuyerComplete, MAKER_LOGIN)
-      .then( insertedDeal =>  deal=insertedDeal );
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
@@ -50,8 +42,8 @@ context('about-buyer', () => {
     contractAboutFinancial.preview().click();
 
     // check the errors have been cleared..
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract value is required');
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract currency is required');
+    contractAboutPreview.errors().should('not.exist');
+    contractAboutPreview.errors().should('not.exist');
 
     // switch to non-GBP currency and prove that we now require the exchange-rate + date fields
     contractAboutFinancial.visit(deal);
@@ -99,14 +91,12 @@ context('about-buyer', () => {
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = moment().subtract(31, 'days');
+    const dateTooFarInThePast = nowPlusDays(-31);
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${moment(dateTooFarInThePast).format('DD')}`);
-    contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${moment(dateTooFarInThePast).format('MM')}`);
-    contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${moment(dateTooFarInThePast).format('YYYY')}`);
+    contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
+    contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+    contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');
-
-
   });
 });

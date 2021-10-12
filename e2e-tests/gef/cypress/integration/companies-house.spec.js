@@ -6,7 +6,7 @@ import CREDENTIALS from '../fixtures/credentials.json';
 
 let applicationId;
 
-context.skip('Companies House Page', () => {
+context('Companies House Page', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER)
@@ -18,7 +18,6 @@ context.skip('Companies House Page', () => {
         applicationId = body.items[0]._id;
       });
     cy.login(CREDENTIALS.MAKER);
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -77,7 +76,7 @@ context.skip('Companies House Page', () => {
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
       cy.visit(relative(`/gef/application-details/${applicationId}/companies-house?status=change`));
-      companiesHouse.backLink().should('not.be.visible');
+      companiesHouse.backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {

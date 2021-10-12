@@ -1,9 +1,10 @@
-const moment = require('moment');
-const { contract, contractReadyForReview, contractComments, defaults } = require('../../../pages');
+const {
+  contract, contractReadyForReview, contractComments, defaults,
+} = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
+
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 // test data we want to set up + work with..
@@ -16,7 +17,7 @@ const dealWithNoBondCoverStartDate = require('./dealWithNoBondCoverStartDate');
 const dealWithNoLoanCoverStartDate = require('./dealWithNoLoanCoverStartDate');
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {
-  let deals = {};
+  const deals = {};
   let dealId;
   const dealFacilities = {
     dealReadyToSubmitForReview: {
@@ -34,19 +35,12 @@ context('A maker selects to submit a contract for review from the view-contract 
   };
   const allCreatedFacilities = [];
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(dealWithIncompleteBonds, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteBonds = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteBonds;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -57,7 +51,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteLoans, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteLoans = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteLoans;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -68,7 +62,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteAbout, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteAbout = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteAbout;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -79,7 +73,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteEligibility, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithIncompleteEligibility = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteEligibility;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -90,7 +84,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealReadyToSubmitForReview, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealReadyToSubmitForReview = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealReadyToSubmitForReview;
 
@@ -108,7 +102,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithNoBondCoverStartDate, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithNoBondCoverStartDate = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoBondCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -125,7 +119,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithNoLoanCoverStartDate, MAKER_LOGIN)
       .then((insertedDeal) => {
         deals.dealWithNoLoanCoverStartDate = insertedDeal;
-        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+        dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoLoanCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
@@ -142,7 +136,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   after(() => {
     allCreatedFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -298,7 +292,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       const bondId = dealFacilities.dealWithNoBondCoverStartDate.bonds[0]._id;
       const row = contract.bondTransactionsTable.row(bondId);
 
-      const expectedDate = moment().format('DD/MM/YYYY');
+      const expectedDate = new Date().toLocaleDateString('en-GB');
       row.requestedCoverStartDate().should('contain.text', expectedDate);
     });
   });
@@ -326,7 +320,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       const loanId = dealFacilities.dealWithNoLoanCoverStartDate.loans[0]._id;
       const row = contract.loansTransactionsTable.row(loanId);
 
-      const expectedDate = moment().format('DD/MM/YYYY');
+      const expectedDate = new Date().toLocaleDateString('en-GB');
       row.requestedCoverStartDate().should('contain.text', expectedDate);
     });
   });

@@ -3,12 +3,12 @@ const CONSTANTS = require('../../constants');
 
 const facility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-  premiumType: '2',
-  ukefFacilityID: '0001',
-  guaranteeFeePayableByBank: '10',
-  coverPercentage: '80',
-  dayCountBasis: '2',
-  ukefExposure: '60',
+  feeType: 'At maturity',
+  ukefFacilityID: 1234,
+  guaranteeFee: 10,
+  coverPercentage: 80,
+  dayCountBasis: 2,
+  ukefExposure: 60,
 };
 
 const exposurePeriod = 2;
@@ -17,51 +17,37 @@ const facilityGuaranteeDates = {
   guaranteeExpiryDate: '2023-02-03',
 };
 
-describe('is valid for premium schedule?', () => {
-  describe('facility is valid for premium schedule', () => {
-    it('should return true for valid facility', () => {
-      const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
-        facility, exposurePeriod, facilityGuaranteeDates,
-      );
-      expect(isValidForPremiumSchedule).toEqual(true);
-    });
+describe('isFacilityValidForPremiumSchedule', () => {
+  it('should return true for valid facility', () => {
+    const result = isFacilityValidForPremiumSchedule(
+      facility, exposurePeriod, facilityGuaranteeDates,
+    );
+    expect(result).toEqual(true);
   });
 
   describe('invalid facility', () => {
     describe('facility exposure period', () => {
       it('should be invalid if no exposure period', () => {
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule({}, '', '');
-        expect(isValidForPremiumSchedule).toEqual(false);
+        const result = isFacilityValidForPremiumSchedule({}, '', '');
+        expect(result).toEqual(false);
       });
 
       it('should be invalid if exposure period < 1', () => {
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule({}, 0.5, '');
-        expect(isValidForPremiumSchedule).toEqual(false);
+        const result = isFacilityValidForPremiumSchedule({}, 0.5, '');
+        expect(result).toEqual(false);
       });
     });
 
-    describe('feeType/premiumType', () => {
-      it('should be invalid if bond and no fee type', () => {
+    describe('feeType', () => {
+      it('should be invalid if no feeType', () => {
         const invalidFacility = {
           ...facility,
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           feeType: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
-      });
-
-      it('should be invalid if loan and no premium type', () => {
-        const invalidFacility = {
-          ...facility,
-          premiumType: '',
-        };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
 
@@ -71,10 +57,10 @@ describe('is valid for premium schedule?', () => {
           ...facility,
           ukefFacilityID: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
 
@@ -84,10 +70,10 @@ describe('is valid for premium schedule?', () => {
           ...facilityGuaranteeDates,
           guaranteeCommencementDate: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           facility, exposurePeriod, invalidFacilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
 
       it('should be invalid if no guarantee expiry date', () => {
@@ -95,23 +81,23 @@ describe('is valid for premium schedule?', () => {
           ...facilityGuaranteeDates,
           guaranteeExpiryDate: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           facility, exposurePeriod, invalidFacilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
 
-    describe('guaranteeFeePayableByBank', () => {
-      it('should be invalid if no guaranteeFeePayableByBank', () => {
+    describe('guaranteeFee', () => {
+      it('should be invalid if no guaranteeFee', () => {
         const invalidFacility = {
           ...facility,
-          guaranteeFeePayableByBank: '',
+          guaranteeFee: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
 
@@ -121,10 +107,10 @@ describe('is valid for premium schedule?', () => {
           ...facility,
           coverPercentage: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
 
@@ -134,10 +120,10 @@ describe('is valid for premium schedule?', () => {
           ...facility,
           dayCountBasis: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
 
@@ -147,10 +133,10 @@ describe('is valid for premium schedule?', () => {
           ...facility,
           ukefExposure: '',
         };
-        const isValidForPremiumSchedule = isFacilityValidForPremiumSchedule(
+        const result = isFacilityValidForPremiumSchedule(
           invalidFacility, exposurePeriod, facilityGuaranteeDates,
         );
-        expect(isValidForPremiumSchedule).toEqual(false);
+        expect(result).toEqual(false);
       });
     });
   });

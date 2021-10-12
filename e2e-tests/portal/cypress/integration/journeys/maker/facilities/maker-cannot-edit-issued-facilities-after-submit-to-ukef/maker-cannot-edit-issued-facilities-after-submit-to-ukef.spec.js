@@ -13,20 +13,12 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     loans: [],
   };
 
-
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(dealWithMultipleFacilityTypesReadyToSubmitToUkef, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const facilitiesToCreate = [
           ...deal.bondTransactions.items,
@@ -61,22 +53,22 @@ context('Checker submits a deal with all facility types to UKEF', () => {
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.uniqueNumberLink().should('not.be.visible');
+      bondRow.uniqueNumberLink().should('not.exist');
       bondRow.uniqueNumber().should('be.visible');
 
-      bondRow.deleteLink().should('not.be.visible');
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.deleteLink().should('not.exist');
+      bondRow.issueFacilityLink().should('not.exist');
     });
 
     dealFacilities.loans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.bankReferenceNumberLink().should('not.be.visible');
+      loanRow.bankReferenceNumberLink().should('not.exist');
       loanRow.bankReferenceNumber().should('be.visible');
 
-      loanRow.deleteLink().should('not.be.visible');
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.deleteLink().should('not.exist');
+      loanRow.issueFacilityLink().should('not.exist');
     });
   });
 });

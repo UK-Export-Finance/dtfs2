@@ -227,7 +227,6 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
     formData.append(file.fieldname, file.buffer, file.originalname);
   });
 
-
   const formHeaders = formData.getHeaders();
 
   const response = await axios({

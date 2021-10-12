@@ -21,5 +21,4 @@ const userCanSubmitDeal = (deal, user) => {
   return true;
 };
 
-
 module.exports = userCanSubmitDeal;

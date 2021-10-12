@@ -10,6 +10,7 @@
   },
   "scripts": {
     "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "start": "node src/index.js",
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
@@ -33,7 +34,7 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
@@ -46,9 +47,9 @@
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
-    "eslint": "6.1.0",
-    "eslint-config-airbnb-base": "14.0.0",
-    "eslint-plugin-import": "2.20.1",
+    "eslint": "^8.0.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.25.1",
     "jest": "27.2.1",
     "nodemon": "^2.0.4",
     "supertest": "4.0.2"

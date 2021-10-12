@@ -19,9 +19,6 @@ context('View a deal', () => {
     };
 
     beforeEach(() => {
-      // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-      cy.on('uncaught:exception', () => false);
-
       // clear down our test users old deals, and insert new ones - updating our deal object
       cy.deleteDeals(MAKER_LOGIN);
 

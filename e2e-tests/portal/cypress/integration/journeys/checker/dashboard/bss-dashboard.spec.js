@@ -28,8 +28,6 @@ context('View a deal with checker role', () => {
   };
 
   before(() => {
-    cy.on('uncaught:exception', () => false);
-
     cy.deleteGefApplications(MAKER_LOGIN);
 
     cy.deleteDeals(MAKER_LOGIN);

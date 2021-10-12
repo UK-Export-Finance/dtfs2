@@ -1,19 +1,22 @@
 const api = require('../api');
-const mapPremiumScheduleFacility = require('../mappings/mapPremiumScheduleFacility');
+const mapPremiumScheduleFacility = require('../mappings/premium-schedule');
 
 const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   if (facility.hasBeenIssued && facilityExposurePeriod) {
-    const parameters = mapPremiumScheduleFacility(
+    const scheduleObj = mapPremiumScheduleFacility(
       facility,
-      facilityExposurePeriod,
+      facilityExposurePeriod.exposurePeriodInMonths,
       facilityGuaranteeDates,
     );
 
-    const premiumSchedule = await api.getPremiumSchedule(
-      parameters,
-    );
-    if (premiumSchedule) {
-      return premiumSchedule;
+    if (scheduleObj) {
+      const premiumSchedule = await api.getPremiumSchedule(
+        scheduleObj,
+      );
+
+      if (premiumSchedule) {
+        return premiumSchedule;
+      }
     }
   }
 

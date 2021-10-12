@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -21,8 +19,6 @@ context('Facilities Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

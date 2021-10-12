@@ -14,7 +14,7 @@ context('Case Underwriting - Pricing and risk', () => {
   const underwritingSupportUser = MOCK_USERS.find((user) => !user.teams.includes('UNDERWRITING_SUPPORT'));
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
@@ -32,7 +32,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -47,10 +47,10 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     it('should NOT display `change` links', () => {
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.be.visible');
+      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
     });
   });
 
@@ -65,10 +65,10 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     it('should display the correct change links', () => {
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('visible');
+      pages.underwritingPricingAndRiskPage.addRatingLink().should('be.visible');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('be.visible');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('be.visible');
     });
 
     it('clicking underwriting nav link should direct to pricing-and-risk page and render `Not added` tag and `add rating` link. Clicking `add rating` takes user to edit page', () => {
@@ -78,7 +78,7 @@ context('Case Underwriting - Pricing and risk', () => {
         expect(text.trim()).to.equal('Not added');
       });
 
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.exist');
 
       pages.underwritingPricingAndRiskPage.addRatingLink().click();
 
@@ -131,7 +131,7 @@ context('Case Underwriting - Pricing and risk', () => {
       // assert elements/value in `pricing and risk` page
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
 
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
+      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('be.visible');
 
@@ -198,9 +198,9 @@ context('Case Underwriting - Pricing and risk', () => {
         expect(text.trim()).to.equal(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
       });
 
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.be.visible');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.be.visible');
+      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
     });
 
     it('cannot manually navigate to the edit page', () => {

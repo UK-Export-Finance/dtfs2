@@ -23,17 +23,11 @@ context('Check deal details', () => {
   };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(dealInDraft, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = fullyCompletedDeal;
 
@@ -49,11 +43,11 @@ context('Check deal details', () => {
 
   afterEach(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -90,7 +84,7 @@ context('Check deal details', () => {
     // A Bond
     //---------------------------------------------------------------
     goToCheckDealDetailsPage();
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
 
     pages.contractSubmissionDetails.editLinkBond(dealId, bondId).should('be.visible');
     pages.contractSubmissionDetails.editLinkBond(dealId, bondId).click();
@@ -101,7 +95,7 @@ context('Check deal details', () => {
     // A Loan
     //---------------------------------------------------------------
     goToCheckDealDetailsPage();
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
 
     pages.contractSubmissionDetails.editLinkLoan(dealId, loanId).should('be.visible');
     pages.contractSubmissionDetails.editLinkLoan(dealId, loanId).click();
@@ -113,25 +107,25 @@ context('Check deal details', () => {
 
     goToCheckDealDetailsPage();
 
-    const differentBondCurrencyId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const differentBondCurrencyId = dealFacilities.bonds[0]._id;
     const differentBondCurrency = pages.contractSubmissionDetails.currencyInfoFacility('bond', differentBondCurrencyId);
     differentBondCurrency.sameAsDealCurrency().should('contain.text', 'No');
     differentBondCurrency.currency().should('exist');
     differentBondCurrency.conversionRate().should('exist');
 
-    const sameBondCurrencyId = dealFacilities.bonds[1]._id; // eslint-disable-line no-underscore-dangle
+    const sameBondCurrencyId = dealFacilities.bonds[1]._id;
     const sameBondCurrency = pages.contractSubmissionDetails.currencyInfoFacility('bond', sameBondCurrencyId);
     sameBondCurrency.sameAsDealCurrency().should('contain.text', 'Yes');
     sameBondCurrency.currency().should('not.exist');
     sameBondCurrency.conversionRate().should('not.exist');
 
-    const differentLoanCurrencyId = dealFacilities.loans[1]._id; // eslint-disable-line no-underscore-dangle
+    const differentLoanCurrencyId = dealFacilities.loans[1]._id;
     const differentLoanCurrency = pages.contractSubmissionDetails.currencyInfoFacility('loan', differentLoanCurrencyId);
     differentLoanCurrency.sameAsDealCurrency().should('contain.text', 'No');
     differentLoanCurrency.currency().should('exist');
     differentLoanCurrency.conversionRate().should('exist');
 
-    const sameLoanCurrencyId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const sameLoanCurrencyId = dealFacilities.loans[0]._id;
     const sameLoanCurrency = pages.contractSubmissionDetails.currencyInfoFacility('loan', sameLoanCurrencyId);
     sameLoanCurrency.sameAsDealCurrency().should('contain.text', 'Yes');
     sameLoanCurrency.currency().should('not.exist');
@@ -180,7 +174,7 @@ context('Check deal details', () => {
 
           cy.updateDeal(insertedDeal._id, dealWithCriteria1, MAKER_LOGIN).then((updatedDeal) => {
             deal = updatedDeal;
-            dealId = deal._id; // eslint-disable-line no-underscore-dangle
+            dealId = deal._id;
           });
         });
     });

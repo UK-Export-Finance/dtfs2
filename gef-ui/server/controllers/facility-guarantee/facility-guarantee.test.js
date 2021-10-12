@@ -72,7 +72,7 @@ describe('facility-guarantee', () => {
 
   it('does not validate frequency when at maturity', () => {
     const errors = validateFacilityGuarantee({
-      feeType: 'At maturity', // advance/arrears/maturity
+      feeType: 'at maturity', // advance/arrears/maturity
       dayCountBasis: '360',
     });
     expect(errors).toEqual([]);

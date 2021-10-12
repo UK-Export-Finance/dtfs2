@@ -1,15 +1,15 @@
-const moment = require('moment');
-
-const date = moment().add(1, 'month');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
+const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
-const dealWithNoCoverStartDate = {...dealReadyToSubmitForReview };
+const date = nowPlusMonths(1);
+
+const dealWithNoCoverStartDate = { ...dealReadyToSubmitForReview };
 
 const loan = dealWithNoCoverStartDate.mockFacilities.find((f) => f.facilityType === 'loan');
 
-loan['coverEndDate-day'] = moment(date).format('DD');
-loan['coverEndDate-month'] = moment(date).format('MM');
-loan['coverEndDate-year'] = moment(date).format('YYYY');
+loan['coverEndDate-day'] = date.getDate();
+loan['coverEndDate-month'] = date.getMonth() + 1;
+loan['coverEndDate-year'] = date.getFullYear();
 loan.facilityStage = 'Unconditional';
 
 module.exports = dealWithNoCoverStartDate;

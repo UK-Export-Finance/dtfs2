@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
 import CREDENTIALS from '../fixtures/credentials.json';

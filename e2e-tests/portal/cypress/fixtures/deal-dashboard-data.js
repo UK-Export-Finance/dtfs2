@@ -1,8 +1,8 @@
-const moment = require('moment');
-
 // NOTE!!
 // these objects are to be pushed straight into the portal-api,
 // so the fields need to go into the correct places in the object..
+
+const now = new Date().valueOf().toString();
 
 module.exports = [
   {
@@ -50,7 +50,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-      submissionDate: moment().utc().valueOf(),
+      submissionDate: now,
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -70,7 +70,7 @@ module.exports = [
       submissionType: 'Manual Inclusion Notice',
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
-      submissionDate: moment().utc().valueOf(),
+      submissionDate: now,
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -98,7 +98,7 @@ module.exports = [
       submissionType: 'Manual Inclusion Application',
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
-      submissionDate: moment().utc().valueOf(),
+      submissionDate: now,
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -125,7 +125,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Abandoned',
       previousStatus: 'Draft',
-      submissionDate: moment().utc().valueOf(),
+      submissionDate: now,
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
