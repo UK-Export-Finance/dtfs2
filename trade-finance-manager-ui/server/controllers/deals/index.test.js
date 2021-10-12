@@ -19,7 +19,6 @@ describe('controllers - deals', () => {
     res = mockRes();
   });
 
-
   describe('GET deals', () => {
     describe('when there are deals', () => {
       beforeEach(() => {

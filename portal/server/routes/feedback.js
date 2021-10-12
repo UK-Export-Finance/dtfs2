@@ -17,7 +17,6 @@ router.get('/feedback', (req, res) =>
 router.post('/feedback', async (req, res) => {
   const { userToken } = requestParams(req);
 
-
   try {
     const response = await api.createFeedback(req.body, userToken);
     if (response) {

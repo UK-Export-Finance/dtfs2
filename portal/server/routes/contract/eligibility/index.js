@@ -215,7 +215,6 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
       );
       const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-
       const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
 
       return res.render('eligibility/eligibility-supporting-documentation.njk', {
@@ -250,7 +249,6 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   const readStream = new stream.PassThrough();
   fileData.pipe(readStream).pipe(res);
 });
-
 
 router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;

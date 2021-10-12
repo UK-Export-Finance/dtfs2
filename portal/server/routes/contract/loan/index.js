@@ -351,7 +351,6 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
 
-
   const formattedRequestedCoverStartDate = formattedTimestamp(loan.requestedCoverStartDate);
   const now = formattedTimestamp(moment().utc().valueOf().toString());
 

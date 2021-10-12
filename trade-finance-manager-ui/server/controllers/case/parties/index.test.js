@@ -321,7 +321,6 @@ describe('controllers - case - parties', () => {
     });
   });
 
-
   describe('POST party edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {

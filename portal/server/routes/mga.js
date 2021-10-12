@@ -26,7 +26,6 @@ router.get('/mga/:filename', async (req, res) => {
   const { userToken } = requestParams(req);
   const { filename } = req.params;
 
-
   const fileData = await api.downloadMga(filename, userToken).catch(() => res.redirect('/not-found'));
   if (!fileData) {
     return;

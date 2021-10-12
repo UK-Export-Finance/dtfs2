@@ -60,8 +60,6 @@ router.get('/:_id/underwriting/managers-decision', underwritingController.getUnd
 router.get('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 router.post('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
 
-
 router.get('/:_id/documents', caseController.getCaseDocuments);
-
 
 module.exports = router;

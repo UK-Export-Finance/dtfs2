@@ -1,4 +1,3 @@
-
 // Fix Azure environment variables
 Object.keys(process.env).forEach((key) => {
   if (key.startsWith('CUSTOMCONNSTR_')) {
