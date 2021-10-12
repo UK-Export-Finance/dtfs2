@@ -16,7 +16,6 @@ const apiUploadTest = async () => {
   }
 };
 
-
 uploadTest.get('/upload-test', async (req, res) => {
   res.status(200).json({
     api: await apiUploadTest(),

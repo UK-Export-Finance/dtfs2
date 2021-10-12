@@ -112,7 +112,6 @@ const postAssignLeadUnderwriter = async (req, res) => {
   return res.redirect(`/case/${dealId}/underwriting/lead-underwriter`);
 };
 
-
 module.exports = {
   getLeadUnderwriter,
   getAssignLeadUnderwriter,

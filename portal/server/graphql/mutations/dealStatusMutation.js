@@ -16,5 +16,4 @@ mutation DealStatus($dealId: String, $status: String, $comments: String){
   }
 }`);
 
-
 module.exports = dealStatusUpdate;

@@ -28,7 +28,6 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
   const fromDays = req.query.fromDays || 0;
   const toDays = req.query.toDays || maxDays;
 
-
   const submissionFilters = {
     ...req.session.miaToBeSubmittedWithConditionsFilters,
     filterBySubmissionType: 'manualInclusionApplication',
@@ -97,7 +96,6 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
     user: req.session.user,
   });
 });
-
 
 router.post('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res) => {
   const { userToken } = requestParams(req);

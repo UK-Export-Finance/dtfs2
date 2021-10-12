@@ -18,7 +18,6 @@ const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
 //   }
 // };
 
-
 /*
 const companiesHouseHealthCheck = async () => {
   const coNoToCheck = '00014259';

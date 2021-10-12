@@ -1,4 +1,3 @@
-
 const formatAsCurrency = (str) => {
   const isEmpty = !(str && str.trim().length > 0);
   let amount = 0;

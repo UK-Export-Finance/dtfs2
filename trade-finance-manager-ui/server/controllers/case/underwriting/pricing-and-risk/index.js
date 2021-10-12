@@ -162,7 +162,6 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
   return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
 };
 
-
 module.exports = {
   getUnderWritingPricingAndRisk,
   getUnderWritingPricingAndRiskEdit,

@@ -47,7 +47,6 @@ router.get('/users/create', async (req, res) => {
     });
 });
 
-
 // roles are fed in = require(checkboxes, so we either get a string or an array.).
 // -so if we don't get an array, put it into an array..
 // if 'maker/checker' value is submitted, remove this and add 'maker' and 'checker' to the array.
@@ -192,7 +191,6 @@ router.get('/users/enable/:_id', async (req, res) => {
       user,
     });
 });
-
 
 router.get('/users/change-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);

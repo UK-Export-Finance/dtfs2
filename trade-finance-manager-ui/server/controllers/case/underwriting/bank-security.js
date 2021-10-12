@@ -21,7 +21,6 @@ const getUnderWritingBankSecurity = async (req, res) => {
   });
 };
 
-
 module.exports = {
   getUnderWritingBankSecurity,
 };

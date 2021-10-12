@@ -30,7 +30,6 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
 
-
   return nunjucks;
 };
 
