@@ -168,6 +168,8 @@ npm run lint
 
 Github actions will then run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment.
 
+E2E tests for GHA have been setup to run in parallel. When these run you will see duplicates of each job with a number denoting the instance.
+
 ## CI
 
 Several environments are used:
