@@ -18,8 +18,6 @@ const numberGeneratorFunctionUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_U
 const callNumberGenerator = async ({
   dealType, entityType, entityId, dealId, user,
 }) => {
-  console.log('Reference Data API - calling Number Generator Orchestrator');
-
   const response = await axios({
     method: 'post',
     url: `${numberGeneratorFunctionUrl}/api/orchestrators/numbergenerator`,
@@ -69,8 +67,6 @@ const callNumberGenerator = async ({
 };
 
 exports.callNumberGeneratorPOST = async (req, res) => {
-  console.log('Reference Data API - callNumberGeneratorPOST called');
-
   const {
     dealType, entityType, entityId, dealId, user,
   } = req.body;

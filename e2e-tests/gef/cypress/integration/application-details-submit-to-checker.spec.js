@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import relative from './relativeURL';
 import applicationSubmission from './pages/application-submission';
 import applicationDetails from './pages/application-details';
@@ -21,8 +20,6 @@ context('Application Details Submission', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

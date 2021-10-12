@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import facilityValue from './pages/facility-value';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -27,8 +25,6 @@ context('Facility Value Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -41,7 +37,7 @@ context('Facility Value Page', () => {
       facilityValue.backLink();
       facilityValue.headingCaption();
       facilityValue.mainHeading().contains('interest');
-      facilityValue.hiddenFacilityType().should('be', 'invisible');
+      facilityValue.hiddenFacilityType().should('not.be.visible');
       facilityValue.valueLabel().should('contain', 'cash');
       facilityValue.valueSuffix().should('contain', 'EUR');
       facilityValue.continueButton();
@@ -52,11 +48,6 @@ context('Facility Value Page', () => {
       facilityValue.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-currency`));
     });
-
-    it('hides back button if visiting page with `change` query', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value?status=change`));
-      facilityValue.backLink().should('not.be', 'visible');
-    });
   });
 
   describe('Visiting page as contingent facility', () => {
@@ -65,7 +56,7 @@ context('Facility Value Page', () => {
       facilityValue.backLink();
       facilityValue.headingCaption();
       facilityValue.mainHeading().contains('risk');
-      facilityValue.hiddenFacilityType().should('be', 'invisible');
+      facilityValue.hiddenFacilityType().should('not.be.visible');
       facilityValue.valueLabel().should('contain', 'contingent');
       facilityValue.valueSuffix().should('contain', 'JPY');
       facilityValue.continueButton();

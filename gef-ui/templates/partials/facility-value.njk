@@ -17,6 +17,8 @@
     }) }}
   {% endif %}
 
+  <p>Status: {{ status }}</p>
+
   {% if status === 'change' %}
     {{ govukBackLink({
       text: "Back to previous page",

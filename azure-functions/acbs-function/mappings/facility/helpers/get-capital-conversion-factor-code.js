@@ -1,15 +1,22 @@
-/*
- "capitalConversionFactorCode":    This field is required for GEF. Cash facility has 8, Contingent facility has 9.
-*/
 const CONSTANTS = require('../../../constants');
 
-const getCapitalConversionFactorCode = (facilityType) => {
-  switch (facilityType) {
+const getCapitalConversionFactorCode = (facility) => {
+  const type = facility.facilitySnapshot.type
+    ? facility.facilitySnapshot.type
+    : facility.facilitySnapshot.facilityType;
+
+  switch (type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return '1';
 
     case CONSTANTS.FACILITY.FACILITY_TYPE.LOAN:
       return '5';
+
+    case CONSTANTS.FACILITY.FACILITY_TYPE.CASH:
+      return '8';
+
+    case CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT:
+      return '9';
 
     default:
       return '';

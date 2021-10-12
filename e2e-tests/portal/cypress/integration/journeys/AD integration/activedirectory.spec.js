@@ -12,14 +12,6 @@ const BAD_LOGIN = { username: 'doesntExist', password: 'whatever' };
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Login', () => {
-  beforeEach(() => {
-    // [ dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   it('When a user that is not logged in navigates to a protected route, they are sent to the homepage', () => {
     beforeYouStart.visit();
     cy.url().should('eq', relative('/login'));

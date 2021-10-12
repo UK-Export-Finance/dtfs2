@@ -1,36 +1,25 @@
-const {contract, contractReturnToMaker, contractComments} = require('../../../pages');
-const {errorSummary, successMessage} = require('../../../partials');
+const { contract, contractReturnToMaker, contractComments } = require('../../../pages');
+const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const CHECKER_LOGIN = mockUsers.find( user=> (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)') );
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
+
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal;
-  let dealId;
 
-  beforeEach( () => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
-  before( () => {
-    const aDealInStatus = (status) => {
-      return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
-    };
+  before(() => {
+    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.details.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 
@@ -77,7 +66,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractReturnToMaker.returnToMaker().click();
 
     // expect to land on the /dashboard page with a success message
-    cy.url().should('include', `/dashboard`)
+    cy.url().should('include', '/dashboard');
     successMessage.successMessageListItem().invoke('text').then((text) => {
       expect(text.trim()).to.match(/Supply Contract returned to maker./);
     });
@@ -100,7 +89,5 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractComments.row(0).commentorName().invoke('text').then((text) => {
       expect(text.trim()).to.equal(`${CHECKER_LOGIN.firstname} ${CHECKER_LOGIN.surname}`);
     });
-
   });
-
 });

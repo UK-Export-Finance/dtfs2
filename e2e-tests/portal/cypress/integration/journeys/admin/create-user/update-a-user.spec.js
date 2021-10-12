@@ -1,8 +1,10 @@
-const { header, users, createUser, editUser} = require('../../../pages');
-const relative = require('../../../relativeURL');
+const {
+  header, users, createUser, editUser,
+} = require('../../../pages');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -12,15 +14,9 @@ context('Admin user updates an existing user', () => {
     surname: 'the builder',
     bank: 'Barclays Bank',
     roles: ['maker'],
-  }
+  };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.removeUserIfPresent(userToUpdate, ADMIN_LOGIN);
   });
 
@@ -31,9 +27,9 @@ context('Admin user updates an existing user', () => {
 
     // add user
     users.addUser().click();
-    for (const role of userToUpdate.roles) {
+    userToUpdate.roles.forEach((role) => {
       createUser.role(role).click();
-    }
+    });
     createUser.username().type(userToUpdate.username);
     createUser.manualPassword().click();
     createUser.password().type(userToUpdate.password);
@@ -46,13 +42,13 @@ context('Admin user updates an existing user', () => {
     users.row(userToUpdate).username().click();
 
     // switch off everything we selected before
-    for (const role of userToUpdate.roles) {
+    userToUpdate.roles.forEach((role) => {
       editUser.role(role).click();
-    }
+    });
 
     editUser.role('checker').click();
-    editUser.firstname().type("{selectAll}{backspace}Homer");
-    editUser.surname().type("{selectAll}{backspace}Simpson");
+    editUser.firstname().type('{selectAll}{backspace}Homer');
+    editUser.surname().type('{selectAll}{backspace}Simpson');
 
     editUser.save().click();
 
@@ -60,6 +56,5 @@ context('Admin user updates an existing user', () => {
     users.row(userToUpdate).roles().invoke('text').then((text) => {
       expect(text.trim()).to.equal('checker');
     });
-
   });
 });

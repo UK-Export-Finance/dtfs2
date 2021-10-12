@@ -24,8 +24,6 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const getDeal = async (dealId, dealType) => {
   let deal;
 
-  console.log('TFM API getDeal ', dealId);
-
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
   }
@@ -44,7 +42,7 @@ const submitDealBeforeUkefIds = async (dealId, dealType) => {
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
-    console.error('TFM API submitDealBeforeUkefIds - deal not found');
+    console.error('TFM API - submitDealBeforeUkefIds - deal not found');
     return false;
   }
 
@@ -57,7 +55,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
-    console.error('TFM API submitDealAfterUkefIds - deal not found ', dealId);
+    console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
     return false;
   }
 
@@ -81,17 +79,16 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
 
-    let updatedDealWithCreateEstore = updatedDealWithUpdatedFacilities;
-
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
-    }
+    const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
+
+      //Submit Exporter detail to ACBS for AIN under GEF
+      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
       return updatedDeal;

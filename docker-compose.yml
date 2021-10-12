@@ -13,7 +13,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     ports:
       - "27017-27019:27017-27019"
@@ -32,7 +32,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5005
@@ -55,7 +55,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5003
@@ -92,7 +92,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
+          cpus: "0.2"
           memory: 600M
     entrypoint: npx nodemon src/index.js -L
 
@@ -112,7 +112,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
+          cpus: "0.2"
           memory: 700M
     environment:
       - DEAL_API_URL=http://portal-api:5001
@@ -137,7 +137,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 950M
     environment:
       - PORT=5001
@@ -180,7 +180,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5002
@@ -230,7 +230,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - DEAL_API_URL=http://portal-api:5001
@@ -268,7 +268,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
@@ -285,7 +285,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
 
   reverse-proxy:
@@ -302,7 +302,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.01'
+          cpus: "0.01"
           memory: 150M
 
   test-hook-api:
@@ -318,7 +318,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
     environment:
       - PORT=5069

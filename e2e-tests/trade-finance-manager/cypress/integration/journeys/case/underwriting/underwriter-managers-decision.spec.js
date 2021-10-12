@@ -1,4 +1,3 @@
-import moment from 'moment';
 import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
@@ -12,7 +11,7 @@ context('Case Underwriting - Pricing and risk', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
@@ -42,7 +41,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -61,7 +60,7 @@ context('Case Underwriting - Pricing and risk', () => {
     partials.caseSubNavigation.underwritingLink().click();
     partials.underwritingSubNav.underwriterManagerDecisionLink().click();
 
-    pages.managersDecisionPage.addDecisionLink().should('not.be.visible');
+    pages.managersDecisionPage.addDecisionLink().should('not.exist');
   });
 
   it('submitting an empty form displays validation errors', () => {
@@ -75,7 +74,7 @@ context('Case Underwriting - Pricing and risk', () => {
   it('selecting `Approve with conditions` radio button reveals comments input, throws validation error if no comment provided and persists radio selection', () => {
     pages.managersDecisionPage.addDecisionLink().click();
 
-    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
+    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.exist');
 
     pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
     pages.managersDecisionPage.commentsInputApproveWithConditions().should('be.visible');
@@ -92,7 +91,7 @@ context('Case Underwriting - Pricing and risk', () => {
   it('selecting `Decline` radio button reveals comments input, throws validation error if no comment provided  and persists radio selection', () => {
     pages.managersDecisionPage.addDecisionLink().click();
 
-    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.be.visible');
+    pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.exist');
 
     pages.managersDecisionPage.decisionRadioInputDecline().click();
     pages.managersDecisionPage.commentsInputDecline().should('be.visible');
@@ -133,7 +132,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     pages.managersDecisionPage.decisionDateTime().invoke('text').then((text) => {
-      const todayFormatted = moment().format('D MMMM YYYY');
+      const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
 
       expect(text.trim()).contains(todayFormatted);
     });

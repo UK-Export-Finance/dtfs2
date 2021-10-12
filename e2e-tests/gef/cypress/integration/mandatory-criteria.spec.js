@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -7,8 +6,6 @@ context('Mandatory Criteria Page', () => {
   before(() => {
     cy.reinsertMocks();
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -60,7 +57,6 @@ context('Mandatory Criteria Page', () => {
 
   describe('Clicking on Abandon', () => {
     it('takes the user back to the dashboard', () => {
-      cy.on('uncaught:exception', () => false);
       mandatoryCriteria.cancelButton().click();
       cy.url().should('eq', relative('/dashboard/gef'));
     });

@@ -18,17 +18,6 @@ let facility;
 
 context('View a deal', () => {
   before(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.deleteGefApplications(MAKER_LOGIN);
     cy.insertOneGefApplication(dummyDeal, MAKER_LOGIN).then((insertedDeal) => {
       deal = insertedDeal;

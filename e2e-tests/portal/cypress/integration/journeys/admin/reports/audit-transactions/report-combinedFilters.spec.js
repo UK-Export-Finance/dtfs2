@@ -1,35 +1,21 @@
-const { reports, defaults } = require('../../../../pages');
-const { auditTransactionsReport } = reports;
-
-const relative = require('../../../../relativeURL');
+const { reports: { auditTransactionsReport } } = require('../../../../pages');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-const BANK1_MAKER = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)') );
-const BANK2_MAKER = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2') );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
+const BANK1_MAKER = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const BANK2_MAKER = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated) 2'));
 
 // test data we want to set up + work with..
-let {
+const {
   aDealWithOneBond,
   aDealWithOneLoan,
   aDealWithOneLoanAndOneBond,
-  aDealWithTenBonds,
   aDealWithTenLoans,
   aDealWithTenLoansAndTenBonds,
- } = require('../../../../../fixtures/transaction-dashboard-data');
-
+} = require('../../../../../fixtures/transaction-dashboard-data');
 
 context('Audit - Transactions Report (viewed by an admin user)', () => {
-  let barclaysDeals, hsbcDeals;
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(ADMIN_LOGIN);
     cy.deleteDeals(BANK1_MAKER);
@@ -74,6 +60,5 @@ context('Audit - Transactions Report (viewed by an admin user)', () => {
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(0 items)');
     });
-
   });
 });

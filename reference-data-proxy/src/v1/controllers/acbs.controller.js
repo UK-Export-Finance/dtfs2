@@ -113,8 +113,6 @@ const createAcbsRecord = async (deal, bank) => {
 
 exports.createAcbsRecordPOST = async (req, res) => {
   const { deal, bank } = req.body;
-
   const { status, data } = await createAcbsRecord(deal, bank);
-
   return res.status(status).send(data);
 };

@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import eligibleAutomaticCover from './pages/eligible-automatic-cover';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -18,8 +16,6 @@ context('Eligible Automatic Cover Page', () => {
         applicationId = body.items[0]._id;
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

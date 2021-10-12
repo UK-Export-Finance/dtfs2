@@ -8,9 +8,9 @@ const {
   calculateExpectedGuaranteeFee,
   calculateExpectedUkefExposure,
 } = require('../../../../support/portal/sectionCalculations');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
   details: {
@@ -38,14 +38,9 @@ context('Bond Financial Details', () => {
   let deal;
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
@@ -57,7 +52,9 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/financial-details');
       cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
 
-      pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+      pages.bondFinancialDetails
+        .minimumRiskMarginFeeInput()
+        .type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/fee-details');

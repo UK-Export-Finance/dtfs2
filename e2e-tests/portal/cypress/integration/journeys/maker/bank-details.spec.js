@@ -1,19 +1,12 @@
 const { bankDetails, contract, contractCheckDealDetails } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
-
 const mockUsers = require('../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Create deal', () => {
   const TOTAL_FORM_FIELDS = 2;
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
@@ -56,20 +49,19 @@ context('Create deal', () => {
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
 
-    //confirm deal is in the correct starting state..
+    // confirm deal is in the correct starting state..
     contract.aboutSupplierDetailsStatus().should(
-      (status) => expect(status).to.contain('Not started')
+      (status) => expect(status).to.contain('Not started'),
     );
 
     contract.eligibilityStatus().should(
-      (status) => expect(status).to.contain('Not started')
+      (status) => expect(status).to.contain('Not started'),
     );
 
     // confirm that the data we've entered appears on the preview page
     contract.checkDealDetailsTab().click();
     contractCheckDealDetails.header().invoke('text').then((text) => {
-      expect(text.trim()).equal(`Supply Contract name: TESTING`);
+      expect(text.trim()).equal('Supply Contract name: TESTING');
     });
-
   });
 });

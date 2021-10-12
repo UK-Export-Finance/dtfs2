@@ -1,4 +1,3 @@
-import moment from 'moment';
 import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
@@ -8,12 +7,11 @@ import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const TOTAL_DEFAULT_AIN_TASKS = 2;
 
-const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new Promise((resolve) => {
+const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new Cypress.Promise((resolve) => {
   cy.getUser(differentUserInSameTeam.username).then((userObj) => {
     const differentUserInSameTeamObj = userObj;
 
     // choose a user in `assigned to` select input, that is not the currently logged in
-    // eslint-disable-next-line no-underscore-dangle
     pages.taskPage.assignedToSelectInput().select(differentUserInSameTeamObj._id);
     pages.taskPage.taskStatusRadioInputInProgress().click();
 
@@ -37,13 +35,13 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
 
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
 
-    loggedInUserTeamName = businessSupportUser.teams[0]; // eslint-disable-line
+    [loggedInUserTeamName] = businessSupportUser.teams;
     usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
   });
 
@@ -67,7 +65,7 @@ context('Case tasks - AIN deal', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -215,7 +213,7 @@ context('Case tasks - AIN deal', () => {
 
     assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then((userObj) => {
       const { firstName, lastName } = userObj;
-      cy.wait(100); // for some reason this prevents flaky test
+      // cy.wait(100); // for some reason this prevents flaky test
 
       pages.tasksPage.filterRadioYourTeam().click();
 
@@ -316,7 +314,7 @@ context('Case tasks - AIN deal', () => {
       const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
 
       assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
-        cy.wait(100); // for some reason this prevents flaky test
+        // cy.wait(100); // for some reason this prevents flaky test
 
         pages.tasksPage.filterRadioYourTeam().click();
 
@@ -383,7 +381,7 @@ context('Case tasks - AIN deal', () => {
 
     firstTask = pages.tasksPage.tasks.row(1, 1);
 
-    const expectedDate = moment().format('DD MMM YYYY');
+    const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
 
     firstTask.dateStarted().invoke('text').then((text) => {
       expect(text.trim()).to.equal(expectedDate);

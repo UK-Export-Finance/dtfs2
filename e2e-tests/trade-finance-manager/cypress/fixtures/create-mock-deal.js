@@ -1,8 +1,7 @@
-import moment from 'moment';
 import MOCK_DEAL_AIN from './deal-AIN';
 
 const createMockDeal = (overrides) => {
-  let submissionDate = moment().utc().valueOf().toString();
+  let submissionDate = new Date().valueOf().toString();
   let facilities = [
     { ...MOCK_DEAL_AIN.mockFacilities[0] },
   ];

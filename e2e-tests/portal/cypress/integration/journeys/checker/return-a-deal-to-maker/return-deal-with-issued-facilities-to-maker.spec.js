@@ -15,21 +15,13 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     loans: [],
   };
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
 
     cy.insertOneDeal(dealWithSomeIssuedFacilitiesReadyForReview, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealWithSomeIssuedFacilitiesReadyForReview;
 
@@ -45,11 +37,11 @@ context('A checker selects to return a deal (with some issued facilities) to mak
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -58,8 +50,8 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     pages.contract.visit(deal);
 
     // expect Unissued Bonds (that need to 'Issue Facility') to have correct status
-    const unissuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Unissued'); // eslint-disable-line no-underscore-dangle
-    const unissuedBondId = unissuedBond._id; // eslint-disable-line no-underscore-dangle
+    const unissuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Unissued');
+    const unissuedBondId = unissuedBond._id;
     const unissuedBondRow = pages.contract.bondTransactionsTable.row(unissuedBondId);
 
     unissuedBondRow.bondStatus().invoke('text').then((text) => {
@@ -67,8 +59,8 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Issued Bonds (that do not need to 'Issue Facility') to have correct status
-    const issuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued'); // eslint-disable-line no-underscore-dangle
-    const issuedBondId = issuedBond._id; // eslint-disable-line no-underscore-dangle
+    const issuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued');
+    const issuedBondId = issuedBond._id;
     const issuedBondRow = pages.contract.bondTransactionsTable.row(issuedBondId);
 
     issuedBondRow.bondStatus().invoke('text').then((text) => {
@@ -76,8 +68,8 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Conditional Loans (that need to 'Issue Facility') to have correct status
-    const conditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Conditional'); // eslint-disable-line no-underscore-dangle
-    const conditionalLoanId = conditionalLoan._id; // eslint-disable-line no-underscore-dangle
+    const conditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Conditional');
+    const conditionalLoanId = conditionalLoan._id;
     const conditionalLoanRow = pages.contract.loansTransactionsTable.row(conditionalLoanId);
 
     conditionalLoanRow.loanStatus().invoke('text').then((text) => {
@@ -85,8 +77,8 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Unconditional Loans (that do not need to 'Issue Facility') to have correct status
-    const unconditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional'); // eslint-disable-line no-underscore-dangle
-    const unconditionalLoanId = unconditionalLoan._id; // eslint-disable-line no-underscore-dangle
+    const unconditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional');
+    const unconditionalLoanId = unconditionalLoan._id;
     const unconditionalLoanRow = pages.contract.loansTransactionsTable.row(unconditionalLoanId);
 
     unconditionalLoanRow.loanStatus().invoke('text').then((text) => {

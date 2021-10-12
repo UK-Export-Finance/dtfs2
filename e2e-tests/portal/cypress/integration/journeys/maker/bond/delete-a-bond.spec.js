@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
@@ -6,6 +5,8 @@ const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+
+const now = new Date().valueOf();
 
 const MOCK_DEAL = {
   details: {
@@ -21,7 +22,7 @@ const MOCK_DEAL = {
   mockFacilities: [
     {
       facilityType: 'bond',
-      createdDate: moment().utc().valueOf(),
+      createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -43,7 +44,7 @@ const MOCK_DEAL = {
     },
     {
       facilityType: 'bond',
-      createdDate: moment().utc().valueOf(),
+      createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -65,7 +66,7 @@ const MOCK_DEAL = {
     },
     {
       facilityType: 'bond',
-      createdDate: moment().utc().valueOf(),
+      createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -97,16 +98,11 @@ context('Delete a Bond', () => {
   };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = MOCK_DEAL;
 
@@ -121,7 +117,7 @@ context('Delete a Bond', () => {
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
       if (facility._id !== bondToDeleteId) {
-        cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+        cy.deleteFacility(facility._id, MAKER_LOGIN);
       }
     });
   });
@@ -132,7 +128,7 @@ context('Delete a Bond', () => {
 
     pages.contract.bondTransactionsTableRows().should('have.length', 3);
 
-    bondToDeleteId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    bondToDeleteId = dealFacilities.bonds[0]._id;
     const bondToDeleteRow = pages.contract.bondTransactionsTable.row(bondToDeleteId);
 
     bondToDeleteRow.deleteLink().click();

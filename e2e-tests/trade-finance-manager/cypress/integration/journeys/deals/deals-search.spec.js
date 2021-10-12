@@ -1,7 +1,7 @@
-import moment from 'moment';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
+import { nowPlusDays } from '../../../support/utils/dateFuncs';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_USERS from '../../../fixtures/users';
@@ -54,12 +54,12 @@ context('User can view and filter multiple deals', () => {
     ],
   });
 
-  const yesterday = moment().subtract(1, 'day');
+  const yesterday = nowPlusDays(-1);
 
   const DEAL_SUBMITTED_YESTERDAY = createMockDeal({
     details: {
       testId: 'DEAL_SUBMITTED_YESTERDAY',
-      submissionDate: moment(yesterday).utc().valueOf().toString(),
+      submissionDate: yesterday.valueOf().toString(),
     },
   });
 
@@ -105,7 +105,7 @@ context('User can view and filter multiple deals', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(_id, MOCK_MAKER_TFM);
     });
     cy.deleteTfmDeals();
   });
@@ -263,7 +263,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by date received in DD/MM/YYYY format', () => {
-    const todayFormatted = moment().format('DD/MM/YYYY');
+    const todayFormatted = new Date().toLocaleDateString('en-GB');
 
     const searchString = todayFormatted;
 
@@ -283,7 +283,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by date received in DD-MM-YYYY format', () => {
-    const todayFormatted = moment().format('DD-MM-YYYY');
+    const todayFormatted = new Date().toLocaleDateString('en-GB');
 
     const searchString = todayFormatted;
 

@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import facilityGuarantee from './pages/facility-guarantee';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -27,8 +25,6 @@ context('Facility Guarantee Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -54,7 +50,7 @@ context('Facility Guarantee Page', () => {
 
     it('hides back button when visiting page with `change` query', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee?status=change`));
-      facilityGuarantee.backLink().should('not.be', 'visible');
+      facilityGuarantee.backLink().should('not.exist');
     });
 
     it('displays errors when the fee type and day count are not selected', () => {

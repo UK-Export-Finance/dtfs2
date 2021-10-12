@@ -11,20 +11,13 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
   let deal;
   let dealId;
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
 
     cy.insertOneDeal(theDeal, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
       });
   });
 

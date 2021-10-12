@@ -1,8 +1,8 @@
-const moment = require('moment');
 const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 
 module.exports = () => {
-  const now = moment();
+  const now = new Date();
 
   // doing a complete serialize+deserialize here...
   // ran into issues destructuring things into our new object; cypress was keeping references
@@ -11,15 +11,15 @@ module.exports = () => {
 
   deal.details.submissionCount = 0;
 
-  deal.submissionDetails['supplyContractConversionDate-day'] = `${now.format('DD')}`;
-  deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
-  deal.submissionDetails['supplyContractConversionDate-year'] = `${now.format('YYYY')}`;
+  deal.submissionDetails['supplyContractConversionDate-day'] = now.getDate();
+  deal.submissionDetails['supplyContractConversionDate-month'] = now.getMonth() + 1;
+  deal.submissionDetails['supplyContractConversionDate-year'] = now.getFullYear();
 
-  deal.loanTransactions.items[0].requestedCoverStartDate = moment().utc().valueOf();
+  deal.loanTransactions.items[0].requestedCoverStartDate = now.valueOf();
 
-  const aMonthInTheFuture = moment().add(1, 'month');
-  deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.format('DD');
-  deal.loanTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture.format('MM');
-  deal.loanTransactions.items[0]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
+  const aMonthInTheFuture = nowPlusMonths(1);
+  deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.getDate();
+  deal.loanTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
+  deal.loanTransactions.items[0]['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
   return deal;
 };
