@@ -31,7 +31,7 @@ const sortDeals = (deals, sortBy) =>
     return 0;
   });
 
-const findDeals = async (searchString, sortBy, callback) => {
+const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
   let dealsArray;
@@ -68,7 +68,42 @@ const findDeals = async (searchString, sortBy, callback) => {
 
     dealsArray = await dealsCollection.find(query).toArray();
   } else {
-    dealsArray = await dealsCollection.find().toArray();
+    let query;
+
+    if (fieldQueries.length) {
+      fieldQueries.forEach((field) => {
+        query = {
+          ...query,
+          [field.name]: {
+            $eq: field.value,
+          }
+        }
+      });
+    }
+
+    // REQUIREMENT: any deals received by TFM on a single specific day
+    // DONE. tfm.dateReceived
+
+    // TODO
+    // REQUIREMENT: any changed on a single, specific day
+    // TODO: align BSS and GEF.
+    // GEF: dealSnapshot.updatedAt // 1634052168113.0 - number
+    // BSS: dealSnapshot.details.dateOfLastAction // 1596805840467 - string
+
+    // TODO
+    // REQUIREMENT: any deals that had eligibiltiy criteria changed on a single, specific day
+    // TBD....
+    // BSS: dealSnapshot.eligibilityLastUpdated
+    // GEF: dealSnapshot.eligibilityLastUpdated
+
+    // TODO
+    // REQUIREMENT: any deals that had any facilities changed on a single, specific day
+    // TBD....
+    // BSS: dealSnapshot.facilitiesLastUpdated
+    // GEF: dealSnapshot.facilitiesLastUpdated
+
+
+    dealsArray = await dealsCollection.find(query).toArray();
   }
 
   deals = dealsArray;
@@ -88,10 +123,15 @@ exports.findDeals = findDeals;
 exports.findDealsGet = async (req, res) => {
   let searchStr;
   let sortByObj;
+  let fieldQueries;
 
   if (req.body.queryParams) {
     if (req.body.queryParams.searchString) {
       searchStr = req.body.queryParams.searchString;
+    }
+
+    if (req.body.queryParams.byField) {
+      fieldQueries = req.body.queryParams.byField;
     }
 
     if (req.body.queryParams.sortBy) {
@@ -99,7 +139,7 @@ exports.findDealsGet = async (req, res) => {
     }
   }
 
-  const deals = await findDeals(searchStr, sortByObj);
+  const deals = await findDeals(searchStr, sortByObj, fieldQueries);
 
   if (deals) {
     return res.status(200).send({

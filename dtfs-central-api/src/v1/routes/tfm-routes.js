@@ -228,6 +228,9 @@ tfmRouter.route('/deals/:id/snapshot')
  *                   searchString:
  *                     type: string
  *                     example: HSBC bank
+ *                   field:
+ *                     type: object
+ *                     example: { dateReceived: '25-12-2021' }
  *                   sortBy:
  *                     type: object
  *                     example: { order: ascending }
