@@ -5,6 +5,12 @@ const CONSTANTS = require('../../constants');
 const getDeals = async (req, res) => {
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
+    byField: [
+      {
+        name: 'tfm.dateReceived',
+        value: '11-10-2021', // eslint-disable-line
+      },
+    ],
   };
 
   const apiResponse = await api.getDeals(queryParams);
@@ -33,7 +39,15 @@ const queryDeals = async (req, res) => {
     searchString = req.body.search;
   }
 
-  const queryParams = { searchString };
+  // const queryParams = { searchString };
+  const queryParams = {
+    byField: [
+      {
+        name: 'tfm.dateReceived',
+        value: '11-10-2021', // eslint-disable-line
+      },
+    ],
+  };
 
   if (req.body.descending || req.body.ascending) {
     const sortBy = Object.getOwnPropertyNames(req.body)[0];
