@@ -26,7 +26,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   const underwriterFullName = `${underwriter.firstName} ${underwriter.lastName}`;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
 
     cy.getUser(underwriterManager1.username).then((userObj) => {
       underwriterManager1UserId = userObj._id;
@@ -56,7 +56,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -82,8 +82,8 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter`));
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
 
-    pages.leadUnderwriterPage.assignLeadUnderwriterLink().should('not.be.visible');
-    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.be.visible');
+    pages.leadUnderwriterPage.assignLeadUnderwriterLink().should('not.exist');
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.exist');
   });
 
   it('underwriter manager can assign an underwriter as the lead underwriter. Submitted lead underwriter details are displayed after submit', () => {
@@ -91,7 +91,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter`));
 
     pages.leadUnderwriterPage.assignLeadUnderwriterLink().should('be.visible');
-    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.be.visible');
+    pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.exist');
 
     // go to lead underwriter assign page/form
     pages.leadUnderwriterPage.assignLeadUnderwriterLink().click();

@@ -13,20 +13,13 @@ context('Portal to TFM deal submission', () => {
   let dealId;
   const dealFacilities = [];
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       MOCK_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
@@ -81,7 +74,7 @@ context('Portal to TFM deal submission', () => {
     // deal facilities with non-GBP currency display GBP and non-GBP currency values
     //---------------------------------------------------------------
     const facilityWithNonGBPCurrency = dealFacilities.find((facility) => facility.currency.code !== 'GBP');
-    const facilityId = facilityWithNonGBPCurrency._id; // eslint-disable-line no-underscore-dangle
+    const facilityId = facilityWithNonGBPCurrency._id;
     const facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
     facilityRow.facilityId().click();

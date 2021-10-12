@@ -6,12 +6,6 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Dashboard BSS Deals', () => {
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.deleteDeals(MAKER_LOGIN);
   });
 

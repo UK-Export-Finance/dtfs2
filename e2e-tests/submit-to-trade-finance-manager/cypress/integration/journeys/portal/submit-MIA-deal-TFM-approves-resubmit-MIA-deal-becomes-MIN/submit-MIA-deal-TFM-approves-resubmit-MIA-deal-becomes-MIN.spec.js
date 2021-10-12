@@ -1,4 +1,3 @@
-import moment from 'moment';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
@@ -18,28 +17,21 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
   let bondId;
   let loanId;
-  const todayFormatted = moment().format('DD/MM/YYYY');
-
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
+  const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric' });
 
   before(() => {
     cy.insertManyDeals([
       MOCK_MIA_DEAL_READY_TO_SUBMIT(),
     ], MAKER)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
-          createdFacilities.map((facility) => {
+          createdFacilities.forEach((facility) => {
             const { facilityType } = facility;
 
             if (facilityType === 'bond') {

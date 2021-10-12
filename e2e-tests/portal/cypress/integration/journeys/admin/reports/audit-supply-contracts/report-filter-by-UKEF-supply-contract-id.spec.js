@@ -1,29 +1,16 @@
-const { reports, defaults } = require('../../../../pages');
-const { auditSupplyContracts } = reports;
-
-const relative = require('../../../../relativeURL');
-
+const { reports } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
-
 // test data we want to set up + work with..
 const transactionTestData = require('../../../../../fixtures/transaction-dashboard-data');
 
+const { auditSupplyContracts } = reports;
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
+
 context('Audit - Report', () => {
-  let deals;
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(ADMIN_LOGIN);
-    cy.insertManyDeals(transactionTestData.all, ADMIN_LOGIN)
-      .then((insertedDeals) => deals = insertedDeals);
+    cy.insertManyDeals(transactionTestData.all, ADMIN_LOGIN);
   });
 
   it('can be filtered by UKEF supply contract id', () => {
@@ -41,6 +28,5 @@ context('Audit - Report', () => {
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');
     });
-
   });
 });

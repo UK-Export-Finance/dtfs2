@@ -6,16 +6,13 @@ module.exports = (deals, opts) => {
   logIn(opts).then((token) => {
     const persisted = [];
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const dealToInsert of deals) {
+    deals.forEach((dealToInsert) => {
       insertDeal(dealToInsert, token).then((insertedDeal) => {
         getDeal(insertedDeal._id, token).then(({ deal }) => {
           persisted.push(deal);
-          if (persisted.length === deals.length) {
-            return persisted;
-          }
+          return persisted;
         });
       });
-    }
+    });
   });
 };

@@ -1,12 +1,11 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 const relative = require('../../../relativeURL');
 const fillLoanForm = require('./fill-loan-forms');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
   details: {
@@ -24,14 +23,9 @@ context('Add a Loan to a Deal', () => {
   let deal;
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
@@ -84,13 +78,9 @@ context('Add a Loan to a Deal', () => {
       });
 
       row.requestedCoverStartDate().invoke('text').then((text) => {
-        const momentDate = moment().set({
-          date: Number(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay),
-          month: Number(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth) - 1, // months are zero indexed
-          year: Number(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear),
-        });
+        const coverStartDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
 
-        expect(text.trim()).equal(momentDate.format('DD/MM/YYYY'));
+        expect(text.trim()).equal(coverStartDate);
       });
 
       row.coverEndDate().invoke('text').then((text) => {

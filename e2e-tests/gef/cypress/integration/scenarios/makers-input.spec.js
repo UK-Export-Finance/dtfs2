@@ -22,8 +22,6 @@ context('Review application when returned to maker', () => {
           applicationIds.push(item._id);
         });
       });
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -45,7 +43,6 @@ context('Review application when returned to maker', () => {
     cy.login(CREDENTIALS.MAKER);
 
     cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
-    cy.on('uncaught:exception', () => false);
   });
 
   describe('DTFS2-4536 Review AIN when returned to maker', () => {

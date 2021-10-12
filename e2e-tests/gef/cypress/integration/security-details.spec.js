@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import securityDetails from './pages/security-details';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -18,8 +17,6 @@ context('Security Details Page', () => {
         applicationId = body.items[2]._id;
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

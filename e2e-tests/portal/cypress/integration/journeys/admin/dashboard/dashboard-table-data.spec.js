@@ -1,5 +1,4 @@
 const { dashboard } = require('../../../pages');
-const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 
@@ -16,16 +15,10 @@ context('Admin dashboard', () => {
   };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     // clear down our test users old deals, and insert a new one - updating our deal object
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
     cy.deleteGefApplications(MAKER_LOGIN);
   });
 

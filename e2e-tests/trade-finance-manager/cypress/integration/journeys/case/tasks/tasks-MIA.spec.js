@@ -35,13 +35,13 @@ context('Case tasks - MIA deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
 
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
 
-    loggedInUserTeamName = businessSupportUser.teams[0]; // eslint-disable-line
+    [loggedInUserTeamName] = businessSupportUser.teams;
     usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
   });
 
@@ -65,7 +65,7 @@ context('Case tasks - MIA deal', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -181,21 +181,21 @@ context('Case tasks - MIA deal', () => {
 
         const lastTaskRow = pages.tasksPage.tasks.row(previousGroupId, lastTaskIdInPreviousGroup);
 
-        lastTaskRow.link().should('not.be.visible');
+        lastTaskRow.link().should('not.exist');
       }
     } else if (currentTaskId !== 1) {
       const previousTaskId = currentTaskId - 1;
 
       const lastTaskRow = pages.tasksPage.tasks.row(currentGroupId, previousTaskId);
 
-      lastTaskRow.link().should('not.be.visible');
+      lastTaskRow.link().should('not.exist');
     }
   };
 
   const assertCompleteTask = (groupId, taskId) => {
     const row = pages.tasksPage.tasks.row(groupId, taskId);
 
-    row.link().should('not.be.visible');
+    row.link().should('not.exist');
 
     row.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Done');
@@ -239,7 +239,7 @@ context('Case tasks - MIA deal', () => {
 
       const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
 
-      nextGroupFirstTaskRow.link().should('not.be.visible');
+      nextGroupFirstTaskRow.link().should('not.exist');
 
       nextGroupFirstTaskRow.status().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Cannot start yet');
@@ -250,7 +250,7 @@ context('Case tasks - MIA deal', () => {
 
       const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
 
-      nextTaskRow.link().should('not.be.visible');
+      nextTaskRow.link().should('not.exist');
 
       nextTaskRow.status().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Cannot start yet');
@@ -295,7 +295,7 @@ context('Case tasks - MIA deal', () => {
     const group3Tasks = new Array(MIA_TASKS_STRUCTURE[3].totalGroupTasks);
     const group4Tasks = new Array(MIA_TASKS_STRUCTURE[4].totalGroupTasks);
 
-    cy.wrap(group1Tasks).each((task, index) => {
+    cy.wrap(group1Tasks).each((_, index) => {
       const taskId = index + 1;
       return new Cypress.Promise((resolve) => {
         submitTaskCompleteAndAssertOtherTasks(1, taskId);
@@ -303,7 +303,7 @@ context('Case tasks - MIA deal', () => {
       });
     });
 
-    cy.wrap(group2Tasks).each((task, index) => {
+    cy.wrap(group2Tasks).each((_, index) => {
       const taskId = index + 1;
       return new Cypress.Promise((resolve) => {
         submitTaskCompleteAndAssertOtherTasks(2, taskId);
@@ -311,7 +311,7 @@ context('Case tasks - MIA deal', () => {
       });
     });
 
-    cy.wrap(group3Tasks).each((task, index) => {
+    cy.wrap(group3Tasks).each((_, index) => {
       const taskId = index + 1;
       return new Cypress.Promise((resolve) => {
         submitTaskCompleteAndAssertOtherTasks(3, taskId);
@@ -319,7 +319,7 @@ context('Case tasks - MIA deal', () => {
       });
     });
 
-    cy.wrap(group4Tasks).each((task, index) => {
+    cy.wrap(group4Tasks).each((_, index) => {
       const taskId = index + 1;
       return new Cypress.Promise((resolve) => {
         submitTaskCompleteAndAssertOtherTasks(4, taskId);

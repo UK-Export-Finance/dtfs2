@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import ineligibleGef from './pages/ineligible-gef';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -6,11 +5,9 @@ import CREDENTIALS from '../fixtures/credentials.json';
 context('Ineligible GEF Page', () => {
   before(() => {
     cy.login(CREDENTIALS.MAKER);
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => false);
     Cypress.Cookies.preserveOnce('connect.sid');
     cy.visit(relative('/gef/ineligible-gef'));
   });

@@ -16,8 +16,6 @@ context('Ineligible Automatic Cover Page', () => {
         applicationId = body.items[0]._id;
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {

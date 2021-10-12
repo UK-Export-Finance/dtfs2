@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import facilityCurrency from './pages/facility-currency';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -27,8 +25,6 @@ context('Facility Currency Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -42,7 +38,7 @@ context('Facility Currency Page', () => {
       facilityCurrency.headingCaption();
       facilityCurrency.mainHeading().contains('cash');
       facilityCurrency.mainHeading().should('not.contain', 'contingent');
-      facilityCurrency.hiddenFacilityType().should('be', 'invisible');
+      facilityCurrency.hiddenFacilityType().should('not.be.visible');
       facilityCurrency.form();
       facilityCurrency.continueButton();
       facilityCurrency.saveAndReturnButton();
@@ -81,7 +77,7 @@ context('Facility Currency Page', () => {
 
     it('hides back button if visiting page with `change` query', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency?status=change`));
-      facilityCurrency.backLink().should('not.be', 'visible');
+      facilityCurrency.backLink().should('not.exist');
     });
   });
 
@@ -93,7 +89,7 @@ context('Facility Currency Page', () => {
       facilityCurrency.mainHeading().contains('contingent');
       facilityCurrency.mainHeading().should('not.contain', 'cash');
       facilityCurrency.form();
-      facilityCurrency.hiddenFacilityType().should('be', 'invisible');
+      facilityCurrency.hiddenFacilityType().should('not.be.visible');
       facilityCurrency.continueButton();
       facilityCurrency.saveAndReturnButton();
     });

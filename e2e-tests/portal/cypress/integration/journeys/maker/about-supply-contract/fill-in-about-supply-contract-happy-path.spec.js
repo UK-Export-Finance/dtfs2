@@ -4,7 +4,7 @@ const {
 const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker')) );
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
@@ -12,32 +12,24 @@ const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 context('about-supply-contract', () => {
   let deal;
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
-    const aDealWith_AboutSupplyContract_InStatus = (status) => {
+    const aDealWithAboutSupplyContractInStatus = (status) => {
       const candidates = twentyOneDeals
-        .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
-        .filter((deal) => (deal.details && deal.details.status === 'Draft'))
-        .filter((deal) => (deal.details && !deal.details.submissionDate));
+        .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
+          && (aDeal.details && aDeal.details.status === 'Draft')
+          && (aDeal.details && !aDeal.details.submissionDate));
 
-      const deal = candidates[0];
-      if (!deal) {
+      const aDeal = candidates[0];
+      if (!aDeal) {
         throw new Error('no suitable test data found');
       } else {
-        return deal;
+        return aDeal;
       }
     };
 
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not started'), MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), MAKER_LOGIN)
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, using the companies house search.', () => {

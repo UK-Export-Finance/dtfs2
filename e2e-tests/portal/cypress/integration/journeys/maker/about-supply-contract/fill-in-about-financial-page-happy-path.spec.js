@@ -1,5 +1,5 @@
 const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview, defaults,
+  contract, contractAboutFinancial, contractAboutPreview, defaults,
 } = require('../../../pages');
 const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -11,14 +11,6 @@ const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json')
 
 context('about-supply-contract', () => {
   let deal;
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
 
   before(() => {
     console.log(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));

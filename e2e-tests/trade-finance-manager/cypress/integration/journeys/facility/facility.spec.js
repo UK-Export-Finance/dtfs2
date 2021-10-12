@@ -9,7 +9,7 @@ context('Facility page', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
@@ -31,12 +31,12 @@ context('Facility page', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
   it('renders case summary with deal data', () => {
-    const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+    const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     // check that a couple of case summary elements have data
@@ -53,7 +53,7 @@ context('Facility page', () => {
   });
 
   it('user can navigate back to parties page via sub navigation', () => {
-    const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+    const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     partials.caseSubNavigation.partiesLink().click();

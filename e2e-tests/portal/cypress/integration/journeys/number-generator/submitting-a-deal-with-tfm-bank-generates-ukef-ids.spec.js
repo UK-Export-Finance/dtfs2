@@ -15,19 +15,11 @@ context.skip('A TFM checker submits a deal', () => {
     loans: [],
   };
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([dealReadyToSubmit()], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = dealReadyToSubmit();
 
@@ -43,11 +35,11 @@ context.skip('A TFM checker submits a deal', () => {
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -77,7 +69,7 @@ context.skip('A TFM checker submits a deal', () => {
       expect(text.trim()).not.to.equal(' ');
     });
 
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.ukefFacilityId().invoke('text').then((text) => {
@@ -85,7 +77,7 @@ context.skip('A TFM checker submits a deal', () => {
       expect(text.trim()).not.to.equal(' ');
     });
 
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.ukefFacilityId().invoke('text').then((text) => {
