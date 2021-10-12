@@ -46,7 +46,10 @@ const facilityUpdate = (facility, acbsFacility, obligorName) => ({
   issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
   facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
   foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
-  productTypeName: facility.facilityType || facility.facilitySnapshot.type,
+  productTypeName:
+    facility.facilityType ||
+    facility.facilitySnapshot.type ||
+    facility.facilitySnapshot.facilityType,
   obligorName,
 });
 

@@ -452,7 +452,6 @@ const updateACBSfacility = async (facility, supplierName) => {
     try {
       const response = await axios({
         method: 'post',
-        // eslint-disable-next-line no-underscore-dangle
         url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityID}/issue`,
         headers: {
           'Content-Type': 'application/json',

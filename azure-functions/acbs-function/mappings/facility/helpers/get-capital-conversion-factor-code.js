@@ -1,9 +1,10 @@
 const CONSTANTS = require('../../../constants');
 
 const getCapitalConversionFactorCode = (facility) => {
-  const type = facility.facilitySnapshot.type
-    ? facility.facilitySnapshot.type
-    : facility.facilitySnapshot.facilityType;
+  const type =
+    facility.facilityType ||
+    facility.facilitySnapshot.type ||
+    facility.facilitySnapshot.facilityType;
 
   switch (type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
