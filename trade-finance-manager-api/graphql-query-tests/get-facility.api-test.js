@@ -177,7 +177,6 @@ describe('graphql query - get facility', () => {
       dayCountBasis: null,
       feeFrequency: null,
       firstDrawdownAmountInExportCurrency: null,
-      guaranteeFeePayableToUkef: null,
     };
 
     expect(data.facility.facilitySnapshot).toEqual(expectedSnapshot);

@@ -3,6 +3,7 @@ const mapFacilityStage = require('../facilities/mapFacilityStage');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
+const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
 
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
@@ -28,6 +29,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     type: facilityType,
     ukefFacilityId,
     ukefExposure,
+    guaranteeFee,
   } = facilitySnapshot;
 
   const formattedFacilityValue = formattedNumber(value);
@@ -53,6 +55,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       facilityValueExportCurrency: `${currency} ${formattedFacilityValue}`,
       facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
       feeType: mapGefFacilityFeeType(paymentType),
+      guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
 
       // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(facilityType),
