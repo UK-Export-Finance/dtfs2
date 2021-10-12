@@ -62,7 +62,6 @@ describe('page specific validation errors', () => {
       expect(result).toEqual(true);
     });
 
-
     it('should return false when field values length is NOT greater than 0', () => {
       const mockFields = { ...FIELDS.FEE_DETAILS };
 

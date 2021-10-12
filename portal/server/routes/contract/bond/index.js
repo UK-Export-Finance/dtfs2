@@ -520,5 +520,4 @@ router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
-
 module.exports = router;

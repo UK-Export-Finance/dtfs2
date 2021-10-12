@@ -51,7 +51,6 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
     });
   });
 
-
   describe('when a loan has been submitted and has `Maker\'s input required` status', () => {
     it('should return true', () => {
       const mockDeal = {

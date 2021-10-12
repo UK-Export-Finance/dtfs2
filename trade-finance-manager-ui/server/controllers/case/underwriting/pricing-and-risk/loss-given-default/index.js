@@ -68,7 +68,6 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
       }],
     };
 
-
     return res.render('case/underwriting/pricing-and-risk/loss-given-default.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',

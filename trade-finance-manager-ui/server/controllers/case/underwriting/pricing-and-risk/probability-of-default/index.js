@@ -66,7 +66,6 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
       }],
     };
 
-
     return res.render('case/underwriting/pricing-and-risk/probability-of-default.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
