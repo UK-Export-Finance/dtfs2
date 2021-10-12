@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import enterExportersCorAddress from './pages/enter-exporters-corr-address';
 import applicationDetails from './pages/application-details';
@@ -7,7 +5,6 @@ import exportersAddress from './pages/exporters-address';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 let applicationIds = [];
-let exporterId;
 let token;
 
 context('Enter Exporters Correspondence Address Page', () => {
@@ -25,8 +22,6 @@ context('Enter Exporters Correspondence Address Page', () => {
         // exporterId = body.items[0].exporterId;
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -50,12 +45,11 @@ context('Enter Exporters Correspondence Address Page', () => {
     });
 
     // Skipping test until cy Referer not being passed bug is fixed
-    xit('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}`));
-
+    it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       enterExportersCorAddress.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
     });
+
     // Next test is a fudge while Referer cant be set in cy.visit({headers}) (test above) replace when possible
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
@@ -89,8 +83,6 @@ context('Enter Exporters Correspondence Address Page', () => {
           });
         });
       cy.login(CREDENTIALS.MAKER);
-      cy.on('uncaught:exception', () => false);
-
 
       cy.visit(relative(`/gef/application-details/${applicationIds[1].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.addressLine1().should('have.value', 'Line 1');
@@ -137,7 +129,7 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address?status=change`));
-      enterExportersCorAddress.backLink().should('not.be.visible');
+      enterExportersCorAddress.backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {

@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import exportersAddress from './pages/exporters-address';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -18,9 +16,6 @@ context('Exporters Address Page', () => {
         applicationId = body.items[2]._id; // 3rd application contains an exporter with address
       });
     cy.login(CREDENTIALS.MAKER);
-
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -77,7 +72,7 @@ context('Exporters Address Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`));
     });
 
-    xit('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
+    it('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type('E1 6JE');
       exportersAddress.continueButton().click();

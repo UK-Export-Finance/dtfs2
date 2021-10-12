@@ -1,19 +1,10 @@
-const { reports, defaults } = require('../../../../pages');
-const { reconciliationReport } = reports;
-
-const relative = require('../../../../relativeURL');
-
+const { reports: { reconciliationReport }, defaults } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 context('reconciliation report', () => {
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.deleteDeals(ADMIN_LOGIN);
   });
 

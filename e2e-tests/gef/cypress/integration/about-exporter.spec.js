@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -21,8 +19,6 @@ context('About Exporter Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -61,7 +57,7 @@ context('About Exporter Page', () => {
 
     it('displays no industry options', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
-      aboutExporter.industries().should('be', 'invisible');
+      aboutExporter.industries().should('not.exist');
     });
   });
 

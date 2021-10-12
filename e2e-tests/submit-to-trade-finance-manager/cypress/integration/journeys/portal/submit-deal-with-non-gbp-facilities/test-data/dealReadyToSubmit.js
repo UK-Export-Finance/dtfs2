@@ -1,35 +1,35 @@
-const moment = require('moment');
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 const dealThatJustNeedsDates = require('./dealThatJustNeedsDates');
 
 module.exports = () => {
-  const now = moment();
+  const now = new Date();
 
-  const deal = JSON.parse(JSON.stringify(dealThatJustNeedsDates));
+  const deal = { ...dealThatJustNeedsDates };
 
-  deal.submissionDetails['supplyContractConversionDate-day'] = `${now.format('DD')}`;
-  deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
-  deal.submissionDetails['supplyContractConversionDate-year'] = `${now.format('YYYY')}`;
+  deal.submissionDetails['supplyContractConversionDate-day'] = now.getDate();
+  deal.submissionDetails['supplyContractConversionDate-month'] = now.getMonth() + 1;
+  deal.submissionDetails['supplyContractConversionDate-year'] = now.getFullYear();
 
-  deal.mockFacilities[0].requestedCoverStartDate = moment().utc().valueOf();
-  deal.mockFacilities[1].requestedCoverStartDate = moment().utc().valueOf();
+  deal.mockFacilities[0].requestedCoverStartDate = now.valueOf();
+  deal.mockFacilities[1].requestedCoverStartDate = now.valueOf();
 
-  const aMonthInTheFuture = moment().add(1, 'month');
+  const aMonthInTheFuture = nowPlusMonths(1);
 
-  deal.mockFacilities[0]['coverEndDate-day'] = aMonthInTheFuture.format('DD');
-  deal.mockFacilities[0]['coverEndDate-month'] = aMonthInTheFuture.format('MM');
-  deal.mockFacilities[0]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
+  deal.mockFacilities[0]['coverEndDate-day'] = aMonthInTheFuture.getDate();
+  deal.mockFacilities[0]['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
+  deal.mockFacilities[0]['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
 
-  deal.mockFacilities[0]['conversionRateDate-day'] = `${now.format('DD')}`;
-  deal.mockFacilities[0]['conversionRateDate-month'] = `${now.format('MM')}`;
-  deal.mockFacilities[0]['conversionRateDate-year'] = `${now.format('YYYY')}`;
+  deal.mockFacilities[1]['coverEndDate-day'] = aMonthInTheFuture.getDate();
+  deal.mockFacilities[1]['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
+  deal.mockFacilities[1]['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
 
-  deal.mockFacilities[1]['coverEndDate-day'] = aMonthInTheFuture.format('DD');
-  deal.mockFacilities[1]['coverEndDate-month'] = aMonthInTheFuture.format('MM');
-  deal.mockFacilities[1]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
+  deal.mockFacilities[0]['conversionRateDate-day'] = now.getDate();
+  deal.mockFacilities[0]['conversionRateDate-month'] = now.getMonth() + 1;
+  deal.mockFacilities[0]['conversionRateDate-year'] = now.getFullYear();
 
-  deal.mockFacilities[1]['conversionRateDate-day'] = `${now.format('DD')}`;
-  deal.mockFacilities[1]['conversionRateDate-month'] = `${now.format('MM')}`;
-  deal.mockFacilities[1]['conversionRateDate-year'] = `${now.format('YYYY')}`;
+  deal.mockFacilities[1]['conversionRateDate-day'] = now.getDate();
+  deal.mockFacilities[1]['conversionRateDate-month'] = now.getMonth() + 1;
+  deal.mockFacilities[1]['conversionRateDate-year'] = now.getFullYear();
 
   return deal;
 };

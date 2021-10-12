@@ -1,6 +1,6 @@
-import moment from 'moment';
 import relative from '../../relativeURL';
 import pages from '../../pages';
+import { nowPlusDays } from '../../../support/utils/dateFuncs';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
@@ -14,18 +14,18 @@ context('User can view and sort deals by ukefDealId', () => {
   let dealDescending1;
   let dealDescending2;
 
-  const twoDaysAgo = moment().subtract(2, 'day');
-  const yesterday = moment().subtract(1, 'day');
+  const twoDaysAgo = nowPlusDays(-2);
+  const yesterday = nowPlusDays(-1);
 
   const DEAL_1 = createMockDeal({
     details: {
-      submissionDate: moment(twoDaysAgo).utc().valueOf().toString(),
+      submissionDate: twoDaysAgo.valueOf().toString(),
     },
   });
 
   const DEAL_2 = createMockDeal({
     details: {
-      submissionDate: moment(yesterday).utc().valueOf().toString(),
+      submissionDate: yesterday.valueOf().toString(),
     },
   });
 
@@ -64,8 +64,7 @@ context('User can view and sort deals by ukefDealId', () => {
           });
 
 
-          dealAscending1 = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER[0];
-          dealAscending2 = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER[1];
+          [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER;
 
           dealDescending1 = dealAscending2;
           dealDescending2 = dealAscending1;
@@ -80,7 +79,7 @@ context('User can view and sort deals by ukefDealId', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(_id, MOCK_MAKER_TFM);
     });
     cy.deleteTfmDeals();
   });

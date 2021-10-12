@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
@@ -19,8 +18,6 @@ context('Name Application Page', () => {
       });
 
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -91,7 +88,6 @@ context('Name Application Page', () => {
 
   describe('Clicking on Abandon', () => {
     it('takes the user back to the dashboard', () => {
-      cy.on('uncaught:exception', () => false);
       nameApplication.cancelButton().click();
       cy.url().should('eq', relative('/dashboard/gef'));
     });

@@ -2,9 +2,9 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
   details: {
@@ -30,14 +30,9 @@ context('Bond Fee Details', () => {
   let deal;
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   describe('when submitting an empty form and navigating back to `Bond Fee Details` page', () => {
@@ -124,9 +119,7 @@ context('Bond Fee Details', () => {
 
       pages.bondFeeDetails.feeTypeAtMaturityInput().click();
 
-      const mainContent = cy.get('#main-content');
-      const visibleRadioButtons = mainContent.find('input[type=radio]:visible');
-      visibleRadioButtons.should('have.length', 5);
+      cy.get('.govuk-radios__item:visible').should('have.length', 5);
     });
   });
 

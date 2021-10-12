@@ -12,16 +12,10 @@
 
   <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span></h1>
 
-  <div class="govuk-tabs" data-module="govuk-tabs">
-    <h2 class="govuk-tabs__title">
-      Contents
-    </h2>
+  {{ contractTabs.render(componentData) }}
 
-    {{ contractTabs.render(componentData) }}
-
-    <section class="govuk-tabs__panel" id="comments">
-      {{ contractOverviewTable.render(componentData) }}
-    </section>
+  <div class="govuk-!-margin-bottom-6">
+    {{ contractOverviewTable.render(componentData) }}
 
   </div>
 

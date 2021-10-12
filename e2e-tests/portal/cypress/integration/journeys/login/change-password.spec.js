@@ -18,12 +18,6 @@ context('Admin user creates a new user; the new user updates their password.', (
   };
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
     cy.removeUserIfPresent(userToCreate, ADMIN_LOGIN);
   });
 
@@ -34,9 +28,10 @@ context('Admin user creates a new user; the new user updates their password.', (
 
     // add user
     users.addUser().click();
-    for (const role of userToCreate.roles) {
+
+    userToCreate.roles.forEach((role) => {
       createUser.role(role).click();
-    }
+    });
     createUser.username().type(userToCreate.username);
     createUser.manualPassword().click();
     createUser.password().type(userToCreate.password);

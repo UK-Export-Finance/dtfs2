@@ -1,8 +1,7 @@
-const moment = require('moment');
+const { padDate, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
-const date = moment();
-const requestedCoverStartDate = date;
-const coverEndDate = moment(date).add(1, 'months');
+const now = new Date();
+const nowPlusMonth = nowPlusMonths(1);
 
 const GUARANTEE_DETAILS = {
   // 'Conditional' facility stage specifics
@@ -10,12 +9,12 @@ const GUARANTEE_DETAILS = {
 
   // 'Unconditional' facility stage specifics
   bankReferenceNumber: '123456',
-  requestedCoverStartDateDay: moment(requestedCoverStartDate).format('DD'),
-  requestedCoverStartDateMonth: moment(requestedCoverStartDate).format('MM'),
-  requestedCoverStartDateYear: moment(requestedCoverStartDate).format('YYYY'),
-  coverEndDateDay: moment(coverEndDate).format('DD'),
-  coverEndDateMonth: moment(coverEndDate).format('MM'),
-  coverEndDateYear: moment(coverEndDate).format('YYYY'),
+  requestedCoverStartDateDay: padDate(now.getDate()),
+  requestedCoverStartDateMonth: padDate(now.getMonth() + 1),
+  requestedCoverStartDateYear: now.getFullYear(),
+  coverEndDateDay: padDate(nowPlusMonth.getDate()),
+  coverEndDateMonth: padDate(nowPlusMonth.getMonth() + 1),
+  coverEndDateYear: nowPlusMonth.getFullYear(),
 };
 
 const FINANCIAL_DETAILS = {
@@ -26,9 +25,9 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: moment(date).format('DD'),
-  conversionRateDateMonth: moment(date).format('MM'),
-  conversionRateDateYear: moment(date).format('YYYY'),
+  conversionRateDateDay: padDate(now.getDate()),
+  conversionRateDateMonth: padDate(now.getMonth() + 1),
+  conversionRateDateYear: now.getFullYear(),
   disbursementAmount: '10.00',
   interestMarginFee: '20',
   coveredPercentage: '5',

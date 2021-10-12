@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from './relativeURL';
 import providedFacility from './pages/provided-facility';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -27,8 +25,6 @@ context('Provided Facility Page', () => {
         });
       });
     cy.login(CREDENTIALS.MAKER);
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
@@ -43,8 +39,8 @@ context('Provided Facility Page', () => {
       providedFacility.mainHeading().contains('cash');
       providedFacility.mainHeading().should('not.contain', 'contingent');
       providedFacility.form();
-      providedFacility.hiddenFacilityType().should('not.be', 'visible');
-      providedFacility.detailsOther().should('not.be', 'visible');
+      providedFacility.hiddenFacilityType().should('not.be.visible');
+      providedFacility.detailsOther().should('not.be.visible');
       providedFacility.continueButton();
       providedFacility.saveAndReturnButton();
     });
@@ -58,14 +54,14 @@ context('Provided Facility Page', () => {
     it('clicking on `Other` checkbox shows `Enter details` textarea field', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
       providedFacility.otherCheckbox().click();
-      providedFacility.detailsOther().should('be', 'visible');
+      providedFacility.detailsOther().should('be.visible');
     });
 
     it('leaving `Enter details` empty shows an error message', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
       providedFacility.otherCheckbox().click();
       providedFacility.continueButton().click();
-      providedFacility.detailsOtherError().should('be', 'visible');
+      providedFacility.detailsOtherError().should('be.visible');
     });
 
     it('filling in `Enter details` and clicking on `Continue` takes user to currency page', () => {
@@ -84,7 +80,7 @@ context('Provided Facility Page', () => {
 
     it('hides back button if visiting page with `change` query', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility?status=change`));
-      providedFacility.backLink().should('not.be', 'visible');
+      providedFacility.backLink().should('not.be.exist');
     });
   });
 
@@ -96,8 +92,8 @@ context('Provided Facility Page', () => {
       providedFacility.mainHeading().contains('contingent');
       providedFacility.mainHeading().should('not.contain', 'cash');
       providedFacility.form();
-      providedFacility.hiddenFacilityType().should('not.be', 'visible');
-      providedFacility.detailsOther().should('not.be', 'visible');
+      providedFacility.hiddenFacilityType().should('not.be.visible');
+      providedFacility.detailsOther();
       providedFacility.continueButton();
       providedFacility.saveAndReturnButton();
     });

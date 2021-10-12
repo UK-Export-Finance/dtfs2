@@ -58,8 +58,7 @@ context('User can view and sort deals by exporter', () => {
             return dealASupplier.localeCompare(dealBSupplier);
           });
 
-          dealAscending1 = ALL_SUBMITTED_DEALS[0];
-          dealAscending2 = ALL_SUBMITTED_DEALS[1];
+          [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS;
 
           dealDescending1 = dealAscending2;
           dealDescending2 = dealAscending1;
@@ -74,7 +73,7 @@ context('User can view and sort deals by exporter', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(_id, MOCK_MAKER_TFM);
     });
     cy.deleteTfmDeals();
   });

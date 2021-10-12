@@ -13,18 +13,11 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     loans: [],
   };
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertOneDeal(dealReadyToSubmitToChecker, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealReadyToSubmitToChecker;
 
@@ -40,17 +33,17 @@ context('A maker and checker can submit and re-submit a deal to each other mult
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
   const assertFacilityTableValuesWithDealStatusInDraft = () => {
     dealFacilities.bonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -61,11 +54,11 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
       bondRow.deleteLink().should('be.visible');
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
     });
 
     dealFacilities.loans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -77,7 +70,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       });
 
       loanRow.deleteLink().should('be.visible');
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
     });
   };
 
@@ -89,7 +82,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     const unconditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Unconditional');
 
     unissuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -100,12 +93,12 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
     });
 
     issuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -116,12 +109,12 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
     });
 
     conditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -132,12 +125,12 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
     });
 
     unconditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -148,7 +141,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
     });
   };
@@ -161,7 +154,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     const unconditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Unconditional');
 
     unissuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -172,12 +165,12 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
-      bondRow.deleteLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
+      bondRow.deleteLink().should('not.exist');
     });
 
     issuedBonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -188,12 +181,12 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.facilityStage);
       });
 
-      bondRow.issueFacilityLink().should('not.be.visible');
-      bondRow.deleteLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.exist');
+      bondRow.deleteLink().should('not.exist');
     });
 
     conditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -204,12 +197,12 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
-      loanRow.deleteLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
+      loanRow.deleteLink().should('not.exist');
     });
 
     unconditionalLoans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -220,8 +213,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('not.be.visible');
-      loanRow.deleteLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.exist');
+      loanRow.deleteLink().should('not.exist');
     });
   };
 
