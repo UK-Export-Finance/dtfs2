@@ -23,6 +23,9 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
     updatedAt: 1628770126497.0,
     value: 123456,
     ukefFacilityId: '123456',
+    guaranteeFee: 10.8,
+    feeFrequency: 'Monthly',
+    dayCountBasis: 365,
   },
   {
     _id: 'MOCK_CONTINGENT_FACILITY_ISSUED',
@@ -48,8 +51,10 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
     updatedAt: 1628770126497.0,
     value: 123456,
     ukefFacilityId: '123456',
+    guaranteeFee: 10.8,
+    feeFrequency: 'Monthly',
+    dayCountBasis: 365,
   },
 ];
-
 
 module.exports = MOCK_CASH_CONTINGENT_FACILIIES;

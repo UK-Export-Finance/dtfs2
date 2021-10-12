@@ -1,4 +1,3 @@
-import moment from 'moment';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
@@ -15,20 +14,13 @@ context('Portal to TFM deal submission', () => {
   let dealId;
   const dealFacilities = [];
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       MOCK_MIA_DEAL_READY_TO_SUBMIT(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        deal = insertedDeals[0];
-        dealId = insertedDeals[0]._id;
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
         const { mockFacilities } = deal;
 
@@ -143,7 +135,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker confirms bond start date
     //---------------------------------------------------------------
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.changeOrConfirmCoverStartDateLink().click();
@@ -153,7 +145,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker confirms loan start date
     //---------------------------------------------------------------
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.changeOrConfirmCoverStartDateLink().click();
@@ -202,7 +194,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().invoke('text').then((text) => {
-      const todayFormatted = moment().format('DD/MM/YYYY');
+      const todayFormatted = new Date().toLocaleDateString('en-GB');
 
       expect(text.trim()).to.contain(todayFormatted);
     });

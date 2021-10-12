@@ -181,7 +181,6 @@ const getCaseFacility = async (req, res) => {
   });
 };
 
-
 const getCaseDocuments = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);

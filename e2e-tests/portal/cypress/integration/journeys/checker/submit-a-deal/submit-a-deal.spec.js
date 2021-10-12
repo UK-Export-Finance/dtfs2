@@ -21,14 +21,6 @@ context('A checker selects to submit a contract from the view-contract page', ()
   let dealBondCoverStartDateInThePast;
   let dealLoanCoverStartDateInThePast;
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertManyDeals([
       dealReadyToSubmit(),
@@ -38,11 +30,13 @@ context('A checker selects to submit a contract from the view-contract page', ()
       submittedDealWithLoanCoverStartDateInThePast(),
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
-        goodDeal = insertedDeals[0];
-        badDealInvalidLoanCoverStartDate = insertedDeals[1];
-        badDealInvalidBondCoverStartDate = insertedDeals[2];
-        dealBondCoverStartDateInThePast = insertedDeals[3];
-        dealLoanCoverStartDateInThePast = insertedDeals[4];
+        [
+          goodDeal,
+          badDealInvalidLoanCoverStartDate,
+          badDealInvalidBondCoverStartDate,
+          dealBondCoverStartDateInThePast,
+          dealLoanCoverStartDateInThePast,
+        ] = insertedDeals;
 
         const goodDealFacilities = [
           ...goodDeal.bondTransactions.items,

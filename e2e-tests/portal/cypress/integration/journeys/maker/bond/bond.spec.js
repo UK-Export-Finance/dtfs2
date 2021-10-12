@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
@@ -24,14 +23,9 @@ context('Add a Bond to a Deal', () => {
   let deal;
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
@@ -206,13 +200,9 @@ context('Add a Bond to a Deal', () => {
         });
 
         row.requestedCoverStartDate().invoke('text').then((text) => {
-          const momentDate = moment().set({
-            date: Number(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay),
-            month: Number(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth) - 1, // months are zero indexed
-            year: Number(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear),
-          });
+          const coverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
 
-          expect(text.trim()).equal(momentDate.format('DD/MM/YYYY'));
+          expect(text.trim()).equal(coverStartDate);
         });
 
         row.coverEndDate().invoke('text').then((text) => {

@@ -37,7 +37,6 @@ router.get('/:_id/change-password', async (req, res) => {
     });
 });
 
-
 router.post('/:_id/change-password', async (req, res) => {
   const { _id } = requestParams(req);
 
@@ -60,6 +59,5 @@ router.post('/:_id/change-password', async (req, res) => {
       requireCurrentPassword: true,
     });
 });
-
 
 module.exports = router;

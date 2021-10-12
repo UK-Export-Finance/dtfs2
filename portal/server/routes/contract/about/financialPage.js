@@ -92,5 +92,4 @@ router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), asyn
   return res.redirect(redirectUrl);
 });
 
-
 module.exports = router;

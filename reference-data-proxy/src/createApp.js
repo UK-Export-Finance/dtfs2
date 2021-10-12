@@ -18,7 +18,6 @@ app.use(express.json());
 app.use(healthcheck);
 app.use('', openRouter);
 
-
 // Return 200 on get to / to confirm to Azure that
 // the container has started successfully:
 const rootRouter = express.Router();

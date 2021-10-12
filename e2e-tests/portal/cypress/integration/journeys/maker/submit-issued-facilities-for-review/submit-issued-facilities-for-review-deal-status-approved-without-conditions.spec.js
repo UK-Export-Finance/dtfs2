@@ -23,19 +23,11 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     loans: [],
   };
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertOneDeal(dealWithStatus, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealWithStatus;
 
@@ -51,11 +43,11 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -64,7 +56,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('not.be.disabled');
 
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.issueFacilityLink().invoke('text').then((text) => {
@@ -89,7 +81,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     pages.contract.proceedToReview().should('not.be.disabled');
 
 
-    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.issueFacilityLink().invoke('text').then((text) => {

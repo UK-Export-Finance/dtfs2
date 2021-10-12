@@ -12,7 +12,7 @@ context('Parties page', () => {
 
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
+    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
@@ -30,7 +30,7 @@ context('Parties page', () => {
 
   after(() => {
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -49,7 +49,7 @@ context('Parties page', () => {
 
     describe('bond issuer facilities table', () => {
       it('clicking `Facility ID` link should take user to facility details page', () => {
-        const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+        const facilityId = dealFacilities[0]._id;
         const facilityRow = pages.partiesPage.bondIssuerFacilitiesTable.row(facilityId);
 
         facilityRow.facilityId().click();
@@ -62,7 +62,7 @@ context('Parties page', () => {
       it('clicking `Facility ID` link should take user to facility details page', () => {
         cy.visit(`/case/${dealId}/parties`);
 
-        const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+        const facilityId = dealFacilities[0]._id;
         const facilityRow = pages.partiesPage.bondBeneficiaryFacilitiesTable.row(facilityId);
 
         facilityRow.facilityId().click();

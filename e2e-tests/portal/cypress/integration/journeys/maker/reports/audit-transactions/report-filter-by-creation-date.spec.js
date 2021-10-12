@@ -1,52 +1,32 @@
-const moment = require('moment');
-
-const { reports, defaults } = require('../../../../pages');
-const { auditTransactionsReport } = reports;
-
-const relative = require('../../../../relativeURL');
-
+const { reports: { auditTransactionsReport } } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && !user.roles.includes('admin')) );
+let { aDealWithOneBond, aDealWithOneLoan, aDealWithOneLoanAndOneBond } = require('../../../../../fixtures/transaction-dashboard-data');
 
-// test data we want to set up + work with..
-let {aDealWithOneBond, aDealWithOneLoan, aDealWithOneLoanAndOneBond} = require('../../../../../fixtures/transaction-dashboard-data');
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && !user.roles.includes('admin')));
 
-const toBigNumber = (date) => {
-  return moment(date, "YYYY-MM-DD").utc().valueOf().toString();
-}
+const toBigNumber = (date) => new Date(date).valueOf().toString();
 
 context('Audit - Transactions Report', () => {
-  let deals;
-
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
 
     cy.insertOneDeal(aDealWithOneBond, MAKER_LOGIN)
-      .then( (inserted) => {
-        cy.updateDeal(inserted._id, {details: {created: toBigNumber("2020-01-01")}}, MAKER_LOGIN)
-          .then( (updated) => {aDealWithOneBond = updated});
+      .then((inserted) => {
+        cy.updateDeal(inserted._id, { details: { created: toBigNumber('2020-01-01') } }, MAKER_LOGIN)
+          .then((updated) => { aDealWithOneBond = updated; });
       });
 
     cy.insertOneDeal(aDealWithOneLoan, MAKER_LOGIN)
-      .then( (inserted) => {
-        cy.updateDeal(inserted._id, {details: {created: toBigNumber("2020-01-03")}}, MAKER_LOGIN)
-          .then( (updated) => {aDealWithOneLoan = updated});
+      .then((inserted) => {
+        cy.updateDeal(inserted._id, { details: { created: toBigNumber('2020-01-03') } }, MAKER_LOGIN)
+          .then((updated) => { aDealWithOneLoan = updated; });
       });
 
     cy.insertOneDeal(aDealWithOneLoanAndOneBond, MAKER_LOGIN)
-      .then( (inserted) => {
-        cy.updateDeal(inserted._id, {details: {created: toBigNumber("2020-01-05")}}, MAKER_LOGIN)
-          .then( (updated) => {aDealWithOneLoanAndOneBond = updated});
+      .then((inserted) => {
+        cy.updateDeal(inserted._id, { details: { created: toBigNumber('2020-01-05') } }, MAKER_LOGIN)
+          .then((updated) => { aDealWithOneLoanAndOneBond = updated; });
       });
-
   });
 
   it('can be filtered by create date', () => {
@@ -59,7 +39,7 @@ context('Audit - Transactions Report', () => {
     //  be looked at to see if they make sense against the new data...
     //-----
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(4 items)'); //based on the test data
+      expect(text.trim()).equal('(4 items)'); // based on the test data
     });
 
     // select the earliest date our data should match and check we still get everything
@@ -96,6 +76,5 @@ context('Audit - Transactions Report', () => {
     auditTransactionsReport.filterByEndDate.day().should('have.value', '04');
     auditTransactionsReport.filterByEndDate.month().should('have.value', '01');
     auditTransactionsReport.filterByEndDate.year().should('have.value', '2020');
-
   });
 });

@@ -1,10 +1,11 @@
-const moment = require('moment');
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const mockDeal = require('./MIA-deal-submitted-to-ukef-with-issued-facilities-after-checker-returned-to-maker');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+
+const day = String(new Date().getDate()).padStart(2, 0);
 
 context('Given an MIA deal that has been submitted to UKEF, maker has issued facilities and a checker has returned the deal to maker', () => {
   let deal;
@@ -14,19 +15,12 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     loans: [],
   };
 
-  beforeEach(() => {
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(mockDeal, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = mockDeal;
 
@@ -42,11 +36,11 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -71,10 +65,10 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     //---------------------------------------------------------------
 
     dealFacilities.bonds.forEach((bond) => {
-      const bondId = bond._id; // eslint-disable-line no-underscore-dangle
+      const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.uniqueNumberLink().should('not.be.visible');
+      bondRow.uniqueNumberLink().should('not.exist');
       bondRow.uniqueNumber().should('be.visible');
 
       bondRow.bondStatus().invoke('text').then((text) => {
@@ -88,15 +82,15 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
       pages.bondIssueFacility.issuedDateDayInput().clear();
-      pages.bondIssueFacility.issuedDateDayInput().type(moment().format('DD'));
+      pages.bondIssueFacility.issuedDateDayInput().type(day);
       pages.bondIssueFacility.submit().click();
     });
 
     dealFacilities.loans.forEach((loan) => {
-      const loanId = loan._id; // eslint-disable-line no-underscore-dangle
+      const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.bankReferenceNumberLink().should('not.be.visible');
+      loanRow.bankReferenceNumberLink().should('not.exist');
       loanRow.bankReferenceNumber().should('be.visible');
 
       loanRow.loanStatus().invoke('text').then((text) => {
@@ -110,7 +104,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
       pages.loanIssueFacility.issuedDateDayInput().clear();
-      pages.loanIssueFacility.issuedDateDayInput().type(moment().format('DD'));
+      pages.loanIssueFacility.issuedDateDayInput().type(day);
       pages.bondIssueFacility.submit().click();
     });
 

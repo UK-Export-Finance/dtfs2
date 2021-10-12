@@ -69,7 +69,7 @@ context('User can view and sort deals by stage', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(_id, MOCK_MAKER_TFM);
     });
     cy.deleteTfmDeals();
   });

@@ -1,9 +1,9 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
   details: {
@@ -28,23 +28,18 @@ const goToPage = (deal) => {
 
 const assertNoValidationErrors = () => {
   partials.errorSummary.errorSummaryLinks().should('have.length', 0);
-  pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.be.visible');
-  pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.be.visible');
-  pages.loanDatesRepayments.dayCountBasisInputErrorMessage().should('not.be.visible');
+  pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.exist');
+  pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.exist');
+  pages.loanDatesRepayments.dayCountBasisInputErrorMessage().should('not.exist');
 };
 
 context('Loan Dates and Repayments', () => {
   let deal;
 
   beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   describe('when submitting an empty form', () => {
@@ -77,7 +72,7 @@ context('Loan Dates and Repayments', () => {
       cy.url().should('include', '/dates-repayments');
 
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
-      pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.be.visible');
+      pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.exist');
     });
   });
 
@@ -85,10 +80,10 @@ context('Loan Dates and Repayments', () => {
     it('should render `Premium frequency` radio buttons and after submit, when returning to page, render `Premium frequency` validation error', () => {
       goToPage(deal);
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
-      pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('be.visible');
+      pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().parent().should('be.visible');
 
       pages.loanDatesRepayments.premiumTypeInArrearInput().click();
-      pages.loanDatesRepayments.premiumFrequencyQuarterlyInput().should('be.visible');
+      pages.loanDatesRepayments.premiumFrequencyQuarterlyInput().parent().should('be.visible');
 
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
 
@@ -98,7 +93,7 @@ context('Loan Dates and Repayments', () => {
       partials.taskListHeader.itemLink('dates-and-repayments').click();
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
 
-      pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.be.visible');
+      pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.exist');
       pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('be.visible');
     });
   });

@@ -1,5 +1,6 @@
 const moment = require('moment');
 const isIssued = require('../../helpers/is-issued');
+const { stripCommas } = require('../../../utils/string');
 
 const hasCoverEndDate = (day, month, year) => {
   if (day && month && year) {
@@ -47,32 +48,32 @@ const mapBssEwcsFacility = (facility) => {
     premiumFrequency,
     bankReferenceNumber,
     uniqueIdentificationNumber,
-    bondType,
+    disbursementAmount,
     facilityStage,
   } = facility;
 
+  const cleanUkefExposure = Number(ukefExposure.split('.')[0].replace(/,/g, ''));
+
   return {
     _id,
-    ukefFacilityID,
+    ukefFacilityID: Number(ukefFacilityID),
     facilityType,
     currencyCode: currency && currency.id,
     value: Number(facilityValue.replace(/,/g, '')),
-    coverPercentage: coveredPercentage,
-    ukefExposure,
+    coverPercentage: Number(coveredPercentage),
+    ukefExposure: cleanUkefExposure,
     coverStartDate: requestedCoverStartDate,
     ukefGuaranteeInMonths,
     hasBeenIssued: isIssued(facilityStage),
     hasBeenAcknowledged,
     coverEndDate: mapCoverEndDate(facility),
-    guaranteeFeePayableByBank,
+    guaranteeFee: Number(guaranteeFeePayableByBank),
+    feeType: feeType || premiumType,
+    feeFrequency: feeFrequency || premiumFrequency,
     dayCountBasis,
-    feeFrequency,
-    premiumFrequency,
-    feeType,
-    premiumType,
+    disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
     bankReference: bankReferenceNumber,
     uniqueIdentificationNumber,
-    bondType,
     tfm: facility.tfm,
   };
 };
@@ -83,3 +84,4 @@ module.exports = {
   mapCoverEndDate,
   mapBssEwcsFacility,
 };
+

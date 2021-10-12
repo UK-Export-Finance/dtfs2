@@ -64,10 +64,10 @@ describe(baseUrl, () => {
         ukefFacilityId: null,
         dayCountBasis: null,
         feeType: null,
-        frequency: null,
+        feeFrequency: null,
       },
       validation: {
-        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'frequency', 'dayCountBasis'],
+        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
       },
     };
     completeUpdate = {
@@ -86,7 +86,7 @@ describe(baseUrl, () => {
       paymentType: 'IN_ARREARS_QUARTLY',
       dayCountBasis: '365',
       feeType: 'in advance',
-      frequency: 'Monthly',
+      feeFrequency: 'Monthly',
     };
   });
 
@@ -221,7 +221,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'frequency', 'dayCountBasis'],
+          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 
@@ -272,7 +272,7 @@ describe(baseUrl, () => {
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
         feeType: 'in advance',
-        frequency: 'Monthly',
+        feeFrequency: 'Monthly',
         dayCountBasis: '365',
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
@@ -313,7 +313,7 @@ describe(baseUrl, () => {
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
         feeType: 'in advance',
-        frequency: 'Monthly',
+        feeFrequency: 'Monthly',
         dayCountBasis: '365',
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
@@ -352,7 +352,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'frequency', 'dayCountBasis'],
+          required: ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 

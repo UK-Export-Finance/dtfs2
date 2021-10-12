@@ -3,7 +3,7 @@ const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
 
 context('A maker is informed of a bond\'s status before submitting an issued bond facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
@@ -12,26 +12,17 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     bonds: [],
   };
 
-  beforeEach(() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-  });
-
   before(() => {
     cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id;
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
         const bonds = mockFacilities.filter((f) => f.facilityType === 'bond');
 
         cy.createFacilities(dealId, bonds, MAKER_LOGIN).then((createdFacilities) => {
-
           dealFacilities.bonds = createdFacilities;
         });
       });
@@ -39,7 +30,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      cy.deleteFacility(facility._id, MAKER_LOGIN);
     });
   });
 
@@ -48,7 +39,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.bondStatus().invoke('text').then((text) => {

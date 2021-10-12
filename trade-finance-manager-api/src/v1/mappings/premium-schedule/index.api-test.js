@@ -1,0 +1,55 @@
+const mapPremiumScheduleFacility = require('.');
+const { mapPremiumFrequencyId, mapPremiumTypeId } = require('./map-premium-ids');
+const mapProductGroup = require('./map-product-group');
+const { mapBssEwcsFacility } = require('../map-submitted-deal/map-bss-ewcs-facility');
+
+const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
+
+describe('mapPremiumScheduleFacility', () => {
+  const mockFacility = mapBssEwcsFacility(MOCK_FACILIIES[1]);
+
+  const mockExposurePeriod = 25;
+
+  const mockGuaranteeDates = {
+    guaranteeCommencementDate: '2021-05-01',
+    guaranteeExpiryDate: '2023-05-01',
+  };
+
+  it('should return null if params are invalid', () => {
+    const result = mapPremiumScheduleFacility({}, 0, {});
+    expect(result).toEqual(null);
+  });
+
+  it('should return mapped object', () => {
+    const facility = mockFacility;
+
+    const result = mapPremiumScheduleFacility(facility, mockExposurePeriod, mockGuaranteeDates);
+
+    const expected = {
+      cumulativeAmount: mockFacility.disbursementAmount,
+      dayBasis: mockFacility.dayCountBasis,
+      exposurePeriod: mockExposurePeriod,
+      facilityURN: mockFacility.ukefFacilityID,
+      guaranteeCommencementDate: mockGuaranteeDates.guaranteeCommencementDate,
+      guaranteeExpiryDate: mockGuaranteeDates.guaranteeExpiryDate,
+      guaranteeFeePercentage: mockFacility.guaranteeFee,
+      guaranteePercentage: mockFacility.coverPercentage,
+      maximumLiability: mockFacility.ukefExposure,
+      premiumTypeId: mapPremiumTypeId(mockFacility),
+      premiumFrequencyId: mapPremiumFrequencyId(mockFacility),
+      productGroup: mapProductGroup(mockFacility.facilityType),
+    };
+    expect(result).toEqual(expected);
+  });
+
+  it('should default cumulativeAmount to 0 when disbursementAmount does not exist', () => {
+    const facility = {
+      ...mockFacility,
+      disbursementAmount: null,
+    };
+
+    const result = mapPremiumScheduleFacility(facility, mockExposurePeriod, mockGuaranteeDates);
+
+    expect(result.cumulativeAmount).toEqual(0);
+  });
+});

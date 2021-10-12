@@ -8,7 +8,6 @@ const {
 } = require('../../helpers');
 const downloadCsv = require('../../utils/downloadCsv');
 
-
 const PAGESIZE = 20;
 const primaryNav = 'reports';
 const router = express.Router();
@@ -121,7 +120,6 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-
 
   const pages = {
     totalPages: Math.ceil(dealData.count / PAGESIZE),

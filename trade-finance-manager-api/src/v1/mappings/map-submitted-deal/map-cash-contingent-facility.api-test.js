@@ -3,6 +3,8 @@ const {
   mapCashContingentFacility,
 } = require('./map-cash-contingent-facility');
 const { convertDateToTimestamp } = require('../../../utils/date');
+const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
+
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../__mocks__/mock-cash-contingent-facilities');
 
 describe('mappings - map submitted deal - mapCashContingentFacility', () => {
@@ -59,11 +61,15 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         ukefExposure,
         coverEndDate,
         name,
+        guaranteeFee,
+        paymentType,
+        feeFrequency,
+        dayCountBasis,
       } = mockFacility;
 
       const expected = {
         _id,
-        ukefFacilityID: ukefFacilityId,
+        ukefFacilityID: Number(ukefFacilityId),
         facilityType: type,
         currencyCode: currency,
         value,
@@ -74,6 +80,10 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         coverStartDate: mapCoverStartDate(mockFacility),
         coverEndDate,
         bankReference: name,
+        guaranteeFee,
+        feeType: mapGefFacilityFeeType(paymentType),
+        feeFrequency,
+        dayCountBasis,
         tfm: mockFacility.tfm,
       };
 
