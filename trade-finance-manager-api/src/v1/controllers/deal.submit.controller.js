@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const {
   findOneTfmDeal,
   findOnePortalDeal,
@@ -101,6 +102,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+
+    // Update facility stage code to Issued
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN

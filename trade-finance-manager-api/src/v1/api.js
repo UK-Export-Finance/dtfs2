@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const axios = require('axios');
 
 require('dotenv').config();
@@ -424,42 +425,49 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
 };
 
 const createACBS = async (deal, bank) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${refDataUrl}/acbs`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        deal,
-        bank,
-      },
-    });
-    return response.data;
-  } catch (err) {
-    return err;
+  if (!!deal && !!bank) {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${refDataUrl}/acbs`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          deal,
+          bank,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      console.error('ACBS create error\n\r', err);
+      return err;
+    }
   }
+  return {};
 };
 
 const updateACBSfacility = async (facility, supplierName) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      // eslint-disable-next-line no-underscore-dangle
-      url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityID}/issue`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        facility,
-        supplierName,
-      },
-    });
-    return response.data;
-  } catch (err) {
-    return err;
+  if (!!facility && !!supplierName) {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityID}/issue`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          facility,
+          supplierName,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      console.error('ACBS Facility update error\n\r', err);
+      return err;
+    }
   }
+  return {};
 };
 
 const getFunctionsAPI = async (type = 'ACBS', url = '') => {

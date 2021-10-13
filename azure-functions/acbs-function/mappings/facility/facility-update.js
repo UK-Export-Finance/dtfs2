@@ -40,18 +40,17 @@
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
-const facilityUpdate = (facility, acbsFacility, obligorName) => {
-  const { facilitySnapshot } = facility;
-
-  return {
-    ...acbsFacility,
-    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facilitySnapshot),
-    issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
-    facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
-    foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
-    productTypeName: facilitySnapshot.facilityType,
-    obligorName,
-  };
-};
+const facilityUpdate = (facility, acbsFacility, obligorName) => ({
+  ...acbsFacility,
+  capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
+  issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
+  facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
+  foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
+  productTypeName:
+    facility.facilityType ||
+    facility.facilitySnapshot.type ||
+    facility.facilitySnapshot.facilityType,
+  obligorName,
+});
 
 module.exports = facilityUpdate;

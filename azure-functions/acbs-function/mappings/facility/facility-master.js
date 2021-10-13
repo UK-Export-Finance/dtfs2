@@ -61,9 +61,10 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
     capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
-    productTypeName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-      ? facility.facilitySnapshot.type
-      : facility.facilitySnapshot.facilityType,
+    productTypeName:
+      facility.facilityType ||
+      facility.facilitySnapshot.type ||
+      facility.facilitySnapshot.facilityType,
     currency: facility.facilitySnapshot.currency.id
       ? facility.facilitySnapshot.currency.id
       : facility.facilitySnapshot.currency,
