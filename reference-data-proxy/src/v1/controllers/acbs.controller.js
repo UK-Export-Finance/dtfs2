@@ -101,7 +101,7 @@ exports.issueAcbsFacilityPOST = async (req, res) => {
     const { status, data } = await issueAcbsFacility(id, facility, supplierName);
     return res.status(status).send(data);
   }
-  return res.status(500).send();
+  return res.status(400).send();
 };
 
 const createAcbsRecord = async (deal, bank) => {
@@ -125,5 +125,5 @@ exports.createAcbsRecordPOST = async (req, res) => {
     const { status, data } = await createAcbsRecord(deal, bank);
     return res.status(status).send(data);
   }
-  return res.status(500).send();
+  return res.status(400).send();
 };
