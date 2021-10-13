@@ -102,7 +102,7 @@ jobs:
         add_git_labels: true   
 
   test:
-    name: "Run GEF E2E tests"
+    name: "Run PR tests"
     needs: build
     environment:
       name: E2ETEST
