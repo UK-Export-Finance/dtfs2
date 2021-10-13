@@ -2,6 +2,10 @@ const CONSTANTS = require('../../constants');
 const CONTENT_STRINGS = require('../content-strings');
 const api = require('../api');
 
+/*
+ * 1) Get facilities associated with a deal
+ * 2) Map eligibility criteria content strings
+ */
 const mapDeal = async (deal) => {
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
