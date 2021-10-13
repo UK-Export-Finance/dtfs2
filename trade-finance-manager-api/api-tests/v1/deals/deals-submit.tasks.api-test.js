@@ -42,6 +42,8 @@ describe('/v1/deals', () => {
 
     sendEmailApiSpy.mockClear();
     externalApis.sendEmail = sendEmailApiSpy;
+
+    externalApis.updatePortalBssDealStatus = jest.fn();
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
