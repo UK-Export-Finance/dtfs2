@@ -21,6 +21,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
 
 const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
 const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
+const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
 
 const createGefExporterController = require('../controllers/portal/gef-exporter/create-gef-exporter.controller');
 const getGefExporterController = require('../controllers/portal/gef-exporter/get-gef-exporter.controller');
@@ -604,6 +605,50 @@ portalRouter.route('/gef/deals')
 portalRouter.route('/gef/deals/:id')
   .get(
     getGefDealController.findOneDealGet,
+  );
+
+/**
+ * @openapi
+ * /gef/deals/:id/status:
+ *   put:
+ *     summary: Update a Portal GEF deal status
+ *     tags: [Portal - GEF]
+ *     description: Update a Portal GEF deal status
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               status: UKEF_ACKNOWLEDGED
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/DealGEF'
+ *                 - type: object
+ *                   properties:
+ *                     previousStatus:
+ *                       example: SUBMITTED_TO_UKEF
+ *                     status:
+ *                       example: UKEF_ACKNOWLEDGED
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/gef/deals/:id/status')
+  .put(
+    putGefDealStatusController.updateDealStatusPut,
   );
 
 /**
