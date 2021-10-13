@@ -5,12 +5,6 @@ const CONSTANTS = require('../../constants');
 const getDeals = async (req, res) => {
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
-    byField: [
-      {
-        name: 'tfm.dateReceived',
-        value: '11-10-2021', // eslint-disable-line
-      },
-    ],
   };
 
   const apiResponse = await api.getDeals(queryParams);
