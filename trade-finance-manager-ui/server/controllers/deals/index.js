@@ -39,15 +39,7 @@ const queryDeals = async (req, res) => {
     searchString = req.body.search;
   }
 
-  // const queryParams = { searchString };
-  const queryParams = {
-    byField: [
-      {
-        name: 'tfm.dateReceived',
-        value: '11-10-2021', // eslint-disable-line
-      },
-    ],
-  };
+  const queryParams = { searchString };
 
   if (req.body.descending || req.body.ascending) {
     const sortBy = Object.getOwnPropertyNames(req.body)[0];
