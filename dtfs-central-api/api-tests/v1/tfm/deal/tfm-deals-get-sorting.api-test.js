@@ -1,4 +1,3 @@
-const moment = require('moment');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
