@@ -42,9 +42,10 @@ function buildBody(app, previewMode) {
   const coverUrl = `/gef/application-details/${app.id}/automatic-cover`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
+  console.log('YOOOO app \n', app);
   return {
     application: app,
-    isAutomaticCover: app.coverTerms.isAutomaticCover,
+    isAutomaticCover: app.eligibilityCriteria.isAutomaticCover,
     exporter: {
       status: app.exporterStatus,
       rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
@@ -52,8 +53,9 @@ function buildBody(app, previewMode) {
       }), previewMode),
     },
     coverTerms: {
-      status: app.coverStatus,
-      rows: mapSummaryList(app.coverTerms, coverItems(coverUrl), previewMode),
+      status: app.eligibilityCriteriaStatus,
+      // rows: mapSummaryList(app.eligibilityCriteria, coverItems(coverUrl), previewMode),
+      rows: [],
     },
     facilities: {
       status: app.facilitiesStatus,

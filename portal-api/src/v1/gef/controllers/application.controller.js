@@ -13,7 +13,6 @@ const { isSuperUser } = require('../../users/checks');
 
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
-const { CoverTerms } = require('../models/coverTerms');
 const { STATUS } = require('../enums');
 const addSubmissionData = require('./application-submit');
 const api = require('../../api');
@@ -22,7 +21,6 @@ const { EMAIL_TEMPLATE_IDS, DEAL: { GEF_STATUS } } = require('../../../constants
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
-const coverTermsCollectionName = 'gef-cover-terms';
 const facilitiesCollectionName = 'gef-facilities';
 const userCollectionName = 'users';
 
@@ -53,7 +51,6 @@ exports.create = async (req, res) => {
     applicationCollectionName,
   );
   const exporterCollection = await db.getCollection(exporterCollectionName);
-  const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
   const validateErrs = validateApplicationReferences(
     req.body,
   );
@@ -61,10 +58,9 @@ exports.create = async (req, res) => {
     res.status(422).send(validateErrs);
   } else {
     const exporter = await exporterCollection.insertOne(new Exporter());
-    const coverTerms = await coverTermsCollection.insertOne(new CoverTerms());
 
     const createdApplication = await applicationCollection.insertOne(
-      new Application(req.body, exporter.insertedId, coverTerms.insertedId),
+      new Application(req.body, exporter.insertedId),
     );
 
     const application = await applicationCollection.findOne({
@@ -96,7 +92,15 @@ exports.getById = async (req, res) => {
   });
 
   if (doc) {
-    if (doc.supportingInformation) doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
+    if (doc.supportingInformation) {
+      doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
+    }
+
+    // TEMP
+    if (doc.eligibilityCriteria) {
+      doc.eligibilityCriteria.status = 'NOT_STARTED';
+      doc.eligibilityCriteria.isAutomaticCover = null;
+    }
     res.status(200).send(doc);
   } else {
     res.status(204).send();
@@ -258,14 +262,6 @@ exports.delete = async (req, res) => {
         _id: ObjectID(String(applicationResponse.value.exporterId)),
       });
     }
-    if (applicationResponse.value.coverTermsId) {
-      const coverTermsCollection = await db.getCollection(
-        coverTermsCollectionName,
-      );
-      await coverTermsCollection.findOneAndDelete({
-        _id: ObjectID(String(applicationResponse.value.coverTermsId)),
-      });
-    }
     // remove facility information related to the application
     const facilitiesCollection = await db.getCollection(
       facilitiesCollectionName,
@@ -316,15 +312,15 @@ exports.findDeals = async (
         },
       },
       { $unwind: '$exporter' },
-      {
-        $lookup: {
-          from: 'gef-cover-terms',
-          localField: 'coverTermsId',
-          foreignField: '_id',
-          as: 'coverTerms',
-        },
-      },
-      { $unwind: '$coverTerms' },
+      // {
+      //   $lookup: {
+      //     from: 'gef-cover-terms',
+      //     localField: 'coverTermsId',
+      //     foreignField: '_id',
+      //     as: 'coverTerms',
+      //   },
+      // },
+      // { $unwind: '$coverTerms' },
       { $match: sanitisedFilters },
       { $sort: { updatedAt: -1, createdAt: -1 } },
       {

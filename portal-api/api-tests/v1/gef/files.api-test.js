@@ -45,7 +45,6 @@ describe(baseUrl, () => {
         userId: aMaker._id,
         bankId: aMaker.bank.id,
         bankInternalRefName: 'Bank 1',
-        coverTermsId: 'ABC',
         additionalRefName: 'Team 1',
         exporterId: '1234567890',
         createdAt: '2021-01-01T00:00',

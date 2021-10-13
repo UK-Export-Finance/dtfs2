@@ -76,7 +76,7 @@ describe(baseUrl, () => {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
-          coverTermsId: expect.any(String),
+          eligibility: {},
           createdAt: expect.any(Number),
           status: 'DRAFT',
           dealType: 'GEF',
@@ -112,7 +112,7 @@ describe(baseUrl, () => {
       const expected = {
         ...mockApplications[0],
         exporterId: expect.any(String),
-        coverTermsId: expect.any(String),
+        eligibility: {},
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
@@ -174,7 +174,7 @@ describe(baseUrl, () => {
       const expected = {
         ...mockApplications[0],
         exporterId: expect.any(String),
-        coverTermsId: expect.any(String),
+        eligibility: {},
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',

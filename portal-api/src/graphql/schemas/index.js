@@ -176,7 +176,6 @@ type GefDeal {
   status: String
   bankId: String
   exporterId: String
-  coverTermsId: String
   bankInternalRefName: String
   mandatoryVersionId: String
   additionalRefName: String

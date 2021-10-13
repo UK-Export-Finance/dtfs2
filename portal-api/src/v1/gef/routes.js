@@ -6,7 +6,6 @@ const fileUpload = require('./middleware/fileUpload');
 const application = require('./controllers/application.controller');
 const exporter = require('./controllers/exporter.controller');
 const facilities = require('./controllers/facilities.controller');
-const coverTerms = require('./controllers/coverTerms.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const externalApi = require('./controllers/externalApi.controller');
@@ -32,11 +31,6 @@ router.route('/application/status/:id')
 router.route('/exporter/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), exporter.getById)
   .put(validate({ role: ['maker', 'data-admin'] }), exporter.update);
-
-// Cover Terms
-router.route('/cover-terms/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), coverTerms.getById)
-  .put(validate({ role: ['maker', 'data-admin'] }), coverTerms.update);
 
 // Facilities
 router.route('/facilities')

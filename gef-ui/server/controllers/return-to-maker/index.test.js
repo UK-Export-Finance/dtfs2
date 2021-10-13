@@ -34,7 +34,6 @@ describe('controllers/return-to-maker', () => {
       _id: '1234',
       status: PROGRESS.BANK_CHECK,
       exporterId: '123',
-      coverTermsId: '123',
       bankInternalRefName: 'My test',
     });
 
@@ -103,7 +102,6 @@ describe('controllers/return-to-maker', () => {
       expect(updateApplication).toHaveBeenCalledWith('1234', expect.objectContaining({
         _id: '1234',
         exporterId: '123',
-        coverTermsId: '123',
         bankInternalRefName: 'My test',
         comments: [
           {
