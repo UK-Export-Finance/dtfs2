@@ -177,7 +177,7 @@ const updateTfmUnderwriterManagersDecision = async (
 
   const newPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
-  await api.updatePortalDealStatus(
+  await api.updatePortalBssDealStatus(
     dealId,
     newPortalStatus,
   );
