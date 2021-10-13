@@ -4,6 +4,7 @@ const mapFacilityStage = require('../facilities/mapFacilityStage');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
+const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
@@ -53,6 +54,7 @@ describe('mapGefFacility', () => {
         facilityValueExportCurrency: `${facilitySnapshot.currency} ${formattedFacilityValue}`,
         facilityValue: mapFacilityValue(facilitySnapshot.currency, formattedFacilityValue, mockFacility.tfm),
         feeType: mapGefFacilityFeeType(facilitySnapshot.paymentType),
+        guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee),
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
         ukefFacilityID: facilitySnapshot.ukefFacilityId,
         ukefExposure: `${facilitySnapshot.currency} ${facilitySnapshot.ukefExposure}`,
