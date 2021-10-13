@@ -4,7 +4,7 @@ const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('graphql-tools');
 const gql = require('graphql-tag');
 
-jest.mock('../src/v1/api');
+const externalApis = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
@@ -41,6 +41,8 @@ describe('graphql mutation - update underwriting managers decision', () => {
     // use the test server to create a query function
     const { query: doQuery } = createTestClient(server);
     query = doQuery;
+
+    externalApis.updatePortalBssDealStatus = jest.fn();
   });
 
   it('should return updated decision with timestamp', async () => {
@@ -66,7 +68,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
         internalComments: mutationVars.managersDecisionUpdate.internalComments,
         userFullName: mutationVars.managersDecisionUpdate.userFullName,
         timestamp: expect.any(String),
-      }
+      },
     };
 
     expect(data.updateUnderwriterManagersDecision).toEqual(expected);
