@@ -75,7 +75,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       expect(status).toEqual(200);
     });
 
-    it('updates the eligibility criteria', async () => {
+    it('updates the eligibility criteria with lastUpdated timestamp', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
@@ -84,6 +84,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
+      expect(typeof body.eligibility.lastUpdated).toEqual('number');
       //
       //
       // Expected: {"criterion-11": "true", "criterion-12": "true", "criterion-13": "true", "criterion-14": "true", "criterion-15": "false", "criterion-16": "true", "criterion-17": "true", "criterion-18": "true"}
@@ -267,6 +268,20 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       expect(status).toEqual(200);
       expect(body.details.submissionType).toEqual('Manual Inclusion Application');
+    });
+
+    it('updates the lastUpdated timestamp on each update', () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const dealId = postResult.body._id;
+
+      const { body: firstUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`);
+
+      const firstUpdateTimeStamp = firstUpdate.eligibility.lastUpdated;
+
+      const { body: secondUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`)
+
+      expect(typeof secondUpdate.eligibility.lastUpdated).toEqual('number');
+      expect(typeof secondUpdate.eligibility.lastUpdated).not.toEqual(firstUpdateTimeStamp);
     });
   });
 });
