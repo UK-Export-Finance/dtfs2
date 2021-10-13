@@ -12,7 +12,7 @@ const withoutId = (obj) => {
 const updateDealStatus = async (dealId, status, existingDeal) => {
   const collection = await db.getCollection('deals');
 
-  console.log(`Updating Portal deal status to ${status}`);
+  console.log(`Updating Portal BSS deal status to ${status}`);
   const previousStatus = existingDeal.details.status;
 
   const modifiedDeal = {
@@ -31,7 +31,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
     { returnOriginal: false },
   );
 
-  console.log(`Updated Portal deal status from ${previousStatus} to ${status}`);
+  console.log(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
 
   return findAndUpdateResponse.value;
 };
