@@ -70,7 +70,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
   } else {
     let query;
 
-    if (fieldQueries.length) {
+    if (fieldQueries && fieldQueries.length) {
       fieldQueries.forEach((field) => {
         query = {
           ...query,
@@ -92,13 +92,11 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
 
     // TODO
     // REQUIREMENT: any deals that had eligibiltiy criteria changed on a single, specific day
-    // TBD....
     // BSS: dealSnapshot.eligibilityLastUpdated
     // GEF: dealSnapshot.eligibilityLastUpdated
 
     // TODO
     // REQUIREMENT: any deals that had any facilities changed on a single, specific day
-    // TBD....
     // BSS: dealSnapshot.facilitiesLastUpdated
     // GEF: dealSnapshot.facilitiesLastUpdated
 
