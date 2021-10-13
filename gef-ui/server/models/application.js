@@ -10,6 +10,57 @@ const {
 const { status } = require('../utils/helpers');
 const { PROGRESS, DEAL_SUBMISSION_TYPE } = require('../../constants');
 
+const termToEligibilityCriteria = {
+  coverStart: 12,
+  noticeDate: 13,
+  facilityLimit: 14,
+  exporterDeclaration: 15,
+  dueDiligence: 16,
+  facilityLetter: 17,
+  facilityBaseCurrency: 18,
+  facilityPaymentCurrency: 19,
+};
+
+const termToSupportDocuments = {
+  coverStart: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
+  noticeDate: ['manualInclusion'],
+  facilityLimit: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
+  exporterDeclaration: ['manualInclusion', 'exportLicence'],
+  dueDiligence: ['manualInclusion'],
+  facilityLetter: ['manualInclusion'],
+  facilityBaseCurrency: ['manualInclusion'],
+  facilityPaymentCurrency: ['manualInclusion'],
+};
+
+const deriveSupportingInfoRequiredDocuments = (application) => {
+  let requiredDocs = [];
+
+  Object.keys(termToSupportDocuments).forEach((term) => {
+    if (application.coverTerms.details[term] === 'false') {
+      requiredDocs = requiredDocs.concat(termToSupportDocuments[term]);
+    }
+  });
+
+  return [...new Set(requiredDocs)];
+};
+
+const deriveSupportingInfoStatus = (application) => {
+  const requiredFields = ['securityDetails'].concat(deriveSupportingInfoRequiredDocuments(application));
+  const availableFields = [];
+
+  requiredFields.forEach((requiredField) => {
+    const availableField = application.supportingInformation[requiredField];
+    if (availableField) availableFields.push(requiredField);
+  });
+
+  let state = PROGRESS.NOT_STARTED;
+  state = availableFields.length === requiredFields.length ? PROGRESS.COMPLETED : state;
+  state = availableFields.length < requiredFields.length ? PROGRESS.IN_PROGRESS : state;
+  state = availableFields.length === 0 ? PROGRESS.NOT_STARTED : state;
+
+  return status[state];
+};
+
 class Application {
   static async findById(id, user, userToken) {
     try {
@@ -31,7 +82,12 @@ class Application {
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
       application.coverStatus = status[application.coverTerms.status || PROGRESS.NOT_STARTED];
       application.facilitiesStatus = status[application.facilities.status || PROGRESS.NOT_STARTED];
-      application.supportingInfoStatus = status[application.supportingInformation?.status || PROGRESS.NOT_STARTED];
+      if (application.supportingInformation) {
+        application.supportingInfoStatus = deriveSupportingInfoStatus(application);
+        application.supportingInformation.requiredFields = deriveSupportingInfoRequiredDocuments(application);
+      } else {
+        application.supportingInfoStatus = status[PROGRESS.NOT_STARTED];
+      }
 
       console.log({
         submissionType: application.submissionType,
@@ -62,17 +118,6 @@ class Application {
       if (application.checkerId) {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }
-
-      const termToEligibilityCriteria = {
-        coverStart: 12,
-        noticeDate: 13,
-        facilityLimit: 14,
-        exporterDeclaration: 15,
-        dueDiligence: 16,
-        facilityLetter: 17,
-        facilityBaseCurrency: 18,
-        facilityPaymentCurrency: 19,
-      };
 
       application.eligibilityCriteria = application.ecs.terms.map((term) => ({
         id: termToEligibilityCriteria[term.id],

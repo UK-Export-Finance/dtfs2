@@ -109,7 +109,7 @@ const postSecurityDetails = async (req, res) => {
 
     await updateApplication(applicationId, application);
 
-    return res.redirect('export-license');
+    return res.redirect('export-licence');
   } catch (err) {
     console.log(`Error updating security details ${err}`);
     return res.sendStatus(500);
