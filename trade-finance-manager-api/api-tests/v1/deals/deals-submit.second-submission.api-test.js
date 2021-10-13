@@ -68,6 +68,9 @@ describe('/v1/deals', () => {
 
     updatePortalFacilityStatusSpy.mockClear();
     externalApis.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
+
+    externalApis.updatePortalBssDealStatus = jest.fn();
+    externalApis.updatePortalGefDealStatus = jest.fn();
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
