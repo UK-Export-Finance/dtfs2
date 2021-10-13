@@ -1,0 +1,29 @@
+name: Build GEF UI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  environment: dev
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+jobs:
+  build:
+    name: Build and push GEF UI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: gef-ui
+        path: gef-ui
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true

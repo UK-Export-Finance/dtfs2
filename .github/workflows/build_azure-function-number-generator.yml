@@ -1,0 +1,29 @@
+name: Build Number Generator
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  environment: dev
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+jobs:
+  build:
+    name: Build and push Number Generator Azure Function
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: azure-function-number-generator
+        path: azure-functions/number-generator-function
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
