@@ -199,6 +199,32 @@ This will take the latest code in the development environment and deploy to test
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
 
+#### Recommended
+
+After deployment, manually check things are OK by submitting a deal to TFM and check that in TFM the deal has data populated.
+
+:warning: There is currently an issue where after deployment, the Number Generator Azure Function App doesn't work correctly.
+
+For a currently unknown reason - the URI's that the Number Generator Function App depends on, can generate incorrect URIs. After a deal is submitted, check the `durable-functions-log` collection Azure Portal. The URIs in any newly created document (created after a deal is submitted after deployment), should have URIs looking something like this:
+
+```shell
+statusQueryGetUri" : "https://tfs-test-function-number-generator.azurewebsites.net/runtime..."
+```
+
+However after deployment, somehow, it gains what seems to be part of a git commit hash, e.g:
+
+```shell
+https://tfs-test-function-number-generator-a1bc23cdfaBa1bc23cdfa.azurewebsites.net/runtim
+```
+
+This is invalid and all of the Number Generator tasks generated after deployment will have this. The tasks will be stuck with "Running" status and will never become completed.
+
+Until the underlying issue is fixed, the workaround is to restart the Number Generator Function App in the Azure Portal. The Function app can be found [here](https://portal.azure.com/#@ukef.onmicrosoft.com/resource/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/digital-test/providers/Microsoft.Web/sites/tfs-test-function-number-generator/appServices)
+
+After the restart, newly submitted deals will work.
+
+After this, worth wiping the `durable-functions-log` collection so that there are no dead documents in the collection.
+
 ### Deploying to demo
 
 To deploy to the demo environment, run the `update-demo.sh` script in `.github/workflows` directory.
