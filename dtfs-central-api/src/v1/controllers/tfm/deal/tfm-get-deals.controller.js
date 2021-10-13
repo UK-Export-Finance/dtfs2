@@ -81,26 +81,6 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       });
     }
 
-    // REQUIREMENT: any deals received by TFM on a single specific day
-    // DONE. tfm.dateReceived
-
-    // TODO
-    // REQUIREMENT: any changed on a single, specific day
-    // TODO: align BSS and GEF.
-    // GEF: dealSnapshot.updatedAt // 1634052168113.0 - number
-    // BSS: dealSnapshot.details.dateOfLastAction // 1596805840467 - string
-
-    // TODO
-    // REQUIREMENT: any deals that had eligibiltiy criteria changed on a single, specific day
-    // BSS: dealSnapshot.eligibilityLastUpdated
-    // GEF: dealSnapshot.eligibilityLastUpdated
-
-    // TODO
-    // REQUIREMENT: any deals that had any facilities changed on a single, specific day
-    // BSS: dealSnapshot.facilitiesLastUpdated
-    // GEF: dealSnapshot.facilitiesLastUpdated
-
-
     dealsArray = await dealsCollection.find(query).toArray();
   }
 
