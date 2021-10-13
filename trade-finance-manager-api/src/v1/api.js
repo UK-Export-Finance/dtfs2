@@ -553,7 +553,7 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
-const updateGefDealStatus = async (dealId, status) => {
+const updatePortalGefDealStatus = async (dealId, status) => {
   try {
     const response = await axios({
       method: 'put',
@@ -604,5 +604,5 @@ module.exports = {
   createEstoreFolders,
   sendEmail,
   findOneGefDeal,
-  updateGefDealStatus,
+  updatePortalGefDealStatus,
 };
