@@ -75,7 +75,7 @@ exports.findOne = async (req, res) => {
     return res.status(facilityIdStatus).send();
   }
 
-  return res.status(404).send();
+  return res.status(500).send();
 };
 
 const issueAcbsFacility = async (id, facility, supplierName) => {
