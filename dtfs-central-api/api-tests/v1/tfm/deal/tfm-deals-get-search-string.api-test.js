@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { add, sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -366,15 +366,16 @@ describe('/v1/tfm/deals', () => {
         });
       });
 
-      it('returns deals filtered by tfm.dateReceived in DD-MM-YYYY format', async () => {
-        const yesterday = moment().subtract(1, 'day');
-        const yesterdayTimestamp = moment(yesterday).utc().valueOf().toString();
+      it('returns deals filtered by tfm.dateReceived in dd-MM-yyyy format', async () => {
+        const today = new Date();
+        const todayTimestamp = new Date().valueOf().toString();
+        const yesterday = sub(today, { days: 1 });
 
         const dealSubmittedYesterday = newDeal({
           details: {
             ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
             status: 'Submitted',
-            submissionDate: yesterdayTimestamp,
+            submissionDate: yesterday,
           },
         });
 
@@ -382,7 +383,7 @@ describe('/v1/tfm/deals', () => {
           details: {
             ukefDealId: 'DEAL-SUBMITTED-TODAY',
             status: 'Submitted',
-            submissionDate: now(),
+            submissionDate: todayTimestamp,
           },
         });
 
@@ -397,8 +398,8 @@ describe('/v1/tfm/deals', () => {
         const dealSubmittedTodayResponseBody = submittedDeals.find((deal) =>
           deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
 
-        const yesterdayFormatted = moment(yesterday).format('DD-MM-YYYY');
-        const todayFormatted = moment().format('DD-MM-YYYY');
+        const yesterdayFormatted = format(yesterday, 'dd-MM-yyyy');
+        const todayFormatted = format(today, 'dd-MM-yyyy');
 
         // manually update deal's tfm object for test
         const dealSubmittedYesterdayUpdateResponse = await api.put({
@@ -436,9 +437,11 @@ describe('/v1/tfm/deals', () => {
         expect(body.deals).toEqual(expectedDeals);
       });
 
-      it('returns deals filtered by tfm.dateReceived in DD/MM/YYYY format', async () => {
-        const yesterday = moment().subtract(1, 'day');
-        const yesterdayTimestamp = moment(yesterday).utc().valueOf().toString();
+      it('returns deals filtered by tfm.dateReceived in dd/MM/yyyy format', async () => {
+        const today = new Date();
+        const todayTimestamp = new Date().valueOf().toString();
+        const yesterday = sub(today, { days: 1 });
+        const yesterdayTimestamp = sub(today, { days: 1 }).valueOf().toString();
 
         const dealSubmittedYesterday = newDeal({
           details: {
@@ -452,7 +455,7 @@ describe('/v1/tfm/deals', () => {
           details: {
             ukefDealId: 'DEAL-SUBMITTED-TODAY',
             status: 'Submitted',
-            submissionDate: now(),
+            submissionDate: todayTimestamp
           },
         });
 
@@ -467,8 +470,8 @@ describe('/v1/tfm/deals', () => {
         const dealSubmittedTodayResponseBody = submittedDeals.find((deal) =>
           deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
 
-        const yesterdayFormatted = moment(yesterday).format('DD-MM-YYYY');
-        const todayFormatted = moment().format('DD-MM-YYYY');
+        const yesterdayFormatted = format(yesterday, 'dd-MM-yyyy');
+        const todayFormatted = format(today, 'dd-MM-yyyy');
 
         // manually update deal's tfm object for test
         const dealSubmittedYesterdayUpdateResponse = await api.put({
@@ -489,7 +492,7 @@ describe('/v1/tfm/deals', () => {
 
         const mockReqBody = {
           queryParams: {
-            searchString: String(moment(yesterday).format('DD/MM/YYYY')),
+            searchString: String(format(yesterday, 'dd/MM/yyyy')),
           },
         };
 
