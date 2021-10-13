@@ -79,7 +79,7 @@ exports.findOne = async (req, res) => {
 };
 
 const issueAcbsFacility = async (id, facility, supplierName) => {
-  if (id && facility && supplierName) {
+  if (id) {
     const response = await axios({
       method: 'post',
       url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
@@ -101,7 +101,7 @@ exports.issueAcbsFacilityPOST = async (req, res) => {
     const { status, data } = await issueAcbsFacility(id, facility, supplierName);
     return res.status(status).send(data);
   }
-  return {};
+  return res.status(500).send();
 };
 
 const createAcbsRecord = async (deal, bank) => {
@@ -125,5 +125,5 @@ exports.createAcbsRecordPOST = async (req, res) => {
     const { status, data } = await createAcbsRecord(deal, bank);
     return res.status(status).send(data);
   }
-  return {};
+  return res.status(500).send();
 };
