@@ -13,14 +13,12 @@ const automaticCover = async (req, res) => {
   const { applicationId } = params;
 
   try {
-    const { terms } = await api.getEligibilityCriteria();
     const application = await api.getApplication(applicationId);
     const { eligibilityCriteria } = application;
 
-    const mappedTerms = terms.map((term) => ({
-      ...term,
-      answer: eligibilityCriteria.answers.length ? eligibilityCriteria.answers.find((answer) => answer.id === term.id).answer : null,
-      htmlText: decode(term.htmlText),
+    const mappedTerms = eligibilityCriteria.answers.map((answerObj) => ({
+      ...answerObj,
+      htmlText: decode(answerObj.htmlText),
     }));
 
     return res.render('partials/automatic-cover.njk', {
@@ -33,10 +31,10 @@ const automaticCover = async (req, res) => {
   }
 };
 
-const getValidationErrors = (fields, items) => {
-  const receivedFields = Object.keys(fields); // Array of received fields i.e ['coverStart']
-  const errorsToDisplay = items.filter(
-    (item) => !receivedFields.includes(String(item.id)),
+const getValidationErrors = (fields, allCriteria) => {
+  const receivedFields = Object.keys(fields);
+  const errorsToDisplay = allCriteria.filter(
+    (criterion) => !receivedFields.includes(String(criterion.id)),
   );
 
   return errorsToDisplay.map((error) => ({
@@ -45,33 +43,43 @@ const getValidationErrors = (fields, items) => {
   }));
 };
 
-const deriveCoverType = (fields, items) => {
+const deriveCoverType = (fields, allCriteria) => {
   const receivedFields = Object.values(fields);
 
-  if (receivedFields.length !== items.length) return undefined;
+  if (receivedFields.length !== allCriteria.length) return undefined;
   if (receivedFields.every(((field) => field === 'true'))) return DEAL_SUBMISSION_TYPE.AIN;
   if (receivedFields.some((field) => field === 'false')) return DEAL_SUBMISSION_TYPE.MIA;
 
   return undefined;
 };
 
+// TODO: extract
+const stringToBoolean = (str) => str === 'false' ? false : !!str;
+
 const validateAutomaticCover = async (req, res, next) => {
   try {
     const { body, params, query } = req;
     const { applicationId } = params;
     const { saveAndReturn } = query;
-    const { terms } = await api.getEligibilityCriteria();
-    const automaticCoverErrors = getValidationErrors(body, terms);
-    const coverType = deriveCoverType(body, terms);
+    const application = await api.getApplication(applicationId);
+    const { eligibilityCriteria } = application;
+
+
+    // TODO: change answeres object name - misleading.
+    // it's not just answers now, it also has the text and error message.
+    const automaticCoverErrors = getValidationErrors(body, eligibilityCriteria.answers);
+    const coverType = deriveCoverType(body, eligibilityCriteria.answers);
 
     if (!saveAndReturn && automaticCoverErrors.length > 0) {
+      const mappedTerms = eligibilityCriteria.answers.map((answerObj) => ({
+        ...answerObj,
+        answer: body[String(answerObj.id)] ? stringToBoolean(body[String(answerObj.id)]) : null,
+        htmlText: decode(answerObj.htmlText),
+      }));
+
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-        selected: body,
-        terms: terms.map((term) => ({
-          ...term,
-          htmlText: decode(term.htmlText),
-        })),
+        terms: mappedTerms,
         applicationId,
       });
     }
@@ -79,13 +87,12 @@ const validateAutomaticCover = async (req, res, next) => {
     await updateSubmissionType(applicationId, coverType);
 
     // copy existing answers
-    const { eligibilityCriteria } = await api.getApplication(applicationId);
     const newAnswers = eligibilityCriteria.answers;
 
     // only update the answers that have been submitted.
     Object.keys(body).forEach((key) => {
       const answerIndex = newAnswers.findIndex((a) => a.id === Number(key));
-      newAnswers[answerIndex].answer = Boolean(body[key]);
+      newAnswers[answerIndex].answer = stringToBoolean(body[key]);
     });
 
     const applicationUpdate = {
@@ -94,7 +101,7 @@ const validateAutomaticCover = async (req, res, next) => {
       },
     };
 
-    const application = await api.updateApplication(applicationId, applicationUpdate);
+    await api.updateApplication(applicationId, applicationUpdate);
 
     if (saveAndReturn) {
       return res.redirect(`/gef/application-details/${applicationId}`);

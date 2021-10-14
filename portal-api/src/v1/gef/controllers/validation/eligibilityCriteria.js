@@ -1,7 +1,7 @@
 const { STATUS } = require('../../enums');
 
 const requiredAnswers = (answers) =>
-  answers.filter((a) => !a.answer);
+  answers.filter((a) => a.answer === null);
 
 const isAutomaticCover = (answers) => {
   if (answers.every((a) => a.answer === true)) {
