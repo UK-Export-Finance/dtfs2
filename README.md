@@ -38,7 +38,7 @@ Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
 Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
 
-## Running the world locally
+## Running the world locally 
 
 ```shell
 docker-compose up
