@@ -9,6 +9,10 @@ const {
 const {
   supportingInfoStatus,
 } = require('./validation/supportingInfo');
+
+const {
+  eligibilityCriteriaStatus,
+} = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
 
 const { Application } = require('../models/application');
@@ -96,10 +100,8 @@ exports.getById = async (req, res) => {
       doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
     }
 
-    // TEMP
     if (doc.eligibilityCriteria) {
-      doc.eligibilityCriteria.status = 'NOT_STARTED';
-      doc.eligibilityCriteria.isAutomaticCover = null;
+      doc.eligibilityCriteria.status = eligibilityCriteriaStatus(doc.eligibilityCriteria.answers);
     }
     res.status(200).send(doc);
   } else {

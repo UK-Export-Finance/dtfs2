@@ -9,7 +9,7 @@ class Application {
       this.status = STATUS.DRAFT;
       this.bankId = req.bankId ? String(req.bankId) : null;
       this.exporterId = exporterId;
-      this.eligibilityCriteria = { answers: {} };
+      this.eligibilityCriteria = { answers: [] };
 
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;

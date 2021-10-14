@@ -42,7 +42,6 @@ function buildBody(app, previewMode) {
   const coverUrl = `/gef/application-details/${app.id}/automatic-cover`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
-  console.log('YOOOO app \n', app);
   return {
     application: app,
     isAutomaticCover: app.eligibilityCriteria.isAutomaticCover,

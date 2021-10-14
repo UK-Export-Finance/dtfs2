@@ -9,6 +9,7 @@ const {
 const { status } = require('../utils/helpers');
 const { PROGRESS, DEAL_SUBMISSION_TYPE } = require('../../constants');
 
+// this is also somewhere else in the app
 const termToEligibilityCriteria = {
   coverStart: 12,
   noticeDate: 13,
@@ -35,7 +36,7 @@ const deriveSupportingInfoRequiredDocuments = (application) => {
   let requiredDocs = [];
 
   Object.keys(termToSupportDocuments).forEach((term) => {
-    if (application.coverTerms.details[term] === 'false') {
+    if (application.coverTerms && application.coverTerms.details[term] === 'false') {
       requiredDocs = requiredDocs.concat(termToSupportDocuments[term]);
     }
   });
@@ -72,13 +73,14 @@ class Application {
 
       const exporterPro = getExporter(application.exporterId);
       const facilitiesPro = getFacilities(id);
-      // const eligibilityCriteriaPro = getEligibilityCriteria();
+      const eligibilityCriteriaPro = getEligibilityCriteria();
 
-      const all = await Promise.all([exporterPro, facilitiesPro]);
-      [application.exporter, application.facilities] = [...all];
+      let eligibilityCriteriaContent;
+
+      const all = await Promise.all([ exporterPro, facilitiesPro, eligibilityCriteriaPro]);
+      [ application.exporter, application.facilities, eligibilityCriteriaContent ] = [...all];
 
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
-      // application.coverStatus = status[application.coverTerms.status || PROGRESS.NOT_STARTED];
       application.eligibilityCriteriaStatus = status[application.eligibilityCriteria.status || PROGRESS.NOT_STARTED];
       application.facilitiesStatus = status[application.facilities.status || PROGRESS.NOT_STARTED];
       if (application.supportingInformation) {
@@ -91,7 +93,6 @@ class Application {
       // Can only submit when all section statuses are set to complete
       // and the application is in Draft or CHANGES_REQUIRED
       application.canSubmit = application.exporterStatus.code === PROGRESS.COMPLETED
-        // && application.coverStatus.code === PROGRESS.COMPLETED
         && application.eligibilityCriteriaStatus.code === PROGRESS.COMPLETED
         && application.facilitiesStatus.code === PROGRESS.COMPLETED
         && (
@@ -112,23 +113,15 @@ class Application {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }
 
-      // const termToEligibilityCriteria = {
-      //   coverStart: 12,
-      //   noticeDate: 13,
-      //   facilityLimit: 14,
-      //   exporterDeclaration: 15,
-      //   dueDiligence: 16,
-      //   facilityLetter: 17,
-      //   facilityBaseCurrency: 18,
-      //   facilityPaymentCurrency: 19,
-      // };
-
-      // application.eligibilityCriteria = application.ecs.terms.map((term) => ({
-      //   id: termToEligibilityCriteria[term.id],
-      //   description: decode(term.htmlText),
-      //   descriptionList: [],
-      //   answer: application.coverTerms.details[term.id],
-      // }));
+      application.eligibilityCriteria =application.eligibilityCriteria.answers.map((answer) => {
+        const contentObj = eligibilityCriteriaContent.terms.find((term) => term.id === answer.id);
+        return {
+          ...answer,
+          description: decode(contentObj.htmlText),
+          descriptionList: [],
+        };
+      });
+      
       return application;
     } catch (err) {
       // eslint-disable-next-line no-console

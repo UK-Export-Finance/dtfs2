@@ -14,14 +14,12 @@ const automaticCover = async (req, res) => {
 
   try {
     const { terms } = await api.getEligibilityCriteria();
-    // const { eligibilityCriteria } = await api.getApplication(applicationId);
-    const theApp = await api.getApplication(applicationId);
-    console.log('*** theApp \n', theApp);
-    const { eligibilityCriteria } = theApp;
+    const application = await api.getApplication(applicationId);
+    const { eligibilityCriteria } = application;
 
     const mappedTerms = terms.map((term) => ({
       ...term,
-      answer: eligibilityCriteria.answers ? eligibilityCriteria.answers.find((answer) => answer.id === term.id).answer : null,
+      answer: eligibilityCriteria.answers.length ? eligibilityCriteria.answers.find((answer) => answer.id === term.id).answer : null,
       htmlText: decode(term.htmlText),
     }));
 
@@ -50,11 +48,6 @@ const getValidationErrors = (fields, items) => {
 const deriveCoverType = (fields, items) => {
   const receivedFields = Object.values(fields);
 
-  console.log('receivedFields.... \n', receivedFields);
-  console.log('items.... \n', items);
-
-  console.log('receivedFields length.... ', receivedFields.length);
-  console.log('items.... ', items.length);
   if (receivedFields.length !== items.length) return undefined;
   if (receivedFields.every(((field) => field === 'true'))) return DEAL_SUBMISSION_TYPE.AIN;
   if (receivedFields.some((field) => field === 'false')) return DEAL_SUBMISSION_TYPE.MIA;
@@ -83,7 +76,6 @@ const validateAutomaticCover = async (req, res, next) => {
       });
     }
 
-    console.log('==== coverType ', coverType);
     await updateSubmissionType(applicationId, coverType);
 
     const update = {
@@ -91,7 +83,8 @@ const validateAutomaticCover = async (req, res, next) => {
         // turn req.body object into array of objects
         answers: Object.keys(body).map((key) => ({
           id: Number(key),
-          answer: body[key],
+          name: terms.find((term) => term.id === Number(key)).name,
+          answer: Boolean(body[key]),
         })),
       },
     };

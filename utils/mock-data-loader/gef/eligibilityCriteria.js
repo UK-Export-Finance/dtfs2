@@ -17,16 +17,19 @@ const ELIGIBILITY_CRITERIA = [
     terms: [
       {
         id: 12,
+        name: 'coverStart',
         htmlText: escape('<p>12. The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
         errMsg: '12. Select if the Maximum Cover period has been exceeded',
       },
       {
         id: 13,
+        name: 'noticeDate',
         htmlText: escape('<p>13. The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).</p>'),
         errMsg: '13. Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
       },
       {
         id: 14,
+        name: 'facilityLimit',
         htmlText: escape(`<p>14.  The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:</p>
                 <div class="lower-roman-with-parens">
                 <ol type="i">
@@ -37,6 +40,7 @@ const ELIGIBILITY_CRITERIA = [
       },
       {
         id: 15,
+        name: 'exporterDeclaration',
         htmlText: escape(`<p>15. The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not
 involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear
 radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or
@@ -46,6 +50,7 @@ Exporter Declaration is inaccurate in any material respect.</p>`),
       },
       {
         id: 16,
+        name: 'dueDiligence',
         htmlText: escape(`<p>16. The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its 
 policies and procedures without having to escalate any issue raised during its Bank Due 
 Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due 
@@ -54,6 +59,7 @@ Diligence.</p>`),
       },
       {
         id: 17,
+        name: 'facilityLetter',
         htmlText: escape(`<p>17. Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, 
 arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and 
 (in the case of a Contingent Facility) any Risk Margin Fee:
@@ -77,12 +83,14 @@ Facility</li>
       },
       {
         id: 18,
+        name: 'facilityBaseCurrency',
         htmlText: escape(`<p>18. Facility Base Currency satisfies the following conditions: is denominated in an Approved 
 Payment Currency.</p>`),
         errMsg: '18. Select if the Facility Base Currency satisfies the condition',
       },
       {
         id: 19,
+        name: 'facilityPaymentCurrency',
         htmlText: escape(`<p>19. Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, 
 arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and 
 (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved 
