@@ -316,11 +316,17 @@ input DealsSortBy {
   order: String
 }
 
+input DealsByField {
+  name: String
+  value: String
+}
+
 input DealsInput {
   start: Int
   pagesize: Int
   searchString: String
   sortBy: DealsSortBy
+  byField: [DealsByField]
 }
 
 type DealSnapshot {
