@@ -27,7 +27,7 @@ See mock users: utils/mock-data-loader/portal/users.js
 npm run test
 ```
 
-### **Run a single UI test**
+### **Run a single UI test **
 
 ```shell
 npm run test /path/to/file.test.js
