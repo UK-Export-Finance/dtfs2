@@ -5,8 +5,8 @@ const gql = require('graphql-tag');
 // This query is used by external systems.
 
 const dealsQuery = gql`
-query Deals($searchString: String, $sortBy: DealsSortBy, $start: Int, $pagesize: Int){
-  deals(params: {searchString: $searchString, sortBy: $sortBy, start: $start, pagesize: $pagesize}) {
+query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField], $start: Int, $pagesize: Int){
+  deals(params: {searchString: $searchString, sortBy: $sortBy, byField: $byField, start: $start, pagesize: $pagesize}) {
     count
     deals{
       _id
