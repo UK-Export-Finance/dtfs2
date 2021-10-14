@@ -156,18 +156,17 @@ type Exporter {
   updatedAt: Float
 }
 
-type CoverTerms {
-  _id: String
-  coverStart: Boolean
-  noticeDate: Boolean
-  facilityLimit: Boolean
-  exporterDeclaration: Boolean
-  dueDiligence: Boolean
-  facilityLetter: Boolean
-  facilityBaseCurrency: Boolean
-  facilityPaymentCurrency: Boolean
-  createdAt: Float
-  updatedAt: Float
+type EligibilityCriteriaAnswer {
+  id: Int
+  name: String
+  htmlText: String
+  errMsg: String
+  answer: Boolean
+}
+
+type EligibilityCriteria {
+  updatedAt: Int
+  answers: [EligibilityCriteriaAnswer]
 }
 
 type GefDeal {
@@ -187,7 +186,7 @@ type GefDeal {
   createdAt: Float
   updatedAt: Float
   exporter: Exporter
-  coverTerms: CoverTerms
+  eligibilityCriteria: EligibilityCriteria
 }
 
 type GefDealsQuery {

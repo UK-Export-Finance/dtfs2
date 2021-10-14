@@ -56,16 +56,6 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const MockCoverTermsResponse = () => {
-  const res = {};
-  res.status = 'NOT_STARTED';
-  res.details = {};
-  res.validation = {};
-  res.validation.required = [];
-  res.data = [];
-  return res;
-};
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
@@ -104,7 +94,6 @@ describe('controllers/about-exporter', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(mockExporterResponse);
-    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.getUserDetails.mockResolvedValue(MockUserResponse());
@@ -147,7 +136,7 @@ describe('controllers/about-exporter', () => {
             status: expect.any(Object),
             rows: expect.any(Array),
           },
-          coverTerms: {
+          eligibilityCriteria: {
             status: expect.any(Object),
             rows: expect.any(Array),
           },

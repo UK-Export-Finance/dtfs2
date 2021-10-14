@@ -317,15 +317,6 @@ exports.findDeals = async (
         },
       },
       { $unwind: '$exporter' },
-      // {
-      //   $lookup: {
-      //     from: 'gef-cover-terms',
-      //     localField: 'coverTermsId',
-      //     foreignField: '_id',
-      //     as: 'coverTerms',
-      //   },
-      // },
-      // { $unwind: '$coverTerms' },
       { $match: sanitisedFilters },
       { $sort: { updatedAt: -1, createdAt: -1 } },
       {

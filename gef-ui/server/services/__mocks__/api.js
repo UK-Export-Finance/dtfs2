@@ -7,8 +7,6 @@ module.exports = {
   getApplication: jest.fn(),
   getExporter: jest.fn(),
   updateExporter: jest.fn(),
-  getCoverTerms: jest.fn(),
-  updateCoverTerms: jest.fn(),
   getFacilities: jest.fn(),
   createFacility: jest.fn(),
   getFacility: jest.fn(),

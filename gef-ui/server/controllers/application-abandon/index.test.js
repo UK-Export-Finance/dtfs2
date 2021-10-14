@@ -47,16 +47,6 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const MockCoverTermsResponse = () => {
-  const res = {};
-  res.status = 'NOT_STARTED';
-  res.details = {};
-  res.validation = {};
-  res.validation.required = [];
-  res.data = [];
-  return res;
-};
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
@@ -86,7 +76,6 @@ describe('controllers/application-abandon', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(MockExporterResponse());
-    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.setApplicationStatus.mockResolvedValue({});

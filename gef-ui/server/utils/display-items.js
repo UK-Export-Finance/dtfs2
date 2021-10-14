@@ -49,7 +49,7 @@ const exporterItems = (exporterUrl, options = {}) => [
   },
 ];
 
-const coverItems = (coverUrl) => [
+const eligibilityCriteriaItems = (coverUrl) => [
   {
     label: 'Cover',
     id: 'cover',
@@ -159,6 +159,6 @@ const facilityItems = (facilityUrl, {
 
 module.exports = {
   exporterItems,
-  coverItems,
+  eligibilityCriteriaItems,
   facilityItems,
 };

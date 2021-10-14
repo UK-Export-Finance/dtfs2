@@ -35,29 +35,20 @@ const MockCoverResponse = () => {
   return res;
 };
 
-const MockCoverTermsResponse = () => {
-  const res = {};
-  return res;
-};
-
 const mockUpdateApplication = jest.fn(() => Promise.resolve());
 
 describe('controllers/automatic-cover', () => {
   let mockResponse;
   let mockRequest;
   let mockCoverResponse;
-  let mockCoverTermsResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockCoverResponse = MockCoverResponse();
-    mockCoverTermsResponse = MockCoverTermsResponse();
 
     api.getApplication.mockResolvedValue({});
     api.getEligibilityCriteria.mockResolvedValue(mockCoverResponse);
-    api.getCoverTerms.mockResolvedValue(mockCoverTermsResponse);
-    api.updateCoverTerms.mockResolvedValue({});
     api.updateApplication = mockUpdateApplication;
   });
 

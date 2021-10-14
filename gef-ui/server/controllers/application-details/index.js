@@ -2,7 +2,7 @@
 const _startCase = require('lodash/startCase');
 const { mapSummaryList } = require('../../utils/helpers');
 const {
-  exporterItems, coverItems, facilityItems,
+  exporterItems, eligibilityCriteriaItems, facilityItems,
 } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
 const { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } = require('../../../constants');
@@ -51,10 +51,8 @@ function buildBody(app, previewMode) {
         showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
       }), previewMode),
     },
-    coverTerms: {
+    eligibilityCriteria: {
       status: app.eligibilityCriteriaStatus,
-      // rows: mapSummaryList(app.eligibilityCriteria, coverItems(coverUrl), previewMode),
-      rows: [],
     },
     facilities: {
       status: app.facilitiesStatus,

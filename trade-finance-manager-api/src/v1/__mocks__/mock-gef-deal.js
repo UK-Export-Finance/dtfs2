@@ -9,16 +9,6 @@ const MOCK_GEF_DEAL = {
   submissionDate: '1626169888809',
   submissionCount: 1,
   submissionType: 'Automatic Inclusion Notice',
-  coverTerms: {
-    coverStart: 'true',
-    dueDiligence: 'true',
-    exporterDeclaration: 'true',
-    facilityBaseCurrency: 'true',
-    facilityLetter: 'true',
-    facilityLimit: 'true',
-    facilityPaymentCurrency: 'true',
-    noticeDate: 'true',
-  },
   createdAt: 1625827333471,
   exporter: {
     isFinanceIncreasing: true,

@@ -12,8 +12,8 @@
 
   <div class="govuk-grid-column-one-half">
     {{ govukTag({
-      text: coverTerms.status.text,
-      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + coverTerms.status.class,
+      text: eligibilityCriteria.status.text,
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + eligibilityCriteria.status.class,
       attributes: {
         'data-cy': 'automatic-cover-status'
       }
@@ -21,7 +21,7 @@
   </div>
 </div>
 {%if not previewMode %}
-  {% if coverTerms.status.code === 'NOT_STARTED' or coverTerms.status.code === 'IN_PROGRESS' %}
+  {% if eligibilityCriteria.status.code === 'NOT_STARTED' or eligibilityCriteria.status.code === 'IN_PROGRESS' %}
     <a class="govuk-link" href="/gef/application-details/{{applicationId}}/automatic-cover" data-cy="automatic-cover-details-link">
       Check if you're eligible for automatic cover
     </a>

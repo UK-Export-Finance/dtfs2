@@ -51,7 +51,7 @@ const MockApplicationResponse = () => {
   res.exporterId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.coverTerms = {
+  res.eligibilityCriteria = {
     isAutomaticCover: true,
   };
   return res;
@@ -69,17 +69,6 @@ const MockExporterResponse = () => {
   res.validation = {};
   res.details.companiesHouseRegistrationNumber = 'tedsi';
   res.validation.required = [];
-  return res;
-};
-
-const MockCoverTermsResponse = () => {
-  const res = {};
-  res.status = 'COMPLETE';
-  res.details = {};
-  res.validation = {};
-  res.validation.required = [];
-  res.isAutomaticCover = true;
-  res.data = [];
   return res;
 };
 
@@ -112,7 +101,6 @@ describe('controllers/application-submission', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(MockExporterResponse());
-    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.getUserDetails.mockResolvedValue(MockUserResponse());

@@ -63,5 +63,4 @@ export {
   updateExporter,
   fetchAllFacilities,
   setApplicationStatus,
-  updateCoverTerms,
 };
