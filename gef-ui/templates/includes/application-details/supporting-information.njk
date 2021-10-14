@@ -11,15 +11,17 @@
   </div>
 
   <div class="govuk-grid-column-one-half">
-    {{ govukTag({
-      text: supportingInfo.status.text,
-      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + supportingInfo.status.class,
-      attributes: {
-        'data-cy': 'supportingInfo-status'
-      }
-    }) }}
+    {% if not previewMode%}
+      {{ govukTag({
+        text: supportingInfo.status.text,
+        classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + supportingInfo.status.class,
+        attributes: {
+          'data-cy': 'supportingInfo-status'
+        }
+      }) }}
+    {% endif %}
   </div>
-</div>
+</div> 
 
 {% if supportingInfo.status.code === 'NOT_STARTED' and not previewMode %}
   <a class="govuk-link" href="/gef/application-details/{{applicationId}}/supporting-information/manual-inclusion-questionnaire" data-cy="supportingInfo-start-link">Add supporting information</a>
@@ -90,9 +92,9 @@
         actions: {
           items: [
             {
-              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              href: "/gef/application-details/" + applicationId + "/supporting-information/financial-statements",
               text: "Change" if supportingInfo.financialStatements[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "financial statements"
             }
           ] if not previewMode
         }
@@ -104,14 +106,14 @@
         value: {
           text: "Required" if not supportingInfo.financialForecasts[0],
           classes: "has-text-danger" if not supportingInfo.financialForecasts[0],
-          html: fileList(supportingInfo.manualInclusion, "/files/") if supportingInfo.financialForecasts[0]
+          html: fileList(supportingInfo.financialForecasts, "/files/") if supportingInfo.financialForecasts[0]
         },
         actions: {
           items: [
             {
-              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              href: "/gef/application-details/" + applicationId + "/supporting-information/financial-forecasts",
               text: "Change" if supportingInfo.financialForecasts[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "financial forecasts"
             }
           ] if not previewMode
         }
@@ -128,9 +130,9 @@
         actions: {
           items: [
             {
-              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              href: "/gef/application-details/" + applicationId + "/supporting-information/financial-commentary",
               text: "Change" if supportingInfo.financialCommentary[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "financial commentary"
             }
           ] if not previewMode
         }
@@ -147,9 +149,9 @@
         actions: {
           items: [
             {
-              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              href: "/gef/application-details/" + applicationId + "/supporting-information/corporate-structure",
               text: "Change" if supportingInfo.corporateStructure[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "corporate structure"
             }
           ] if not previewMode
         }
@@ -166,9 +168,9 @@
         actions: {
           items: [
             {
-              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              href: "/gef/application-details/" + applicationId + "/supporting-information/debtor-creditor-reports",
               text: "Change" if supportingInfo.debtorAndCreditorReports[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "aged debtor and creditor listing"
             }
           ] if not previewMode
         }
@@ -204,9 +206,9 @@
         actions: {
           items: [
             {
-              href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
+              href: "/gef/application-details/" + applicationId + "/supporting-information/export-licence",
               text: "Change" if supportingInfo.exportLicence[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "export licence"
             }
           ] if not previewMode
         }
