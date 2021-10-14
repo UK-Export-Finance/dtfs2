@@ -21,6 +21,9 @@
   {% include "includes/application-preview/about-exporter.njk" %}
   {% include "includes/application-preview/automatic-cover.njk" %}
   {% include "includes/application-preview/facilities.njk" %}
+  {% if not isAutomaticCover %}
+    {% include "includes/application-details/supporting-information.njk" %} 
+  {% endif %}
   {% if checkerCanSubmit %}
     {% include "includes/application-preview/submit.njk" %}
   {% endif %}
