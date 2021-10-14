@@ -78,17 +78,23 @@ const validateAutomaticCover = async (req, res, next) => {
 
     await updateSubmissionType(applicationId, coverType);
 
-    const update = {
+    // copy existing answers
+    const { eligibilityCriteria } = await api.getApplication(applicationId);
+    const newAnswers = eligibilityCriteria.answers;
+
+    // only update the answers that have been submitted.
+    Object.keys(body).forEach((key) => {
+      const answerIndex = newAnswers.findIndex((a) => a.id === Number(key));
+      newAnswers[answerIndex].answer = Boolean(body[key]);
+    });
+
+    const applicationUpdate = {
       eligibilityCriteria: {
-        // turn req.body object into array of objects
-        answers: Object.keys(body).map((key) => ({
-          id: Number(key),
-          name: terms.find((term) => term.id === Number(key)).name,
-          answer: Boolean(body[key]),
-        })),
+        answers: newAnswers,
       },
     };
-    const application = await api.updateApplication(applicationId, update);
+
+    const application = await api.updateApplication(applicationId, applicationUpdate);
 
     if (saveAndReturn) {
       return res.redirect(`/gef/application-details/${applicationId}`);

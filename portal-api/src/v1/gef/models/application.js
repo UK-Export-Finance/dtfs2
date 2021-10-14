@@ -1,15 +1,22 @@
 const { DEAL_TYPE, STATUS } = require('../enums');
 
 class Application {
-  constructor(req, exporterId) {
-    if (exporterId) {
+  constructor(req, exporterId, eligibilityTerms) {
+    if (exporterId && eligibilityTerms) {
       // New Application
       this.dealType = DEAL_TYPE;
       this.userId = req.userId ? String(req.userId) : null;
       this.status = STATUS.DRAFT;
       this.bankId = req.bankId ? String(req.bankId) : null;
+
       this.exporterId = exporterId;
-      this.eligibilityCriteria = { answers: [] };
+
+      this.eligibilityCriteria = {
+        answers: eligibilityTerms.map((term) => ({
+          ...term,
+          answer: null,
+        })),
+      };
 
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;

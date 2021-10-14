@@ -1,6 +1,6 @@
 const { STATUS } = require('../../enums');
 
-const hasRequiredItems = (answers) =>
+const requiredAnswers = (answers) =>
   answers.filter((a) => !a.answer);
 
 const isAutomaticCover = (answers) => {
@@ -15,17 +15,18 @@ const isAutomaticCover = (answers) => {
 };
 
 const eligibilityCriteriaStatus = (answers) => {
-  const requiredCount = hasRequiredItems(answers).length;
+  const count = answers.length;
+  const requiredCount = requiredAnswers(answers).length;
 
-  if (requiredCount > 0) {
-    return STATUS.IN_PROGRESS;
+  if (requiredCount === count) {
+    return STATUS.NOT_STARTED;
   }
 
   if (requiredCount === 0) {
     return STATUS.COMPLETED;
   }
 
-  return STATUS.NOT_STARTED;
+  return STATUS.IN_PROGRESS;
 };
 
 const eligibilityCriteriaValidation = (answers) => ({

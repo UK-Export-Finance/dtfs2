@@ -14,6 +14,7 @@ const {
   eligibilityCriteriaStatus,
 } = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
+const { getLatestCriteria: getLatestEligibilityCriteria } = require('../controllers/eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
@@ -62,9 +63,10 @@ exports.create = async (req, res) => {
     res.status(422).send(validateErrs);
   } else {
     const exporter = await exporterCollection.insertOne(new Exporter());
+    const eligibility = await getLatestEligibilityCriteria();
 
     const createdApplication = await applicationCollection.insertOne(
-      new Application(req.body, exporter.insertedId),
+      new Application(req.body, exporter.insertedId, eligibility.terms),
     );
 
     const application = await applicationCollection.findOne({
@@ -157,6 +159,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 
   const exporterCollection = await db
     .getCollection(exporterCollectionName);
+
   // get exporter name
   const { companyName = '' } = await exporterCollection.findOne({
     _id: ObjectID(String(existingApplication.exporterId)),
