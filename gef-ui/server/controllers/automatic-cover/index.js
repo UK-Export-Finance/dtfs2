@@ -54,7 +54,7 @@ const deriveCoverType = (fields, allCriteria) => {
 };
 
 // TODO: extract
-const stringToBoolean = (str) => str === 'false' ? false : !!str;
+const stringToBoolean = (str) => (str === 'false') ? false : !!str;
 
 const validateAutomaticCover = async (req, res, next) => {
   try {
@@ -63,7 +63,6 @@ const validateAutomaticCover = async (req, res, next) => {
     const { saveAndReturn } = query;
     const application = await api.getApplication(applicationId);
     const { eligibilityCriteria } = application;
-
 
     // TODO: change answeres object name - misleading.
     // it's not just answers now, it also has the text and error message.

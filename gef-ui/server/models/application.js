@@ -9,18 +9,6 @@ const {
 const { status } = require('../utils/helpers');
 const { PROGRESS, DEAL_SUBMISSION_TYPE } = require('../../constants');
 
-// this is also somewhere else in the app
-const termToEligibilityCriteria = {
-  coverStart: 12,
-  noticeDate: 13,
-  facilityLimit: 14,
-  exporterDeclaration: 15,
-  dueDiligence: 16,
-  facilityLetter: 17,
-  facilityBaseCurrency: 18,
-  facilityPaymentCurrency: 19,
-};
-
 const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
   noticeDate: ['manualInclusion'],
@@ -80,7 +68,7 @@ class Application {
       let eligibilityCriteriaContent;
 
       const all = await Promise.all([ exporterPro, facilitiesPro, eligibilityCriteriaPro]);
-      [ application.exporter, application.facilities, eligibilityCriteriaContent ] = [...all];
+      [application.exporter, application.facilities, eligibilityCriteriaContent] = [...all];
 
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
       application.eligibilityCriteriaStatus = status[application.eligibilityCriteria.status || PROGRESS.NOT_STARTED];
@@ -115,7 +103,7 @@ class Application {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }
 
-      application.eligibilityCriteria =application.eligibilityCriteria.answers.map((answer) => {
+      application.eligibilityCriteria = application.eligibilityCriteria.answers.map((answer) => {
         const contentObj = eligibilityCriteriaContent.terms.find((term) => term.id === answer.id);
         return {
           ...answer,
@@ -123,7 +111,7 @@ class Application {
           descriptionList: [],
         };
       });
-      
+
       return application;
     } catch (err) {
       // eslint-disable-next-line no-console

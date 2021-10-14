@@ -2,7 +2,7 @@
 const _startCase = require('lodash/startCase');
 const { mapSummaryList } = require('../../utils/helpers');
 const {
-  exporterItems, eligibilityCriteriaItems, facilityItems,
+  exporterItems, facilityItems,
 } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
 const { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } = require('../../../constants');
@@ -39,7 +39,6 @@ function buildHeader(app) {
 
 function buildBody(app, previewMode) {
   const exporterUrl = `/gef/application-details/${app.id}`;
-  const coverUrl = `/gef/application-details/${app.id}/automatic-cover`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
   return {
