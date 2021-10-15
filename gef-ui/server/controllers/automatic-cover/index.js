@@ -54,7 +54,7 @@ const deriveCoverType = (fields, allCriteria) => {
 };
 
 // TODO: extract
-const stringToBoolean = (str) => (str === 'false') ? false : !!str;
+const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
 const validateAutomaticCover = async (req, res, next) => {
   try {

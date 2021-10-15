@@ -67,7 +67,7 @@ class Application {
 
       let eligibilityCriteriaContent;
 
-      const all = await Promise.all([ exporterPro, facilitiesPro, eligibilityCriteriaPro]);
+      const all = await Promise.all([exporterPro, facilitiesPro, eligibilityCriteriaPro]);
       [application.exporter, application.facilities, eligibilityCriteriaContent] = [...all];
 
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
