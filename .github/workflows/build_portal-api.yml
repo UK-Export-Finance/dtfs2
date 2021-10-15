@@ -1,8 +1,20 @@
 name: Build Portal API
 
 on:
-  pull_request:
-    branches: [ main ]
+  workflow_call:
+    inputs:
+      sha:
+        required: true
+        type: string
+    secrets:
+      AZURE_DIGITAL_DEV:
+        required: true
+      ACR_REGISTRY_DEV:
+        required: true
+      ACR_USERNAME_DEV:
+        required: true
+      ACR_PASSWORD_DEV:
+        required: true
 
 env:
   environment: dev
@@ -15,7 +27,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
-      run: "echo GITHUB_SHA=${{ github.sha }}"
+      run: "echo GITHUB_SHA=${{ inputs.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
@@ -24,6 +36,6 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: portal-api
         path: portal-api
-        tags: ${{ github.sha }}
-        build_args: GITHUB_SHA=${{ github.sha }}
+        tags: ${{ inputs.sha }}
+        build_args: GITHUB_SHA=${{ inputs.sha }}
         add_git_labels: true

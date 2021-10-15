@@ -1,56 +1,29 @@
-name: PR tests - ACBS Function App
+name: PR - ACBS
 
 on:
   pull_request:
     branches: [ main ]
     paths: 
     - 'azure-functions/acbs-function/**'
-  schedule:
-    # A weekly run to roll up any base image patches, 
-    # in office hours, avoiding bank holiday Mondays:
-    # "At 12:00 on Tuesday." - https://crontab.guru/
-    - cron: '0 12 * * 2'
 
 env:
   environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
 
 jobs:
-  set-environment:
-    name: Set Environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-    steps:
-    - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
-        
-  build:
-    name: Build and push ACBS Azure Function
-    runs-on: ubuntu-latest
-    needs: set-environment
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Commit hash
-      run: "echo GITHUB_SHA=${{ github.sha }}"
-    - name: Build and push
-      uses: docker/build-push-action@v1
-      with:
-        registry: ${{ secrets.ACR_REGISTRY_DEV }}
-        username: ${{ secrets.ACR_USERNAME_DEV }}
-        password: ${{ secrets.ACR_PASSWORD_DEV }}
-        repository: azure-function-acbs
-        path: azure-functions/acbs-function
-        tags: ${{ github.sha }}
-        build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true
+  workflow-build-acbs:
+    uses: uk-export-finance/dtfs/.github/workflows/build_azure-function-acbs.yml@main
+    with:
+      sha: ${{ github.sha }}
+    secrets:
+      AZURE_DIGITAL_DEV: ${{ secrets.AZURE_DIGITAL_DEV }}
+      ACR_REGISTRY_DEV: ${{ secrets.ACR_REGISTRY_DEV }}
+      ACR_USERNAME_DEV: ${{ secrets.ACR_USERNAME_DEV }}
+      ACR_PASSWORD_DEV: ${{ secrets.ACR_PASSWORD_DEV }}
 
   test:
-    name: Run PR tests
-    needs: [set-environment, build]
+    name: Test ACBS Functions
+    needs: [workflow-build-acbs]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: ubuntu-latest
