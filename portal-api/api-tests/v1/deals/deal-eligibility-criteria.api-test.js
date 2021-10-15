@@ -270,7 +270,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       expect(body.details.submissionType).toEqual('Manual Inclusion Application');
     });
 
-    it('updates the lastUpdated timestamp on each update', () => {
+    it('updates the lastUpdated timestamp on each update', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 

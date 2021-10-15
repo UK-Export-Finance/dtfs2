@@ -11,6 +11,7 @@ const { expectMongoId } = require('../../expectMongoIds');
 const baseUrl = '/v1/gef/application';
 const collectionName = 'gef-application';
 const mockApplications = require('../../fixtures/gef/application');
+const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 
 const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
@@ -86,6 +87,7 @@ describe(baseUrl, () => {
           supportingInformation: {},
           ukefDealId: null,
           checkerId: null,
+          eligibilityCriteria: { answers: mockEligibilityCriteria },
         })),
       };
 
@@ -124,6 +126,7 @@ describe(baseUrl, () => {
         },
         ukefDealId: null,
         checkerId: null,
+        eligibilityCriteria: { answers: mockEligibilityCriteria },
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -184,6 +187,7 @@ describe(baseUrl, () => {
         supportingInformation: {},
         ukefDealId: null,
         checkerId: null,
+        eligibilityCriteria: { answers: mockEligibilityCriteria },
       };
       expect(body).toEqual(expectMongoId(expected));
     });
