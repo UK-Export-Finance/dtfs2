@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const morgan = require('morgan');
 const session = require('express-session');
 const redis = require('redis');
@@ -17,6 +18,7 @@ const sentry = require('./utils/sentry');
 const app = express();
 
 app.use(sentry);
+app.use(compression());
 const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {

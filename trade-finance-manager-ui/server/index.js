@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
 
@@ -24,6 +25,7 @@ configureNunjucks({
 
 app.use(express.urlencoded());
 app.use(session(sessionOptions()));
+app.use(compression());
 
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
