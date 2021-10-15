@@ -109,7 +109,7 @@ class Application {
         && user.roles.includes('maker');
 
       application.checkerCanSubmit = ['BANK_CHECK'].includes(application.status)
-        && user._id !== application.userId // The checker is not the maker
+        && !application.editedBy.includes(user._id) // The checker is not in the list of editors
         && user.roles.includes('checker');
 
       if (![PROGRESS.DRAFT].includes(application.status)) {
