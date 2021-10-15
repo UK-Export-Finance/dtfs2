@@ -1,5 +1,5 @@
 const { decode } = require('html-entities');
-const { validationErrorHandler } = require('../../utils/helpers');
+const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
 const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
 
 const api = require('../../services/api');
@@ -52,9 +52,6 @@ const deriveCoverType = (fields, allCriteria) => {
 
   return undefined;
 };
-
-// TODO: extract
-const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
 const validateAutomaticCover = async (req, res, next) => {
   try {
