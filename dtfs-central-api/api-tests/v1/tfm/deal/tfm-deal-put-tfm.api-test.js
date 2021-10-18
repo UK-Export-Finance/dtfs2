@@ -126,7 +126,6 @@ describe('/v1/tfm/deal/:id', () => {
 
       const dealAfterSecondUpdate = dealSecondUpdateBody.deal;
 
-
       const expectedHistory = {
         tasks: [
           ...firstHistoryUpdate.tfm.history.tasks,
