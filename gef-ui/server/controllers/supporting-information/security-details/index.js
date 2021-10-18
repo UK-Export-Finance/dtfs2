@@ -14,7 +14,7 @@ const getSecurityDetails = async (req, res) => {
 
     // if application not found not authorised to view route
     if (!application) {
-      console.log(`User unauthorised to view application ${applicationId} security details`);
+      console.error(`User unauthorised to view application ${applicationId} security details`);
       return res.sendStatus(404);
     }
 
@@ -27,7 +27,7 @@ const getSecurityDetails = async (req, res) => {
       applicationSecurity: securityDetails.application,
     });
   } catch (err) {
-    console.log(`Error getting security details ${err}`);
+    console.error(`Error getting security details ${err}`);
     return res.sendStatus(500);
   }
 };
@@ -98,7 +98,7 @@ const postSecurityDetails = async (req, res) => {
     const application = await Application.findById(applicationId, user, userToken);
 
     if (!application) {
-      console.log(`User unauthorised to update application ${applicationId} security details`);
+      console.error(`User unauthorised to update application ${applicationId} security details`);
       return res.sendStatus(404);
     }
 
@@ -111,7 +111,7 @@ const postSecurityDetails = async (req, res) => {
 
     return res.redirect('export-licence');
   } catch (err) {
-    console.log(`Error updating security details ${err}`);
+    console.error(`Error updating security details ${err}`);
     return res.sendStatus(500);
   }
 };
