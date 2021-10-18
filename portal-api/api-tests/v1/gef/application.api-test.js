@@ -78,6 +78,7 @@ describe(baseUrl, () => {
           ...expectMongoId(item),
           exporterId: expect.any(String),
           eligibility: {
+            criteria: mockEligibilityCriteria,
             lastUpdated: expect.any(Number),
           },
           createdAt: expect.any(Number),
@@ -89,7 +90,6 @@ describe(baseUrl, () => {
           supportingInformation: {},
           ukefDealId: null,
           checkerId: null,
-          eligibilityCriteria: { answers: mockEligibilityCriteria },
         })),
       };
 

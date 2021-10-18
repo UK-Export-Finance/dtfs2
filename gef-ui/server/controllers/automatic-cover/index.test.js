@@ -113,7 +113,7 @@ describe('controllers/automatic-cover', () => {
     it('renders the `automatic-cover` template', async () => {
       await automaticCover(mockRequest, mockResponse);
 
-      const expectedTerms = MockEligibilityCriteria().answers.map((criterion) => ({
+      const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
         htmlText: decode(criterion.htmlText),
       }));
@@ -161,7 +161,7 @@ describe('controllers/automatic-cover', () => {
     it('renders the correct data if validation fails', async () => {
       await validateAutomaticCover(mockRequest, mockResponse);
 
-      const expectedTerms = MockEligibilityCriteria().answers.map((criterion) => ({
+      const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
         htmlText: decode(criterion.htmlText),
       }));
