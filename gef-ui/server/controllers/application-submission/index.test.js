@@ -53,7 +53,12 @@ const MockApplicationResponse = () => {
   res.bankInternalRefName = 'My test';
   res.eligibilityCriteria = {
     isAutomaticCover: true,
+    answers: [
+      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+    ],
   };
+  res.submissionType = 'Automatic Inclusion Notice';
+
   return res;
 };
 
@@ -75,7 +80,7 @@ const MockExporterResponse = () => {
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
-      id: 'coverStart',
+      id: 12,
       htmlText: '<p>Some eligibility criteria</p>',
       errMsg: '12. Select some eligibilty',
     },

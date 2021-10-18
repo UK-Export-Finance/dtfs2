@@ -24,7 +24,12 @@ const deriveSupportingInfoRequiredDocuments = (application) => {
   let requiredDocs = [];
 
   Object.keys(termToSupportDocuments).forEach((term) => {
-    const { answer: criterionAnswer } = application.eligibilityCriteria.answers.find((a) => a.name === term);
+    const answerObj = application.eligibilityCriteria.answers.find((a) => a.name === term);
+
+    let criterionAnswer;
+    if (answerObj) {
+      criterionAnswer = answerObj.answer;
+    }
 
     if (criterionAnswer === false) {
       requiredDocs = requiredDocs.concat(termToSupportDocuments[term]);

@@ -38,6 +38,12 @@ const MockApplicationResponse = () => {
   res.supportingInformation = {
     status: 'NOT_STARTED',
   };
+  res.eligibilityCriteria = {
+    answers: [
+      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+    ],
+  };
+
   return res;
 };
 
@@ -59,7 +65,7 @@ const MockExporterResponse = () => {
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
-      id: 'coverStart',
+      id: 12,
       htmlText: '<p>Some eligibility criteria</p>',
       errMsg: '12. Select some eligibilty',
     },
@@ -137,8 +143,11 @@ describe('controllers/about-exporter', () => {
             rows: expect.any(Array),
           },
           eligibilityCriteria: {
-            status: expect.any(Object),
-            rows: expect.any(Array),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
           },
           facilities: {
             status: expect.any(Object),

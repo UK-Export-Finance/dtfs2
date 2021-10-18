@@ -21,17 +21,72 @@ const MockResponse = () => {
   return res;
 };
 
-const MockCoverResponse = () => {
+const MockEligibilityCriteria = () => ({
+  answers: [
+    {
+      id: 12,
+      name: 'coverStart',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 13,
+      name: 'noticeDate',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 14,
+      name: 'facilityLimit',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 15,
+      name: 'exporterDeclaration',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 16,
+      name: 'dueDiligence',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 17,
+      name: 'facilityLetter',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 18,
+      name: 'facilityBaseCurrency',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 19,
+      name: 'facilityPaymentCurrency',
+      answer: null,
+      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      errMsg: 'Mock error message',
+    },
+  ],
+});
+
+const MockApplicationResponse = () => {
   const res = {};
-  res.terms = [{
-    id: 'coverStart',
-    htmlText: '&lt;p&gt;x. this one shouldn&#39;t show as it&#39;s an old version&lt;/p&gt',
-    errMsg: 'Error message',
-  }, {
-    id: 'value',
-    htmlText: '&lt;p&gt;x. this one shouldn&#39;t show as it&#39;s an old version&lt;/p&gt',
-    errMsg: 'Error message',
-  }];
+  res._id = '1234';
+  res.eligibilityCriteria = MockEligibilityCriteria();
+
   return res;
 };
 
@@ -40,15 +95,14 @@ const mockUpdateApplication = jest.fn(() => Promise.resolve());
 describe('controllers/automatic-cover', () => {
   let mockResponse;
   let mockRequest;
-  let mockCoverResponse;
+  let mockApplicationResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
-    mockCoverResponse = MockCoverResponse();
+    mockApplicationResponse = MockApplicationResponse();
 
-    api.getApplication.mockResolvedValue({});
-    api.getEligibilityCriteria.mockResolvedValue(mockCoverResponse);
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.updateApplication = mockUpdateApplication;
   });
 
@@ -58,17 +112,15 @@ describe('controllers/automatic-cover', () => {
   describe('GET Automatic Cover', () => {
     it('renders the `automatic-cover` template', async () => {
       await automaticCover(mockRequest, mockResponse);
+
+      const expectedTerms = MockEligibilityCriteria().answers.map((criterion) => ({
+        ...criterion,
+        htmlText: decode(criterion.htmlText),
+      }));
+
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', {
-          terms: [{
-            errMsg: 'Error message',
-            htmlText: '<p>x. this one shouldn\'t show as it\'s an old version</p>',
-            id: 'coverStart',
-          }, {
-            errMsg: 'Error message',
-            htmlText: '<p>x. this one shouldn\'t show as it\'s an old version</p>',
-            id: 'value',
-          }],
+          terms: expectedTerms,
           applicationId: '123',
         });
     });
@@ -76,7 +128,7 @@ describe('controllers/automatic-cover', () => {
     it('redirects user to `problem with service` page if there is an issue with the api', async () => {
       const mockedRejection = { response: { status: 400, message: 'Whoops' } };
 
-      api.getEligibilityCriteria.mockRejectedValueOnce(mockedRejection);
+      api.getApplication.mockRejectedValueOnce(mockedRejection);
       await automaticCover(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
@@ -88,7 +140,7 @@ describe('controllers/automatic-cover', () => {
 
       beforeEach(async () => {
         mockRequest.query.saveAndReturn = 'true';
-        mockRequest.body = { coverStart: 'true' };
+        mockRequest.body = { '12': 'true' };
 
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -108,14 +160,17 @@ describe('controllers/automatic-cover', () => {
 
     it('renders the correct data if validation fails', async () => {
       await validateAutomaticCover(mockRequest, mockResponse);
+
+      const expectedTerms = MockEligibilityCriteria().answers.map((criterion) => ({
+        ...criterion,
+        htmlText: decode(criterion.htmlText),
+      }));
+
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
           errors: expect.any(Object),
-          terms: mockCoverResponse.terms.map((term) => ({
-            ...term,
-            htmlText: decode(term.htmlText),
-          })),
-          selected: {},
+          terms: expectedTerms,
+          // selected: {},
           applicationId: '123',
         }));
     });
@@ -124,7 +179,16 @@ describe('controllers/automatic-cover', () => {
       const mockApplicationId = '123';
 
       beforeEach(async () => {
-        mockRequest.body = { coverStart: 'false', value: 'true' };
+        mockRequest.body = {
+          '12': 'false',
+          '13': 'true',
+          '14': 'true',
+          '15': 'true',
+          '16': 'true',
+          '17': 'true',
+          '18': 'true',
+          '19': 'true',
+        };
         await validateAutomaticCover(mockRequest, mockResponse);
       });
 
@@ -133,7 +197,7 @@ describe('controllers/automatic-cover', () => {
           `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
         );
 
-        mockRequest.body = { coverStart: 'false', value: 'true' };
+        mockRequest.body = { '12': 'false', '13': 'true' };
         await validateAutomaticCover(mockRequest, mockResponse);
         expect(mockResponse.redirect).toHaveBeenCalledWith(
           `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
@@ -153,8 +217,17 @@ describe('controllers/automatic-cover', () => {
       const mockApplicationId = '123';
 
       beforeEach(async () => {
-        mockRequest.body = { coverStart: 'true', value: 'true' };
-        api.getEligibilityCriteria.mockResolvedValueOnce(mockCoverResponse);
+        mockRequest.body = {
+          '12': 'true',
+          '13': 'true',
+          '14': 'true',
+          '15': 'true',
+          '16': 'true',
+          '17': 'true',
+          '18': 'true',
+          '19': 'true',
+        };
+
         await validateAutomaticCover(mockRequest, mockResponse);
       });
 
@@ -178,7 +251,7 @@ describe('controllers/automatic-cover', () => {
 
       const mockedRejection = { status: 400, message: 'Whoops' };
 
-      api.getEligibilityCriteria.mockRejectedValueOnce(mockedRejection);
+      api.getApplication.mockRejectedValueOnce(mockedRejection);
       await validateAutomaticCover(mockRequest, mockResponse, next);
       expect(next).toHaveBeenCalledWith(mockedRejection);
     });

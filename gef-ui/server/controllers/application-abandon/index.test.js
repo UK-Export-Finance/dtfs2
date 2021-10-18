@@ -34,6 +34,11 @@ const MockApplicationResponse = () => {
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.status = 'Draft';
+  res.eligibilityCriteria = {
+    answers: [
+      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+    ],
+  };
   return res;
 };
 
@@ -50,7 +55,7 @@ const MockExporterResponse = () => {
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
-      id: 'coverStart',
+      id: 12,
       htmlText: '<p>Some eligibility criteria</p>',
       errMsg: '12. Select some eligibilty',
     },
@@ -72,7 +77,7 @@ describe('controllers/application-abandon', () => {
   beforeEach(() => {
     mockResponse = new MockResponse();
     mockRequest = new MockRequest();
-    mockApplicationResponse = MockApplicationResponse();
+    mockApplicationResponse = new MockApplicationResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(MockExporterResponse());
