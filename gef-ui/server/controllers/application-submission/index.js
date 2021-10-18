@@ -1,6 +1,6 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { PROGRESS } = require('../../../constants');
+const { DEAL_SUBMISSION_TYPE, PROGRESS } = require('../../../constants');
 const Application = require('../../models/application');
 
 const maxCommentLength = 400;
@@ -10,7 +10,7 @@ const getApplicationSubmission = async (req, res) => {
   const { applicationId } = params;
   const { user, userToken } = session;
   const application = await Application.findById(applicationId, user, userToken);
-  const isAutomaticCover = application.eligibilityCriteria && application.eligibilityCriteria.isAutomaticCover;
+  const isAutomaticCover = (application.submissionType === DEAL_SUBMISSION_TYPE.AIN);
 
   return res.render('application-details-comments.njk', { applicationId, isAutomaticCover, maxCommentLength });
 };
@@ -21,7 +21,7 @@ const postApplicationSubmission = async (req, res, next) => {
   const { applicationId } = params;
   const { comment } = body;
   const application = await Application.findById(applicationId, user, userToken);
-  const isAutomaticCover = application.eligibilityCriteria && application.eligibilityCriteria.isAutomaticCover;
+  const isAutomaticCover = (application.submissionType === DEAL_SUBMISSION_TYPE.AIN);
   const maker = await api.getUserDetails(application.userId, userToken);
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
