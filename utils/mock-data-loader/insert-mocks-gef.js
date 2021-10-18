@@ -33,13 +33,42 @@ const insertMocks = async () => {
   }
 
   console.log('inserting application');
-  for (const item of MOCKS.APPLICATION) {
+  for (const [index, item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, token);
 
+
+    const applicationUpdate = {
+      submissionType: item.submissionType,
+    };
+
+    // update the second 'in progress' mock deal
+    // this puts the deal's eligibilityCriteria into an 'in progress' state
+    if (index === 1) {
+      const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
+
+      applicationUpdate.eligibilityCriteria = {
+        answers: latestEligibilityCriteria.terms,
+      };
+      applicationUpdate.eligibilityCriteria.answers[0].answer = true;
+    }
+
+    // update the third 'completed' mock deal
+    // this puts the deal's eligibilityCriteria into an 'completed' state
+    if (index === 2) {
+      const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
+
+      applicationUpdate.eligibilityCriteria = {
+        answers: latestEligibilityCriteria.terms.map((term) => ({
+          ...term,
+          answer: true,
+        })),
+      };
+    }
+
     await api.updateApplication(
       application._id,
-      { submissionType: item.submissionType },
+      applicationUpdate,
       token,
     );
   }
