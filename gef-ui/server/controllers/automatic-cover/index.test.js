@@ -218,14 +218,14 @@ describe('controllers/automatic-cover', () => {
 
       beforeEach(async () => {
         mockRequest.body = {
-          '12': 'true',
-          '13': 'true',
-          '14': 'true',
-          '15': 'true',
-          '16': 'true',
-          '17': 'true',
-          '18': 'true',
-          '19': 'true',
+          12: 'true',
+          13: 'true',
+          14: 'true',
+          15: 'true',
+          16: 'true',
+          17: 'true',
+          18: 'true',
+          19: 'true',
         };
 
         await validateAutomaticCover(mockRequest, mockResponse);
