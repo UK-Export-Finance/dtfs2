@@ -156,7 +156,7 @@ type Exporter {
   updatedAt: Float
 }
 
-type EligibilityCriteriaAnswer {
+type EligibilityCriterion {
   id: Int
   name: String
   htmlText: String
@@ -164,9 +164,9 @@ type EligibilityCriteriaAnswer {
   answer: Boolean
 }
 
-type EligibilityCriteria {
-  updatedAt: Int
-  answers: [EligibilityCriteriaAnswer]
+type Eligibility {
+  lastUpdated: Int
+  criteria: [EligibilityCriterion]
 }
 
 type GefDeal {
@@ -186,7 +186,7 @@ type GefDeal {
   createdAt: Float
   updatedAt: Float
   exporter: Exporter
-  eligibilityCriteria: EligibilityCriteria
+  eligibility: Eligibility
 }
 
 type GefDealsQuery {

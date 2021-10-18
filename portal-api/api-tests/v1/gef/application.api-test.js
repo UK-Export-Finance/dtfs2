@@ -116,7 +116,9 @@ describe(baseUrl, () => {
       const expected = {
         ...mockApplications[0],
         exporterId: expect.any(String),
-        eligibility: {},
+        eligibility: {
+          criteria: mockEligibilityCriteria
+        },
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
@@ -128,7 +130,6 @@ describe(baseUrl, () => {
         },
         ukefDealId: null,
         checkerId: null,
-        eligibilityCriteria: { answers: mockEligibilityCriteria },
       };
       expect(body).toEqual(expectMongoId(expected));
     });

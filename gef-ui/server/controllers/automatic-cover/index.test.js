@@ -170,7 +170,6 @@ describe('controllers/automatic-cover', () => {
         .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
           errors: expect.any(Object),
           terms: expectedTerms,
-          // selected: {},
           applicationId: '123',
         }));
     });
