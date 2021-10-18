@@ -66,7 +66,10 @@ describe('/v1/tfm/deal/:id', () => {
 
       expect(status).toEqual(200);
       expect(body.dealSnapshot).toMatchObject(newDeal);
-      expect(body.tfm).toEqual(dealUpdate.tfm);
+      expect(body.tfm).toEqual({
+        ...dealUpdate.tfm,
+        lastUpdated: expect.any(Number),
+      });
     });
   });
 
@@ -110,7 +113,10 @@ describe('/v1/tfm/deal/:id', () => {
         ...newDeal,
         ...snapshotUpdate,
       });
-      expect(body.tfm).toEqual(mockTfm.tfm);
+      expect(body.tfm).toEqual({
+        ...mockTfm.tfm,
+        lastUpdated: expect.any(Number),
+      });
     });
   });
 });

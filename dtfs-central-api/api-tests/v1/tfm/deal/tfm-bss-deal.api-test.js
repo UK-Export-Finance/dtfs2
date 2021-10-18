@@ -142,7 +142,10 @@ describe('/v1/tfm/deal/:id', () => {
       const dealAfterUpdate = body.deal;
 
       expect(dealAfterUpdate.dealSnapshot).toMatchObject(newDeal);
-      expect(dealAfterUpdate.tfm).toEqual(dealUpdate.tfm);
+      expect(dealAfterUpdate.tfm).toEqual({
+        ...dealUpdate.tfm,
+        lastUpdated: expect.any(Number),
+      });
     });
 
     it('retains existing deal.tfm.history when adding new history', async () => {
@@ -212,6 +215,37 @@ describe('/v1/tfm/deal/:id', () => {
 
       expect(dealAfterSecondUpdate.tfm.history).toEqual(expectedHistory);
     });
+
+    it('updates deal.tfm.lastUpdated on each update', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
+
+      const anUpdate = {
+        tfm: { test: true },
+      };
+
+      // first update
+      await api.put({ dealUpdate: anUpdate }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: firstUpdateBody } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(typeof firstUpdateBody.deal.tfm.lastUpdated).toEqual('number');
+      
+      const lastUpdatedOriginalValue = firstUpdateBody.deal.tfm.lastUpdated;
+
+      // second update
+      await api.put({ dealUpdate: anUpdate }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: secondUpdateBody } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(typeof secondUpdateBody.deal.tfm.lastUpdated).toEqual('number');
+      expect(secondUpdateBody.deal.tfm.lastUpdated).not.toEqual(lastUpdatedOriginalValue);
+    });
   });
 
   describe('PUT /v1/tfm/deal/:id/snapshot', () => {
@@ -256,7 +290,11 @@ describe('/v1/tfm/deal/:id', () => {
         ...newDeal,
         ...snapshotUpdate,
       });
-      expect(dealAfterUpdate.deal.tfm).toEqual(mockTfm.tfm);
+
+      expect(dealAfterUpdate.deal.tfm).toEqual({
+        ...mockTfm.tfm,
+        lastUpdated: expect.any(Number),
+      });
     });
   });
 });
