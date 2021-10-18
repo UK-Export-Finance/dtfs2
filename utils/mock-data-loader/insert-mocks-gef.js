@@ -46,17 +46,17 @@ const insertMocks = async () => {
     // update the second 'in progress' mock deal
     // this puts the deal's eligibilityCriteria into an 'in progress' state
     if (index === 1) {
-      applicationUpdate.eligibilityCriteria = {
-        answers: latestEligibilityCriteria.terms,
+      applicationUpdate.eligibility = {
+        criteria: latestEligibilityCriteria.terms,
       };
-      applicationUpdate.eligibilityCriteria.answers[0].answer = true;
+      applicationUpdate.eligibility.criteria[0].answer = true;
     }
 
     // update the third 'completed' mock deal
     // this puts the deal's eligibilityCriteria into an 'completed' state
     if (index === 2) {
-      applicationUpdate.eligibilityCriteria = {
-        answers: latestEligibilityCriteria.terms.map((term) => ({
+      applicationUpdate.eligibility = {
+        criteria: latestEligibilityCriteria.terms.map((term) => ({
           ...term,
           answer: true,
         })),

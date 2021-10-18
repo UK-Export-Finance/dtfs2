@@ -102,8 +102,8 @@ exports.getById = async (req, res) => {
       doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
     }
 
-    if (doc.eligibilityCriteria) {
-      doc.eligibilityCriteria.status = eligibilityCriteriaStatus(doc.eligibilityCriteria.answers);
+    if (doc.eligibility) {
+      doc.eligibility.status = eligibilityCriteriaStatus(doc.eligibility.criteria);
     }
     res.status(200).send(doc);
   } else {

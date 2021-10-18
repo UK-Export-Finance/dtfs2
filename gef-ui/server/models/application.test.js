@@ -6,7 +6,7 @@ jest.mock('../services/api');
 const { PROGRESS } = require('../../constants');
 
 const MockEligibilityCriteria = () => ({
-  answers: [
+  criteria: [
     { id: 12, name: 'coverStart', answer: true },
     { id: 13, name: 'noticeDate', answer: true },
     { id: 14, name: 'facilityLimit', answer: true },
@@ -27,7 +27,7 @@ const MockApplicationResponse = () => {
   res.status = 'DRAFT';
   res.userId = 'mock-user';
   res.supportingInformation = {};
-  res.eligibilityCriteria = MockEligibilityCriteria();
+  res.eligibility = MockEligibilityCriteria();
 
   return res;
 };
@@ -48,7 +48,7 @@ const MockExporterResponse = () => {
 };
 
 const MockEligibilityCriteriaResponse = () => ({
-  terms: MockEligibilityCriteria().answers,
+  terms: MockEligibilityCriteria().criteria,
 });
 
 const MockFacilityResponse = () => {
@@ -89,8 +89,8 @@ describe('models/application', () => {
 
     describe('returns model with expected supporting information fields for EC12', () => {
       beforeEach(() => {
-        mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
-        mockApplicationResponse.eligibilityCriteria.answers[0].answer = false;
+        mockApplicationResponse.eligibility = MockEligibilityCriteria();
+        mockApplicationResponse.eligibility.criteria[0].answer = false;
       });
 
       it('sets supportingInfoStatus as expected', async () => {
@@ -108,8 +108,8 @@ describe('models/application', () => {
 
     describe('returns model with expected supporting information fields for EC14', () => {
       beforeEach(() => {
-        mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
-        mockApplicationResponse.eligibilityCriteria.answers[2].answer = false;
+        mockApplicationResponse.eligibility = MockEligibilityCriteria();
+        mockApplicationResponse.eligibility.criteria[2].answer = false;
       });
 
       it('sets supportingInfoStatus as expected', async () => {
@@ -127,9 +127,9 @@ describe('models/application', () => {
 
     describe('returns model with expected supporting information fields for EC15', () => {
       beforeEach(() => {
-        mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
+        mockApplicationResponse.eligibility = MockEligibilityCriteria();
 
-        mockApplicationResponse.eligibilityCriteria.answers[3].answer = false;
+        mockApplicationResponse.eligibility.criteria[3].answer = false;
       });
 
       it('sets supportingInfoStatus as expected', async () => {
@@ -148,12 +148,12 @@ describe('models/application', () => {
 
     describe('returns model with expected supporting information fields for all other Cover terms', () => {
       beforeEach(() => {
-        mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
-        mockApplicationResponse.eligibilityCriteria.answers[1].answer = false;
-        mockApplicationResponse.eligibilityCriteria.answers[4].answer = false;
-        mockApplicationResponse.eligibilityCriteria.answers[5].answer = false;
-        mockApplicationResponse.eligibilityCriteria.answers[6].answer = false;
-        mockApplicationResponse.eligibilityCriteria.answers[7].answer = false;
+        mockApplicationResponse.eligibility = MockEligibilityCriteria();
+        mockApplicationResponse.eligibility.criteria[1].answer = false;
+        mockApplicationResponse.eligibility.criteria[4].answer = false;
+        mockApplicationResponse.eligibility.criteria[5].answer = false;
+        mockApplicationResponse.eligibility.criteria[6].answer = false;
+        mockApplicationResponse.eligibility.criteria[7].answer = false;
       });
 
       it('sets supportingInfoStatus as expected', async () => {
@@ -173,8 +173,8 @@ describe('models/application', () => {
       beforeEach(() => {
         mockApplicationResponse.supportingInformation.manualInclusion = ['path'];
 
-        mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
-        mockApplicationResponse.eligibilityCriteria.answers[3].answer = false;
+        mockApplicationResponse.eligibility = MockEligibilityCriteria();
+        mockApplicationResponse.eligibility.criteria[3].answer = false;
       });
 
       it('sets supportingInfoStatus as expected', async () => {
@@ -196,8 +196,8 @@ describe('models/application', () => {
         mockApplicationResponse.supportingInformation.manualInclusion = ['path'];
         mockApplicationResponse.supportingInformation.exportLicence = ['path'];
 
-        mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
-        mockApplicationResponse.eligibilityCriteria.answers[3].answer = false;
+        mockApplicationResponse.eligibility = MockEligibilityCriteria();
+        mockApplicationResponse.eligibility.criteria[3].answer = false;
       });
 
       it('sets supportingInfoStatus as expected', async () => {

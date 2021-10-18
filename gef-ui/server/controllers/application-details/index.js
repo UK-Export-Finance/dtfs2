@@ -55,7 +55,7 @@ function buildBody(app, previewMode) {
         showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
       }), previewMode),
     },
-    eligibilityCriteria: {
+    eligibility: {
       status: app.eligibilityCriteriaStatus,
     },
     facilities: {

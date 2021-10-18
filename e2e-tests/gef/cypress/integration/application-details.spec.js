@@ -149,7 +149,7 @@ context('Application Details Page', () => {
       applicationDetails.exporterSummaryList();
     });
 
-    it.only('displays the correct automatic cover elements', () => {
+    it('displays the correct automatic cover elements', () => {
       applicationDetails.automaticCoverHeading();
       applicationDetails.automaticCoverStatus().contains('Complete');
       applicationDetails.automaticCoverCriteria();

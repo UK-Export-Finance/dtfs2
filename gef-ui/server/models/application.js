@@ -24,7 +24,7 @@ const deriveSupportingInfoRequiredDocuments = (application) => {
   let requiredDocs = [];
 
   Object.keys(termToSupportDocuments).forEach((term) => {
-    const answerObj = application.eligibilityCriteria.answers.find((a) => a.name === term);
+    const answerObj = application.eligibility.criteria.find((a) => a.name === term);
 
     let criterionAnswer;
     if (answerObj) {
@@ -76,7 +76,7 @@ class Application {
       [application.exporter, application.facilities, eligibilityCriteriaContent] = [...all];
 
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
-      application.eligibilityCriteriaStatus = status[application.eligibilityCriteria.status || PROGRESS.NOT_STARTED];
+      application.eligibilityCriteriaStatus = status[application.eligibility.status || PROGRESS.NOT_STARTED];
       application.facilitiesStatus = status[application.facilities.status || PROGRESS.NOT_STARTED];
       if (application.supportingInformation) {
         application.supportingInfoStatus = deriveSupportingInfoStatus(application);
@@ -108,10 +108,10 @@ class Application {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }
 
-      application.eligibilityCriteria.answers = application.eligibilityCriteria.answers.map((answer) => {
-        const contentObj = eligibilityCriteriaContent.terms.find((term) => term.id === answer.id);
+      application.eligibility.criteria = application.eligibility.criteria.map((criterion) => {
+        const contentObj = eligibilityCriteriaContent.terms.find((term) => term.id === criterion.id);
         return {
-          ...answer,
+          ...criterion,
           description: decode(contentObj.htmlText),
           descriptionList: [],
         };

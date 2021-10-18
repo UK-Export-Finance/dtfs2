@@ -14,9 +14,9 @@ const automaticCover = async (req, res) => {
 
   try {
     const application = await api.getApplication(applicationId);
-    const { eligibilityCriteria } = application;
+    const { eligibility } = application;
 
-    const mappedTerms = eligibilityCriteria.answers.map((answerObj) => ({
+    const mappedTerms = eligibility.criteria.map((answerObj) => ({
       ...answerObj,
       htmlText: decode(answerObj.htmlText),
     }));
@@ -59,15 +59,13 @@ const validateAutomaticCover = async (req, res, next) => {
     const { applicationId } = params;
     const { saveAndReturn } = query;
     const application = await api.getApplication(applicationId);
-    const { eligibilityCriteria } = application;
+    const { eligibility } = application;
 
-    // TODO: change answeres object name - misleading.
-    // it's not just answers now, it also has the text and error message.
-    const automaticCoverErrors = getValidationErrors(body, eligibilityCriteria.answers);
-    const coverType = deriveCoverType(body, eligibilityCriteria.answers);
+    const automaticCoverErrors = getValidationErrors(body, eligibility.criteria);
+    const coverType = deriveCoverType(body, eligibility.criteria);
 
     if (!saveAndReturn && automaticCoverErrors.length > 0) {
-      const mappedTerms = eligibilityCriteria.answers.map((answerObj) => ({
+      const mappedTerms = eligibility.criteria.map((answerObj) => ({
         ...answerObj,
         answer: body[String(answerObj.id)] ? stringToBoolean(body[String(answerObj.id)]) : null,
         htmlText: decode(answerObj.htmlText),
@@ -83,7 +81,7 @@ const validateAutomaticCover = async (req, res, next) => {
     await updateSubmissionType(applicationId, coverType);
 
     // copy existing answers
-    const newAnswers = eligibilityCriteria.answers;
+    const newAnswers = eligibility.criteria;
 
     // only update the answers that have been submitted.
     Object.keys(body).forEach((key) => {
@@ -92,8 +90,8 @@ const validateAutomaticCover = async (req, res, next) => {
     });
 
     const applicationUpdate = {
-      eligibilityCriteria: {
-        answers: newAnswers,
+      eligibility: {
+        criteria: newAnswers,
       },
     };
 

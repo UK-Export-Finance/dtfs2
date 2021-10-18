@@ -34,8 +34,8 @@ const MockApplicationResponse = () => {
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.status = 'Draft';
-  res.eligibilityCriteria = {
-    answers: [
+  res.eligibility = {
+    criteria: [
       { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
     ],
   };

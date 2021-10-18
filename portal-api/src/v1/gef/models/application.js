@@ -11,8 +11,8 @@ class Application {
 
       this.exporterId = exporterId;
 
-      this.eligibilityCriteria = {
-        answers: eligibilityTerms.map((term) => ({
+      this.eligibility = {
+        criteria: eligibilityTerms.map((term) => ({
           ...term,
           answer: null,
         })),
@@ -44,11 +44,11 @@ class Application {
         'supportingInformation',
         'bankInternalRefName',
         'additionalRefName',
-        'eligibilityCriteria',
+        'eligibility',
       ];
 
-      if (req.eligibilityCriteria) {
-        req.eligibilityCriteria.updatedAt = Date.now();
+      if (req.eligibility) {
+        req.eligibility.updatedAt = Date.now();
       }
 
       Object.entries(req).forEach(([key, value]) => {

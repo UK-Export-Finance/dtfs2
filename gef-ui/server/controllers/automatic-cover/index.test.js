@@ -22,7 +22,7 @@ const MockResponse = () => {
 };
 
 const MockEligibilityCriteria = () => ({
-  answers: [
+  criteria: [
     {
       id: 12,
       name: 'coverStart',
@@ -85,7 +85,7 @@ const MockEligibilityCriteria = () => ({
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.eligibilityCriteria = MockEligibilityCriteria();
+  res.eligibility = MockEligibilityCriteria();
 
   return res;
 };

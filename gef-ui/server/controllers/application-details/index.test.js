@@ -38,8 +38,8 @@ const MockApplicationResponse = () => {
   res.supportingInformation = {
     status: 'NOT_STARTED',
   };
-  res.eligibilityCriteria = {
-    answers: [
+  res.eligibility = {
+    criteria: [
       { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
     ],
   };
@@ -142,7 +142,7 @@ describe('controllers/about-exporter', () => {
             status: expect.any(Object),
             rows: expect.any(Array),
           },
-          eligibilityCriteria: {
+          eligibility: {
             status: {
               code: expect.any(String),
               text: expect.any(String),

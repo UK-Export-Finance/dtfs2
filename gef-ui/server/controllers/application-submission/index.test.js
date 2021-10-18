@@ -51,9 +51,9 @@ const MockApplicationResponse = () => {
   res.exporterId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.eligibilityCriteria = {
+  res.eligibility = {
     isAutomaticCover: true,
-    answers: [
+    criteria: [
       { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
     ],
   };
