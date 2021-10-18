@@ -169,6 +169,7 @@ const createDealEligibility = async (eligibility) => {
     status: eligibilityStatus,
     criteria: eligibilityCriteriaWithAnswers,
     ...eligibilityCriteria11AgentDetails(),
+    lastUpdated: null,
   };
 };
 
