@@ -89,6 +89,16 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     dealChangesDetails = dealChanges.details;
   }
 
+  let existingDealEligibility;
+  if (existingDeal && existingDeal.eligibility) {
+    existingDealEligibility = existingDeal.eligibility;
+  }
+
+  let dealChangesEligibility;
+  if (dealChanges && dealChanges.eligibility) {
+    dealChangesEligibility = dealChanges.eligibility;
+  }
+
   const update = {
     ...dealChanges,
     details: {
@@ -96,6 +106,10 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
       ...dealChangesDetails,
       dateOfLastAction: now(),
     },
+    eligibility: {
+      ...existingDealEligibility,
+      ...dealChangesEligibility,
+    }
   };
 
   if (routePath === PORTAL_ROUTE) {
