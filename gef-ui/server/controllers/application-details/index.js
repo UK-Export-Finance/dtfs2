@@ -5,7 +5,12 @@ const {
   exporterItems, facilityItems,
 } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } = require('../../../constants');
+const {
+  FACILITY_TYPE,
+  AUTHORISATION_LEVEL,
+  PROGRESS,
+  DEAL_SUBMISSION_TYPE
+} = require('../../../constants');
 
 const Application = require('../../models/application');
 
@@ -43,7 +48,7 @@ function buildBody(app, previewMode) {
 
   return {
     application: app,
-    isAutomaticCover: app.eligibilityCriteria.isAutomaticCover,
+    isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
     exporter: {
       status: app.exporterStatus,
       rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
