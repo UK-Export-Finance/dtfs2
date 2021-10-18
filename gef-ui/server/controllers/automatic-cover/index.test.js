@@ -197,7 +197,7 @@ describe('controllers/automatic-cover', () => {
           `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
         );
 
-        mockRequest.body = { 12: 'false', '13': 'true' };
+        mockRequest.body = { 12: 'false', 13: 'true' };
         await validateAutomaticCover(mockRequest, mockResponse);
         expect(mockResponse.redirect).toHaveBeenCalledWith(
           `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
