@@ -16,7 +16,7 @@ const healthcheck = require('./healthcheck');
 const app = express();
 app.use(helmet());
 
-const PORT = process.env.PORT || 5003;
+const { PORT } = process.env;
 
 configureNunjucks({
   autoescape: true,

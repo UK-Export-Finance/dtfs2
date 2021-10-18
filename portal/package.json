@@ -45,6 +45,7 @@
     "connect-redis": "^5.0.0",
     "core-js": "^2.6.11",
     "dotenv": "8.2.0",
+    "envalid": "^7.2.1",
     "express": "^4.17.1",
     "express-session": "1.17.0",
     "form-data": "3.0.0",

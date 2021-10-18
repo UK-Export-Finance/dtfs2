@@ -1,13 +1,14 @@
-const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
 const helmet = require('helmet');
 
-const healthcheck = require('./healthcheck');
+require('dotenv').config();
+const { validateEnv } = require('./utils/validateEnv');
 
-dotenv.config();
+const { SENTRY_DSN } = validateEnv(process.env);
+const healthcheck = require('./healthcheck');
 
 const { openRouter } = require('./v1/routes');
 const swaggerRoutes = require('./v1/swagger-routes');
@@ -30,7 +31,7 @@ rootRouter.get('/', async (req, res) => {
 rootRouter.use(Sentry.Handlers.requestHandler());
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: SENTRY_DSN,
   integrations: [new CaptureConsole(
     {
       // array of methods that should be captured

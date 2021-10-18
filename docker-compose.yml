@@ -64,6 +64,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
+      - SESSION_SECRET
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -90,6 +91,8 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
+      - AZURE_ACBS_FUNCTION_SCHEDULE
+      - AZURE_ACBS_FUNCTION_URL
     deploy:
       resources:
         limits:
@@ -116,6 +119,7 @@ services:
           cpus: "0.2"
           memory: 700M
     environment:
+      - PORT=5000
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
@@ -234,6 +238,7 @@ services:
           cpus: "0.1"
           memory: 300M
     environment:
+      - PORT=5006
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY

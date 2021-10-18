@@ -1,5 +1,4 @@
 const cors = require('cors');
-const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
@@ -17,11 +16,10 @@ const uploadTest = require('./upload-test');
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
 const initScheduler = require('./scheduler');
+require('dotenv').config();
+const { validateEnv } = require('./utils/validateEnv');
 
-dotenv.config();
-
-const { CORS_ORIGIN, SENTRY_DSN } = process.env;
-
+const env = validateEnv(process.env);
 const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 
@@ -37,7 +35,7 @@ app.use(express.json());
 app.use(compression());
 
 app.use(cors({
-  origin: CORS_ORIGIN,
+  origin: env.CORS_ORIGIN,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
@@ -49,7 +47,7 @@ app.use(graphQlRouter);
 
 Sentry.init({
   // environment: 'development',
-  dsn: SENTRY_DSN,
+  dsn: env.SENTRY_DSN,
   integrations: [
     // enable HTTP calls tracing
     // new Sentry.Integrations.Http({ tracing: true }),

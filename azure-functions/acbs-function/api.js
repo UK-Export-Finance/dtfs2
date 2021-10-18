@@ -1,4 +1,3 @@
-/* eslint-disable no-extra-boolean-cast */
 /**
 * ACBS Functions API Library deals with following HTTP Methods:
 * 1. GET
@@ -11,15 +10,18 @@
 const axios = require('axios');
 
 require('dotenv').config();
+const { validateEnv } = require('./helpers/validateEnv');
+
+const { MULESOFT_API_UKEF_TF_EA_URL, MULESOFT_API_KEY, MULESOFT_API_SECRET } = validateEnv(process.env);
 
 const getACBS = async (apiRef) => {
   if (!!apiRef) {
     const response = await axios({
       method: 'get',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username: MULESOFT_API_KEY,
+        password: MULESOFT_API_SECRET,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -42,10 +44,10 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
 
     const response = await axios({
       method: 'put',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username: MULESOFT_API_KEY,
+        password: MULESOFT_API_SECRET,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -71,10 +73,10 @@ const postToACBS = async (apiRef, acbsInput) => {
   if (!!apiRef && !!acbsInput) {
     const response = await axios({
       method: 'post',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username: MULESOFT_API_KEY,
+        password: MULESOFT_API_SECRET,
       },
       headers: {
         'Content-Type': 'application/json',

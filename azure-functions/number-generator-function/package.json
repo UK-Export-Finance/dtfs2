@@ -8,7 +8,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
-    "durable-functions": "^1.4.6"
-  },
-  "devDependencies": {}
+    "durable-functions": "^1.4.6",
+    "envalid": "^7.2.1"
+  }
 }

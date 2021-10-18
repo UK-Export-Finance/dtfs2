@@ -20,14 +20,17 @@ const app = express();
 app.use(helmet());
 
 app.use(sentry);
-const PORT = process.env.PORT || 5000;
+require('dotenv').config();
+const { validateEnv } = require('./utils/validateEnv');
 
-if (!process.env.SESSION_SECRET) {
+const { SESSION_SECRET, REDIS_HOSTNAME, PORT } = validateEnv(process.env);
+
+if (!SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');
 }
 
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET,
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 };
@@ -46,7 +49,7 @@ if (process.env.REDIS_KEY) {
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
 redisClient.on('error', (err) => {
-  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+  console.error(`Unable to connect to Redis: ${REDIS_HOSTNAME}`, { err });
 });
 
 redisClient.on('ready', () => {

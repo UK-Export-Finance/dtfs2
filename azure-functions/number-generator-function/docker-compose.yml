@@ -1,4 +1,4 @@
-version: "3" 
+version: "3"
 services:
 
   number-generator-function:
@@ -15,4 +15,3 @@ services:
       - WEBSITE_HOSTNAME=localhost:7072
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
-      - MULESOFT_API_NUMBER_GENERATOR_URL

@@ -16,12 +16,13 @@ const postUnderwriterManagersDecision = require('./graphql/mutations/update-unde
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 
 require('dotenv').config();
+const { validateEnv } = require('./helpers/validateEnv');
 
-const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
+const { TRADE_FINANCE_MANAGER_API_URL } = validateEnv(process.env);
 
 const getDeal = async (id, tasksFilters) => {
   const queryParams = {
-    _id: id, // eslint-disable-line no-underscore-dangle
+    _id: id,
     tasksFilters,
   };
 
@@ -167,13 +168,13 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-// Temp login for mock users. Active Directory will proabably replace this
+// Temp login for mock users. Active Directory will probably replace this
 // Just get the user, not really concerned about logging in with passwords for mock users
 const login = async (username) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/users/${username}`,
+      url: `${TRADE_FINANCE_MANAGER_API_URL}/v1/users/${username}`,
       headers: {
         'Content-Type': 'application/json',
       },

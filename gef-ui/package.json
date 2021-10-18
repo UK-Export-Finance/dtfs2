@@ -49,6 +49,7 @@
     "core-js": "^2.6.11",
     "date-fns": "^2.23.0",
     "dotenv": "8.2.0",
+    "envalid": "^7.2.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.10",
     "express-session": "1.17.0",

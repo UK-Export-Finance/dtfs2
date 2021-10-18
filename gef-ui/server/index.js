@@ -21,15 +21,18 @@ app.use(helmet());
 
 app.use(sentry);
 app.use(compression());
-const PORT = process.env.PORT || 5006;
 
-if (!process.env.SESSION_SECRET) {
-  // eslint-disable-next-line no-console
+require('dotenv').config();
+const { validateEnv } = require('./utils/validateEnv');
+
+const { PORT, SESSION_SECRET } = validateEnv(process.env);
+
+if (!SESSION_SECRET) {
   console.error('GEF UI server - SESSION_SECRET missing');
 }
 
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET,
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 };
@@ -95,7 +98,6 @@ app.use((err, req, res, next) => {
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
-// eslint-disable-next-line no-console
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
 app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`)); // eslint-disable-line no-console
