@@ -18,7 +18,6 @@ const MockEligibilityCriteria = () => ({
   ],
 });
 
-
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
@@ -49,7 +48,7 @@ const MockExporterResponse = () => {
 };
 
 const MockEligibilityCriteriaResponse = () => ({
-  terms: MockEligibilityCriteria().answers
+  terms: MockEligibilityCriteria().answers,
 });
 
 const MockFacilityResponse = () => {
@@ -131,7 +130,7 @@ describe('models/application', () => {
         mockApplicationResponse.eligibilityCriteria = MockEligibilityCriteria();
 
         mockApplicationResponse.eligibilityCriteria.answers[3].answer = false;
-      }); 
+      });
 
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');

@@ -140,7 +140,7 @@ describe('controllers/automatic-cover', () => {
 
       beforeEach(async () => {
         mockRequest.query.saveAndReturn = 'true';
-        mockRequest.body = { '12': 'true' };
+        mockRequest.body = { 12: 'true' };
 
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -180,14 +180,14 @@ describe('controllers/automatic-cover', () => {
 
       beforeEach(async () => {
         mockRequest.body = {
-          '12': 'false',
-          '13': 'true',
-          '14': 'true',
-          '15': 'true',
-          '16': 'true',
-          '17': 'true',
-          '18': 'true',
-          '19': 'true',
+          12: 'false',
+          13: 'true',
+          14: 'true',
+          15: 'true',
+          16: 'true',
+          17: 'true',
+          18: 'true',
+          19: 'true',
         };
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -197,7 +197,7 @@ describe('controllers/automatic-cover', () => {
           `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
         );
 
-        mockRequest.body = { '12': 'false', '13': 'true' };
+        mockRequest.body = { 12: 'false', '13': 'true' };
         await validateAutomaticCover(mockRequest, mockResponse);
         expect(mockResponse.redirect).toHaveBeenCalledWith(
           `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,

@@ -6,7 +6,7 @@ import {
   mapSummaryList,
   apiErrorHandler,
   isTrueSet,
-  stringToBoolean, 
+  stringToBoolean,
 } from './helpers';
 
 describe('userToken()', () => {
