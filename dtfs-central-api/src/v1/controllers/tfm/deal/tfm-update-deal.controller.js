@@ -11,40 +11,42 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const collection = await db.getCollection('tfm-deals');
 
   // remove dealSnapshot to ensure its not updated
-  const { dealSnapshot, ...update } = dealChanges;
+  const { dealSnapshot, ...tfmUpdate } = dealChanges;
 
-  let tfmUpdate = update;
+  let dealUpdate = tfmUpdate;
 
   // ensure that deal.tfm.history is not wiped
   if (existingDeal.tfm && existingDeal.tfm.history) {
-    tfmUpdate = {
+    dealUpdate = {
       tfm: {
         ...existingDeal.tfm,
-        ...update.tfm,
+        ...tfmUpdate.tfm,
         history: existingDeal.tfm.history,
       },
     };
 
-    if (update.tfm.history) {
-      if (update.tfm.history.tasks) {
-        tfmUpdate.tfm.history.tasks = [
+    if (tfmUpdate.tfm.history) {
+      if (tfmUpdate.tfm.history.tasks) {
+        dealUpdate.tfm.history.tasks = [
           ...existingDeal.tfm.history.tasks,
-          ...update.tfm.history.tasks,
+          ...tfmUpdate.tfm.history.tasks,
         ];
       }
 
-      if (update.tfm.history.emails) {
-        tfmUpdate.tfm.history.emails = [
+      if (tfmUpdate.tfm.history.emails) {
+        dealUpdate.tfm.history.emails = [
           ...existingDeal.tfm.history.emails,
-          ...update.tfm.history.emails,
+          ...tfmUpdate.tfm.history.emails,
         ];
       }
     }
   }
 
+  dealUpdate.tfm.lastUpdated = new Date().valueOf();
+
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: dealId },
-    $.flatten(withoutId(tfmUpdate)),
+    $.flatten(withoutId(dealUpdate)),
     { returnOriginal: false },
   );
 
