@@ -9,7 +9,7 @@ const {
   FACILITY_TYPE,
   AUTHORISATION_LEVEL,
   PROGRESS,
-  DEAL_SUBMISSION_TYPE
+  DEAL_SUBMISSION_TYPE,
 } = require('../../../constants');
 
 const Application = require('../../models/application');

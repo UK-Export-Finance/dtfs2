@@ -108,8 +108,6 @@ class Application {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }
 
-      application.eligibilityCriteria = application.eligibilityCriteria;
-
       application.eligibilityCriteria.answers = application.eligibilityCriteria.answers.map((answer) => {
         const contentObj = eligibilityCriteriaContent.terms.find((term) => term.id === answer.id);
         return {
