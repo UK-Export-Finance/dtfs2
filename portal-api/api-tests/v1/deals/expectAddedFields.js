@@ -7,6 +7,7 @@ const expectAddedFields = (obj) => {
     eligibility: {
       status: 'Not started',
       criteria: expect.any(Array),
+      lastUpdated: expect.any(Number),
     },
     submissionDetails: {
       status: 'Not started',

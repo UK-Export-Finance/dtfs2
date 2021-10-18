@@ -77,7 +77,9 @@ describe(baseUrl, () => {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
-          eligibility: {},
+          eligibility: {
+            lastUpdated: expect.any(Number),
+          },
           createdAt: expect.any(Number),
           status: 'DRAFT',
           dealType: 'GEF',
