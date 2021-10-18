@@ -76,6 +76,7 @@ describe('/v1/tfm/deals', () => {
             tfm: {
               ...submittedMINDeal.tfm,
               dateReceived: '12-11-2021',
+              lastUpdated: expect.any(Number),
             },
           },
         ];
