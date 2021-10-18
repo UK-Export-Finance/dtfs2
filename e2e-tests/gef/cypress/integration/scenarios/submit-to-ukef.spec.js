@@ -75,8 +75,8 @@ context('Submit application to UKEF', () => {
       applicationPreview.status().contains("Ready for Checker's approval");
 
       // the ability to return the application or submit to ukef should not be visible
-      applicationPreview.submitButton().should('not.be.visible');
-      applicationPreview.returnButton().should('not.be.visible');
+      applicationPreview.submitButton().should('not.exist');
+      applicationPreview.returnButton().should('not.exist');
     });
   });
 });
