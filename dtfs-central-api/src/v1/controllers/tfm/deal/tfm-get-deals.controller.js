@@ -2,11 +2,17 @@ const moment = require('moment');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
+const getCrossDataModelProperty = require('../../../../utils/getCrossDataModelProperty');
+
+const isEmpty = (value) => {
+  if (value === null) return '';
+  return value;
+};
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
-    const xField = getObjectPropertyValueFromStringPath(xDeal, sortBy.field);
-    const yField = getObjectPropertyValueFromStringPath(yDeal, sortBy.field);
+    const xField = isEmpty(getObjectPropertyValueFromStringPath(xDeal, getCrossDataModelProperty(xDeal, sortBy.field)));
+    const yField = isEmpty(getObjectPropertyValueFromStringPath(yDeal, getCrossDataModelProperty(yDeal, sortBy.field)));
 
     if (sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING) {
       if (xField > yField) {
@@ -76,8 +82,8 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
           ...query,
           [field.name]: {
             $eq: field.value,
-          }
-        }
+          },
+        };
       });
     }
 
