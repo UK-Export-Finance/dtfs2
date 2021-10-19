@@ -32,7 +32,7 @@ context('Review application when returned to maker', () => {
     cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
     applicationDetails.submitButton().click();
     applicationSubmission.commentsField().type('DTFS2-4536 Comments from maker');
-    applicationSubmission.submmitButton().click();
+    applicationSubmission.submitButton().click();
     applicationSubmission.confirmation();
     cy.login(CREDENTIALS.CHECKER);
     cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
@@ -61,7 +61,7 @@ context('Review application when returned to maker', () => {
 
       // it allows the maker to optionally add additional comments
       applicationSubmission.commentsField().type('Comments from the maker');
-      applicationSubmission.submmitButton().click();
+      applicationSubmission.submitButton().click();
       applicationSubmission.confirmation();
 
       // it changes the status to Ready for Checker's approval

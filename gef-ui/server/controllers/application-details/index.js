@@ -97,11 +97,9 @@ function buildView(app, previewMode) {
 
 const applicationDetails = async (req, res, next) => {
   const {
-    params,
-    session,
+    params: { applicationId },
+    session: { user, userToken },
   } = req;
-  const { applicationId } = params;
-  const { user, userToken } = session;
   try {
     const application = await Application.findById(applicationId, user, userToken);
     if (!application) {
