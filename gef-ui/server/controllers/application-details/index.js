@@ -113,16 +113,16 @@ const applicationDetails = async (req, res, next) => {
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
     // Behaviour depending on application state
     const stateToPartial = {
-      CHANGES_REQUIRED: 'application-details',
       DRAFT: 'application-details',
+      CHANGES_REQUIRED: 'application-details',
       BANK_CHECK: 'application-preview',
       SUBMITTED_TO_UKEF: 'application-preview',
       ABANDONED: 'application-preview',
-      UKEF_ACKNOWLEDGED: '',
-      UKEF_IN_PROGRESS: '',
-      UKEF_ACCEPTED_CONDITIONAL: '',
-      UKEF_ACCEPTED_UNCONDITIONAL: '',
-      UKEF_DECLINED: '',
+      UKEF_ACKNOWLEDGED: 'application-preview',
+      UKEF_IN_PROGRESS: 'application-details',
+      UKEF_ACCEPTED_CONDITIONAL: 'application-preview',
+      UKEF_ACCEPTED_UNCONDITIONAL: 'application-preview',
+      UKEF_DECLINED: 'application-preview',
       EXPIRED: '',
       WITHDRAWN: '',
     };

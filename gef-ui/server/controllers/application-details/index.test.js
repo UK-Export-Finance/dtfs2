@@ -86,7 +86,7 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-describe('controllers/about-exporter', () => {
+describe('controllers/application-detaills', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
@@ -163,35 +163,126 @@ describe('controllers/about-exporter', () => {
         }));
     });
 
-    it('renders header details if not DRAFT status', async () => {
-      mockApplicationResponse.status = 'BANK_CHECK';
+    describe('template rendering from deal.status', () => {
+      it('renders `application-details` when status is DRAFT', async () => {
+        mockApplicationResponse.status = 'DRAFT';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-      mockExporterResponse.details.industries = ['Mock Industry', 'Another Industry'];
+        await applicationDetails(mockRequest, mockResponse);
 
-      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            abandon: true,
+          }));
+      });
 
-      await applicationDetails(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
-        applicationStatus: 'BANK_CHECK',
-      }));
-    });
+      it('renders `application-details` when status is CHANGES_REQUIRED', async () => {
+        mockApplicationResponse.status = 'CHANGES_REQUIRED';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-    it('renders application preview for checker', async () => {
-      mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+        await applicationDetails(mockRequest, mockResponse);
 
-      mockApplicationResponse.checker = {
-        firstname: 'Mock',
-        surname: 'User',
-      };
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
 
-      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+      it('renders `application-preview` when status is BANK_CHECK', async () => {
+        mockApplicationResponse.status = 'BANK_CHECK';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-      await applicationDetails(mockRequest, mockResponse);
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
-          checkedBy: 'Mock User',
-        }));
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-preview` when status is SUBMITTED_TO_UKEF', async () => {
+        mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-preview` when status is ABANDONED', async () => {
+        mockApplicationResponse.status = 'ABANDONED';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-preview` when status is UKEF_ACKNOWLEDGED', async () => {
+        mockApplicationResponse.status = 'UKEF_ACKNOWLEDGED';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-details` when status is UKEF_IN_PROGRESS', async () => {
+        mockApplicationResponse.status = 'UKEF_IN_PROGRESS';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-preview` when status is UKEF_ACCEPTED_CONDITIONAL', async () => {
+        mockApplicationResponse.status = 'UKEF_ACCEPTED_CONDITIONAL';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-preview` when status is UKEF_ACCEPTED_UNCONDITIONAL', async () => {
+        mockApplicationResponse.status = 'UKEF_ACCEPTED_UNCONDITIONAL';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-preview` when status is UKEF_DECLINED', async () => {
+        mockApplicationResponse.status = 'UKEF_DECLINED';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
