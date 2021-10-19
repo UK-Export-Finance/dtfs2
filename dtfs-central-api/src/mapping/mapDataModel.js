@@ -15,11 +15,11 @@ const getBSSProperty = (propertyPath) => {
   }
 };
 
-const getCrossDataModelProperty = (deal, propertyPath) => {
+const mapDataModel = (deal, propertyPath) => {
   if (deal && propertyPath) {
     if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) return getBSSProperty(propertyPath);
   }
   return propertyPath;
 };
 
-module.exports = getCrossDataModelProperty;
+module.exports = mapDataModel;

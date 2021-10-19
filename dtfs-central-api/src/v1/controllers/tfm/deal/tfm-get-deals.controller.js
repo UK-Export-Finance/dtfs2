@@ -2,7 +2,7 @@ const moment = require('moment');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
-const getCrossDataModelProperty = require('../../../../mapping/getCrossDataModelProperty');
+const mapDataModel = require('../../../../mapping/mapDataModel');
 const setEmptyIfNull = require('../../../../utils/setEmptyIfNull');
 
 const sortDeals = (deals, sortBy) =>
@@ -10,13 +10,13 @@ const sortDeals = (deals, sortBy) =>
     const xField = setEmptyIfNull(
       getObjectPropertyValueFromStringPath(
         xDeal,
-        getCrossDataModelProperty(xDeal, sortBy.field),
+        mapDataModel(xDeal, sortBy.field),
       ),
     );
     const yField = setEmptyIfNull(
       getObjectPropertyValueFromStringPath(
         yDeal,
-        getCrossDataModelProperty(yDeal, sortBy.field),
+        mapDataModel(yDeal, sortBy.field),
       ),
     );
 
