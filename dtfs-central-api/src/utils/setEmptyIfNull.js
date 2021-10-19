@@ -1,5 +1,5 @@
 const setEmptyIfNull = (value) => {
-  if (value === null) return '';
+  if (value === null || value === undefined) return '';
   return value;
 };
 
