@@ -16,17 +16,20 @@ const ELIGIBILITY_CRITERIA = [
     createdAt: '2021-01-02T00:00',
     terms: [
       {
-        id: 'coverStart',
+        id: 12,
+        name: 'coverStart',
         htmlText: escape('<p>12. The period between the Cover Start Date and the  Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
         errMsg: '12. Select if the Maximum Cover period has been exceeded',
       },
       {
-        id: 'noticeDate',
+        id: 13,
+        name: 'noticeDate',
         htmlText: escape('<p>13. The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months or such longer period as may be agreed by UKEF.</p>'),
         errMsg: '13. Select if the period between the includsion Notice Date and the Requested Cover Start Date exceeds 3 months or any other period agreed by UKEF',
       },
       {
-        id: 'facilityLimit',
+        id: 14,
+        name: 'facilityLimit',
         htmlText: escape(`<p>14.  The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:</p>
                 <p>(i) the Available Master Guarantee Limit 
                 (ii) the Available Obligor's limit</p>`),

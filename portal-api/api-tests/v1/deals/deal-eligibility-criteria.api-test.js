@@ -85,24 +85,18 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
-      expect(typeof body.eligibility.lastUpdated).toEqual('number');
+      expect(typeof body.deal.eligibility.lastUpdated).toEqual('number');
 
-      const lastUpdatedOriginalValue = body.eligibility.lastUpdated;
+      const lastUpdatedOriginalValue = body.deal.eligibility.lastUpdated;
 
       // second update
       await as(aBarclaysMaker).put(updatedECPartial).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       const { body: secondUpdateBody } = await as(aBarclaysMaker).get(`/v1/deals/${newId}`);
 
-      expect(typeof secondUpdateBody.eligibility.lastUpdated).toEqual('number');
+      expect(typeof secondUpdateBody.deal.eligibility.lastUpdated).toEqual('number');
 
-      expect(secondUpdateBody.eligibility.lastUpdated).not.toEqual(lastUpdatedOriginalValue);
-      //
-      //
-      // Expected: {"criterion-11": "true", "criterion-12": "true", "criterion-13": "true", "criterion-14": "true", "criterion-15": "false", "criterion-16": "true", "criterion-17": "true", "criterion-18": "true"}
-      // Received: [{"answer": true, "description": "The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.", "id": 11}, {"answer": true, "description": "The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.", "id": 12}, {"answer": true, "description": "The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).", "id": 13}, {"answer": true, "description": "For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.", "id": 14}, {"answer": false, "description": "The Requested Cover Start Date is no more than three months from the date of submission.", "id": 15}, {"answer": true, "description": "The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.", "id": 16}, {"answer": true, "description": "The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.", "id": 17}, {"answer": true, "description": "The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.", "id": 18}]
-      //
-      // expect(body.eligibility.criteria).toEqual(updatedEC);
+      expect(secondUpdateBody.deal.eligibility.lastUpdated).not.toEqual(lastUpdatedOriginalValue);
     });
 
     it('updates all the eligibility criteria without validation error', async () => {

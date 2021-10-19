@@ -13,6 +13,22 @@ mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);
 });
 
+expect.extend({
+  toBeNumberOrNull(received) {
+    if (typeof received !== 'number'
+      && received !== null) {
+      return {
+        pass: false,
+        message: () => 'Expected a number or null value',
+      };
+    }
+
+    return {
+      pass: true,
+    };
+  },
+});
+
 beforeAll(() => {
   axios.defaults.adapter = corsAdapter;
 });

@@ -79,7 +79,8 @@ describe(baseUrl, () => {
           exporterId: expect.any(String),
           eligibility: {
             criteria: mockEligibilityCriteria,
-            lastUpdated: expect.any(Number),
+            updatedAt: expect.any(Number),
+            statis: 'NOT_STARTED',
           },
           createdAt: expect.any(Number),
           status: 'DRAFT',
@@ -117,7 +118,9 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         exporterId: expect.any(String),
         eligibility: {
-          criteria: mockEligibilityCriteria
+          criteria: mockEligibilityCriteria,
+          updatedAt: expect.any(Number),
+          statis: 'NOT_STARTED',
         },
         status: 'DRAFT',
         createdAt: expect.any(Number),
@@ -180,7 +183,6 @@ describe(baseUrl, () => {
       const expected = {
         ...mockApplications[0],
         exporterId: expect.any(String),
-        eligibility: {},
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
@@ -190,7 +192,10 @@ describe(baseUrl, () => {
         supportingInformation: {},
         ukefDealId: null,
         checkerId: null,
-        eligibilityCriteria: { answers: mockEligibilityCriteria },
+        eligibility: {
+          criteria: mockEligibilityCriteria,
+          updatedAt: expect.any(Number),
+        },
       };
       expect(body).toEqual(expectMongoId(expected));
     });
