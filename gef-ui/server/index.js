@@ -10,6 +10,7 @@ const path = require('path');
 require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
+const dotenv = require('dotenv');
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 
@@ -22,10 +23,11 @@ app.use(helmet());
 app.use(sentry);
 app.use(compression());
 
-require('dotenv').config();
+dotenv.config();
 const { validateEnv } = require('./utils/validateEnv');
 
-const { PORT, SESSION_SECRET } = validateEnv(process.env);
+validateEnv();
+const { PORT, SESSION_SECRET } = process.env;
 
 if (!SESSION_SECRET) {
   console.error('GEF UI server - SESSION_SECRET missing');

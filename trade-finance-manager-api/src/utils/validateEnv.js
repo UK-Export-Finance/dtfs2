@@ -1,6 +1,8 @@
 const { cleanEnv, str } = require('envalid');
+const dotenv = require('dotenv');
 
-const validateEnv = (dotenv) => cleanEnv(dotenv, {
+dotenv.config();
+const validateEnv = () => cleanEnv(process.env, {
   // MongoDB
   MONGODB_URI: str(),
   MONGO_INITDB_DATABASE: str(),

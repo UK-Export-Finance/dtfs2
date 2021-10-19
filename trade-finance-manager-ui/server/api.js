@@ -1,4 +1,5 @@
 const axios = require('axios');
+const dotenv = require('dotenv');
 const apollo = require('./graphql/apollo');
 const dealQuery = require('./graphql/queries/deal-query');
 const dealsLightQuery = require('./graphql/queries/deals-query-light');
@@ -15,10 +16,11 @@ const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-p
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 
-require('dotenv').config();
+dotenv.config();
 const { validateEnv } = require('./helpers/validateEnv');
 
-const { TRADE_FINANCE_MANAGER_API_URL } = validateEnv(process.env);
+validateEnv();
+const { TRADE_FINANCE_MANAGER_API_URL } = process.env;
 
 const getDeal = async (id, tasksFilters) => {
   const queryParams = {

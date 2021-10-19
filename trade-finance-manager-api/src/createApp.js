@@ -8,21 +8,21 @@ const helmet = require('helmet');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
+const dotenv = require('dotenv');
 const graphqlKeyAuthentication = require('./graphql/key-authentication');
 const graphqlPermissions = require('./graphql/middleware/graphql-permissions');
 
-const {
-  resolvers, typeDefs, graphQlRouter,
-} = require('./graphql');
+const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 
 const healthcheck = require('./healthcheck');
 const openRouter = require('./v1/routes');
 const initScheduler = require('./scheduler');
 
-require('dotenv').config();
+dotenv.config();
 const { validateEnv } = require('./utils/validateEnv');
 
-const { SENTRY_DSN } = validateEnv(process.env);
+validateEnv();
+const { SENTRY_DSN } = process.env;
 
 initScheduler();
 

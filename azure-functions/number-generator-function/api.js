@@ -1,9 +1,9 @@
 const axios = require('axios');
-
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config();
 const { validateEnv } = require('./helpers/validateEnv');
-
-const { MULESOFT_API_UKEF_TF_EA_URL, MULESOFT_API_KEY, MULESOFT_API_SECRET } = validateEnv(process.env);
+validateEnv();
+const { MULESOFT_API_UKEF_TF_EA_URL, MULESOFT_API_KEY, MULESOFT_API_SECRET } = process.env;
 
 const getAPI = async (type) => {
   const response = await axios({

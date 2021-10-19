@@ -9,6 +9,7 @@ const path = require('path');
 require('./azure-env');
 
 const RedisStore = require('connect-redis')(session);
+const dotenv = require('dotenv');
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
@@ -20,10 +21,12 @@ const app = express();
 app.use(helmet());
 
 app.use(sentry);
-require('dotenv').config();
+
+dotenv.config();
 const { validateEnv } = require('./utils/validateEnv');
 
-const { SESSION_SECRET, REDIS_HOSTNAME, PORT } = validateEnv(process.env);
+validateEnv();
+const { SESSION_SECRET, REDIS_HOSTNAME, PORT } = process.env;
 
 if (!SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');

@@ -10,16 +10,19 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const Sentry = require('@sentry/node');
 const { CaptureConsole } = require('@sentry/integrations');
 // const Tracing = require('@sentry/tracing');
+const dotenv = require('dotenv');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
+dotenv.config();
+const { validateEnv } = require('./utils/validateEnv');
+
+validateEnv();
+const { CORS_ORIGIN, SENTRY_DSN } = process.env;
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
 const initScheduler = require('./scheduler');
-require('dotenv').config();
-const { validateEnv } = require('./utils/validateEnv');
 
-const env = validateEnv(process.env);
 const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 
@@ -35,7 +38,7 @@ app.use(express.json());
 app.use(compression());
 
 app.use(cors({
-  origin: env.CORS_ORIGIN,
+  origin: CORS_ORIGIN,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
@@ -47,7 +50,7 @@ app.use(graphQlRouter);
 
 Sentry.init({
   // environment: 'development',
-  dsn: env.SENTRY_DSN,
+  dsn: SENTRY_DSN,
   integrations: [
     // enable HTTP calls tracing
     // new Sentry.Integrations.Http({ tracing: true }),

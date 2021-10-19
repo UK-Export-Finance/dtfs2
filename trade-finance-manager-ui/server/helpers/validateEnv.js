@@ -1,6 +1,9 @@
 const { cleanEnv, str } = require('envalid');
+const dotenv = require('dotenv');
 
-const validateEnv = (dotenv) => cleanEnv(dotenv, {
+dotenv.config();
+
+const validateEnv = () => cleanEnv(process.env, {
   // Redis - checks disabled
   // REDIS_HOSTNAME: str(),
   // REDIS_KEY: str(),

@@ -1,12 +1,13 @@
 const axios = require('axios');
 const FormData = require('form-data');
+const dotenv = require('dotenv');
 const apollo = require('./graphql/apollo');
 
 const {
   allDealsQuery, dealsQuery, transactionsQuery, gefDealsQuery, gefFacilitiesQuery,
 } = require('./graphql/queries');
 
-require('dotenv').config();
+dotenv.config();
 
 const urlRoot = process.env.DEAL_API_URL;
 

@@ -2,12 +2,14 @@ const express = require('express');
 const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
+const dotenv = require('dotenv');
 const helmet = require('helmet');
 
-require('dotenv').config();
+dotenv.config();
 const { validateEnv } = require('./utils/validateEnv');
 
-const { SENTRY_DSN } = validateEnv(process.env);
+validateEnv();
+const { SENTRY_DSN } = process.env;
 const healthcheck = require('./healthcheck');
 
 const { openRouter } = require('./v1/routes');

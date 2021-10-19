@@ -1,5 +1,6 @@
 const express = require('express');
 const compression = require('compression');
+const dotenv = require('dotenv');
 const helmet = require('helmet');
 
 const {
@@ -12,10 +13,10 @@ const {
 
 const healthcheck = require('./healthcheck');
 
-require('dotenv').config();
+dotenv.config();
 const { validateEnv } = require('./utils/validateEnv');
 
-validateEnv(process.env);
+validateEnv();
 
 const {
   bankRoutes,
