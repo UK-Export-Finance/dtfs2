@@ -65,11 +65,15 @@ const validateAutomaticCover = async (req, res, next) => {
     const coverType = deriveCoverType(body, eligibility.criteria);
 
     if (!saveAndReturn && automaticCoverErrors.length > 0) {
-      const mappedTerms = eligibility.criteria.map((answerObj) => ({
-        ...answerObj,
-        answer: body[String(answerObj.id)] ? stringToBoolean(body[String(answerObj.id)]) : null,
-        htmlText: decode(answerObj.htmlText),
-      }));
+      const mappedTerms = eligibility.criteria.map((answerObj) => {
+        const submittedAnswer = body[String(answerObj.id)];
+
+        return {
+          ...answerObj,
+          answer: submittedAnswer ? stringToBoolean(submittedAnswer) : null,
+          htmlText: decode(answerObj.htmlText),
+        };
+      });
 
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
