@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from '../relativeURL';
 import applicationDetails from '../pages/application-details';
 import applicationSubmission from '../pages/application-submission';
@@ -8,7 +6,6 @@ import applicationPreview from '../pages/application-preview';
 import returnToMaker from '../pages/return-to-maker';
 
 const applicationIds = [];
-
 context('Submit application to UKEF', () => {
   before(() => {
     cy.reinsertMocks();
@@ -22,13 +19,10 @@ context('Submit application to UKEF', () => {
           applicationIds.push(item._id);
         });
       });
-
-    cy.on('uncaught:exception', () => false);
   });
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.on('uncaught:exception', () => false);
   });
 
   describe('DTFS2-4698 MakerChecker should not be able to submit own edited deals', () => {
@@ -47,7 +41,6 @@ context('Submit application to UKEF', () => {
       returnToMaker.comment().type('DTFS2-4698 return to maker comment by the maker checker');
       returnToMaker.submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
-      // cy.login(CREDENTIALS.MAKER);  // don't need to login again just visit the application - has maker role
       cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
 
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');

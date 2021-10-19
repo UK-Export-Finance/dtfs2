@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
@@ -24,10 +22,8 @@ describe(baseUrl, () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    // noRoles = testUsers().withoutAnyRoles().one();
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
-    // anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
