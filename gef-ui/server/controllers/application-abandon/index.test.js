@@ -77,7 +77,7 @@ describe('controllers/application-abandon', () => {
   beforeEach(() => {
     mockResponse = new MockResponse();
     mockRequest = new MockRequest();
-    mockApplicationResponse = new MockApplicationResponse();
+    mockApplicationResponse = MockApplicationResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(MockExporterResponse());
