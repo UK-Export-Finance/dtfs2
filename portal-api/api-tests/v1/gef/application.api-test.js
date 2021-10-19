@@ -78,7 +78,6 @@ describe(baseUrl, () => {
               ...criterion,
               answer: null,
             })),
-            updatedAt: expect.any(Number),
           },
           createdAt: expect.any(Number),
           status: 'DRAFT',
@@ -120,8 +119,7 @@ describe(baseUrl, () => {
             ...criterion,
             answer: null,
           })),
-          updatedAt: expect.any(Number),
-          statis: 'NOT_STARTED',
+          status: 'NOT_STARTED',
         },
         status: 'DRAFT',
         createdAt: expect.any(Number),
@@ -198,7 +196,6 @@ describe(baseUrl, () => {
             ...criterion,
             answer: null,
           })),
-          updatedAt: expect.any(Number),
         },
       };
       expect(body).toEqual(expectMongoId(expected));
