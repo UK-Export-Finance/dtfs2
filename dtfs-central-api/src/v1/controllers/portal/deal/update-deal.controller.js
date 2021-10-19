@@ -84,7 +84,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     originalDeal = await findOneDeal(dealId);
   }
 
-  let existingDealDetails;
+  let originalDealDetails;
   if (originalDeal && originalDeal.details) {
     originalDealDetails = originalDeal.details;
   }
@@ -132,7 +132,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
 exports.updateDeal = updateDeal;
 
 const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
-  const result = await findOneDeal(dealId, async (deal) => {
+  await findOneDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
     const updatedFacilities = [
@@ -155,8 +155,6 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
 
     return updatedDeal;
   });
-
-  return result;
 };
 
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
