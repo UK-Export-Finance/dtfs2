@@ -1,18 +1,22 @@
 const CONSTANTS = require('../constants');
+const { hasValue } = require('../utils/string');
 
 const getBSSProperty = (propertyPath) => {
-  switch (propertyPath) {
-    case 'dealSnapshot.ukefDealId':
-      return 'dealSnapshot.details.ukefDealId';
-    case 'dealSnapshot.exporter.companyName':
-      return 'dealSnapshot.submissionDetails.supplier-name';
-    case 'dealSnapshot.buyer.companyName':
-      return 'dealSnapshot.submissionDetails.buyer-name';
-    case 'dealSnapshot.details.owningBank.name':
-      return 'dealSnapshot.bank.name';
-    default:
-      return propertyPath;
+  if (hasValue(propertyPath)) {
+    switch (propertyPath) {
+      case 'dealSnapshot.ukefDealId':
+        return 'dealSnapshot.details.ukefDealId';
+      case 'dealSnapshot.exporter.companyName':
+        return 'dealSnapshot.submissionDetails.supplier-name';
+      case 'dealSnapshot.buyer.companyName':
+        return 'dealSnapshot.submissionDetails.buyer-name';
+      case 'dealSnapshot.details.owningBank.name':
+        return 'dealSnapshot.bank.name';
+      default:
+        return propertyPath;
+    }
   }
+  return null;
 };
 
 const mapDataModel = (deal, propertyPath) => {
