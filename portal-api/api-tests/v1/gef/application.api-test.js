@@ -19,7 +19,7 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 const api = require('../../../src/v1/api');
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
-  criteria.version === 1.5);
+  criteria.version === 1.5).terms;
 
 describe(baseUrl, () => {
   let aMaker;
