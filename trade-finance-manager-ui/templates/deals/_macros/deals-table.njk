@@ -16,7 +16,7 @@
           {{tableHeading.render({
             fieldName: 'ukefDealId',
             buttonText: 'Deal ID',
-            buttonValue: 'dealSnapshot.details.ukefDealId',
+            buttonValue: 'dealSnapshot.ukefDealId',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -34,7 +34,7 @@
           {{tableHeading.render({
             fieldName: 'exporter',
             buttonText: 'Exporter',
-            buttonValue: 'dealSnapshot.submissionDetails.supplier-name',
+            buttonValue: 'dealSnapshot.exporter.companyName',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -42,7 +42,7 @@
           {{tableHeading.render({
             fieldName: 'buyer',
             buttonText: 'Buyer',
-            buttonValue: 'dealSnapshot.submissionDetails.buyer-name',
+            buttonValue: 'dealSnapshot.buyer.companyName',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -50,7 +50,7 @@
           {{tableHeading.render({
             fieldName: 'bank',
             buttonText: 'Bank',
-            buttonValue: 'dealSnapshot.details.owningBank.name',
+            buttonValue: 'dealSnapshot.bank.name',
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
