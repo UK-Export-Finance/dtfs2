@@ -89,13 +89,6 @@ class Application {
         application.supportingInfoStatus = status[PROGRESS.NOT_STARTED];
       }
 
-      console.log({
-        submissionType: application.submissionType,
-        supportingInfoStatus: application.supportingInfoStatus,
-        canSubmit: application.submissionType === DEAL_SUBMISSION_TYPE.AIN
-        || application.supportingInfoStatus === PROGRESS.COMPLETED,
-      });
-
       // Can only submit when all section statuses are set to complete
       // and the application is in Draft or CHANGES_REQUIRED
       application.canSubmit = application.exporterStatus.code === PROGRESS.COMPLETED
@@ -108,9 +101,7 @@ class Application {
         && [PROGRESS.DRAFT, PROGRESS.CHANGES_REQUIRED].includes(application.status)
         && user.roles.includes('maker');
 
-      application.checkerCanSubmit = ['BANK_CHECK'].includes(application.status)
-        && user._id !== application.userId // The checker is not the maker
-        && user.roles.includes('checker');
+      application.checkerCanSubmit = ['BANK_CHECK'].includes(application.status) && !application.editedBy.includes(user._id) && user.roles.includes('checker');
 
       if (![PROGRESS.DRAFT].includes(application.status)) {
         application.maker = await getUserDetails(application.userId, userToken);
