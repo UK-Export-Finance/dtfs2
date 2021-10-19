@@ -78,10 +78,16 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
   const collection = await db.getCollection('deals');
+  
+  let originalDeal = existingDeal;
+
+  if (!existingDeal) {
+    originalDeal = await findOneDeal(dealId);
+  }
 
   let existingDealDetails;
-  if (existingDeal && existingDeal.details) {
-    existingDealDetails = existingDeal.details;
+  if (originalDeal && originalDeal.details) {
+    originalDealDetails = originalDeal.details;
   }
 
   let dealChangesDetails;
@@ -89,9 +95,9 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     dealChangesDetails = dealChanges.details;
   }
 
-  let existingDealEligibility;
-  if (existingDeal && existingDeal.eligibility) {
-    existingDealEligibility = existingDeal.eligibility;
+  let originalDealEligibility;
+  if (originalDeal && originalDeal.eligibility) {
+    originalDealEligibility = originalDeal.eligibility;
   }
 
   let dealChangesEligibility;
@@ -102,14 +108,14 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
   const update = {
     ...dealChanges,
     details: {
-      ...existingDealDetails,
+      ...originalDealDetails,
       ...dealChangesDetails,
       dateOfLastAction: now(),
     },
     eligibility: {
-      ...existingDealEligibility,
+      ...originalDealEligibility,
       ...dealChangesEligibility,
-    }
+    },
   };
 
   if (routePath === PORTAL_ROUTE) {
@@ -188,6 +194,7 @@ exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
   const { user, dealUpdate } = req.body;
+
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
