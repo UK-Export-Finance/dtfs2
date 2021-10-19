@@ -3,21 +3,17 @@ const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
 const getCrossDataModelProperty = require('../../../../mapping/getCrossDataModelProperty');
-
-const isEmpty = (value) => {
-  if (value === null) return '';
-  return value;
-};
+const setEmptyIfNull = require('../../../../utils/setEmptyIfNull');
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
-    const xField = isEmpty(
+    const xField = setEmptyIfNull(
       getObjectPropertyValueFromStringPath(
         xDeal,
         getCrossDataModelProperty(xDeal, sortBy.field),
       ),
     );
-    const yField = isEmpty(
+    const yField = setEmptyIfNull(
       getObjectPropertyValueFromStringPath(
         yDeal,
         getCrossDataModelProperty(yDeal, sortBy.field),
