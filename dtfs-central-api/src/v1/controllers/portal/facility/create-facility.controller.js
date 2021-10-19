@@ -47,7 +47,7 @@ exports.createFacilityPost = async (req, res) => {
     });
   }
 
-  return findOneDeal(facility.associatedDealId, async (deal) => {
+  const created = await findOneDeal(facility.associatedDealId, async (deal) => {
     if (deal) {
       const createdFacility = await createFacility(facility, user, req.routePath);
 
@@ -56,4 +56,6 @@ exports.createFacilityPost = async (req, res) => {
 
     return res.status(404).send('Deal not found');
   });
+
+  return created;
 };
