@@ -18,6 +18,9 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
 
+const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
+  criteria.version === 1.5);
+
 describe(baseUrl, () => {
   let aMaker;
   let aChecker;
@@ -64,13 +67,6 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[13]).to(baseUrl);
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
 
-      // MW: couldn't get the promise.all running in sequential order
-      // await mockApplications.map(async (item) => {
-      //   return as(aMaker).post(item).to(baseUrl);
-      // })
-
-      // await Promise.all(promise);
-
       const { body, status } = await as(aChecker).get(baseUrl);
 
       const expected = {
@@ -78,9 +74,11 @@ describe(baseUrl, () => {
           ...expectMongoId(item),
           exporterId: expect.any(String),
           eligibility: {
-            criteria: mockEligibilityCriteria,
+            criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+              ...criterion,
+              answer: null,
+            })),
             updatedAt: expect.any(Number),
-            statis: 'NOT_STARTED',
           },
           createdAt: expect.any(Number),
           status: 'DRAFT',
@@ -118,7 +116,10 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         exporterId: expect.any(String),
         eligibility: {
-          criteria: mockEligibilityCriteria,
+          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+            ...criterion,
+            answer: null,
+          })),
           updatedAt: expect.any(Number),
           statis: 'NOT_STARTED',
         },
@@ -193,7 +194,10 @@ describe(baseUrl, () => {
         ukefDealId: null,
         checkerId: null,
         eligibility: {
-          criteria: mockEligibilityCriteria,
+          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+            ...criterion,
+            answer: null,
+          })),
           updatedAt: expect.any(Number),
         },
       };
