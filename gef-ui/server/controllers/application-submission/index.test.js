@@ -176,7 +176,7 @@ describe('controllers/application-submission', () => {
           comments: [{
             role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
           }],
-          editorId: expect.any(Number),
+          editorId: 1235,
         },
       };
 

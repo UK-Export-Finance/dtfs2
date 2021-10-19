@@ -20,7 +20,7 @@ const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const {
   EMAIL_TEMPLATE_IDS,
-  DEAL: { GEF_STATUS }
+  DEAL: { GEF_STATUS },
 } = require('../../../constants');
 
 const applicationCollectionName = 'gef-application';
@@ -135,7 +135,7 @@ exports.update = async (req, res) => {
       .send(validateErrs);
   }
 
-  // TODO: write the unit test
+  // TODO: DTFS2-4987 Write unit tests for editorId
   const updateAction = {};
   if (update.editorId) {
     updateAction.$addToSet = { editedBy: update.editorId };
@@ -168,7 +168,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   const userCollection = await db.getCollection(userCollectionName);
   const {
     firstname: firstName = '',
-    surname = ''
+    surname = '',
   } = userId
     ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
     : {};
@@ -358,8 +358,8 @@ exports.findDeals = async (
       {
         $sort: {
           updatedAt: -1,
-          createdAt: -1
-        }
+          createdAt: -1,
+        },
       },
       {
         $facet: {
@@ -374,8 +374,8 @@ exports.findDeals = async (
       {
         $project: {
           count: '$count.total',
-          deals: 1
-        }
+          deals: 1,
+        },
       },
     ])
     .toArray();
