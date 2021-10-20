@@ -2,10 +2,8 @@ FROM node:lts-alpine AS image
 
 WORKDIR /app
 
-ADD . .
+COPY . .
 RUN npm install
-RUN npm run lint
-
 
 FROM node:lts-alpine
 # Identifies the code in the running container
@@ -16,4 +14,3 @@ WORKDIR /app
 COPY --from=image /app /app
 
 CMD node src/index.js
-
