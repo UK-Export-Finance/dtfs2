@@ -155,7 +155,7 @@ context('Application Details Page', () => {
     before(() => {
       cy.visit(relative(`/gef/application-details/${applications[2]._id}`));
 
-      // Make the deal an  Automatic Inclusion Application
+      // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el, index) => {
         $el.find('[data-cy="automatic-cover-true"]').trigger('click');
