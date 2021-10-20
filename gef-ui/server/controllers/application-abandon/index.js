@@ -7,7 +7,7 @@ const applicationIsAbandonable = (application) => [PROGRESS.DRAFT,
   PROGRESS.CHANGES_REQUIRED,
   PROGRESS.BANK_CHECK].includes(application.status.toUpperCase());
 
-const dashboardUrl = '/dashboard/gef';
+const dashboardUrl = '/dashboard';
 
 const confirmAbandonApplication = async (req, res, next) => {
   const {
