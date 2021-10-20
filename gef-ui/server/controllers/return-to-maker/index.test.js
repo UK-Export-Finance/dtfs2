@@ -75,7 +75,7 @@ describe('controllers/return-to-maker', () => {
       await getReturnToMaker(mockRequest, mockResponse);
 
       expect(mockResponse.render).not.toHaveBeenCalled();
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard/gef/');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -113,7 +113,7 @@ describe('controllers/return-to-maker', () => {
         ],
       }));
       expect(setApplicationStatus).toHaveBeenCalledWith('1234', PROGRESS.CHANGES_REQUIRED);
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard/gef/');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
     it('renders error where comments are too long', async () => {

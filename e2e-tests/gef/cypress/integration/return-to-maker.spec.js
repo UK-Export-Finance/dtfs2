@@ -39,18 +39,18 @@ context('Return to Maker', () => {
 
     it('does not display for applications that aren\'t in checking state', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0]}/return-to-maker`));
-      cy.location('pathname').should('contain', 'dashboard/gef');
+      cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits without comments ', () => {
       returnToMaker.submitButton().click();
-      cy.location('pathname').should('contain', 'dashboard/gef');
+      cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits with comments', () => {
       returnToMaker.comment().type('Test comment');
       returnToMaker.submitButton().click();
-      cy.location('pathname').should('contain', 'dashboard/gef');
+      cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('display an error when the comment is greater than 400 characters', () => {

@@ -39,7 +39,7 @@ context('Review application when returned to maker', () => {
     applicationPreview.returnButton().click();
     returnToMaker.comment().type('DTFS2-4536 return to maker comment by the checker');
     returnToMaker.submitButton().click();
-    cy.location('pathname').should('contain', 'dashboard/gef');
+    cy.location('pathname').should('contain', 'dashboard');
     cy.login(CREDENTIALS.MAKER);
 
     cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
