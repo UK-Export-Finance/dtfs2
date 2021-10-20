@@ -2,6 +2,7 @@
 .npm
 .idea
 .env
+**/.env
 pipeline.log
 dist
 node_modules
