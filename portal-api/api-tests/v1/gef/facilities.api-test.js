@@ -280,6 +280,7 @@ describe(baseUrl, () => {
           ...details,
           ...update,
           updatedAt: expect.any(Number),
+          value: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
           guaranteeFee: calculateGuaranteeFee(update, {}),
@@ -321,6 +322,7 @@ describe(baseUrl, () => {
           ...details,
           ...update,
           updatedAt: expect.any(Number),
+          value: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
           guaranteeFee: calculateGuaranteeFee(update, {}),
