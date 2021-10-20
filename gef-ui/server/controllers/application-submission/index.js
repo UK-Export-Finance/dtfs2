@@ -43,9 +43,10 @@ const postApplicationSubmission = async (req, res, next) => {
       const comments = application.comments || [];
       comments.push(commentObj);
 
-      await api.updateApplication(applicationId, { comments });
+      await api.updateApplication(applicationId, { comments, editorId: user._id });
+    } else {
+      await api.updateApplication(applicationId, { editorId: user._id });
     }
-
     await api.setApplicationStatus(applicationId, PROGRESS.BANK_CHECK);
   } catch (err) {
     console.error(err);

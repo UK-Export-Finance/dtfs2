@@ -2,6 +2,8 @@ const { DEAL_TYPE, STATUS } = require('../enums');
 
 class Application {
   constructor(req, exporterId, eligibilityTerms) {
+    const editedBy = [];
+
     if (exporterId && eligibilityTerms) {
       // New Application
       this.dealType = DEAL_TYPE;
@@ -28,6 +30,8 @@ class Application {
       this.supportingInformation = {};
       this.ukefDealId = null;
       this.checkerId = null;
+      editedBy.push(this.userId);
+      this.editedBy = editedBy;
       this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
     } else {
       // Update
@@ -40,6 +44,7 @@ class Application {
         'submissionCount',
         'submissionDate',
         'ukefDealId',
+        'editorId',
         'checkerId',
         'supportingInformation',
         'bankInternalRefName',

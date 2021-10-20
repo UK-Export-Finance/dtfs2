@@ -22,7 +22,10 @@ const { STATUS } = require('../enums');
 const addSubmissionData = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
-const { EMAIL_TEMPLATE_IDS, DEAL: { GEF_STATUS } } = require('../../../constants');
+const {
+  EMAIL_TEMPLATE_IDS,
+  DEAL: { GEF_STATUS },
+} = require('../../../constants');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
@@ -60,7 +63,8 @@ exports.create = async (req, res) => {
     req.body,
   );
   if (validateErrs) {
-    res.status(422).send(validateErrs);
+    res.status(422)
+      .send(validateErrs);
   } else {
     const exporter = await exporterCollection.insertOne(new Exporter());
     const eligibility = await getLatestEligibilityCriteria();
@@ -73,22 +77,25 @@ exports.create = async (req, res) => {
       _id: ObjectID(String(createdApplication.insertedId)),
     });
 
-    res.status(201).json(application);
+    res.status(201)
+      .json(application);
   }
 };
 
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
 
-  const doc = await collection.find({}).toArray();
+  const doc = await collection.find({})
+    .toArray();
 
   if (doc.length && doc.supportingInformation) {
     doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
   }
 
-  res.status(200).send({
-    items: doc,
-  });
+  res.status(200)
+    .send({
+      items: doc,
+    });
 };
 
 exports.getById = async (req, res) => {
@@ -107,7 +114,8 @@ exports.getById = async (req, res) => {
     }
     res.status(200).send(doc);
   } else {
-    res.status(204).send();
+    res.status(204)
+      .send();
   }
 };
 
@@ -117,9 +125,11 @@ exports.getStatus = async (req, res) => {
     _id: ObjectID(String(req.params.id)),
   });
   if (doc) {
-    res.status(200).send({ status: doc.status });
+    res.status(200)
+      .send({ status: doc.status });
   } else {
-    res.status(204).send();
+    res.status(204)
+      .send();
   }
 };
 
@@ -128,12 +138,21 @@ exports.update = async (req, res) => {
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
-    return res.status(422).send(validateErrs);
+    return res.status(422)
+      .send(validateErrs);
   }
+
+  // TODO: DTFS2-4987 Write unit tests for editorId
+  const updateAction = {};
+  if (update.editorId) {
+    updateAction.$addToSet = { editedBy: update.editorId };
+    delete update.editorId;
+  }
+  updateAction.$set = update;
 
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectID(String(req.params.id)) } },
-    { $set: update },
+    updateAction,
     { returnOriginal: false },
   );
   let response;
@@ -141,7 +160,8 @@ exports.update = async (req, res) => {
     response = result.value;
   }
 
-  return res.status(utils.mongoStatus(result)).send(response);
+  return res.status(utils.mongoStatus(result))
+    .send(response);
 };
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
@@ -153,7 +173,10 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 
   // get maker user details
   const userCollection = await db.getCollection(userCollectionName);
-  const { firstname: firstName = '', surname = '' } = userId
+  const {
+    firstname: firstName = '',
+    surname = '',
+  } = userId
     ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
     : {};
 
@@ -185,7 +208,8 @@ exports.changeStatus = async (req, res) => {
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);
   if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
+    return res.status(422)
+      .send(enumValidationErr);
   }
 
   const collection = await db.getCollection(applicationCollectionName);
@@ -194,7 +218,8 @@ exports.changeStatus = async (req, res) => {
   });
 
   if (!existingApplication) {
-    return res.status(404).send();
+    return res.status(404)
+      .send();
   }
 
   const { status } = req.body;
@@ -249,7 +274,8 @@ exports.changeStatus = async (req, res) => {
     await sendStatusUpdateEmail(user, existingApplication, status);
   }
 
-  return res.status(utils.mongoStatus(updatedDocument)).send(response);
+  return res.status(utils.mongoStatus(updatedDocument))
+    .send(response);
 };
 
 exports.delete = async (req, res) => {
@@ -282,7 +308,9 @@ const dealsFilters = (user, filters = []) => {
   const amendedFilters = [...filters];
 
   // add the bank clause if we're not a superuser
-  if (!isSuperUser(user)) { amendedFilters.push({ bankId: { $eq: user.bank.id } }); }
+  if (!isSuperUser(user)) {
+    amendedFilters.push({ bankId: { $eq: user.bank.id } });
+  }
 
   let result = {};
   if (amendedFilters.length === 1) {
@@ -318,7 +346,12 @@ exports.findDeals = async (
       },
       { $unwind: '$exporter' },
       { $match: sanitisedFilters },
-      { $sort: { updatedAt: -1, createdAt: -1 } },
+      {
+        $sort: {
+          updatedAt: -1,
+          createdAt: -1,
+        },
+      },
       {
         $facet: {
           count: [{ $count: 'total' }],
@@ -329,7 +362,12 @@ exports.findDeals = async (
         },
       },
       { $unwind: '$count' },
-      { $project: { count: '$count.total', deals: 1 } },
+      {
+        $project: {
+          count: '$count.total',
+          deals: 1,
+        },
+      },
     ])
     .toArray();
 
