@@ -1,9 +1,7 @@
-const getObjectPropertyValueFromStringPath = (obj, str) =>
-  str.split('.').reduce((p, propertyName) => {
-    if (p && p[propertyName]) {
-      return p[propertyName];
-    }
+const getObjectPropertyValueFromStringPath = (object, field) =>
+  field.split('.').reduce((o, p) => {
+    if (o && o[p]) return o[p];
     return null;
-  }, obj);
+  }, object);
 
 module.exports = getObjectPropertyValueFromStringPath;

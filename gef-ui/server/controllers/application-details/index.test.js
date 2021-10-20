@@ -22,6 +22,7 @@ const MockRequest = () => {
     user: {
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
+      _id: 1235,
     },
   };
   return req;
@@ -39,6 +40,7 @@ const MockApplicationResponse = () => {
   res.supportingInformation = {
     status: 'NOT_STARTED',
   };
+  res.editedBy = ['MAKER_CHECKER'];
   return res;
 };
 
@@ -173,10 +175,9 @@ describe('controllers/about-exporter', () => {
       api.getExporter.mockResolvedValueOnce(mockExporterResponse);
 
       await applicationDetails(mockRequest, mockResponse);
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
-          applicationStatus: 'BANK_CHECK',
-        }));
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        applicationStatus: 'BANK_CHECK',
+      }));
     });
 
     it('renders application preview for checker', async () => {

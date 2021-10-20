@@ -2,11 +2,23 @@ const moment = require('moment');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
+const mapDataModel = require('../../../../mapping/mapDataModel');
+const setEmptyIfNull = require('../../../../utils/setEmptyIfNull');
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
-    const xField = getObjectPropertyValueFromStringPath(xDeal, sortBy.field);
-    const yField = getObjectPropertyValueFromStringPath(yDeal, sortBy.field);
+    const xField = setEmptyIfNull(
+      getObjectPropertyValueFromStringPath(
+        xDeal,
+        mapDataModel(xDeal, sortBy.field),
+      ),
+    );
+    const yField = setEmptyIfNull(
+      getObjectPropertyValueFromStringPath(
+        yDeal,
+        mapDataModel(yDeal, sortBy.field),
+      ),
+    );
 
     if (sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING) {
       if (xField > yField) {
@@ -76,8 +88,8 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
           ...query,
           [field.name]: {
             $eq: field.value,
-          }
-        }
+          },
+        };
       });
     }
 

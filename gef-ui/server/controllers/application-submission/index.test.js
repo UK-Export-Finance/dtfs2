@@ -41,6 +41,7 @@ const MockSubmissionRequest = () => ({
     user: {
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
+      _id: 1235,
     },
   },
 });
@@ -55,6 +56,7 @@ const MockApplicationResponse = () => {
   res.coverTerms = {
     isAutomaticCover: true,
   };
+  res.editorId = 1235;
   return res;
 };
 
@@ -139,7 +141,7 @@ describe('controllers/application-submission', () => {
 
   describe('POST Application Submission', () => {
     beforeEach(() => {
-      mockRequest = new MockSubmissionRequest();
+      mockRequest = MockSubmissionRequest();
     });
 
     it('renders confirmation if successfully submitted', async () => {
@@ -152,7 +154,7 @@ describe('controllers/application-submission', () => {
     });
 
     it('renders error where comments are too long', async () => {
-      const longComments = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante nec magna fringilla dapibus. Praesent porta nibh at metus venenatis feugiat. Proin vel sollicitudin ligula. Nulla sed massa quis augue bibendum lacinia vitae id leo. Aliquam quis imperdiet felis, et tempus eros. Duis efficitur odio nisl, non finibus urna convallis sit amet. Cras tortor odio, finibus in fermentum vel, posuere quis.';
+      const longComments = 'a'.repeat(410);
       mockRequest.body.comment = longComments;
 
       await postApplicationSubmission(mockRequest, mockResponse);
@@ -174,6 +176,7 @@ describe('controllers/application-submission', () => {
           comments: [{
             role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
           }],
+          editorId: 1235,
         },
       };
 
@@ -188,7 +191,7 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.updateApplication).not.toHaveBeenCalled();
+      expect(api.updateApplication).toHaveReturnedWith(undefined);
     });
 
     it('updates the application status to `BANK_CHECK`', async () => {

@@ -1,7 +1,6 @@
-const bodyParser = require('body-parser');
-// const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
+const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
@@ -22,19 +21,14 @@ const initScheduler = require('./scheduler');
 
 dotenv.config();
 
-// const { CORS_ORIGIN } = process.env;
 initScheduler();
 
 const app = express();
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(express.json());
+app.use(compression());
+
 app.use(healthcheck);
 app.use('/v1', openRouter);
-
-// app.use(cors({
-//   origin: CORS_ORIGIN,
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-// }));
-
 app.use(graphQlRouter);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
