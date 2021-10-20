@@ -687,6 +687,26 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
       expect(body.lastEdited).toEqual(expect.any(String));
     });
+
+    it('should update the associated deal\'s facilitiesUpdated timestamp', () => {
+      // create deal
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const dealId = deal.body._id;
+
+      // create bond facility
+      const { body: createdBond } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const { bondId } = createdBond;
+
+      const bondUpdate = { test: true };
+
+      // update bond facility
+      await as(aBarclaysMaker).put(bondUpdate).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+      // get the deal, check facilities timestamp
+      const { body: dealAfterFirstUpdate } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const originalFacilitiesUpdated = dealAfterFirstUpdate.deal.facilitiesUpdated;
+      expect(originalFacilitiesUpdated).toEqual(expect.any(String));
+    });
   });
 
   describe('DELETE /v1/deals/:id/bond/:id', () => {

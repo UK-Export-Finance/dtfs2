@@ -481,6 +481,26 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(200);
       expect(body.loan.lastEdited).toEqual(expect.any(String));
     });
+
+    it('should update the associated deal\'s facilitiesUpdated timestamp', () => {
+      // create deal
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const dealId = deal.body._id;
+
+      // create loan facility
+      const { body: createdLoan } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      const { loanId } = createdLoan;
+
+      const loanUpdate = { test: true };
+
+      // update loan facility
+      await as(aBarclaysMaker).put(loanUpdate).to(`/v1/deals/${dealId}/loan/${loanId}`);
+
+      // get the deal, check facilities timestamp
+      const { body: dealAfterFirstUpdate } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const originalFacilitiesUpdated = dealAfterFirstUpdate.deal.facilitiesUpdated;
+      expect(originalFacilitiesUpdated).toEqual(expect.any(String));
+    });
   });
 
   describe('PUT /v1/deals/:id/loan/create', () => {
