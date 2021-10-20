@@ -1,4 +1,3 @@
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -7,7 +6,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(express.json());
 
 const { CORS_ORIGIN } = process.env;
 app.use(cors({

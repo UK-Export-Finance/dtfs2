@@ -2,6 +2,7 @@ const { DEAL_TYPE, STATUS } = require('../enums');
 
 class Application {
   constructor(req, exporterId, coverTermsId) {
+    const editedBy = [];
     if (exporterId) {
       // New Application
       this.dealType = DEAL_TYPE;
@@ -20,12 +21,14 @@ class Application {
       this.supportingInformation = {};
       this.ukefDealId = null;
       this.checkerId = null;
+      editedBy.push(this.userId);
+      this.editedBy = editedBy;
       this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
     } else {
       // Update
       this.updatedAt = Date.now();
       // Only set properties if they are part of the request otherwise they get cleared
-      const updatable = ['comments', 'submissionType', 'submissionCount', 'submissionDate', 'ukefDealId', 'checkerId', 'supportingInformation', 'bankInternalRefName', 'additionalRefName'];
+      const updatable = ['comments', 'submissionType', 'submissionCount', 'submissionDate', 'ukefDealId', 'editorId', 'checkerId', 'supportingInformation', 'bankInternalRefName', 'additionalRefName'];
       Object.entries(req).forEach(([key, value]) => {
         if (updatable.includes(key)) {
           this[key] = value;

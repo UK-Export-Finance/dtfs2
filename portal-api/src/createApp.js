@@ -1,8 +1,8 @@
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
+const compression = require('compression');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
@@ -31,7 +31,8 @@ const app = express();
 app.use(healthcheck);
 app.use(uploadTest);
 app.use(passport.initialize());
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(express.json());
+app.use(compression());
 
 app.use(cors({
   origin: CORS_ORIGIN,

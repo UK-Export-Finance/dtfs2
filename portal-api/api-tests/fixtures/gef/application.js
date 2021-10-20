@@ -11,6 +11,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -24,6 +25,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -37,6 +39,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -50,6 +53,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -63,6 +67,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -76,6 +81,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -89,6 +95,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -102,6 +109,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -115,6 +123,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -128,6 +137,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -141,6 +151,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -154,6 +165,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -167,6 +179,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -180,6 +193,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }, {
   dealType: 'GEF',
   userId: null,
@@ -193,6 +207,7 @@ const APPLICATION = [{
   status: 'IN_PROGRESS',
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
 }];
 
 module.exports = APPLICATION;
