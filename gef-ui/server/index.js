@@ -29,10 +29,6 @@ const { validateEnv } = require('./utils/validateEnv');
 validateEnv();
 const { PORT, SESSION_SECRET } = process.env;
 
-if (!SESSION_SECRET) {
-  console.error('GEF UI server - SESSION_SECRET missing');
-}
-
 const sessionOptions = {
   secret: SESSION_SECRET,
   resave: false,
