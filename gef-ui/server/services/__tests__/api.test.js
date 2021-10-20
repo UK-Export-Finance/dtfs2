@@ -193,32 +193,6 @@ describe('deleteFacility()', () => {
   });
 });
 
-describe('getCoverTerms()', () => {
-  it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getCoverTerms('fakeId');
-    expect(response).toEqual({ status: 200 });
-  });
-
-  it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getCoverTerms('fakeId')).rejects.toThrowError();
-  });
-});
-
-describe('updateCoverTerms()', () => {
-  it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateCoverTerms('fakeId', { payload: 'payload' });
-    expect(response).toEqual({ status: 200 });
-  });
-
-  it('throws an error if there is an api error', async () => {
-    Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateCoverTerms('fakeId')).rejects.toThrowError();
-  });
-});
-
 describe('getEligibilityCriteria()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));

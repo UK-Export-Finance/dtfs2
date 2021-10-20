@@ -169,6 +169,7 @@ const createDealEligibility = async (eligibility) => {
     status: eligibilityStatus,
     criteria: eligibilityCriteriaWithAnswers,
     ...eligibilityCriteria11AgentDetails(),
+    lastUpdated: null,
   };
 };
 
@@ -248,7 +249,7 @@ exports.update = async (req, res) => {
     if (!deal) res.status(404).send();
 
     if (!userHasAccessTo(req.user, deal)) {
-      res.status(401).send();
+      return res.status(401).send();
     } else {
       const updatedDeal = await updateDeal(
         dealId,
@@ -256,7 +257,8 @@ exports.update = async (req, res) => {
         req.user,
         deal,
       );
-      res.status(200).json(updatedDeal);
+
+      return res.status(200).json(updatedDeal);
     }
   });
 };

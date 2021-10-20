@@ -9,11 +9,15 @@ const {
 const {
   supportingInfoStatus,
 } = require('./validation/supportingInfo');
+
+const {
+  eligibilityCriteriaStatus,
+} = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
+const { getLatestCriteria: getLatestEligibilityCriteria } = require('../controllers/eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
-const { CoverTerms } = require('../models/coverTerms');
 const { STATUS } = require('../enums');
 const addSubmissionData = require('./application-submit');
 const api = require('../../api');
@@ -25,7 +29,6 @@ const {
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
-const coverTermsCollectionName = 'gef-cover-terms';
 const facilitiesCollectionName = 'gef-facilities';
 const userCollectionName = 'users';
 
@@ -56,7 +59,6 @@ exports.create = async (req, res) => {
     applicationCollectionName,
   );
   const exporterCollection = await db.getCollection(exporterCollectionName);
-  const coverTermsCollection = await db.getCollection(coverTermsCollectionName);
   const validateErrs = validateApplicationReferences(
     req.body,
   );
@@ -65,10 +67,10 @@ exports.create = async (req, res) => {
       .send(validateErrs);
   } else {
     const exporter = await exporterCollection.insertOne(new Exporter());
-    const coverTerms = await coverTermsCollection.insertOne(new CoverTerms());
+    const eligibility = await getLatestEligibilityCriteria();
 
     const createdApplication = await applicationCollection.insertOne(
-      new Application(req.body, exporter.insertedId, coverTerms.insertedId),
+      new Application(req.body, exporter.insertedId, eligibility.terms),
     );
 
     const application = await applicationCollection.findOne({
@@ -103,9 +105,14 @@ exports.getById = async (req, res) => {
   });
 
   if (doc) {
-    if (doc.supportingInformation) doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
-    res.status(200)
-      .send(doc);
+    if (doc.supportingInformation) {
+      doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
+    }
+
+    if (doc.eligibility) {
+      doc.eligibility.status = eligibilityCriteriaStatus(doc.eligibility.criteria);
+    }
+    res.status(200).send(doc);
   } else {
     res.status(204)
       .send();
@@ -175,6 +182,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 
   const exporterCollection = await db
     .getCollection(exporterCollectionName);
+
   // get exporter name
   const { companyName = '' } = await exporterCollection.findOne({
     _id: ObjectID(String(existingApplication.exporterId)),
@@ -285,14 +293,6 @@ exports.delete = async (req, res) => {
         _id: ObjectID(String(applicationResponse.value.exporterId)),
       });
     }
-    if (applicationResponse.value.coverTermsId) {
-      const coverTermsCollection = await db.getCollection(
-        coverTermsCollectionName,
-      );
-      await coverTermsCollection.findOneAndDelete({
-        _id: ObjectID(String(applicationResponse.value.coverTermsId)),
-      });
-    }
     // remove facility information related to the application
     const facilitiesCollection = await db.getCollection(
       facilitiesCollectionName,
@@ -345,15 +345,6 @@ exports.findDeals = async (
         },
       },
       { $unwind: '$exporter' },
-      {
-        $lookup: {
-          from: 'gef-cover-terms',
-          localField: 'coverTermsId',
-          foreignField: '_id',
-          as: 'coverTerms',
-        },
-      },
-      { $unwind: '$coverTerms' },
       { $match: sanitisedFilters },
       {
         $sort: {

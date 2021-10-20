@@ -77,24 +77,6 @@ const updateExporter = async (exporterId, payload) => {
   }
 };
 
-const getCoverTerms = async (coverTermsId) => {
-  try {
-    const { data } = await Axios.get(`/gef/cover-terms/${coverTermsId}`);
-    return data;
-  } catch (err) {
-    return apiErrorHandler(err);
-  }
-};
-
-const updateCoverTerms = async (coverTermsId, payload) => {
-  try {
-    const { data } = await Axios.put(`/gef/cover-terms/${coverTermsId}`, payload);
-    return data;
-  } catch (err) {
-    return apiErrorHandler(err);
-  }
-};
-
 const getFacilities = async (applicationId) => {
   if (!applicationId) {
     return [];
@@ -254,8 +236,6 @@ module.exports = {
   getApplication,
   getExporter,
   updateExporter,
-  getCoverTerms,
-  updateCoverTerms,
   getFacilities,
   createFacility,
   getFacility,

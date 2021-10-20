@@ -22,9 +22,6 @@
  *       exporterId:
  *         type: string
  *         example: 123abc
- *       coverTermsId:
- *         type: string
- *         example: 123abc
  *       bankInternalRefName:
  *         type: string
  *         example: Example name

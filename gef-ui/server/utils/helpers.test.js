@@ -6,6 +6,7 @@ import {
   mapSummaryList,
   apiErrorHandler,
   isTrueSet,
+  stringToBoolean,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -409,5 +410,15 @@ describe('isTrueSet()', () => {
 
   it('returns false boolean if string value is equal to `false`', () => {
     expect(isTrueSet('false')).toBe(false);
+  });
+});
+
+describe('stringToBoolean', () => {
+  it('returns `true` string as boolean', () => {
+    expect(stringToBoolean('true')).toEqual(true);
+  });
+
+  it('returns `false` string as boolean', () => {
+    expect(stringToBoolean('false')).toEqual(false);
   });
 });

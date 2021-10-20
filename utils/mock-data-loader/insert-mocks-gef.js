@@ -33,13 +33,39 @@ const insertMocks = async () => {
   }
 
   console.log('inserting application');
-  for (const item of MOCKS.APPLICATION) {
+  const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
+  
+  for (const [index, item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, token);
 
+    const applicationUpdate = {
+      submissionType: item.submissionType,
+    };
+
+    // update the second 'in progress' mock deal
+    // this puts the deal's eligibilityCriteria into an 'in progress' state
+    if (index === 1) {
+      applicationUpdate.eligibility = {
+        criteria: latestEligibilityCriteria.terms,
+      };
+      applicationUpdate.eligibility.criteria[0].answer = true;
+    }
+
+    // update the third 'completed' mock deal
+    // this puts the deal's eligibilityCriteria into an 'completed' state
+    if (index === 2) {
+      applicationUpdate.eligibility = {
+        criteria: latestEligibilityCriteria.terms.map((term) => ({
+          ...term,
+          answer: true,
+        })),
+      };
+    }
+
     await api.updateApplication(
       application._id,
-      { submissionType: item.submissionType },
+      applicationUpdate,
       token,
     );
   }
@@ -63,13 +89,6 @@ const insertMocks = async () => {
       // eslint-disable-next-line no-param-reassign
       delete subitem.applicationId;
       await api.updateFacilities(facilty.details, subitem, token);
-    }
-  }
-
-  console.log('updating cover terms information');
-  for (const [index, item] of MOCKS.COVER_TERMS.entries()) {
-    if (index > 0) {
-      await api.updateCoverTerms(application[index].coverTermsId, item, token);
     }
   }
 };

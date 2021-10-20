@@ -9,11 +9,15 @@ const { expectMongoId } = require('../../expectMongoIds');
 const baseUrl = '/v1/gef/application';
 const collectionName = 'gef-application';
 const mockApplications = require('../../fixtures/gef/application');
+const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 
 const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
+
+const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
+  criteria.version === 1.5).terms;
 
 describe(baseUrl, () => {
   let aMaker;
@@ -59,20 +63,18 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[13]).to(baseUrl);
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
 
-      // MW: couldn't get the promise.all running in sequential order
-      // await mockApplications.map(async (item) => {
-      //   return as(aMaker).post(item).to(baseUrl);
-      // })
-
-      // await Promise.all(promise);
-
       const { body, status } = await as(aChecker).get(baseUrl);
 
       const expected = {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
-          coverTermsId: expect.any(String),
+          eligibility: {
+            criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+              ...criterion,
+              answer: null,
+            })),
+          },
           createdAt: expect.any(Number),
           status: 'DRAFT',
           dealType: 'GEF',
@@ -108,7 +110,13 @@ describe(baseUrl, () => {
       const expected = {
         ...mockApplications[0],
         exporterId: expect.any(String),
-        coverTermsId: expect.any(String),
+        eligibility: {
+          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+            ...criterion,
+            answer: null,
+          })),
+          status: 'NOT_STARTED',
+        },
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
@@ -170,7 +178,6 @@ describe(baseUrl, () => {
       const expected = {
         ...mockApplications[0],
         exporterId: expect.any(String),
-        coverTermsId: expect.any(String),
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
@@ -180,6 +187,12 @@ describe(baseUrl, () => {
         supportingInformation: {},
         ukefDealId: null,
         checkerId: null,
+        eligibility: {
+          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+            ...criterion,
+            answer: null,
+          })),
+        },
       };
       expect(body).toEqual(expectMongoId(expected));
     });

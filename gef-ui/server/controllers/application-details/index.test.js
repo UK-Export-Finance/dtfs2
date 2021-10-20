@@ -32,7 +32,6 @@ const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
   res.exporterId = '123';
-  res.coverTermsId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.status = 'DRAFT';
@@ -40,6 +39,12 @@ const MockApplicationResponse = () => {
   res.supportingInformation = {
     status: 'NOT_STARTED',
   };
+  res.eligibility = {
+    criteria: [
+      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+    ],
+  };
+
   res.editedBy = ['MAKER_CHECKER'];
   return res;
 };
@@ -59,20 +64,10 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const MockCoverTermsResponse = () => {
-  const res = {};
-  res.status = 'NOT_STARTED';
-  res.details = {};
-  res.validation = {};
-  res.validation.required = [];
-  res.data = [];
-  return res;
-};
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
-      id: 'coverStart',
+      id: 12,
       htmlText: '<p>Some eligibility criteria</p>',
       errMsg: '12. Select some eligibilty',
     },
@@ -107,7 +102,6 @@ describe('controllers/about-exporter', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(mockExporterResponse);
-    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.getUserDetails.mockResolvedValue(MockUserResponse());
@@ -150,9 +144,12 @@ describe('controllers/about-exporter', () => {
             status: expect.any(Object),
             rows: expect.any(Array),
           },
-          coverTerms: {
-            status: expect.any(Object),
-            rows: expect.any(Array),
+          eligibility: {
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
           },
           facilities: {
             status: expect.any(Object),

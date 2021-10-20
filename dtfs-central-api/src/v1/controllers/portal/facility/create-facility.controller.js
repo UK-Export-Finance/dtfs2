@@ -47,7 +47,7 @@ exports.createFacilityPost = async (req, res) => {
     });
   }
 
-  return findOneDeal(facility.associatedDealId, async (deal) => {
+  await findOneDeal(facility.associatedDealId, async (deal) => {
     if (deal) {
       const createdFacility = await createFacility(facility, user, req.routePath);
 

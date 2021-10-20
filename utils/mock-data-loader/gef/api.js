@@ -94,23 +94,6 @@ const updateExporter = async (exporterId, data, token) => {
   return response;
 };
 
-// Cover Terms
-
-const updateCoverTerms = async (coverTermsId, data, token) => {
-  const response = await axios({
-    method: 'put',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/cover-terms/${coverTermsId}`,
-    data,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response;
-};
-
 // Facilties
 
 const createFacilities = async (data, token) => {
@@ -268,7 +251,6 @@ module.exports = {
   listApplication,
   deleteExporter,
   updateExporter,
-  updateCoverTerms,
   createFacilities,
   listFacilities,
   deleteFacilities,

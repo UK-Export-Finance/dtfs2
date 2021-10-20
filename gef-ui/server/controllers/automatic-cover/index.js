@@ -1,5 +1,5 @@
 const { decode } = require('html-entities');
-const { validationErrorHandler } = require('../../utils/helpers');
+const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
 const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
 
 const api = require('../../services/api');
@@ -13,15 +13,16 @@ const automaticCover = async (req, res) => {
   const { applicationId } = params;
 
   try {
-    const { terms } = await api.getEligibilityCriteria();
-    const { coverTermsId } = await api.getApplication(applicationId);
-    const { details } = await api.getCoverTerms(coverTermsId);
+    const application = await api.getApplication(applicationId);
+    const { eligibility } = application;
+
+    const mappedTerms = eligibility.criteria.map((answerObj) => ({
+      ...answerObj,
+      htmlText: decode(answerObj.htmlText),
+    }));
+
     return res.render('partials/automatic-cover.njk', {
-      selected: details,
-      terms: terms.map((term) => ({
-        ...term,
-        htmlText: decode(term.htmlText),
-      })),
+      terms: mappedTerms,
       applicationId,
     });
   } catch (err) {
@@ -30,10 +31,10 @@ const automaticCover = async (req, res) => {
   }
 };
 
-const getValidationErrors = (fields, items) => {
-  const receivedFields = Object.keys(fields); // Array of received fields i.e ['coverStart']
-  const errorsToDisplay = items.filter(
-    (item) => !receivedFields.includes(item.id),
+const getValidationErrors = (fields, allCriteria) => {
+  const receivedFields = Object.keys(fields);
+  const errorsToDisplay = allCriteria.filter(
+    (criterion) => !receivedFields.includes(String(criterion.id)),
   );
 
   return errorsToDisplay.map((error) => ({
@@ -42,10 +43,10 @@ const getValidationErrors = (fields, items) => {
   }));
 };
 
-const deriveCoverType = (fields, items) => {
+const deriveCoverType = (fields, allCriteria) => {
   const receivedFields = Object.values(fields);
 
-  if (receivedFields.length !== items.length) return undefined;
+  if (receivedFields.length !== allCriteria.length) return undefined;
   if (receivedFields.every(((field) => field === 'true'))) return DEAL_SUBMISSION_TYPE.AIN;
   if (receivedFields.some((field) => field === 'false')) return DEAL_SUBMISSION_TYPE.MIA;
 
@@ -57,25 +58,48 @@ const validateAutomaticCover = async (req, res, next) => {
     const { body, params, query } = req;
     const { applicationId } = params;
     const { saveAndReturn } = query;
-    const { coverTermsId } = await api.getApplication(applicationId);
-    const { terms } = await api.getEligibilityCriteria();
-    const automaticCoverErrors = getValidationErrors(body, terms);
-    const coverType = deriveCoverType(body, terms);
+    const application = await api.getApplication(applicationId);
+    const { eligibility } = application;
+
+    const automaticCoverErrors = getValidationErrors(body, eligibility.criteria);
+    const coverType = deriveCoverType(body, eligibility.criteria);
 
     if (!saveAndReturn && automaticCoverErrors.length > 0) {
+      const mappedTerms = eligibility.criteria.map((answerObj) => {
+        const submittedAnswer = body[String(answerObj.id)];
+
+        return {
+          ...answerObj,
+          answer: submittedAnswer ? stringToBoolean(submittedAnswer) : null,
+          htmlText: decode(answerObj.htmlText),
+        };
+      });
+
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-        selected: body,
-        terms: terms.map((term) => ({
-          ...term,
-          htmlText: decode(term.htmlText),
-        })),
+        terms: mappedTerms,
         applicationId,
       });
     }
 
     await updateSubmissionType(applicationId, coverType);
-    await api.updateCoverTerms(coverTermsId, body);
+
+    // copy existing answers
+    const newAnswers = eligibility.criteria;
+
+    // only update the answers that have been submitted.
+    Object.keys(body).forEach((key) => {
+      const answerIndex = newAnswers.findIndex((a) => a.id === Number(key));
+      newAnswers[answerIndex].answer = stringToBoolean(body[key]);
+    });
+
+    const applicationUpdate = {
+      eligibility: {
+        criteria: newAnswers,
+      },
+    };
+
+    await api.updateApplication(applicationId, applicationUpdate);
 
     if (saveAndReturn) {
       return res.redirect(`/gef/application-details/${applicationId}`);
