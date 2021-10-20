@@ -6,6 +6,7 @@ const gql = require('graphql-tag');
 const graphqlPermissions = require('../src/graphql/middleware/graphql-permissions');
 const graphqlKeyAuthentication = require('../src/graphql/key-authentication');
 
+require('dotenv').config();
 const apiToken = process.env.UKEF_TFM_API_SYSTEM_KEY;
 
 jest.mock('../src/v1/api');

@@ -1,4 +1,5 @@
 const axios = require('axios');
+require('dotenv').config();
 
 const findACBSIndustrySector = async (industryId) => {
   const response = await axios({

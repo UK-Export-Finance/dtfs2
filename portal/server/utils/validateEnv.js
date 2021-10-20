@@ -17,7 +17,7 @@ const validateEnv = () => cleanEnv(process.env, {
   DEAL_API_URL: str(),
   SENTRY_DSN: str(),
   PORT: str(),
-  SESSION_SECRET: str(),
+//   SESSION_SECRET: str(),
   // GITHUB_SHA: str()
 });
 

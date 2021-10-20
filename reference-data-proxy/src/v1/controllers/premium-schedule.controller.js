@@ -1,10 +1,10 @@
-/* eslint-disable no-underscore-dangle */
 // Premium Schedule API returns the premium schedule for a given facility
 //
 // the flow is:
 // 1) Post parameters to Premium Schedule API, returns  header location to load the segments
 // 2) Premium Schedule Segments gets the segments by facilityURN
 const axios = require('axios');
+require('dotenv').config();
 const { objectIsEmpty } = require('../../utils/object');
 
 const postPremiumSchedule = async (premiumScheduleParameters) => {

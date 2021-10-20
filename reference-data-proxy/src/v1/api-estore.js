@@ -1,4 +1,5 @@
 const axios = require('axios');
+require('dotenv').config();
 
 const postToAPI = async (apiEndpoint, apiData) => {
   if (!process.env.MULESOFT_API_UKEF_ESTORE_EA_URL) {
