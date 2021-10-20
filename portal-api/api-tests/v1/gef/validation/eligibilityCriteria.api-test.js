@@ -10,13 +10,13 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
     it('should return all items that have true or false answers', () => {
       const mockAnswers = [
         { answer: true },
-        { answer: true },
+        { answer: false },
         { answer: null },
       ];
 
       const result = getAnsweredItems(mockAnswers);
 
-      const expected = mockAnswers.filter((a) => a.answer === null);
+      const expected = mockAnswers.filter((a) => a.answer !== null);
 
       expect(result).toEqual(expected);
     });
