@@ -2,6 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
+const dotenv = require('dotenv');
 const helmet = require('helmet');
 
 const path = require('path');
@@ -12,7 +13,11 @@ const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 
 const healthcheck = require('./healthcheck');
+const { validateEnv } = require('./helpers/validateEnv');
 
+validateEnv();
+
+dotenv.config();
 const app = express();
 app.use(helmet());
 

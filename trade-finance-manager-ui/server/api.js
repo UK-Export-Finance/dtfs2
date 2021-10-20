@@ -17,9 +17,7 @@ const postUnderwriterManagersDecision = require('./graphql/mutations/update-unde
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 
 dotenv.config();
-const { validateEnv } = require('./helpers/validateEnv');
 
-validateEnv();
 const { TRADE_FINANCE_MANAGER_API_URL } = process.env;
 
 const getDeal = async (id, tasksFilters) => {

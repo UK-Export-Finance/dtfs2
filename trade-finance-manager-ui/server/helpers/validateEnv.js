@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-console.log(process.env);
 const validateEnv = () => cleanEnv(process.env, {
   // Redis - checks disabled
   // REDIS_HOSTNAME: str(),
