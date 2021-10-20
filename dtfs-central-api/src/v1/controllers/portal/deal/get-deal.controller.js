@@ -208,16 +208,6 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     //         },
     //       },
     //       { $unwind: '$exporter' },
-
-    //       {
-    //         $lookup: {
-    //           from: 'gef-cover-terms',
-    //           localField: 'coverTermsId',
-    //           foreignField: '_id',
-    //           as: 'coverTerms',
-    //         },
-    //       },
-    //       { $unwind: '$coverTerms' },
     //       {
     //         $project: {
     //           _id: 1,

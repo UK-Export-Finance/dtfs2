@@ -33,10 +33,16 @@ exports.getById = async (req, res) => {
   }
 };
 
-exports.getLatest = async (req, res) => {
+const getLatestCriteria = async () => {
   const collection = await db.getCollection(collectionName);
   const item = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray();
-  res.status(200).send(item[0]);
+  return item[0];
+};
+exports.getLatestCriteria = getLatestCriteria;
+
+exports.getLatest = async (req, res) => {
+  const doc = await getLatestCriteria();
+  res.status(200).send(doc);
 };
 
 exports.create = async (req, res) => {

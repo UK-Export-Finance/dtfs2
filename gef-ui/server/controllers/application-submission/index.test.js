@@ -50,13 +50,17 @@ const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
   res.exporterId = '123';
-  res.coverTermsId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.coverTerms = {
+  res.eligibility = {
     isAutomaticCover: true,
+    criteria: [
+      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+    ],
   };
+  res.submissionType = 'Automatic Inclusion Notice';
   res.editorId = 1235;
+
   return res;
 };
 
@@ -75,21 +79,10 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const MockCoverTermsResponse = () => {
-  const res = {};
-  res.status = 'COMPLETE';
-  res.details = {};
-  res.validation = {};
-  res.validation.required = [];
-  res.isAutomaticCover = true;
-  res.data = [];
-  return res;
-};
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
-      id: 'coverStart',
+      id: 12,
       htmlText: '<p>Some eligibility criteria</p>',
       errMsg: '12. Select some eligibilty',
     },
@@ -115,7 +108,6 @@ describe('controllers/application-submission', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(MockExporterResponse());
-    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.getUserDetails.mockResolvedValue(MockUserResponse());

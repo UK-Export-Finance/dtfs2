@@ -2,10 +2,15 @@
 const _startCase = require('lodash/startCase');
 const { mapSummaryList } = require('../../utils/helpers');
 const {
-  exporterItems, coverItems, facilityItems,
+  exporterItems, facilityItems,
 } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const { FACILITY_TYPE, AUTHORISATION_LEVEL, PROGRESS } = require('../../../constants');
+const {
+  FACILITY_TYPE,
+  AUTHORISATION_LEVEL,
+  PROGRESS,
+  DEAL_SUBMISSION_TYPE,
+} = require('../../../constants');
 
 const Application = require('../../models/application');
 
@@ -39,21 +44,19 @@ function buildHeader(app) {
 
 function buildBody(app, previewMode) {
   const exporterUrl = `/gef/application-details/${app.id}`;
-  const coverUrl = `/gef/application-details/${app.id}/automatic-cover`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
   return {
     application: app,
-    isAutomaticCover: app.coverTerms.isAutomaticCover,
+    isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
     exporter: {
       status: app.exporterStatus,
       rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
         showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
       }), previewMode),
     },
-    coverTerms: {
-      status: app.coverStatus,
-      rows: mapSummaryList(app.coverTerms, coverItems(coverUrl), previewMode),
+    eligibility: {
+      status: app.eligibilityCriteriaStatus,
     },
     facilities: {
       status: app.facilitiesStatus,

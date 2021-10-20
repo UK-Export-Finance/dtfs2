@@ -1,5 +1,6 @@
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
+import automaticCover from './pages/automatic-cover';
 import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
 
@@ -173,31 +174,23 @@ context('Application Details Page', () => {
 
   context('Manual Inclusion Application', () => {
     before(() => {
-      // Force item to be manual inclusion notice
-
-      cy.apiLogin(CREDENTIALS.MAKER)
-        .then((token) => token)
-        .then((token) => {
-          const coverTerms = {
-            coverStart: false,
-            noticeDate: false,
-            facilityLimit: false,
-            exporterDeclaration: false,
-            dueDiligence: false,
-            facilityLetter: false,
-            facilityBaseCurrency: false,
-            facilityPaymentCurrency: false,
-          };
-
-          cy.apiUpdateCoverTerms(applications[1].coverTermsId, token, coverTerms);
-        });
-
       cy.login(CREDENTIALS.MAKER);
+      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
+
+      // Make the deal a Manual Inclusion Application
+      applicationDetails.automaticCoverDetailsLink().click();
+      automaticCover.automaticCoverTerm().each(($el, index) => {
+        if (index === 0) {
+          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
+        } else {
+          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
+        }
+      });
+      automaticCover.saveAndReturnButton().click();
     });
 
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
     });
 
     describe('Supporting information section', () => {

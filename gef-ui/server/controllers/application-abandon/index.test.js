@@ -31,10 +31,14 @@ const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
   res.exporterId = '123';
-  res.coverTermsId = '123';
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.status = 'Draft';
+  res.eligibility = {
+    criteria: [
+      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+    ],
+  };
   return res;
 };
 
@@ -48,20 +52,10 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const MockCoverTermsResponse = () => {
-  const res = {};
-  res.status = 'NOT_STARTED';
-  res.details = {};
-  res.validation = {};
-  res.validation.required = [];
-  res.data = [];
-  return res;
-};
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
-      id: 'coverStart',
+      id: 12,
       htmlText: '<p>Some eligibility criteria</p>',
       errMsg: '12. Select some eligibilty',
     },
@@ -87,7 +81,6 @@ describe('controllers/application-abandon', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(MockExporterResponse());
-    api.getCoverTerms.mockResolvedValue(MockCoverTermsResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.setApplicationStatus.mockResolvedValue({});

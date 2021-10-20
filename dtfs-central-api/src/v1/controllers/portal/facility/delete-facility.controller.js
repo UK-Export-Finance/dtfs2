@@ -5,7 +5,7 @@ const db = require('../../../../drivers/db-client');
 exports.deleteFacility = async (req, res) => {
   const facilityId = req.params.id;
 
-  findOneFacility(facilityId, async (facility) => {
+  await findOneFacility(facilityId, async (facility) => {
     if (facility) {
       const collection = await db.getCollection('facilities');
       const status = await collection.deleteOne({ _id: facilityId });

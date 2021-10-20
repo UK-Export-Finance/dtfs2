@@ -17,7 +17,6 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   // - we can get new data from type-b XML/workflow.
   // - some deal updates do not want to be marked as "edited by X user"
   // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
-
   if (user) {
     const {
       username,
@@ -78,10 +77,16 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
   const collection = await db.getCollection('deals');
+  
+  let originalDeal = existingDeal;
 
-  let existingDealDetails;
-  if (existingDeal && existingDeal.details) {
-    existingDealDetails = existingDeal.details;
+  if (!existingDeal) {
+    originalDeal = await findOneDeal(dealId);
+  }
+
+  let originalDealDetails;
+  if (originalDeal && originalDeal.details) {
+    originalDealDetails = originalDeal.details;
   }
 
   let dealChangesDetails;
@@ -89,12 +94,26 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     dealChangesDetails = dealChanges.details;
   }
 
+  let originalDealEligibility;
+  if (originalDeal && originalDeal.eligibility) {
+    originalDealEligibility = originalDeal.eligibility;
+  }
+
+  let dealChangesEligibility;
+  if (dealChanges && dealChanges.eligibility) {
+    dealChangesEligibility = dealChanges.eligibility;
+  }
+  
   const update = {
     ...dealChanges,
     details: {
-      ...existingDealDetails,
+      ...originalDealDetails,
       ...dealChangesDetails,
       dateOfLastAction: now(),
+    },
+    eligibility: {
+      ...originalDealEligibility,
+      ...dealChangesEligibility,
     },
   };
 
@@ -140,7 +159,6 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
 
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
-
 const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
   await findOneDeal(dealId, async (deal) => {
     if (deal && deal.facilities) {
@@ -174,6 +192,7 @@ exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
   const { user, dealUpdate } = req.body;
+
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {

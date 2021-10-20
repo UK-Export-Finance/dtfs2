@@ -34,7 +34,6 @@ const draftApplication = {
   status: 'DRAFT',
   bankId: '9',
   exporterId: '60fa98b4f4464a001459a588',
-  coverTermsId: '60fa98b4f4464a001459a589',
   bankInternalRefName: 'ref0001',
   mandatoryVersionId: null,
   createdAt: 1627035828247,

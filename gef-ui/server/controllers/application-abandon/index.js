@@ -19,6 +19,7 @@ const confirmAbandonApplication = async (req, res, next) => {
   let application;
   try {
     application = await Application.findById(applicationId, user, userToken);
+
     if (!application) {
       return res.redirect(dashboardUrl);
     }

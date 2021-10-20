@@ -23,7 +23,6 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res.exporterId = '123';
-  res.coverTermsId = '123';
   res.bankInternalRefName = 'My test';
   res.comments = [{
     role: 'maker',

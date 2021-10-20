@@ -290,6 +290,10 @@ describe('/v1/portal/deals', () => {
           ...newDeal.details,
           bankSupplyContractName: 'change this field',
         },
+        eligibility: {
+          ...newDeal.eligibility,
+          mockNewField: true,
+        },
       };
 
       const { status, body } = await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -307,6 +311,9 @@ describe('/v1/portal/deals', () => {
         details: {
           bankSupplyContractName: 'change this field',
         },
+        eligibility: {
+          mockNewField: true,
+        },
       };
 
       const expectedDataIncludingUpdate = {
@@ -314,6 +321,10 @@ describe('/v1/portal/deals', () => {
         details: {
           ...newDeal.details,
           bankSupplyContractName: 'change this field',
+        },
+        eligibility: {
+          ...newDeal.eligibility,
+          mockNewField: true,
         },
       };
 

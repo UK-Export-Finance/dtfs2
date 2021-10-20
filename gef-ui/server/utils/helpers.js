@@ -225,6 +225,8 @@ const status = ({
   },
 });
 
+const stringToBoolean = (str) => (str === 'false' ? false : !!str);
+
 module.exports = {
   apiErrorHandler,
   getApplicationType,
@@ -236,4 +238,5 @@ module.exports = {
   status,
   userToken,
   validationErrorHandler,
+  stringToBoolean,
 };

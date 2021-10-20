@@ -96,6 +96,7 @@ exports.update = async (req, res) => {
           criteria: updatedCriteria,
           ...criteria11Additional,
           validationErrors,
+          lastUpdated: new Date().valueOf(),
         },
         dealFiles: {
           ...dealFiles,
