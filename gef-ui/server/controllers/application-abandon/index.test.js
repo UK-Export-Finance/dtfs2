@@ -123,7 +123,7 @@ describe('controllers/application-abandon', () => {
   describe('POST abandonApplication', () => {
     it('redirects to dashboard url if update is successful', async () => {
       await abandonApplication(mockRequest, mockResponse);
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard/gef');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
     it('returns next(err) if update is unsuccessful', async () => {

@@ -89,7 +89,7 @@ context('Name Application Page', () => {
   describe('Clicking on Abandon', () => {
     it('takes the user back to the dashboard', () => {
       nameApplication.cancelButton().click();
-      cy.url().should('eq', relative('/dashboard/gef'));
+      cy.url().should('eq', relative('/dashboard/0'));
     });
   });
 });
