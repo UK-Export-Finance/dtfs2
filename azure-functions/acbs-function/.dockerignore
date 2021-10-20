@@ -1,1 +1,10 @@
 local.settings.json
+README.md
+run.sh
+LICENSE
+Dockerfile
+docker-compose.yml
+generated_reports
+.git
+.cache
+*.md
