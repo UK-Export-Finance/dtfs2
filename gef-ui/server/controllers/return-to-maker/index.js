@@ -14,7 +14,7 @@ const getReturnToMaker = async (req, res) => {
   if (status !== PROGRESS.BANK_CHECK) {
     // eslint-disable-next-line no-console
     console.log('Incorrect status or permissions, redirecting to dashboard');
-    return res.redirect('/dashboard/gef/');
+    return res.redirect('/dashboard');
   }
 
   return res.render('partials/return-to-maker.njk', { applicationId, maxCommentLength: MAX_COMMENT_LENGTH });
@@ -58,7 +58,7 @@ const postReturnToMaker = async (req, res, next) => {
     return next(err);
   }
 
-  return res.redirect('/dashboard/gef/');
+  return res.redirect('/dashboard');
 };
 
 module.exports = {
