@@ -4,6 +4,7 @@ const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-opt
 const CONSTANTS = require('../../constants');
 
 require('dotenv').config();
+
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
