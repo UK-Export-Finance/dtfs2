@@ -1,7 +1,7 @@
 {
-  "name": "tfm-api",
+  "name": "central-api",
   "version": "1.0.0",
-  "description": "Trade Finance Manager API",
+  "description": "Central API",
   "main": "src/index.js",
   "engineStrict": true,
   "engines": {
