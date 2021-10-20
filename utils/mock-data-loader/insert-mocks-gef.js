@@ -47,12 +47,6 @@ const insertMocks = async () => {
       criteria: latestEligibilityCriteria.terms,
     };
 
-    // if (index === 1 || index === 2) {
-    //   applicationUpdate.eligibility = {
-    //     criteria: latestEligibilityCriteria.terms,
-    //   };
-    // }
-
     await api.updateApplication(
       application._id,
       applicationUpdate,
