@@ -392,7 +392,7 @@ describe(baseUrl, () => {
 
       const { body } = await as(aMaker).get(`${applicationBaseUrl}/${facility.body.details.applicationId}`);
 
-      expect(body.facilitiesUpdated).toEqual(expect.any(Number);
+      expect(body.facilitiesUpdated).toEqual(expect.any(Number));
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
