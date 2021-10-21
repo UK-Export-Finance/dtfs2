@@ -113,7 +113,7 @@ const update = async (id, updateBody) => {
 
   // update facilitiesUpdated timestamp in the deal
   const dealUpdate = {
-    facilitiesUpdated: Date.now(),
+    facilitiesUpdated: new Date().valueOf(),
   };
   const update = new Application(dealUpdate);
 

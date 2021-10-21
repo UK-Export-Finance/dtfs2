@@ -22,7 +22,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
   const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
 
   const dealUpdate = {
-    facilitiesUpdated: Date.now(),
+    facilitiesUpdated: new Date().valueOf(),
   };
 
   await updateDeal(
