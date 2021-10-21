@@ -13,10 +13,11 @@ const facilitiesController = require('./facilities.controller');
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
+    id: dealId,
     loanId,
   } = req.params;
 
-  await findOneDeal(req.params.id, async (deal) => {
+  await findOneDeal(dealId, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         return res.status(401).send();
@@ -74,7 +75,12 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.issueFacilityDetailsProvided = false;
       }
 
-      const { status, data } = await facilitiesController.update(loanId, modifiedLoan, req.user);
+      const { status, data } = await facilitiesController.update(
+        dealId,
+        loanId,
+        modifiedLoan,
+        req.user,
+      );
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

@@ -24,7 +24,12 @@ const updateFacilityCoverStartDates = async (user, deal) => {
         facility['requestedCoverStartDate-month'] = today.getMonth() + 1;
         facility['requestedCoverStartDate-year'] = today.getFullYear();
 
-        const { data } = await facilitiesController.update(facilityId, facility, user);
+        const { data } = await facilitiesController.update(
+          deal._id,
+          facilityId,
+          facility,
+          user,
+        );
         return data;
       }
       return facility;

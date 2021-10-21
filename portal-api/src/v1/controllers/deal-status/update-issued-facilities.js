@@ -137,7 +137,12 @@ const updateIssuedFacilities = async (
             }
           }
 
-          await facilitiesController.update(facilityId, facility, user);
+          await facilitiesController.update(
+            deal._id,
+            facilityId,
+            facility,
+            user,
+          );
 
           updatedCount += 1;
         }

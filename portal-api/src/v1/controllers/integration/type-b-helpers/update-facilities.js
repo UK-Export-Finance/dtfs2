@@ -117,7 +117,12 @@ const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueF
     modifiedBond.status = changeBondStatus(bond, workflowBond, workflowActionCode);
   }
 
-  const { data } = await facilitiesController.update(bondId, modifiedBond, interfaceUser);
+  const { data } = await facilitiesController.update(
+    dealId,
+    bondId,
+    modifiedBond,
+    interfaceUser,
+  );
 
   return data;
 };
