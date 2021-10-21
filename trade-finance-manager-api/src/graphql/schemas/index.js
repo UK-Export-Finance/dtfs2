@@ -106,6 +106,7 @@ type DealEligibilityCriterion {
 }
 
 type DealEligibility {
+  criteria: [DealEligibilityCriterion!]
   agentAddressCountry: Country
   agentAddressLine1: String
   agentAddressLine2: String
@@ -336,7 +337,6 @@ type DealSnapshot {
   facilities: [Facility]
   submissionDetails: DealSubmissionDetails
   isFinanceIncreasing: Boolean
-  eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility
   dealFiles: DealFiles
 }
