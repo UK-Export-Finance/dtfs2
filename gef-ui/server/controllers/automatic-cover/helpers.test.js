@@ -59,11 +59,11 @@ describe('controllers/automatic-cover/helpers', () => {
     describe('when some received criteria answers are `false`', () => {
       it(`should return ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
         const mockFields = {
-          '12': 'true',
-          '13': 'true',
-          '14': 'true',
-          '15': 'true',
-          '16': 'false',
+          12: 'true',
+          13: 'true',
+          14: 'true',
+          15: 'true',
+          16: 'false',
         };
 
         const result = deriveCoverType(mockFields, mockAllCriteria);
