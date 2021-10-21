@@ -13,9 +13,9 @@ describe('controllers/automatic-cover/helpers', () => {
   describe('getValidationErrors', () => {
     it('should return errors for all fields that do not have values/answers', () => {
       const mockFields = {
-        '12': 'true',
-        '13': 'true',
-        '14': 'true',
+        12: 'true',
+        13: 'true',
+        14: 'true',
       };
 
       const result = getValidationErrors(mockFields, mockAllCriteria);
@@ -33,7 +33,7 @@ describe('controllers/automatic-cover/helpers', () => {
     describe('when the received criteria answers length is not the same as all all criteria', () => {
       it('should return undefined', () => {
         const mockFields = {};
-        
+
         const result = deriveCoverType(mockFields, mockAllCriteria);
 
         expect(result).toEqual(undefined);
@@ -43,11 +43,11 @@ describe('controllers/automatic-cover/helpers', () => {
     describe('when all received criteria answers are `true`', () => {
       it(`should return ${DEAL_SUBMISSION_TYPE.AIN}`, () => {
         const mockFields = {
-          '12': 'true',
-          '13': 'true',
-          '14': 'true',
-          '15': 'true',
-          '16': 'true',
+          12: 'true',
+          13: 'true',
+          14: 'true',
+          15: 'true',
+          16: 'true',
         };
 
         const result = deriveCoverType(mockFields, mockAllCriteria);

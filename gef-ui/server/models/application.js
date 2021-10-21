@@ -1,6 +1,5 @@
 const {
   getApplication,
-  getEligibilityCriteria,
   getExporter,
   getFacilities,
   getUserDetails,
