@@ -6,7 +6,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     isInDraft: false,
     title: 'test 1',
     criteria: [
-      { body: 'Test is a mock test' },
+      { id: '1', body: 'Test is a mock test' },
     ],
   },
   {
@@ -16,7 +16,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     isInDraft: false,
     title: 'test 2',
     criteria: [
-      { body: 'Test is a mock test' },
+      { id: '1', body: 'Test is a mock test' },
     ],
   },
   {
@@ -92,7 +92,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     isInDraft: false,
     title: 'test 4 (old version)',
     criteria: [
-      { body: 'Test is a mock test' },
+      { id: '1', body: 'Test is a mock test' },
     ],
   },
   {
@@ -102,7 +102,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     isInDraft: true,
     title: 'test 5 (draft)',
     criteria: [
-      { body: 'Test is a mock test' },
+      { id: '1', body: 'Test is a mock test' },
     ],
   },
 ];

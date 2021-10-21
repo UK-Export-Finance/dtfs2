@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
@@ -18,13 +17,11 @@ const updatedMandatoryCriteria = {
 const baseUrl = '/v1/gef/mandatory-criteria-versioned';
 
 describe(baseUrl, () => {
-  // let noRoles;
   let aMaker;
   let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    // noRoles = testUsers().withoutAnyRoles().one();
     aMaker = testUsers().withRole('maker').one();
     anEditor = testUsers().withRole('editor').one();
   });
@@ -87,7 +84,12 @@ describe(baseUrl, () => {
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(allMandatoryCriteria[2]),
         createdAt: expect.any(Number),
-        htmlText: expect.any(String),
+        criteria: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            body: expect.any(String),
+          }),
+        ]),
       }));
     });
   });
@@ -112,7 +114,12 @@ describe(baseUrl, () => {
       const expected = {
         ...expectMongoId(newMandatoryCriteria),
         createdAt: expect.any(Number),
-        htmlText: expect.any(String),
+        criteria: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            body: expect.any(String),
+          }),
+        ]),
       };
       expect(body).toEqual(expected);
     });
@@ -161,7 +168,9 @@ describe(baseUrl, () => {
         version: 99,
         isInDraft: true,
         title: 'test 99',
-        htmlText: '<p>Test is a mock test</p>',
+        criteria: [
+          { id: '1', body: 'Testing' },
+        ],
       };
       delete itemUpdate._id; // immutable key
 
@@ -175,6 +184,9 @@ describe(baseUrl, () => {
         ...itemUpdate,
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
+        criteria: [
+          { id: '1', body: 'Testing' },
+        ],
       }));
     });
   });
