@@ -146,8 +146,8 @@ const dealQuery = gql`
         eligibilityCriteria {
           id,
           answer,
-          description,
-          descriptionList
+          text,
+          textList
         }
         submissionDetails {
           supplierName,
