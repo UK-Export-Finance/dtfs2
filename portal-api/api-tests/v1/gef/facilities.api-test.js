@@ -359,7 +359,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('completely update a facility ', async () => {
+    it('completely updates a facility', async () => {
       const { details } = newFacility;
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body.details._id}`);
@@ -381,6 +381,18 @@ describe(baseUrl, () => {
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
+    });
+
+    it('updates the associated deal\'s facilitiesUpdated timestamp', () => {
+      const { details } = newFacility;
+      const facility = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+      const update = { hasBeenIssued : true };
+      await as(aMaker).put(update).to(`${baseUrl}/${facility.body.details._id}`);
+
+      const { body } = await as(aMaker).get(`${applicationBaseUrl}/${facility.body.details.applicationId}`);
+
+      expect(body.facilitiesUpdated).toEqual(expect.any(Number);
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
