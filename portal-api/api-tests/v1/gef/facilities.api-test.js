@@ -359,7 +359,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('completely update a facility ', async () => {
+    it('completely updates a facility', async () => {
       const { details } = newFacility;
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body.details._id}`);
@@ -381,6 +381,23 @@ describe(baseUrl, () => {
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
+    });
+
+    it('updates the associated deal\'s facilitiesUpdated timestamp', async () => {
+      // create deal
+      const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
+
+      // create and update facility
+      const { details } = newFacility;
+      const facility = await as(aMaker).post({ applicationId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+      const update = { hasBeenIssued : true };
+      await as(aMaker).put(update).to(`${baseUrl}/${facility.body.details._id}`);
+
+      // check the deal
+      const { body } = await as(aMaker).get(`${applicationBaseUrl}/${createdDeal._id}`);
+
+      expect(body.facilitiesUpdated).toEqual(expect.any(Number));
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {

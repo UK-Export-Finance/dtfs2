@@ -1,4 +1,5 @@
 const api = require('../api');
+const { updateDeal } = require('./deal.controller');
 
 exports.create = async (facilityBody, user) => {
   const createdFacility = await api.createFacility(facilityBody, user);
@@ -17,8 +18,21 @@ exports.create = async (facilityBody, user) => {
 exports.findOne = async (facilityId) =>
   api.findOneFacility(facilityId);
 
-exports.update = async (facilityId, facilityBody, user) =>
-  api.updateFacility(facilityId, facilityBody, user);
+exports.update = async (dealId, facilityId, facilityBody, user) => {
+  const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
+
+  const dealUpdate = {
+    facilitiesUpdated: new Date().valueOf(),
+  };
+
+  await updateDeal(
+    dealId,
+    dealUpdate,
+    user,
+  );
+
+  return updatedFacility;
+};
 
 exports.delete = async (facilityId, user) =>
   api.deleteFacility(facilityId, user);

@@ -105,10 +105,11 @@ const premiumTypeFields = (loan) => {
 
 exports.updateLoan = async (req, res) => {
   const {
+    id: dealId,
     loanId,
   } = req.params;
 
-  await findOneDeal(req.params.id, async (deal) => {
+  await findOneDeal(dealId, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
@@ -156,7 +157,12 @@ exports.updateLoan = async (req, res) => {
         modifiedLoan.requestedCoverStartDate = null;
       }
 
-      const { status, data } = await facilitiesController.update(loanId, modifiedLoan, req.user);
+      const { status, data } = await facilitiesController.update(
+        dealId,
+        loanId,
+        modifiedLoan,
+        req.user,
+      );
 
       const validationErrors = loanValidationErrors(data, deal);
 

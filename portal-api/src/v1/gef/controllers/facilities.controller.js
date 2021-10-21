@@ -5,6 +5,7 @@ const {
   facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums,
 } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
+const { Application } = require('../models/application');
 const { isSuperUser } = require('../../users/checks');
 const {
   calculateUkefExposure,
@@ -12,6 +13,7 @@ const {
 } = require('../calculations/facility-calculations');
 
 const collectionName = 'gef-facilities';
+const dealsCollectionName = 'gef-application';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
@@ -93,6 +95,8 @@ exports.getById = async (req, res) => {
 
 const update = async (id, updateBody) => {
   const collection = await db.getCollection(collectionName);
+  const dealsCollection = await db.getCollection(dealsCollectionName);
+
   const facilityId = ObjectID(String(id));
 
   const existingFacility = await collection.findOne({ _id: facilityId });
@@ -103,11 +107,25 @@ const update = async (id, updateBody) => {
     guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
   });
 
-  const result = await collection.findOneAndUpdate(
+  const updatedFacility = await collection.findOneAndUpdate(
     { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnOriginal: false },
   );
 
-  return result;
+  if (existingFacility) {
+    // update facilitiesUpdated timestamp in the deal
+    const dealUpdate = {
+      facilitiesUpdated: new Date().valueOf(),
+    };
+    const update = new Application(dealUpdate);
+
+    await dealsCollection.findOneAndUpdate(
+      { _id: { $eq: ObjectID(existingFacility.applicationId) } },
+      { $set: dealUpdate },
+      { returnOriginal: false },
+    );
+  }
+
+  return updatedFacility;
 };
 exports.update = update;
 

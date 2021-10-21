@@ -51,7 +51,12 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
       facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
     }
 
-    const { data } = await facilitiesController.update(facilityId, facility, user);
+    const { data } = await facilitiesController.update(
+      deal._id,
+      facilityId,
+      facility,
+      user,
+    );
 
     return data;
   });
