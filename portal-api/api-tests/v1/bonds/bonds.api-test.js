@@ -688,7 +688,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(body.lastEdited).toEqual(expect.any(String));
     });
 
-    it('should update the associated deal\'s facilitiesUpdated timestamp', () => {
+    it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {
       // create deal
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
