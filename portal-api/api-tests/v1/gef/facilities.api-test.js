@@ -384,13 +384,18 @@ describe(baseUrl, () => {
     });
 
     it('updates the associated deal\'s facilitiesUpdated timestamp', async () => {
+      // create deal
+      const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
+
+      // create and update facility
       const { details } = newFacility;
-      const facility = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const facility = await as(aMaker).post({ applicationId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const update = { hasBeenIssued : true };
       await as(aMaker).put(update).to(`${baseUrl}/${facility.body.details._id}`);
 
-      const { body } = await as(aMaker).get(`${applicationBaseUrl}/${facility.body.details.applicationId}`);
+      // check the deal
+      const { body } = await as(aMaker).get(`${applicationBaseUrl}/${createdDeal._id}`);
 
       expect(body.facilitiesUpdated).toEqual(expect.any(Number));
     });

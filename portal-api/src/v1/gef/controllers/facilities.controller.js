@@ -111,17 +111,19 @@ const update = async (id, updateBody) => {
     { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnOriginal: false },
   );
 
-  // update facilitiesUpdated timestamp in the deal
-  const dealUpdate = {
-    facilitiesUpdated: new Date().valueOf(),
-  };
-  const update = new Application(dealUpdate);
+  if (existingFacility) {
+    // update facilitiesUpdated timestamp in the deal
+    const dealUpdate = {
+      facilitiesUpdated: new Date().valueOf(),
+    };
+    const update = new Application(dealUpdate);
 
-  await dealsCollection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(existingFacility.applicationId) } },
-    { $set: dealUpdate },
-    { returnOriginal: false },
-  );
+    await dealsCollection.findOneAndUpdate(
+      { _id: { $eq: ObjectID(existingFacility.applicationId) } },
+      { $set: dealUpdate },
+      { returnOriginal: false },
+    );
+  }
 
   return updatedFacility;
 };
