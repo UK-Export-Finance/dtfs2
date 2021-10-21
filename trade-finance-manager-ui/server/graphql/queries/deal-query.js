@@ -134,20 +134,20 @@ const dealQuery = gql`
           agentAddressCountry {
             code
             name
-          },
-          agentAddressLine1,
-          agentAddressLine2,
-          agentAddressLine3,
-          agentAddressPostcode,
-          agentAddressTown,
-          agentName,
+          }
+          agentAddressLine1
+          agentAddressLine2
+          agentAddressLine3
+          agentAddressPostcode
+          agentAddressTown
+          agentName
           agentAlias
-        }
-        eligibilityCriteria {
-          id,
-          answer,
-          text,
-          textList
+          criteria {
+            id
+            answer
+            text
+            textList
+          }
         }
         submissionDetails {
           supplierName,
