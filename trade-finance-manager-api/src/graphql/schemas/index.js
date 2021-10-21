@@ -99,10 +99,9 @@ type DealFiles {
 }
 
 type DealEligibilityCriterion {
-  _id: String
   id: Int
-  description: String
-  descriptionList: [String]
+  text: String
+  textList: [String]
   answer: String
 }
 
