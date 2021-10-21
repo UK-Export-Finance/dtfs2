@@ -497,9 +497,8 @@ describe('/v1/deals/:id/loan', () => {
       await as(aBarclaysMaker).put(loanUpdate).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
       // get the deal, check facilities timestamp
-      const { body: dealAfterFirstUpdate } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
-      const originalFacilitiesUpdated = dealAfterFirstUpdate.deal.facilitiesUpdated;
-      expect(originalFacilitiesUpdated).toEqual(expect.any(String));
+      const { body: dealAfterUpdate } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      expect(dealAfterUpdate.deal.facilitiesUpdated).toEqual(expect.any(Number));
     });
   });
 

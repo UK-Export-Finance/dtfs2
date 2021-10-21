@@ -383,7 +383,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('updates the associated deal\'s facilitiesUpdated timestamp', () => {
+    it('updates the associated deal\'s facilitiesUpdated timestamp', async () => {
       const { details } = newFacility;
       const facility = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
