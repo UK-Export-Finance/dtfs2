@@ -1,7 +1,7 @@
 const { STATUS } = require('../../enums');
 
-const requiredAnswers = (answers) =>
-  answers.filter((a) => (!a.answer || a.answer === null));
+const getAnsweredItems = (answers) =>
+  answers.filter((a) => (a.answer === true || a.answer === false));
 
 const isAutomaticCover = (answers) => {
   if (answers.every((a) => a.answer === true)) {
@@ -9,20 +9,21 @@ const isAutomaticCover = (answers) => {
   }
 
   if (answers.some((a) => a.answer === null)) {
-    return null;
+    return false;
   }
+
   return false;
 };
 
 const eligibilityCriteriaStatus = (answers) => {
-  const count = answers.length;
-  const requiredCount = requiredAnswers(answers).length;
+  const requiredCount = answers.length;
+  const answeredCount = getAnsweredItems(answers).length;
 
-  if (requiredCount === count) {
+  if (answeredCount === 0) {
     return STATUS.NOT_STARTED;
   }
 
-  if (requiredCount === 0) {
+  if (answeredCount === requiredCount) {
     return STATUS.COMPLETED;
   }
 
@@ -34,8 +35,9 @@ const eligibilityCriteriaValidation = (answers) => ({
 });
 
 module.exports = {
-  eligibilityCriteriaValidation,
-  eligibilityCriteriaStatus,
+  getAnsweredItems,
   isAutomaticCover,
+  eligibilityCriteriaStatus,
+  eligibilityCriteriaValidation,
 };
 
