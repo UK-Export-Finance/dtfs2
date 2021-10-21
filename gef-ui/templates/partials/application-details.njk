@@ -3,16 +3,16 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
-  {% if isAutomaticCover === true %}
-    Automatic inclusion notice
-  {% elif (isAutomaticCover === false) %}
-    Manual inclusion application
+  {% if application.submissionType %}
+    {{ application.submissionType }}
   {% else %}
     Application Details
   {% endif %}
 {% endblock %}
 
+
 {% block content %}
+
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
@@ -35,10 +35,8 @@
       General export facility
     </span>
     <h1 class="govuk-heading-xl" data-cy="main-heading">
-      {% if isAutomaticCover === true %}
-        Automatic inclusion notice
-      {% elif (isAutomaticCover === false) %}
-        Manual inclusion application
+      {% if application.submissionType %}
+        {{ application.submissionType }}
       {% else %}
         Application Details
       {% endif %}
