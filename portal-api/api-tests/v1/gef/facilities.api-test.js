@@ -19,22 +19,19 @@ const {
   calculateUkefExposure,
   calculateGuaranteeFee,
 } = require('../../../src/v1/gef/calculations/facility-calculations');
+const { roundNumber } = require('../../../src/utils/number');
 
 describe(baseUrl, () => {
-  // let noRoles;
   let aMaker;
   let aChecker;
-  // let anEditor;
   let mockApplication;
   let newFacility;
   let completeUpdate;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    // noRoles = testUsers().withoutAnyRoles().one();
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
-    // anEditor = testUsers().withRole('editor').one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     newFacility = {
@@ -267,7 +264,7 @@ describe(baseUrl, () => {
         details: ['test'],
         detailsOther: null,
         currency: 'GBP',
-        value: 10000000,
+        value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
@@ -283,6 +280,7 @@ describe(baseUrl, () => {
           ...details,
           ...update,
           updatedAt: expect.any(Number),
+          value: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
           guaranteeFee: calculateGuaranteeFee(update, {}),
@@ -308,7 +306,7 @@ describe(baseUrl, () => {
         details: ['test'],
         detailsOther: null,
         currency: 'GBP',
-        value: 10000000,
+        value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
         paymentType: 'IN_ADVANCE_QUARTERLY',
@@ -324,6 +322,7 @@ describe(baseUrl, () => {
           ...details,
           ...update,
           updatedAt: expect.any(Number),
+          value: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
           guaranteeFee: calculateGuaranteeFee(update, {}),
@@ -529,15 +528,34 @@ describe(baseUrl, () => {
     describe('when value and coverPercentage is present in the requested update', () => {
       it('should calculate based on the provided values', () => {
         const update = {
-          value: 1234,
-          coverPercentage: 25,
+          value: '1234',
+          coverPercentage: '25',
         };
         const existingFacility = {};
 
         const result = calculateUkefExposure(update, existingFacility);
 
-        const expected = (update.value * update.coverPercentage);
+        const expected = Number(update.value) * (Number(update.coverPercentage) / 100);
         expect(result).toEqual(expected);
+      });
+
+      describe('when the calculated value generated from requested update contains more than 2 decimals', () => {
+        describe('when value and coverPercentage is present in the requested update', () => {
+          it('should calculate and round the number based on the provided values', () => {
+            const update = {
+              value: '1234567',
+              coverPercentage: '70',
+            };
+            const existingFacility = {};
+
+            const result = calculateUkefExposure(update, existingFacility);
+
+            const calculation = Number(update.value) * (Number(update.coverPercentage) / 100);
+
+            const expected = roundNumber(calculation);
+            expect(result).toEqual(expected);
+          });
+        });
       });
     });
 
@@ -551,7 +569,7 @@ describe(baseUrl, () => {
 
         const result = calculateUkefExposure(update, existingFacility);
 
-        const expected = (existingFacility.value * existingFacility.coverPercentage);
+        const expected = existingFacility.value * (existingFacility.coverPercentage / 100);
         expect(result).toEqual(expected);
       });
     });
@@ -561,13 +579,13 @@ describe(baseUrl, () => {
     describe('when interestPercentage is present in the requested update', () => {
       it('should calculate using the the provided interestPercentage', () => {
         const update = {
-          interestPercentage: 25,
+          interestPercentage: '25',
         };
         const existingFacility = {};
 
         const result = calculateGuaranteeFee(update, existingFacility);
 
-        const expected = (0.9 * update.interestPercentage);
+        const expected = (0.9 * Number(update.interestPercentage));
         expect(result).toEqual(expected);
       });
     });

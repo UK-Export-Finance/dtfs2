@@ -1,3 +1,8 @@
+const {
+  decimalsCount,
+  roundNumber,
+} = require('../../../utils/number');
+
 const calculateUkefExposure = (requestedUpdate, existingFacility) => {
   let latestValue = (existingFacility && existingFacility.value);
   let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
@@ -11,9 +16,17 @@ const calculateUkefExposure = (requestedUpdate, existingFacility) => {
     latestCoverPercentage = requestedUpdate.coverPercentage;
   }
 
-  const calculation = (latestValue * latestCoverPercentage);
+  const calculation = Number(latestValue) * (Number(latestCoverPercentage) / 100);
 
-  return calculation;
+  const totalDecimals = decimalsCount(calculation);
+
+  if (totalDecimals > 2) {
+    ukefExposure = roundNumber(calculation, 2);
+  } else {
+    ukefExposure = calculation;
+  }
+
+  return ukefExposure;
 };
 exports.calculateUkefExposure = calculateUkefExposure;
 
@@ -25,7 +38,7 @@ const calculateGuaranteeFee = (requestedUpdate, existingFacility) => {
     latestInterestPercentage = requestedUpdate.interestPercentage;
   }
 
-  const calculation = (0.9 * latestInterestPercentage);
+  const calculation = (0.9 * Number(latestInterestPercentage));
 
   return calculation;
 };
