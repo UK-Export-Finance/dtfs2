@@ -1,4 +1,3 @@
-const { decode } = require('html-entities');
 const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
 const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
 
@@ -16,13 +15,8 @@ const automaticCover = async (req, res) => {
     const application = await api.getApplication(applicationId);
     const { eligibility } = application;
 
-    const mappedTerms = eligibility.criteria.map((answerObj) => ({
-      ...answerObj,
-      htmlText: decode(answerObj.htmlText),
-    }));
-
     return res.render('partials/automatic-cover.njk', {
-      terms: mappedTerms,
+      terms: eligibility.criteria,
       applicationId,
     });
   } catch (err) {
@@ -71,7 +65,6 @@ const validateAutomaticCover = async (req, res, next) => {
         return {
           ...answerObj,
           answer: submittedAnswer ? stringToBoolean(submittedAnswer) : null,
-          htmlText: decode(answerObj.htmlText),
         };
       });
 

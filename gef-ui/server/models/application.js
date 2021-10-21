@@ -1,4 +1,3 @@
-const { decode } = require('html-entities');
 const {
   getApplication,
   getEligibilityCriteria,
@@ -68,12 +67,9 @@ class Application {
 
       const exporterPro = getExporter(application.exporterId);
       const facilitiesPro = getFacilities(id);
-      const eligibilityCriteriaPro = getEligibilityCriteria();
 
-      let eligibilityCriteriaContent;
-
-      const all = await Promise.all([exporterPro, facilitiesPro, eligibilityCriteriaPro]);
-      [application.exporter, application.facilities, eligibilityCriteriaContent] = [...all];
+      const all = await Promise.all([exporterPro, facilitiesPro]);
+      [application.exporter, application.facilities] = [...all];
 
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
       application.eligibilityCriteriaStatus = status[application.eligibility.status || PROGRESS.NOT_STARTED];
@@ -105,15 +101,6 @@ class Application {
       if (application.checkerId) {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }
-
-      application.eligibility.criteria = application.eligibility.criteria.map((criterion) => {
-        const contentObj = eligibilityCriteriaContent.terms.find((term) => term.id === criterion.id);
-        return {
-          ...criterion,
-          description: decode(contentObj.htmlText),
-          descriptionList: [],
-        };
-      });
 
       return application;
     } catch (err) {
