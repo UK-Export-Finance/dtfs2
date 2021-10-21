@@ -1,5 +1,6 @@
 const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
 const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
+const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
 
@@ -23,28 +24,6 @@ const automaticCover = async (req, res) => {
     console.error(err);
     return res.render('partials/problem-with-service.njk');
   }
-};
-
-const getValidationErrors = (fields, allCriteria) => {
-  const receivedFields = Object.keys(fields);
-  const errorsToDisplay = allCriteria.filter(
-    (criterion) => !receivedFields.includes(String(criterion.id)),
-  );
-
-  return errorsToDisplay.map((error) => ({
-    errRef: error.id,
-    errMsg: error.errMsg,
-  }));
-};
-
-const deriveCoverType = (fields, allCriteria) => {
-  const receivedFields = Object.values(fields);
-
-  if (receivedFields.length !== allCriteria.length) return undefined;
-  if (receivedFields.every(((field) => field === 'true'))) return DEAL_SUBMISSION_TYPE.AIN;
-  if (receivedFields.some((field) => field === 'false')) return DEAL_SUBMISSION_TYPE.MIA;
-
-  return undefined;
 };
 
 const validateAutomaticCover = async (req, res, next) => {
