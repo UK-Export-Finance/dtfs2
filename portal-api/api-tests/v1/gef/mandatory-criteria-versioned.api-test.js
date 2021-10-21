@@ -84,6 +84,7 @@ describe(baseUrl, () => {
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(allMandatoryCriteria[2]),
         createdAt: expect.any(Number),
+        introText: expect.any(String),
         criteria: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),

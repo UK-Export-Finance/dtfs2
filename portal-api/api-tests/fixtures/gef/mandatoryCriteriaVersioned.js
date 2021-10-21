@@ -5,6 +5,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'test 1',
+    introText 'Test intro 1',
     criteria: [
       { id: '1', body: 'Test is a mock test' },
     ],
