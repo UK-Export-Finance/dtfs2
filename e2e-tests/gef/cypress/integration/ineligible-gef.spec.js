@@ -23,7 +23,7 @@ context('Ineligible GEF Page', () => {
   describe('Clicking on Back Button', () => {
     it('redirects user to the applications and notices page', () => {
       ineligibleGef.backLink().click();
-      cy.url().should('eq', relative('/dashboard/gef'));
+      cy.url().should('eq', relative('/dashboard/0'));
     });
   });
 });

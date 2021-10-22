@@ -10,10 +10,11 @@ const facilitiesController = require('./facilities.controller');
 
 exports.updateBondCoverStartDate = async (req, res) => {
   const {
+    id: dealId,
     bondId,
   } = req.params;
 
-  await findOneDeal(req.params.id, async (deal) => {
+  await findOneDeal(dealId, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         return res.status(401).send();
@@ -51,7 +52,12 @@ exports.updateBondCoverStartDate = async (req, res) => {
         });
       }
 
-      const { status, data } = await facilitiesController.update(bondId, modifiedBond, req.user);
+      const { status, data } = await facilitiesController.update(
+        dealId,
+        bondId,
+        modifiedBond,
+        req.user,
+      );
 
       return res.status(status).send(data);
     }

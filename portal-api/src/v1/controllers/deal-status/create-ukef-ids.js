@@ -66,7 +66,12 @@ const createUkefIds = async (entityId, deal, user) => {
     };
 
     facilitiesUpdatePromises.push(
-      facilitiesController.update(facilityId, modifiedFacility, user),
+      facilitiesController.update(
+        deal._id,
+        facilityId,
+        modifiedFacility,
+        user,
+      ),
     );
 
     return facilityId;

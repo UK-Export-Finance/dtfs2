@@ -33,6 +33,7 @@ class Application {
       editedBy.push(this.userId);
       this.editedBy = editedBy;
       this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
+      this.facilitiesUpdated = null;
     } else {
       // Update
       this.updatedAt = Date.now();
@@ -50,6 +51,7 @@ class Application {
         'bankInternalRefName',
         'additionalRefName',
         'eligibility',
+        'facilitiesUpdated',
       ];
 
       if (req.eligibility) {
