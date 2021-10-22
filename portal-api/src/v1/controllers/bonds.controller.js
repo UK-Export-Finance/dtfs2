@@ -106,10 +106,11 @@ const feeTypeFields = (bond) => {
 
 exports.updateBond = async (req, res) => {
   const {
+    id: dealId,
     bondId,
   } = req.params;
 
-  await findOneDeal(req.params.id, async (deal) => {
+  await findOneDeal(dealId, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
@@ -151,7 +152,12 @@ exports.updateBond = async (req, res) => {
         modifiedBond.requestedCoverStartDate = null;
       }
 
-      const { status, data } = await facilitiesController.update(bondId, modifiedBond, req.user);
+      const { status, data } = await facilitiesController.update(
+        dealId,
+        bondId,
+        modifiedBond,
+        req.user,
+      );
 
       const validationErrors = bondValidationErrors(data, deal);
 

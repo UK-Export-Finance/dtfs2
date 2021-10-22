@@ -36,7 +36,9 @@ context('Application Details Page', () => {
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
       applicationDetails.captionHeading();
-      applicationDetails.mainHeading();
+      applicationDetails.mainHeading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Application Details');
+      });
     });
 
     it('shows a valid link to edit the reference', () => {
@@ -97,15 +99,34 @@ context('Application Details Page', () => {
   });
 
   describe('Visiting page when IN PROGRESS status', () => {
+    before(() => {
+      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
+
+      // Start the Eligibility Criteria selection, but don't complete it.
+      // This puts the Eligibility Criteira section in an "in progress" state.
+      applicationDetails.automaticCoverDetailsLink().click();
+      automaticCover.automaticCoverTerm().each(($el, index) => {
+        if (index === 1) {
+          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
+        }
+      });
+      automaticCover.saveAndReturnButton().click();
+    });
+
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
     });
 
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
+    });
+
+    it('displays the correct submission type heading', () => {
+      applicationDetails.mainHeading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Application Details');
+      });
     });
 
     it('displays the correct exporter elements', () => {
@@ -131,15 +152,31 @@ context('Application Details Page', () => {
   });
 
   describe('Visiting page when COMPLETED status', () => {
+    before(() => {
+      cy.visit(relative(`/gef/application-details/${applications[2]._id}`));
+
+      // Make the deal an Automatic Inclusion Application
+      applicationDetails.automaticCoverDetailsLink().click();
+      automaticCover.automaticCoverTerm().each(($el, index) => {
+        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
+      });
+      automaticCover.saveAndReturnButton().click();
+    });
+
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${applications[2]._id}`));
     });
 
     it('displays the application banner', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
+    });
+
+    it('displays the correct submission type heading', () => {
+      applicationDetails.mainHeading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Automatic Inclusion Notice');
+      });
     });
 
     it('displays the correct exporter elements', () => {
@@ -180,17 +217,19 @@ context('Application Details Page', () => {
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el, index) => {
-        if (index === 0) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        } else {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        }
+        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
       });
       automaticCover.saveAndReturnButton().click();
     });
 
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
+    });
+
+    it('displays the correct submission type heading', () => {
+      applicationDetails.mainHeading().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Manual Inclusion Application');
+      });
     });
 
     describe('Supporting information section', () => {
