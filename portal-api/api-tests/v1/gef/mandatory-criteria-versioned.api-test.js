@@ -169,6 +169,7 @@ describe(baseUrl, () => {
         version: 99,
         isInDraft: true,
         title: 'test 99',
+        introText: 'intro 99',
         criteria: [
           { id: '1', body: 'Testing' },
         ],
