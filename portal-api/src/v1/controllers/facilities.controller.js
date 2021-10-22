@@ -19,17 +19,23 @@ exports.findOne = async (facilityId) =>
   api.findOneFacility(facilityId);
 
 exports.update = async (dealId, facilityId, facilityBody, user) => {
+  const existingFacility = await api.findOneFacility(facilityId);
+
   const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
 
-  const dealUpdate = {
-    facilitiesUpdated: new Date().valueOf(),
-  };
+  if (existingFacility) {
+    // update facilitiesUpdated timestamp in the deal
 
-  await updateDeal(
-    dealId,
-    dealUpdate,
-    user,
-  );
+    const dealUpdate = {
+      facilitiesUpdated: new Date().valueOf(),
+    };
+
+    await updateDeal(
+      dealId,
+      dealUpdate,
+      user,
+    );
+  }
 
   return updatedFacility;
 };
