@@ -14,7 +14,7 @@ Field mapping based on email from Gareth Ashby 15/03/2021
 */
 
 const indemnifier = ({ deal }) => {
-  const { submissionDetails } = deal.dealSnapshot;
+  const submissionDetails = deal.dealSnapshot.submissionDetails;
 
   const countryCode = submissionDetails['indemnifier-address-country'] && submissionDetails['indemnifier-address-country'].code;
   const citizenshipClass = countryCode === 'GBR' ? '1' : '2';
