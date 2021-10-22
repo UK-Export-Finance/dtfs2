@@ -81,17 +81,16 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   if (!deal) {
     return;
   }
-  const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
 
   /**
-  1. Check whether the exporter has a URN (Company house registration number)
-  2. Ensure submission type is AIN only (0.1)
+  1. GEF - Check whether the exporter has a URN
+  2. BSS/ECWS - Check all the parties have a URN
   */
-  if (allRequiredPartiesHaveUrn && deal.dealSnapshot.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    // Start ACBS process
+  const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
+
+  if (allRequiredPartiesHaveUrn) {
     await acbsController.createACBS(deal);
   }
-
 };
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
@@ -102,7 +101,6 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
 
   await submitACBSIfAllPartiesHaveUrn(dealId);
@@ -118,7 +116,6 @@ const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, creditRatingUpdate);
 
   return updatedDeal.tfm;
