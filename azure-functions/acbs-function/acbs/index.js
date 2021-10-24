@@ -22,9 +22,12 @@ module.exports = df.orchestrator(function* HDeal(context) {
     const product = deal.dealSnapshot.dealType;
 
     // Get ACBS industry code
-    const industryCode = deal.dealSnapshot.submissionDetails
-      ? deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code
-      : deal.dealSnapshot.exporter.industries[0].code;
+    let industryCode;
+    if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
+      industryCode = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
+    } else {
+      industryCode = deal.dealSnapshot.exporter.industries[0].code;
+    }
 
     const acbsReference = {
       supplierAcbsIndustryCode: yield context.df.callActivityWithRetry(
@@ -72,8 +75,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
     yield context.df.Task.all(
       product === CONSTANTS.PRODUCT.TYPE.GEF
         ? [exporterTask, bankTask]
-        // eslint-disable-next-line comma-dangle
-        : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask]
+        : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask],
     );
 
     let parties;
@@ -118,8 +120,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       deal,
       parties.indemnifier
         ? parties.indemnifier.partyIdentifier
-        // eslint-disable-next-line comma-dangle
-        : parties.exporter.partyIdentifier
+        : parties.exporter.partyIdentifier,
     );
     const dealGuaranteeRecord = yield context.df.callActivityWithRetry(
       'activity-create-deal-guarantee',
@@ -146,7 +147,6 @@ module.exports = df.orchestrator(function* HDeal(context) {
     yield context.df.Task.all([...facilityTasks]);
 
     return {
-      // eslint-disable-next-line no-underscore-dangle
       portalDealId: deal._id,
       ukefDealId:
         product === CONSTANTS.PRODUCT.TYPE.GEF
@@ -155,7 +155,6 @@ module.exports = df.orchestrator(function* HDeal(context) {
       deal: dealAcbsData,
       facilities: facilityTasks.map(({ result }) => result),
     };
- } else {
-   console.error('No input specified');
- }
+  }
+  console.error('No input specified');
 });

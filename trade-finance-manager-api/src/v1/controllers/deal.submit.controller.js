@@ -58,7 +58,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
-  console.log('UKEF ID verified, executing ACBS procedure');
+  console.log('UKEF ID verified');
 
   if (!deal) {
     console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);

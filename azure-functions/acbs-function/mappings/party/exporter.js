@@ -28,24 +28,21 @@ const exporter = ({ deal, acbsReference }) => {
     : deal.dealSnapshot.submissionDetails;
 
   if (product === CONSTANTS.PRODUCT.TYPE.GEF) {
-    countryCode = submissionDetails.exporter.registeredAddress.country.substring(0,3);
-    dealCountry = "GB";
+    countryCode = submissionDetails.exporter.registeredAddress.country.substring(0, 3);
+    dealCountry = 'GB';
   } else {
-    countryCode =
-      submissionDetails["supplier-address-country"] &&
-      submissionDetails["supplier-address-country"].code;
-    dealCountry = "GBR";
+    countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
+    dealCountry = 'GBR';
   }
 
-  const citizenshipClass =
-    countryCode === dealCountry
-      ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
-      : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
+  const citizenshipClass = countryCode === dealCountry
+    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
+    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
 
   const partyNames = getPartyNames(
     product === CONSTANTS.PRODUCT.TYPE.GEF
       ? submissionDetails.exporter.companyName
-      : submissionDetails["supplier-name"]
+      : submissionDetails['supplier-name'],
   );
 
   return {
@@ -55,7 +52,7 @@ const exporter = ({ deal, acbsReference }) => {
     smeType: getSmeType(
       product === CONSTANTS.PRODUCT.TYPE.GEF
         ? submissionDetails.exporter.smeType
-        : submissionDetails["sme-type"]
+        : submissionDetails['sme-type'],
     ),
     citizenshipClass,
     officerRiskDate: now(),
