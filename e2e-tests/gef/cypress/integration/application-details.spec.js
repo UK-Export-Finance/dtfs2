@@ -1,3 +1,4 @@
+const { format } = require('date-fns');
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
@@ -31,6 +32,17 @@ context('Application Details Page', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
+
+      applicationDetails.bannerStatus().contains('Draft');
+      applicationDetails.bannerProduct().should('have.text','General Export Facility');
+
+      const todayFormatted = format(new Date(), 'dd MMM yyyy')
+      applicationDetails.bannerDateCreated().contains(todayFormatted);
+      applicationDetails.bannerSubmissionType().should('have.text', '-');
+      applicationDetails.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`)
+      applicationDetails.bannerExporter().should('have.text', '-');
+      applicationDetails.bannerCheckedBy().should('have.text', '-');
+      applicationDetails.bannerBuyer().should('have.text', '-');
     });
 
     it('displays the correct headings', () => {
@@ -121,6 +133,9 @@ context('Application Details Page', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
+
+      applicationDetails.bannerStatus().contains('Draft');
+      applicationDetails.bannerExporter().should('not.contain', '-');
     });
 
     it('displays the correct submission type heading', () => {
@@ -171,6 +186,10 @@ context('Application Details Page', () => {
       applicationDetails.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
+
+      applicationDetails.bannerStatus().contains('Draft');
+      applicationDetails.bannerSubmissionType().should('have.text', 'Automatic Inclusion Notice');
+      applicationDetails.bannerExporter().should('not.contain', '-');
     });
 
     it('displays the correct submission type heading', () => {
@@ -226,10 +245,12 @@ context('Application Details Page', () => {
       Cypress.Cookies.preserveOnce('connect.sid');
     });
 
-    it('displays the correct submission type heading', () => {
+    it('displays the correct submission type heading and text in banner', () => {
       applicationDetails.mainHeading().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Manual Inclusion Application');
       });
+
+      applicationDetails.bannerSubmissionType().should('have.text', 'Manual Inclusion Application');
     });
 
     describe('Supporting information section', () => {
