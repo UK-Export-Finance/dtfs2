@@ -1,7 +1,7 @@
 const expectMongoId = (obj) => {
   return {
     _id:  expect.any(String),
-    ... obj
+    ...obj
   }
 }
 

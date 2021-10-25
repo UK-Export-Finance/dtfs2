@@ -36,7 +36,7 @@ const MockApplicationResponse = () => {
   res.status = 'Draft';
   res.eligibility = {
     criteria: [
-      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+      { id: 12, answer: null, text: 'Test' },
     ],
   };
   return res;
@@ -56,7 +56,7 @@ const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
       id: 12,
-      htmlText: '<p>Some eligibility criteria</p>',
+      text: 'Some eligibility criteria',
       errMsg: '12. Select some eligibilty',
     },
   ],

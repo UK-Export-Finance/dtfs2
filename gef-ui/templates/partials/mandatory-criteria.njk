@@ -16,17 +16,34 @@
     }) }}
   {% endif %}
 
-
   <span class="govuk-caption-xl" data-cy="heading-caption">
     Create new application
   </span>
 
   <h1 class="govuk-heading-xl" data-cy="main-heading">
-    Confirm eligiblity (mandatory criteria)
+    {{ criteria.title }}
   </h1>
 
+  <p>{{ criteria.introText }}</p>
+
   <div data-cy="mandatory-criteria">
-  {{ criteria.htmlText | safe }}
+    <ol class="govuk-list govuk-list--spaced">
+      {% for criterion in criteria.criteria %}
+        <li class="govuk-body">
+          {{ criterion.id}}. {{ criterion.body }}
+
+          {% if criterion.childList %}
+            <ol class="govuk-list govuk-list--bullet govuk-!-padding-left-7">
+              {% for childCriterion in criterion.childList %}
+                <li class="govuk-body">{{ childCriterion }}</li>
+              {% endfor %}
+            </ol>
+          {% endif %}
+
+        </li>
+      {% endfor %}
+    
+    </ol>
   </div>
 
   <form
