@@ -1,6 +1,6 @@
 const DEAL = {
   ELIGIBILITY_CRITERIA: {
-    BSS_EWCS: {
+    'BSS/EWCS': {
       11: {
         text: 'There are no agents involved in the supply contract.',
         textList: [],

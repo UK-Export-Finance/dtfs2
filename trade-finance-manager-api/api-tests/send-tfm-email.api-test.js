@@ -9,6 +9,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../src/v1/__mocks__/mock-notify-emai
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: 'BSS/EWCS',
+  eligibility: mockDeal.eligibility,
 });
 
 describe('sendTfmEmail', () => {

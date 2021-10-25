@@ -142,6 +142,12 @@ const GET_DEAL = gql`
           }
         }
         eligibility {
+          criteria {
+            id
+            answer
+            description
+            descriptionList
+          }
           agentAddressCountry {
             code
             name
@@ -153,12 +159,6 @@ const GET_DEAL = gql`
           agentAddressTown,
           agentName,
           agentAlias
-        }
-        eligibilityCriteria {
-          id,
-          answer,
-          description,
-          descriptionList
         }
         submissionDetails {
           supplierName,
