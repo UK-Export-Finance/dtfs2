@@ -2,45 +2,12 @@ const Application = require('../../../models/application');
 const { validationErrorHandler } = require('../../../utils/helpers');
 const validateFile = require('../../../utils/validateFile');
 const { uploadAndSaveToDeal, removeFileFromDeal } = require('../../../utils/fileUtils');
+const { docType } = require('./docType');
 
 const MAX_FILE_SIZE = 1024 * 1024 * 12;
 
-const mapDocTypeParemeterToProps = (docType) => {
-  const map = {
-    'management-accounts': {
-      fieldName: 'managementAccounts',
-      title: 'Add year-to-date management accounts',
-    },
-    'manual-inclusion-questionnaire': {
-      fieldName: 'manualInclusion',
-      title: 'Add manual inclusion questionnaire',
-    },
-    'financial-statements': {
-      fieldName: 'financialStatements',
-      title: 'Add financial statements for the last 3 years',
-    },
-    'financial-forecasts': {
-      fieldName: 'financialForecasts',
-      title: 'Add financial forecasts for the  facility cover period',
-    },
-    'financial-commentary': {
-      fieldName: 'financialCommentary',
-      title: 'Add a brief commentary on the financial information',
-    },
-    'corporate-structure': {
-      fieldName: 'corporateStructure',
-      title: 'Add a corporate structure diagram',
-    },
-    'debtor-creditor-reports': {
-      fieldName: 'debtorAndCreditorReports',
-      title: 'Add aged debtor and aged creditor reports',
-    },
-    'export-licence': {
-      fieldName: 'exportLicence',
-      title: 'Add export licence',
-    },
-  };
-  const mappedValues = map[docType];
+const mapDocTypeParemeterToProps = (type) => {
+  const mappedValues = docType[type];
   if (!mappedValues) throw new Error('NOT_SUPPORTED');
 
   return mappedValues;
@@ -66,6 +33,29 @@ const validateFileQuestion = (application, field, errRef) => {
   }
 
   return errors;
+};
+
+const nextDocument = (application, applicationId, fieldName) => {
+  let supportingDocument = 'manual-inclusion-questionnaire'; // default page
+  if (application.supportingInformation?.requiredFields?.length > 0) {
+    const currentIndex = application.supportingInformation.requiredFields.indexOf(fieldName);
+    const nextIndex = (currentIndex + 1) % application.supportingInformation.requiredFields.length;
+
+    const nextItem = application.supportingInformation.requiredFields[nextIndex];
+
+    Object.values(docType).forEach((value) => {
+      if (value.fieldName === nextItem) {
+        supportingDocument = value.path;
+      }
+    });
+  }
+
+  let nextDoc = `/gef/application-details/${applicationId}/supporting-information/${supportingDocument}`;
+  if (!application.supportingInformation?.requiredFields?.length) {
+    nextDoc = `/gef/application-details/${applicationId}`;
+  }
+
+  return nextDoc;
 };
 
 const getApplication = async (applicationId, user, userToken) => {
@@ -107,14 +97,16 @@ const getSupportingDocuments = async (req, res, next) => {
     application = await getApplication(applicationId, user, userToken);
     const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
 
+    const files = application.supportingInformation?.[fieldName] ? application.supportingInformation?.[fieldName] : [];
     return res.render('partials/upload-supporting-documents.njk', {
       title,
       formHeaderFragment: fieldName,
       user,
       applicationId,
-      files: application.supportingInformation?.[fieldName],
+      files,
     });
   } catch (err) {
+    console.error(err);
     return handleError(err, req, res, next);
   }
 };
@@ -213,8 +205,9 @@ const postSupportingDocuments = async (req, res, next) => {
       });
     }
 
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(nextDocument(application, applicationId, fieldName));
   } catch (err) {
+    console.err(err);
     return handleError(err, req, res, next);
   }
 };
