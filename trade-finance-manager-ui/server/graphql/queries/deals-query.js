@@ -90,6 +90,12 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           smeType
         }
         eligibility {
+          criteria {
+            id
+            answer
+            text
+            textList
+          }
           agentAddressCountry {
             code
             name
@@ -99,11 +105,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           agentAddressLine3
           agentAddressPostcode
           agentAddressTown
-        }
-        eligibilityCriteria {
-          id
-          answer
-          description
         }
         dealFiles {
           security

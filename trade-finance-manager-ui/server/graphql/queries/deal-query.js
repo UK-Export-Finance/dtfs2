@@ -131,23 +131,23 @@ const dealQuery = gql`
           }
         }
         eligibility {
+          criteria {
+            id
+            answer
+            text
+            textList
+          }
           agentAddressCountry {
             code
             name
-          },
-          agentAddressLine1,
-          agentAddressLine2,
-          agentAddressLine3,
-          agentAddressPostcode,
-          agentAddressTown,
-          agentName,
+          }
+          agentAddressLine1
+          agentAddressLine2
+          agentAddressLine3
+          agentAddressPostcode
+          agentAddressTown
+          agentName
           agentAlias
-        }
-        eligibilityCriteria {
-          id,
-          answer,
-          description,
-          descriptionList
         }
         submissionDetails {
           supplierName,

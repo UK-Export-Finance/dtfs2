@@ -1,6 +1,7 @@
 const mapTotals = require('./mapTotals');
 const mapFacilities = require('../facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
+const mapEligibility = require('./mapEligibility');
 
 const mapDealSnapshot = (deal) => {
   const {
@@ -14,14 +15,16 @@ const mapDealSnapshot = (deal) => {
     eligibility,
   } = dealSnapshot;
 
-  return {
+  const mapped = {
     ...dealSnapshot,
     submissionDetails: mapSubmissionDetails(submissionDetails),
-    eligibilityCriteria: eligibility.criteria,
+    eligibility: mapEligibility(eligibility),
     facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
     totals: mapTotals(facilities),
     isFinanceIncreasing: false,
   };
+
+  return mapped;
 };
 
 module.exports = mapDealSnapshot;
