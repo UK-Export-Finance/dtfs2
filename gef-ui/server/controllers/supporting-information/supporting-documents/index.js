@@ -7,7 +7,10 @@ const { docType } = require('./docType');
 const MAX_FILE_SIZE = 1024 * 1024 * 12;
 
 const mapDocTypeParemeterToProps = (type) => {
-  const mappedValues = docType[type];
+  let mappedValues = null;
+  if (Object.prototype.hasOwnProperty.call(docType, type)) {
+    mappedValues = docType[type];
+  }
   if (!mappedValues) throw new Error('NOT_SUPPORTED');
 
   return mappedValues;
@@ -38,12 +41,13 @@ const validateFileQuestion = (application, field, errRef) => {
 const nextDocument = (application, applicationId, fieldName) => {
   let supportingDocument = 'manual-inclusion-questionnaire'; // default page
   if (application.supportingInformation?.requiredFields?.length > 0) {
+    const allDocTypes = docType;
     const currentIndex = application.supportingInformation.requiredFields.indexOf(fieldName);
     const nextIndex = (currentIndex + 1) % application.supportingInformation.requiredFields.length;
 
     const nextItem = application.supportingInformation.requiredFields[nextIndex];
 
-    Object.values(docType).forEach((value) => {
+    Object.values(allDocTypes).forEach((value) => {
       if (value.fieldName === nextItem) {
         supportingDocument = value.path;
       }
@@ -97,7 +101,10 @@ const getSupportingDocuments = async (req, res, next) => {
     application = await getApplication(applicationId, user, userToken);
     const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
 
-    const files = application.supportingInformation?.[fieldName] ? application.supportingInformation?.[fieldName] : [];
+    let files = [];
+    if (Object.prototype.hasOwnProperty.call(application.supportingInformation, fieldName)) {
+      files = application.supportingInformation?.[fieldName];
+    }
     return res.render('partials/upload-supporting-documents.njk', {
       title,
       formHeaderFragment: fieldName,
@@ -106,7 +113,7 @@ const getSupportingDocuments = async (req, res, next) => {
       files,
     });
   } catch (err) {
-    console.error(err);
+    console.error('GEF UI - Error getting Supporting Documents ', err);
     return handleError(err, req, res, next);
   }
 };
