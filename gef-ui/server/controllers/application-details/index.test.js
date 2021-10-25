@@ -167,7 +167,6 @@ describe('controllers/application-detaills', () => {
           ukefDealId: mockApplicationResponse.ukefDealId,
           submissionDate: mockApplicationResponse.submissionDate,
           companyName: mockExporterResponse.details.companyName,
-          applicationShowSummary: true,
           applicationStatus: mockApplicationResponse.status,
           dateCreated: mockApplicationResponse.createdAt,
           timezone: mockUserResponse.timezone,

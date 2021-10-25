@@ -20,7 +20,6 @@ function buildHeader(app) {
     ukefDealId: app.ukefDealId,
     submissionDate: app.submissionDate,
     companyName: app.exporter.details.companyName,
-    applicationShowSummary: true,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
     timezone: app.maker.timezone || 'Europe/London',
