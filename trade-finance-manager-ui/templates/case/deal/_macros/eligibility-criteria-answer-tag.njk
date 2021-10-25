@@ -2,12 +2,11 @@
 
 {% macro render(params) %}
 
-  {% if params.answer === 'true' %}
+  {% if params.answer %}
     {% set answerText = 'Passed' %}
     {% set answerClass = 'govuk-tag--green' %}
-  {% endif %}
 
-  {% if params.answer === 'false' %}
+    {% else %}
     {% set answerText = 'Failed' %}
     {% set answerClass = 'govuk-tag--red' %}
   {% endif %}

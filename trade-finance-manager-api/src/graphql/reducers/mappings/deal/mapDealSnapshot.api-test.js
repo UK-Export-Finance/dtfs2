@@ -2,6 +2,7 @@ const mapDealSnapshot = require('./mapDealSnapshot');
 const mapTotals = require('./mapTotals');
 const mapFacilities = require('../facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
+const mapEligibility = require('./mapEligibility');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal-AIN-submitted');
 
 describe('mapDealSnapshot', () => {
@@ -35,7 +36,7 @@ describe('mapDealSnapshot', () => {
     const expected = {
       ...mockDeal.dealSnapshot,
       submissionDetails: mapSubmissionDetails(MOCK_DEAL.submissionDetails),
-      eligibilityCriteria: MOCK_DEAL.eligibility.criteria,
+      eligibility: mapEligibility(MOCK_DEAL.eligibility),
       facilities: mapFacilities(mockFacilities, MOCK_DEAL.details, mockDeal.tfm),
       totals: mapTotals(mockFacilities),
       isFinanceIncreasing: false,
