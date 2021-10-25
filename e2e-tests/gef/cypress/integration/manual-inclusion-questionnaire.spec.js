@@ -72,24 +72,9 @@ context('manual inclusion Page', () => {
       manualInclusion.uploadFailure('upload-file-wrong-type.csv');
     });
 
-    // it('allows a file of the correct type', () => {
-    //   manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
-    //   manualInclusion.uploadSuccess('upload-file-valid.doc');
-    // });
-
-    // it('displays the application details screen when pressing Continue', () => {
-    //   manualInclusion.fileUploadComponent().attachFile('upload-file-valid.doc');
-    //   manualInclusion.continueButton()
-    //     .click();
-    //   cy.url()
-    //     .should('eq', relative(`/gef/application-details/${id}`));
-    // });
-
     it('displays the application page when pressing Cancel', () => {
-      manualInclusion.cancelLink()
-        .click();
-      cy.url()
-        .should('eq', relative(`/gef/application-details/${id}`));
+      manualInclusion.cancelLink().click();
+      cy.url().should('eq', relative(`/gef/application-details/${id}`));
     });
   });
 });
