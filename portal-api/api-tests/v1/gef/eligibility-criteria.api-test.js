@@ -144,7 +144,7 @@ describe(baseUrl, () => {
   //       dateCreated: '2021-01-01T00:00',
   //       isInDraft: true,
   //       title: 'test 99',
-  //       htmlText: '<p>Test is a mock test</p>',
+  //       text: 'Test is a mock test',
   //     };
   //     delete itemUpdate._id; // immutable key
 

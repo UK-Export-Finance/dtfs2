@@ -159,7 +159,7 @@ type Exporter {
 type EligibilityCriterion {
   id: Int
   name: String
-  htmlText: String
+  text: String
   errMsg: String
   answer: Boolean
 }

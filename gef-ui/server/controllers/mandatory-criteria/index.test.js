@@ -18,7 +18,7 @@ const MockResponse = () => {
 
 const MockCriteriaResponse = () => {
   const res = {};
-  res.htmlText = 'This is a test';
+  res.text = 'This is a test';
   return res;
 };
 

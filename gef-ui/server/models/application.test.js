@@ -47,10 +47,6 @@ const MockExporterResponse = () => {
   return res;
 };
 
-const MockEligibilityCriteriaResponse = () => ({
-  terms: MockEligibilityCriteria().criteria,
-});
-
 const MockFacilityResponse = () => {
   const res = {};
   res.status = 'IN_PROGRESS';
@@ -68,18 +64,15 @@ describe('models/application', () => {
     let mockApplicationResponse;
     let mockExporterResponse;
     let mockFacilityResponse;
-    let mockEligibilityCriteriaResponse;
 
     beforeEach(() => {
       mockApplicationResponse = MockApplicationResponse();
       mockExporterResponse = MockExporterResponse();
       mockFacilityResponse = MockFacilityResponse();
-      mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
 
       api.getApplication.mockResolvedValue(mockApplicationResponse);
       api.getExporter.mockResolvedValue(mockExporterResponse);
       api.getFacilities.mockResolvedValue(mockFacilityResponse);
-      api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
       api.getUserDetails.mockResolvedValue(MockUserResponse());
     });
 

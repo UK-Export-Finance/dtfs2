@@ -1,4 +1,3 @@
-import { decode } from 'html-entities';
 import { automaticCover, validateAutomaticCover } from './index';
 import api from '../../services/api';
 import { DEAL_SUBMISSION_TYPE } from '../../../constants';
@@ -27,56 +26,56 @@ const MockEligibilityCriteria = () => ({
       id: 12,
       name: 'coverStart',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 13,
       name: 'noticeDate',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 14,
       name: 'facilityLimit',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 15,
       name: 'exporterDeclaration',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 16,
       name: 'dueDiligence',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 17,
       name: 'facilityLetter',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 18,
       name: 'facilityBaseCurrency',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 19,
       name: 'facilityPaymentCurrency',
       answer: null,
-      htmlText: '&lt;p&gt;Test&lt;/p&gt',
+      text: 'Test',
       errMsg: 'Mock error message',
     },
   ],
@@ -115,7 +114,7 @@ describe('controllers/automatic-cover', () => {
 
       const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
-        htmlText: decode(criterion.htmlText),
+        text: 'Test',
       }));
 
       expect(mockResponse.render)
@@ -163,7 +162,7 @@ describe('controllers/automatic-cover', () => {
 
       const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
-        htmlText: decode(criterion.htmlText),
+        text: 'Test',
       }));
 
       expect(mockResponse.render)

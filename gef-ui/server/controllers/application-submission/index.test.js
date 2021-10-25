@@ -55,7 +55,7 @@ const MockApplicationResponse = () => {
   res.eligibility = {
     isAutomaticCover: true,
     criteria: [
-      { id: 12, answer: null, htmlText: '&lt;p&gt;Test&lt;/p&gt' },
+      { id: 12, answer: null, text: 'Test' },
     ],
   };
   res.submissionType = 'Automatic Inclusion Notice';
@@ -83,7 +83,7 @@ const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
       id: 12,
-      htmlText: '<p>Some eligibility criteria</p>',
+      text: 'Some eligibility criteria',
       errMsg: '12. Select some eligibilty',
     },
   ],
