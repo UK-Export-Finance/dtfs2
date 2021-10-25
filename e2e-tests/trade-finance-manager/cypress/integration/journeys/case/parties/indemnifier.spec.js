@@ -60,6 +60,7 @@ context('Parties - user can view and edit indemnifier', () => {
         const partyUrn = 'test partyurn';
 
         pages.partiesPage.indemnifierEditLink().click();
+        pages.buyerPage.urnInput().clear();
         pages.indemnifierPage.urnInput().type(partyUrn);
 
         pages.indemnifierPage.saveButton().click();
