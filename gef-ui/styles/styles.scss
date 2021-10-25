@@ -53,6 +53,11 @@ $govuk-new-link-styles: true;
   }
 }
 
+.application-banner-hr {
+  border-color: govuk-colour("white");
+  width: 94%;
+}
+
 .preview-banner {
   display: block;
 }
