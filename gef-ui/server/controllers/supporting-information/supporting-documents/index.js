@@ -296,4 +296,5 @@ module.exports = {
   postSupportingDocuments,
   uploadSupportingDocument,
   deleteSupportingDocument,
+  nextDocument,
 };

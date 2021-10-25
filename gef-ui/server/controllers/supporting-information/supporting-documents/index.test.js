@@ -1,5 +1,5 @@
 import {
-  getSupportingDocuments, postSupportingDocuments, uploadSupportingDocument, deleteSupportingDocument,
+  getSupportingDocuments, postSupportingDocuments, uploadSupportingDocument, deleteSupportingDocument, nextDocument,
 } from '.';
 import Application from '../../../models/application';
 import validateFile from '../../../utils/validateFile';
@@ -10,12 +10,13 @@ jest.mock('../../../utils/validateFile', () => jest.fn(() => [true, null]));
 jest.mock('../../../utils/fileUtils');
 
 const MockResponse = () => {
-  const res = {};
-  res.redirect = jest.fn();
-  res.sendStatus = jest.fn();
-  res.status = jest.fn(() => res);
-  res.render = jest.fn();
-  res.send = jest.fn();
+  const res = {
+    redirect: jest.fn(),
+    sendStatus: jest.fn(),
+    status: jest.fn(() => res),
+    render: jest.fn(),
+    send: jest.fn(),
+  };
   return res;
 };
 
@@ -27,9 +28,9 @@ const MockApplication = () => ({
 });
 
 describe('controllers/supporting-documents', () => {
-  const mockResponse = new MockResponse();
+  const mockResponse = MockResponse();
   let mockRequest;
-  Application.findById.mockResolvedValue(new MockApplication());
+  Application.findById.mockResolvedValue(MockApplication());
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -461,6 +462,46 @@ describe('controllers/supporting-documents', () => {
         file: 'mock-file.pdf',
         success: { messageText: 'mock-file.pdf deleted' },
       });
+    });
+  });
+
+  describe('next supporting document', () => {
+    const application = {
+      supportingInformation: {
+        requiredFields: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'],
+      },
+    };
+    const applicationId = 1234;
+
+    it('moves to the financial statements page', () => {
+      expect(nextDocument(application, applicationId, 'managementAccounts')).toContain('/financial-statements');
+    });
+    it('moves to the financial forecasts page', () => {
+      expect(nextDocument(application, applicationId, 'financialStatements')).toContain('/financial-forecasts');
+    });
+    it('moves to the Brief commentary on the financial information page', () => {
+      expect(nextDocument(application, applicationId, 'financialForecasts')).toContain('/financial-commentary');
+    });
+    it('moves to the Corporate structure diagram page', () => {
+      expect(nextDocument(application, applicationId, 'financialCommentary')).toContain('/corporate-structure');
+    });
+    it('moves to the Aged debtor and aged creditor listing page', () => {
+      expect(nextDocument(application, applicationId, 'corporateStructure')).toContain('/debtor-creditor-reports');
+    });
+    it('moves to the Exporter licence page', () => {
+      expect(nextDocument(application, applicationId, 'debtorAndCreditorReports')).toContain('/export-licence');
+    });
+    it('moves to the Manual Inclusion page', () => {
+      expect(nextDocument(application, applicationId, 'exportLicence')).toContain('/manual-inclusion-questionnaire');
+    });
+
+    it('skips the management accounts page and moves to the financial forecasts page', () => {
+      application.supportingInformation.requiredFields = ['manualInclusion', 'financialStatements', 'financialForecasts'];
+      expect(nextDocument(application, applicationId, 'financialStatements')).toContain('/financial-forecasts');
+    });
+    it('returns to the main applications page', () => {
+      application.supportingInformation = {};
+      expect(nextDocument(application, applicationId, 'manualInclusion')).toBe(`/gef/application-details/${applicationId}`);
     });
   });
 });
