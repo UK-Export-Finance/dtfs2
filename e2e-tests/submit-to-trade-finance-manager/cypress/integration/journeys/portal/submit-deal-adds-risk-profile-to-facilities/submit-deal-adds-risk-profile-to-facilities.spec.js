@@ -30,6 +30,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
+
   it('Portal deal is submitted to UKEF, facility `risk profile` defaults to `Flat`. User can navigate to facility pages', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
