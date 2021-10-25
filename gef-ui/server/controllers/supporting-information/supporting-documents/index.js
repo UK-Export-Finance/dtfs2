@@ -214,7 +214,6 @@ const postSupportingDocuments = async (req, res, next) => {
 
     return res.redirect(nextDocument(application, applicationId, fieldName));
   } catch (err) {
-    console.err(err);
     return handleError(err, req, res, next);
   }
 };
