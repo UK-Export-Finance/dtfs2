@@ -15,7 +15,6 @@
 
 {% include "includes/application-details/applicationReferenceAndActions.njk" %}
 
-
 <div class="application-banner preview-banner" data-cy="application-banner">
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
@@ -67,7 +66,8 @@
       </div>
     </div>
   </div>
-  {% if applicationStatus === 'SUBMITTED_TO_UKEF' %}
-    {% include "includes/application-preview/deal-details.njk" %}
+
+  {% if submissionCount > 0 %}
+    {% include "includes/application-preview/deal-submission-details.njk" %}
   {% endif %}
 </div>
