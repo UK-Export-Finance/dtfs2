@@ -21,8 +21,7 @@ openRouter.route('/api-docs')
  *   put:
  *     summary: Submit a deal
  *     tags: [Deals]
- *     description: Creates snapshots (via Central API), calls external APIs,
- *     sends status update to internal APIs. See README
+ *     description: Creates snapshots (via Central API), calls external APIs, sends status update to internal APIs
  *     requestBody:
  *       description: Fields required to find a deal and send updates to Portal. The checker object is for Portal update
  *       required: true
