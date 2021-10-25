@@ -56,7 +56,6 @@
     "govuk-frontend": "^3.12.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
-    "html-entities": "^2.1.0",
     "http-errors": "^1.8.0",
     "imask": "^6.0.5",
     "jquery": "3.5.0",
