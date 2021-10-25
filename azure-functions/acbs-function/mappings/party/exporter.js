@@ -2,9 +2,6 @@ const { now } = require('../../helpers/date');
 const { getSmeType, getPartyNames } = require('./helpers');
 const CONSTANTS = require('../../constants');
 
-let countryCode;
-let dealCountry;
-
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
   partyAlternateIdentifier  string  UKEF Party URN
@@ -21,6 +18,8 @@ Field mapping based on email from Gareth Ashby 15/03/2021
 const exporter = ({ deal, acbsReference }) => {
   // Get Product Type i.e. GEF
   const product = deal.dealSnapshot.dealType;
+  let countryCode;
+  let dealCountry;
 
   // Get Deal's Snapshot
   const submissionDetails = product === CONSTANTS.PRODUCT.TYPE.GEF
