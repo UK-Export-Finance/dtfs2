@@ -104,6 +104,7 @@ describe('controllers/application-detaills', () => {
   let mockExporterResponse;
   let mockFacilityResponse;
   let mockUserResponse;
+  let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -112,11 +113,12 @@ describe('controllers/application-detaills', () => {
     mockExporterResponse = MockExporterResponse();
     mockFacilityResponse = MockFacilityResponse();
     mockUserResponse = MockUserResponse();
+    mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
-    api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
+    api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
   });
 
