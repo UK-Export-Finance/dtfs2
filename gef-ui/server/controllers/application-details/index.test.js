@@ -163,7 +163,7 @@ describe('controllers/application-detaills', () => {
       await applicationDetails(mockRequest, mockResponse);
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/application-details.njk', {
-          // header 
+          // header
           ukefDealId: mockApplicationResponse.ukefDealId,
           submissionDate: mockApplicationResponse.submissionDate,
           companyName: mockExporterResponse.details.companyName,
