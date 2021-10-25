@@ -35,34 +35,34 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Date created</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="date-created"><p>{{ dateCreated | localiseTimestamp('DD MMM YYYY', timezone) }}</p>
+        <div class="govuk-grid-column-two-thirds" data-cy="date-created"><p>{{ dateCreated | localiseTimestamp('DD MMM YYYY', timezone)  | dashIfEmpty }}</p>
         </div>
       </div>
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Type</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="submission-type"><p>{{ applicationType }}</p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="submission-type"><p>{{ applicationType | dashIfEmpty }}</p></div>
       </div>
     </div>
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Created by</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="created-by"><p>{{ createdBy }}</p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="created-by"><p>{{ createdBy | dashIfEmpty }}</p></div>
       </div>
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Exporter</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="exporter"><p>{{ companyName }}</p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="exporter"><p>{{ companyName | dashIfEmpty }}</p></div>
       </div>
     </div>
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Checked by</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="checked-by"><p>{{ checkedBy }}</p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="checked-by"><p>{{ checkedBy | dashIfEmpty }}</p></div>
       </div>
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Buyer</strong></p></div>
-        <div class="govuk-grid-column-two-thirds"><p>-</p></div>
+        <div class="govuk-grid-column-two-thirds"><p>{{ buyer | dashIfEmpty }}</p></div>
       </div>
     </div>
   </div>

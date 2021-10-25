@@ -6,12 +6,12 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Sent to UKEF</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="date-submitted"><p>{{ submissionDate | localiseTimestamp('DD MMM YYYY', timezone) }}</p>
+        <div class="govuk-grid-column-two-thirds" data-cy="date-submitted"><p>{{ submissionDate | localiseTimestamp('DD MMM YYYY', timezone)  | dashIfEmpty }}</p>
         </div>
       </div>
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>UKEF deal ID</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="ukef-deal-id"><p>{{ ukefDealId }}</p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="ukef-deal-id"><p>{{ ukefDealId | dashIfEmpty }}</p></div>
       </div>
     </div>
   </div>
