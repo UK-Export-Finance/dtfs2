@@ -1,6 +1,9 @@
+const { format } = require('date-fns');
 import relative from './relativeURL';
+import automaticCover from './pages/automatic-cover';
 import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
+import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 let applicationId;
@@ -15,6 +18,17 @@ context('Submit to UKEF', () => {
       })
       .then(({ body }) => {
         applicationId = body.items[2]._id;
+
+        cy.login(CREDENTIALS.MAKER);
+
+        cy.visit(relative(`/gef/application-details/${applicationId}`));
+
+        // Make the deal an Automatic Inclusion Application
+        applicationDetails.automaticCoverDetailsLink().click();
+        automaticCover.automaticCoverTerm().each(($el, index) => {
+          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
+        });
+        automaticCover.saveAndReturnButton().click();
       });
 
     cy.login(CREDENTIALS.CHECKER);
@@ -65,6 +79,18 @@ context('Submit to UKEF', () => {
       submitToUkef.comment().type('Test comment');
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanel();
+    });
+
+    describe('After submission', () => {
+      it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
+        cy.visit(relative(`/gef/application-details/${applicationId}`));
+
+        applicationDetails.bannerStatus().contains('Submitted to UKEF');
+        applicationDetails.bannerUkefDealId().contains('Pending');
+
+        const todayFormatted = format(new Date(), 'dd MMM yyyy')
+        applicationDetails.bannerDateCreated().contains(todayFormatted);
+      });
     });
   });
 });

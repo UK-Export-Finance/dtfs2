@@ -12,6 +12,8 @@ const applicationDetails = {
   bannerExporter: () => cy.get('[data-cy="exporter"]'),
   bannerCheckedBy: () => cy.get('[data-cy="checked-by"]'),
   bannerBuyer: () => cy.get('[data-cy="buyer"]'),
+  bannerDateSubmitted: () => cy.get('[data-cy="date-submitted"]'),
+  bannerUkefDealId: () => cy.get('[data-cy="ukef-deal-id"]'),
 
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),
   editRefNameLink: () => cy.get('[data-cy="edit-refname-link"]'),
