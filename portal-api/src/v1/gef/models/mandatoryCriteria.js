@@ -3,7 +3,8 @@ class MandatoryCriteria {
     this.version = req.version;
     this.isInDraft = req.isInDraft;
     this.title = req.title;
-    this.htmlText = req.htmlText;
+    this.introText = req.introText;
+    this.criteria = req.criteria;
     this.createdAt = Date.now();
     this.updatedAt = null;
   }

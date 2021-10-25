@@ -1,4 +1,3 @@
-const { decode } = require('html-entities');
 const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/helpers');
 const api = require('../../services/api');
 
@@ -7,10 +6,7 @@ const getMandatoryCriteria = async (req, res) => {
     const criteria = await api.getMandatoryCriteria();
 
     return res.render('partials/mandatory-criteria.njk', {
-      criteria: {
-        ...criteria,
-        htmlText: decode(criteria.htmlText),
-      },
+      criteria,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -32,10 +28,7 @@ const validateMandatoryCriteria = async (req, res) => {
 
       return res.render('partials/mandatory-criteria.njk', {
         errors: validationErrorHandler(mandatoryError),
-        criteria: {
-          ...criteria,
-          htmlText: decode(criteria.htmlText),
-        },
+        criteria,
       });
     }
 
