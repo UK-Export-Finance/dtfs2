@@ -491,8 +491,8 @@ describe('controllers/supporting-documents', () => {
     it('moves to the Exporter licence page', () => {
       expect(nextDocument(application, applicationId, 'debtorAndCreditorReports')).toContain('/export-licence');
     });
-    it('moves to the Manual Inclusion page', () => {
-      expect(nextDocument(application, applicationId, 'exportLicence')).toContain('/manual-inclusion-questionnaire');
+    it('moves to the main application page when user reaches the final step', () => {
+      expect(nextDocument(application, applicationId, 'exportLicence')).toBe(`/gef/application-details/${applicationId}`);
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {

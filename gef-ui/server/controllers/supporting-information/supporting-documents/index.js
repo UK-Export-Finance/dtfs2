@@ -40,9 +40,9 @@ const validateFileQuestion = (application, field, errRef) => {
 
 const nextDocument = (application, applicationId, fieldName) => {
   let supportingDocument = 'manual-inclusion-questionnaire'; // default page
+  const currentIndex = application.supportingInformation?.requiredFields?.indexOf(fieldName);
   if (application.supportingInformation?.requiredFields?.length > 0) {
     const allDocTypes = docType;
-    const currentIndex = application.supportingInformation.requiredFields.indexOf(fieldName);
     const nextIndex = (currentIndex + 1) % application.supportingInformation.requiredFields.length;
 
     const nextItem = application.supportingInformation.requiredFields[nextIndex];
@@ -55,7 +55,8 @@ const nextDocument = (application, applicationId, fieldName) => {
   }
 
   let nextDoc = `/gef/application-details/${applicationId}/supporting-information/${supportingDocument}`;
-  if (!application.supportingInformation?.requiredFields?.length) {
+  if (!application.supportingInformation?.requiredFields?.length
+      || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${applicationId}`;
   }
 
