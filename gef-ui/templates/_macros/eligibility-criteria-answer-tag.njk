@@ -3,10 +3,10 @@
 {% macro render(params) %}
 
   {% set answerText = params.answer %}
-  {% if params.answer === 'true' %}
+  {% if params.answer %}
     {% set answerClass = 'govuk-tag--green' %}
-  {% endif %}
-  {% if params.answer === 'false' %}
+
+    {% else %}
     {% set answerClass = 'govuk-tag--red' %}
   {% endif %}
 

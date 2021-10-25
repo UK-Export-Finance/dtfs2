@@ -8,7 +8,7 @@ describe(component, () => {
 
   describe('when params.answer is `true`', () => {
     beforeEach(() => {
-      const params = { answer: 'true' };
+      const params = { answer: true };
       wrapper = render(params);
     });
 
@@ -24,7 +24,7 @@ describe(component, () => {
   describe('when params.answer is `false`', () => {
 
     beforeEach(() => {
-      const params = { answer: 'false' };
+      const params = { answer: false };
       wrapper = render(params);
     });
 
