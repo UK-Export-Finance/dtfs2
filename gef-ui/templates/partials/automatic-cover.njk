@@ -3,6 +3,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../_macros/eligibility-criterion.njk' as eligibilityCriterion %}
 
 {% block pageTitle %}Automatic cover{% endblock %}
 
@@ -27,6 +28,7 @@
     text: "If you’re eligible for automatic cover, you can submit all the application details as an automatic inclusion notice (AIN). Once you’ve submitted the AIN, your cover will be available immediately for you to use."
   }) }}
 
+
   <form method="post" data-cy="form">
     {% for term in terms %}
       {{ govukRadios({
@@ -35,7 +37,11 @@
         name: term.id,
         fieldset: {
           legend: {
-            html: term.htmlText
+            html: eligibilityCriterion.render({
+              id: term.id,
+              text: term.text,
+              textList: term.textList
+            })
           }
         },
         attributes: {
