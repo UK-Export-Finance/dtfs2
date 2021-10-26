@@ -193,7 +193,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails.mainHeading().contains('Automatic  Inclusion Application');
+      applicationDetails.mainHeading().contains('Automatic Inclusion Notice');
     });
 
     it('displays the correct exporter elements', () => {
