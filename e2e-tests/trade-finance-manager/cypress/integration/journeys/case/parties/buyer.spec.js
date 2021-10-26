@@ -60,6 +60,7 @@ context('Parties - user can view and edit buyer', () => {
         const partyUrn = 'test partyurn';
 
         pages.partiesPage.buyerEditLink().click();
+        pages.buyerPage.urnInput().clear();
         pages.buyerPage.urnInput().type(partyUrn);
 
         pages.buyerPage.saveButton().click();
