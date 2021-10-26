@@ -101,7 +101,7 @@ const sendMiaAcknowledgement = async (deal) => {
   return emailResponse;
 };
 
-const generateAinMinEmailVariables = (deal, facilityLists) => {
+const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
   const {
     ukefDealId,
     bankReferenceNumber,
@@ -142,21 +142,28 @@ const sendAinMinAcknowledgement = async (deal) => {
     return null;
   }
 
-  const facilityLists = generateFacilityLists(dealType, facilities);
-
+  let facilityLists;
+  let templateId;
+  let emailVariables;
+  let emailResponse;
   const { email: sendToEmailAddress } = maker;
 
-  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    facilityLists = generateFacilityLists(dealType, facilities);
 
-  const emailVariables = generateAinMinEmailVariables(deal, facilityLists);
+    templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
 
-  const emailResponse = await sendTfmEmail(
-    templateId,
-    sendToEmailAddress,
-    emailVariables,
-    deal,
-  );
-  return emailResponse;
+    emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
+
+    emailResponse = await sendTfmEmail(
+      templateId,
+      sendToEmailAddress,
+      emailVariables,
+      deal,
+    );
+    return emailResponse;
+  }
+  return null;
 };
 
 const sendDealSubmitEmails = async (deal) => {
@@ -182,6 +189,6 @@ module.exports = {
   sendMiaAcknowledgement,
   generateFacilitiesListString,
   generateFacilityLists,
-  generateAinMinEmailVariables,
+  generateBssDealAinMinConfirmationEmailVariables,
   sendAinMinAcknowledgement,
 };

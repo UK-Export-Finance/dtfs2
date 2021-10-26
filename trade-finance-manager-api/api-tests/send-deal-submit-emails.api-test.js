@@ -2,7 +2,7 @@ const {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
   sendDealSubmitEmails,
-  generateAinMinEmailVariables,
+  generateBssDealAinMinConfirmationEmailVariables,
   sendMiaAcknowledgement,
 } = require('../src/v1/controllers/send-deal-submit-emails');
 const { generateFacilityLists } = require('../src/v1/helpers/notify-template-formatters');
@@ -215,7 +215,7 @@ describe('send-deal-submit-emails', () => {
             mockDealIssuedAndUnissued.facilities,
           );
 
-          const expectedEmailVariables = generateAinMinEmailVariables(mockDealIssuedAndUnissued, facilityLists);
+          const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssuedAndUnissued, facilityLists);
 
           expect(sendEmailApiSpy).toHaveBeenCalled();
 
@@ -273,7 +273,7 @@ describe('send-deal-submit-emails', () => {
             mockDealIssued.facilities,
           );
 
-          const expectedEmailVariables = generateAinMinEmailVariables(mockDealIssued, facilityLists);
+          const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssued, facilityLists);
 
           expect(sendEmailApiSpy).toHaveBeenCalled();
 
@@ -331,7 +331,7 @@ describe('send-deal-submit-emails', () => {
             mockDealIssuedAndUnissued.facilities,
           );
 
-          const expectedEmailVariables = generateAinMinEmailVariables(mockDealIssuedAndUnissued, facilityLists);
+          const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssuedAndUnissued, facilityLists);
 
           expect(sendEmailApiSpy).toHaveBeenCalled();
 
@@ -389,7 +389,7 @@ describe('send-deal-submit-emails', () => {
             mockDealIssued.facilities,
           );
 
-          const expectedEmailVariables = generateAinMinEmailVariables(mockDealIssued, facilityLists);
+          const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssued, facilityLists);
 
           expect(sendEmailApiSpy).toHaveBeenCalled();
 
