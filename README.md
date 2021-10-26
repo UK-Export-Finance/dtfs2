@@ -1,6 +1,6 @@
 # UKEF Trade Finance Service
 
-This repository contains the code for the UK Export Finance Trade Finance Service.
+This repository contains the code for the UK Export Finance Trade Finance Service. 
 
 ## Getting started
 
