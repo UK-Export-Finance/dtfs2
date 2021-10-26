@@ -71,7 +71,7 @@ context('about-supply-contract', () => {
 
     //-----
     // use the companies house search to find the indemnifier
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('SC467044');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('08547313');
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     //------
