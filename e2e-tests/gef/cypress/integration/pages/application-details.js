@@ -1,7 +1,20 @@
 /* eslint-disable no-undef */
 const applicationDetails = {
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
+
+  // application banner/summary
   applicationBanner: () => cy.get('[data-cy="application-banner"]'),
+  bannerStatus: () => cy.get('[data-cy="status"]'),
+  bannerProduct: () => cy.get('[data-cy="product"]'),
+  bannerDateCreated: () => cy.get('[data-cy="date-created"]'),
+  bannerSubmissionType: () => cy.get('[data-cy="submission-type"]'),
+  bannerCreatedBy: () => cy.get('[data-cy="created-by"]'),
+  bannerExporter: () => cy.get('[data-cy="exporter"]'),
+  bannerCheckedBy: () => cy.get('[data-cy="checked-by"]'),
+  bannerBuyer: () => cy.get('[data-cy="buyer"]'),
+  bannerDateSubmitted: () => cy.get('[data-cy="date-submitted"]'),
+  bannerUkefDealId: () => cy.get('[data-cy="ukef-deal-id"]'),
+
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),
   editRefNameLink: () => cy.get('[data-cy="edit-refname-link"]'),
   abandonLink: () => cy.get('[data-cy="abandon-link"]'),

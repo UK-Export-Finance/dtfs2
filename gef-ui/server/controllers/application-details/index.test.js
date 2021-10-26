@@ -4,6 +4,10 @@ import {
 } from '.';
 import api from '../../services/api';
 
+const Chance = require('chance');
+
+const chance = new Chance();
+
 jest.mock('../../services/api');
 
 const MockResponse = () => {
@@ -24,6 +28,7 @@ const MockRequest = () => {
       roles: ['MAKER'],
       _id: 1235,
     },
+    userToken: 'TEST',
   };
   return req;
 };
@@ -33,7 +38,8 @@ const MockApplicationResponse = () => {
   res._id = '1234';
   res.exporterId = '123';
   res.bankId = 'BANKID';
-  res.bankInternalRefName = 'My test';
+  res.bankInternalRefName = 'Internal refernce';
+  res.additionalRefName = 'Additional reference';
   res.status = 'DRAFT';
   res.userId = 'mock-user';
   res.supportingInformation = {
@@ -44,14 +50,22 @@ const MockApplicationResponse = () => {
       { id: 12, answer: null, text: 'Test' },
     ],
   };
-
   res.editedBy = ['MAKER_CHECKER'];
+  res.submissionType = 'Automatic Inclusion Application';
+  res.submissionCount = 0;
+  res.comments = [];
+  res.ukefDealId = null;
+  res.createdAt = chance.timestamp();
+  res.submissionDate = chance.timestamp();
   return res;
 };
 
 const MockUserResponse = () => ({
   username: 'maker',
   bank: { id: 'BANKID' },
+  firstname: 'Joe',
+  surname: 'Bloggs',
+  timezone: 'Europe/London',
 });
 
 const MockExporterResponse = () => {
@@ -60,6 +74,7 @@ const MockExporterResponse = () => {
   res.status = 'IN_PROGRESS';
   res.validation = {};
   res.details.companiesHouseRegistrationNumber = 'tedsi';
+  res.details.companyName = 'Test Company';
   res.validation.required = [];
   return res;
 };
@@ -92,6 +107,8 @@ describe('controllers/application-detaills', () => {
   let mockApplicationResponse;
   let mockExporterResponse;
   let mockFacilityResponse;
+  let mockUserResponse;
+  let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -99,12 +116,14 @@ describe('controllers/application-detaills', () => {
     mockApplicationResponse = MockApplicationResponse();
     mockExporterResponse = MockExporterResponse();
     mockFacilityResponse = MockFacilityResponse();
+    mockUserResponse = MockUserResponse();
+    mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
-    api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
-    api.getUserDetails.mockResolvedValue(MockUserResponse());
+    api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
+    api.getUserDetails.mockResolvedValue(mockUserResponse);
   });
 
   afterEach(() => {
@@ -120,6 +139,15 @@ describe('controllers/application-detaills', () => {
 
       expect(mockResponse.render).not.toHaveBeenCalled();
       expect(mockResponse.redirect).toHaveBeenCalled();
+    });
+
+    it('should call get user API to get maker details', async () => {
+      await applicationDetails(mockRequest, mockResponse);
+
+      expect(api.getUserDetails).toHaveBeenCalledWith(
+        mockApplicationResponse.userId,
+        mockRequest.session.userToken,
+      );
     });
 
     it('renders the `Application Details` template', async () => {
@@ -138,11 +166,32 @@ describe('controllers/application-detaills', () => {
 
       await applicationDetails(mockRequest, mockResponse);
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
-          bankInternalRefName: 'My test',
+        .toHaveBeenCalledWith('partials/application-details.njk', {
+          // header
+          ukefDealId: mockApplicationResponse.ukefDealId,
+          submissionDate: mockApplicationResponse.submissionDate,
+          companyName: mockExporterResponse.details.companyName,
+          applicationStatus: mockApplicationResponse.status,
+          dateCreated: mockApplicationResponse.createdAt,
+          timezone: mockUserResponse.timezone,
+          createdBy: `${mockUserResponse.firstname} ${mockUserResponse.surname}`,
+          comments: mockApplicationResponse.comments,
+          applicationType: mockApplicationResponse.submissionType,
+          submissionCount: mockApplicationResponse.submissionCount,
+
+          // body
+          application: {
+            ...mockApplicationResponse,
+            maker: mockUserResponse,
+          },
+          isAutomaticCover: expect.any(Boolean),
           exporter: {
-            status: expect.any(Object),
             rows: expect.any(Array),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
           },
           eligibility: {
             status: {
@@ -152,15 +201,35 @@ describe('controllers/application-detaills', () => {
             },
           },
           facilities: {
-            status: expect.any(Object),
             data: expect.any(Array),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
           },
           supportingInfo: {
             requiredFields: expect.any(Array),
-            status: expect.any(Object),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
           },
+          bankInternalRefName: mockApplicationResponse.bankInternalRefName,
+          additionalRefName: mockApplicationResponse.additionalRefName,
+          applicationId: expect.any(String),
+          makerCanSubmit: expect.any(Boolean),
+          checkerCanSubmit: expect.any(Boolean),
+          previewMode: expect.any(Boolean),
+
+          // actions
           submit: expect.any(Boolean),
-        }));
+          abandon: expect.any(Boolean),
+
+          // user in session
+          user: mockRequest.session.user,
+        });
     });
 
     describe('template rendering from deal.status', () => {

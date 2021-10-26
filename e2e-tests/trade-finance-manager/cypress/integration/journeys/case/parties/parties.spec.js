@@ -71,7 +71,7 @@ context('Parties page', () => {
       });
     });
 
-    it.only('does not render edit links', () => {
+    it('does not render edit links', () => {
       pages.partiesPage.exporterEditLink().should('not.exist');
       pages.partiesPage.buyerEditLink().should('not.exist');
       pages.partiesPage.agentEditLink().should('not.exist');

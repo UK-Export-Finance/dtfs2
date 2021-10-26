@@ -32,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
-  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme"
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "dependencies": {
+    "date-fns": "^2.25.0"
+  }
 }

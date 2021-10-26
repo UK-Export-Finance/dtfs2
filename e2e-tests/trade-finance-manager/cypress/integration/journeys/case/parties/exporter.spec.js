@@ -60,7 +60,7 @@ context('Parties - user can view and edit exporter', () => {
         const partyUrn = 'test partyurn';
 
         pages.partiesPage.exporterEditLink().click();
-        pages.buyerPage.urnInput().clear();
+        pages.exporterPage.urnInput().clear();
         pages.exporterPage.urnInput().type(partyUrn);
 
         pages.exporterPage.saveButton().click();
