@@ -340,6 +340,7 @@ type DealSnapshot {
   isFinanceIncreasing: Boolean
   eligibility: DealEligibility
   dealFiles: DealFiles
+  facilitiesUpdated: Int
 }
 
 type Deal {
