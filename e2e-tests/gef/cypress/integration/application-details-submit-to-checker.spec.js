@@ -1,7 +1,6 @@
 import relative from './relativeURL';
 import applicationSubmission from './pages/application-submission';
 import applicationDetails from './pages/application-details';
-import automaticCover from './pages/automatic-cover';
 import applicationPreview from './pages/application-preview';
 import CREDENTIALS from '../fixtures/credentials.json';
 
