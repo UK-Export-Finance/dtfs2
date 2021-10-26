@@ -51,9 +51,14 @@ const submitDealBeforeUkefIds = async (dealId, dealType) => {
 };
 exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 
-
+/**
+ * Following function is only triggered once
+ * the number has been granted by the number generator
+ * Azure function
+ */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
+  console.log('UKEF ID verified');
 
   if (!deal) {
     console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
@@ -88,7 +93,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
 
-      // Submit Exporter detail to ACBS for AIN under GEF
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
       await sendDealSubmitEmails(updatedDealWithTasks);
@@ -104,7 +108,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
 
     // Update facility stage code to Issued
-
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
     ) {
