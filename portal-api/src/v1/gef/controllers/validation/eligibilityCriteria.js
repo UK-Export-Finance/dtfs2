@@ -30,9 +30,14 @@ const eligibilityCriteriaStatus = (answers) => {
   return STATUS.IN_PROGRESS;
 };
 
+const eligibilityCriteriaValidation = (answers) => ({
+  required: hasRequiredItems(answers),
+});
+
 module.exports = {
   getAnsweredItems,
   isAutomaticCover,
   eligibilityCriteriaStatus,
+  eligibilityCriteriaValidation,
 };
 
