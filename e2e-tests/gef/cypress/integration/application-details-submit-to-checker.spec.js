@@ -19,6 +19,7 @@ context('Application Details Submission', () => {
           applicationIds.push(item._id);
         });
       });
+
     cy.login(CREDENTIALS.MAKER);
   });
 
@@ -28,7 +29,7 @@ context('Application Details Submission', () => {
   });
 
   describe('Submission confirmation and comments', () => {
-    const longComment = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt, dui sit amet mollis placerat, nunc nulla blandit augue, gravida luctus erat nisl et libero. Nullam eu ex justo. Nam tristique nec dolor nec tempus. Phasellus pulvinar congue finibus. Vivamus pellentesque, erat et auctor convallis, est purus varius nisl, suscipit sodales magna felis ac nulla. Phasellus rutrum, lorem ac dolor. ';
+    const longComment = 'a'.repeat(401);
     it('gives the page as expected', () => {
       applicationSubmission.applicationSubmissionPage();
       applicationSubmission.backLink();
@@ -43,7 +44,7 @@ context('Application Details Submission', () => {
     });
 
     it('allows submission with comments', () => {
-      applicationSubmission.commentsField().type('Some comments here ......');
+      applicationSubmission.commentsField().type('test');
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmation();
     });
@@ -55,13 +56,13 @@ context('Application Details Submission', () => {
     });
 
     it('takes user back to application details page if cancel link clicked', () => {
-      applicationSubmission.commentsField().type('Some comments here ....');
+      applicationSubmission.commentsField().type('test');
       applicationSubmission.cancelLink().click();
       applicationPreview.applicationPreviewPage();
     });
 
     it('takes user back to application details page if back link clicked', () => {
-      applicationSubmission.commentsField().type('Some comments here ....');
+      applicationSubmission.commentsField().type('test');
       applicationSubmission.backLink().click();
       applicationPreview.applicationPreviewPage();
     });
@@ -78,9 +79,11 @@ context('Application Details Submission', () => {
   });
 
   describe('maker no longer sees editable content in details screen', () => {
-    it('no longer shows the "edit" links on the application details page', () => {
+    beforeEach(() => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
+    });
 
+    it('no longer shows the "edit" links on the application details page', () => {
       applicationDetails.submitHeading().should('not.exist');
       applicationDetails.submitButton().should('not.exist');
       applicationDetails.exporterDetailsLink().should('not.exist');
@@ -89,6 +92,10 @@ context('Application Details Submission', () => {
       applicationDetails.addContingentFacilityButton().should('not.exist');
       applicationDetails.deleteFacilityLink().should('not.exist');
       applicationDetails.abandonLink().should('exist');
+    });
+
+    it('updates status in application banner', () => {
+      applicationDetails.bannerStatus().contains('Ready for Checker\'s approval');
     });
   });
 });

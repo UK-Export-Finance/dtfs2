@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
+const api = require('../../services/api');
 const { mapSummaryList } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -15,31 +16,28 @@ const {
 const Application = require('../../models/application');
 
 function buildHeader(app) {
-  if (!['DRAFT'].includes(app.status)) {
-    const main = {
-      ukefDealId: app.ukefDealId || '-',
-      submissionDate: app.submissionDate || '-',
-      companyName: app.exporter.details.companyName,
-      applicationShowSummary: [
-        PROGRESS.SUBMITTED_TO_UKEF,
-        PROGRESS.CHANGES_REQUIRED,
-        PROGRESS.BANK_CHECK].includes(app.status),
-      applicationStatus: app.status,
-      dateCreated: app.createdAt,
-      timezone: app.maker.timezone || 'Europe/London',
-      createdBy: `${app.maker.firstname} ${app.maker.surname}`,
-      comments: app.comments,
-      applicationType: app.submissionType,
+  const main = {
+    ukefDealId: app.ukefDealId,
+    submissionDate: app.submissionDate,
+    companyName: app.exporter.details.companyName,
+    applicationStatus: app.status,
+    dateCreated: app.createdAt,
+    timezone: app.maker.timezone || 'Europe/London',
+    createdBy: `${app.maker.firstname} ${app.maker.surname}`,
+    comments: app.comments,
+    applicationType: app.submissionType,
+    submissionCount: app.submissionCount,
+  };
+
+  let checker = {};
+
+  if (app.checker) {
+    checker = {
+      checkedBy: `${app.checker.firstname} ${app.checker.surname}`,
     };
-    let checker = {};
-    if (app.checker) {
-      checker = {
-        checkedBy: `${app.checker.firstname} ${app.checker.surname}`,
-      };
-    }
-    return { ...main, ...checker };
   }
-  return {};
+
+  return { ...main, ...checker };
 }
 
 function buildBody(app, previewMode) {
@@ -111,6 +109,14 @@ const applicationDetails = async (req, res, next) => {
     }
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
+
+    const maker = await api.getUserDetails(application.userId, userToken);
+
+    const applicationWithMaker = {
+      ...application,
+      maker,
+    };
+
     // Behaviour depending on application state
     const stateToPartial = {
       DRAFT: 'application-details',
@@ -127,7 +133,10 @@ const applicationDetails = async (req, res, next) => {
       WITHDRAWN: '',
     };
     const partial = stateToPartial[application.status];
-    return res.render(`partials/${partial}.njk`, { user, ...buildView(application, previewMode) });
+    return res.render(`partials/${partial}.njk`, {
+      user,
+      ...buildView(applicationWithMaker, previewMode),
+    });
   } catch (err) {
     console.error(err);
     return next(err);

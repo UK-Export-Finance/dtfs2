@@ -23,12 +23,8 @@
     }) }}
   {% endif %}
 
-  {% if applicationShowSummary %}
-    {% include "includes/application-preview/summary.njk" %}
-    {% include "includes/application-preview/task-comments.njk" %}
-  {% else %}
-    {% include "includes/application-details/applicationReferenceAndActions.njk" %}
-  {% endif %}
+  {% include "includes/application-preview/summary.njk" %}
+  {% include "includes/application-preview/task-comments.njk" %}
 
   <header data-cy="application-details-page">
     <span class="govuk-caption-xl" data-cy="heading-caption">
