@@ -58,7 +58,7 @@ context('Parties - user can view and edit agent', () => {
 
       it('should save entered details', () => {
         pages.partiesPage.agentEditLink().click();
-        pages.buyerPage.urnInput().clear();
+        pages.agentPage.agentUniqueRefInput().clear();
         pages.agentPage.agentUniqueRefInput().type('agent partyurn');
         pages.agentPage.agentCommissionRateInput().type('2.5');
 
