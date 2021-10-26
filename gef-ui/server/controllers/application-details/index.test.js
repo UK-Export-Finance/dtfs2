@@ -1,12 +1,11 @@
-const Chance = require('chance');
-
-const chance = new Chance();
-
 import {
   applicationDetails,
   postApplicationDetails,
 } from '.';
 import api from '../../services/api';
+
+const Chance = require('chance');
+const chance = new Chance();
 
 jest.mock('../../services/api');
 
