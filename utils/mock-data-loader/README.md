@@ -47,3 +47,7 @@ The IP for these can be found in https://portal.azure.com/#blade/HubsExtension/B
 3. `cd utils/mock-data-loader`
 4. Enure the .env file is pointing to the environment you want to update
 5. `node re-insert-mocks.js` :warning: **this will delete the current data - DO NOT USE IN PROD**
+
+## Notifying other teams of breaking changes
+
+:warning: When cleaning the dev database, we need to notify other teams of this (another team consumes the TFM GraphQL API) by emailing "IT Mulesoft Technical Support".

@@ -188,7 +188,10 @@ GEF test environment is hosted on the same URL as Portal v2. To access GEF:
 ## Deployment
 
 The dev environment is the only environment that is automatically updated. All other environments require a manual trigger.
+
 This ensures that the environments are stable, unaffected by CI/CD and the business can continue with QA and user testing.
+
+:warning: When changes are merged to the main branch (and is automatically deployed to the dev environment), we need to be mindful of any breaking changes with the TFM GraphQL schema/queries or cleaning the dev database. Another team consumes the TFM GraphQL API - we need to notify them of any breaking changes by emailing "IT Mulesoft Technical Support".
 
 ### Deploying to test
 
