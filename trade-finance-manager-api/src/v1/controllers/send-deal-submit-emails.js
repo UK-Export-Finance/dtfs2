@@ -129,7 +129,7 @@ const generateAinMinEmailVariables = (deal, facilityLists) => {
   return emailVariables;
 };
 
-const sendAinMinIssuedFacilitiesAcknowledgement = async (deal) => {
+const sendAinMinAcknowledgement = async (deal) => {
   const {
     dealType,
     submissionType,
@@ -166,12 +166,12 @@ const sendDealSubmitEmails = async (deal) => {
 
   const firstTaskEmail = await sendFirstTaskEmail(deal);
   const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
-  const emailAcknowledgementAinMinIssued = await sendAinMinIssuedFacilitiesAcknowledgement(deal);
+  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal);
 
   return {
     firstTaskEmail,
     emailAcknowledgementMIA,
-    emailAcknowledgementAinMinIssued,
+    emailAcknowledgementAinMin,
   };
 };
 
@@ -183,5 +183,5 @@ module.exports = {
   generateFacilitiesListString,
   generateFacilityLists,
   generateAinMinEmailVariables,
-  sendAinMinIssuedFacilitiesAcknowledgement,
+  sendAinMinAcknowledgement,
 };

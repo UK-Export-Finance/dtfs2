@@ -19,7 +19,7 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgement } = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 const getDeal = async (dealId, dealType) => {
@@ -127,7 +127,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
-      await sendAinMinIssuedFacilitiesAcknowledgement(updatedDeal);
+      await sendAinMinAcknowledgement(updatedDeal);
     }
 
     await updatePortalDealStatus(updatedDeal);

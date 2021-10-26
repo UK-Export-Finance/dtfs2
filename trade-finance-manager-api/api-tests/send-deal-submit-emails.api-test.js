@@ -170,7 +170,7 @@ describe('send-deal-submit-emails', () => {
           const expected = {
             firstTaskEmail: await sendFirstTaskEmail(mockDeal),
             emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDeal),
-            emailAcknowledgementAinMinIssued: null,
+            emailAcknowledgementAinMin: null,
           };
 
           expect(result).toEqual(expected);
@@ -230,7 +230,7 @@ describe('send-deal-submit-emails', () => {
           expect(result).toEqual({
             firstTaskEmail: await sendFirstTaskEmail(mockDealIssuedAndUnissued),
             emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssuedAndUnissued),
-            emailAcknowledgementAinMinIssued: MOCK_NOTIFY_EMAIL_RESPONSE,
+            emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
           });
         });
       });
@@ -288,7 +288,7 @@ describe('send-deal-submit-emails', () => {
           expect(result).toEqual({
             firstTaskEmail: await sendFirstTaskEmail(mockDealIssued),
             emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssued),
-            emailAcknowledgementAinMinIssued: MOCK_NOTIFY_EMAIL_RESPONSE,
+            emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
           });
         });
       });
@@ -346,7 +346,7 @@ describe('send-deal-submit-emails', () => {
           expect(result).toEqual({
             firstTaskEmail: await sendFirstTaskEmail(mockDealIssuedAndUnissued),
             emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssuedAndUnissued),
-            emailAcknowledgementAinMinIssued: MOCK_NOTIFY_EMAIL_RESPONSE,
+            emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
           });
         });
       });
@@ -404,7 +404,7 @@ describe('send-deal-submit-emails', () => {
           expect(result).toEqual({
             firstTaskEmail: await sendFirstTaskEmail(mockDealIssued),
             emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssued),
-            emailAcknowledgementAinMinIssued: MOCK_NOTIFY_EMAIL_RESPONSE,
+            emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
           });
         });
       });
