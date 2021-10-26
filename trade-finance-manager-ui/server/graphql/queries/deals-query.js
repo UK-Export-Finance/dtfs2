@@ -105,6 +105,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           agentAddressLine3
           agentAddressPostcode
           agentAddressTown
+          lastUpdated
         }
         dealFiles {
           security
@@ -143,6 +144,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
             riskProfile
           }
         }
+        facilitiesUpdated
       }
     }
   }
