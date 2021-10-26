@@ -115,6 +115,7 @@ type DealEligibility {
   agentAddressTown: String
   agentName: String
   agentAlias: String
+  lastUpdated: Int
 }
 
 type FacilityProduct {
