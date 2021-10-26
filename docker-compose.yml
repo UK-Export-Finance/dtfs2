@@ -48,7 +48,6 @@ services:
       - trade-finance-manager-api
     ports:
       - "5003:5003"
-      - "9229:9229"
     volumes:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
@@ -64,7 +63,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
-    command: npx nodemon --inspect=0.0.0.0 server/index.js -L
+    command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
