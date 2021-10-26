@@ -1,3 +1,7 @@
+const Chance = require('chance');
+
+const chance = new Chance();
+
 import {
   applicationDetails,
   postApplicationDetails,
@@ -51,8 +55,8 @@ const MockApplicationResponse = () => {
   res.submissionCount = 0;
   res.comments = [];
   res.ukefDealId = null;
-  res.createdAt = 1635162120311.0;
-  res.submissionDate = 1635162120311.0;
+  res.createdAt = chance.timestamp();
+  res.submissionDate = chance.timestamp();
   return res;
 };
 
