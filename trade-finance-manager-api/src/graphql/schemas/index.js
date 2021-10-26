@@ -115,6 +115,7 @@ type DealEligibility {
   agentAddressTown: String
   agentName: String
   agentAlias: String
+  lastUpdated: Int
 }
 
 type FacilityProduct {
@@ -339,6 +340,7 @@ type DealSnapshot {
   isFinanceIncreasing: Boolean
   eligibility: DealEligibility
   dealFiles: DealFiles
+  facilitiesUpdated: Int
 }
 
 type Deal {
