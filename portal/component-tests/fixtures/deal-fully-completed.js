@@ -223,7 +223,7 @@ const deal = {
     'indemnifier-address-line-2': 'Maxwell Road',
     'indemnifier-address-postcode': 'HA6 2XY',
     'indemnifier-address-town': 'Northwood',
-    'indemnifier-companies-house-registration-number': 'SC467044',
+    'indemnifier-companies-house-registration-number': '08547313',
     'indemnifier-correspondence-address-country': {
       code: 'GBR',
       name: 'United Kingdom',

@@ -37,7 +37,7 @@ const EXPORTER = [
   },
   {
     // Completed
-    companiesHouseRegistrationNumber: "SC467044",
+    companiesHouseRegistrationNumber: "08547313",
     companyName: chance.company(),
     registeredAddress: {
       line1: chance.street({ syllables: 8 }),
