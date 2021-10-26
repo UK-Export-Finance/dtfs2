@@ -128,7 +128,7 @@
  *                example: United Kingdom
  *           indemnifier-companies-house-registration-number:
  *             type: string
- *             example: 'SC467044'
+ *             example: '08547313'
  *           indemnifier-correspondence-address-line-1:
  *             type: string
  *             example: 27 Petersfield
@@ -209,7 +209,7 @@
  *                example: United Kingdom
  *           supplier-companies-house-registration-number:
  *             type: string
- *             example: 'SC467044'
+ *             example: '08547313'
  *           supplier-correspondence-line-1:
  *             type: string
  *             example: 27 Petersfield
