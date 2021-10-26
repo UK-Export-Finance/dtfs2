@@ -146,7 +146,7 @@ const sendAinMinAcknowledgement = async (deal) => {
 
   const { email: sendToEmailAddress } = maker;
 
-  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED;
+  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
 
   const emailVariables = generateAinMinEmailVariables(deal, facilityLists);
 

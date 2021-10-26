@@ -222,7 +222,7 @@ describe('send-deal-submit-emails', () => {
           const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
           expect(lastSendEmailCall).toEqual([
-            CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED,
+            CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION,
             mockDealIssuedAndUnissued.maker.email,
             { ...expectedEmailVariables },
           ]);
@@ -280,7 +280,7 @@ describe('send-deal-submit-emails', () => {
           const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
           expect(lastSendEmailCall).toEqual([
-            CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED,
+            CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION,
             mockDealIssued.maker.email,
             { ...expectedEmailVariables },
           ]);
@@ -338,7 +338,7 @@ describe('send-deal-submit-emails', () => {
           const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
           expect(lastSendEmailCall).toEqual([
-            CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED,
+            CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION,
             mockDealIssuedAndUnissued.maker.email,
             { ...expectedEmailVariables },
           ]);
@@ -396,7 +396,7 @@ describe('send-deal-submit-emails', () => {
           const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
           expect(lastSendEmailCall).toEqual([
-            CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_SUBMIT_MIN_AIN_FACILITIES_ISSUED,
+            CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION,
             mockDealIssued.maker.email,
             { ...expectedEmailVariables },
           ]);
