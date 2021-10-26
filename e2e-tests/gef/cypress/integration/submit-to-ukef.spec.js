@@ -85,7 +85,7 @@ context('Submit to UKEF', () => {
       it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
         cy.visit(relative(`/gef/application-details/${applicationId}`));
 
-        applicationDetails.bannerStatus().contains('Submitted to UKEF');
+        applicationDetails.bannerStatus().contains('Submitted');
         applicationDetails.bannerUkefDealId().contains('Pending');
 
         const todayFormatted = format(new Date(), 'dd MMM yyyy')

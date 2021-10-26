@@ -193,9 +193,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails.mainHeading().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Automatic Inclusion Notice');
-      });
+      applicationDetails.mainHeading().contains('Automatic  Inclusion Application');
     });
 
     it('displays the correct exporter elements', () => {
@@ -246,9 +244,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading and text in banner', () => {
-      applicationDetails.mainHeading().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Manual Inclusion Application');
-      });
+      applicationDetails.mainHeading().contains('Manual Inclusion Application');
 
       applicationDetails.bannerSubmissionType().should('have.text', 'Manual Inclusion Application');
     });
