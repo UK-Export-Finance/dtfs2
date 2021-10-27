@@ -5,7 +5,7 @@ module.exports = (deal, errorList) => {
   const { maker, owningBank } = deal.details;
 
   if (!maker
-    || !maker._id // eslint-disable-line no-underscore-dangle
+    || !maker._id
     || !owningBank) {
     newErrorList.makerObject = {
       order: orderNumber(newErrorList),

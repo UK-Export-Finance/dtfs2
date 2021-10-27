@@ -1,4 +1,4 @@
-const setEmptyIfNull = require('./setEmptyIfNull');
+const setEmptyIfNull = require('../../../src/utils/setEmptyIfNull');
 
 describe('Checking empty value function used for sorting', () => {
   it('Should return blank value for null input', () => {

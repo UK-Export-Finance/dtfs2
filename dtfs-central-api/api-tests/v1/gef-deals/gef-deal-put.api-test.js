@@ -17,7 +17,6 @@ describe('/v1/portal/gef/deals/:id/status', () => {
 
   describe('PUT /v1/portal/gef/deals/:id/status', () => {
     it('updates a deal status and previousStatus', async () => {
-
       const { body: createdDeal } = await api.post(mockDeal).to('/v1/portal/gef/deals');
 
       const dealId = createdDeal._id;

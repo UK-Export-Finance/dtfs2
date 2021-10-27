@@ -1,8 +1,7 @@
 const wipeDB = require('../../../wipeDB');
-
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const { expectMongoIds, expectMongoId } = require('../../../expectMongoIds');
+const { expectMongoIds } = require('../../../expectMongoIds');
 
 const mockUsers = [
   {

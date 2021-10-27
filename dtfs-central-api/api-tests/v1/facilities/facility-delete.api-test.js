@@ -1,7 +1,8 @@
+const axios = require('axios');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
+
+const { DTFS_CENTRAL_API } = process.env;
 
 const mockUser = {
   _id: '123456789',
@@ -13,7 +14,8 @@ const mockUser = {
   },
 };
 
-let newBondFacility = {
+const newBondFacility = {
+  associatedDealId: 123,
   facilityType: 'bond',
 };
 
@@ -31,11 +33,6 @@ const newDeal = aDeal({
   },
 });
 
-const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-  return body;
-};
-
 describe('/v1/portal/facilities', () => {
   let dealId;
 
@@ -45,19 +42,35 @@ describe('/v1/portal/facilities', () => {
   });
 
   beforeEach(async () => {
-    const deal = await createDeal();
+    const { data: deal } = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API}/v1/portal/deals`,
+      data: { deal: newDeal, user: mockUser },
+    });
 
     dealId = deal._id;
     newBondFacility.associatedDealId = dealId;
-    
-    const { body } = await api.post({ facility: newBondFacility, user: mockUser }).to('/v1/portal/facilities');
 
-    bondFacilityId = body._id;
+    const { data: facility } = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API}/v1/portal/facilities`,
+      data: { facility: newBondFacility, user: mockUser },
+    });
+
+    bondFacilityId = facility._id;
   });
 
   describe('DELETE /v1/portal/facilities/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove({}).to('/v1/portal/facilities/12345678910');
+      let status = null;
+      try {
+        await axios({
+          method: 'delete',
+          url: `${DTFS_CENTRAL_API}/v1/portal/facilities/12345678910`,
+        });
+      } catch (error) {
+        status = error.response.status;
+      }
 
       expect(status).toEqual(404);
     });
@@ -68,10 +81,13 @@ describe('/v1/portal/facilities', () => {
         user: mockUser,
       };
 
-      const deleteResponse = await api.remove(removeBody).to(`/v1/portal/facilities/${bondFacilityId}`);
-      expect(deleteResponse.status).toEqual(200);
+      const { status } = await axios({
+        method: 'delete',
+        url: `${DTFS_CENTRAL_API}/v1/portal/facilities/${bondFacilityId}`,
+        data: removeBody,
+      });
 
-      expect(deleteResponse.body.ok).toEqual(1);
+      expect(status).toEqual(200);
     });
   });
 });

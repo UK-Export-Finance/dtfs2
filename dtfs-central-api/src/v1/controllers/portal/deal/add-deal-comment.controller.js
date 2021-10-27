@@ -1,4 +1,3 @@
-
 const db = require('../../../../drivers/db-client');
 const now = require('../../../../now');
 const { findOneDeal } = require('./get-deal.controller');
@@ -28,7 +27,6 @@ const addDealComment = async (_id, commentType, comment) => {
 };
 exports.addDealComment = addDealComment;
 
-
 exports.addDealCommentPost = async (req, res) => {
   const dealId = req.params.id;
 
@@ -38,12 +36,7 @@ exports.addDealCommentPost = async (req, res) => {
     if (deal) {
       const { commentType, comment } = req.body;
 
-      const updatedDeal = await addDealComment(
-        dealId,
-        commentType,
-        comment,
-        req.routePath,
-      );
+      const updatedDeal = await addDealComment(dealId, commentType, comment);
 
       res.status(200).json(updatedDeal);
     }

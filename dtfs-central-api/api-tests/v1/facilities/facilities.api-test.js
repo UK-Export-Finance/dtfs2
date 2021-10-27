@@ -31,10 +31,9 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
-
 describe('/v1/portal/facilities', () => {
   let dealId;
 
@@ -42,7 +41,7 @@ describe('/v1/portal/facilities', () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
   });
- 
+
   beforeEach(async () => {
     const deal = await createDeal();
 
@@ -125,7 +124,7 @@ describe('/v1/portal/facilities', () => {
         associatedDealId: '1234',
       };
 
-      const { status, body } = await api.post(postBody).to('/v1/portal/multiple-facilities');
+      const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');
 
       expect(status).toEqual(404);
     });

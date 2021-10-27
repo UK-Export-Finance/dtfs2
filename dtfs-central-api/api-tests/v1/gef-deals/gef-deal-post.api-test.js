@@ -22,7 +22,7 @@ describe('/v1/portal/gef/deals', () => {
 
       expect(body).toEqual({ _id: expect.any(String) });
 
-      const { body: dealAfterCreation } = await api.get(`/v1/portal/gef/deals/${body._id}`)
+      const { body: dealAfterCreation } = await api.get(`/v1/portal/gef/deals/${body._id}`);
 
       expect(dealAfterCreation).toEqual({
         _id: body._id,

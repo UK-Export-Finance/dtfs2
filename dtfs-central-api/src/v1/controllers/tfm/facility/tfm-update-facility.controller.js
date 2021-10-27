@@ -4,7 +4,7 @@ const db = require('../../../../drivers/db-client');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
-  delete cleanedObject._id; // eslint-disable-line no-underscore-dangle
+  delete cleanedObject._id;
   return cleanedObject;
 };
 
