@@ -38,6 +38,17 @@ const mapGefDeal = (deal) => {
     tfm,
   };
 
+  // these extra fields are only used in GEF submission confirmation email
+  mapped.exporter = {
+    ...mapped.exporter,
+    registeredAddress: exporter.registeredAddress,
+    selectedIndustry: {
+      name: exporter.selectedIndustry.name,
+      class: exporter.selectedIndustry.class.name,
+    },
+    smeType: exporter.smeType,
+  };
+
   return mapped;
 };
 

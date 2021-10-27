@@ -16,24 +16,32 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
 
     const result = mapGefDeal(mockDeal);
 
+    const { dealSnapshot } = mockDeal;
+
     const expected = {
-      _id: mockDeal.dealSnapshot._id,
-      dealType: mockDeal.dealSnapshot.dealType,
-      bankReferenceNumber: mockDeal.dealSnapshot.bankInternalRefName,
-      bankAdditionalReferenceName: mockDeal.dealSnapshot.additionalRefName,
-      submissionCount: mockDeal.dealSnapshot.submissionCount,
-      submissionType: mockDeal.dealSnapshot.submissionType,
-      submissionDate: mockDeal.dealSnapshot.submissionDate,
-      status: mockDeal.dealSnapshot.status,
-      ukefDealId: mockDeal.dealSnapshot.ukefDealId,
+      _id: dealSnapshot._id,
+      dealType: dealSnapshot.dealType,
+      bankReferenceNumber: dealSnapshot.bankInternalRefName,
+      bankAdditionalReferenceName: dealSnapshot.additionalRefName,
+      submissionCount: dealSnapshot.submissionCount,
+      submissionType: dealSnapshot.submissionType,
+      submissionDate: dealSnapshot.submissionDate,
+      status: dealSnapshot.status,
+      ukefDealId: dealSnapshot.ukefDealId,
       exporter: {
-        isFinanceIncreasing: mockDeal.dealSnapshot.isFinanceIncreasing,
-        companyName: mockDeal.dealSnapshot.exporter.companyName,
-        companiesHouseRegistrationNumber: mockDeal.dealSnapshot.exporter.companiesHouseRegistrationNumber,
-        probabilityOfDefault: Number(mockDeal.dealSnapshot.exporter.probabilityOfDefault),
+        isFinanceIncreasing: dealSnapshot.isFinanceIncreasing,
+        companyName: dealSnapshot.exporter.companyName,
+        companiesHouseRegistrationNumber: dealSnapshot.exporter.companiesHouseRegistrationNumber,
+        probabilityOfDefault: Number(dealSnapshot.exporter.probabilityOfDefault),
+        registeredAddress: dealSnapshot.exporter.registeredAddress,
+        selectedIndustry: {
+          name: dealSnapshot.exporter.selectedIndustry.name,
+          class: dealSnapshot.exporter.selectedIndustry.class.name,
+        },
+        smeType: dealSnapshot.exporter.smeType,
       },
-      maker: mockDeal.dealSnapshot.maker,
-      facilities: mockDeal.dealSnapshot.facilities.map((facility) => mapCashContingentFacility(facility)),
+      maker: dealSnapshot.maker,
+      facilities: dealSnapshot.facilities.map((facility) => mapCashContingentFacility(facility)),
       tfm: mockDeal.tfm,
     };
 
