@@ -1,9 +1,7 @@
-const { add, sub, format } = require('date-fns');
+const { sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const now = require('../../../../src/now');
-const CONSTANTS = require('../../../../src/constants');
 const {
   newDeal,
   createAndSubmitDeals,
@@ -455,7 +453,7 @@ describe('/v1/tfm/deals', () => {
           details: {
             ukefDealId: 'DEAL-SUBMITTED-TODAY',
             status: 'Submitted',
-            submissionDate: todayTimestamp
+            submissionDate: todayTimestamp,
           },
         });
 

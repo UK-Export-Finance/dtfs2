@@ -34,7 +34,6 @@ const createDeal = async () => {
   const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
-
 describe('/v1/portal/facilities', () => {
   let dealId;
 
@@ -81,7 +80,6 @@ describe('/v1/portal/facilities', () => {
 
       const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${body._id}`);
 
-
       expect(facilityAfterCreation.facilityType).toEqual(newFacility.facilityType);
       expect(facilityAfterCreation.associatedDealId).toEqual(newFacility.associatedDealId);
       expect(typeof facilityAfterCreation.createdDate).toEqual('string');
@@ -92,7 +90,7 @@ describe('/v1/portal/facilities', () => {
       const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      expect(parseInt(facility1.body._id).toString()).toEqual(facility1.body._id);
+      expect(parseInt(facility1.body._id, 10).toString()).toEqual(facility1.body._id);
       expect(facility2.body._id - facility1.body._id).toEqual(1);
       expect(facility3.body._id - facility2.body._id).toEqual(1);
     });
@@ -115,8 +113,7 @@ describe('/v1/portal/facilities', () => {
       const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
-
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       const { status, body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 

@@ -1,7 +1,6 @@
+const db = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
-  const db = require('../src/drivers/db-client');
-
   const drop = async (collection) => new Promise(async (resolve, reject) => {
     const collectionToDrop = await db.getCollection(collection);
 
@@ -11,7 +10,7 @@ const wipe = async (collections) => {
   });
 
   const dropPromises = [];
-  for (collection of collections) {
+  for (const collection of collections) {
     dropPromises.push(drop(collection));
   }
   const dropped = await Promise.all(dropPromises);

@@ -9,6 +9,7 @@ const newDeal = {
 };
 
 const newFacility = {
+  applicationId: 12345,
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
 };
 
@@ -16,7 +17,6 @@ const createDeal = async () => {
   const { body } = await api.post(newDeal).to('/v1/portal/gef/deals');
   return body;
 };
-
 describe('/v1/portal/gef/facilities', () => {
   let dealId;
 

@@ -37,7 +37,6 @@ const createDeal = async () => {
   const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
-
 describe('/v1/tfm/facilities', () => {
   let dealId;
 
@@ -59,7 +58,7 @@ describe('/v1/tfm/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns 404 when adding facility to non-existant deal', async () => {
+    it('returns 404 when adding facility to non-existent deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,

@@ -1,19 +1,7 @@
 const wipeDB = require('../../../wipeDB');
-
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-
 const { expectMongoIds } = require('../../../expectMongoIds');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
 
 const mockTeams = [{
   id: 'TEAM1',

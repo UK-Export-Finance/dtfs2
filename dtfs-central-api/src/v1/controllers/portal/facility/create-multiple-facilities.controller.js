@@ -10,15 +10,14 @@ const createFacilities = async (facilities, dealId) => {
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
     facility.createdDate = now();
-    facility._id = await generateFacilityId(); // eslint-disable-line no-underscore-dangle
+    facility._id = await generateFacilityId();
     facility.associatedDealId = dealId;
     return facility;
   }));
 
-
   const idsArray = [];
   facilitiesWithId.forEach((f) => {
-    idsArray.push(f._id); // eslint-disable-line no-underscore-dangle
+    idsArray.push(f._id);
   });
 
   const result = await collection.insertMany(facilitiesWithId);

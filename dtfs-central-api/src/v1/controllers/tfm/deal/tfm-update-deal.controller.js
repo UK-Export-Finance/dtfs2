@@ -71,7 +71,6 @@ exports.updateDealPut = async (req, res) => {
   return res.status(404).send();
 };
 
-
 const updateDealSnapshot = async (deal, snapshotChanges) => {
   const collection = await db.getCollection('tfm-deals');
 

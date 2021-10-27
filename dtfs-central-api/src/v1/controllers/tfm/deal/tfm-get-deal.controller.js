@@ -29,7 +29,7 @@ const findOneDeal = async (_id, callback) => {
         }).toArray();
 
         facilityIds.forEach((id) => {
-          const { facilitySnapshot } = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
+          const { facilitySnapshot } = facilities.find((f) => f._id === id);
 
           if (facilitySnapshot) {
             const { facilityType } = facilitySnapshot;

@@ -61,7 +61,7 @@ describe('/v1/portal/deals', () => {
       const deal2 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const deal3 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
 
-      expect(parseInt(deal1.body._id).toString()).toEqual(deal1.body._id);
+      expect(parseInt(deal1.body._id, 10).toString()).toEqual(deal1.body._id);
       expect(deal2.body._id - deal1.body._id).toEqual(1);
       expect(deal3.body._id - deal2.body._id).toEqual(1);
     });
@@ -186,7 +186,7 @@ describe('/v1/portal/deals', () => {
       const { body: deal1 } = await api.get(`/v1/portal/deals/${createdDeal1._id}`);
       const { body: deal2 } = await api.get(`/v1/portal/deals/${createdDeal2._id}`);
       const { body: deal3 } = await api.get(`/v1/portal/deals/${createdDeal3._id}`);
-      
+
       const { status, body } = await api.post().to('/v1/portal/deals/query');
 
       expect(status).toEqual(200);
