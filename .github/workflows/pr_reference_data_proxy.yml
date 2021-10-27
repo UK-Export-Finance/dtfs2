@@ -69,6 +69,8 @@ jobs:
       
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
 
+      SENTRY_DSN: ${SENTRY_DSN}
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
