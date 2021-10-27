@@ -13,7 +13,7 @@ Sentry.init({
   dsn: SENTRY_DSN,
   integrations: [
     // enable HTTP calls tracing
-    new Sentry.Integrations.Http({ tracing: true }),
+    // new Sentry.Integrations.Http({ tracing: true }),
     // enable Express.js middleware tracing
     new Tracing.Integrations.Express({ app }),
     new ExtraErrorData({ depth: 10 }),
@@ -32,7 +32,7 @@ Sentry.init({
 // transaction/span/breadcrumb is attached to its own Hub instance
 sentry.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
-sentry.use(Sentry.Handlers.tracingHandler());
+// sentry.use(Sentry.Handlers.tracingHandler());
 
 // The error handler must be before any other error middleware and after all controllers
 sentry.use(Sentry.Handlers.errorHandler());
