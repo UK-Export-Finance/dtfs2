@@ -10,6 +10,7 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const Sentry = require('@sentry/node');
 const { CaptureConsole } = require('@sentry/integrations');
 // const Tracing = require('@sentry/tracing');
+const sentry = require('./utils/sentry');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
@@ -28,6 +29,7 @@ configurePassport(passport);
 initScheduler();
 
 const app = express();
+app.use(sentry);
 app.use(healthcheck);
 app.use(uploadTest);
 app.use(passport.initialize());

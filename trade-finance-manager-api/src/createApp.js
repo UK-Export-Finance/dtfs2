@@ -15,6 +15,7 @@ const {
   resolvers, typeDefs, graphQlRouter,
 } = require('./graphql');
 
+const sentry = require('./utils/sentry');
 const healthcheck = require('./healthcheck');
 const openRouter = require('./v1/routes');
 const initScheduler = require('./scheduler');
@@ -24,6 +25,7 @@ dotenv.config();
 initScheduler();
 
 const app = express();
+app.use(sentry);
 app.use(express.json());
 app.use(compression());
 

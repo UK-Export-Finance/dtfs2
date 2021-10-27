@@ -1,4 +1,5 @@
 const { NotifyClient } = require('notifications-node-client');
+const Sentry = require('@sentry/node');
 
 const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY);
 
@@ -20,7 +21,8 @@ exports.sendEmail = async (req, res) => {
     })
     .then((response) => response)
     .catch((err) => {
-      console.error('Error calling Notify API ', err.response);
+      console.error('Error calling Notify API ', { err: { err } });
+      Sentry.captureException(err);
       return err.response;
     });
 

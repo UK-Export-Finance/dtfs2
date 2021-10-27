@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
+const sentry = require('./utils/sentry');
 
 const {
   BANK_ROUTE,
@@ -24,6 +25,7 @@ const {
 
 
 const app = express();
+app.use(sentry);
 app.use(healthcheck);
 app.use(express.json());
 app.use(compression());

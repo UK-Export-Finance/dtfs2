@@ -14,7 +14,7 @@ exports.lookup = async (req, res) => {
     method: 'get',
     url,
   }).catch((catchErr) => {
-    console.error('Error calling Ordnance Survey API');
+    console.error('Error calling Ordnance Survey API', catchErr.response);
     return catchErr.response;
   });
 

@@ -11,8 +11,10 @@ const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 
 const healthcheck = require('./healthcheck');
+const sentry = require('./utils/sentry');
 
 const app = express();
+app.use(sentry);
 
 const PORT = process.env.PORT || 5003;
 

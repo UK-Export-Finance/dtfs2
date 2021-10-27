@@ -16,8 +16,8 @@ const configureNunjucks = require('./nunjucks-configuration');
 const sentry = require('./utils/sentry');
 
 const app = express();
-
 app.use(sentry);
+
 const PORT = process.env.PORT || 5000;
 
 if (!process.env.SESSION_SECRET) {
