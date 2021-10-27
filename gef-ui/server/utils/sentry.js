@@ -4,6 +4,7 @@ const Tracing = require('@sentry/tracing');
 const express = require('express');
 
 const app = express();
+app.disable('x-powered-by');
 const sentry = express.Router();
 const { SENTRY_DSN } = process.env;
 
