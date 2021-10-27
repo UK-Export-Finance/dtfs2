@@ -6,13 +6,14 @@ let client;
 
 let connection = null;
 
-
 const dbConnect = async () => {
   client = await MongoClient.connect(
     url,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      connectTimeoutMS: 30000,
+      keepAlive: 1,
     },
   );
   connection = await client.db(dbName);
