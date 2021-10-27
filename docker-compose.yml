@@ -40,6 +40,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://localhost:5005
+      - SENTRY_DSN=${SENTRY_DSN}
     entrypoint: npx nodemon src/index.js -L
 
   trade-finance-manager-ui:
@@ -64,6 +65,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
+      - SENTRY_DSN=${SENTRY_DSN}
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -122,6 +124,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
+      - SENTRY_DSN=${SENTRY_DSN}
     command: npx nodemon server/index.js -L
 
   portal-api:
@@ -240,6 +243,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
+      - SENTRY_DSN=${SENTRY_DSN}
     command: npx nodemon server/index.js -L
 
   # ACBS function is causing an out of memory error on github actions. disable for now

@@ -1,8 +1,9 @@
-const { CaptureConsole } = require('@sentry/integrations');
+const { CaptureConsole, ExtraErrorData } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
 const Tracing = require('@sentry/tracing');
 const express = require('express');
 
+const app = express();
 const sentry = express.Router();
 const { SENTRY_DSN } = process.env;
 
@@ -14,7 +15,9 @@ Sentry.init({
     // enable HTTP calls tracing
     new Sentry.Integrations.Http({ tracing: true }),
     // enable Express.js middleware tracing
-    new Tracing.Integrations.Express({ sentry }),
+    new Tracing.Integrations.Express({ app }),
+    new ExtraErrorData({ depth: 10 }),
+    // new ExtraErrorData({ depth: 10 }),
     new CaptureConsole(
       {
         levels: ['error'], // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
