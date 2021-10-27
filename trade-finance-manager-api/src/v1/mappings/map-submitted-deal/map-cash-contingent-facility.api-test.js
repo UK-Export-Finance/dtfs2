@@ -65,6 +65,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         paymentType,
         feeFrequency,
         dayCountBasis,
+        interestPercentage,
       } = mockFacility;
 
       const expected = {
@@ -84,6 +85,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         feeType: mapGefFacilityFeeType(paymentType),
         feeFrequency,
         dayCountBasis,
+        interestPercentage,
         tfm: mockFacility.tfm,
       };
 

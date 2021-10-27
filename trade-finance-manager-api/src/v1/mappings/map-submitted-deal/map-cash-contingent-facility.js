@@ -39,7 +39,7 @@ const mapCashContingentFacility = (facility) => {
     tfm,
   } = facility;
 
-  return {
+  const mapped = {
     _id,
     ukefFacilityID: Number(ukefFacilityId),
     facilityType: type,
@@ -58,6 +58,12 @@ const mapCashContingentFacility = (facility) => {
     dayCountBasis,
     tfm,
   };
+
+
+  // these extra fields are only used in GEF submission confirmation email
+  mapped.interestPercentage = facility.interestPercentage;
+
+  return mapped;
 };
 
 
