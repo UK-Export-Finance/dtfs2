@@ -1,6 +1,6 @@
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
-const api = require('..api/../../api')(app);
+const api = require('../../../api')(app);
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
 
@@ -33,7 +33,7 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
 

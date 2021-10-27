@@ -6,7 +6,7 @@ const { PORTAL_ROUTE } = require('../../../../constants/routes');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
-  delete cleanedObject._id; // eslint-disable-line no-underscore-dangle
+  delete cleanedObject._id;
   return cleanedObject;
 };
 
@@ -77,7 +77,7 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
   const collection = await db.getCollection('deals');
-  
+
   let originalDeal = existingDeal;
 
   if (!existingDeal) {
@@ -103,7 +103,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
   if (dealChanges && dealChanges.eligibility) {
     dealChangesEligibility = dealChanges.eligibility;
   }
-  
+
   const update = {
     ...dealChanges,
     details: {
@@ -192,7 +192,6 @@ exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
   const { user, dealUpdate } = req.body;
-
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {

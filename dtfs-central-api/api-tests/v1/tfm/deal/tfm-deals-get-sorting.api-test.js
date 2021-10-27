@@ -1,8 +1,6 @@
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const now = require('../../../../src/now');
-const CONSTANTS = require('../../../../src/constants');
 const {
   newDeal,
   createAndSubmitDeals,
@@ -204,7 +202,6 @@ describe('/v1/tfm/deals', () => {
         });
 
         it('returns deals sorted by tfm.product - descending', async () => {
-
           const mockReqBody = {
             queryParams: {
               sortBy: {

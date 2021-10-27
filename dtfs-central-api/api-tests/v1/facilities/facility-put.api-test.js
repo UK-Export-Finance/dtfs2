@@ -32,11 +32,6 @@ const newDeal = aDeal({
   },
 });
 
-const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-  return body;
-};
-
 describe('/v1/portal/facilities', () => {
   let dealId;
 
@@ -46,7 +41,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   beforeEach(async () => {
-    const deal = await createDeal();
+    const { body: deal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
 
     dealId = deal._id;
     newFacility.associatedDealId = dealId;
@@ -118,7 +113,7 @@ describe('/v1/portal/facilities', () => {
 
       await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacilityResponse.body._id}`);
 
-      const { body, status } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(body.deal.editedBy[1].userId).toEqual(updatedFacility.user._id);
       expect(body.deal.editedBy[1].bank).toEqual(updatedFacility.user.bank);

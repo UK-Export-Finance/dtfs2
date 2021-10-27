@@ -1,7 +1,7 @@
 const {
   isEmptyString,
   hasValue,
-} = require('../../src/utils/string');
+} = require('../../../src/utils/string');
 
 describe('utils - string', () => {
   describe('isEmptyString', () => {

@@ -1,6 +1,6 @@
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
-const api = require('..api/../../api')(app);
+const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 
 const newDeal = {
@@ -10,6 +10,7 @@ const newDeal = {
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  applicationId: 123,
 };
 
 describe('/v1/tfm/deals/:id/facilities', () => {

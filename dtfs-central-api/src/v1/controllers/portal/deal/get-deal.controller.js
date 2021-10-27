@@ -19,7 +19,7 @@ const extendDealWithFacilities = async (deal) => {
   }).toArray();
 
   facilityIds.forEach((id) => {
-    const facilityObj = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
+    const facilityObj = facilities.find((f) => f._id === id);
 
     if (facilityObj) {
       const { facilityType } = facilityObj;
@@ -57,7 +57,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
     .toArray();
 
   const extendedDeals = [];
-  for await (deal of deals) {
+  for await (const deal of deals) {
     const extendedDeal = await extendDealWithFacilities(deal);
     extendedDeals.push(extendedDeal);
   }

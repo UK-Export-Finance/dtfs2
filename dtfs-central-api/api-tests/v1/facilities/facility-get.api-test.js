@@ -31,10 +31,9 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
 };
-
 describe('/v1/portal/facilities', () => {
   let dealId;
 
