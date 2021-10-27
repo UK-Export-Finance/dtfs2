@@ -50,9 +50,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   const issueDate = helpers.getIssueDate(facility, deal.dealSnapshot.submissionDate);
 
   return {
-    dealIdentifier: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-      ? acbsData.investor.dealIdentifier.padStart(10, 0)
-      : acbsData.deal.dealIdentifier.padStart(10, 0),
+    dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
     facilityIdentifier: facility.ukefFacilityID
       ? facility.ukefFacilityID.padStart(10, 0)
       : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
@@ -62,9 +60,9 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
     capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
     productTypeName:
-      facility.facilityType ||
-      facility.facilitySnapshot.type ||
-      facility.facilitySnapshot.facilityType,
+      facility.facilityType
+      || facility.facilitySnapshot.type
+      || facility.facilitySnapshot.facilityType,
     currency: facility.facilitySnapshot.currency.id
       ? facility.facilitySnapshot.currency.id
       : facility.facilitySnapshot.currency,
