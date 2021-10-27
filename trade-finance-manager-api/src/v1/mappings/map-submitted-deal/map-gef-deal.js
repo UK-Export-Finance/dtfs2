@@ -39,6 +39,10 @@ const mapGefDeal = (deal) => {
   };
 
   // these extra fields are only used in GEF submission confirmation email
+  mapped.bank = {
+    emails: dealSnapshot.bank.emails,
+  };
+
   mapped.exporter = {
     ...mapped.exporter,
     registeredAddress: exporter.registeredAddress,

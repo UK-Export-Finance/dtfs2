@@ -42,6 +42,9 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
       },
       maker: dealSnapshot.maker,
       facilities: dealSnapshot.facilities.map((facility) => mapCashContingentFacility(facility)),
+      bank: {
+        emails: dealSnapshot.bank.emails,
+      },
       tfm: mockDeal.tfm,
     };
 
