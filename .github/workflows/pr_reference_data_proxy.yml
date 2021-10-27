@@ -69,7 +69,7 @@ jobs:
       
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
 
-      SENTRY_DSN: ${SENTRY_DSN}
+      SENTRY_DSN: ${secrets.SENTRY_DSN}
 
     steps:
     - uses: actions/checkout@v2
