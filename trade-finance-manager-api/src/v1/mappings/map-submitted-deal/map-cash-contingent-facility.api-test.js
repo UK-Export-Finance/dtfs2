@@ -5,7 +5,7 @@ const {
 const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
 
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');
 
 describe('mappings - map submitted deal - mapCashContingentFacility', () => {
   describe('mapCoverStartDate', () => {
@@ -43,7 +43,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
   describe('mapCashContingentFacility', () => {
     it('should return mapped facility', () => {
       const mockFacility = {
-        ...MOCK_CASH_CONTINGENT_FACILIIES[0],
+        ...MOCK_CASH_CONTINGENT_FACILITIES[0],
         tfm: {},
       };
 
@@ -66,6 +66,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         feeFrequency,
         dayCountBasis,
         interestPercentage,
+        shouldCoverStartOnSubmission,
       } = mockFacility;
 
       const expected = {
@@ -86,6 +87,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         feeFrequency,
         dayCountBasis,
         interestPercentage,
+        shouldCoverStartOnSubmission,
         tfm: mockFacility.tfm,
       };
 

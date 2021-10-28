@@ -7,7 +7,7 @@ const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
 /*
 * facilityFieldsObj
-* returns a new object with the fields/values we need.
+* returns a new object with the fields/values we need to consume and display in the email.
 */
 const facilityFieldsObj = (facility) => {
   // TODO: better way to reference fields to avoid duplication. DRY
@@ -16,7 +16,6 @@ const facilityFieldsObj = (facility) => {
     _id,
     bankReference,
     hasBeenIssued,
-    // requestedCoverStartDate 'TODO: need logic and updated mapping',
     coverStartDate,
     value,
     currencyCode,
@@ -33,11 +32,10 @@ const facilityFieldsObj = (facility) => {
     _id,
     bankReference,
     hasBeenIssued,
-    // requestedCoverStartDate 'TODO: need logic and updated mapping',
     coverStartDate,
     value,
     currencyCode,
-    interestPercentae,
+    interestPercentage,
     coverPercentage,
     // Minimum risk margin fee 'TODO need confirmation on field',
     guaranteeFee,
@@ -47,14 +45,20 @@ const facilityFieldsObj = (facility) => {
     dayCountBasis,
   }))(facility);
 
+  // NOTE: we do not want to include shouldCoverStartOnSubmission in the list of fields.
+  // Otherwise, the email would split this field out, which is not required in design.
+  if (!facility.shouldCoverStartOnSubmission) {
+    fields.requestedCoverStartDate = facility.coverStartDate;
+  }
+
   return fields;
 };
 
 /*
-* generateFacilityListItemString
+* generateFacilityFieldListItemString
 * returns a formatted string for a single field/list item.
 */
-const generateFacilityListItemString = (fieldName, fieldValue) => {
+const generateFacilityFieldListItemString = (fieldName, fieldValue) => {
   const title = CONTENT_STRINGS[fieldName];
 
   const str = generateListItemString(`${title}: ${fieldValue}`);
@@ -63,11 +67,11 @@ const generateFacilityListItemString = (fieldName, fieldValue) => {
 };
 
 /*
-* generateSingleFacilityListString
+* generateFacilityFieldsListString
 * returns a formatted string for multiple fields in a single facility.
 */
-const generateSingleFacilityListString = (facility) => {
-  const singleFacilityListString = '';
+const generateFacilityFieldsListString = (facility) => {
+  let singleFacilityListString = '';
 
   const fields = facilityFieldsObj(facility);
 
@@ -75,10 +79,29 @@ const generateSingleFacilityListString = (facility) => {
   Object.keys(fields).forEach((fieldName) => {
     const value = fields[fieldName];
 
-    singleFacilityListString += generateFacilityListItemString(fieldName, value);
+    if (value) {
+      singleFacilityListString += generateFacilityFieldListItemString(fieldName, value);
+    }
   });
 
   return singleFacilityListString;
+};
+
+/*
+* generateFacilitiesListString
+* returns a formatted string for multiple facilities.
+* For each facility, this generates a heading and list of facility fields.
+*/
+const generateFacilitiesListString = (heading, facilities) => {
+  const formattedHeading = generateHeadingString(heading);
+  let listString = '';
+
+  facilities.forEach((facility) => {
+    listString += formattedHeading;
+    listString += generateFacilityFieldsListString(facility);
+  });
+
+  return listString;
 };
 
 /*
@@ -102,23 +125,17 @@ const gefFacilitiesList = (facilities) => {
   let contingentFacilitiesList = '';
 
   if (cashes) {
-    const heading = generateHeadingString(CONTENT_STRINGS.HEADINGS.CASH);
-
-    cashes.forEach((facility) => {
-      const singleFacilityListString = generateSingleFacilityListString(facility);
-
-      cashFacilitiesList += `${heading}${singleFacilityListString}`;
-    });
+    cashFacilitiesList = generateFacilitiesListString(
+      CONTENT_STRINGS.HEADINGS.CASH,
+      cashes,
+    );
   }
 
   if (contingents) {
-    const contingentHeading = generateHeadingString(`${CONTENT_STRINGS.HEADINGS.CONTINGENT}:`);
-
-    contingents.forEach((facility) => {
-      const singleFacilityListString = generateSingleFacilityListString(facility);
-
-      contingentFacilitiesList += `${heading}${singleFacilityListString}`;
-    });
+    contingentFacilitiesList = generateFacilitiesListString(
+      CONTENT_STRINGS.HEADINGS.CONTINGENT,
+      contingents,
+    );
   }
 
   return {
@@ -127,4 +144,10 @@ const gefFacilitiesList = (facilities) => {
   };
 };
 
-module.exports = gefFacilitiesList;
+module.exports = {
+  facilityFieldsObj,
+  generateFacilityFieldListItemString,
+  generateFacilityFieldsListString,
+  generateFacilitiesListString,
+  gefFacilitiesList,
+};

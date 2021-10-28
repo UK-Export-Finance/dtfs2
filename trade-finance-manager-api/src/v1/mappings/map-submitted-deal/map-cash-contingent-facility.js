@@ -62,6 +62,7 @@ const mapCashContingentFacility = (facility) => {
 
   // these extra fields are only used in GEF submission confirmation email
   mapped.interestPercentage = facility.interestPercentage;
+  mapped.shouldCoverStartOnSubmission = facility.shouldCoverStartOnSubmission;
 
   return mapped;
 };
