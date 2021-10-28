@@ -204,7 +204,7 @@ jobs:
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
-        channel: '#dtfs2-dev'
+        channel: '#dtfs-github-actions'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       if: failure()
