@@ -79,7 +79,6 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     );
 
     return {
-    // eslint-disable-next-line no-underscore-dangle
       facilityId: facility._id,
       facilityStage: helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType),
       facilityMaster,
