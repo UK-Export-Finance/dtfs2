@@ -18,22 +18,14 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   const {
     deal, facility, dealAcbsData,
   } = context.df.getInput();
+  let response;
 
-  // Create Guarantee (Facility Provider)
+  // 1. Create Guarantee (Facility Provider)
   const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
     deal,
     facility,
     { dealAcbsData },
     CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
-  );
-
-  const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
-    deal,
-    facility,
-    { dealAcbsData },
-    deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-      ? CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER
-      : CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
   );
 
   const facilityProviderTask = context.df.callActivityWithRetry(
@@ -42,16 +34,31 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
   );
 
-  const facilityBuyerTask = context.df.callActivityWithRetry(
-    'activity-create-facility-guarantee',
-    retryOptions,
-    { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
-  );
+  // 2. Create Guarantee (Facility buyer) - ECWS/BSS ONLY
+  if (deal.dealSnapshot.dealType !== CONSTANTS.PRODUCT.TYPE.GEF) {
+    const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
+      deal,
+      facility,
+      { dealAcbsData },
+      CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
+    );
 
-  yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
+    const facilityBuyerTask = context.df.callActivityWithRetry(
+      'activity-create-facility-guarantee',
+      retryOptions,
+      { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
+    );
 
-  return {
-    facilityProviderGuarantee: facilityProviderTask.result,
-    facilityBuyerGuarantee: facilityBuyerTask.result,
-  };
+    yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
+    response = {
+      facilityProviderGuarantee: facilityProviderTask.result,
+      facilityBuyerGuarantee: facilityBuyerTask.result,
+    };
+  } else {
+    yield context.df.Task.all([facilityProviderTask]);
+    response = {
+      facilityProviderGuarantee: facilityProviderTask.result,
+    };
+  }
+  return response;
 });
