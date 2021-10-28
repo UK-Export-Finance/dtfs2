@@ -25,7 +25,7 @@ Sentry.init({
       },
     )],
   attachStacktrace: true, // attach stack traces to exceptions and messages
-  debug: true, // attempt to print out useful debugging information if something goes wrong
+//   debug: true, // attempt to print out useful debugging information if something goes wrong
   tracesSampleRate: 1.0, // defaults to 1.0
 });
 
