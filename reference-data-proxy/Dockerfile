@@ -3,7 +3,7 @@ FROM node:lts-alpine AS image
 WORKDIR /app
 
 COPY . .
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 FROM node:lts-alpine
 # Identifies the code in the running container

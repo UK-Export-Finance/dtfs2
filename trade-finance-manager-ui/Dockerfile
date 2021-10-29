@@ -3,7 +3,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 COPY . .
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Identifies the code in the running container
 ARG GITHUB_SHA
