@@ -91,9 +91,14 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
+      /**
+       * Current requirement only allows AIN & MIN deals to be send to ACBS
+       */
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-
-      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
+        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      }
 
       await sendDealSubmitEmails(updatedDealWithTasks);
       return updatedDeal;
