@@ -21,12 +21,12 @@ module.exports = df.orchestrator(function* HDeal(context) {
     // Get Product Type
     const product = deal.dealSnapshot.dealType;
 
-    // Get ACBS industry code
+    // Get ACBS industry ID from UKEF Industry ID
     let industryCode;
     if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
       industryCode = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
     } else {
-      industryCode = deal.dealSnapshot.exporter.industries[0].code;
+      industryCode = deal.dealSnapshot.exporter.industries[0].class.code;
     }
 
     const acbsReference = {
