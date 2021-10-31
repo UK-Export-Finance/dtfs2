@@ -12,16 +12,18 @@ const Application = require('../models/application');
  * @param {*} maxFileSize (optional) maximum file size to allow (defaults to API limits of 10MB otherwise)
  * @returns array of processed files
  */
-const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSize) => {
-  const uploadedFiles = await uploadFile(files, dealId, token, maxFileSize);
+const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSize, documentPath) => {
+  const uploadedFiles = await uploadFile(files, dealId, token, maxFileSize, documentPath);
 
   return Promise.all(uploadedFiles.map(async (file) => {
     const deal = await Application.findById(dealId, user, token);
 
-    if (!file.error) {
+    const fileObject = { ...file, documentPath };
+
+    if (!fileObject.error) {
       const updatedField = [
         ...(deal.supportingInformation?.[field] || []),
-        file,
+        fileObject,
       ];
 
       const updatedDeal = { ...deal };
@@ -31,7 +33,7 @@ const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSiz
       await updateApplication(dealId, updatedDeal);
     }
 
-    return file;
+    return fileObject;
   }));
 };
 
@@ -43,14 +45,14 @@ const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSiz
  * @param {*} deal application/deal object
  * @param {*} token
  */
-const removeFileFromDeal = async (filename, field, deal, token) => {
+const removeFileFromDeal = async (filename, field, deal, token, documentPath) => {
   const existingFiles = deal.supportingInformation?.[field];
 
   const fileToDelete = existingFiles.find((file) => file.filename === filename);
 
   // files with errors will not have an ID set so don't need removing further
   if (fileToDelete?._id) {
-    await deleteFile(fileToDelete._id, token);
+    await deleteFile(fileToDelete._id, token, documentPath);
 
     const updatedDeal = { ...deal };
     updatedDeal.supportingInformation[field] = existingFiles.filter((file) => file._id !== fileToDelete._id);

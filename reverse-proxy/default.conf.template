@@ -9,6 +9,7 @@ upstream gef-ui {
 server {
   listen 80;
   client_max_body_size 60M;
+  client_body_buffer_size 60M;
 
   location / {
     proxy_set_header Host $host;

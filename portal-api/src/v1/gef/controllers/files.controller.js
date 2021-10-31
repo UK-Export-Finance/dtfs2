@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const stream = require('stream');
 const fs = require('fs');
+const filesize = require('filesize');
 
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -12,7 +13,8 @@ const { formatFilenameForSharepoint } = require('../../../utils');
 const FILESHARE = 'portal';
 const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
 
-const DEFAULT_MAX_SIZE = 1024 * 1024 * 10;
+const DEFAULT_MAX_SIZE = 10; // 10mb default
+const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
 
 const collectionName = 'files';
 const dealCollectionName = 'gef-application';
@@ -23,7 +25,12 @@ const fileError = (file, maxFileSize) => {
   const allowedFileRegex = /\.(gif|jpg|jpeg|png|bmp|tif|txt|pdf|doc|docx|ppt|pptx|xls|xlsx|msg|zip)$/;
   if (!file.originalname.match(allowedFileRegex)) error = 'The selected file must be a BMP, DOC, DOCX, GIF, JPEG, JPG, MSG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS, XLSX or ZIP';
 
-  if (file.size > maxFileSize) error = `${file.originalname} must be smaller than ${Math.round(maxFileSize / (1024 * 1024))}MB`;
+  const { value: currentFileSize, unit } = filesize(file.size, { base: 2, output: 'object' });
+
+  if (DEFAULT_UNITS.includes(unit) || (unit === 'MiB' && currentFileSize <= maxFileSize)) {
+    return null; // don't throw an error if the file is smaller than the max size allowed
+  }
+  error = `${file.originalname} must be smaller than ${maxFileSize}MB`;
 
   return error;
 };
@@ -38,15 +45,12 @@ const errorFormat = (file, parentId, error) => ({
 });
 
 exports.create = async (req, res) => {
-  const {
-    files,
-    body: { parentId, maxSize },
-  } = req;
+  const { files, body: { parentId, maxSize, documentPath } } = req;
 
   const maxFileSize = maxSize || DEFAULT_MAX_SIZE;
 
   // ensure a parentId exists
-  if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parentId');
+  if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parent');
 
   // Ensure some files have been passed
   if (!files?.length) return res.status(400).send('missing files');
@@ -67,14 +71,16 @@ exports.create = async (req, res) => {
       const fileResult = await fileshare.uploadFile({
         buffer: fs.readFileSync(file.path),
         fileshare: FILESHARE,
-        folder: `${EXPORT_FOLDER}/${parentId}`,
+        folder: `${EXPORT_FOLDER}/${parentId}/${documentPath}`,
         filename: formatFilenameForSharepoint(file.originalname),
       });
 
       if (fileResult.error) return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
 
+      const fileObject = { ...file, documentPath };
+
       const collection = await db.getCollection(collectionName);
-      const insertedFile = await collection.insertOne(new File(file, parentId));
+      const insertedFile = await collection.insertOne(new File(fileObject, parentId));
       const fileData = await collection.findOne({
         _id: ObjectId(String(insertedFile.insertedId)),
       });
@@ -126,11 +132,11 @@ exports.downloadFile = async (req, res) => {
   if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
 
   try {
-    const { filename, mimetype } = file;
+    const { filename, mimetype, documentPath } = file;
 
     const documentLocation = {
       fileshare: FILESHARE,
-      folder: `${EXPORT_FOLDER}/${deal._id}`,
+      folder: `${EXPORT_FOLDER}/${deal._id}/${documentPath}`,
       filename,
     };
 
@@ -159,7 +165,8 @@ exports.delete = async (req, res) => {
     // Check user has rights to access this file
     if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
 
-    await fileshare.deleteFile(FILESHARE, `${EXPORT_FOLDER}/${deal._id}/${file.filename}`);
+    const { documentPath } = req.body;
+    await fileshare.deleteFile(FILESHARE, `${EXPORT_FOLDER}/${deal._id}/${documentPath}/${file.filename}`);
 
     const collection = await db.getCollection(collectionName);
     const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });

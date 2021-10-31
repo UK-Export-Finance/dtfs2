@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // ACBS API is used to check that deal/facility ids are not already being used.
 //
 // the flow is:
@@ -113,7 +112,7 @@ const createAcbsRecord = async (deal, bank) => {
         deal,
         bank,
       },
-    }).catch((err) => err);
+    }).catch((err) => console.error(err));
     return response;
   }
   return {};

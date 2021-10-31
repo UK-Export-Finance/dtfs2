@@ -1,6 +1,8 @@
-const DEFAULT_MAX_SIZE = 1024 * 1024 * 10;
-const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'msg', 'pdf', 'png', 'ppt', 'pptx', 'tif', 'txt', 'xls', 'xlsx', 'zip'];
+const filesize = require('filesize');
 
+const DEFAULT_MAX_SIZE = 10; // 10mb
+const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
+const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'msg', 'pdf', 'png', 'ppt', 'pptx', 'tif', 'txt', 'xls', 'xlsx', 'zip'];
 /**
  * Validates file's for size and format
  *
@@ -9,20 +11,19 @@ const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'ms
  * @param {Array} allowedFormats (optional) array of file extensions to allow
  * @returns [isValid, error]
  */
-const validateFile = (
-  { originalname, size } = {},
-  maxSize = DEFAULT_MAX_SIZE,
-  allowedFormats = DEFAULT_ALLOWED_FORMATS,
-) => {
+const validateFile = ({ originalname, size } = {}, maxSize = DEFAULT_MAX_SIZE) => {
   if (!originalname || !size) return [false, 'Invalid file'];
 
-  if (!originalname.match(new RegExp(`\\.(${allowedFormats.join('|')})$`))) {
-    return [false, `${originalname} must be a ${allowedFormats.slice(0, -1).join(', ').toUpperCase()} or ${allowedFormats[allowedFormats.length - 1].toUpperCase()}`];
+  if (!originalname.match(new RegExp(`\\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`))) {
+    return [false, `${originalname} must be a ${DEFAULT_ALLOWED_FORMATS.slice(0, -1).join(', ').toUpperCase()} or ${DEFAULT_ALLOWED_FORMATS[DEFAULT_ALLOWED_FORMATS.length - 1].toUpperCase()}`];
   }
 
-  if (size > maxSize) return [false, `${originalname} must be smaller than ${Math.round(maxSize / (1024 * 1024))}MB`];
+  const { value: currentFileSize, unit } = filesize(size, { base: 2, output: 'object' });
 
-  return [true, null];
+  if (DEFAULT_UNITS.includes(unit) || (unit === 'MiB' && currentFileSize <= maxSize)) {
+    return [true, null];
+  }
+  return [false, `${originalname} must be smaller than ${maxSize}MB`];
 };
 
 module.exports = validateFile;

@@ -94,7 +94,7 @@ const updateExporter = async (exporterId, data, token) => {
   return response;
 };
 
-// Facilties
+// Facilities
 
 const createFacilities = async (data, token) => {
   const response = await axios({

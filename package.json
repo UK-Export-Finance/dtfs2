@@ -8,14 +8,14 @@
     "npm": ">=6.0.0 <7.0.0"
   },
   "devDependencies": {
-    "cypress": "^8.5.0",
-    "cypress-audit": "^1.0.0",
+    "cypress": "^8.7.0",
+    "cypress-audit": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
-    "eslint": "^8.0.0",
+    "eslint": "^8.1.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-import": "^2.25.1"
+    "eslint-plugin-import": "^2.25.2"
   },
   "scripts": {
     "pipeline": "./bin/pipeline.sh",

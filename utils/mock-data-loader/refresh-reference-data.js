@@ -17,7 +17,7 @@ const matches = (existing, candidate) => {
 const refreshCountries = async (token) => {
   const countriesUpdated = [];
 
-  for (existingCountry of await api.listCountries(token)) {
+  for (const existingCountry of await api.listCountries(token)) {
     const matchById = latestCountries.find( country => country.id === existingCountry.id );
     if (!matchById) {
       // existing currency has gone.. so we need to delete..
@@ -33,7 +33,7 @@ const refreshCountries = async (token) => {
   }
 
   const newlyAddedCountries = latestCountries.filter( newCountry => !countriesUpdated.find(entry=>entry.id = newCountry.id) )
-  for (newCountry of newlyAddedCountries) {
+  for (const newCountry of newlyAddedCountries) {
     console.log(`creating: ${JSON.stringify(newCountry)}`)
     await api.createCountry(newCountry, token);
   }
@@ -43,7 +43,7 @@ const refreshCountries = async (token) => {
 const refreshCurrencies = async (token) => {
   const currenciesUpdated = [];
 
-  for (existingCurrency of await api.listCurrencies(token)) {
+  for (const existingCurrency of await api.listCurrencies(token)) {
     const matchById = latestCurrencies.find( currency => currency.id === existingCurrency.id );
     if (!matchById) {
       // existing currency has gone.. so we need to delete..
@@ -59,7 +59,7 @@ const refreshCurrencies = async (token) => {
   }
 
   const newlyAddedCurrencies = latestCurrencies.filter( newCurrency => !currenciesUpdated.find(entry=>entry.currencyId === newCurrency.currencyId) )
-  for (newCurrency of newlyAddedCurrencies) {
+  for (const newCurrency of newlyAddedCurrencies) {
     console.log(`creating: ${JSON.stringify(newCurrency)}`)
     await api.createCurrency(newCurrency, token);
   }

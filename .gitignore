@@ -30,3 +30,5 @@ db-schema/**
 
 temp/
 docker-compose.dev.yml
+.dccache
+*/dccache
