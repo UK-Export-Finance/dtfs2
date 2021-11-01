@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const automaticCover = {
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   form: () => cy.get('[data-cy="form"]'),

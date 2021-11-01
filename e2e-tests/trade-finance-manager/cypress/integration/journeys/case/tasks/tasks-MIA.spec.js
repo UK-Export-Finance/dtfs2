@@ -24,7 +24,6 @@ const MIA_TASKS_STRUCTURE = {
   },
 };
 
-
 context('Case tasks - MIA deal', () => {
   let dealId;
   const dealFacilities = [];

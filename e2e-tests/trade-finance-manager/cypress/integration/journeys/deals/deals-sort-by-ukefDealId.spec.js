@@ -63,7 +63,6 @@ context('User can view and sort deals by ukefDealId', () => {
             return (Number(dealAUkefId) - Number(dealBUkefId));
           });
 
-
           [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER;
 
           dealDescending1 = dealAscending2;

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const applicationDetails = {
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
 

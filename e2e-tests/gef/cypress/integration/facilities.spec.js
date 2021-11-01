@@ -63,7 +63,6 @@ context('Facilities Page', () => {
     });
   });
 
-
   describe('Clicking on Continue button', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));

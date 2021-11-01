@@ -96,7 +96,6 @@ context('User can view and sort deals by exporter', () => {
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
     row2.invoke('attr', 'data-cy').should('eq', `deal-${dealAscending2._id}`);
 
-
     pages.dealsPage.dealsTable.headings.exporter().invoke('attr', 'aria-sort').should('eq', 'ascending');
     pages.dealsPage.dealsTable.headings.exporterSortButton().invoke('attr', 'name').should('eq', 'descending');
   });

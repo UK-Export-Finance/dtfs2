@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const applicationSubmission = {
   applicationSubmissionPage: () => cy.get('[data-cy="application-submit-page"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),

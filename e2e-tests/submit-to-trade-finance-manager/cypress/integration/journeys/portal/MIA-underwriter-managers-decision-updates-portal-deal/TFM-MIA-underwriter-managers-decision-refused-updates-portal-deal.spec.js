@@ -43,7 +43,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -84,7 +83,6 @@ context('Portal to TFM deal submission', () => {
     tfmPages.managersDecisionPage.decisionRadioInputDecline().click();
     tfmPages.managersDecisionPage.commentsInputDecline().type(MOCK_COMMENTS);
     tfmPages.managersDecisionPage.submitButton().click();
-
 
     //---------------------------------------------------------------
     // Go back to Portal

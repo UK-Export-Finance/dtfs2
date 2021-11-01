@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const submitToUkef = {
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   comment: () => cy.get('[data-cy="comment"]'),

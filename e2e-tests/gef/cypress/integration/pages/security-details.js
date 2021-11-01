@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const securityDetails = {
   visit: (id) => cy.visit(`/gef/application-details/${id}/supporting-information/security-details`),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),

@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
 import relative from '../relativeURL';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';

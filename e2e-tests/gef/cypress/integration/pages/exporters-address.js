@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const automaticCover = {
   backLink: () => cy.get('[data-cy="back-link"]'),
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),

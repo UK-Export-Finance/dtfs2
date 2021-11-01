@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const applicationPreview = {
   backLink: () => cy.get('[data-cy="back-link"]'),
   bankReference: () => cy.get('[data-cy="bank-reference"]'),

@@ -39,7 +39,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -52,7 +51,6 @@ context('Portal to TFM deal submission', () => {
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-
 
     //---------------------------------------------------------------
     // user login to TFM

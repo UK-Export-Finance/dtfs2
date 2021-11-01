@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const facilityValue = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),

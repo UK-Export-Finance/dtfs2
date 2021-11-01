@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import 'cypress-file-upload';
 import login from './commands/login';
 import reinsertMocks from './commands/reinsertMocks';

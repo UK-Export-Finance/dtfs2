@@ -78,12 +78,6 @@ context('Name Application Page', () => {
       nameApplication.firstErrorLink().click();
       cy.url().should('eq', relative(`/gef/applications/${applications[0]._id}/name`));
     });
-
-    it('Entering new Bank internal ref takes you application detail page', () => {
-      nameApplication.internalRef().type('NEW-REF-NAME');
-      nameApplication.form().submit();
-      nameApplication.applicationDetailsPage();
-    });
   });
 
   describe('Clicking on Abandon', () => {

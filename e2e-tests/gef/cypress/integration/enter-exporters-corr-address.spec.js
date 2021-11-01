@@ -19,7 +19,6 @@ context('Enter Exporters Correspondence Address Page', () => {
         body.items.forEach((item) => {
           applicationIds.push({ id: item._id, exporterId: item.exporterId });
         });
-        // exporterId = body.items[0].exporterId;
       });
     cy.login(CREDENTIALS.MAKER);
   });

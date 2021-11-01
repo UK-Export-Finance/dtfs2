@@ -1,10 +1,11 @@
-const { format } = require('date-fns');
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
 import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
+
+const { format } = require('date-fns');
 
 let applicationId;
 
@@ -88,7 +89,7 @@ context('Submit to UKEF', () => {
         applicationDetails.bannerStatus().contains('Submitted');
         applicationDetails.bannerUkefDealId();
 
-        const todayFormatted = format(new Date(), 'dd MMM yyyy')
+        const todayFormatted = format(new Date(), 'dd MMM yyyy');
         applicationDetails.bannerDateCreated().contains(todayFormatted);
       });
     });

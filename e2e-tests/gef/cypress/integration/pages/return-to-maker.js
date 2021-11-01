@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const returnToMaker = {
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   comment: () => cy.get('[data-cy="checker-comments"]'),

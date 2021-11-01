@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const nameApplication = {
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   internalRef: () => cy.get('[data-cy="internal-ref"]'),

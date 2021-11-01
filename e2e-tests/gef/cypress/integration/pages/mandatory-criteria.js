@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const mandatoryCriteria = {
   captionHeading: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),

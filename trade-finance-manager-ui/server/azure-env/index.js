@@ -4,7 +4,5 @@ Object.keys(process.env).forEach((key) => {
     const fixedKey = key.substr('CUSTOMCONNSTR_'.length);
     process.env[fixedKey] = process.env[key];
     console.log(`Fixed ${key} to ${fixedKey}`);
-  } else {
-    console.log(` - ${key}`);
   }
 });

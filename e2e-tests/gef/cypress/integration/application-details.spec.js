@@ -1,9 +1,10 @@
-const { format } = require('date-fns');
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
+
+const { format } = require('date-fns');
 
 let applications;
 
@@ -34,12 +35,12 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
 
       applicationDetails.bannerStatus().contains('Draft');
-      applicationDetails.bannerProduct().should('have.text','General Export Facility');
+      applicationDetails.bannerProduct().should('have.text', 'General Export Facility');
 
-      const todayFormatted = format(new Date(), 'dd MMM yyyy')
+      const todayFormatted = format(new Date(), 'dd MMM yyyy');
       applicationDetails.bannerDateCreated().contains(todayFormatted);
       applicationDetails.bannerSubmissionType().should('have.text', '-');
-      applicationDetails.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`)
+      applicationDetails.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
       applicationDetails.bannerExporter().should('have.text', '-');
       applicationDetails.bannerCheckedBy().should('have.text', '-');
       applicationDetails.bannerBuyer().should('have.text', '-');

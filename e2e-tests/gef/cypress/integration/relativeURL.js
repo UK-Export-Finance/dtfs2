@@ -1,5 +1,3 @@
 const base = Cypress.config('baseUrl');
 
-module.exports = (relativeUrl) => {
-  return `${base}${relativeUrl}`;
-};
+module.exports = (relativeUrl) => `${base}${relativeUrl}`;

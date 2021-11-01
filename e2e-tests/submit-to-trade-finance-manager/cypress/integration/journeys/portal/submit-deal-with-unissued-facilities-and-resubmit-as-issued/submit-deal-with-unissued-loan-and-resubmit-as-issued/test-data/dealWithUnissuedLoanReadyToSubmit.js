@@ -1,4 +1,4 @@
-const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
+const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate.json');
 
 module.exports = () => {
   const now = new Date();

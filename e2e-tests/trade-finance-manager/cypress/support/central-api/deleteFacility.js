@@ -8,4 +8,3 @@ module.exports = (facilityId, user) => {
     resolve();
   });
 };
-
