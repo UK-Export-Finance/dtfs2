@@ -6,6 +6,8 @@ const {
   generateFacilitiesListString,
 } = require('../helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
+const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');
+const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
 const sendTfmEmail = require('./send-tfm-email');
 
 // make sure the first task is `Match or Create Parties`
@@ -163,6 +165,23 @@ const sendAinMinAcknowledgement = async (deal) => {
     );
     return emailResponse;
   }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    facilityLists = gefFacilitiesList(facilities);
+
+    templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
+
+    emailVariables = generateAinMinConfirmationEmailVars(deal, facilityLists);
+
+    emailResponse = await sendTfmEmail(
+      templateId,
+      sendToEmailAddress,
+      emailVariables,
+      deal,
+    );
+    return emailResponse;
+  }
+
   return null;
 };
 
