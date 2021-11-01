@@ -80,7 +80,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const result = generateFacilityFieldListItemString(mockFieldName, mockFieldValue);
 
-      const expectedTitle = CONTENT_STRINGS[mockFieldName];
+      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockFieldName];
       const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
 
       expect(result).toEqual(expected);
@@ -161,16 +161,16 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
         mockContingentFacilities,
       );
 
-      expect(result.cashFacilitiesList).toEqual(expectedCashString);
-      expect(result.contingentFacilitiesList).toEqual(expectedContingentString);
+      expect(result.cashes).toEqual(expectedCashString);
+      expect(result.contingents).toEqual(expectedContingentString);
     });
 
     it('should return empty strings when no facilities exist', () => {
       const result = gefFacilitiesList([]);
 
       expect(result).toEqual({
-        cashFacilitiesList: '',
-        contingentFacilitiesList: '',
+        cashes: '',
+        contingents: '',
       });
     });
   });

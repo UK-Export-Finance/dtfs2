@@ -1,12 +1,13 @@
 const { format } = require('date-fns');
 const { generateAddressString } = require('../../helpers/generate-address-string');
 
-const gefEmailVariables = (deal, facilitiesList) => {
+const gefEmailVariables = (deal, facilityLists) => {
   const {
     submissionType,
     maker,
     exporter,
-    bankInternalRefName,
+    bankReferenceNumber,
+    bankAdditionalReferenceName,
     submissionDate,
     ukefDealId,
   } = deal;
@@ -19,20 +20,18 @@ const gefEmailVariables = (deal, facilitiesList) => {
     surname,
     exporterName: exporter.companyName,
     ukefDealId,
-    bankGefDealId: 'TODO', // TODO: "bank gef deal id" (need confirmaition)
-    dealName: bankInternalRefName,
+    bankGefDealId: bankReferenceNumber,
+    dealName: bankAdditionalReferenceName,
     submissionDate: format(Number(submissionDate), 'do, MMMM, yyyy'),
     exporterCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     exporterName: exporter.companyName,
     exporterAddress: generateAddressString(exporter.registeredAddress),
     industrySector: exporter.selectedIndustry.name,
-    industryClass: exporter.selectedIndustry.class.name,
+    industryClass: exporter.selectedIndustry.class,
     smeType: exporter.smeType,
     probabilityOfDefault: exporter.probabilityOfDefault,
-    cashFacilitiesList: facilitiesList.cash,
-    showCashFacilitiesHeader: facilitiesList.cash ? 'yes' : 'no',
-    contingentFacilitiesList: facilitiesList.contingent,
-    showContingentFacilitiesHeader: facilitiesList.contingent ? 'yes' : 'no',
+    cashFacilitiesList: facilityLists.cashes,
+    contingentFacilitiesList: facilityLists.contingents,
   };
 
   return emailVariables;

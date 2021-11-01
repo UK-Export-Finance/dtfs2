@@ -59,7 +59,7 @@ const facilityFieldsObj = (facility) => {
 * returns a formatted string for a single field/list item.
 */
 const generateFacilityFieldListItemString = (fieldName, fieldValue) => {
-  const title = CONTENT_STRINGS[fieldName];
+  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[fieldName];
 
   const str = generateListItemString(`${title}: ${fieldValue}`);
 
@@ -121,26 +121,26 @@ const gefFacilitiesList = (facilities) => {
     contingents,
   } = getFacilitiesByType(facilities);
 
-  let cashFacilitiesList = '';
-  let contingentFacilitiesList = '';
+  let cashesListString = '';
+  let contingentsListString = '';
 
   if (cashes) {
-    cashFacilitiesList = generateFacilitiesListString(
+    cashesListString = generateFacilitiesListString(
       CONTENT_STRINGS.HEADINGS.CASH,
       cashes,
     );
   }
 
   if (contingents) {
-    contingentFacilitiesList = generateFacilitiesListString(
+    contingentsListString = generateFacilitiesListString(
       CONTENT_STRINGS.HEADINGS.CONTINGENT,
       contingents,
     );
   }
 
   return {
-    cashFacilitiesList,
-    contingentFacilitiesList,
+    cashes: cashesListString,
+    contingents: contingentsListString,
   };
 };
 
