@@ -12,7 +12,12 @@ const SME_TYPE = {
   NOT_KNOWN: 'Not known',
 };
 
+const EXPIRATION_DATE = {
+  NONE: '99/99/99',
+};
+
 module.exports = {
   SME_TYPE,
   SUBMISSION_TYPE,
+  EXPIRATION_DATE,
 };
