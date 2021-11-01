@@ -10,10 +10,10 @@ Issued (straight to Issued    Cover Start Date        Cover Start Date
 const { formatTimestamp } = require('../../../helpers/date');
 
 const getDealEffectiveDate = (deal) => {
-  const earliestGuaranteeDate = deal.dealSnapshote.facilities.reduce((earliestDate, facility) => {
+  const earliestGuaranteeDate = deal.dealSnapshot.facilities.reduce((earliestDate, facility) => {
     const { effectiveDate } = facility.tfm.facilityGuaranteeDates;
     return effectiveDate < earliestDate ? effectiveDate : earliestDate;
-  }, formatTimestamp(deal.submittedDate));
+  }, formatTimestamp(deal.dealSnapshot.submissionDate));
 
   return earliestGuaranteeDate;
 };
