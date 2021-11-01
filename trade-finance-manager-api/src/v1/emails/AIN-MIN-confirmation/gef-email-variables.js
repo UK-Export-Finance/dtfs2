@@ -1,3 +1,4 @@
+const { format } = require('date-fns');
 const { generateAddressString } = require('../../helpers/generate-address-string');
 
 const gefEmailVariables = (deal, facilitiesList) => {
@@ -18,8 +19,9 @@ const gefEmailVariables = (deal, facilitiesList) => {
     surname,
     exporterName: exporter.companyName,
     ukefDealId,
+    bankGefDealId: 'TODO', // TODO: "bank gef deal id" (need confirmaition)
     dealName: bankInternalRefName,
-    submissionDate,
+    submissionDate: format(Number(submissionDate), 'do, MMMM, yyyy'),
     exporterCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     exporterName: exporter.companyName,
     exporterAddress: generateAddressString(exporter.registeredAddress),
