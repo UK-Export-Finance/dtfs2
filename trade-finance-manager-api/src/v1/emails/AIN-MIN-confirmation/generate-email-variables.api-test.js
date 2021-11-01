@@ -14,7 +14,7 @@ describe('generate AIN/MIN confirmation email variables', () => {
 
     it('should return bssEmailVariables function', () => {
       const result = generateAinMinConfirmationEmailVars(mockDeal, mockFacilityLists);
-    
+
       const expected = bssEmailVariables(mockDeal, mockFacilityLists);
       expect(result).toEqual(expected);
     });

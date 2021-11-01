@@ -78,10 +78,8 @@ const mapBssEwcsFacility = (facility) => {
   };
 };
 
-
 module.exports = {
   hasCoverEndDate,
   mapCoverEndDate,
   mapBssEwcsFacility,
 };
-

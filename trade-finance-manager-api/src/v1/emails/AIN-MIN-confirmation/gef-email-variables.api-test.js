@@ -2,22 +2,16 @@ const { format } = require('date-fns');
 const gefEmailVariables = require('./gef-email-variables');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const { generateAddressString } = require('../../helpers/generate-address-string');
-const CONSTANTS = require('../../../constants');
 const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('generate AIN/MIN confirmation email variables - GEF', () => {
-  let mockFacilityLists = {
-    issued: 'test',
-    unissued: 'test',
+  const mockFacilityLists = {
+    cashes: 'test',
+    contingents: 'test',
   };
 
   it('should return object', () => {
     const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
-
-    const mockFacilityLists = {
-      cashes: 'test',
-      contingents: 'test',
-    };
 
     const result = gefEmailVariables(mockSubmittedDeal, mockFacilityLists);
 
@@ -31,7 +25,6 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
       dealName: mockSubmittedDeal.bankAdditionalReferenceName,
       submissionDate: format(Number(mockSubmittedDeal.submissionDate), 'do, MMMM, yyyy'),
       exporterCompaniesHouseRegistrationNumber: mockSubmittedDeal.exporter.companiesHouseRegistrationNumber,
-      exporterName: mockSubmittedDeal.exporter.companyName,
       exporterAddress: generateAddressString(mockSubmittedDeal.exporter.registeredAddress),
       industrySector: mockSubmittedDeal.exporter.selectedIndustry.name,
       industryClass: mockSubmittedDeal.exporter.selectedIndustry.class,

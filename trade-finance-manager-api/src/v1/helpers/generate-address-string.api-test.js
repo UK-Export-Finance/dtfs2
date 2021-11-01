@@ -11,7 +11,7 @@ describe('generate-address-string', () => {
     addressLine3: null,
     locality: 'Mock locality',
     postalCode: 'Mock postcode',
-    country: null
+    country: null,
   };
 
   describe('generateCleanAddressArray', () => {

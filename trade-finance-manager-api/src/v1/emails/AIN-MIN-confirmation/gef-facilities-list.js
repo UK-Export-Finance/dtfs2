@@ -105,12 +105,14 @@ const generateFacilitiesListString = (heading, facilities) => {
 };
 
 /*
-* For each type of facility, we need to send a single variable to Notify that contains a string for each facility of that type.
+* For each type of facility, we need to send a single variable to Notify 
+* that contains a string for each facility of that type.
 * If for example there are 2 Cash facilites and 2 Contingent facilities:
 * - cashFacilitiesList will return a formatted string of all cash facilities.
 * - contingentFacilitiesList will return a formatted string of all cash facilities.
 * - example of one list:
-* - '#Facility 1 Heading\n\n*Facility 1 - Item 1\n*Facility 1 - Item 2\n#Facility 2 Heading\n\n*Facility 2 - Item 1\n*Facility 2 - Item 2\n'
+* - '#Facility 1 Heading\n\n*Facility 1 - Item 1\n*Facility 1 -
+* Item 2\n#Facility 2 Heading\n\n*Facility 2 - Item 1\n*Facility 2 - Item 2\n'
 * Each facility (of any type) requires:
 * - a heading
 * - multiple list items from facility data

@@ -67,7 +67,6 @@ describe('send-deal-submit-emails', () => {
       };
     });
 
-
     describe('shouldSendFirstTaskEmail', () => {
       it('should return true when task title is `match or create parties`', () => {
         const mockTask = {

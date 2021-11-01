@@ -37,7 +37,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
   describe('facilityFieldsObj', () => {
     it('should return specific fields from a facility object', () => {
       const result = facilityFieldsObj(mockFacility);
-      
+
       const expected = {
         ukefFacilityID: mockFacility.ukefFacilityID,
         _id: mockFacility._id,

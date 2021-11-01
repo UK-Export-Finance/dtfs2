@@ -12,11 +12,6 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
   it('should return object', () => {
     const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
 
-    const mockFacilityLists = {
-      issued: 'test',
-      unissued: 'test',
-    };
-
     const result = bssEmailVariables(mockSubmittedDeal, mockFacilityLists);
 
     const expected = {
