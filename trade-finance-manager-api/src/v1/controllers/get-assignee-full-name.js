@@ -16,5 +16,4 @@ const getAssigneeFullName = async (assignedUserId) => {
   return fullName;
 };
 
-
 module.exports = getAssigneeFullName;
