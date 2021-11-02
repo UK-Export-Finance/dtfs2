@@ -12,7 +12,7 @@ const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 const facilityFieldsObj = (facility) => {
   const fields = (({
     ukefFacilityID,
-    _id,
+    name,
     bankReference,
     coverStartDate,
     value,
@@ -28,7 +28,7 @@ const facilityFieldsObj = (facility) => {
     facilityStage,
   }) => ({
     ukefFacilityID,
-    _id,
+    name,
     bankReference,
     coverStartDate,
     value,
@@ -49,6 +49,11 @@ const facilityFieldsObj = (facility) => {
   if (!facility.shouldCoverStartOnSubmission) {
     fields.requestedCoverStartDate = facility.coverStartDate;
   }
+
+  // format for emails
+  fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
+  fields.coverPercentage = `${coverPercentage}%`;
+  fields.guaranteeFee = `${guaranteeFee}%`;
 
   return fields;
 };
