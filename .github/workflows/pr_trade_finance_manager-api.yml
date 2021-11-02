@@ -109,10 +109,10 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d trade-finance-manager-api
+        docker compose up -d trade-finance-manager-api
     - name: Run API tests
       run: |
-        docker-compose exec -T trade-finance-manager-api npm run api-test
+        docker compose exec -T trade-finance-manager-api npm run api-test
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
@@ -196,7 +196,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        docker compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -213,7 +213,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm install
         cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false --browser=chrome
+        npx cypress run --config video=true --browser=chrome
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
