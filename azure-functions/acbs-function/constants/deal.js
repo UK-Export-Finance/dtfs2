@@ -16,8 +16,13 @@ const EXPIRATION_DATE = {
   NONE: '99/99/99',
 };
 
+const PARTY = {
+  GUARANTOR: '00000141',
+};
+
 module.exports = {
   SME_TYPE,
   SUBMISSION_TYPE,
   EXPIRATION_DATE,
+  PARTY,
 };

@@ -1,5 +1,5 @@
 const { to2Decimals } = require('../../helpers/currency');
-const { getDealEffectiveDate, getDealValue } = require('./helpers');
+const { getDealEffectiveDate, getDealValue, getDealSubmissionDate } = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const GEF_CURRENCY = 'GBP';
@@ -12,6 +12,7 @@ const GEF_CURRENCY = 'GBP';
   obligorPartyIdentifier          string    Supplier ACBS ID returned from ACBS Create Customer API call
   obligorName                     string    supplier name
   obligorIndustryClassification   string    ACBS Supplier industry classification - must be 4 characters e.g. 0104
+  creditReviewRiskDate            date      YYYY-MM-DD
 */
 
 /*
@@ -35,6 +36,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
     ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
     : deal.dealSnapshot['supplier-name'].substring(0, 35),
   obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
+  creditReviewRiskDate: getDealSubmissionDate(deal),
 });
 
 module.exports = initialDeal;
