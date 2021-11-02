@@ -1,5 +1,4 @@
-
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require('bson');
 const db = require('../../drivers/db-client');
 
 const updateGefApplication = async (applicationId, applicationUpdate) => {
@@ -10,7 +9,7 @@ const updateGefApplication = async (applicationId, applicationUpdate) => {
     {
       $set: applicationUpdate,
     },
-    { returnOriginal: false },
+    { returnDocument: 'after', returnOriginal: false },
   );
 
   return updatedApplication;
@@ -24,7 +23,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     {
       $set: facilityUpdate,
     },
-    { returnOriginal: false },
+    { returnDocument: 'after', returnOriginal: false },
   );
 
   return updatedFacility;
