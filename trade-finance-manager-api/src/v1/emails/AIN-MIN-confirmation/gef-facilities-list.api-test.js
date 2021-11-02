@@ -42,7 +42,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
         ukefFacilityID: mockFacility.ukefFacilityID,
         _id: mockFacility._id,
         bankReference: mockFacility.bankReference,
-        hasBeenIssued: mockFacility.hasBeenIssued,
+        facilityStage: mockFacility.facilityStage,
         coverStartDate: mockFacility.coverStartDate,
         value: mockFacility.value,
         currencyCode: mockFacility.currencyCode,

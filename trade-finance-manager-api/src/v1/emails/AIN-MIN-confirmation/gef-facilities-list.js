@@ -10,12 +10,10 @@ const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 * returns a new object with the fields/values we need to consume and display in the email.
 */
 const facilityFieldsObj = (facility) => {
-  // TODO: better way to reference fields to avoid duplication. DRY
   const fields = (({
     ukefFacilityID,
     _id,
     bankReference,
-    hasBeenIssued,
     coverStartDate,
     value,
     currencyCode,
@@ -27,11 +25,11 @@ const facilityFieldsObj = (facility) => {
     feeType,
     feeFrequency,
     dayCountBasis,
+    facilityStage,
   }) => ({
     ukefFacilityID,
     _id,
     bankReference,
-    hasBeenIssued,
     coverStartDate,
     value,
     currencyCode,
@@ -43,6 +41,7 @@ const facilityFieldsObj = (facility) => {
     feeType,
     feeFrequency,
     dayCountBasis,
+    facilityStage,
   }))(facility);
 
   // NOTE: we do not want to include shouldCoverStartOnSubmission in the list of fields.
@@ -105,7 +104,7 @@ const generateFacilitiesListString = (heading, facilities) => {
 };
 
 /*
-* For each type of facility, we need to send a single variable to Notify 
+* For each type of facility, we need to send a single variable to Notify
 * that contains a string for each facility of that type.
 * If for example there are 2 Cash facilites and 2 Contingent facilities:
 * - cashFacilitiesList will return a formatted string of all cash facilities.

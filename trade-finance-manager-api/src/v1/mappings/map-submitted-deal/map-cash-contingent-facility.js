@@ -1,5 +1,6 @@
 const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
+const CONSTANTS = require('../../../constants');
 
 const mapCoverStartDate = (facility) => {
   const {
@@ -17,6 +18,14 @@ const mapCoverStartDate = (facility) => {
   }
 
   return null;
+};
+
+const mapFacilityStage = (hasBeenIssued) => {
+  if (hasBeenIssued) {
+    return CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED;
+  }
+
+  return CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT;
 };
 
 const mapCashContingentFacility = (facility) => {
@@ -62,11 +71,13 @@ const mapCashContingentFacility = (facility) => {
   // these extra fields are only used in GEF submission confirmation email
   mapped.interestPercentage = facility.interestPercentage;
   mapped.shouldCoverStartOnSubmission = facility.shouldCoverStartOnSubmission;
+  mapped.facilityStage = mapFacilityStage(hasBeenIssued);
 
   return mapped;
 };
 
 module.exports = {
   mapCoverStartDate,
+  mapFacilityStage,
   mapCashContingentFacility,
 };

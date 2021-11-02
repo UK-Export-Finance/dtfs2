@@ -1,9 +1,11 @@
 const {
   mapCoverStartDate,
+  mapFacilityStage,
   mapCashContingentFacility,
 } = require('./map-cash-contingent-facility');
 const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
+const CONSTANTS = require('../../../constants');
 
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');
 
@@ -37,6 +39,22 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
       const result = mapCoverStartDate({});
 
       expect(result).toEqual(null);
+    });
+  });
+
+  describe('mapFacilityStage', () => {
+    describe('when passed flag is true', () => {
+      it(`should return ${CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED}`, () => {
+        const result = mapFacilityStage(true);
+
+        expect(result).toEqual(CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED);
+      });
+    });
+
+    it(`should otherwise return ${CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT}`, () => {
+      const result = mapFacilityStage(false);
+
+      expect(result).toEqual(CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT);
     });
   });
 
@@ -88,6 +106,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         dayCountBasis,
         interestPercentage,
         shouldCoverStartOnSubmission,
+        facilityStage: mapFacilityStage(hasBeenIssued),
         tfm: mockFacility.tfm,
       };
 

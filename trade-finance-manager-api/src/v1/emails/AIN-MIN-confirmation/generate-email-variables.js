@@ -14,7 +14,7 @@ const generateAinMinConfirmationEmailVars = (deal, facilityLists) => {
 
     default:
       return {};
-  },
+  }
 };
 
 module.exports = generateAinMinConfirmationEmailVars;

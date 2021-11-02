@@ -47,7 +47,6 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
 
   describe('when there are no issued or unissued facilities', () => {
     it('should return correct `show issued/unissued header` properties', () => {
-
       mockFacilityLists = {
         issued: '',
         unissued: '',
