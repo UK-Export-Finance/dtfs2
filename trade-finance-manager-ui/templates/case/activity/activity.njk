@@ -1,4 +1,7 @@
 {% import './_macros/deal-submitted.njk' as dealSubmitted %}
+{% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 
 {% extends "case/case.njk" %}
 
@@ -10,6 +13,20 @@
 
       <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="activity-heading">Activity and comments</h2>
 
+        {% set filterCommentData = {
+          
+        } %}
+
+      {{ activityCommentFilter.render(filterCommentData) }}
+
+      {{ govukButton({
+         text: "Add a comment",
+        classes: "govuk-button--secondary",
+        href: "/case/" + dealId + "/activity" + "/post-comment",
+      attributes: {
+        'data-cy': 'add-comment-button'
+      }
+      }) }}
       <ul>
 
         {% set componentData = {

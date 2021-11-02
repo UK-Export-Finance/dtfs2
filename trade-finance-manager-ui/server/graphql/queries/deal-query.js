@@ -22,6 +22,12 @@ const dealQuery = gql`
             commissionRate
           }
         }
+        activities {
+          type
+          timestamp
+          text
+          author
+        }
         tasks {
           groupTitle
           id
@@ -61,6 +67,7 @@ const dealQuery = gql`
           folderName
         }
         leadUnderwriter
+        activities
       }
       dealSnapshot {
         _id,

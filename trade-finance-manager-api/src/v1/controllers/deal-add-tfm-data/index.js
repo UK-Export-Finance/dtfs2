@@ -18,12 +18,14 @@ const addTfmDealData = async (deal) => {
     tfm,
   } = deal;
 
+  // 02/11 added array to store activities including comments
   const dealUpdate = {
     tfm: {
       ...tfm,
       dateReceived: addDateReceived(submissionDate),
       history: DEFAULTS.HISTORY,
       parties: {},
+      activities: [],
       product: addDealProduct(deal),
       stage: addDealStage(status, submissionType),
       ...addDealPricingAndRisk(deal),

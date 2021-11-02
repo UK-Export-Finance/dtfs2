@@ -1,0 +1,26 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro render(params) %}
+    {{ govukRadios({
+    classes: "govuk-radios--inline",
+    idPrefix: "filterType",
+    name: "filterType",
+    fieldset: {
+        legend: {
+        text: "Filter all activities and comments",
+        classes: "govuk-visually-hidden"
+        }
+    },
+    items: [
+        {
+        value: "All activity",
+        text: "All activity"
+        },
+        {
+        value: "Comments only",
+        text: "Comments only"
+        }
+    ]
+    }) }}
+
+{% endmacro %}    
