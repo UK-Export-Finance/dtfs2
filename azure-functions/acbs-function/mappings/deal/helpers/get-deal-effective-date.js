@@ -8,7 +8,7 @@ Switch Commitment to Issued   Portal Submission Date  Cover Start Date
 Issued (straight to Issued    Cover Start Date        Cover Start Date
 */
 const { formatTimestamp } = require('../../../helpers/date');
-const { getDealSubmissionDate } = require('./get-deal-submission-date');
+const getDealSubmissionDate = require('./get-deal-submission-date');
 
 const getDealEffectiveDate = (deal) => {
   const earliestGuaranteeDate = deal.dealSnapshot.facilities.reduce((earliestDate, facility) => {

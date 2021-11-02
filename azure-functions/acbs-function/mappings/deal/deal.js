@@ -1,5 +1,7 @@
 const { to2Decimals } = require('../../helpers/currency');
-const { getDealEffectiveDate, getDealValue, getDealSubmissionDate } = require('./helpers');
+const { getDealEffectiveDate, getDealValue } = require('./helpers');
+const { formatTimestamp } = require('../../helpers/date');
+const getDealSubmissionDate = require('./helpers/get-deal-submission-date');
 const CONSTANTS = require('../../constants');
 
 const GEF_CURRENCY = 'GBP';
@@ -36,7 +38,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
     ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
     : deal.dealSnapshot['supplier-name'].substring(0, 35),
   obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
-  creditReviewRiskDate: getDealSubmissionDate(deal),
+  creditReviewRiskDate: formatTimestamp(getDealSubmissionDate(deal)),
 });
 
 module.exports = initialDeal;
