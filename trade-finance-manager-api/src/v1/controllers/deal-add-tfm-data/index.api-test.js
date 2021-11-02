@@ -22,6 +22,7 @@ describe('deal submit - add TFM data', () => {
         dateReceived: addDateReceived(mockDeal.submissionDate),
         history: DEFAULTS.HISTORY,
         parties: {},
+        activities: [],
         product: addDealProduct(mockDeal),
         stage: addDealStage(mockDeal.status, mockDeal.submissionType),
         ...addDealPricingAndRisk(mockDeal),

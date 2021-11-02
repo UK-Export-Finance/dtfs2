@@ -1,0 +1,39 @@
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+
+{% block sub_content %}
+<form
+        method="post"
+        data-cy="form">
+    {{ govukTextarea({
+    name: "Add a Comment",
+    id: "add-a-comment",
+    rows: "8",
+    label: {
+        text: "Add a comment",
+        classes: "govuk-label--l",
+        isPageHeading: false
+    },
+    hint: {
+        text: ""
+    },
+    attributes: {
+            'data-cy': 'activity-comment'
+        }
+    }) }}
+
+    <div class="govuk-button-group">
+        {{ govukButton({
+        text: "Add"
+        }) }}
+
+        <a class="govuk-link",
+            href="/case/{{ dealId }}/activity",>Cancel</a>
+    </div>
+ </form>
+
+
+{% endblock %}
