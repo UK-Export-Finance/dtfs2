@@ -42,32 +42,42 @@ const postComment = async (req, res) => {
   const { params, session, body } = req;
   const dealId = params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
-  const { user, userToken } = session;
+  console.log(deal);
+  const { user } = session;
   const { comment } = body;
 
-  return res.render('case/activity/activity-comment.njk', {
-    // dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
-    dealId,
+  try {
+    if (comment) {
+      const shortUser = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        _id: user._id,
+      };
+      const commentObj = {
+        type: 'COMMENT',
+        timestamp: moment().unix(),
+        author: shortUser,
+        text: comment,
+      };
+      const comments = deal.tfm.activities;
+      comments.push(commentObj);
+      await api.updateActivityComment(dealId, comments);
+      console.log(comments);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+
+  return res.render('case/activity/activity.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'activity',
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     user,
-    comment,
   });
-
-  // if (comment) {
-  //   const commentObj = {
-  //     type: 'COMMENT',
-  //     timestamp: moment.now,
-  //     author: user,
-  //     text: comment  
-  //   }
-  // }
-
-
-  
-    
-
-
-
-}
+};
 
 module.exports = {
   getActivity,

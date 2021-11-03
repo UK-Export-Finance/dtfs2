@@ -255,11 +255,16 @@ type TFMDealDecision  {
   userFullName: String
   timestamp: String
 }
+type TFMAuthor {
+  firstName: String
+  lastName: String
+  _id: String
+}
 type TFMActivity {
   type: String
   timestamp: String
   text: String
-  author: String
+  author: [TFMAuthor]
 }
 type TFMDealData {
   parties: TFMParties
@@ -429,6 +434,19 @@ input TFMLeadUnderwriterInput {
   userId: String
 }
 
+input TFMAuthorInput {
+  firstName: String
+  lastName: String
+  _id: String
+}
+
+input TFMActivityInput {
+  type: String
+  timestamp: String
+  text: String
+  author: TFMAuthorInput
+}
+
 type TeamMember {
   _id: String
   firstName: String
@@ -461,6 +479,7 @@ type Mutation {
   updateFacilityRiskProfile(_id: ID!, facilityUpdate: TFMFacilityRiskProfileInput): TFMFacilityData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
   updateLeadUnderwriter(dealId: ID!, leadUnderwriterUpdate: TFMLeadUnderwriterInput): TFMDealData
+  updateActivityComment(dealId: ID!, commentUpdate: TFMActivityInput): TFMDealData
 }
 `;
 

@@ -14,6 +14,7 @@ const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-
 const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
+const updateCommentMutation = require ('./graphql/mutations/update-comment');
 
 require('dotenv').config();
 
@@ -167,6 +168,19 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
+const updateActivityComment = async (dealID, commentUpdate) => {
+
+  const updateVariables = {
+    dealID,
+    commentUpdate,
+  };
+
+  const response = await apollo('PUT',  updateCommentMutation , updateVariables)
+
+  return response;
+
+};
+
 // Temp login for mock users. Active Directory will proabably replace this
 // Just get the user, not really concerned about logging in with passwords for mock users
 const login = async (username) => {
@@ -199,5 +213,6 @@ module.exports = {
   updateProbabilityOfDefault,
   updateUnderwriterManagersDecision,
   updateLeadUnderwriter,
+  updateActivityComment,
   login,
 };

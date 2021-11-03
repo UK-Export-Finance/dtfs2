@@ -26,7 +26,11 @@ const dealQuery = gql`
           type
           timestamp
           text
-          author
+          author {
+            firstName
+            lastName
+            _id
+          }
         }
         tasks {
           groupTitle
@@ -67,7 +71,6 @@ const dealQuery = gql`
           folderName
         }
         leadUnderwriter
-        activities
       }
       dealSnapshot {
         _id,

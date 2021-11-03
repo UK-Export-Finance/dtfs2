@@ -38,7 +38,7 @@ router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
 router.get('/:_id/activity', activityController.getActivity);
 router.get('/:_id/activity/post-comment', activityController.getCommentBox);
-//router.post('/:_id/activity/post-comment', activityController.postComment);
+router.post('/:_id/activity/post-comment', activityController.postComment);
 
 router.get('/:_id/underwriting/pricing-and-risk', underwritingController.getUnderWritingPricingAndRisk);
 router.get('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
