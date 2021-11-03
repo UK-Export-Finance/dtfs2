@@ -210,7 +210,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm install
         cd e2e-tests/gef
-        npx cypress run --config video=false --record --parallel
+        npx cypress run --config video=false --record --parallel --browser=chrome
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
