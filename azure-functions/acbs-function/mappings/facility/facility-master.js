@@ -48,6 +48,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   } = facility.tfm.facilityGuaranteeDates;
 
   const issueDate = helpers.getIssueDate(facility, deal.dealSnapshot.submissionDate);
+  const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
 
   return {
     dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
@@ -71,12 +72,10 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
     delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
-    facilityStageCode: helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType),
+    facilityStageCode,
     exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
     creditRatingCode: CONSTANTS.FACILITY.CREDIT_RATING.CODE14,
-    guaranteePercentage: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-      ? Number(facility.facilitySnapshot.coverPercentage)
-      : Number(facility.facilitySnapshot.coveredPercentage),
+    guaranteePercentage: helpers.getInsuredPercentage(facilityStageCode),
     premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
     riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
     riskStatusCode: CONSTANTS.FACILITY.RISK.STATUS.TYPE03,
