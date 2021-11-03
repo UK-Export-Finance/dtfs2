@@ -11,19 +11,17 @@ const partiesPage = {
   bondBeneficiaryEditLink: () => cy.get('[data-cy="bond-beneficiary-area"] [data-cy="edit-party-link"]'),
   bondIssuerFacilitiesTable: {
     row: (facilityId) => {
-      const row = cy.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}"]`);
+      cy.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}"]`).as('row');
       return {
-        row,
-        facilityId: () => row.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityId: () => cy.get('@row').get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
       };
     },
   },
   bondBeneficiaryFacilitiesTable: {
     row: (facilityId) => {
-      const row = cy.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}"]`);
+      cy.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}"]`).as('row');
       return {
-        row,
-        facilityId: () => row.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityId: () => cy.get('@row').get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
       };
     },
   },

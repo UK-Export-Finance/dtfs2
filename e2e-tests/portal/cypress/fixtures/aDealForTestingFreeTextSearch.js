@@ -25,4 +25,4 @@ module.exports = {
   eligibility: {
     status: 'Incomplete',
   },
-}
+};

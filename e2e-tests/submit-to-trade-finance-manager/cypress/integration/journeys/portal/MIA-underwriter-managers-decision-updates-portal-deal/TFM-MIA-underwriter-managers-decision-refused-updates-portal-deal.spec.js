@@ -16,19 +16,24 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = insertedDeals[0]._id;
+    cy.deleteTfmDeals();
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], MAKER_LOGIN).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = insertedDeals[0]._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  after(() => {
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MAKER_LOGIN);
+    });
+    cy.deleteTfmDeals();
   });
 
   it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Refused` decision, Portal deal status is updated, comments/reason for refusal display', () => {

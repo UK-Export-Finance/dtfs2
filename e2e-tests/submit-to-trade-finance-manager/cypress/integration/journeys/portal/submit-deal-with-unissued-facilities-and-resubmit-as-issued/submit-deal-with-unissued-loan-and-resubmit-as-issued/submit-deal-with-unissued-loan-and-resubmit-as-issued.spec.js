@@ -25,10 +25,8 @@ context('Portal to TFM deal submission', () => {
   let loanId;
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
-      .then((insertedDeals) => {
+    cy.deleteTfmDeals();
+    cy.insertManyDeals([MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT()], MAKER_LOGIN).then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
@@ -40,6 +38,13 @@ context('Portal to TFM deal submission', () => {
           loanId = loan._id;
         });
       });
+  });
+
+  after(() => {
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MAKER_LOGIN);
+    });
+    cy.deleteTfmDeals();
   });
 
   it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM with Premium schedule populated, Portal facility status is updated to `Acknowledged`', () => {

@@ -10,4 +10,4 @@ module.exports = {
   auditSupplyContracts,
   coverStartDateReport,
   reconciliationReport,
-}
+};

@@ -21,7 +21,6 @@ module.exports.logIn = (opts) => {
   });
 };
 
-
 module.exports.deleteDeal = (token, deal) => cy.request({
   url: `${api()}/v1/deals/${deal._id}`,
   method: 'DELETE',

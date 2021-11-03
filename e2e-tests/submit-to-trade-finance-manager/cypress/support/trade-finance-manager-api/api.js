@@ -15,7 +15,6 @@ module.exports.submitDeal = (dealId, dealType) => cy.request({
   return resp.body;
 });
 
-
 module.exports.submitDealAfterUkefIds = (dealId, dealType, checker) => cy.request({
   url: `${api()}/v1/deals/submitDealAfterUkefIds`,
   method: 'PUT',

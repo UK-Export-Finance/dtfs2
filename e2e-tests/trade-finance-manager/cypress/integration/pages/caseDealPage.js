@@ -8,15 +8,13 @@ const caseDealPage = {
 
   dealFacilitiesTable: {
     row: (facilityId) => {
-      const row = cy.get(`[data-cy="facility-${facilityId}"]`);
+      cy.get(`[data-cy="facility-${facilityId}"]`).as('row');
       return {
-        row,
-        facilityId: () => row.get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
-        facilityTenor: () => row.get(`[data-cy="facility-${facilityId}-tenor"]`),
+        facilityId: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityTenor: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-tenor"]`),
       };
     },
   },
-
 };
 
 module.exports = caseDealPage;

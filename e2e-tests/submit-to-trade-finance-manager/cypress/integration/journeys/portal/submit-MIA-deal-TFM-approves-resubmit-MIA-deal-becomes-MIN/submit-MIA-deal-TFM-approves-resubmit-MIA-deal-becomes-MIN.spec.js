@@ -7,7 +7,7 @@ import MOCK_PORTAL_USERS from '../../../../../../portal/cypress/fixtures/mockUse
 import MOCK_TFM_USERS from '../../../../../../trade-finance-manager/cypress/fixtures/users';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
-const MAKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const MAKER_LOGIN = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 const CHECKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
 
@@ -17,38 +17,45 @@ context('Portal to TFM deal submission', () => {
   let bondId;
   let loanId;
   const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'numeric', day: '2-digit' });
+  const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_MIA_DEAL_READY_TO_SUBMIT(),
-    ], MAKER)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.deleteTfmDeals();
+    cy.insertManyDeals([MOCK_MIA_DEAL_READY_TO_SUBMIT()], MAKER_LOGIN).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER).then((createdFacilities) => {
-          createdFacilities.forEach((facility) => {
-            const { facilityType } = facility;
+      cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
+        createdFacilities.forEach((facility) => {
+          const { facilityType } = facility;
 
-            if (facilityType === 'bond') {
-              bondId = facility._id;
-            }
+          if (facilityType === 'bond') {
+            bondId = facility._id;
+          }
 
-            if (facilityType === 'loan') {
-              loanId = facility._id;
-            }
-          });
+          if (facilityType === 'loan') {
+            loanId = facility._id;
+          }
         });
       });
+    });
+  });
+
+  after(() => {
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MAKER_LOGIN);
+    });
+    cy.deleteTfmDeals();
   });
 
   it('Checker submits an MIA deal, TFM approves, maker/checker resubmit; Deal then becomes MIN', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(MAKER);
+    cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
@@ -142,7 +149,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker confirms no need to change cover start dates
     //---------------------------------------------------------------
-    cy.login(MAKER);
+    cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);
 
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);

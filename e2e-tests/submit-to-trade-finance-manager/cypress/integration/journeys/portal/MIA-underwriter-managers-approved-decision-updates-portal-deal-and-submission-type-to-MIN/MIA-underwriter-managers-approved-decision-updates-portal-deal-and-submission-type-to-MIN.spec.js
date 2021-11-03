@@ -9,16 +9,14 @@ import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubm
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
-context('Portal to TFM deal submission', () => {
+context('MIA underwriter managers approved decision updates portal deal and submission type to MIN', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_MIA_DEAL_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
-      .then((insertedDeals) => {
+    cy.deleteTfmDeals();
+    cy.insertManyDeals([MOCK_MIA_DEAL_READY_TO_SUBMIT()], MAKER_LOGIN).then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
@@ -32,6 +30,13 @@ context('Portal to TFM deal submission', () => {
           dealFacilities.loans = loans;
         });
       });
+  });
+
+  after(() => {
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MAKER_LOGIN);
+    });
+    cy.deleteTfmDeals();
   });
 
   it('MIA is submitted, TFM Underwriter submits `Approved` decision. Portal status updates; Portal deal is resubmitted and then should become an MIN', () => {

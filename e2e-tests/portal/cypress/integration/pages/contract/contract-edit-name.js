@@ -4,6 +4,6 @@ const page = {
   submit: () => cy.get('[data-cy="Submit"]'),
 
   expectError: (text) => cy.get('.govuk-error-message').contains(text),
-}
+};
 
 module.exports = page;

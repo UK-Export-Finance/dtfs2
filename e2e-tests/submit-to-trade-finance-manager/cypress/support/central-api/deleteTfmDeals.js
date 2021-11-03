@@ -14,6 +14,6 @@ module.exports = () => {
   new Cypress.Promise(() => {
     getAllTfmDeals().then((deals) => {
       deleteAllDeals(deals);
-    });
+    }).catch((err) => console.log(err));
   });
 };

@@ -30,10 +30,8 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
-      .then((insertedDeals) => {
+    cy.deleteTfmDeals();
+    cy.insertManyDeals([MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT()], MAKER_LOGIN).then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
@@ -47,6 +45,13 @@ context('Portal to TFM deal submission', () => {
           dealFacilities.loans = loans;
         });
       });
+  });
+
+  after(() => {
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MAKER_LOGIN);
+    });
+    cy.deleteTfmDeals();
   });
 
   it('MIN deal with unissued facilities that then become issued updates facilties in TFM', () => {

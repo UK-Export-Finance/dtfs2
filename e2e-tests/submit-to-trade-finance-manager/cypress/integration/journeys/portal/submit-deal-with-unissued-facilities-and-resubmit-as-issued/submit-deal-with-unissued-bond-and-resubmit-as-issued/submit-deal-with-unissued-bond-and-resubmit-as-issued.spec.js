@@ -24,10 +24,8 @@ context('Portal to TFM deal submission', () => {
   let bondId;
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
-      .then((insertedDeals) => {
+    cy.deleteTfmDeals();
+    cy.insertManyDeals([MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT()], MAKER_LOGIN).then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
@@ -39,6 +37,13 @@ context('Portal to TFM deal submission', () => {
           bondId = bond._id;
         });
       });
+  });
+
+  after(() => {
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, MAKER_LOGIN);
+    });
+    cy.deleteTfmDeals();
   });
 
   it('Portal deal with unissued bond is submitted to UKEF, bond displays correctly in TFM with Premium schedule populated. Bond is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
@@ -101,7 +106,7 @@ context('Portal to TFM deal submission', () => {
 
 
     //---------------------------------------------------------------
-    // portal maker completes bond inssuance form
+    // portal maker completes bond insurance form
     //---------------------------------------------------------------
     cy.login(MAKER_LOGIN);
     portalPages.contract.visit(deal);

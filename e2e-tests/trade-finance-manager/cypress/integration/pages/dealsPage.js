@@ -19,10 +19,9 @@ const dealsPage = {
       buyerSortButton: () => cy.get('[data-cy="deals-table-heading-buyer-button"]'),
     },
     row: (dealId) => {
-      const row = cy.get(`[data-cy="deal-${dealId}"]`);
+      cy.get(`[data-cy="deal-${dealId}"]`).as('row');
       return {
-        row,
-        dealLink: () => row.get(`[data-cy="deal-${dealId}-ukef-deal-id-link"]`),
+        dealLink: () => cy.get('@row').get(`[data-cy="deal-${dealId}-ukef-deal-id-link"]`),
       };
     },
   },
