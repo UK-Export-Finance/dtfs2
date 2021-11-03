@@ -262,9 +262,9 @@ type TFMAuthor {
 }
 type TFMActivity {
   type: String
-  timestamp: String
+  timestamp: Int
   text: String
-  author: [TFMAuthor]
+  author: TFMAuthor
 }
 type TFMDealData {
   parties: TFMParties
@@ -442,7 +442,7 @@ input TFMAuthorInput {
 
 input TFMActivityInput {
   type: String
-  timestamp: String
+  timestamp: Int
   text: String
   author: TFMAuthorInput
 }

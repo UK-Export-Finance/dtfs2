@@ -14,7 +14,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const { dealSnapshot, ...tfmUpdate } = dealChanges;
 
   let dealUpdate = tfmUpdate;
-
+  console.log('dealupdate', dealUpdate);
   // ensure that deal.tfm.history is not wiped
   if (existingDeal.tfm && existingDeal.tfm.history) {
     dealUpdate = {
@@ -41,7 +41,14 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       }
     }
   }
-
+  console.log('existing deal', existingDeal.tfm);
+  if (existingDeal.tfm && existingDeal.tfm.activities) {
+    dealUpdate.tfm.activities = {
+      ...existingDeal.tfm.activities,
+      ...tfmUpdate.tfm.activities,
+    };
+  }
+  console.log('updated deal', dealUpdate.tfm.activities);
   dealUpdate.tfm.lastUpdated = new Date().valueOf();
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(

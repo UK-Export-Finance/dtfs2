@@ -241,7 +241,7 @@ exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
 const updateTfmActivityComment = async (dealId, commentUpdate) => {
   const updatedComment = {
     tfm: {
-      activities: commentUpdate,
+      activities: [commentUpdate],
     },
   };
 
