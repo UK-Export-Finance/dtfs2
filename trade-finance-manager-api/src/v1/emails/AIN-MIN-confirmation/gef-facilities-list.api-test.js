@@ -1,3 +1,4 @@
+const { format } = require('date-fns');
 const {
   facilityFieldsObj,
   generateFacilityFieldListItemString,
@@ -19,19 +20,25 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     MOCK_CASH_CONTINGENT_FACILIIES[0],
   );
 
+  const mockFacilityType = {
+    name: 'facilityType',
+    value: 'CASH',
+  };
+
   const mockBankReference = {
     name: 'bankReference',
     value: '123-test',
   };
 
-  const mockCoverPercentage = {
-    name: 'coverPercentage',
-    value: 20,
+  const mockDayCountBasis = {
+    name: 'dayCountBasis',
+    value: 365,
   };
 
   const mockSimpleFacility = {
+    [mockFacilityType.name]: mockFacilityType.value,
     [mockBankReference.name]: mockBankReference.value,
-    [mockCoverPercentage.name]: mockCoverPercentage.value,
+    [mockDayCountBasis.name]: mockDayCountBasis.value,
   };
 
   describe('facilityFieldsObj', () => {
@@ -40,7 +47,6 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const expected = {
         ukefFacilityID: mockFacility.ukefFacilityID,
-        _id: mockFacility._id,
         bankReference: mockFacility.bankReference,
         facilityStage: mockFacility.facilityStage,
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),
@@ -78,9 +84,9 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const mockFieldName = 'bankReference';
       const mockFieldValue = '123-test';
 
-      const result = generateFacilityFieldListItemString(mockFieldName, mockFieldValue);
+      const result = generateFacilityFieldListItemString(mockFacilityType.value, mockFieldName, mockFieldValue);
 
-      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockFieldName];
+      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockFacilityType.value][mockFieldName];
       const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
 
       expect(result).toEqual(expected);
@@ -92,16 +98,18 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const result = generateFacilityFieldsListString(mockSimpleFacility);
 
       const formattedBankRef = generateFacilityFieldListItemString(
+        mockFacilityType.value,
         mockBankReference.name,
         mockBankReference.value,
       );
 
-      const formattedCoverPercentage = generateFacilityFieldListItemString(
-        mockCoverPercentage.name,
-        mockCoverPercentage.value,
+      const formattedDayCountBasis = generateFacilityFieldListItemString(
+        mockFacilityType.value,
+        mockDayCountBasis.name,
+        mockDayCountBasis.value,
       );
 
-      const expected = `${formattedBankRef}${formattedCoverPercentage}`;
+      const expected = `${formattedBankRef}${formattedDayCountBasis}`;
 
       expect(result).toEqual(expected);
     });

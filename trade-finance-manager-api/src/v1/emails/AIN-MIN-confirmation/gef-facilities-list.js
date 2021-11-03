@@ -1,3 +1,4 @@
+const { format } = require('date-fns');
 const getFacilitiesByType = require('../../helpers/get-facilities-by-type');
 const {
   generateHeadingString,
@@ -12,36 +13,32 @@ const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 const facilityFieldsObj = (facility) => {
   const fields = (({
     ukefFacilityID,
-    name,
     bankReference,
+    facilityStage,
     coverStartDate,
     value,
     currencyCode,
-    interestPercentage,
     coverPercentage,
-    // Minimum risk margin fee 'TODO need confirmation on field',
+    interestPercentage,
     guaranteeFee,
     ukefExposure,
     feeType,
     feeFrequency,
     dayCountBasis,
-    facilityStage,
   }) => ({
     ukefFacilityID,
-    name,
     bankReference,
+    facilityStage,
     coverStartDate,
     value,
     currencyCode,
-    interestPercentage,
     coverPercentage,
-    // Minimum risk margin fee 'TODO need confirmation on field',
+    interestPercentage,
     guaranteeFee,
     ukefExposure,
     feeType,
     feeFrequency,
     dayCountBasis,
-    facilityStage,
   }))(facility);
 
   // NOTE: we do not want to include shouldCoverStartOnSubmission in the list of fields.
@@ -51,9 +48,15 @@ const facilityFieldsObj = (facility) => {
   }
 
   // format for emails
-  fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
-  fields.coverPercentage = `${coverPercentage}%`;
-  fields.guaranteeFee = `${guaranteeFee}%`;
+  if (fields.coverStartDate) {
+    fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
+  }
+  if (fields.coverPercentage) {
+    fields.coverPercentage = `${fields.coverPercentage}%`;
+  }
+  if (fields.guaranteeFee) {
+    fields.guaranteeFee = `${fields.guaranteeFee}%`;
+  }
 
   return fields;
 };
@@ -62,8 +65,8 @@ const facilityFieldsObj = (facility) => {
 * generateFacilityFieldListItemString
 * returns a formatted string for a single field/list item.
 */
-const generateFacilityFieldListItemString = (fieldName, fieldValue) => {
-  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[fieldName];
+const generateFacilityFieldListItemString = (facilityType, fieldName, fieldValue) => {
+  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[facilityType][fieldName];
 
   const str = generateListItemString(`${title}: ${fieldValue}`);
 
@@ -84,7 +87,11 @@ const generateFacilityFieldsListString = (facility) => {
     const value = fields[fieldName];
 
     if (value) {
-      singleFacilityListString += generateFacilityFieldListItemString(fieldName, value);
+      singleFacilityListString += generateFacilityFieldListItemString(
+        facility.facilityType,
+        fieldName,
+        value,
+      );
     }
   });
 
