@@ -4,6 +4,7 @@ const {
   generateBssDealAinMinConfirmationEmailVariables,
   sendMiaAcknowledgement,
 } = require('./send-deal-submit-emails');
+const { generateFacilityLists } = require('../helpers/notify-template-formatters');
 
 const CONSTANTS = require('../../constants');
 const api = require('../api');
