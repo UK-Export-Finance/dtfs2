@@ -59,10 +59,9 @@ const postComment = async (req, res) => {
         author: shortUser,
         text: comment,
       };
-      const comments = deal.tfm.activities;
-      comments.push(commentObj);
-      await api.updateActivityComment(dealId, comments);
-      console.log(comments);
+      // const comments = deal.tfm.activities;
+      // comments.push(commentObj);
+      await api.updateActivityComment(dealId, commentObj);
     }
   } catch (err) {
     console.log(err);
