@@ -3,7 +3,7 @@ FROM node:14.18.1-alpine3.13 AS image
 WORKDIR /app
 
 COPY . .
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 FROM node:14.18.1-alpine3.13
 # Identifies the code in the running container
