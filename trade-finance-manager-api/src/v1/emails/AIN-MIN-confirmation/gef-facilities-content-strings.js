@@ -4,7 +4,7 @@ const GENERIC_LIST_ITEM_TITLES = {
   requestedCoverStartDate: 'Requested cover start date',
   coverStartDate: 'Cover start date',
   coverPercentage: 'Covered percentage',
-  guaranteeFee: 'Guarantee fee payable by bank', 
+  guaranteeFee: 'Guarantee fee payable by bank',
   ukefExposure: 'UKEF exposure',
   dayCountBasis: 'Day count basis',
 };

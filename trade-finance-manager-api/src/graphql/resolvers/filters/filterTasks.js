@@ -47,7 +47,6 @@ const filterTeamTasksInGroup = (task, group, FILTER_VALUE) => {
 const filterTeamTasks = (tasks, FILTER_TEAM_ID) =>
   mapAndFilter(tasks, filterTeamTasksInGroup, FILTER_TEAM_ID);
 
-
 const filterUserTasksInGroup = (task, group, FILTER_VALUE) => {
   const filteredGroup = group;
   const { assignedTo } = task;

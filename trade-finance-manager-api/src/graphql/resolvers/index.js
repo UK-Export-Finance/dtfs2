@@ -15,7 +15,6 @@ const updateProbabilityOfDefault = require('./mutation-update-probability-of-def
 const updateUnderwriterManagersDecision = require('./mutation-update-underwriter-managers-decision');
 const updateLeadUnderwriter = require('./mutation-update-lead-underwriter');
 
-
 const resolvers = {
   Query: {
     deal: (root, args) => queryDeal(args),

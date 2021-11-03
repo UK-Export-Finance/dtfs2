@@ -19,7 +19,6 @@ async function pingStorage(doFetch) {
   };
 }
 
-
 async function pingMongo() {
   if (!MONGODB_URI) {
     return `MONGODB_URI is empty. ${JSON.stringify(process.env)}`;
