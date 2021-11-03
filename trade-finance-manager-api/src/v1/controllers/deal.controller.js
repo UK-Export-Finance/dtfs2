@@ -248,3 +248,16 @@ const updateTfmLeadUnderwriter = async (
   return updatedDeal.tfm;
 };
 exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
+
+const updateTfmActivityComment = async (dealId, commentUpdate) => {
+  const updatedComment = {
+    tfm: {
+      activities: commentUpdate,
+    },
+  };
+
+  const updatedDeal = await api.updateDeal(dealId, updatedComment);
+
+  return updatedDeal.tfm;
+};
+exports.updateTfmActivityComment = updateTfmActivityComment;
