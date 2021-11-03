@@ -4,7 +4,7 @@ const updateCommentMutation = gql`
     mutation UpdateActivityComment($dealId: ID!, $commentUpdate: TFMActivityInput) {
         updateActivityComment(dealId: $dealId, commentUpdate: $commentUpdate) {
             type
-            timeStamp
+            timestamp
             text
             author {
                 firstName
