@@ -10,11 +10,7 @@ const deleteAllDeals = (deals) => {
 
 module.exports = () => {
   console.log('deleteTfmDeals::');
-
-  // eslint-disable-next-line no-new
-  new Cypress.Promise(() => {
-    getAllTfmDeals().then((deals) => {
-      deleteAllDeals(deals);
-    });
+  getAllTfmDeals().then((deals) => {
+    deleteAllDeals(deals);
   });
 };

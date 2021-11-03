@@ -1,7 +1,4 @@
-const api = () => {
-  const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
-  return url;
-};
+const api = () => `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
 
 module.exports.createFacility = async (facility, associatedDealId, user) =>
   cy.request({
