@@ -214,7 +214,7 @@ jobs:
         npm install
         cd e2e-tests/submit-to-trade-finance-manager
         
-        npx cypress run --config video=false
+        npx cypress run --config video=false --record --browser=chrome
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
