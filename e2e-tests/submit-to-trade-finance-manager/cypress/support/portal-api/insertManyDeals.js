@@ -1,13 +1,19 @@
-const { insertDeal, getDeal, logIn } = require('./api');
+const {
+  insertDeal, getDeal, logIn, listAllDeals, deleteDeal,
+} = require('./api');
 
 module.exports = (deals, opts) => {
   console.log('createManyDeals::');
 
   logIn(opts).then((token) => {
     const persisted = [];
+    // delete existing deals
+    listAllDeals(token).then(async (deal) => {
+      await deal.forEach((val) => deleteDeal(token, val));
+    });
 
-    for (const dealToInsert of deals) {
-      insertDeal(dealToInsert, token).then((insertedDeal) => {
+    Object.values(deals).forEach((val) => {
+      insertDeal(val, token).then((insertedDeal) => {
         getDeal(insertedDeal._id, token).then(({ deal }) => {
           persisted.push(deal);
           if (persisted.length === deals.length) {
@@ -15,6 +21,6 @@ module.exports = (deals, opts) => {
           }
         });
       });
-    }
+    });
   });
 };
