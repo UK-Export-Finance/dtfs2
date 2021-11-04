@@ -201,29 +201,29 @@ jobs:
         npm install
         node ./re-insert-mocks.js
         pwd
-    - name: Run e2e tests
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install
-        cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false # --record
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
-    - uses: act10ns/slack@v1
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs-github-actions'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: failure()
+    # - name: Run e2e tests
+    #   env:
+    #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+    #   run: |
+    #     pwd
+    #     cd $GITHUB_WORKSPACE
+    #     npm install
+    #     cd e2e-tests/submit-to-trade-finance-manager
+    #     npx cypress run --config video=false # --record
+    # - name: Save Cypress screenshots
+    #   if: ${{ failure() }}
+    #   uses: actions/upload-artifact@main
+    #   with:
+    #     name: screenshots
+    #     path: './cypress/screenshots'
+    # - uses: act10ns/slack@v1
+    #   with:
+    #     status: ${{ job.status }}
+    #     steps: ${{ toJson(steps) }}
+    #     channel: '#dtfs-github-actions'
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    #   if: failure()
 
   promote:
     name: Promote container images to Dev
