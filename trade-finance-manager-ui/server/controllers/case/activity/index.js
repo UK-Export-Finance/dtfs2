@@ -42,7 +42,6 @@ const postComment = async (req, res) => {
   const { params, session, body } = req;
   const dealId = params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
-  console.log(deal);
   const { user } = session;
   const { comment } = body;
 
