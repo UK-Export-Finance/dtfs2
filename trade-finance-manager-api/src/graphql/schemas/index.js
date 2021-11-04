@@ -13,6 +13,7 @@ type Country {
 type OwningBank {
   name: String
   emails: [String]
+  partyUrn: String
 }
 
 type Maker {
