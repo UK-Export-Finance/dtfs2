@@ -239,6 +239,7 @@ const MOCK_DEAL = {
     submissionDetails: {
       supplierPartyUrn: 'MOCK supplierPartyUrn',
     },
+    activities: [],
   },
 };
 

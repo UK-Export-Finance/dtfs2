@@ -207,7 +207,6 @@ const updateTfmUnderwriterManagersDecision = async (
 };
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
-
 const updateTfmLeadUnderwriter = async (
   dealId,
   leadUnderwriter,
@@ -233,7 +232,6 @@ const updateTfmLeadUnderwriter = async (
     userId,
   );
 
-
   return updatedDeal.tfm;
 };
 exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
@@ -241,7 +239,7 @@ exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
 const updateTfmActivityComment = async (dealId, commentUpdate) => {
   const updatedComment = {
     tfm: {
-      activities: [commentUpdate],
+      activities: commentUpdate,
     },
   };
 
