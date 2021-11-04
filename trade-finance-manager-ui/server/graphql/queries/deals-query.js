@@ -40,10 +40,13 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           }
           dateOfLastAction
           submissionDate
+          manualInclusionNoticeSubmissionDate
           approvalDate
           created
-          owningBank{
+          owningBank {
             name
+            emails
+            partyUrn
           }
         }
         submissionDetails {
