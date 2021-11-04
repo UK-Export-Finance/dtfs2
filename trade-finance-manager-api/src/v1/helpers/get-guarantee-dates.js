@@ -19,7 +19,6 @@ Issued (straight to Issued)   Cover Start Date        Cover Start Date
 
 */
 
-
 const getGuaranteeDates = (facility, dealSubmissionDate) => {
   let guaranteeCommencementDate;
   let guaranteeExpiryDate;

@@ -1,4 +1,6 @@
 const {
+  generateHeadingString,
+  generateListItemString,
   generateFacilitiesListHeading,
   generateFacilitiesListString,
   generateBssFacilityLists,
@@ -10,6 +12,30 @@ const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
 describe('notify-template-formatters', () => {
+  describe('generateHeadingString', () => {
+    it('should return a formatted string', () => {
+      const str = 'Testing';
+
+      const result = generateHeadingString(str);
+
+      const expected = `#${str}\n\n`;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('generateListItemString', () => {
+    it('should return a formatted string', () => {
+      const str = 'My list item';
+
+      const result = generateListItemString(str);
+
+      const expected = `*${str}\n`;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe('generateFacilitiesListHeading', () => {
     describe('when facilityType is loan', () => {
       it('should return loan product name', () => {

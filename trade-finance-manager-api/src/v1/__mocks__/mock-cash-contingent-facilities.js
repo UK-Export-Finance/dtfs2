@@ -2,9 +2,9 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
   {
     _id: 'MOCK_CASH_FACILITY_ISSUED',
     applicationId: 'MOCK_GEF_DEAL',
-    coverEndDate: '2021-12-12T00:00:00.000Z',
+    coverEndDate: '2021-08-12T00:00:00.000Z',
     coverPercentage: 12,
-    coverStartDate: null,
+    coverStartDate: '2021-10-08T00:00:00.000Z',
     createdAt: 1628693855675.0,
     currency: 'EUR',
     details: [
@@ -30,9 +30,9 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
   {
     _id: 'MOCK_CONTINGENT_FACILITY_ISSUED',
     applicationId: 'MOCK_GEF_DEAL',
-    coverEndDate: '2021-12-12T00:00:00.000Z',
+    coverEndDate: '2021-10-12T00:00:00.000Z',
     coverPercentage: 12,
-    coverStartDate: null,
+    coverStartDate: '2021-12-08T00:00:00.000Z',
     createdAt: 1628693855675.0,
     currency: 'EUR',
     details: [

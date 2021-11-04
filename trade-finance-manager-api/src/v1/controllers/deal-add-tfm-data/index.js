@@ -18,7 +18,6 @@ const addTfmDealData = async (deal) => {
     tfm,
   } = deal;
 
-
   const dealUpdate = {
     tfm: {
       ...tfm,

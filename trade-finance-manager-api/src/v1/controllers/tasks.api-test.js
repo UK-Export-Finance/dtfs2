@@ -130,7 +130,6 @@ describe('tasks controller', () => {
       });
     });
 
-
     describe('when statusFrom is `In progress` and statusTo is `Done`', () => {
       it('should return dateCompleted', () => {
         const result = generateTaskDates('In progress', 'Done');
