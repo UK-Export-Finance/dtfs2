@@ -21,6 +21,8 @@ describe('mapGefDealDetails', () => {
       submissionType: mockDeal.dealSnapshot.submissionType,
       owningBank: {
         name: mockDeal.dealSnapshot.bank.name,
+        emails: mockDeal.dealSnapshot.bank.emails,
+        partyUrn: mockDeal.dealSnapshot.bank.partyUrn,
       },
     };
 
