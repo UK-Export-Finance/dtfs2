@@ -39,6 +39,7 @@ type DealDetails {
   checkerMIN: Checker
   dateOfLastAction: String
   submissionDate: String
+  manualInclusionNoticeSubmissionDate: String
   approvalDate: String
   created: String
   workflowStatus: String
