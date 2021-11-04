@@ -100,7 +100,7 @@ const DEAL = {
         text: 'The facility base currency is an approved currency.',
       },
       19: {
-        text: 'Any upfront or arrangement fees, as well as interest rates and risk margin fees are in an approved currency.'
+        text: 'Any upfront or arrangement fees, as well as interest rates and risk margin fees are in an approved currency.',
       },
     },
   },

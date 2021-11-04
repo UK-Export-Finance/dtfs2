@@ -260,7 +260,6 @@ describe('helpers - tasks', () => {
       });
     });
 
-
     describe('when previous task is NOT complete', () => {
       it('should return false', () => {
         const mockParentGroup = {

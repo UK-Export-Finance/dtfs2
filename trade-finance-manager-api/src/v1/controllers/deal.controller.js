@@ -207,7 +207,6 @@ const updateTfmUnderwriterManagersDecision = async (
 };
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
-
 const updateTfmLeadUnderwriter = async (
   dealId,
   leadUnderwriter,
@@ -232,7 +231,6 @@ const updateTfmLeadUnderwriter = async (
     taskGroupsToUpdate,
     userId,
   );
-
 
   return updatedDeal.tfm;
 };

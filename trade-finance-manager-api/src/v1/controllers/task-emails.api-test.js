@@ -145,7 +145,6 @@ describe('task emails functions', () => {
       );
     });
 
-
     it('should send an email for MIA - GIVE_EXPORTER_A_CREDIT_RATING task', async () => {
       const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
@@ -257,7 +256,7 @@ describe('task emails functions', () => {
       expect(api.sendEmail).toHaveBeenCalledWith(
         CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
         underwritersTeam.email,
-        expectedEmailVars,  
+        expectedEmailVars,
       );
     });
 

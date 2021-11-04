@@ -12,5 +12,4 @@ const allPartiesHaveUrn = ({ dealSnapshot, tfm }) => {
   return dealPartiesHaveUrn && facilitiesHaveUrn;
 };
 
-
 module.exports = allPartiesHaveUrn;

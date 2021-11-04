@@ -20,7 +20,6 @@ const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
   return updatedFacility.tfm;
 };
 
-
 module.exports = {
   findOneFacility,
   updateTfmFacility,

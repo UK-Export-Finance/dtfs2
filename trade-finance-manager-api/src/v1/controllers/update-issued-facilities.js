@@ -82,5 +82,4 @@ const updatedIssuedFacilities = async (deal) => {
   return modifiedDeal;
 };
 
-
 exports.updatedIssuedFacilities = updatedIssuedFacilities;
