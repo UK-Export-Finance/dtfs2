@@ -52,6 +52,11 @@ const FORECAST_PERCENTAGE = {
   UNISSUED: 75,
 };
 
+const GUARANTEE_PERCENTAGE = {
+  ISSUED: 100,
+  UNISSUED: 75,
+};
+
 const LENDER_TYPE = {
   TYPE1: '100',
   TYPE5: '500',
@@ -95,6 +100,10 @@ const API_USER = {
   APIUKEF: 'APIUKEF',
 };
 
+const BANK_IDENTIFIER = {
+  DEFAULT: '00000000',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_TYPE_CODE,
@@ -104,6 +113,7 @@ module.exports = {
   GUARANTEE_TYPE,
   STAGE_CODE,
   FORECAST_PERCENTAGE,
+  GUARANTEE_PERCENTAGE,
   LENDER_TYPE,
   BUNDLE_STATUS,
   PORTFOLIO,
@@ -113,4 +123,5 @@ module.exports = {
   CREDIT_RATING,
   RISK,
   API_USER,
+  BANK_IDENTIFIER,
 };

@@ -35,7 +35,6 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     { acbsFacilityCovenantInput: acbsFacilityBondCovenantInput },
   );
 
-
   const parties = {};
   // Create facility parties
   if (facility.tfm.bondIssuerPartyUrn) {
@@ -80,7 +79,6 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     retryOptions,
     { acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput },
   );
-
 
   return {
     parties,

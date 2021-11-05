@@ -14,7 +14,7 @@ Field mapping based on email from Gareth Ashby 15/03/2021
 */
 
 const bondIssuer = ({ deal, facility }) => {
-  const { submissionDetails } = deal.dealSnapshot;
+  const { submissionDetails } = deal.dealSnapshot.submissionDetails;
 
   const countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
   const citizenshipClass = countryCode === 'GBR' ? '1' : '2';

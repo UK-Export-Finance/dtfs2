@@ -129,7 +129,6 @@ const updateTfmLossGivenDefault = async (dealId, lossGivenDefault) => {
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, lossGivenDefaultUpdate);
 
   return updatedDeal.tfm;
@@ -143,7 +142,6 @@ const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, probabilityOfDefaultUpdate);
 
   return updatedDeal.tfm;

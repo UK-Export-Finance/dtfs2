@@ -43,6 +43,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       retryOptions,
       { party: mappings.party.exporter({ deal, acbsReference }) },
     );
+
     const bankTask = context.df.callActivityWithRetry(
       'activity-create-party',
       retryOptions,
@@ -50,8 +51,6 @@ module.exports = df.orchestrator(function* HDeal(context) {
     );
 
     let buyerTask;
-    let agentTask;
-    let indemnifierTask;
 
     if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
       buyerTask = context.df.callActivityWithRetry(
@@ -59,6 +58,14 @@ module.exports = df.orchestrator(function* HDeal(context) {
         retryOptions,
         { party: mappings.party.buyer({ deal }) },
       );
+
+      /*
+      Following parties are only created once the
+      future tickets have been incorporated.
+
+      let agentTask;
+      let indemnifierTask;
+
       agentTask = context.df.callActivityWithRetry(
         'activity-create-party',
         retryOptions,
@@ -69,13 +76,15 @@ module.exports = df.orchestrator(function* HDeal(context) {
         retryOptions,
         { party: mappings.party.indemnifier({ deal }) },
       );
+      */
     }
 
     // 1.1. Party tasks are run in parallel so wait for them all to be finished.
     yield context.df.Task.all(
       product === CONSTANTS.PRODUCT.TYPE.GEF
         ? [exporterTask, bankTask]
-        : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask],
+        : [exporterTask, bankTask, buyerTask],
+      // : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask],
     );
 
     let parties;
@@ -88,10 +97,10 @@ module.exports = df.orchestrator(function* HDeal(context) {
     } else {
       parties = {
         exporter: exporterTask.result,
-        buyer: buyerTask.result,
-        agent: agentTask.result,
-        indemnifier: indemnifierTask.result,
         bank: bankTask.result,
+        buyer: buyerTask.result,
+        // agent: agentTask.result,
+        // indemnifier: indemnifierTask.result,
       };
     }
 
@@ -101,6 +110,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       parties.exporter.partyIdentifier,
       acbsReference,
     );
+
     const dealRecord = yield context.df.callActivityWithRetry(
       'activity-create-deal',
       retryOptions,

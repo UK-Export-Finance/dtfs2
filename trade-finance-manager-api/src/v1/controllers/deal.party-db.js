@@ -38,15 +38,15 @@ const addPartyUrns = async (deal) => {
           partyUrnRequired: hasExporter,
         },
         buyer: {
-          partyUrn: deal.buyer ? deal.buyer.name : '',
+          partyUrn: '',
           partyUrnRequired: hasBuyer,
         },
         indemnifier: {
-          partyUrn: deal.indemnifier ? deal.indemnifier.name : '',
+          partyUrn: '',
           partyUrnRequired: hasIndemnifier,
         },
         agent: {
-          partyUrn: deal.eligibility ? deal.eligibility.agentName : '',
+          partyUrn: '',
           partyUrnRequired: hasAgent,
         },
       },

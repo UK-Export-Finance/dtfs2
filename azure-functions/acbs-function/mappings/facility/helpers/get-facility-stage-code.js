@@ -8,7 +8,7 @@ const getFacilityStageCode = (facility, dealType) => {
       : CONSTANTS.FACILITY.STAGE_CODE.UNISSUED;
   }
 
-  return isIssued(facility.facilitySnapshot.facilityStage)
+  return isIssued(facility.facilityStage)
     ? CONSTANTS.FACILITY.STAGE_CODE.ISSUED
     : CONSTANTS.FACILITY.STAGE_CODE.UNISSUED;
 };
