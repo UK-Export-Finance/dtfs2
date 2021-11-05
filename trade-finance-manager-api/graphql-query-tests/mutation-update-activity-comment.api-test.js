@@ -11,9 +11,9 @@ const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 
-const UPDATE_ACTIVITY_COMMENT = gql`
-mutation UpdateActivityComment($dealId: ID!, $commentUpdate: TFMActivityInput) {
-    updateActivityComment(dealId: $dealId, commentUpdate: $commentUpdate) {
+const UPDATE_ACTIVITY = gql`
+mutation UpdateActivity($dealId: ID!, $activityUpdate: TFMActivityInput) {
+    updateActivity(dealId: $dealId, activityUpdate: $activityUpdate) {
         activities {
           type
           timestamp
@@ -49,7 +49,7 @@ describe('graphql mutation - update activity comment', () => {
   it('should add a comment', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
-      commentUpdate: {
+      activityUpdate: {
         type: 'COMMENT',
         timestamp: 1234342,
         text: 'test',
@@ -62,10 +62,10 @@ describe('graphql mutation - update activity comment', () => {
     };
 
     const { data } = await query({
-      query: UPDATE_ACTIVITY_COMMENT,
+      query: UPDATE_ACTIVITY,
       variables: mutationVars,
     });
     //console.log('----- graphqlResponse \n', graphqlResponse);
-    expect(data.updateActivityComment).toEqual(mutationVars);
+    expect(data.updateActivity).toEqual(mutationVars);
   });
 });

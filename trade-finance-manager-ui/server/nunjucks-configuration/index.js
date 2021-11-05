@@ -1,5 +1,5 @@
 const nunjucks = require('nunjucks');
-let mojFilters = require('../../node_modules/@ministryofjustice/frontend/moj/filters/all');
+let mojFilters = require('../../node_modules/@ministryofjustice/frontend/moj/filters/all')();
 const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
 const filterFormatDateString = require('./filter-formatDateString');
 const dashIfEmpty = require('./filter-dashIfEmpty');

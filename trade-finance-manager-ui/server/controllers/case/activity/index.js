@@ -60,7 +60,7 @@ const postComment = async (req, res) => {
       };
       // const comments = deal.tfm.activities;
       // comments.push(commentObj);
-      await api.updateActivityComment(dealId, commentObj);
+      await api.updateActivity(dealId, commentObj);
     }
   } catch (err) {
     console.log(err);
