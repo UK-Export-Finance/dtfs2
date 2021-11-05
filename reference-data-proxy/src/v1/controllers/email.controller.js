@@ -9,7 +9,7 @@ exports.sendEmail = async (req, res) => {
     emailVariables,
   } = req.body;
 
-  console.log('Calling Notify API');
+  console.log('Calling Notify API. templateId: ', templateId);
 
   const personalisation = emailVariables;
 
@@ -20,7 +20,7 @@ exports.sendEmail = async (req, res) => {
     })
     .then((response) => response)
     .catch((err) => {
-      console.error('Error calling Notify API ', err.response);
+      console.error('Error calling Notify API ', err.response.status);
       return err.response;
     });
 

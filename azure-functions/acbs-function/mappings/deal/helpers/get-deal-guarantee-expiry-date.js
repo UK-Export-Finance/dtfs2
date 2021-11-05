@@ -8,6 +8,7 @@ Switch Commitment to Issued   Portal Submission Date  Cover Start Date
 Issued (straight to Issued    Cover Start Date        Cover Start Date
 */
 const { formatTimestamp, addYear } = require('../../../helpers/date');
+const getDealSubmissionDate = require('./get-deal-submission-date');
 const CONSTANT = require('../../../constants/product');
 
 const getDealGuaranteeExpiryDate = (deal) => {
@@ -15,10 +16,10 @@ const getDealGuaranteeExpiryDate = (deal) => {
     return addYear(formatTimestamp(deal.dealSnapshot.submissionDate), 20);
   }
 
-  const latestGuaranteeExpiry = deal.reduce((latestDate, facility) => {
-    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
+  const latestGuaranteeExpiry = deal.dealSnapshot.facilities.reduce((latestDate, facility) => {
+    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates ? facility.tfm.facilityGuaranteeDates : '';
     return guaranteeExpiryDate > latestDate ? guaranteeExpiryDate : latestDate;
-  }, formatTimestamp(deal.submittedDate));
+  }, formatTimestamp(getDealSubmissionDate(deal)));
 
   return latestGuaranteeExpiry;
 };

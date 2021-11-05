@@ -10,7 +10,6 @@ const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
 
-
 const findOnePortalDeal = async (dealId) => {
   try {
     const response = await axios({
@@ -130,7 +129,6 @@ const updatePortalFacility = async (facilityId, update) => {
   }
 };
 
-
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
@@ -183,7 +181,6 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
     return err;
   }
 };
-
 
 const submitDeal = async (dealType, dealId) => {
   try {

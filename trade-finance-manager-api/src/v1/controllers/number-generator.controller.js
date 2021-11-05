@@ -80,8 +80,12 @@ const checkAzureNumberGeneratorFunction = async () => {
           return;
       }
 
-      // Update TFM
-      await dealSubmitController.submitDealAfterUkefIds(input.entityId, input.dealType, input.user);
+      // Submit to TFM.
+      // Only trigger this update if the Azure function task's ID, is the same as the deal ID.
+      // Without this conditional, every task (i.e multiple facilities) will trigger multiple deal submissions.
+      if (input.entityId === input.dealId) {
+        await dealSubmitController.submitDealAfterUkefIds(input.entityId, input.dealType, input.user);
+      }
 
       // Update functionLog
       // Keep any with errors for reference but remove successful ones
@@ -101,7 +105,6 @@ const checkAzureNumberGeneratorFunction = async () => {
     }
   });
 };
-
 
 module.exports = {
   checkAzureNumberGeneratorFunction,

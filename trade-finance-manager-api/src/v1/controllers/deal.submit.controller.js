@@ -19,7 +19,7 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinIssuedFacilitiesAcknowledgement } = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 const getDeal = async (dealId, dealType) => {
@@ -58,7 +58,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
-  console.log('UKEF ID verified');
+  console.log('UKEF IDs verified');
 
   if (!deal) {
     console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
@@ -91,9 +91,14 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
+      /**
+       * Current requirement only allows AIN & MIN deals to be send to ACBS
+       */
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-
-      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
+        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      }
 
       await sendDealSubmitEmails(updatedDealWithTasks);
       return updatedDeal;
@@ -127,7 +132,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
 
-      await sendAinMinIssuedFacilitiesAcknowledgement(updatedDeal);
+      await sendAinMinAcknowledgement(updatedDeal);
     }
 
     await updatePortalDealStatus(updatedDeal);

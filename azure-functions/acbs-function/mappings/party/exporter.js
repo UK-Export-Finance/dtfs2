@@ -4,7 +4,7 @@ const CONSTANTS = require('../../constants');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
-  partyAlternateIdentifier  string  UKEF Party URN
+  partyAlternateIdentifier  string  UKEF Party URN (Maximum 20 character)
   industryClassification    string  4 digit industry class, banks = 2501, if not known then use 0001, default to 0116
   name1                     string  First 35 characters of Party name
   name2                     string  Characters 36 – 70 of Party name
@@ -45,7 +45,7 @@ const exporter = ({ deal, acbsReference }) => {
   );
 
   return {
-    alternateIdentifier: deal.tfm.parties.exporter.partyUrn,
+    alternateIdentifier: deal.tfm.parties.exporter.partyUrn.substring(0, 20),
     industryClassification: acbsReference.supplierAcbsIndustryCode,
     ...partyNames,
     smeType: getSmeType(

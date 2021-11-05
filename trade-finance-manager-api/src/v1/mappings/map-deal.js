@@ -1,5 +1,4 @@
 const CONSTANTS = require('../../constants');
-const CONTENT_STRINGS = require('../content-strings');
 const mapEligibilityCriteriaContentStrings = require('./map-eligibility-criteria-content-strings');
 const api = require('../api');
 

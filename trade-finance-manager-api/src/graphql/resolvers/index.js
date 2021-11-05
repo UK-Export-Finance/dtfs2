@@ -16,7 +16,6 @@ const updateUnderwriterManagersDecision = require('./mutation-update-underwriter
 const updateLeadUnderwriter = require('./mutation-update-lead-underwriter');
 const updateActivityComment = require('./mutation-update-activity-comment');
 
-
 const resolvers = {
   Query: {
     deal: (root, args) => queryDeal(args),

@@ -12,7 +12,6 @@ const convertDealCurrencies = async (deal) => {
     tfm,
   } = deal;
 
-
   if (dealCurrency && dealCurrency.id !== 'GBP') {
     const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP');
 

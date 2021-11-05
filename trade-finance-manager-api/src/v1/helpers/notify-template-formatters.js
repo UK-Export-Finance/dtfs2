@@ -1,6 +1,10 @@
 const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
+const generateHeadingString = (heading) => `#${heading}\n\n`;
+
+const generateListItemString = (str) => `*${str}\n`;
+
 const generateFacilitiesListHeading = (facilityType) => {
   let heading;
   if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
@@ -19,7 +23,7 @@ const generateFacilitiesListHeading = (facilityType) => {
     heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 
-  return `#${heading}\n\n`;
+  return generateHeadingString(heading);
 };
 
 const generateFacilitiesListString = (facilities) => {
@@ -130,6 +134,8 @@ const generateFacilityLists = (dealType, facilities) => {
 };
 
 module.exports = {
+  generateHeadingString,
+  generateListItemString,
   generateFacilitiesListHeading,
   generateFacilitiesListString,
   generateBssFacilityLists,

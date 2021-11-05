@@ -40,7 +40,6 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
       );
 
       return {
-        // eslint-disable-next-line no-underscore-dangle
         facilityId: facility._id,
         issuedFacilityMaster,
       };

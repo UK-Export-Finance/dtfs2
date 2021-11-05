@@ -16,7 +16,6 @@ const generateTaskEmailVariables = (urlOrigin, task, dealId, exporterName, ukefD
   ukefDealId,
 });
 
-
 module.exports = {
   generateTaskUrl,
   generateTaskEmailVariables,
