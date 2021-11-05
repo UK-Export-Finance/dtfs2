@@ -483,7 +483,7 @@ type Mutation {
   updateFacilityRiskProfile(_id: ID!, facilityUpdate: TFMFacilityRiskProfileInput): TFMFacilityData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
   updateLeadUnderwriter(dealId: ID!, leadUnderwriterUpdate: TFMLeadUnderwriterInput): TFMDealData
-  updateActivityComment(dealId: ID!, commentUpdate: TFMActivityInput): TFMDealData
+  updateActivity(dealId: ID!, activityUpdate: TFMActivityInput): TFMDealData
 }
 `;
 

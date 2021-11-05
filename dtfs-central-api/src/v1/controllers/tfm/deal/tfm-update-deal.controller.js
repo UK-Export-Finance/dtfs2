@@ -41,7 +41,9 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     }
   }
   console.log(existingDeal.tfm);
-  if (existingDeal.tfm && existingDeal.tfm.activities) {
+  console.log('tfm uodate', tfmUpdate.tfm.activities);
+  if (existingDeal.tfm && existingDeal.tfm.activities && (tfmUpdate.tfm.activities.length !== 0)) {
+    console.log('in here', tfmUpdate.tfm.activities);
     dealUpdate.tfm.activities = [
       ...existingDeal.tfm.activities,
       { ...tfmUpdate.tfm.activities },
