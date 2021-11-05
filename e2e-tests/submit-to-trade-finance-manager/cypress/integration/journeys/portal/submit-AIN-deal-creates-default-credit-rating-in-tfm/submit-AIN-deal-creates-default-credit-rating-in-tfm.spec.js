@@ -30,10 +30,6 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  beforeEach(() => {
-    Cypress.Screenshot.defaults({ capture: 'fullPage' });
-  });
-
   it('Portal deal is submitted to UKEF, `Good` credit rating is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
@@ -45,7 +41,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
