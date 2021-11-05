@@ -61,11 +61,11 @@ describe('graphql mutation - update activity comment', () => {
       },
     };
 
-    const graphqlResponse = await query({
+    const { data } = await query({
       query: UPDATE_ACTIVITY_COMMENT,
       variables: mutationVars,
     });
-    console.log('----- graphqlResponse \n', graphqlResponse);
-    //expect(data.updateActivityComment).toEqual(updateComment);
+    //console.log('----- graphqlResponse \n', graphqlResponse);
+    expect(data.updateActivityComment).toEqual(mutationVars);
   });
 });
