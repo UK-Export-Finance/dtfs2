@@ -39,22 +39,21 @@
 
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
+const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
-  const {
-    guaranteeCommencementDate,
-    guaranteeExpiryDate,
-    effectiveDate,
-  } = facility.tfm.facilityGuaranteeDates;
+  const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates
+    ? facility.tfm.facilityGuaranteeDates
+    : '';
 
-  const issueDate = helpers.getIssueDate(facility, deal.dealSnapshot.submissionDate);
+  const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
 
   return {
     dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
-    facilityIdentifier: facility.ukefFacilityID
-      ? facility.ukefFacilityID.padStart(10, 0)
-      : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId
+      ? facility.facilitySnapshot.ukefFacilityId.padStart(10, 0)
+      : facility.facilitySnapshot.ukefFacilityID.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
@@ -70,7 +69,9 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
-    delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
+    delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType
+      ? deal.dealSnapshot.submissionType
+      : deal.dealSnapshot.details.submissionType),
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     facilityStageCode,
     exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
@@ -86,11 +87,11 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     ),
     issueDate,
     description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
-    agentBankIdentifier: '00000000',
+    agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
     obligorName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
       ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
-      : deal.dealSnapshot['supplier-name'].substring(0, 35),
+      : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   };
 };

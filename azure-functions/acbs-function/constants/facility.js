@@ -100,6 +100,10 @@ const API_USER = {
   APIUKEF: 'APIUKEF',
 };
 
+const BANK_IDENTIFIER = {
+  DEFAULT: '00000000',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_TYPE_CODE,
@@ -119,4 +123,5 @@ module.exports = {
   CREDIT_RATING,
   RISK,
   API_USER,
+  BANK_IDENTIFIER,
 };

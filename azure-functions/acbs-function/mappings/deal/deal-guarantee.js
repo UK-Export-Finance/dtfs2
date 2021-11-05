@@ -1,5 +1,5 @@
 const { to2Decimals } = require('../../helpers/currency');
-const { getDealValue, getDealEffectiveDate, getDealGuaranteeExpiryDate } = require('./helpers');
+const { getDealValue, getDealEffectiveDate, getDealGuaranteeExpiryDate, getDealId } = require('./helpers');
 const CONSTANT = require('../../constants');
 
 /*
@@ -12,7 +12,7 @@ const CONSTANT = require('../../constants');
 */
 
 const dealInvestor = (deal, limitKey) => ({
-  dealIdentifier: deal.dealSnapshot.ukefDealId.padStart(10, 0),
+  dealIdentifier: getDealId(deal),
   guarantorParty: CONSTANT.DEAL.PARTY.GUARANTOR,
   limitKey,
   guaranteeExpiryDate: getDealGuaranteeExpiryDate(deal),

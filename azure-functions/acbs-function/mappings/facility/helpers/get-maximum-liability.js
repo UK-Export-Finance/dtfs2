@@ -1,4 +1,7 @@
 const getMaximumLiability = (facilitySnapshot) => {
-  return typeof facilitySnapshot.ukefExposure !== 'number' ? Number(facilitySnapshot.ukefExposure.replace(/,/g, '')) : facilitySnapshot.ukefExposure;
+  if (typeof facilitySnapshot.ukefExposure !== 'number') {
+    return Number(facilitySnapshot.ukefExposure.replace(/,/g, ''));
+  }
+  return facilitySnapshot.ukefExposure;
 };
 module.exports = getMaximumLiability;

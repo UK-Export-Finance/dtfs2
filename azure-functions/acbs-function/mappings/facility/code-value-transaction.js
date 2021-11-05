@@ -19,12 +19,14 @@ const CONSTANTS = require('../../constants');
 const codeValueTransaction = (deal, facility) => {
   const {
     effectiveDate,
-  } = facility.tfm.facilityGuaranteeDates;
+  } = facility.tfm.facilityGuaranteeDates
+    ? facility.tfm.facilityGuaranteeDates
+    : '';
 
   return {
-    facilityIdentifier: facility.ukefFacilityID
-      ? facility.ukefFacilityID.padStart(10, 0)
-      : facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId
+      ? facility.facilitySnapshot.ukefFacilityId.padStart(10, 0)
+      : facility.facilitySnapshot.ukefFacilityID.padStart(10, 0),
     lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
     initialBundleStatusCode: CONSTANTS.FACILITY.BUNDLE_STATUS.STATUS3,
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,

@@ -12,7 +12,7 @@ const getDealSubmissionDate = require('./get-deal-submission-date');
 
 const getDealEffectiveDate = (deal) => {
   const earliestGuaranteeDate = deal.dealSnapshot.facilities.reduce((earliestDate, facility) => {
-    const { effectiveDate } = facility.tfm.facilityGuaranteeDates;
+    const { effectiveDate } = facility.tfm.facilityGuaranteeDates ? facility.tfm.facilityGuaranteeDates : '';
     return effectiveDate < earliestDate ? effectiveDate : earliestDate;
   }, formatTimestamp(getDealSubmissionDate(deal)));
 
