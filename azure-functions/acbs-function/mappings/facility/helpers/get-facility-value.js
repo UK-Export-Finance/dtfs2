@@ -1,10 +1,15 @@
 const getFacilityValue = (facility) => {
-  const facilitySnapshot = facility;
-
-  if (facilitySnapshot.conversionRate) {
-    return Number(facilitySnapshot.facilityValue) / Number(facilitySnapshot.conversionRate);
+  if (facility.facilitySnapshot.conversionRate) {
+    return Number(facility.facilitySnapshot.facilityValue) / Number(facility.facilitySnapshot.conversionRate);
   }
-  return facilitySnapshot.facilityValue ? Number(facilitySnapshot.facilityValue) : Number(facilitySnapshot.value);
+
+  if (facility.tfm.facilityValueInGBP) {
+    return facility.tfm.facilityValueInGBP;
+  }
+
+  return facility.facilitySnapshot.facilityValue
+    ? Number(facility.facilitySnapshot.facilityValue)
+    : Number(facility.facilitySnapshot.value);
 };
 
 module.exports = getFacilityValue;

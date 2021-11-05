@@ -25,6 +25,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     const acbsFacilityMasterInput = mappings.facility.facilityMaster(
       deal, facility, dealAcbsData, acbsReference,
     );
+
     const facilityMaster = yield context.df.callActivityWithRetry(
       'activity-create-facility-master',
       retryOptions,
@@ -33,6 +34,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // 2. Facility Investor
     const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
+
     const facilityInvestor = yield context.df.callActivityWithRetry(
       'activity-create-facility-investor',
       retryOptions,
@@ -43,6 +45,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(
       deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
     );
+
     const facilityCovenant = yield context.df.callActivityWithRetry(
       'activity-create-facility-covenant',
       retryOptions,
@@ -59,11 +62,11 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     }
 
     if (deal.dealSnapshot.dealType !== CONSTANTS.PRODUCT.TYPE.GEF) {
-      if (facility.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
+      if (facility.facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
         facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-loan', {
           deal, facility, dealAcbsData,
         });
-      } else if (facility.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
+      } else if (facility.facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
         facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-bond', {
           deal, facility, dealAcbsData,
         });
@@ -72,6 +75,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // 5. Bundle creation + Facility activation
     const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction(deal, facility);
+
     const codeValueTransaction = yield context.df.callActivity(
       'activity-create-code-value-transaction',
       { acbsCodeValueTransactionInput },
