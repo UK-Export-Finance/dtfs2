@@ -56,4 +56,6 @@ exports.createFacilityPost = async (req, res) => {
 
     return res.status(404).send('Deal not found');
   });
+
+  return res.status(404).send();
 };

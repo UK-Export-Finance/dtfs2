@@ -1,4 +1,9 @@
-const { parse, getTime, startOfDay, endOfDay } = require('date-fns');
+const {
+  parse,
+  getTime,
+  startOfDay,
+  endOfDay,
+} = require('date-fns');
 
 // date format that the endpoint will receive
 const DATE_INPUT_FORMAT = 'dd-MM-yyyy';
@@ -25,7 +30,7 @@ const dayStartAndEndTimestamps = (dateString) => {
   // generate end of the day timestamp
   const dayEnd = endOfDay(new Date(day));
   const dayEndTimestamp = getTime(dayEnd);
-  
+
   const dates = {
     dayStartTimestamp,
     dayEndTimestamp,
@@ -33,7 +38,6 @@ const dayStartAndEndTimestamps = (dateString) => {
 
   return dates;
 };
-
 
 module.exports = {
   TIMESTAMP_FIELDS,
