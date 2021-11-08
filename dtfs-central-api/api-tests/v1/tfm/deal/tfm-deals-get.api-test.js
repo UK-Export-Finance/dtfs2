@@ -28,6 +28,7 @@ const newDeal = (dealOverrides) => ({
   eligibility: {
     status: 'Not started',
     criteria: [{ }],
+    ...dealOverrides.eligibility,
   },
   bondTransactions: dealOverrides.bondTransactions,
   loanTransactions: dealOverrides.loanTransactions,
