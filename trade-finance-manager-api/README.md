@@ -45,6 +45,10 @@ When a deal is submitted to UKEF from the Portal, the deal is sent to TFM API. T
 
 :warning: In TFM, a deal is known as a 'Case'. A Case will have one deal with facilities and tasks for the users's to complete in order to process the case.
 
+## Notifying other teams of breaking changes
+
+:warning: When changing the TFM API GraphQL schema/queries, we need to notify other teams of this (another team consumes the TFM GraphQL API) by emailing "IT Mulesoft Technical Support".
+
 ## What happens when a deal is sent to TFM
 
 In essence:
