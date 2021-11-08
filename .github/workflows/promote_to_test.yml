@@ -44,7 +44,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -71,13 +71,13 @@ jobs:
         docker push ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
@@ -85,7 +85,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
@@ -103,7 +103,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -130,13 +130,13 @@ jobs:
         docker push ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
@@ -144,7 +144,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
@@ -162,7 +162,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -189,13 +189,13 @@ jobs:
         docker push ${{ env.registry_to }}/reference-data-proxy:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-reference-data-proxy
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --action swap
@@ -203,7 +203,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }}
@@ -221,7 +221,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -248,13 +248,13 @@ jobs:
         docker push ${{ env.registry_to }}/trade-finance-manager-ui:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-ui
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --action swap
@@ -262,7 +262,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }}
@@ -280,7 +280,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -307,13 +307,13 @@ jobs:
         docker push ${{ env.registry_to }}/trade-finance-manager-api:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-api
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --action swap
@@ -321,7 +321,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }}
@@ -339,7 +339,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -366,13 +366,13 @@ jobs:
         docker push ${{ env.registry_to }}/dtfs-central-api:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-dtfs-central-api
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --action swap
@@ -380,7 +380,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }}
@@ -398,7 +398,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -425,13 +425,13 @@ jobs:
         docker push ${{ env.registry_to }}/gef-ui:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-gef-ui
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --action swap
@@ -439,7 +439,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }}
@@ -457,7 +457,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -484,14 +484,14 @@ jobs:
         docker push ${{ env.registry_to }}/azure-function-acbs:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         azcliversion: 2.12.1
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-acbs
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         azcliversion: 2.12.1
         inlineScript: |
@@ -500,7 +500,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         azcliversion: 2.12.1
         inlineScript: |
@@ -519,7 +519,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -546,14 +546,14 @@ jobs:
         docker push ${{ env.registry_to }}/azure-function-number-generator:${{ env.tag_to }}
 
     - name: Create slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         azcliversion: 2.12.1
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-number-generator
 
     - name: Swap slot
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         azcliversion: 2.12.1
         inlineScript: |
@@ -562,7 +562,7 @@ jobs:
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: Azure/cli@v2.30.0
+      uses: Azure/cli@v2.29.2
       with:
         azcliversion: 2.12.1
         inlineScript: |
