@@ -117,7 +117,7 @@ type DealEligibility {
   agentAddressTown: String
   agentName: String
   agentAlias: String
-  lastUpdated: Int
+  lastUpdated: Float
 }
 
 type FacilityProduct {
