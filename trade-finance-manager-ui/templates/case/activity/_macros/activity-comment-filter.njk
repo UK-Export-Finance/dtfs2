@@ -1,6 +1,10 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+
 
 {% macro render(params) %}
+
+<form method="POST" autocomplete="off">
     {{ govukRadios({
     classes: "govuk-radios--inline",
     idPrefix: "filterType",
@@ -14,7 +18,12 @@
     items: [
         {
         value: "All activity",
-        text: "All activity"
+        text: "All activity",
+        checked: true,
+        attributes: {
+            'data-cy': '',
+            'onChange': ''
+            }
         },
         {
         value: "Comments only",
@@ -22,5 +31,6 @@
         }
     ]
     }) }}
+     </form>
 
 {% endmacro %}    
