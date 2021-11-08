@@ -8,6 +8,7 @@ const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const { assignGroupTasksToOneUser } = require('./tasks.controller');
+const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 const findOneTfmDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -170,12 +171,28 @@ const updateTfmUnderwriterManagersDecision = async (
 
   const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
 
-  const newPortalStatus = mapTfmDealStageToPortalStatus(decision);
+  const mappedDeal = mapSubmittedDeal(updatedDeal);
 
-  await api.updatePortalBssDealStatus(
-    dealId,
-    newPortalStatus,
-  );
+  const {
+    dealType,
+    submissionType,
+  } = mappedDeal;
+
+  const newPortalStatus = mapTfmDealStageToPortalStatus(dealType, decision);
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    await api.updatePortalBssDealStatus(
+      dealId,
+      newPortalStatus,
+    );
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    await api.updatePortalGefDealStatus(
+      dealId,
+      newPortalStatus,
+    );
+  }
 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
@@ -193,12 +210,8 @@ const updateTfmUnderwriterManagersDecision = async (
     portalCommentObj,
   );
 
-  const { dealSnapshot } = updatedDeal;
-  const { details } = dealSnapshot;
-  const { submissionType } = details;
-
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    await sendDealDecisionEmail(updatedDeal);
+    await sendDealDecisionEmail(mappedDeal);
   }
 
   return updatedDeal.tfm;
