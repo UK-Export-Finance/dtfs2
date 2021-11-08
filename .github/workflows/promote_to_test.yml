@@ -144,6 +144,7 @@ jobs:
     - name: Swap slot
       uses: azure/CLI@v1
       with:
+        azcliversion: 2.29.2
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
           
@@ -262,6 +263,7 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
+        azcliversion: 2.29.2
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-ui
 
@@ -387,6 +389,7 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
+        azcliversion: 2.29.2
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-dtfs-central-api
 
