@@ -486,14 +486,14 @@ jobs:
     - name: Create slot
       uses: Azure/cli@v1.0.0
       with:
-        azcliversion: 2.12.1
+        azcliversion: 2.29.2
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-acbs
 
     - name: Swap slot
       uses: Azure/cli@v1.0.0
       with:
-        azcliversion: 2.12.1
+        azcliversion: 2.29.2
         inlineScript: |
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --action swap
           
@@ -502,7 +502,7 @@ jobs:
       if: ${{ always() }}
       uses: Azure/cli@v1.0.0
       with:
-        azcliversion: 2.12.1
+        azcliversion: 2.29.2
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }}
 
@@ -548,14 +548,14 @@ jobs:
     - name: Create slot
       uses: Azure/cli@v1.0.0
       with:
-        azcliversion: 2.12.1
+        azcliversion: 2.29.2
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-number-generator
 
     - name: Swap slot
       uses: Azure/cli@v1.0.0
       with:
-        azcliversion: 2.12.1
+        azcliversion: 2.29.2
         inlineScript: |
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --action swap
           
@@ -564,6 +564,6 @@ jobs:
       if: ${{ always() }}
       uses: Azure/cli@v1.0.0
       with:
-        azcliversion: 2.12.1
+        azcliversion: 2.29.2
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }}
