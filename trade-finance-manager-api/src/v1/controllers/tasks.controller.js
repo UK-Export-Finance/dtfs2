@@ -1,6 +1,6 @@
+const { getTime } = require('date-fns');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const now = require('../../now');
 const getAssigneeFullName = require('./get-assignee-full-name');
 const {
   previousTaskIsComplete,
@@ -26,7 +26,7 @@ const updateHistory = ({
   statusTo,
   assignedUserId,
   updatedBy,
-  timestamp: now(),
+  timestamp: getTime(new Date()),
 });
 
 const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
@@ -55,15 +55,15 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
 
 const generateTaskDates = (statusFrom, statusTo) => {
   const dates = {
-    lastEdited: now(),
+    lastEdited: getTime(new Date()),
   };
 
   if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO) {
-    dates.dateStarted = now();
+    dates.dateStarted = getTime(new Date());
   }
 
   if (statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
-    dates.dateCompleted = now();
+    dates.dateCompleted = getTime(new Date());
   }
 
   return dates;
