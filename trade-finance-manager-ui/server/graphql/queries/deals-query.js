@@ -9,6 +9,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
   deals(params: {searchString: $searchString, sortBy: $sortBy, byField: $byField, start: $start, pagesize: $pagesize}) {
     count
     deals {
+      _id
       dealSnapshot {
         details {
           status
