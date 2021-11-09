@@ -1,3 +1,4 @@
+const { getTime } = require('date-fns');
 const mapDeal = require('../mappings/map-deal');
 const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
@@ -163,7 +164,7 @@ const updateTfmUnderwriterManagersDecision = async (
         comments,
         internalComments,
         userFullName,
-        timestamp: now(),
+        timestamp: getTime(new Date()),
       },
       stage: decision,
     },
