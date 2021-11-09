@@ -5,7 +5,6 @@ const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
-const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const { assignGroupTasksToOneUser } = require('./tasks.controller');
