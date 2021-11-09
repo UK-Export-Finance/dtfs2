@@ -256,7 +256,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 };
 
 const queryDeals = async ({
-  byField,
+  queryParams,
   start = 0,
   pagesize = 0,
 }) => {
@@ -268,9 +268,7 @@ const queryDeals = async ({
         'Content-Type': 'application/json',
       },
       data: {
-        queryParams: {
-          byField,
-        },
+        queryParams,
         start,
         pagesize,
       },

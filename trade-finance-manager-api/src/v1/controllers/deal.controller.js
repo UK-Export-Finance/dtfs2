@@ -25,7 +25,7 @@ const findOneTfmDeal = async (dealId) => {
 exports.findOneTfmDeal = findOneTfmDeal;
 
 const queryDeals = async (queryParams) => {
-  const { deals } = await api.queryDeals({ ...queryParams });
+  const { deals } = await api.queryDeals({ queryParams });
 
   if (!deals) {
     return false;
