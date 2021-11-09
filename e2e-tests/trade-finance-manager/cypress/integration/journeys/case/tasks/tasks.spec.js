@@ -274,7 +274,6 @@ context('Case tasks - AIN deal', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-
     //---------------------------------------------------------------
     // task form values should have the default values
     //---------------------------------------------------------------
@@ -381,7 +380,7 @@ context('Case tasks - AIN deal', () => {
 
     firstTask = pages.tasksPage.tasks.row(1, 1);
 
-    const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
+    const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
 
     firstTask.dateStarted().invoke('text').then((text) => {
       expect(text.trim()).to.equal(expectedDate);

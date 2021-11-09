@@ -17,7 +17,7 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
   let bondId;
   let loanId;
-  const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric' });
+  const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'numeric', day: '2-digit' });
 
   before(() => {
     cy.insertManyDeals([
@@ -58,7 +58,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal deal should have correct submission type and date prior to submission
     //---------------------------------------------------------------
@@ -71,7 +70,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.submissionDate().invoke('text').then((text) => {
       expect(text.trim()).to.equal('-');
     });
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -91,7 +89,6 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-
     //---------------------------------------------------------------
     // portal deal status should be updated
     //---------------------------------------------------------------
@@ -105,12 +102,10 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.equal('Submitted');
     });
 
-
     //---------------------------------------------------------------
     // portal submission type remains the same
     //---------------------------------------------------------------
     portalPages.contract.eligibilitySubmissionType().contains('Manual Inclusion Application');
-
 
     //---------------------------------------------------------------
     // portal submission date should be updated
@@ -122,7 +117,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.submissionDate().invoke('text').then((text) => {
       expect(text.trim()).to.equal(todayFormatted);
     });
-
 
     //---------------------------------------------------------------
     // TFM Underwriter manager approves the deal
@@ -147,7 +141,6 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.submitButton().click();
 
-
     //---------------------------------------------------------------
     // portal maker confirms no need to change cover start dates
     //---------------------------------------------------------------
@@ -164,14 +157,12 @@ context('Portal to TFM deal submission', () => {
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
     portalPages.facilityConfirmCoverStartDate.submit().click();
 
-
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
     portalPages.contract.proceedToReview().click();
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -186,7 +177,6 @@ context('Portal to TFM deal submission', () => {
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-
 
     //---------------------------------------------------------------
     // Portal Deal should now:
