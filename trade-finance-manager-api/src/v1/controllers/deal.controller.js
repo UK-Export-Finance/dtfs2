@@ -1,10 +1,10 @@
+const { getTime } = require('date-fns');
 const mapDeal = require('../mappings/map-deal');
 const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
-const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const { assignGroupTasksToOneUser } = require('./tasks.controller');
@@ -25,7 +25,7 @@ const findOneTfmDeal = async (dealId) => {
 exports.findOneTfmDeal = findOneTfmDeal;
 
 const queryDeals = async (queryParams) => {
-  const { deals } = await api.queryDeals({ ...queryParams });
+  const { deals } = await api.queryDeals({ queryParams });
 
   if (!deals) {
     return false;
@@ -163,7 +163,7 @@ const updateTfmUnderwriterManagersDecision = async (
         comments,
         internalComments,
         userFullName,
-        timestamp: now(),
+        timestamp: getTime(new Date()),
       },
       stage: decision,
     },

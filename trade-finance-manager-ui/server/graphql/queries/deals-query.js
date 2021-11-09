@@ -8,49 +8,56 @@ const dealsQuery = gql`
 query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField], $start: Int, $pagesize: Int){
   deals(params: {searchString: $searchString, sortBy: $sortBy, byField: $byField, start: $start, pagesize: $pagesize}) {
     count
-    deals{
+    deals {
       _id
-      tfm {
-        dateReceived
-        product
-        stage
-        history {
-          tasks {
-            timestamp
-          }
-        }
-      }
       dealSnapshot {
-        _id
         details {
           status
-          bankSupplyContractID
-          bankSupplyContractName
           ukefDealId
           submissionType
+          submissionDate
           maker {
-            username
             firstname
             surname
+            email
           }
           checker {
-            username
             firstname
             surname
           }
           dateOfLastAction
           submissionDate
+          manualInclusionNoticeSubmissionDate
           approvalDate
           created
-          owningBank{
+          owningBank {
             name
+            emails
+            partyUrn
           }
+          bankSupplyContractID
+          bankSupplyContractName
         }
         submissionDetails {
+          supplierType
+          supplierCompaniesHouseRegistrationNumber
           supplierName
+          supplierCountry
+          supplierAddressLine1
+          supplierAddressLine2
+          supplierAddressLine3
+          supplierAddressPostcode
+          supplierAddressTown
+          industrySector
+          industryClass
           supplyContractDescription
-          destinationCountry
-          supplyContractValue
+          indemnifierCompaniesHouseRegistrationNumber
+          indemnifierCorrespondenceAddressCountry
+          indemnifierCorrespondenceAddressLine1
+          indemnifierCorrespondenceAddressLine2
+          indemnifierCorrespondenceAddressLine3
+          indemnifierCorrespondenceAddressPostcode
+          indemnifierCorrespondenceAddressTown
           buyerName
           buyerAddressCountry
           buyerAddressLine1
@@ -58,36 +65,8 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           buyerAddressLine3
           buyerAddressPostcode
           buyerAddressTown
-          indemnifierAddressCountry
-          indemnifierAddressLine1
-          indemnifierAddressLine2
-          indemnifierAddressLine3
-          indemnifierAddressPostcode
-          indemnifierAddressTown
-          indemnifierCorrespondenceAddressCountry
-          indemnifierCorrespondenceAddressLine1
-          indemnifierCorrespondenceAddressLine2
-          indemnifierCorrespondenceAddressLine3
-          indemnifierCorrespondenceAddressPostcode
-          indemnifierCorrespondenceAddressTown
-          indemnifierName
-          industryClass
-          industrySector
-          supplierAddressCountry
-          supplierCountry
-          supplierAddressLine1
-          supplierAddressLine2
-          supplierAddressLine3
-          supplierAddressPostcode
-          supplierAddressTown
-          supplierCompaniesHouseRegistrationNumber
-          supplierCorrespondenceAddressCountry
-          supplierCorrespondenceAddressLine1
-          supplierCorrespondenceAddressLine2
-          supplierCorrespondenceAddressLine3
-          supplierCorrespondenceAddressPostcode
-          supplierCorrespondenceAddressTown
-          smeType
+          supplyContractValue
+          supplyContractCurrency
         }
         eligibility {
           criteria {
@@ -105,6 +84,8 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           agentAddressLine3
           agentAddressPostcode
           agentAddressTown
+          agentName
+          agentAlias
           lastUpdated
         }
         dealFiles {
@@ -116,6 +97,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         }
         facilities {
           facilitySnapshot {
+            _id,
             ukefFacilityID
             bankFacilityReference
             facilityValue
@@ -146,9 +128,25 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         }
         facilitiesUpdated
       }
+      tfm {
+        dateReceived
+        product
+        stage
+        underwriterManagersDecision {
+          decision
+          comments
+          internalComments
+          userFullName
+          timestamp
+        }
+        exporterCreditRating
+        probabilityOfDefault
+        lossGivenDefault
+      }
     }
   }
 }
+
 `;
 
 module.exports = dealsQuery;
