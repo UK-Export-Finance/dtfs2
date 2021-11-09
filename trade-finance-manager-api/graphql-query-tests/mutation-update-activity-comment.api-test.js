@@ -23,6 +23,7 @@ mutation UpdateActivity($dealId: ID!, $activityUpdate: TFMActivityInput) {
             lastName
             _id
           }
+          label
       }
     }
 }

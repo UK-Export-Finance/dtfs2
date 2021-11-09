@@ -265,6 +265,7 @@ type TFMActivity {
   timestamp: Int
   text: String
   author: TFMAuthor
+  label: String
 }
 type TFMDealData {
   parties: TFMParties
@@ -318,9 +319,14 @@ input TasksFilters {
   teamId: String
 }
 
+input ActivityFilters {
+  filterType: String
+}
+
 input DealInput {
   _id: String!
   tasksFilters: TasksFilters
+  activityFilters: ActivityFilters
 }
 
 input DealsSortBy {
@@ -445,6 +451,7 @@ input TFMActivityInput {
   timestamp: Int
   text: String
   author: TFMAuthorInput
+  label: String
 }
 
 type TeamMember {

@@ -12,6 +12,7 @@ const updateActivityMutation = gql`
                     lastName
                     _id
                 }
+                label
             }
         }
     }

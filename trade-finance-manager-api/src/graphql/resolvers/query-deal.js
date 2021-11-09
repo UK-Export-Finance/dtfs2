@@ -1,11 +1,12 @@
 const dealReducer = require('../reducers/deal');
 const { findOneTfmDeal } = require('../../v1/controllers/deal.controller');
 const { filterTasks } = require('./filters/filterTasks');
+const { filterActivities } = require('./filters/filterActivities');
 
 require('dotenv').config();
 
 const queryDeal = async ({ params }) => {
-  const { _id, tasksFilters } = params;
+  const { _id, tasksFilters, activityFilters } = params;
 
   const deal = await findOneTfmDeal(_id);
 
@@ -14,6 +15,7 @@ const queryDeal = async ({ params }) => {
     tfm: {
       ...deal.tfm,
       tasks: filterTasks(deal.tfm.tasks, tasksFilters),
+      activities: filterActivities(deal.tfm.activities, activityFilters),
     },
   };
 

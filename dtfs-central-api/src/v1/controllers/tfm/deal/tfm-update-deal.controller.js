@@ -40,10 +40,8 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       }
     }
   }
-  console.log(existingDeal.tfm);
-  console.log('tfm uodate', tfmUpdate.tfm.activities);
-  if (existingDeal.tfm && existingDeal.tfm.activities && (tfmUpdate.tfm.activities.length !== 0)) {
-    console.log('in here', tfmUpdate.tfm.activities);
+  // activities .type check added to ensure that nested objects not added after task submission
+  if (existingDeal.tfm && existingDeal.tfm.activities && (tfmUpdate.tfm.activities && tfmUpdate.tfm.activities.length !== 0 && tfmUpdate.tfm.activities.type)) {
     dealUpdate.tfm.activities = [
       ...existingDeal.tfm.activities,
       { ...tfmUpdate.tfm.activities },

@@ -37,6 +37,7 @@ router.get('/:_id/parties/bond-beneficiary', partiesController.getBondBeneficiar
 router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
 router.get('/:_id/activity', activityController.getActivity);
+router.post('/:_id/activity', activityController.filterActivities);
 router.get('/:_id/activity/post-comment', activityController.getCommentBox);
 router.post('/:_id/activity/post-comment', activityController.postComment);
 
