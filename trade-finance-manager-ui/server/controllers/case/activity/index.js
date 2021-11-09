@@ -8,8 +8,8 @@ const mappedActivities = (activities) => activities.map((activity) => ({
   },
   text: activity.text,
   datetime: {
-    timestamp: moment.unix(activity.timestamp).format('D MMM YYYY'),
-    type: 'date',
+    timestamp: moment.unix(activity.timestamp).format(),
+    type: 'datetime',
   },
   byline: {
     text: `${activity.author.firstName} ${activity.author.lastName}`,
