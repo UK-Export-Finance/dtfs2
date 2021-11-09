@@ -1,14 +1,14 @@
-const moment = require('moment');
+const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
 const CONSTANTS = require('../../../constants');
-// TODO: change to date-fns
+
 const mappedActivities = (activities) => activities.map((activity) => ({
   label: {
     text: activity.label,
   },
   text: activity.text,
   datetime: {
-    timestamp: moment.unix(activity.timestamp).format(),
+    timestamp: fromUnixTime(new Date(activity.timestamp)),
     type: 'datetime',
   },
   byline: {
@@ -53,7 +53,7 @@ const filterActivities = async (req, res) => {
   const { filterType } = req.body;
 
   const { user } = req.session;
-  console.log(filterType);
+
   const activityFilters = {
     filterType,
   };
@@ -100,7 +100,7 @@ const postComment = async (req, res) => {
   const dealId = params._id; // eslint-disable-line no-underscore-dangle
   const { user } = session;
   const { comment } = body;
-  // TODO: change to date-fns
+
   try {
     if (comment) {
       const shortUser = {
@@ -110,7 +110,7 @@ const postComment = async (req, res) => {
       };
       const commentObj = {
         type: 'COMMENT',
-        timestamp: moment().unix(),
+        timestamp: getUnixTime(new Date()),
         author: shortUser,
         text: comment,
         label: CONSTANTS.ACTIVITIES.ACTIVITY_LABEL.COMMENT,
