@@ -1,11 +1,11 @@
-FROM node:lts-alpine AS image
+FROM node:14.18.1-alpine3.13 AS image
 
 WORKDIR /app
 
 COPY . .
 RUN npm install
 
-FROM node:lts-alpine
+FROM node:14.18.1-alpine3.13
 # Identifies the code in the running container
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
