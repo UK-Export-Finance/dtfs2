@@ -47,13 +47,13 @@ exports.createFacilityPost = async (req, res) => {
     });
   }
 
-  await findOneDeal(facility.associatedDealId, async (deal) => {
-    if (deal) {
-      const createdFacility = await createFacility(facility, user, req.routePath);
+  const deal = await findOneDeal(facility.associatedDealId);
 
-      return res.status(200).send(createdFacility);
-    }
+  if (deal) {
+    const createdFacility = await createFacility(facility, user, req.routePath);
 
-    return res.status(404).send('Deal not found');
-  });
+    return res.status(200).send(createdFacility);
+  }
+
+  return res.status(404).send('Deal not found');
 };

@@ -1,3 +1,4 @@
+const { getTime, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -77,6 +78,51 @@ describe('/v1/tfm/deals', () => {
               lastUpdated: expect.any(Number),
             },
           },
+        ];
+
+        expect(body.deals.length).toEqual(expectedDeals.length);
+
+        expect(body.deals).toEqual(expectedDeals);
+      });
+
+      it('returns deals filtered by dealSnapshot.eligibility.lastUpdated', async () => {
+        const today = new Date();
+        const todayTimestamp = getTime(today);
+        const todayFormatted = format(new Date(), 'dd-MM-yyyy')
+
+        const miaDeal = newDeal({
+          eligibility: {
+            lastUpdated: todayTimestamp,
+          },
+        });
+
+        const minDeal = newDeal({});
+
+        const [
+          submittedMIADeal,
+          submittedMINDeal,
+        ] = await createAndSubmitDeals([
+          miaDeal,
+          minDeal,
+        ]);
+
+        const mockReqBody = {
+          queryParams: {
+            byField: [
+              {
+                name: 'dealSnapshot.eligibility.lastUpdated',
+                value: todayFormatted,
+              },
+            ],
+          },
+        };
+
+        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+        expect(status).toEqual(200);
+
+        const expectedDeals = [
+          submittedMIADeal,
         ];
 
         expect(body.deals.length).toEqual(expectedDeals.length);

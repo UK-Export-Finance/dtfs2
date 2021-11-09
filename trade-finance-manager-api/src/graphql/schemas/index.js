@@ -13,6 +13,7 @@ type Country {
 type OwningBank {
   name: String
   emails: [String]
+  partyUrn: String
 }
 
 type Maker {
@@ -39,6 +40,7 @@ type DealDetails {
   checkerMIN: Checker
   dateOfLastAction: String
   submissionDate: String
+  manualInclusionNoticeSubmissionDate: String
   approvalDate: String
   created: String
   workflowStatus: String
@@ -115,7 +117,7 @@ type DealEligibility {
   agentAddressTown: String
   agentName: String
   agentAlias: String
-  lastUpdated: Int
+  lastUpdated: Float
 }
 
 type FacilityProduct {
@@ -340,7 +342,7 @@ type DealSnapshot {
   isFinanceIncreasing: Boolean
   eligibility: DealEligibility
   dealFiles: DealFiles
-  facilitiesUpdated: Int
+  facilitiesUpdated: Float
 }
 
 type Deal {
