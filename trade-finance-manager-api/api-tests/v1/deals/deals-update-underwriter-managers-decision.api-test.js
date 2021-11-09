@@ -4,7 +4,8 @@ const externalApis = require('../../../src/v1/api');
 const { updateTfmUnderwriterManagersDecision } = require('../../../src/v1/controllers/deal.controller');
 const mapTfmDealStageToPortalStatus = require('../../../src/v1/mappings/map-tfm-deal-stage-to-portal-status');
 
-const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
+const MOCK_DEAL_BSS_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
+const MOCK_DEAL_GEF_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../../src/constants');
 
@@ -12,12 +13,11 @@ const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
 ));
 
-const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
+const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 
 describe('update tfm underwriter managers decision', () => {
-  const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+  const dealId = MOCK_DEAL_BSS_MIA._id;
   const comments = 'Testing';
   const internalComments = '';
   const userFullName = 'Test User';
@@ -32,6 +32,7 @@ describe('update tfm underwriter managers decision', () => {
     externalApis.sendEmail = sendEmailApiSpy;
     updatePortalBssDealStatusSpy.mockClear();
     externalApis.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
+    externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
   });
 
   describe('when deal is MIA with decision: approved with conditions', () => {
@@ -48,12 +49,12 @@ describe('update tfm underwriter managers decision', () => {
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITH_CONDITIONS,
-        sendToEmailAddress: MOCK_DEAL_MIA_SUBMITTED.details.maker.email,
+        sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
         emailVariables: {
-          recipientName: MOCK_DEAL_MIA_SUBMITTED.details.maker.firstname,
-          exporterName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
-          bankReferenceNumber: MOCK_DEAL_MIA_SUBMITTED.details.bankSupplyContractID,
-          ukefDealId: MOCK_DEAL_MIA_SUBMITTED.details.ukefDealId,
+          recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
+          exporterName: MOCK_DEAL_BSS_MIA.submissionDetails['supplier-name'],
+          bankReferenceNumber: MOCK_DEAL_BSS_MIA.details.bankSupplyContractID,
+          ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           conditions: comments,
         },
       };
@@ -81,12 +82,12 @@ describe('update tfm underwriter managers decision', () => {
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITHOUT_CONDITIONS,
-        sendToEmailAddress: MOCK_DEAL_MIA_SUBMITTED.details.maker.email,
+        sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
         emailVariables: {
-          recipientName: MOCK_DEAL_MIA_SUBMITTED.details.maker.firstname,
-          exporterName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
-          bankReferenceNumber: MOCK_DEAL_MIA_SUBMITTED.details.bankSupplyContractID,
-          ukefDealId: MOCK_DEAL_MIA_SUBMITTED.details.ukefDealId,
+          recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
+          exporterName: MOCK_DEAL_BSS_MIA.submissionDetails['supplier-name'],
+          bankReferenceNumber: MOCK_DEAL_BSS_MIA.details.bankSupplyContractID,
+          ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
         },
       };
 
@@ -113,12 +114,12 @@ describe('update tfm underwriter managers decision', () => {
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_DECLINED,
-        sendToEmailAddress: MOCK_DEAL_MIA_SUBMITTED.details.maker.email,
+        sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
         emailVariables: {
-          recipientName: MOCK_DEAL_MIA_SUBMITTED.details.maker.firstname,
-          exporterName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
-          bankReferenceNumber: MOCK_DEAL_MIA_SUBMITTED.details.bankSupplyContractID,
-          ukefDealId: MOCK_DEAL_MIA_SUBMITTED.details.ukefDealId,
+          recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
+          exporterName: MOCK_DEAL_BSS_MIA.submissionDetails['supplier-name'],
+          bankReferenceNumber: MOCK_DEAL_BSS_MIA.details.bankSupplyContractID,
+          ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           reasonForRejection: comments,
         },
       };
@@ -132,20 +133,49 @@ describe('update tfm underwriter managers decision', () => {
     });
   });
 
-  it('should call api.updatePortalBssDealStatus', async () => {
-    const decision = 'Declined';
+  describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
+    it('should call api.updatePortalBssDealStatus', async () => {
+      const decision = 'Declined';
 
-    await updateTfmUnderwriterManagersDecision(
-      dealId,
-      decision,
-      comments,
-      internalComments,
-      userFullName,
-    );
+      await updateTfmUnderwriterManagersDecision(
+        dealId,
+        decision,
+        comments,
+        internalComments,
+        userFullName,
+      );
 
-    expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-      dealId,
-      mapTfmDealStageToPortalStatus(decision),
-    );
+      expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
+        dealId,
+        mapTfmDealStageToPortalStatus(
+          CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          decision,
+        ),
+      );
+    });
+  });
+
+  describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
+    const gefDealId = MOCK_DEAL_GEF_MIA._id;
+
+    it('should call api.updatePortalGefDealStatus', async () => {
+      const decision = 'Declined';
+
+      await updateTfmUnderwriterManagersDecision(
+        gefDealId,
+        decision,
+        comments,
+        internalComments,
+        userFullName,
+      );
+
+      expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
+        gefDealId,
+        mapTfmDealStageToPortalStatus(
+          CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          decision,
+        ),
+      );
+    });
   });
 });
