@@ -16,7 +16,7 @@ const getAPI = async (type) => {
   }).catch((err) => ({
     status: err.response.status,
     data: {
-      error: err.response.data.error,
+      error: err.response.data.error ? err.response.data.error : err,
     },
   }));
 
@@ -27,8 +27,10 @@ const getCurrency = (currencyCode) => getAPI(`currency/${currencyCode}`);
 
 const getACBSIndustrySector = async (industryId) => getAPI(`map-industry-sector?ukefIndustryId=${industryId}`);
 
+const getACBSCountryCode = async (country) => getAPI(`country?searchtext=${country}`);
 
 module.exports = {
   getCurrency,
   getACBSIndustrySector,
+  getACBSCountryCode,
 };
