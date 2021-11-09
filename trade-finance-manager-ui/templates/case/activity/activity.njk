@@ -15,19 +15,18 @@
       <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="activity-heading">Activity and comments</h2>
 
         {% set filterCommentData = {
-          activities: activities,
-          comments: comments
+          selectedActivityFilter: selectedActivityFilter
         } %}
 
       {{ activityCommentFilter.render(filterCommentData) }}
 
       {{ govukButton({
-         text: "Add a comment",
+        text: "Add a comment",
         classes: "govuk-button--secondary",
         href: "/case/" + dealId + "/activity" + "/post-comment",
-      attributes: {
-        'data-cy': 'add-comment-button'
-      }
+        attributes: {
+          'data-cy': 'add-comment-button'
+        }
       }) }}
 
       {% set componentData = {
@@ -36,19 +35,16 @@
         submissionDate: deal.details.submissionDate,
         userTimezone: user.timezone,
         tfm: tfm,
-        activities: activity
-      }%}
+        activities: activities
+      } %}
     
 
-        
       {{ mojTimeline({
-        items: comments
+        items: activities
       }) }}
-      
-       
 
     </div>
-
+    
   </div>
 
 {% endblock %}

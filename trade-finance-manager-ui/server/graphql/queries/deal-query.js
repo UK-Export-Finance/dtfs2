@@ -1,8 +1,8 @@
 const gql = require('graphql-tag');
 
 const dealQuery = gql`
-  query Deal($_id: String! $tasksFilters: TasksFilters) {
-    deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
+  query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityFilters) {
+    deal(params: { _id: $_id, tasksFilters: $tasksFilters activityFilters: $activityFilters }) {
       _id
       tfm {
         product
@@ -31,6 +31,7 @@ const dealQuery = gql`
             lastName
             _id
           }
+          label
         }
         tasks {
           groupTitle

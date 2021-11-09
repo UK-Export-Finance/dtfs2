@@ -1,36 +1,44 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
-
 
 {% macro render(params) %}
+    {% set selectedActivityFilter = params.selectedActivityFilter %}
 
-<form method="POST" autocomplete="off">
-    {{ govukRadios({
-    classes: "govuk-radios--inline",
-    idPrefix: "filterType",
-    name: "filterType",
-    fieldset: {
-        legend: {
-        text: "Filter all activities and comments",
-        classes: "govuk-visually-hidden"
-        }
-    },
-    items: [
-        {
-        value: "All activity",
-        text: "All activity",
-        checked: true,
-        attributes: {
-            'data-cy': '',
-            'onChange': ''
+  <section id="activity-filters" data-cy="activity-filters">
+
+    <form method="post" autocomplete="off">
+
+        {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "filterType",
+        name: "filterType",
+        fieldset: {
+            legend: {
+            text: "Filter all activities and comments",
+            classes: "govuk-visually-hidden"
             }
         },
-        {
-        value: "Comments only",
-        text: "Comments only"
-        }
-    ]
-    }) }}
+        items: [
+            {
+            value: "all-activity",
+            text: "All activity",
+            checked: selectedActivityFilter === 'all-activity',
+            attributes: {
+                'data-cy': 'activity-comment-radio-button-all-activities',
+                'onChange': 'this.form.submit()'
+                }
+            },
+            {
+            value: "comments-only",
+            text: "Comments only",
+            checked: selectedActivityFilter === 'comments-only',
+            attributes: {
+                'data-cy': 'activity-comment-radio-button-comments-only',
+                'onChange': 'this.form.submit()'
+                }
+            }
+        ]
+        }) }}
      </form>
+  </section>
 
 {% endmacro %}    
