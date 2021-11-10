@@ -1,4 +1,4 @@
 <h3>The manual inclusion application was rejected for the following reasons:</h3>
 {% for comment in ukefDecision %}
-    <p>{{ comment.text }}</p>
+    <p>{{ comment.text | safe }}</p>
 {% endfor %}
