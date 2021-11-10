@@ -13,11 +13,15 @@ const SME_TYPE = {
 };
 
 const EXPIRATION_DATE = {
-  NONE: '9999-99-99',
+  NONE: null,
 };
 
 const PARTY = {
   GUARANTOR: '00000141',
+};
+
+const CURRENCY = {
+  DEFAULT: 'GBP',
 };
 
 module.exports = {
@@ -25,4 +29,5 @@ module.exports = {
   SUBMISSION_TYPE,
   EXPIRATION_DATE,
   PARTY,
+  CURRENCY,
 };
