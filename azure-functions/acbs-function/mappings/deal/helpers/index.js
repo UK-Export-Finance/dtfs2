@@ -4,6 +4,7 @@ const getDealSubmissionDate = require('./get-deal-submission-date');
 const getIndustryClassification = require('./get-industry-classification');
 const getDealValue = require('./get-deal-value');
 const getDealId = require('./get-deal-id');
+const getDealCurrency = require('./get-deal-currency');
 
 module.exports = {
   getDealGuaranteeExpiryDate,
@@ -12,4 +13,5 @@ module.exports = {
   getIndustryClassification,
   getDealValue,
   getDealId,
+  getDealCurrency,
 };
