@@ -8,13 +8,12 @@ import {
 
 const res = mockRes();
 
-// changed to RISK_MANAGERS TO CHECK WORKS
 const mockUser = {
   _id: '12345678',
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['RISK_MANAGERS'],
+  teams: ['UNDERWRITERS', 'RISK_MANAGERS'],
 };
 
 const session = {
