@@ -22,6 +22,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
 const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
 const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
 const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
+const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
 
 const createGefExporterController = require('../controllers/portal/gef-exporter/create-gef-exporter.controller');
 const getGefExporterController = require('../controllers/portal/gef-exporter/get-gef-exporter.controller');
@@ -650,6 +651,53 @@ portalRouter.route('/gef/deals/:id/status')
   .put(
     putGefDealStatusController.updateDealStatusPut,
   );
+
+/**
+ * @openapi
+ * /gef/deals/:id/comment:
+ *   post:
+ *     summary: Add a comment to a GEF deal in gef-application collection
+ *     tags: [Portal - GEF]
+ *     description: Add a comment to a GEF deal in gef-application collection
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to add comment
+ *     requestBody:
+ *       description: Required fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               commentType:
+ *                 type: string
+ *                 example: 'comment'
+ *               comment:
+ *                 type: object
+ *                 properties:
+ *                   user:
+ *                     type: object
+ *                     schema:
+ *                       $ref: '#/definitions/User'
+ *                   text:
+ *                     type: string
+ *                     example: 'Amazing comment'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/DealGEF'
+ *       404:
+ *         description: Deal not found
+ */
+portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwriterCommentToGefDeal);
 
 /**
  * @openapi
