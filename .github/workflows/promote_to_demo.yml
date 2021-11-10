@@ -46,7 +46,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -74,14 +74,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
           
@@ -90,7 +90,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
         
@@ -109,7 +109,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -137,14 +137,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
           
@@ -153,7 +153,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
 
@@ -172,7 +172,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -200,14 +200,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-reference-data-proxy
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --action swap
           
@@ -216,7 +216,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }}
 
@@ -235,7 +235,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -263,14 +263,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-ui
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --action swap
           
@@ -279,7 +279,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }}
         
@@ -298,7 +298,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -326,14 +326,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-api
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --action swap
           
@@ -342,7 +342,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }}
 
@@ -361,7 +361,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -389,14 +389,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-dtfs-central-api
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --action swap
           
@@ -405,7 +405,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }}
 
@@ -451,14 +451,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-gef-ui
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --action swap
           
@@ -467,7 +467,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }}
   
@@ -486,7 +486,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -514,14 +514,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-acbs
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --action swap
           
@@ -530,7 +530,7 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }}
 
@@ -549,7 +549,7 @@ jobs:
     - name: Defaults
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -577,14 +577,14 @@ jobs:
     - name: Create slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-number-generator
 
     - name: Swap slot
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --action swap
           
@@ -593,6 +593,6 @@ jobs:
       if: ${{ always() }}
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.29.2
+        azcliversion: 2.30.0
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }}
