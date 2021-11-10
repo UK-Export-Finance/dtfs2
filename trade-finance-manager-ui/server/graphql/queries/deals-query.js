@@ -11,6 +11,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
     deals {
       _id
       dealSnapshot {
+        dealType
         details {
           status
           ukefDealId
