@@ -8,12 +8,13 @@ import {
 
 const res = mockRes();
 
+// changed to RISK_MANAGERS TO CHECK WORKS
 const mockUser = {
   _id: '12345678',
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['UNDERWRITERS'],
+  teams: ['RISK_MANAGERS'],
 };
 
 const session = {
@@ -22,7 +23,7 @@ const session = {
 
 const userCannotEdit = {
   ...mockUser,
-  teams: ['RISK_MANAGERS'],
+  teams: ['BUSINESS_SUPPORT'],
 };
 
 const mockDeal = {
