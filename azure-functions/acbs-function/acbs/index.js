@@ -42,7 +42,18 @@ module.exports = df.orchestrator(function* HDeal(context) {
       ),
     };
 
-    if (product === CONSTANTS.PRODUCT.TYPE.GEF) {
+    /**
+     * Check whether the exporter's country is in the UK.
+     * If it is set to GBR (Default) and skip ACBS country code Mulesoft call
+     */
+    if (CONSTANTS.DEAL.UNITED_KINGDOM.includes(country.toLowerCase())) {
+      acbsReference.country = {
+        supplierAcbsCountryCode: CONSTANTS.DEAL.COUNTRY.DEFAULT,
+      };
+      country = CONSTANTS.DEAL.COUNTRY.DEFAULT;
+    }
+
+    if (product === CONSTANTS.PRODUCT.TYPE.GEF && country !== CONSTANTS.DEAL.COUNTRY.DEFAULT) {
       acbsReference.country = {
         supplierAcbsCountryCode: yield context.df.callActivityWithRetry(
           'activity-get-acbs-country-code',
