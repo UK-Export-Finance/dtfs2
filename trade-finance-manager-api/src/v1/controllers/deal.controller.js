@@ -156,6 +156,8 @@ const updateTfmUnderwriterManagersDecision = async (
   internalComments,
   userFullName,
 ) => {
+  // Add Manager's decision to the deal (this gets updated in tfm-deals collection)
+  // note: GEF and BSS deals follow the same format
   const managerDecisionUpdate = {
     tfm: {
       underwriterManagersDecision: {
@@ -204,11 +206,14 @@ const updateTfmUnderwriterManagersDecision = async (
     text: comments,
   };
 
-  api.addPortalDealComment(
-    dealId,
-    portalCommentType,
-    portalCommentObj,
-  );
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
+    await api.addUnderwriterCommentToGefDeal(dealId, portalCommentType, portalCommentObj);
+  }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
     await sendDealDecisionEmail(mappedDeal);

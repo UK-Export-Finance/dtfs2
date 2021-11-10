@@ -75,6 +75,7 @@ function buildBody(app, previewMode) {
     applicationId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
+    ukefDecision: app.ukefDecision,
     previewMode,
   };
 }
