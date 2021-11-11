@@ -23,8 +23,8 @@ const calculateDaysOfCover = (coverStartDate, coverEndDate) => {
 
   // NOTE: if the start date is passed first, we get a minus result.
   const coverDifference = differenceInDays(
-    new Date(coverEndDate),
-    new Date(coverStartDate),
+    new Date(Number(coverEndDate)),
+    new Date(Number(coverStartDate)),
   );
 
   return coverDifference;
@@ -58,7 +58,7 @@ const generateGefFacilityFeeRecord = (facility) => {
     value: facilityValue,
     coverPercentage,
     coverStartDate,
-    coverEndDate,
+    coverEndDateTimestamp: coverEndDate,
   } = facility;
 
   const drawnAmount = calculateDrawnAmount(

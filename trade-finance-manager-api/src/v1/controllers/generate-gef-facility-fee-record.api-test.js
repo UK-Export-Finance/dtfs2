@@ -13,8 +13,8 @@ describe('generate-gef-facility-fee-record', () => {
   const mockCoverPercentage = 20;
 
   // for days of cover
-  const mockCoverStartDate = '2021-12-01T00:00:00.000Z';
-  const mockCoverEndDate = '2023-12-01T00:00:00.000Z';
+  const mockCoverStartDate = '1636379303330';
+  const mockCoverEndDateTimestamp = '1701388800000';
 
   // for fee amount
   const mockInterestPercentage = 12;
@@ -39,12 +39,12 @@ describe('generate-gef-facility-fee-record', () => {
     it('should return the amount of days between start and end cover dates', () => {
       const result = calculateDaysOfCover(
         mockCoverStartDate,
-        mockCoverEndDate,
+        mockCoverEndDateTimestamp,
       );
 
       const expected = differenceInDays(
-        new Date(mockCoverEndDate),
-        new Date(mockCoverStartDate),
+        new Date(Number(mockCoverEndDateTimestamp)),
+        new Date(Number(mockCoverStartDate)),
       );
 
       expect(result).toEqual(expected);
@@ -61,7 +61,7 @@ describe('generate-gef-facility-fee-record', () => {
 
       const daysOfCover = calculateDaysOfCover(
         mockCoverStartDate,
-        mockCoverEndDate,
+        mockCoverEndDateTimestamp,
       );
 
       const result = calculateFeeAmount(
@@ -89,7 +89,7 @@ describe('generate-gef-facility-fee-record', () => {
         value: mockFacilityValue,
         coverPercentage: mockCoverPercentage,
         coverStartDate: mockCoverStartDate,
-        coverEndDate: mockCoverEndDate,
+        coverEndDateTimestamp: mockCoverEndDateTimestamp,
       };
 
       const result = generateGefFacilityFeeRecord(mockFacility);
@@ -101,7 +101,7 @@ describe('generate-gef-facility-fee-record', () => {
 
       const daysOfCover = calculateDaysOfCover(
         mockCoverStartDate,
-        mockCoverEndDate,
+        mockCoverEndDateTimestamp,
       );
 
       const expected = calculateFeeAmount(
