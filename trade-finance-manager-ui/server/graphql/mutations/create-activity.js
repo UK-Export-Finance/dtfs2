@@ -1,8 +1,8 @@
 const gql = require('graphql-tag');
 
-const updateActivityMutation = gql`
-    mutation UpdateActivity($dealId: ID!, $activityUpdate: TFMActivityInput) {
-        updateActivity(dealId: $dealId, activityUpdate: $activityUpdate) {
+const createActivityMutation = gql`
+    mutation createActivity($dealId: ID!, $activityUpdate: TFMActivityInput) {
+        createActivity(dealId: $dealId, activityUpdate: $activityUpdate) {
             activities {
                 type
                 timestamp
@@ -18,4 +18,4 @@ const updateActivityMutation = gql`
     }
 `;
 
-module.exports = updateActivityMutation;
+module.exports = createActivityMutation;
