@@ -1,11 +1,8 @@
 import relative from '../../../relativeURL';
-import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
-
-const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
 
 context('Case Underwriting - Pricing and risk for Risk Managers', () => {
   let dealId;
@@ -98,63 +95,6 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
       pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
-    });
-
-    it('submitting a rating displays the rating in table on `pricing and risk` page and does not render `add credit rating` link', () => {
-      pages.underwritingPricingAndRiskPage.addRatingLink().click();
-
-      // select option, submit
-      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
-
-      // assert elements/value in `pricing and risk` page
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
-
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
-
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('be.visible');
-
-      pages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Good (BB-)');
-      });
-    });
-
-    it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
-      // check value previously submitted
-      pages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Good (BB-)');
-      });
-
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().click();
-
-      // previously submitted value should be auto selected
-      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().should('be.checked');
-
-      // submit different value
-      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputAcceptable().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
-
-      // check new value displays in `pricing and risk` page
-      pages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Acceptable (B+)');
-      });
-    });
-  });
-
-  describe('Risk Managers can edit once logged in', () => {
-    beforeEach(() => {
-      cy.login(riskManagerUser);
-
-      cy.visit(`/case/${dealId}/underwriting/pricing-and-risk`);
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
-    });
-
-    it('edit button is visible as compared to add', () => {
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('exist');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('exist');
     });
   });
 });
