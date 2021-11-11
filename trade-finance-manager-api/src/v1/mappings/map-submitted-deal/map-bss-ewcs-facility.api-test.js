@@ -74,7 +74,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         guaranteeFee: Number(guaranteeFeePayableByBank),
         feeType: premiumType,
         feeFrequency,
-        dayCountBasis,
+        dayCountBasis: Number(dayCountBasis),
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
         bankReference: bankReferenceNumber,
         uniqueIdentificationNumber,

@@ -158,7 +158,7 @@ type FacilitySnapshot {
   firstDrawdownAmountInExportCurrency: String
   feeType: String
   feeFrequency: String
-  dayCountBasis: String
+  dayCountBasis: Int
   dates: FacilityDates
   providedOn: [String]
   providedOnOther: String

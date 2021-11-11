@@ -53,7 +53,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(facility),
     feeType: mapFeeType(facility),
     feeFrequency: mapFeeFrequency(facility),
-    dayCountBasis: facility.dayCountBasis,
+    dayCountBasis: Number(facility.dayCountBasis),
     dates: mapDates(facility, facilityTfm, dealDetails),
 
     // bond specifics

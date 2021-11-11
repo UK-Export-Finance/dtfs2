@@ -127,7 +127,7 @@ class Facility {
       }
 
       if (req.dayCountBasis) {
-        this.dayCountBasis = req.dayCountBasis;
+        this.dayCountBasis = Number(req.dayCountBasis);
       }
 
       if (req.paymentType != null) {

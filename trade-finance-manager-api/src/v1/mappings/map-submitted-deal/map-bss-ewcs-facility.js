@@ -70,7 +70,7 @@ const mapBssEwcsFacility = (facility) => {
     guaranteeFee: Number(guaranteeFeePayableByBank),
     feeType: feeType || premiumType,
     feeFrequency: feeFrequency || premiumFrequency,
-    dayCountBasis,
+    dayCountBasis: Number(dayCountBasis),
     disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
     bankReference: bankReferenceNumber,
     uniqueIdentificationNumber,

@@ -121,7 +121,7 @@ describe('mapFacility', () => {
       firstDrawdownAmountInExportCurrency: expectedFirstDrawdownAmountInExportCurrency,
       feeType: mapFeeType(facilityLatest),
       feeFrequency: mapFeeFrequency(facilityLatest),
-      dayCountBasis: mockFacility.dayCountBasis,
+      dayCountBasis: Number(mockFacility.dayCountBasis),
       dates: expectedDates,
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
