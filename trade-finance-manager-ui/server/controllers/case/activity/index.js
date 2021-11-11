@@ -115,7 +115,7 @@ const postComment = async (req, res) => {
         text: comment,
         label: CONSTANTS.ACTIVITIES.ACTIVITY_LABEL.COMMENT,
       };
-      await api.updateActivity(dealId, commentObj);
+      await api.createActivity(dealId, commentObj);
     }
   } catch (err) {
     console.log(err);

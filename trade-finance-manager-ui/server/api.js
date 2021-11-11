@@ -14,7 +14,7 @@ const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-
 const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
-const updateActivityMutation = require('./graphql/mutations/update-activity');
+const createActivityMutation = require('./graphql/mutations/create-activity');
 
 require('dotenv').config();
 
@@ -169,13 +169,13 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const updateActivity = async (dealId, activityUpdate) => {
+const createActivity = async (dealId, activityUpdate) => {
   const updateVariables = {
     dealId,
     activityUpdate,
   };
 
-  const response = await apollo('PUT', updateActivityMutation, updateVariables);
+  const response = await apollo('PUT', createActivityMutation, updateVariables);
 
   return response;
 };
@@ -212,6 +212,6 @@ module.exports = {
   updateProbabilityOfDefault,
   updateUnderwriterManagersDecision,
   updateLeadUnderwriter,
-  updateActivity,
+  createActivity,
   login,
 };
