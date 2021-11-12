@@ -596,6 +596,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
 
     return response.data;
   } catch ({ response }) {
+    console.error('Unable to add a comment as an underwriter ', response);
     return false;
   }
 };
