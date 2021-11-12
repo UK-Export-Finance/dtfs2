@@ -19,7 +19,7 @@ const addUnderwriterCommentToGefDealSpy = jest.fn(() => Promise.resolve({}));
 const addPortalDealCommentSpy = jest.fn(() => Promise.resolve({}));
 
 describe('update tfm underwriter managers decision', () => {
-  const dealId = MOCK_DEAL_BSS_MIA._id;
+  const bssDealId = MOCK_DEAL_BSS_MIA._id;
   const comments = 'Testing';
   const internalComments = '';
   const userFullName = 'Test User';
@@ -28,7 +28,7 @@ describe('update tfm underwriter managers decision', () => {
     sendEmailApiSpy.mockClear();
     externalApis.sendEmail = sendEmailApiSpy;
 
-    await api.put({ dealId }).to('/v1/deals/submit');
+    await api.put({ bssDealId }).to('/v1/deals/submit');
 
     sendEmailApiSpy.mockClear();
     externalApis.sendEmail = sendEmailApiSpy;
@@ -44,7 +44,7 @@ describe('update tfm underwriter managers decision', () => {
       const decision = 'Approved (with conditions)';
 
       await updateTfmUnderwriterManagersDecision(
-        dealId,
+        bssDealId,
         decision,
         comments,
         internalComments,
@@ -77,7 +77,7 @@ describe('update tfm underwriter managers decision', () => {
       const decision = 'Approved (without conditions)';
 
       await updateTfmUnderwriterManagersDecision(
-        dealId,
+        bssDealId,
         decision,
         comments,
         internalComments,
@@ -109,7 +109,7 @@ describe('update tfm underwriter managers decision', () => {
       const decision = 'Declined';
 
       await updateTfmUnderwriterManagersDecision(
-        dealId,
+        bssDealId,
         decision,
         comments,
         internalComments,
@@ -140,22 +140,16 @@ describe('update tfm underwriter managers decision', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
     it('should call api.updatePortalBssDealStatus', async () => {
       const decision = 'Declined';
+      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
+      expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(bssDealId, mapTfmDealStageToPortalStatus(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, decision));
+    });
 
-      await updateTfmUnderwriterManagersDecision(
-        dealId,
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-      );
+    it('should call api.addPortalDealComment', async () => {
+      const ukefDecision = 'ukefDecision';
+      const ukefDecisionText = 'Application declined';
 
-      expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-        dealId,
-        mapTfmDealStageToPortalStatus(
-          CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          decision,
-        ),
-      );
+      await updateTfmUnderwriterManagersDecision(bssDealId, ukefDecision, ukefDecisionText, internalComments, userFullName);
+      expect(addPortalDealCommentSpy).toHaveBeenCalledWith(bssDealId, 'ukefComments', { text: 'Testing' });
     });
   });
 
@@ -165,21 +159,16 @@ describe('update tfm underwriter managers decision', () => {
     it('should call api.updatePortalGefDealStatus', async () => {
       const decision = 'Declined';
 
-      await updateTfmUnderwriterManagersDecision(
-        gefDealId,
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-      );
+      await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
+      expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(gefDealId, mapTfmDealStageToPortalStatus(CONSTANTS.DEALS.DEAL_TYPE.GEF, decision));
+    });
 
-      expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-        gefDealId,
-        mapTfmDealStageToPortalStatus(
-          CONSTANTS.DEALS.DEAL_TYPE.GEF,
-          decision,
-        ),
-      );
+    it('should call api.addUnderwriterCommentToGefDeal', async () => {
+      const decision = 'Declined';
+      const ukefDecision = 'ukefDecision';
+
+      await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
+      expect(addUnderwriterCommentToGefDealSpy).toHaveBeenCalledWith(gefDealId, ukefDecision, { text: 'Testing' });
     });
   });
 });

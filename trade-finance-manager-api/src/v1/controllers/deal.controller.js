@@ -149,13 +149,7 @@ const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
 };
 exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
 
-const updateTfmUnderwriterManagersDecision = async (
-  dealId,
-  decision,
-  comments,
-  internalComments,
-  userFullName,
-) => {
+const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, internalComments, userFullName) => {
   // Add Manager's decision to the deal (this gets updated in tfm-deals collection)
   // note: GEF and BSS deals follow the same format
   const managerDecisionUpdate = {
