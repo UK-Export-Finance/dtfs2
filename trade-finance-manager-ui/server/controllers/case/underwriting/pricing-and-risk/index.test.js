@@ -13,7 +13,7 @@ const mockUser = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['UNDERWRITERS'],
+  teams: ['UNDERWRITERS', 'RISK_MANAGERS'],
 };
 
 const session = {
@@ -22,7 +22,7 @@ const session = {
 
 const userCannotEdit = {
   ...mockUser,
-  teams: ['RISK_MANAGERS'],
+  teams: ['BUSINESS_SUPPORT'],
 };
 
 const mockDeal = {
