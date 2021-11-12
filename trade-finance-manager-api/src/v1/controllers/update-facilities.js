@@ -2,8 +2,9 @@ const api = require('../api');
 const convertFacilityCurrency = require('./convert-facility-currency');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const DEFAULTS = require('../defaults');
-const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
+const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
+const { generateGefFacilityFeeRecord } = require('./generate-gef-facility-fee-record');
 const CONSTANTS = require('../../constants');
 
 const updateFacilities = async (deal) => {
@@ -34,12 +35,18 @@ const updateFacilities = async (deal) => {
       );
     }
 
+    let feeRecord;
+    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      feeRecord = generateGefFacilityFeeRecord(facility);
+    }
+
     const facilityUpdate = {
       ...facilityCurrencyConversion,
       ...facilityExposurePeriod,
       facilityGuaranteeDates,
       riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
       premiumSchedule: facilityPremiumSchedule,
+      feeRecord,
     };
 
     const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);

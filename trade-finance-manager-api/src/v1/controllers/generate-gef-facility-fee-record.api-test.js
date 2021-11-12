@@ -84,6 +84,7 @@ describe('generate-gef-facility-fee-record', () => {
   describe('generateGefFacilityFeeRecord', () => {
     it('should return result of all calculations passed to calculateFeeAmount', () => {
       const mockFacility = {
+        hasBeenIssued: true,
         interestPercentage: mockInterestPercentage,
         dayCountBasis: mockDayBasis,
         value: mockFacilityValue,

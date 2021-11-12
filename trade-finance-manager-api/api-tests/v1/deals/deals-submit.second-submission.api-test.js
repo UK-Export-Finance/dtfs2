@@ -4,6 +4,8 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const dealController = require('../../../src/v1/controllers/deal.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
 const { generateFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
+const { generateGefFacilityFeeRecord } = require('../../../src/v1/controllers/generate-gef-facility-fee-record');
+const { mapCashContingentFacility } = require('../../../src/v1/mappings/map-submitted-deal/map-cash-contingent-facility');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
@@ -53,6 +55,19 @@ const createFacilityCoverEndDate = (facility) =>
     month: Number(facility['coverEndDate-month']) - 1, // months are zero indexed
     year: Number(facility['coverEndDate-year']),
   });
+
+const mockChecker = {
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated) (TFM)',
+  },
+  email: 'test@testing.com',
+  firstname: 'Test',
+  surname: 'User',
+  roles: ['checker'],
+  timezone: 'Europe/London',
+  username: 'BANK1_CHECKER1',
+};
 
 describe('/v1/deals', () => {
   beforeEach(() => {
@@ -290,19 +305,6 @@ describe('/v1/deals', () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.details.submissionType).toEqual('Manual Inclusion Application');
 
-        const mockChecker = {
-          bank: {
-            id: '9',
-            name: 'UKEF test bank (Delegated) (TFM)',
-          },
-          email: 'test@testing.com',
-          firstname: 'Test',
-          surname: 'User',
-          roles: ['checker'],
-          timezone: 'Europe/London',
-          username: 'BANK1_CHECKER1',
-        };
-
         const { status, body } = await submitDeal({
           ...createSubmitBody(MOCK_MIA_SECOND_SUBMIT),
           checker: mockChecker,
@@ -521,17 +523,43 @@ describe('/v1/deals', () => {
     });
 
     describe('GEF deal - on second submission', () => {
-      it('does NOT call premium schedule when dealType is GEF', async () => {
-        const mockDeal = {
-          ...MOCK_GEF_DEAL,
-          submissionCount: 1,
-        };
+      const mockDeal = {
+        ...MOCK_GEF_DEAL,
+        submissionCount: 1,
+      };
 
+      it('does NOT call premium schedule when dealType is GEF', async () => {
         const { status } = await submitDeal(createSubmitBody(mockDeal));
 
         expect(status).toEqual(200);
 
         expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
+      });
+
+      it('adds fee record to issued facilities', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(mockDeal));
+
+        expect(status).toEqual(200);
+
+        const issuedFacility = body.facilities.find((facility) =>
+          facility.hasBeenIssued);
+
+        const mappedFacility = mapCashContingentFacility(issuedFacility);
+
+        const expected = generateGefFacilityFeeRecord(mappedFacility);
+
+        expect(issuedFacility.tfm.feeRecord).toEqual(expected);
+      });
+
+      it('does NOT add fee record to unissued facilities', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(mockDeal));
+
+        expect(status).toEqual(200);
+
+        const unissuedFacility = body.facilities.find((facility) =>
+          !facility.hasBeenIssued);
+
+        expect(unissuedFacility.tfm.feeRecord).toEqual(null);
       });
     });
   });

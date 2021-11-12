@@ -1,5 +1,7 @@
 const { differenceInDays } = require('date-fns');
 
+// TODO: move to helpers directory?
+
 const calculateDrawnAmount = (facilityValue, coverPercentage) => {
   /* Business logic:
    * (Facility Amount * UKEF Cover) * 10 %) to four decimal places
@@ -50,35 +52,39 @@ const calculateFeeAmount = (
 };
 
 const generateGefFacilityFeeRecord = (facility) => {
-  let feeRecord;
-  
-  const {
-    interestPercentage,
-    dayCountBasis: dayBasis,
-    value: facilityValue,
-    coverPercentage,
-    coverStartDate,
-    coverEndDateTimestamp: coverEndDate,
-  } = facility;
+  if (facility.hasBeenIssued) {
+    let feeRecord;
+    
+    const {
+      interestPercentage,
+      dayCountBasis: dayBasis,
+      value: facilityValue,
+      coverPercentage,
+      coverStartDate,
+      coverEndDateTimestamp: coverEndDate,
+    } = facility;
 
-  const drawnAmount = calculateDrawnAmount(
-    facilityValue,
-    coverPercentage,
-  );
+    const drawnAmount = calculateDrawnAmount(
+      facilityValue,
+      coverPercentage,
+    );
 
-  const daysOfCover = calculateDaysOfCover(
-    coverStartDate,
-    coverEndDate,
-  );
+    const daysOfCover = calculateDaysOfCover(
+      coverStartDate,
+      coverEndDate,
+    );
 
-  feeRecord = calculateFeeAmount(
-    drawnAmount,
-    daysOfCover,
-    interestPercentage,
-    dayBasis,
-  );
+    feeRecord = calculateFeeAmount(
+      drawnAmount,
+      daysOfCover,
+      interestPercentage,
+      dayBasis,
+    );
 
-  return feeRecord;
+    return feeRecord;
+  }
+
+  return null;
 };
 
 module.exports = {
