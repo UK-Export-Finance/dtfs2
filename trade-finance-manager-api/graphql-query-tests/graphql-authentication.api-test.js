@@ -1,13 +1,12 @@
 const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 const graphqlPermissions = require('../src/graphql/middleware/graphql-permissions');
 const graphqlKeyAuthentication = require('../src/graphql/key-authentication');
 
 const apiToken = process.env.UKEF_TFM_API_SYSTEM_KEY;
-
 
 jest.mock('../src/v1/api');
 
@@ -47,7 +46,6 @@ const partyUpdate = {
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
-
 
 describe('graphql query - authentication', () => {
   describe('missing authorisation key', () => {

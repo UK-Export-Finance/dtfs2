@@ -1,7 +1,7 @@
 const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 
 const externalApis = require('../src/v1/api');

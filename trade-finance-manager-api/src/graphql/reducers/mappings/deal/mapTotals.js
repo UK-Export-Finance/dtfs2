@@ -28,7 +28,6 @@ const mapTotals = (facilities) => {
 
   totals.facilitiesValueInGBP = `GBP ${formattedFacilitiesValue}`;
 
-
   // total ukef exposure for all facilities
   const ukefExposureArray = [
     ...facilities.map((f) => {

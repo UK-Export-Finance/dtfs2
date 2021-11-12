@@ -34,7 +34,6 @@ app.use(graphQlRouter);
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
 
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -46,7 +45,6 @@ const server = new ApolloServer({
 });
 
 server.applyMiddleware({ app });
-
 
 // Return 200 on get to / to confirm to Azure that
 // the container has started successfully:

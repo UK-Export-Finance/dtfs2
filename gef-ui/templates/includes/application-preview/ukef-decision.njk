@@ -1,0 +1,6 @@
+<h3>The manual inclusion application was rejected for the following reasons:</h3>
+<div data-cy='ukef-decision'>
+    {% for comment in ukefDecision %}
+        {{ comment.text | safe }}
+    {% endfor %}
+</div>

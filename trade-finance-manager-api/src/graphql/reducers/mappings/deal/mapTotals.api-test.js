@@ -85,7 +85,6 @@ describe('mapTotals', () => {
     });
   });
 
-
   describe('with cash & contingent facilities', () => {
     it('should return formatted total of all facility values', async () => {
       const result = mapTotals(mockCashAndContingentFacilities);

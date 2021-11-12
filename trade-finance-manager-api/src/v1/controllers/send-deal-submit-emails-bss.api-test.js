@@ -155,9 +155,7 @@ describe('send-deal-submit-emails - BSS', () => {
           mockDealIssued.facilities,
         );
 
-        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(
-          mockDealIssued, facilityLists,
-        );
+        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssued, facilityLists);
 
         expect(sendEmailApiSpy).toHaveBeenCalled();
 

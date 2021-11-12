@@ -222,11 +222,10 @@ const MOCK_DEAL = {
           disbursementAmount: '1,234.00',
           issueFacilityDetailsStarted: true,
           bankReferenceNumberRequiredForIssuance: true,
-          requestedCoverStartDate: 1610369832226.0,
-          issuedDate: 1610369832226.0,
+          requestedCoverStartDate: 1610369832226,
+          issuedDate: 1610369832226,
           issueFacilityDetailsProvided: true,
           status: 'Acknowledged',
-          ukefFacilityID: '65432',
           currency: {
             text: 'GBP - UK Sterling',
             id: 'GBP',
