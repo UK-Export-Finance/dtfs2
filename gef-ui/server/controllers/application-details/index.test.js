@@ -266,6 +266,7 @@ describe('controllers/application-detaills', () => {
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
+            abandon: false,
           }));
       });
 
