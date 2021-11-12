@@ -1,6 +1,5 @@
 const mapDeal = require('../../../src/v1/mappings/map-deal');
 const mapEligibilityCriteriaContentStrings = require('../../../src/v1/mappings/map-eligibility-criteria-content-strings');
-const CONTENT_STRINGS = require('../../../src/v1/content-strings');
 const {
   eligibility,
   facilities,

@@ -1,7 +1,8 @@
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+
 const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
 const gql = require('graphql-tag');
 
 jest.mock('../src/v1/api');
@@ -213,8 +214,6 @@ const GET_DEAL = gql`
 `;
 
 describe('graphql query - get deal', () => {
-  let query;
-
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
@@ -226,8 +225,7 @@ describe('graphql query - get deal', () => {
     });
 
     // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
+    createTestClient(server);
   });
 
   it('should return a mapped deal via dealReducer', async () => {

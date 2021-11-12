@@ -25,5 +25,4 @@ const mapDeals = (
   };
 };
 
-
 module.exports = mapDeals;
