@@ -1,6 +1,8 @@
 const { PROGRESS } = require('../../../constants/index');
 const { validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
+const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
+const Application = require('../../models/application');
 
 const MAX_COMMENT_LENGTH = 400;
 
@@ -23,6 +25,8 @@ const createSubmissionToUkef = async (req, res) => {
   const { user, userToken } = req.session;
   const { applicationId } = params;
   const { comment } = body;
+  const applicationType = await Application.findById(applicationId, user, userToken);
+  const isAutomaticCover = (applicationType.submissionType === DEAL_SUBMISSION_TYPE.AIN);
   let application;
   console.log('GEF Application is being submitted to UKEF--TFM');
   try {
@@ -69,7 +73,7 @@ const createSubmissionToUkef = async (req, res) => {
     await api.updateApplication(applicationId, application);
     await api.setApplicationStatus(applicationId, PROGRESS.SUBMITTED_TO_UKEF);
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-    return res.render('partials/submit-to-ukef-confirmation.njk');
+    return res.render('partials/submit-to-ukef-confirmation.njk', { isAutomaticCover });
   } catch (err) {
     console.error(err);
     return res.render('partials/problem-with-service.njk');

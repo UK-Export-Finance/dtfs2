@@ -84,8 +84,7 @@ function buildActions(app) {
     submit: app.canSubmit,
     abandon: [
       PROGRESS.DRAFT,
-      PROGRESS.CHANGES_REQUIRED,
-      PROGRESS.BANK_CHECK].includes(app.status.toUpperCase()),
+      PROGRESS.CHANGES_REQUIRED].includes(app.status.toUpperCase()),
   };
 }
 

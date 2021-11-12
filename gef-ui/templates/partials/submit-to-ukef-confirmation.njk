@@ -9,7 +9,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
       {{ govukPanel({
-        titleText: "Automatic inclusion notice submitted to UKEF",
+        titleText: "Automatic inclusion notice submitted to UKEF"
+        if isAutomaticCover else 
+        "Manual inclusion application submitted to UKEF",
         classes: "govuk-!-margin-bottom-7",
         attributes: {
           'data-cy': 'ukef-submission-confirmation'
