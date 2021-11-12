@@ -19,9 +19,7 @@ const facilityGuaranteeDates = {
 
 describe('isFacilityValidForPremiumSchedule', () => {
   it('should return true for valid facility', () => {
-    const result = isFacilityValidForPremiumSchedule(
-      facility, exposurePeriod, facilityGuaranteeDates,
-    );
+    const result = isFacilityValidForPremiumSchedule(facility, exposurePeriod, facilityGuaranteeDates);
     expect(result).toEqual(true);
   });
 
@@ -44,9 +42,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facility,
           feeType: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });
@@ -57,9 +53,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facility,
           ukefFacilityID: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });
@@ -70,9 +64,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facilityGuaranteeDates,
           guaranteeCommencementDate: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          facility, exposurePeriod, invalidFacilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(facility, exposurePeriod, invalidFacilityGuaranteeDates);
         expect(result).toEqual(false);
       });
 
@@ -81,9 +73,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facilityGuaranteeDates,
           guaranteeExpiryDate: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          facility, exposurePeriod, invalidFacilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(facility, exposurePeriod, invalidFacilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });
@@ -94,9 +84,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facility,
           guaranteeFee: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });
@@ -107,9 +95,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facility,
           coverPercentage: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });
@@ -120,9 +106,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facility,
           dayCountBasis: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });
@@ -133,9 +117,7 @@ describe('isFacilityValidForPremiumSchedule', () => {
           ...facility,
           ukefExposure: '',
         };
-        const result = isFacilityValidForPremiumSchedule(
-          invalidFacility, exposurePeriod, facilityGuaranteeDates,
-        );
+        const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);
       });
     });

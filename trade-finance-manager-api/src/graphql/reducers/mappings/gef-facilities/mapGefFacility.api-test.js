@@ -36,7 +36,6 @@ describe('mapGefFacility', () => {
 
     mockFacility.facilitySnapshot.facilityStage = mapFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued);
 
-
     const { facilitySnapshot } = mockFacility;
 
     const expected = {

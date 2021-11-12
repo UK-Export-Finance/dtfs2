@@ -10,5 +10,4 @@ const mapGefFacilityProvidedOn = (details) =>
     return previousValue;
   }, []);
 
-
 module.exports = mapGefFacilityProvidedOn;
