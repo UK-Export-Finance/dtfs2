@@ -1,10 +1,8 @@
 const {
   sendFirstTaskEmail,
   sendDealSubmitEmails,
-  generateBssDealAinMinConfirmationEmailVariables,
   sendMiaAcknowledgement,
 } = require('./send-deal-submit-emails');
-const { generateFacilityLists } = require('../helpers/notify-template-formatters');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
 const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');

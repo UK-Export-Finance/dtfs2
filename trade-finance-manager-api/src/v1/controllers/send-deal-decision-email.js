@@ -8,7 +8,7 @@ const sendDealDecisionEmail = async (mappedDeal) => {
     bankReferenceNumber,
     ukefDealId,
     maker,
-    exporter
+    exporter,
   } = mappedDeal;
 
   const {

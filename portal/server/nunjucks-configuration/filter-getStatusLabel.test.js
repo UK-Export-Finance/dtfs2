@@ -37,8 +37,8 @@ describe('getStatusLabel filter', () => {
     expect(getStatusLabel('UKEF_ACCEPTED_UNCONDITIONAL')).toEqual('Accepted by UKEF (without conditions)');
   });
 
-  it('returns label for UKEF_DECLINED', () => {
-    expect(getStatusLabel('UKEF_DECLINED')).toEqual('Rejected by UKEF');
+  it('returns label for UKEF_REFUSED', () => {
+    expect(getStatusLabel('UKEF_REFUSED')).toEqual('Rejected by UKEF');
   });
 
   it('returns label for EXPIRED', () => {
