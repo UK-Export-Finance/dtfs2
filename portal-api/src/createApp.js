@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
+const helmet = require('helmet');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
@@ -28,6 +29,7 @@ configurePassport(passport);
 initScheduler();
 
 const app = express();
+app.use(helmet());
 app.use(healthcheck);
 app.use(uploadTest);
 app.use(passport.initialize());
