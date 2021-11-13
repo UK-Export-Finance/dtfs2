@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
-const dotenv = require('dotenv');
 const helmet = require('helmet');
 
 const {
@@ -23,7 +22,6 @@ const {
   userRoutes,
   swaggerRoutes,
 } = require('./v1/routes');
-
 
 const app = express();
 app.use(helmet());
