@@ -50,6 +50,7 @@
     "graphql": "^15.0.0",
     "graphql-middleware": "^4.0.2",
     "graphql-tools": "^6.2.5",
+    "helmet": "^4.6.0",
     "is-port-reachable": "^3.0.0",
     "jsonwebtoken": "8.5.1",
     "moment": "2.24.0",
