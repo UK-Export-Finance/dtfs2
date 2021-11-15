@@ -2,7 +2,6 @@ const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 const { generateGefFacilityFeeRecord } = require('../../../src/v1/controllers/generate-gef-facility-fee-record');
-const { mapCashContingentFacility } = require('../../../src/v1/mappings/map-submitted-deal/map-cash-contingent-facility');
 const CONSTANTS = require('../../../src/constants');
 const submitDeal = require('../utils/submitDeal');
 
@@ -233,9 +232,7 @@ describe('/v1/deals', () => {
             const issuedFacility = body.facilities.find((facility) =>
               facility.hasBeenIssued);
 
-            const mappedFacility = mapCashContingentFacility(issuedFacility);
-
-            const expected = generateGefFacilityFeeRecord(mappedFacility);
+            const expected = generateGefFacilityFeeRecord(issuedFacility);
 
             expect(issuedFacility.tfm.feeRecord).toEqual(expected);
           });

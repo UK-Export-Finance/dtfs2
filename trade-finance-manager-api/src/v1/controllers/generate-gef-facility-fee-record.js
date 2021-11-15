@@ -1,19 +1,21 @@
 const { differenceInDays } = require('date-fns');
+const { formattedNumber } = require('../../utils/number');
 
 // TODO: move to helpers directory?
 
-const calculateDrawnAmount = (facilityValue, coverPercentage) => {
+const calculateDrawnAmount = (
+  facilityValue,
+  coverPercentage,
+  interestPercentage,
+) => {
   /* Business logic:
-   * (Facility Amount * UKEF Cover) * 10 %) to four decimal places
+   * (Facility Amount * UKEF Cover) * 10 %) * bank's interest margin/percentage
   */
 
   const valueAndCover = (facilityValue * coverPercentage);
 
-  const tenPercent = (valueAndCover * 10 / 100);
+  const drawnAmount = (valueAndCover * interestPercentage);
 
-  const drawnAmount = (valueAndCover * tenPercent);
-
-  // TODO: 4 decimal places
   return drawnAmount;
 };
 
@@ -35,20 +37,20 @@ const calculateDaysOfCover = (coverStartDate, coverEndDate) => {
 const calculateFeeAmount = (
   drawnAmount,
   daysOfCover,
-  interestPercentage,
   dayBasis,
 ) => {
   /* Business logic:
-   * (Drawn Amount * Days) * Bank’s interest margin) Divided by Days Basis
+   * (Drawn Amount * Days) * 10 percent
   */
 
   const drawnAmountAndDays = (drawnAmount * daysOfCover);
 
-  const amountMultipliedByInterest = (drawnAmountAndDays * interestPercentage);
+  const tenPercent = (drawnAmountAndDays * 10 / 100);
 
-  const feeAmount = (amountMultipliedByInterest / dayBasis);
+  const feeAmount = (drawnAmountAndDays * tenPercent);
 
-  return feeAmount;
+  const formatted = formattedNumber(feeAmount);
+  return formatted;
 };
 
 const generateGefFacilityFeeRecord = (facility) => {
@@ -67,6 +69,7 @@ const generateGefFacilityFeeRecord = (facility) => {
     const drawnAmount = calculateDrawnAmount(
       facilityValue,
       coverPercentage,
+      interestPercentage,
     );
 
     const daysOfCover = calculateDaysOfCover(
@@ -77,7 +80,6 @@ const generateGefFacilityFeeRecord = (facility) => {
     feeRecord = calculateFeeAmount(
       drawnAmount,
       daysOfCover,
-      interestPercentage,
       dayBasis,
     );
 

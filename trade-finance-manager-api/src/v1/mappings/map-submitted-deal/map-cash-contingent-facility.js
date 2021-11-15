@@ -1,3 +1,4 @@
+const { isValid } = require('date-fns');
 const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
 const CONSTANTS = require('../../../constants');
@@ -13,7 +14,7 @@ const mapCoverStartDate = (facility) => {
     return submittedAsIssuedDate;
   }
 
-  if (coverStartDate) {
+  if (coverStartDate && isValid(new Date(coverStartDate))) {
     return convertDateToTimestamp(coverStartDate);
   }
 

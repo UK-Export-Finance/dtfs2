@@ -5,7 +5,6 @@ const dealController = require('../../../src/v1/controllers/deal.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
 const { generateFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
 const { generateGefFacilityFeeRecord } = require('../../../src/v1/controllers/generate-gef-facility-fee-record');
-const { mapCashContingentFacility } = require('../../../src/v1/mappings/map-submitted-deal/map-cash-contingent-facility');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
@@ -544,9 +543,7 @@ describe('/v1/deals', () => {
         const issuedFacility = body.facilities.find((facility) =>
           facility.hasBeenIssued);
 
-        const mappedFacility = mapCashContingentFacility(issuedFacility);
-
-        const expected = generateGefFacilityFeeRecord(mappedFacility);
+        const expected = generateGefFacilityFeeRecord(issuedFacility);
 
         expect(issuedFacility.tfm.feeRecord).toEqual(expected);
       });

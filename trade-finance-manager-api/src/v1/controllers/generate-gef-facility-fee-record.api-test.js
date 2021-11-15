@@ -22,12 +22,15 @@ describe('generate-gef-facility-fee-record', () => {
 
   describe('calculateDrawnAmount', () => {
     it('should return correct calculation', () => {
-      const result = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage);
+      const result = calculateDrawnAmount(
+        mockFacilityValue,
+        mockCoverPercentage,
+        mockInterestPercentage,
+      );
 
       const valueAndCover = (mockFacilityValue * mockCoverPercentage);
-      const tenPercent = (valueAndCover * 10 / 100);
 
-      const drawnAmount = (valueAndCover * tenPercent);
+      const drawnAmount = (valueAndCover * mockInterestPercentage);
 
       const expected = drawnAmount;
       
@@ -67,15 +70,14 @@ describe('generate-gef-facility-fee-record', () => {
       const result = calculateFeeAmount(
         drawnAmount,
         daysOfCover,
-        mockInterestPercentage,
         mockDayBasis,
       );
 
       const drawnAmountAndDays = (drawnAmount * daysOfCover);
 
-      const amountMultipliedByInterest = (drawnAmountAndDays * mockInterestPercentage);
+      const tenPercent = (drawnAmountAndDays * 10 / 100);
 
-      const expected = (amountMultipliedByInterest / mockDayBasis);
+      const expected = formattedNumber(drawnAmountAndDays * tenPercent);
 
       expect(result).toEqual(expected);
     });
@@ -98,6 +100,7 @@ describe('generate-gef-facility-fee-record', () => {
       const drawnAmount = calculateDrawnAmount(
         mockFacilityValue,
         mockCoverPercentage,
+        mockInterestPercentage,
       );
 
       const daysOfCover = calculateDaysOfCover(
@@ -108,7 +111,6 @@ describe('generate-gef-facility-fee-record', () => {
       const expected = calculateFeeAmount(
         drawnAmount,
         daysOfCover,
-        mockFacility.interestPercentage,
         mockFacility.dayCountBasis,
       );
 
