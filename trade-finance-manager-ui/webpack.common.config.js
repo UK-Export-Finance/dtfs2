@@ -6,6 +6,7 @@ module.exports = {
   entry: {
     main: './scripts/main.js',
     govukFrontend: './scripts/govuk-frontend.js',
+    jsEnabled: './scripts/js-enabled.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
