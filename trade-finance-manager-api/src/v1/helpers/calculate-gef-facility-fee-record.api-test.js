@@ -3,11 +3,11 @@ const {
   calculateDrawnAmount,
   calculateDaysOfCover,
   calculateFeeAmount,
-  generateGefFacilityFeeRecord,
-} = require('./generate-gef-facility-fee-record');
+  calculateGefFacilityFeeRecord,
+} = require('./calculate-gef-facility-fee-record');
 const { formattedNumber } = require('../../utils/number');
 
-describe('generate-gef-facility-fee-record', () => {
+describe('calculate-gef-facility-fee-record', () => {
   // for drawn amount
   const mockFacilityValue = 150000;
   const mockCoverPercentage = 20;
@@ -33,7 +33,7 @@ describe('generate-gef-facility-fee-record', () => {
       const drawnAmount = (valueAndCover * mockInterestPercentage);
 
       const expected = drawnAmount;
-      
+
       expect(result).toEqual(expected);
     });
   });
@@ -83,7 +83,7 @@ describe('generate-gef-facility-fee-record', () => {
     });
   });
 
-  describe('generateGefFacilityFeeRecord', () => {
+  describe('calculateGefFacilityFeeRecord', () => {
     it('should return result of all calculations passed to calculateFeeAmount', () => {
       const mockFacility = {
         hasBeenIssued: true,
@@ -95,7 +95,7 @@ describe('generate-gef-facility-fee-record', () => {
         coverEndDateTimestamp: mockCoverEndDateTimestamp,
       };
 
-      const result = generateGefFacilityFeeRecord(mockFacility);
+      const result = calculateGefFacilityFeeRecord(mockFacility);
 
       const drawnAmount = calculateDrawnAmount(
         mockFacilityValue,

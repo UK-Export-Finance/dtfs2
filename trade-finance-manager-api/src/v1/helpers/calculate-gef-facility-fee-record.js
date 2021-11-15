@@ -14,9 +14,7 @@ const calculateDrawnAmount = (
 
   const valueAndCover = (facilityValue * coverPercentage);
 
-  const drawnAmount = (valueAndCover * interestPercentage);
-
-  return drawnAmount;
+  return (valueAndCover * interestPercentage);
 };
 
 const calculateDaysOfCover = (coverStartDate, coverEndDate) => {
@@ -26,12 +24,10 @@ const calculateDaysOfCover = (coverStartDate, coverEndDate) => {
   */
 
   // NOTE: if the start date is passed first, we get a minus result.
-  const coverDifference = differenceInDays(
+  return differenceInDays(
     new Date(Number(coverEndDate)),
     new Date(Number(coverStartDate)),
   );
-
-  return coverDifference;
 };
 
 const calculateFeeAmount = (
@@ -49,14 +45,13 @@ const calculateFeeAmount = (
 
   const feeAmount = (drawnAmountAndDays * tenPercent);
 
-  const formatted = formattedNumber(feeAmount);
-  return formatted;
+  return formattedNumber(feeAmount);
 };
 
-const generateGefFacilityFeeRecord = (facility) => {
+const calculateGefFacilityFeeRecord = (facility) => {
   if (facility.hasBeenIssued) {
     let feeRecord;
-    
+
     const {
       interestPercentage,
       dayCountBasis: dayBasis,
@@ -93,5 +88,5 @@ module.exports = {
   calculateDrawnAmount,
   calculateDaysOfCover,
   calculateFeeAmount,
-  generateGefFacilityFeeRecord,
+  calculateGefFacilityFeeRecord,
 };

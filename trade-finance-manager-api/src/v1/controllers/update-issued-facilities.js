@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
-const { generateGefFacilityFeeRecord } = require('./generate-gef-facility-fee-record');
+const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
 
 const updatedIssuedFacilities = async (deal) => {
@@ -56,7 +56,7 @@ const updatedIssuedFacilities = async (deal) => {
 
       let feeRecord;
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-        feeRecord = generateGefFacilityFeeRecord(facility);
+        feeRecord = calculateGefFacilityFeeRecord(facility);
       }
 
       const facilityUpdate = {
