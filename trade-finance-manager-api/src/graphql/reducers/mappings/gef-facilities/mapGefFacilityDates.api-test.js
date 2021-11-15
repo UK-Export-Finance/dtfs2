@@ -19,7 +19,7 @@ describe('mapGefFacilityDates', () => {
 
   it('should return inclusionNoticeReceived as deal submissionDate if manualInclusionNoticeSubmissionDate is empty', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
-    expect(result.inclusionNoticeReceived).toEqual(MOCK_GEF_DEAL.submissionDate);
+    expect(result.inclusionNoticeReceived).toEqual(Number(MOCK_GEF_DEAL.submissionDate));
   });
 
   it('should return manualInclusionNoticeSubmissionDate as deal submissionDate if manualInclusionNoticeSubmissionDate has a value', () => {
@@ -30,13 +30,13 @@ describe('mapGefFacilityDates', () => {
 
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, mockMinDeal);
 
-    expect(result.inclusionNoticeReceived).toEqual(mockMinDeal.manualInclusionNoticeSubmissionDate);
+    expect(result.inclusionNoticeReceived).toEqual(Number(mockMinDeal.manualInclusionNoticeSubmissionDate));
   });
 
   it('should return bankIssueNoticeReceived as submittedAsIssuedDate', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
-    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.submittedAsIssuedDate);
+    expect(result.bankIssueNoticeReceived).toEqual(Number(mockFacility.submittedAsIssuedDate));
   });
 
   it('should return coverStartDate as timestamp', () => {

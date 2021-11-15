@@ -17,8 +17,8 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
   return {
-    inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
-    bankIssueNoticeReceived: submittedAsIssuedDate,
+    inclusionNoticeReceived: Number(manualInclusionNoticeSubmissionDate) || Number(dealSubmissionDate),
+    bankIssueNoticeReceived: Number(submittedAsIssuedDate),
     coverStartDate: convertDateToTimestamp(coverStartDate),
     coverEndDate: mapCoverEndDate(
       moment(coverEndDate).format('DD'),

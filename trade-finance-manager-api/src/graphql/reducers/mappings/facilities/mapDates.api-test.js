@@ -10,8 +10,8 @@ describe('mapDates', () => {
   };
 
   const mockFacility = {
-    issuedFacilitySubmittedToUkefTimestamp: '160690061100',
-    requestedCoverStartDate: '160690061200',
+    issuedFacilitySubmittedToUkefTimestamp: 160690061100,
+    requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
     ukefGuaranteeInMonths: '12',
     ...mockCoverEndDate,
   };
@@ -26,7 +26,7 @@ describe('mapDates', () => {
 
   it('should return inclusionNoticeReceived as deal submissionDate if manualInclusionNoticeSubmissionDate is empty', () => {
     const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
-    expect(result.inclusionNoticeReceived).toEqual(mockDealDetails.submissionDate);
+    expect(result.inclusionNoticeReceived).toEqual(Number(mockDealDetails.submissionDate));
   });
 
   it('should return manualInclusionNoticeSubmissionDate as deal submissionDate if manualInclusionNoticeSubmissionDate has a value', () => {
@@ -35,7 +35,7 @@ describe('mapDates', () => {
       manualInclusionNoticeSubmissionDate: '16069006199999',
     };
     const result = mapDates(mockFacility, mockFacilityTfm, minMockDealDetails);
-    expect(result.inclusionNoticeReceived).toEqual(minMockDealDetails.manualInclusionNoticeSubmissionDate);
+    expect(result.inclusionNoticeReceived).toEqual(Number(minMockDealDetails.manualInclusionNoticeSubmissionDate));
   });
 
   it('should return bankIssueNoticeReceived as facility issuedFacilitySubmittedToUkefTimestamp;', () => {

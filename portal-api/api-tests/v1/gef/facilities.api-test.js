@@ -81,7 +81,7 @@ describe(baseUrl, () => {
       coverPercentage: 75,
       interestPercentage: 10,
       paymentType: 'IN_ARREARS_QUARTLY',
-      dayCountBasis: '365',
+      dayCountBasis: 365,
       feeType: 'in advance',
       feeFrequency: 'Monthly',
     };
@@ -270,7 +270,7 @@ describe(baseUrl, () => {
         paymentType: 'IN_ADVANCE_QUARTERLY',
         feeType: 'in advance',
         feeFrequency: 'Monthly',
-        dayCountBasis: '365',
+        dayCountBasis: 365,
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
@@ -312,7 +312,7 @@ describe(baseUrl, () => {
         paymentType: 'IN_ADVANCE_QUARTERLY',
         feeType: 'in advance',
         feeFrequency: 'Monthly',
-        dayCountBasis: '365',
+        dayCountBasis: 365,
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);

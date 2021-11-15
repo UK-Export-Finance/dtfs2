@@ -56,12 +56,14 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
     ...MOCK_CASH_FACILITY,
     hasBeenIssued: true,
     submittedAsIssuedDate: 1628770126495,
+    issuedFacilitySubmittedToUkefTimestamp: 1628770126497,
   },
   {
     _id: 'MOCK_CONTINGENT_FACILITY_ISSUED',
     ...MOCK_CONTINGENT_FACILITY,
     hasBeenIssued: true,
     submittedAsIssuedDate: 1628770126495,
+    issuedFacilitySubmittedToUkefTimestamp: 1628770126497,
   },
   {
     _id: 'MOCK_CONTINGENT_FACILITY_UNISSUED',
