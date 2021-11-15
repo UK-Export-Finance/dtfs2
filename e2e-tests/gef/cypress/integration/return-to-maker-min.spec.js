@@ -103,6 +103,8 @@ context('Return to Maker', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmation().contains('Manual inclusion application submitted for checking at your bank');
+      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      applicationPreview.status().contains('Ready for Checker\'s approval');
     });
   });
 });
