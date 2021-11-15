@@ -126,8 +126,8 @@ type FacilityProduct {
 }
 
 type FacilityDates {
-  inclusionNoticeReceived: Float
-  bankIssueNoticeReceived: Float
+  inclusionNoticeReceived: String
+  bankIssueNoticeReceived: String
   coverStartDate: String
   coverEndDate: String
   tenor: String
