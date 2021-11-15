@@ -113,6 +113,7 @@ describe('mapFacility', () => {
       facilityStage: mapFacilityStage(mockFacilityStage),
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: mapFacilityValue(mockFacility.currency.id, formattedFacilityValue, mockTfmFacility),
+      currency: mockFacility.currency.id,
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,
       bankFacilityReference: mapBankFacilityReference(mockFacility),

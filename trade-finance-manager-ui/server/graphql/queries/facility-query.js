@@ -23,6 +23,7 @@ const facilityQuery = gql`
         ukefExposure,
         banksInterestMargin,
         firstDrawdownAmountInExportCurrency,
+        currency,
         feeType,
         feeFrequency,
         dayCountBasis,
@@ -60,6 +61,7 @@ const facilityQuery = gql`
         },
         premiumTotals
         creditRating
+        feeRecord
       }
     }
   }

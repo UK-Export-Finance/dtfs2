@@ -148,6 +148,7 @@ type FacilitySnapshot {
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
+  currency: String
   coveredPercentage: String!
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
@@ -301,6 +302,7 @@ type TFMFacilityData {
   premiumSchedule: [PremiumScheduleData]
   premiumTotals: String
   hasBeenAcknowledged: Boolean
+  feeRecord: String
 }
 
 input TasksFilters {

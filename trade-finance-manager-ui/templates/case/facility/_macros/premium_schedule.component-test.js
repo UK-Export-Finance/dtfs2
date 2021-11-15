@@ -8,6 +8,13 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const params = {
+    user: {
+      timezone: 'Europe/London',
+    },
+  };
+
+  const mockBssFacilityParams = {
+    ...params,
     facility: {
       _id: '12345678',
       ukefFacilityID: '0040004833',
@@ -41,71 +48,68 @@ describe(page, () => {
         exposure: 'GBP 123',
         timestamp: '1606900616651',
       },
+      premiumSchedule: [
+        {
+          id: 2035,
+          calculationDate: '2021-05-06',
+          income: 99.2,
+          incomePerDay: 3.2,
+          exposure: 64000,
+          period: 1,
+          daysInPeriod: 31,
+          effectiveFrom: '2021-05-06T00:00:00',
+          effectiveTo: '2023-05-05T00:00:00',
+          created: '2021-05-06T11:08:41',
+          updated: '2021-05-06T11:08:41',
+          isAtive: 'Y',
+          __typename: 'PremiumScheduleData',
+          formattedIncome: '99.20',
+        },
+        {
+          id: 2036,
+          calculationDate: '2021-06-06',
+          income: 96,
+          incomePerDay: 3.2,
+          exposure: 64000,
+          period: 2,
+          daysInPeriod: 30,
+          effectiveFrom: '2021-05-06T00:00:00',
+          effectiveTo: '2023-05-05T00:00:00',
+          created: '2021-05-06T11:08:41',
+          updated: '2021-05-06T11:08:41',
+          isAtive: 'Y',
+          __typename: 'PremiumScheduleData',
+          formattedIncome: '96.00',
+        },
+        {
+          id: 2037,
+          calculationDate: '2021-07-06',
+          income: 99.2,
+          incomePerDay: 3.2,
+          exposure: 64000,
+          period: 3,
+          daysInPeriod: 31,
+          effectiveFrom: '2021-05-06T00:00:00',
+          effectiveTo: '2023-05-05T00:00:00',
+          created: '2021-05-06T11:08:41',
+          updated: '2021-05-06T11:08:41',
+          isAtive: 'Y',
+          __typename: 'PremiumScheduleData',
+          formattedIncome: '99.20',
+        },
+      ],
+      premiumTotals: '294.40',
     },
-    user: {
-      timezone: 'Europe/London',
-    },
-    premiumSchedule: [
-      {
-        id: 2035,
-        calculationDate: '2021-05-06',
-        income: 99.2,
-        incomePerDay: 3.2,
-        exposure: 64000,
-        period: 1,
-        daysInPeriod: 31,
-        effectiveFrom: '2021-05-06T00:00:00',
-        effectiveTo: '2023-05-05T00:00:00',
-        created: '2021-05-06T11:08:41',
-        updated: '2021-05-06T11:08:41',
-        isAtive: 'Y',
-        __typename: 'PremiumScheduleData',
-        formattedIncome: '99.20',
-      },
-      {
-        id: 2036,
-        calculationDate: '2021-06-06',
-        income: 96,
-        incomePerDay: 3.2,
-        exposure: 64000,
-        period: 2,
-        daysInPeriod: 30,
-        effectiveFrom: '2021-05-06T00:00:00',
-        effectiveTo: '2023-05-05T00:00:00',
-        created: '2021-05-06T11:08:41',
-        updated: '2021-05-06T11:08:41',
-        isAtive: 'Y',
-        __typename: 'PremiumScheduleData',
-        formattedIncome: '96.00',
-      },
-      {
-        id: 2037,
-        calculationDate: '2021-07-06',
-        income: 99.2,
-        incomePerDay: 3.2,
-        exposure: 64000,
-        period: 3,
-        daysInPeriod: 31,
-        effectiveFrom: '2021-05-06T00:00:00',
-        effectiveTo: '2023-05-05T00:00:00',
-        created: '2021-05-06T11:08:41',
-        updated: '2021-05-06T11:08:41',
-        isAtive: 'Y',
-        __typename: 'PremiumScheduleData',
-        formattedIncome: '99.20',
-      },
-    ],
-    premiumTotals: '294.40',
   };
 
   beforeEach(() => {
-    wrapper = render(params);
+    wrapper = render(mockBssFacilityParams);
   });
 
   describe('premium schedule', () => {
     describe('fee (premium) type', () => {
       it('should render', () => {
-        wrapper.expectText('[data-cy="facility-premium-type"]').toRead(params.facility.feeType);
+        wrapper.expectText('[data-cy="facility-premium-type"]').toRead(mockBssFacilityParams.facility.feeType);
       });
 
       describe('when there is no feeType', () => {
@@ -116,48 +120,108 @@ describe(page, () => {
       });
     });
 
-    it('should render fee frequency', () => {
-      wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(params.facility.feeFrequency);
+    describe('`how often` feeFrequency/premiumFrequency', () => {
+      it('should render', () => {
+        wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(mockBssFacilityParams.facility.feeFrequency);
+      });
+
+      describe('when there is no feeFrequency, but premiumFrequency', () => {
+        it('should render', () => {
+          const premiumFrequencyParams = {
+            ...params,
+            facility: {
+              ...mockBssFacilityParams.facility,
+              feeFrequency: null,
+              premiumFrequency: 'test',
+            },
+          };
+
+          wrapper = render(premiumFrequencyParams);
+          wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(premiumFrequencyParams.facility.premiumFrequency);
+        });
+      });
+      
+      describe('when there is no frequency', () => {
+        it('should render dash', () => {
+          wrapper = render({});
+          wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead('-');
+        });
+      });
     });
 
     describe('day count basis', () => {
       it('should render', () => {
-        wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead(params.facility.dayCountBasis);
+        wrapper.expectText('[data-cy="facility-premium-day-count-basis"]').toRead(mockBssFacilityParams.facility.dayCountBasis);
       });
 
-      describe('when there is no feeType', () => {
+      describe('when there is no dayCountBasis', () => {
         it('should render dash', () => {
           wrapper = render({});
-          wrapper.expectText('[data-cy="facility-premium-daycountbasis"]').toRead('-');
+          wrapper.expectText('[data-cy="facility-premium-day-count-basis"]').toRead('-');
         });
       });
     });
 
-    describe('premium schedule table', () => {
-      it('should render correct number of premium schedule rows', () => {
-        wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(params.premiumSchedule.length);
-      });
-
-      it('should format the premium schedule date correctly', () => {
-        const firstPremiumSchedule = params.premiumSchedule[0];
-        wrapper.expectText(`[data-cy="facility-${firstPremiumSchedule.id}-dueDate"]`).toRead('06 May 2021');
-      });
-
-      describe('at maturity', () => {
-        beforeEach(() => {
-          const atMaturityParams = {
-            facility: {
-              ...params.facility,
-              feeType: 'At maturity',
-              feeFrequency: '',
-            },
-          };
-          wrapper = render(atMaturityParams);
+    describe('premium schedule - BSS facility', () => {
+      describe('total to be paid', () => {
+        it('should render as facilityTfm.premiumTotals', () => {
+          wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead(mockBssFacilityParams.facilityTfm.premiumTotals);
         });
 
-        it('should not render fee frequency', () => {
-          wrapper.expectText('[data-cy="facility-premium-frequency"]').notToExist();
+        describe('when there is no facilityTfm.premiumTotals', () => {
+          it('should render dash', () => {
+            wrapper = render({});
+            wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead('-');
+          });
         });
+      });
+
+      describe('premium schedule table', () => {
+        it('should render', () => {
+          wrapper.expectElement('[data-cy="faciliy-premium-schedule-table"]').toExist();
+        });
+
+        it('should render correct number of premium schedule rows', () => {
+          wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(mockBssFacilityParams.facilityTfm.premiumSchedule.length);
+        });
+
+        it('should format the premium schedule date correctly', () => {
+          const firstPremiumSchedule = mockBssFacilityParams.facilityTfm.premiumSchedule[0];
+          wrapper.expectText(`[data-cy="facility-${firstPremiumSchedule.id}-dueDate"]`).toRead('06 May 2021');
+        });
+      });
+    });
+
+    describe('premium schedule - GEF facility', () => {
+      const mockGefFacilityParams = {
+        ...params,
+        facility: {
+          facilityType: 'Cash facility',
+        },
+        facilityTfm: {
+          feeRecord: 12345678,
+        },
+      };
+
+      beforeEach(() => {
+        wrapper = render(mockGefFacilityParams);
+      });
+
+      describe('total to be paid', () => {
+        it('should render as facilityTfm.feeRecord', () => {
+          wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead(String(mockGefFacilityParams.facilityTfm.feeRecord));
+        });
+
+        describe('when there is no facilityTfm.feeRecord', () => {
+          it('should render dash', () => {
+            wrapper = render({});
+            wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead('-');
+          });
+        });
+      });
+
+      it('should NOT render premium schedule table', () => {
+        wrapper.expectElement('[data-cy="faciliy-premium-schedule-table"]').notToExist();
       });
     });
   });
