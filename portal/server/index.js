@@ -17,7 +17,11 @@ const configureNunjucks = require('./nunjucks-configuration');
 const sentry = require('./utils/sentry');
 
 const app = express();
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 
 app.use(sentry);
 const PORT = process.env.PORT || 5000;

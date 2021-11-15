@@ -23,9 +23,12 @@ const {
   swaggerRoutes,
 } = require('./v1/routes');
 
-
 const app = express();
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(healthcheck);
 app.use(express.json());
 app.use(compression());
