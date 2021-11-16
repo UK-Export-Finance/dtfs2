@@ -1,4 +1,3 @@
-// const defaultSchedule = '*/5 * * * * *';
 const dotenv = require('dotenv');
 
 dotenv.config();

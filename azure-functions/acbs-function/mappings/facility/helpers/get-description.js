@@ -8,7 +8,7 @@ const getDescription = (facility, dealType) => {
   const exposurePeriod = getExposurePeriod(facility, dealType);
 
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return `GEF ${exposurePeriod} Months`;
+    return `MGA GEF ${exposurePeriod} Months`;
   }
 
   switch (facility.facilitySnapshot.facilityType) {

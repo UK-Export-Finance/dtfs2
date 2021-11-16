@@ -104,7 +104,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS facility status ${facilityId}`);
+    console.error(`TFM API - error updating BSS facility status ${facilityId}`, response);
 
     return false;
   }
@@ -255,7 +255,11 @@ const updateFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
-const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
+const queryDeals = async ({
+  queryParams,
+  start = 0,
+  pagesize = 0,
+}) => {
   try {
     const response = await axios({
       method: 'get',
@@ -579,6 +583,24 @@ const updatePortalGefDealStatus = async (dealId, status) => {
   }
 };
 
+const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { dealId, commentType, comment },
+    });
+
+    return response.data;
+  } catch ({ response }) {
+    console.error('Unable to add a comment as an underwriter ', response);
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -610,4 +632,5 @@ module.exports = {
   sendEmail,
   findOneGefDeal,
   updatePortalGefDealStatus,
+  addUnderwriterCommentToGefDeal,
 };

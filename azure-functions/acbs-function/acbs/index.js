@@ -21,21 +21,49 @@ module.exports = df.orchestrator(function* HDeal(context) {
     // Get Product Type
     const product = deal.dealSnapshot.dealType;
 
-    // Get ACBS industry ID from UKEF Industry ID
-    let industryCode;
+    // Get ACBS industry ID from UKEF industry ID
+    let industry;
+    // Get ACBS Country code (3 Letter ISO) from UKEF country name
+    let country;
+
     if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
-      industryCode = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
+      industry = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
+      country = deal.dealSnapshot.submissionDetails['supplier-address-country'] && deal.dealSnapshot.submissionDetails['supplier-address-country'].code;
     } else {
-      industryCode = deal.dealSnapshot.exporter.industries[0].class.code;
+      industry = deal.dealSnapshot.exporter.industries[0].class.code;
+      country = deal.dealSnapshot.exporter.registeredAddress.country;
     }
 
     const acbsReference = {
       supplierAcbsIndustryCode: yield context.df.callActivityWithRetry(
         'activity-get-acbs-industry-sector',
         retryOptions,
-        { industryCode },
+        { industry },
       ),
     };
+
+    /**
+     * Check whether the exporter's country is in the UK.
+     * If it is set to GBR (Default) and skip ACBS country code Mulesoft call
+     */
+    if (CONSTANTS.DEAL.UNITED_KINGDOM.includes(country.toLowerCase())) {
+      acbsReference.country = {
+        supplierAcbsCountryCode: CONSTANTS.DEAL.COUNTRY.DEFAULT,
+      };
+      country = CONSTANTS.DEAL.COUNTRY.DEFAULT;
+    }
+
+    if (product === CONSTANTS.PRODUCT.TYPE.GEF && country !== CONSTANTS.DEAL.COUNTRY.DEFAULT) {
+      acbsReference.country = {
+        supplierAcbsCountryCode: yield context.df.callActivityWithRetry(
+          'activity-get-acbs-country-code',
+          retryOptions,
+          { country },
+        ),
+      };
+    } else {
+      acbsReference.country = country;
+    }
 
     // 1. Create Parties
     const exporterTask = context.df.callActivityWithRetry(

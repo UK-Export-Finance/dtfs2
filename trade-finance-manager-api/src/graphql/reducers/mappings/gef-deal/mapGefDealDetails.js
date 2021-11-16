@@ -5,6 +5,8 @@ const mapGefDealDetails = (dealSnapshot) => ({
   submissionType: dealSnapshot.submissionType,
   owningBank: {
     name: dealSnapshot.bank.name,
+    emails: dealSnapshot.bank.emails,
+    partyUrn: dealSnapshot.bank.partyUrn,
   },
 });
 

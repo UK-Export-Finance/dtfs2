@@ -4,6 +4,7 @@ const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
+const helmet = require('helmet');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
@@ -24,6 +25,11 @@ dotenv.config();
 initScheduler();
 
 const app = express();
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(express.json());
 app.use(compression());
 
@@ -33,7 +39,6 @@ app.use(graphQlRouter);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
-
 
 const server = new ApolloServer({
   typeDefs,
@@ -46,7 +51,6 @@ const server = new ApolloServer({
 });
 
 server.applyMiddleware({ app });
-
 
 // Return 200 on get to / to confirm to Azure that
 // the container has started successfully:

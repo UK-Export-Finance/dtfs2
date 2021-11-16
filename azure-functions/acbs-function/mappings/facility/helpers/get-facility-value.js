@@ -1,9 +1,9 @@
-const getFacilityValue = (facility) => {
-  if (facility.facilitySnapshot.conversionRate) {
+const getFacilityValue = (facility, currency) => {
+  if (facility.facilitySnapshot.conversionRate && currency) {
     return Number(facility.facilitySnapshot.facilityValue) / Number(facility.facilitySnapshot.conversionRate);
   }
 
-  if (facility.tfm.facilityValueInGBP) {
+  if (facility.tfm.facilityValueInGBP && currency) {
     return facility.tfm.facilityValueInGBP;
   }
 

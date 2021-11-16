@@ -55,6 +55,7 @@
     "govuk-frontend": "3.14.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
+    "helmet": "^4.6.0",
     "imask": "^6.0.5",
     "lodash.isequal": "^4.5.0",
     "moment": "2.24.0",

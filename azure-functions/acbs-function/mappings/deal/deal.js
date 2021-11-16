@@ -1,10 +1,13 @@
 const { to2Decimals } = require('../../helpers/currency');
-const { getDealEffectiveDate, getDealValue, getDealId } = require('./helpers');
+const {
+  getDealEffectiveDate,
+  getDealValue,
+  getDealId,
+  getDealCurrency,
+} = require('./helpers');
 const { formatTimestamp } = require('../../helpers/date');
 const getDealSubmissionDate = require('./helpers/get-deal-submission-date');
 const CONSTANTS = require('../../constants');
-
-const GEF_CURRENCY = 'GBP';
 
 /*
   dealIdentifier                  string    UKEF ID
@@ -29,10 +32,7 @@ Issued (straight to Issued)   Cover Start Date        Cover Start Date
 const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
   _id: deal._id,
   dealIdentifier: getDealId(deal),
-  currency: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-    ? GEF_CURRENCY
-    : deal.dealSnapshot.submissionDetails.supplyContractCurrency
-    && deal.dealSnapshot.submissionDetails.supplyContractCurrency.id,
+  currency: getDealCurrency(deal),
   dealValue: to2Decimals(getDealValue(deal)),
   guaranteeCommencementDate: getDealEffectiveDate(deal),
   obligorPartyIdentifier,

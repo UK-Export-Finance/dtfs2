@@ -66,5 +66,4 @@ bankRouter.route('/:id')
     getBankController.findOneBankGet,
   );
 
-
 module.exports = bankRouter;

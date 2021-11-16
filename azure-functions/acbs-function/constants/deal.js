@@ -13,16 +13,35 @@ const SME_TYPE = {
 };
 
 const EXPIRATION_DATE = {
-  NONE: '99/99/99',
+  NONE: null,
 };
 
 const PARTY = {
   GUARANTOR: '00000141',
 };
 
+const CURRENCY = {
+  DEFAULT: 'GBP',
+};
+
+const COUNTRY = {
+  DEFAULT: 'GBR',
+};
+
+const UNITED_KINGDOM = [
+  'united kingdom',
+  'england',
+  'wales',
+  'scotland',
+  'northern ireland',
+];
+
 module.exports = {
   SME_TYPE,
   SUBMISSION_TYPE,
   EXPIRATION_DATE,
   PARTY,
+  CURRENCY,
+  COUNTRY,
+  UNITED_KINGDOM,
 };

@@ -5,7 +5,7 @@ const mapEligibility = (eligibility) => ({
     answer: criterion.answer,
     text: criterion.description,
     textList: criterion.descriptionList,
-  }))
+  })),
 });
 
 module.exports = mapEligibility;

@@ -12,27 +12,22 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   sme                       string  Workflow sme type code  4 digit code - default if unknown 70
   citizenshipClass          string  If Customer domicile country is UK set to '1' otherwise '2'
   officerRiskDate           date    yyyy-MM-dd i.e. 2019-10-21, Date of creation (we use current date)
-  countryCode               string  Maximum 3 characters
+  countryCode               string  3 Character ISO Code
   */
 
 const exporter = ({ deal, acbsReference }) => {
-  // Get Product Type i.e. GEF
+  // Get Product Type i.e. GEF, BSS/ECWS
   const product = deal.dealSnapshot.dealType;
-  let countryCode;
-  let dealCountry;
+  const countryCode = acbsReference.country.supplierAcbsCountryCode
+    ? acbsReference.country.supplierAcbsCountryCode
+    : acbsReference.country;
 
   // Get Deal's Snapshot
   const submissionDetails = product === CONSTANTS.PRODUCT.TYPE.GEF
     ? deal.dealSnapshot
     : deal.dealSnapshot.submissionDetails;
 
-  if (product === CONSTANTS.PRODUCT.TYPE.GEF) {
-    countryCode = submissionDetails.exporter.registeredAddress.country.substring(0, 3);
-    dealCountry = 'GB';
-  } else {
-    countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
-    dealCountry = 'GBR';
-  }
+  const dealCountry = product === CONSTANTS.PRODUCT.TYPE.GEF ? 'GB' : 'GBR';
 
   const citizenshipClass = countryCode === dealCountry
     ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM

@@ -6,6 +6,7 @@ module.exports = {
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     maskedInputs: './scripts/masked-inputs.js',
+    jsEnabled: './scripts/js-enabled.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
