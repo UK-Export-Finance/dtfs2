@@ -1,4 +1,5 @@
 const pageRenderer = require('../../../../component-tests/componentRenderer');
+const formatAsCurrencyFilter = require('../../../../server/nunjucks-configuration/formatAsCurrency');
 
 const page = '../templates/case/facility/_macros/premium_schedule.njk';
 
@@ -165,7 +166,9 @@ describe(page, () => {
     describe('premium schedule - BSS facility', () => {
       describe('total to be paid', () => {
         it('should render as facilityTfm.premiumTotals', () => {
-          wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead(mockBssFacilityParams.facilityTfm.premiumTotals);
+          const expected = formatAsCurrencyFilter(mockBssFacilityParams.facilityTfm.premiumTotals);
+
+          wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead(expected);
         });
 
         describe('when there is no facilityTfm.premiumTotals', () => {
@@ -209,7 +212,9 @@ describe(page, () => {
 
       describe('total to be paid', () => {
         it('should render as facilityTfm.feeRecord', () => {
-          wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead(String(mockGefFacilityParams.facilityTfm.feeRecord));
+          const expected = formatAsCurrencyFilter(mockGefFacilityParams.facilityTfm.feeRecord);
+
+          wrapper.expectText('[data-cy="total-to-be-paid-to-ukef"]').toRead(expected);
         });
 
         describe('when there is no facilityTfm.feeRecord', () => {

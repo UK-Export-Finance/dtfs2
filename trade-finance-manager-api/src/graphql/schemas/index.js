@@ -302,7 +302,7 @@ type TFMFacilityData {
   premiumSchedule: [PremiumScheduleData]
   premiumTotals: String
   hasBeenAcknowledged: Boolean
-  feeRecord: String
+  feeRecord: Float
 }
 
 input TasksFilters {

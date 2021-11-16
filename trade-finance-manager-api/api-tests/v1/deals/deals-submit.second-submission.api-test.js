@@ -4,7 +4,7 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const dealController = require('../../../src/v1/controllers/deal.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
 const { generateFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
-const { calculateGefFacilityFeeRecord } = require('../../../src/v1/controllers/calculate-gef-facility-fee-record');
+const { calculateGefFacilityFeeRecord } = require('../../../src/v1/helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
