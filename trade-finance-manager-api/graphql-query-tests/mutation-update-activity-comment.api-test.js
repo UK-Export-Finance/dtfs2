@@ -66,7 +66,6 @@ describe('graphql mutation - update activity comment', () => {
       query: UPDATE_ACTIVITY,
       variables: mutationVars,
     });
-    //console.log('----- graphqlResponse \n', graphqlResponse);
     expect(data.createActivity).toEqual(mutationVars);
   });
 });
