@@ -1,19 +1,15 @@
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
 
-const sendDealDecisionEmail = async (deal) => {
-  const { dealSnapshot, tfm } = deal;
-  const { details, submissionDetails } = dealSnapshot;
+const sendDealDecisionEmail = async (mappedDeal) => {
+  const { tfm } = mappedDeal;
 
   const {
-    bankSupplyContractID: bankReferenceNumber,
+    bankReferenceNumber,
     ukefDealId,
     maker,
-  } = details;
-
-  const {
-    'supplier-name': exporterName,
-  } = submissionDetails;
+    exporter,
+  } = mappedDeal;
 
   const {
     firstname: recipientName,
@@ -31,7 +27,7 @@ const sendDealDecisionEmail = async (deal) => {
 
   const emailVariables = {
     recipientName,
-    exporterName,
+    exporterName: exporter.companyName,
     bankReferenceNumber,
     ukefDealId,
   };
@@ -60,7 +56,7 @@ const sendDealDecisionEmail = async (deal) => {
     templateId,
     sendToEmailAddress,
     emailVariables,
-    deal,
+    mappedDeal,
   );
 };
 

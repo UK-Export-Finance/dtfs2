@@ -51,6 +51,7 @@
     "govuk-frontend": "3.13.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
+    "helmet": "^4.6.0",
     "imask": "^6.0.5",
     "jquery": "^3.6.0",
     "json2csv": "^5.0.6",

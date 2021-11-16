@@ -1,7 +1,6 @@
 const {
   sendDealSubmitEmails,
 } = require('./send-deal-submit-emails');
-const api = require('../api');
 
 describe('sendDealSubmitEmails', () => {
   it('should return false when there is no deal', async () => {

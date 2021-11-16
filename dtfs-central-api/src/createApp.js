@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
+const helmet = require('helmet');
 
 const {
   BANK_ROUTE,
@@ -22,8 +23,12 @@ const {
   swaggerRoutes,
 } = require('./v1/routes');
 
-
 const app = express();
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(healthcheck);
 app.use(express.json());
 app.use(compression());

@@ -1,6 +1,4 @@
 const moment = require('moment');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const DEFAULTS = require('../../../src/v1/defaults');

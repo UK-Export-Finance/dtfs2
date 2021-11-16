@@ -317,8 +317,8 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it('renders `application-preview` when status is UKEF_ACCEPTED_CONDITIONAL', async () => {
-        mockApplicationResponse.status = 'UKEF_ACCEPTED_CONDITIONAL';
+      it('renders `application-preview` when status is UKEF_APPROVED_WITH_CONDITIONS', async () => {
+        mockApplicationResponse.status = 'UKEF_APPROVED_WITH_CONDITIONS';
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -329,8 +329,8 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it('renders `application-preview` when status is UKEF_ACCEPTED_UNCONDITIONAL', async () => {
-        mockApplicationResponse.status = 'UKEF_ACCEPTED_UNCONDITIONAL';
+      it('renders `application-preview` when status is UKEF_APPROVED_WITHOUT_CONDITIONS', async () => {
+        mockApplicationResponse.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -341,8 +341,8 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it('renders `application-preview` when status is UKEF_DECLINED', async () => {
-        mockApplicationResponse.status = 'UKEF_DECLINED';
+      it('renders `application-preview` when status is UKEF_REFUSED', async () => {
+        mockApplicationResponse.status = 'UKEF_REFUSED';
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);

@@ -132,7 +132,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     pages.managersDecisionPage.decisionDateTime().invoke('text').then((text) => {
-      const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+      const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
 
       expect(text.trim()).contains(todayFormatted);
     });

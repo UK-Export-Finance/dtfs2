@@ -51,7 +51,7 @@ describe(component, () => {
     it('should render value', () => {
       const wrapper = render(params);
 
-      const formattedDay = localiseTimestamp(params.decision.timestamp, 'D MMMM YYYY', params.user.timezone);
+      const formattedDay = localiseTimestamp(params.decision.timestamp, 'DD MMMM YYYY', params.user.timezone);
       const formattedTime = localiseTimestamp(params.decision.timestamp, 'HH:mm', params.user.timezone);
 
       const expected = `${formattedDay} at ${formattedTime}`;

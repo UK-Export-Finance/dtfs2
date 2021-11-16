@@ -75,6 +75,7 @@ function buildBody(app, previewMode) {
     applicationId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
+    ukefDecision: app.ukefDecision,
     previewMode,
   };
 }
@@ -126,9 +127,9 @@ const applicationDetails = async (req, res, next) => {
       ABANDONED: 'application-preview',
       UKEF_ACKNOWLEDGED: 'application-preview',
       UKEF_IN_PROGRESS: 'application-details',
-      UKEF_ACCEPTED_CONDITIONAL: 'application-preview',
-      UKEF_ACCEPTED_UNCONDITIONAL: 'application-preview',
-      UKEF_DECLINED: 'application-preview',
+      UKEF_APPROVED_WITHOUT_CONDITIONS: 'application-preview',
+      UKEF_APPROVED_WITH_CONDITIONS: 'application-preview',
+      UKEF_REFUSED: 'application-preview',
       EXPIRED: '',
       WITHDRAWN: '',
     };

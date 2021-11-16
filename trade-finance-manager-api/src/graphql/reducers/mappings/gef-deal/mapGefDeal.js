@@ -11,5 +11,4 @@ const mapGefDeal = (deal) => {
   return mapped;
 };
 
-
 module.exports = mapGefDeal;

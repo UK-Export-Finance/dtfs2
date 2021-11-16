@@ -33,7 +33,6 @@ describe('mapFacilityType', () => {
     });
   });
 
-
   describe(`when facility is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CASH}`, () => {
     it('should return `Cash facility`', () => {
       const mockCashFacility = {

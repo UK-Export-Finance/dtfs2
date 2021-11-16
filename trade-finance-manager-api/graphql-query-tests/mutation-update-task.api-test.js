@@ -1,7 +1,7 @@
 const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 
 jest.mock('../src/v1/api');
@@ -11,6 +11,7 @@ const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
+
 const MOCK_USER = MOCK_USERS[0];
 
 const UPDATE_TASK = gql`

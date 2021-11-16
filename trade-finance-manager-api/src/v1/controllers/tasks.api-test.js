@@ -97,7 +97,7 @@ describe('tasks controller', () => {
       const result = generateTaskDates();
 
       const expected = {
-        lastEdited: expect.any(String),
+        lastEdited: expect.any(Number),
       };
 
       expect(result).toEqual(expected);
@@ -108,8 +108,8 @@ describe('tasks controller', () => {
         const result = generateTaskDates('To do', 'In progress');
 
         const expected = {
-          lastEdited: expect.any(String),
-          dateStarted: expect.any(String),
+          lastEdited: expect.any(Number),
+          dateStarted: expect.any(Number),
         };
 
         expect(result).toEqual(expected);
@@ -121,9 +121,9 @@ describe('tasks controller', () => {
         const result = generateTaskDates('To do', 'Done');
 
         const expected = {
-          lastEdited: expect.any(String),
-          dateStarted: expect.any(String),
-          dateCompleted: expect.any(String),
+          lastEdited: expect.any(Number),
+          dateStarted: expect.any(Number),
+          dateCompleted: expect.any(Number),
         };
 
         expect(result).toEqual(expected);
@@ -135,8 +135,8 @@ describe('tasks controller', () => {
         const result = generateTaskDates('In progress', 'Done');
 
         const expected = {
-          lastEdited: expect.any(String),
-          dateCompleted: expect.any(String),
+          lastEdited: expect.any(Number),
+          dateCompleted: expect.any(Number),
         };
 
         expect(result).toEqual(expected);
@@ -428,9 +428,9 @@ describe('tasks controller', () => {
           userFullName: `${firstName} ${lastName}`,
         },
         status: tfmTaskUpdate.status,
-        lastEdited: expect.any(String),
-        dateStarted: expect.any(String),
-        dateCompleted: expect.any(String),
+        lastEdited: expect.any(Number),
+        dateStarted: expect.any(Number),
+        dateCompleted: expect.any(Number),
       };
 
       expect(result).toEqual(expectedUpdatedTask);

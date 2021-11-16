@@ -3,6 +3,7 @@ const express = require('express');
 const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
+const helmet = require('helmet');
 
 const healthcheck = require('./healthcheck');
 
@@ -12,6 +13,11 @@ const { openRouter } = require('./v1/routes');
 const swaggerRoutes = require('./v1/swagger-routes');
 
 const app = express();
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(express.json());
 app.use(compression());
 

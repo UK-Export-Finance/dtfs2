@@ -16,6 +16,10 @@
   {% include "includes/application-preview/summary.njk" %}
   {% include "includes/application-preview/task-comments.njk" %}
 
+
+   {% if ukefDecision.length %}
+      {% include "includes/application-preview/ukef-decision.njk" %}
+   {% endif %}
   <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
 
   {% include "includes/application-preview/about-exporter.njk" %}

@@ -1,13 +1,14 @@
+const { getTime } = require('date-fns');
 const mapDeal = require('../mappings/map-deal');
 const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
-const now = require('../../now');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const { assignGroupTasksToOneUser } = require('./tasks.controller');
+const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 const findOneTfmDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -24,7 +25,7 @@ const findOneTfmDeal = async (dealId) => {
 exports.findOneTfmDeal = findOneTfmDeal;
 
 const queryDeals = async (queryParams) => {
-  const { deals } = await api.queryDeals({ ...queryParams });
+  const { deals } = await api.queryDeals({ queryParams });
 
   if (!deals) {
     return false;
@@ -148,13 +149,9 @@ const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
 };
 exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
 
-const updateTfmUnderwriterManagersDecision = async (
-  dealId,
-  decision,
-  comments,
-  internalComments,
-  userFullName,
-) => {
+const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, internalComments, userFullName) => {
+  // Add Manager's decision to the deal (this gets updated in tfm-deals collection)
+  // note: GEF and BSS deals follow the same format
   const managerDecisionUpdate = {
     tfm: {
       underwriterManagersDecision: {
@@ -162,7 +159,7 @@ const updateTfmUnderwriterManagersDecision = async (
         comments,
         internalComments,
         userFullName,
-        timestamp: now(),
+        timestamp: getTime(new Date()),
       },
       stage: decision,
     },
@@ -170,12 +167,28 @@ const updateTfmUnderwriterManagersDecision = async (
 
   const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
 
-  const newPortalStatus = mapTfmDealStageToPortalStatus(decision);
+  const mappedDeal = mapSubmittedDeal(updatedDeal);
 
-  await api.updatePortalBssDealStatus(
-    dealId,
-    newPortalStatus,
-  );
+  const {
+    dealType,
+    submissionType,
+  } = mappedDeal;
+
+  const newPortalStatus = mapTfmDealStageToPortalStatus(dealType, decision);
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    await api.updatePortalBssDealStatus(
+      dealId,
+      newPortalStatus,
+    );
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    await api.updatePortalGefDealStatus(
+      dealId,
+      newPortalStatus,
+    );
+  }
 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
@@ -187,18 +200,20 @@ const updateTfmUnderwriterManagersDecision = async (
     text: comments,
   };
 
-  api.addPortalDealComment(
-    dealId,
-    portalCommentType,
-    portalCommentObj,
-  );
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
+  }
 
-  const { dealSnapshot } = updatedDeal;
-  const { details } = dealSnapshot;
-  const { submissionType } = details;
+  // if it's a GEF deal, update the gef-application collection to include the ukefDecision
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    // set the comment type to 'ukefDecision'
+    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
+    // create a POST request to Central-api to update the deal that matches the given dealId
+    await api.addUnderwriterCommentToGefDeal(dealId, portalCommentType, portalCommentObj);
+  }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    await sendDealDecisionEmail(updatedDeal);
+    await sendDealDecisionEmail(mappedDeal);
   }
 
   return updatedDeal.tfm;
