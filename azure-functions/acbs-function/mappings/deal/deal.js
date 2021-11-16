@@ -27,6 +27,7 @@ Issued (straight to Issued)   Cover Start Date        Cover Start Date
 */
 
 const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
+  _id: deal._id,
   dealIdentifier: getDealId(deal),
   currency: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
     ? GEF_CURRENCY
