@@ -9,6 +9,8 @@
 * case err object does not have expected properties due to network connection, SSL verification or other issues.
 */
 const axios = require('axios');
+const activity = require('./helpers/activity');
+const CONSTANTS = require('./constants');
 
 require('dotenv').config();
 
@@ -90,6 +92,11 @@ const postToACBS = async (apiRef, acbsInput) => {
           : err,
       },
     }));
+
+    if (CONSTANTS.ACTIVITY.ACCEPTED_ENDPOINTS.includes(apiRef) && acbsInput._id) {
+      activity.create(acbsInput._id, response, apiRef);
+    }
+
     return response;
   }
   return {};

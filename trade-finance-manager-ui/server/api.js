@@ -169,13 +169,13 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = async (dealId, activityUpdate) => {
-  const updateVariables = {
+const createActivity = async (dealId, activityObject) => {
+  const activity = {
     dealId,
-    activityUpdate,
+    activityObject,
   };
 
-  const response = await apollo('PUT', createActivityMutation, updateVariables);
+  const response = await apollo('PUT', createActivityMutation, activity);
 
   return response;
 };

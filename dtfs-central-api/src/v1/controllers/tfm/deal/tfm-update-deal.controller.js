@@ -40,12 +40,23 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       }
     }
   }
-  // activities .type check added to ensure that nested objects not added after task submission
-  if (existingDeal.tfm && existingDeal.tfm.activities && (tfmUpdate.tfm.activities && tfmUpdate.tfm.activities.length !== 0 && tfmUpdate.tfm.activities.type)) {
-    dealUpdate.tfm.activities = [
-      ...existingDeal.tfm.activities,
-      { ...tfmUpdate.tfm.activities },
-    ];
+
+  // Ensure tfm.activities is not wiped and avoid recursive object creation
+  if (existingDeal.tfm && existingDeal.tfm.activities) {
+    dealUpdate = {
+      tfm: {
+        ...existingDeal.tfm,
+        ...tfmUpdate.tfm,
+        activities: existingDeal.tfm.activities,
+      },
+    };
+
+    if (tfmUpdate.tfm.activities) {
+      dealUpdate.tfm.activities = [
+        ...existingDeal.tfm.activities,
+        ...tfmUpdate.tfm.activities,
+      ];
+    }
   }
 
   dealUpdate.tfm.lastUpdated = new Date().valueOf();
@@ -62,7 +73,8 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
-  const { dealUpdate } = req.body;
+  const dealUpdate = req.body;
+
   const deal = await findOneDeal(dealId, false, 'tfm');
 
   if (deal) {

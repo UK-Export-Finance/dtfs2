@@ -14,9 +14,13 @@ const getAPI = async (type) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => ({
-    status: err.response.status,
+    status: err.response
+      ? err.response.status
+      : err,
     data: {
-      error: err.response.data.error ? err.response.data.error : err,
+      error: err.response
+        ? err.response.data.error
+        : err,
     },
   }));
 
@@ -27,8 +31,11 @@ const getCurrency = (currencyCode) => getAPI(`currency/${currencyCode}`);
 
 const getACBSIndustrySector = async (industryId) => getAPI(`map-industry-sector?ukefIndustryId=${industryId}`);
 
+<<<<<<< HEAD
 const getACBSCountryCode = async (country) => getAPI(`country?searchtext=${country}`);
 
+=======
+>>>>>>> be930c9bc (Add activity to the deal)
 module.exports = {
   getCurrency,
   getACBSIndustrySector,
