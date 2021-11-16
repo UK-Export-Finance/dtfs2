@@ -10,7 +10,7 @@ import applicationPreview from './pages/application-preview';
 
 let applicationId;
 
-context('Return to Maker', () => {
+context('Return to Maker as MIN', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.CHECKER)
@@ -25,14 +25,14 @@ context('Return to Maker', () => {
       });
   });
 
-  describe('creates and submits min', () => {
+  describe('creates and submits MIN', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${applicationId}`));
     });
 
-    it('submits as min', () => {
+    it('submits as MIN', () => {
       cy.visit(relative(`/gef/application-details/${applicationId}`));
 
       // Make the deal an Manual Inclusion Application
@@ -46,8 +46,8 @@ context('Return to Maker', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile('test.pdf', `${manualInclusion.url(applicationId)}/upload`);
-      manualInclusion.uploadSuccess('test.pdf');
+      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(applicationId)}/upload`);
+      manualInclusion.uploadSuccess('upload-file-valid.doc');
       manualInclusion.continueButton().click();
       securityDetails.visit(applicationId);
       securityDetails.exporterSecurity().type('test');
@@ -74,6 +74,7 @@ context('Return to Maker', () => {
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('comment1');
       returnToMaker.submitButton().click();
+      cy.location('pathname').should('contain', 'dashboard');
     });
   });
 
@@ -93,7 +94,7 @@ context('Return to Maker', () => {
       applicationPreview.status().contains('Further Maker\'s input required');
     });
 
-    it('can change secruity details commments', () => {
+    it('can change security details commments', () => {
       securityDetails.visit(applicationId);
       securityDetails.exporterSecurity().type(' test3');
       securityDetails.applicationSecurity().type('test4');
