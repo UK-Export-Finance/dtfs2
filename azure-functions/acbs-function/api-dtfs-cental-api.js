@@ -4,7 +4,7 @@ const centralAPI = process.env.DTFS_CENTRAL_API;
 
 require('dotenv').config();
 
-const getDeal = async (dealId) => {
+const getTfmDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
@@ -20,13 +20,7 @@ const getDeal = async (dealId) => {
   }
 };
 
-const createActivity = async (dealId, activity) => {
-  const tfm = {
-    activities: [
-      activity,
-    ],
-  };
-
+const updateTfmDeal = async (dealId, tfm) => {
   try {
     const response = await axios({
       method: 'put',
@@ -46,6 +40,6 @@ const createActivity = async (dealId, activity) => {
 };
 
 module.exports = {
-  getDeal,
-  createActivity,
+  getTfmDeal,
+  updateTfmDeal,
 };
