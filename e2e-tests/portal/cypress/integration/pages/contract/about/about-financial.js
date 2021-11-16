@@ -1,10 +1,8 @@
-const date = (prefix) => {
-  return {
-    day: () => cy.get(`[data-cy="${prefix}-day"]`),
-    month: () => cy.get(`[data-cy="${prefix}-month"]`),
-    year: () => cy.get(`[data-cy="${prefix}-year"]`),
-  }
-};
+const date = (prefix) => ({
+  day: () => cy.get(`[data-cy="${prefix}-day"]`),
+  month: () => cy.get(`[data-cy="${prefix}-month"]`),
+  year: () => cy.get(`[data-cy="${prefix}-year"]`),
+});
 
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/financial`),
@@ -12,7 +10,7 @@ const page = {
   supplyContractValue: () => cy.get('[data-cy="supplyContractValue"]'),
   supplyContractCurrency: () => cy.get('[data-cy="supplyContractCurrency"]'),
   supplyContractConversionRateToGBP: () => cy.get('[data-cy="supplyContractConversionRateToGBP"]'),
-  supplyContractConversionDate: () => date("supplyContractConversionDate"),
+  supplyContractConversionDate: () => date('supplyContractConversionDate'),
 
   preview: () => cy.get('[data-cy="Preview"]'),
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),

@@ -7,16 +7,11 @@ const caseDealPage = {
   partiesLink: () => cy.get('[data-cy="parties-link"]'),
 
   dealFacilitiesTable: {
-    row: (facilityId) => {
-      const row = cy.get(`[data-cy="facility-${facilityId}"]`);
-      return {
-        row,
-        facilityId: () => row.get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
-        facilityTenor: () => row.get(`[data-cy="facility-${facilityId}-tenor"]`),
-      };
-    },
+    row: (facilityId) => ({
+      facilityId: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+      facilityTenor: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-tenor"]`),
+    }),
   },
-
 };
 
 module.exports = caseDealPage;

@@ -134,11 +134,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    if (expectedResultsLength > 1) {
-      pages.dealsPage.heading().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-      });
-    } else if (expectedResultsLength === 1) {
+    if (expectedResultsLength === 1) {
       pages.dealsPage.heading().invoke('text').then((text) => {
         expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
       });
@@ -224,7 +220,6 @@ context('User can view and filter multiple deals', () => {
     });
   });
 
-
   it('search/filter by bond productCode', () => {
     const searchString = 'BSS';
 
@@ -263,26 +258,6 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by date received in DD/MM/YYYY format', () => {
-    const todayFormatted = new Date().toLocaleDateString('en-GB');
-
-    const searchString = todayFormatted;
-
-    const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) =>
-      deal.details.testId !== 'DEAL_SUBMITTED_YESTERDAY');
-
-    const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
-
-    pages.dealsPage.searchFormInput().type(searchString);
-    pages.dealsPage.searchFormSubmitButton().click();
-
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
-
-    pages.dealsPage.heading().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-    });
-  });
-
-  it('search/filter by date received in DD-MM-YYYY format', () => {
     const todayFormatted = new Date().toLocaleDateString('en-GB');
 
     const searchString = todayFormatted;

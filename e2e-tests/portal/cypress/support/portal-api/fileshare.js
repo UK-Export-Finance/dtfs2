@@ -1,7 +1,3 @@
-const {downloadFile,logIn} = require('./api');
+const { downloadFile, logIn } = require('./api');
 
-module.exports.downloadFile = (deal, opts) => {
-  return logIn(opts).then( (token) => {
-      return downloadFile(token, deal);
-  })
-}
+module.exports.downloadFile = (deal, opts) => logIn(opts).then((token) => downloadFile(token, deal));
