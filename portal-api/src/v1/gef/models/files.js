@@ -7,6 +7,7 @@ class File {
     this.mimetype = file.mimetype;
     this.encoding = file.encoding;
     this.size = file.size;
+    this.documentPath = file.documentPath;
   }
 }
 
