@@ -19,7 +19,7 @@ const getAuthor = () => {
       _id: deal.dealSnapshot.bank.id,
     };
   }
-  return '';
+  return {};
 };
 
 const getLabel = () => {

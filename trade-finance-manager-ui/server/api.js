@@ -175,9 +175,7 @@ const createActivity = async (dealId, activityObject) => {
     activityObject,
   };
 
-  const response = await apollo('PUT', createActivityMutation, activity);
-
-  return response;
+  return apollo('PUT', createActivityMutation, activity);
 };
 
 // Temp login for mock users. Active Directory will proabably replace this
