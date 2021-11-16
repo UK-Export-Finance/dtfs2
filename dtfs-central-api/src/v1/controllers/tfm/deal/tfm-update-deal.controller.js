@@ -14,6 +14,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const { dealSnapshot, ...tfmUpdate } = dealChanges;
 
   let dealUpdate = tfmUpdate;
+
   // ensure that deal.tfm.history is not wiped
   if (existingDeal.tfm && existingDeal.tfm.history) {
     dealUpdate = {
@@ -73,7 +74,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
-  const dealUpdate = req.body;
+  const { dealUpdate } = req.body;
 
   const deal = await findOneDeal(dealId, false, 'tfm');
 

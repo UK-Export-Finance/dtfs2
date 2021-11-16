@@ -29,7 +29,9 @@ const updateTfmDeal = async (dealId, tfm) => {
         'Content-Type': 'application/json',
       },
       data: {
-        tfm,
+        dealUpdate: {
+          tfm,
+        },
       },
     });
     return response.data;
