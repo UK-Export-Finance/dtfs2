@@ -67,7 +67,7 @@ const getDescription = () => {
 const getObject = async () => {
   let object = {};
   try {
-    object = await api.getDeal(dealId).then((data) => {
+    object = await api.getTfmDeal(dealId).then((data) => {
       if (data && data._id) {
         deal = data;
         return {
@@ -92,7 +92,12 @@ const create = (id, response, type) => {
     acbsResponse = response;
     record = type;
     getObject().then((result) => {
-      api.createActivity(dealId, result);
+      const tfm = {
+        activities: [
+          result,
+        ],
+      };
+      api.updateTfmDeal(dealId, tfm);
     });
   }
 };
