@@ -12,14 +12,18 @@ const labelCase = (label) => label.charAt(0).toUpperCase() + label.substring(1).
 const getTimestamp = () => getUnixTime(new Date(acbsResponse.headers.date));
 
 const getAuthor = () => {
-  if (record === 'deal' || record === 'facility') {
+  if (record === 'deal') {
     return {
       firstName: deal.dealSnapshot.bank.name,
       lastName: '',
       _id: deal.dealSnapshot.bank.id,
     };
   }
-  return {};
+  return {
+    firstName: '',
+    lastName: '',
+    _id: '',
+  };
 };
 
 const getLabel = () => {
@@ -31,7 +35,7 @@ const getLabel = () => {
     return `${dealType} submitted`;
   }
   if (record === 'facility') {
-    return 'Facility submitted';
+    return 'Facility submitted to ACBS';
   }
   return '';
 };
