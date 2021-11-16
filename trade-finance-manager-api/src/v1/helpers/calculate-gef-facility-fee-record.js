@@ -1,18 +1,17 @@
 const { differenceInDays } = require('date-fns');
 const { formattedNumber } = require('../../utils/number');
 
-// TODO: move to helpers directory?
-
 const calculateDrawnAmount = (
   facilityValue,
   coverPercentage,
   interestPercentage,
 ) => {
   /* Business logic:
-   * (Facility Amount * UKEF Cover) * 10 %) * bank's interest margin/percentage
+   * (Facility Amount * UKEF Cover (fractional percentage)) * bank's interest margin/percentage
   */
 
-  const valueAndCover = (facilityValue * coverPercentage);
+  const fractionalCoverPercentage = `0.${coverPercentage}`;
+  const valueAndCover = (facilityValue * fractionalCoverPercentage);
 
   return (valueAndCover * interestPercentage);
 };
@@ -36,16 +35,12 @@ const calculateFeeAmount = (
   dayBasis,
 ) => {
   /* Business logic:
-   * (Drawn Amount * Days) * 10 percent
+   * (Drawn Amount * Days Of Cover) * 10 percent, divided by day basis
   */
 
   const drawnAmountAndDays = (drawnAmount * daysOfCover);
 
-  const tenPercent = (drawnAmountAndDays * 10 / 100);
-
-  const feeAmount = (drawnAmountAndDays * tenPercent);
-
-  return formattedNumber(feeAmount);
+  return (drawnAmount * daysOfCover * 0.1 / dayBasis);
 };
 
 const calculateGefFacilityFeeRecord = (facility) => {
