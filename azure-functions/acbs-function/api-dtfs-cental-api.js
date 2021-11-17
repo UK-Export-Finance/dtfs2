@@ -1,8 +1,7 @@
+require('dotenv').config();
 const axios = require('axios');
 
 const centralAPI = process.env.DTFS_CENTRAL_API;
-
-require('dotenv').config();
 
 const getTfmDeal = async (dealId) => {
   try {

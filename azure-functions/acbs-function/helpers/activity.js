@@ -19,7 +19,7 @@ const getAuthor = () => {
     _id: '',
   };
 
-  if (record === 'deal') {
+  if (record === 'deal' || record === 'facility') {
     author.firstName = deal.dealSnapshot.bank.name;
     author._id = deal.dealSnapshot.bank.id;
   }
