@@ -73,7 +73,10 @@ const generateBssFacilityLists = (facilities) => {
   const unissuedBondsList = generateFacilitiesListString(unissuedBonds);
   const unissuedLoansList = generateFacilitiesListString(unissuedLoans);
 
-  const issued = `${issuedBondsList}\n${issuedLoansList}`;
+  let issued = '';
+  if (issuedBondsList.length || issuedLoansList.length) {
+    issued = `${issuedBondsList}\n${issuedLoansList}`;
+  }
 
   let unissued = '';
   if (unissuedBondsList.length || unissuedLoansList.length) {
