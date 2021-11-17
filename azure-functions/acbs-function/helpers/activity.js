@@ -10,7 +10,7 @@ let updateRecord;
 
 const labelCase = (label) => label.charAt(0).toUpperCase() + label.substring(1).toLowerCase();
 
-const getTimestamp = () => getUnixTime(new Date(acbsResponse.headers.date));
+const getTimestamp = () => getUnixTime(acbsResponse.headers ? new Date(acbsResponse.headers.date) : new Date());
 
 const getAuthor = () => {
   const author = {
@@ -96,9 +96,7 @@ const add = (id, response, type, update = false) => {
     updateRecord = update;
     getObject().then((result) => {
       const tfm = {
-        activities: [
-          result,
-        ],
+        activities: result,
       };
       api.updateTfmDeal(dealId, tfm);
     });

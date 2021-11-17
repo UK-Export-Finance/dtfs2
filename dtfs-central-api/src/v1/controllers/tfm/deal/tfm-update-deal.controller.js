@@ -38,10 +38,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
         ];
       }
 
-      if (
-        tfmUpdate.tfm.history.emails
-        && tfmUpdate.tfm.history.emails.recipient
-      ) {
+      if (tfmUpdate.tfm.history.emails && tfmUpdate.tfm.history.emails.recipient) {
         dealUpdate.tfm.history.emails = [
           ...existingDeal.tfm.history.emails,
           ...tfmUpdate.tfm.history.emails,
@@ -54,12 +51,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
    * Ensure tfm.activities is not wiped and avoid recursive object creation
    * by checking .type property for the activities object
    * */
-
-  if (
-    existingDeal.tfm
-    && existingDeal.tfm.activities
-    && tfmUpdate.tfm.activities.type
-  ) {
+  if (existingDeal.tfm && existingDeal.tfm.activities && tfmUpdate.tfm.activities.type) {
     dealUpdate = {
       tfm: {
         ...existingDeal.tfm,
@@ -71,7 +63,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     if (tfmUpdate.tfm.activities) {
       dealUpdate.tfm.activities = [
         ...existingDeal.tfm.activities,
-        { ...tfmUpdate.tfm.activities },
+        tfmUpdate.tfm.activities,
       ];
     }
   }
