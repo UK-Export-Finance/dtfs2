@@ -64,6 +64,10 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
           : err,
       },
     }));
+
+    if (CONSTANTS.ACTIVITY.ACCEPTED_ENDPOINTS.includes(apiRef) && acbsInput._id) {
+      activity.add(acbsInput._id, response, apiRef, true);
+    }
     return response;
   }
   return {};
@@ -94,7 +98,7 @@ const postToACBS = async (apiRef, acbsInput) => {
     }));
 
     if (CONSTANTS.ACTIVITY.ACCEPTED_ENDPOINTS.includes(apiRef) && acbsInput._id) {
-      activity.create(acbsInput._id, response, apiRef);
+      activity.add(acbsInput._id, response, apiRef);
     }
 
     return response;

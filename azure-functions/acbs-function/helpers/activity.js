@@ -6,36 +6,38 @@ let deal;
 let record;
 let acbsResponse;
 let dealId;
+let updateRecord;
 
 const labelCase = (label) => label.charAt(0).toUpperCase() + label.substring(1).toLowerCase();
 
 const getTimestamp = () => getUnixTime(new Date(acbsResponse.headers.date));
 
 const getAuthor = () => {
-  if (record === 'deal') {
-    return {
-      firstName: deal.dealSnapshot.bank.name,
-      lastName: '',
-      _id: deal.dealSnapshot.bank.id,
-    };
-  }
-  return {
+  const author = {
     firstName: '',
     lastName: '',
     _id: '',
   };
+
+  if (record === 'deal') {
+    author.firstName = deal.dealSnapshot.bank.name;
+    author._id = deal.dealSnapshot.bank.id;
+  }
+
+  return author;
 };
 
 const getLabel = () => {
   const dealType = deal.dealSnapshot.details
     ? labelCase(deal.dealSnapshot.details.submissionType)
     : labelCase(deal.dealSnapshot.submissionType);
+  const text = updateRecord ? 'updated' : 'submitted';
 
   if (record === 'deal') {
-    return `${dealType} submitted`;
+    return `${dealType} ${text}`;
   }
   if (record === 'facility') {
-    return 'Facility submitted to ACBS';
+    return `Facility ${text}`;
   }
   return '';
 };
@@ -86,11 +88,12 @@ const getObject = async () => {
   return object;
 };
 
-const create = (id, response, type) => {
+const add = (id, response, type, update = false) => {
   if (id && response && type) {
     dealId = id;
     acbsResponse = response;
     record = type;
+    updateRecord = update;
     getObject().then((result) => {
       const tfm = {
         activities: [
@@ -103,5 +106,5 @@ const create = (id, response, type) => {
 };
 
 module.exports = {
-  create,
+  add,
 };
