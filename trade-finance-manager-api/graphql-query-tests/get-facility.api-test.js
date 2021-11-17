@@ -44,6 +44,7 @@ const GET_FACILITY = gql`
         facilityStage,
         facilityValueExportCurrency,
         facilityValue,
+        currency,
         ukefExposure,
         coveredPercentage,
         bankFacilityReference,
@@ -171,11 +172,10 @@ describe('graphql query - get facility', () => {
 
     const expectedSnapshot = {
       ...reducerResult.facilitySnapshot,
-      // fields that do not exist and therefore return as null from graphql query
+
+      // These fields are in the query, but only specific to BSS/EWCS.
       bondBeneficiary: null,
       bondIssuer: null,
-      dayCountBasis: null,
-      feeFrequency: null,
       firstDrawdownAmountInExportCurrency: null,
     };
 

@@ -10,8 +10,8 @@ describe('mapDates', () => {
   };
 
   const mockFacility = {
-    issuedFacilitySubmittedToUkefTimestamp: '160690061100',
-    requestedCoverStartDate: '160690061200',
+    issuedFacilitySubmittedToUkefTimestamp: 160690061100,
+    requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
     ukefGuaranteeInMonths: '12',
     ...mockCoverEndDate,
   };

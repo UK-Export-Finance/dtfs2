@@ -1,10 +1,11 @@
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
+const { calculateGefFacilityFeeRecord } = require('../../../src/v1/helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../../src/constants');
 const submitDeal = require('../utils/submitDeal');
 
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const MOCK_DEAL_BSS = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
@@ -107,7 +108,7 @@ describe('/v1/deals', () => {
 
       describe('all bonds that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
 
           expect(status).toEqual(200);
 
@@ -116,13 +117,13 @@ describe('/v1/deals', () => {
 
 
           expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
-          expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+          expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
         });
       });
 
       describe('all loans that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
 
           expect(status).toEqual(200);
 
@@ -131,7 +132,7 @@ describe('/v1/deals', () => {
 
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
-          expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+          expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
         });
       });
 
@@ -148,7 +149,7 @@ describe('/v1/deals', () => {
         });
 
         it('does not get the exposure period info for unissued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
 
           expect(status).toEqual(200);
 
@@ -156,40 +157,9 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('premium schedule', () => {
-        it('calls premium schedule for an issued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
-
-          expect(status).toEqual(200);
-
-          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(1);
-        });
-
-        it('does NOT call premium schedule for an unissued facility', async () => {
-          const mockDeal = {
-            ...MOCK_DEAL,
-            submissionCount: 0,
-          };
-
-          const { status } = await submitDeal(createSubmitBody(mockDeal));
-
-          expect(status).toEqual(200);
-
-          expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
-        });
-
-        it('does NOT call premium schedule when dealType is GEF', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
-
-          expect(status).toEqual(200);
-
-          expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
-        });
-      });
-
       describe('riskProfile (BSS/EWCS facilities)', () => {
         it('defaults all facilities riskProfile to `Flat`', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
 
           expect(status).toEqual(200);
 
@@ -218,6 +188,89 @@ describe('/v1/deals', () => {
 
           expect(cashFacility.tfm.riskProfile).toEqual('Flat');
           expect(contingentFacility.tfm.riskProfile).toEqual('Flat');
+        });
+      });
+
+      describe('premium schedule', () => {
+        it('calls premium schedule for an issued facility', async () => {
+          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
+
+          expect(status).toEqual(200);
+
+          expect(externalApis.getPremiumSchedule.mock.calls).toHaveLength(1);
+        });
+
+        it('does NOT call premium schedule for an unissued facility', async () => {
+          const mockDeal = {
+            ...MOCK_DEAL_BSS,
+            submissionCount: 0,
+          };
+
+          const { status } = await submitDeal(createSubmitBody(mockDeal));
+
+          expect(status).toEqual(200);
+
+          expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
+        });
+
+        it('does NOT call premium schedule when dealType is GEF', async () => {
+          const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+          expect(status).toEqual(200);
+
+          expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('fee record', () => {
+        describe('when facility/dealType is GEF', () => {
+          it('adds fee record to issued facilities', async () => {
+            const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+            expect(status).toEqual(200);
+
+            const issuedFacility = body.facilities.find((facility) =>
+              facility.hasBeenIssued);
+
+            const expected = calculateGefFacilityFeeRecord(issuedFacility);
+
+            expect(issuedFacility.tfm.feeRecord).toEqual(expected);
+          });
+
+          it('does NOT add fee record to unissued facilities', async () => {
+            const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+            expect(status).toEqual(200);
+
+            const unissuedFacility = body.facilities.find((facility) =>
+              !facility.hasBeenIssued);
+
+            expect(unissuedFacility.tfm.feeRecord).toEqual(null);
+          });
+        });
+
+        describe('when facility/dealType is BSS', () => {
+          it('does NOT add fee record to any unissued facilities', async () => {
+            const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
+
+            expect(status).toEqual(200);
+
+            const unissuedFacility = body.facilities.find((facility) =>
+              !facility.hasBeenIssued);
+
+            expect(unissuedFacility.tfm.feeRecord).toBeUndefined();
+          });
+
+          it('does NOT add fee record to any issued facilities', async () => {
+            const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
+
+            expect(status).toEqual(200);
+
+            const issuedFacility = body.facilities.find((facility) =>
+              facility.hasBeenIssued);
+
+            expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+          });
         });
       });
     });

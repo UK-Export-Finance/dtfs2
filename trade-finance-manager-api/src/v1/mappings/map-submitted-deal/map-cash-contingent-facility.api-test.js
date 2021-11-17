@@ -35,6 +35,19 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
       expect(result).toEqual(expected);
     });
 
+    describe('when coverStartDate is an invalid date and facility.hasBeenIssued is NOT true', () => {
+      it('should return null', () => {
+        const mockFacility = {
+          hasBeenIssued: null,
+          coverStartDate: '',
+        };
+
+        const result = mapCoverStartDate(mockFacility);
+
+        expect(result).toEqual(null);
+      });
+    });
+
     it('should return null', () => {
       const result = mapCoverStartDate({});
 
@@ -98,7 +111,8 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         ukefGuaranteeInMonths: monthsOfCover || 0,
         ukefExposure,
         coverStartDate: mapCoverStartDate(mockFacility),
-        coverEndDate,
+        coverEndDate: coverEndDate,
+        coverEndDateTimestamp: convertDateToTimestamp(coverEndDate),
         bankReference: name,
         guaranteeFee,
         feeType: mapGefFacilityFeeType(paymentType),
