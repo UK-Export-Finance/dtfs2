@@ -444,7 +444,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         coveredPercentage: '2',
         feeType: 'test',
         feeFrequency: 'test',
-        dayCountBasis: 'test',
+        dayCountbasis: '365'',
         currency: { id: 'EUR', text: 'Euros' },
       };
 
