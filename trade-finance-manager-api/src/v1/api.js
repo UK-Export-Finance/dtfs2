@@ -442,7 +442,7 @@ const createACBS = async (deal, bank) => {
       return response.data;
     } catch (err) {
       console.error('ACBS create error\n\r', err);
-      return err;
+      return false;
     }
   }
   return {};
