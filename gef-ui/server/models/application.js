@@ -44,7 +44,8 @@ const deriveSupportingInfoStatus = (application) => {
   requiredFields.forEach((requiredField) => {
     const availableField = application.supportingInformation[requiredField];
 
-    if (availableField?.length || Object.prototype.hasOwnProperty.call(availableField, 'exporter')) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (availableField?.length || availableField?.hasOwnProperty('exporter')) {
       availableFields.push(requiredField);
     }
   });
