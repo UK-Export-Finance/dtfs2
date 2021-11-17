@@ -169,13 +169,13 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = async (dealId, activityObject) => {
-  const activity = {
+const createActivity = async (dealId, activityUpdate) => {
+  const updateVariable = {
     dealId,
-    activityObject,
+    activityUpdate,
   };
 
-  return apollo('PUT', createActivityMutation, activity);
+  return apollo('PUT', createActivityMutation, updateVariable);
 };
 
 // Temp login for mock users. Active Directory will proabably replace this
