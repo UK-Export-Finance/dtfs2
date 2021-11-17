@@ -58,16 +58,13 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
-    productTypeId: helpers.getProductTypeId(
-      facility,
-      deal.dealSnapshot.dealType
-    ),
+    productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
     capitalConversionFactorCode:
       helpers.getCapitalConversionFactorCode(facility),
     productTypeName:
-      facility.facilityType ||
-      facility.facilitySnapshot.type ||
-      facility.facilitySnapshot.facilityType,
+      facility.facilityType
+      || facility.facilitySnapshot.type
+      || facility.facilitySnapshot.facilityType,
     currency: facility.facilitySnapshot.currency.id
       ? facility.facilitySnapshot.currency.id
       : facility.facilitySnapshot.currency,
@@ -77,28 +74,18 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     delegationType: helpers.getDelegationType(
       deal.dealSnapshot.submissionType
         ? deal.dealSnapshot.submissionType
-        : deal.dealSnapshot.details.submissionType
+        : deal.dealSnapshot.details.submissionType,
     ),
-    intrestOrFeeRate: helpers.getInterestOrFeeRate(
-      facility.facilitySnapshot,
-      deal.dealSnapshot.dealType
-    ),
+    intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     facilityStageCode,
-    exposurePeriod: String(
-      helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)
-    ),
+    exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
     creditRatingCode: CONSTANTS.FACILITY.CREDIT_RATING.CODE14,
     guaranteePercentage: helpers.getInsuredPercentage(facilityStageCode),
-    premiumFrequencyCode: helpers.getPremiumFrequencyCode(
-      facility.facilitySnapshot
-    ),
+    premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
     riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
     riskStatusCode: CONSTANTS.FACILITY.RISK.STATUS.TYPE03,
     effectiveDate,
-    foreCastPercentage: helpers.getForecastPercentage(
-      facility.facilitySnapshot,
-      deal.dealSnapshot.dealType
-    ),
+    foreCastPercentage: helpers.getForecastPercentage(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     issueDate,
     description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
     agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
@@ -106,7 +93,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     obligorName:
       deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
         ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
-        : deal.dealSnapshot.submissionDetails["supplier-name"].substring(0, 35),
+        : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   };
 };
