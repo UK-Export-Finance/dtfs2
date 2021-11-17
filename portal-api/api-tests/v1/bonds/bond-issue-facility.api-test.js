@@ -54,7 +54,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     coveredPercentage: '2',
     feeType: 'test',
     feeFrequency: 'test',
-    dayCountbasis: '365'',
+    dayCountBasis: '365',
     status: 'Ready for check'
   };
 
