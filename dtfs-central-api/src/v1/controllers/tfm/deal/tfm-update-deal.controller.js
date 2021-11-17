@@ -43,7 +43,8 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   }
 
   // Ensure tfm.activities is not wiped and avoid recursive object creation
-  if (existingDeal.tfm && existingDeal.tfm.activities) {
+  console.log(tfmUpdate);
+  if (existingDeal.tfm && existingDeal.tfm.activities && tfmUpdate.tfm.activities.type) {
     dealUpdate = {
       tfm: {
         ...existingDeal.tfm,
@@ -55,7 +56,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     if (tfmUpdate.tfm.activities) {
       dealUpdate.tfm.activities = [
         ...existingDeal.tfm.activities,
-        ...tfmUpdate.tfm.activities,
+        {...tfmUpdate.tfm.activities},
       ];
     }
   }
