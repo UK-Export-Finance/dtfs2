@@ -150,9 +150,9 @@ class Facility {
         this.submittedAsIssuedDate = req.submittedAsIssuedDate;
       }
 
-      // nullify values based on previous questions
+      // sets to now date to now
       if (req.shouldCoverStartOnSubmission === true) {
-        this.coverStartDate = null;
+        this.coverStartDate = new Date();
       }
 
       if (req.hasBeenIssued === false) {
