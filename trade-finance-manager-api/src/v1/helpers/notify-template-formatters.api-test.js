@@ -207,7 +207,22 @@ describe('notify-template-formatters', () => {
       expect(result).toEqual(expected);
     });
 
-    describe('when tere are no unissued facilities', () => {
+    describe('when there are no issued facilities', () => {
+      it('should return issued as empty string', () => {
+        const mockFacilities = [
+          {
+            facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+            hasBeenIssued: false,
+          },
+        ];
+
+        const result = generateBssFacilityLists(mockFacilities);
+
+        expect(result.issued).toEqual('');
+      });
+    });
+
+    describe('when there are no unissued facilities', () => {
       it('should return unissued as empty string', () => {
         const mockFacilities = [
           {
