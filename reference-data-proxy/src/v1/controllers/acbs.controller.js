@@ -121,9 +121,13 @@ const createAcbsRecord = async (deal, bank) => {
 
 exports.createAcbsRecordPOST = async (req, res) => {
   if (req) {
-    const { deal, bank } = req.body;
-    const { status, data } = await createAcbsRecord(deal, bank);
-    return res.status(status).send(data);
+    try {
+      const { deal, bank } = req.body;
+      const { status, data } = await createAcbsRecord(deal, bank);
+      return res.status(status).send(data);
+    } catch (error) {
+      console.error('ACBS post failed.', { error });
+    }
   }
   return res.status(400).send();
 };
