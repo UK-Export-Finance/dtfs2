@@ -43,7 +43,10 @@ const deriveSupportingInfoStatus = (application) => {
 
   requiredFields.forEach((requiredField) => {
     const availableField = application.supportingInformation[requiredField];
-    if (availableField) availableFields.push(requiredField);
+
+    if (availableField?.length || Object.prototype.hasOwnProperty.call(availableField, 'exporter')) {
+      availableFields.push(requiredField);
+    }
   });
 
   let state = PROGRESS.NOT_STARTED;
@@ -53,7 +56,6 @@ const deriveSupportingInfoStatus = (application) => {
 
   return status[state];
 };
-
 class Application {
   static async findById(id, user, userToken) {
     try {

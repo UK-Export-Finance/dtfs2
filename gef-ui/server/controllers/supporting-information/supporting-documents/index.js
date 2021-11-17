@@ -6,7 +6,7 @@ const { docType } = require('./docType');
 
 const MAX_FILE_SIZE = 10; // 10 mb default
 
-const mapDocTypeParemeterToProps = (type) => {
+const mapDocTypeParameterToProps = (type) => {
   let mappedValues = null;
   if (Object.prototype.hasOwnProperty.call(docType, type)) {
     mappedValues = docType[type];
@@ -100,7 +100,7 @@ const getSupportingDocuments = async (req, res, next) => {
 
   try {
     application = await getApplication(applicationId, user, userToken);
-    const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, title } = mapDocTypeParameterToProps(documentType);
 
     let files = [];
     if (Object.prototype.hasOwnProperty.call(application.supportingInformation, fieldName)) {
@@ -128,7 +128,7 @@ const postSupportingDocuments = async (req, res, next) => {
   } = req;
   const errRef = 'documents';
   try {
-    const { fieldName, title, path } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, title, path } = mapDocTypeParameterToProps(documentType);
     const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
 
     let errors = [];
@@ -224,7 +224,7 @@ const postSupportingDocuments = async (req, res, next) => {
 const uploadSupportingDocument = async (req, res, next) => {
   const { file, params: { applicationId, documentType }, session: { user, userToken } } = req;
   try {
-    const { fieldName, path } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
 
     if (!file) return res.status(400).send('Missing file');
 
@@ -274,7 +274,7 @@ const deleteSupportingDocument = async (req, res, next) => {
   try {
     if (!fileToDelete) return res.status(400).send('Missing file to delete');
 
-    const { fieldName, path } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
 
     const application = await getApplication(applicationId, user, userToken);
     const documentPath = path;
