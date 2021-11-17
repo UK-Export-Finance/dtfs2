@@ -100,11 +100,11 @@
             {% endfor %}
           </tbody>
 
-          {% if premiumTotals %}
+          {% if facilityTfm.premiumTotals %}
             <tfoot>
               <tr>
                 <td colspan="3" class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold govuk-table__cell--numeric" data-cy="premium-total">
-                  Total {{ premiumTotals | formatAsCurrency }}
+                  Total {{ facilityTfm.premiumTotals | formatAsCurrency }}
                 </td>
                 <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
               </tr>
