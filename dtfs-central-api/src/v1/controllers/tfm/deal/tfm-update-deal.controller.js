@@ -15,7 +15,12 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 
   let dealUpdate = tfmUpdate;
 
-  // ensure that deal.tfm.history is not wiped
+  /**
+   * Ensure tfm.history is not wiped and avoid recursive object creation
+   * by checking .recipient property for the emails object and
+   * by checking .taskId property for the tasks object.
+   * */
+
   if (existingDeal.tfm && existingDeal.tfm.history) {
     dealUpdate = {
       tfm: {
@@ -26,14 +31,17 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     };
 
     if (tfmUpdate.tfm.history) {
-      if (tfmUpdate.tfm.history.tasks) {
+      if (tfmUpdate.tfm.history.tasks && tfmUpdate.tfm.history.tasks.taskId) {
         dealUpdate.tfm.history.tasks = [
           ...existingDeal.tfm.history.tasks,
           ...tfmUpdate.tfm.history.tasks,
         ];
       }
 
-      if (tfmUpdate.tfm.history.emails) {
+      if (
+        tfmUpdate.tfm.history.emails
+        && tfmUpdate.tfm.history.emails.recipient
+      ) {
         dealUpdate.tfm.history.emails = [
           ...existingDeal.tfm.history.emails,
           ...tfmUpdate.tfm.history.emails,
@@ -42,9 +50,16 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     }
   }
 
-  // Ensure tfm.activities is not wiped and avoid recursive object creation
-  console.log(tfmUpdate);
-  if (existingDeal.tfm && existingDeal.tfm.activities && tfmUpdate.tfm.activities.type) {
+  /**
+   * Ensure tfm.activities is not wiped and avoid recursive object creation
+   * by checking .type property for the activities object
+   * */
+
+  if (
+    existingDeal.tfm
+    && existingDeal.tfm.activities
+    && tfmUpdate.tfm.activities.type
+  ) {
     dealUpdate = {
       tfm: {
         ...existingDeal.tfm,
@@ -56,7 +71,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     if (tfmUpdate.tfm.activities) {
       dealUpdate.tfm.activities = [
         ...existingDeal.tfm.activities,
-        {...tfmUpdate.tfm.activities},
+        { ...tfmUpdate.tfm.activities },
       ];
     }
   }
