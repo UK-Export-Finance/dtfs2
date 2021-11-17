@@ -44,24 +44,25 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.saveAndReturnButton();
     });
 
+    // TODO: DTFS2-5084 - disabled because it's flaky
     // Skipping test until cy Referer not being passed bug is fixed
-    it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      enterExportersCorAddress.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
-    });
+    // it('redirects user to select exporters address page when clicking on `Back` Link', () => {
+    //   enterExportersCorAddress.backLink().click();
+    //   cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
+    // });
 
     // Next test is a fudge while Referer cant be set in cy.visit({headers}) (test above) replace when possible
-    it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
-      exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type('1');
-      exportersAddress.continueButton().click();
-      exportersAddress.postcodeError();
-      exportersAddress.manualAddressEntryLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
-      enterExportersCorAddress.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
-    });
+    // it('redirects user to select exporters address page when clicking on `Back` Link', () => {
+    //   cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
+    //   exportersAddress.yesRadioButton().click();
+    //   exportersAddress.correspondenceAddress().type('1');
+    //   exportersAddress.continueButton().click();
+    //   exportersAddress.postcodeError();
+    //   exportersAddress.manualAddressEntryLink().click();
+    //   cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
+    //   enterExportersCorAddress.backLink().click();
+    //   cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
+    // });
 
     it('pre-populates form with address when coming from select exporters correspondence address', () => {
       cy.apiLogin(CREDENTIALS.MAKER)
