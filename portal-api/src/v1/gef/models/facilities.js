@@ -150,7 +150,7 @@ class Facility {
         this.submittedAsIssuedDate = req.submittedAsIssuedDate;
       }
 
-      // sets to now date to now
+      // set time to midnight (today) - actual time is irrelevant - only need the date
       if (req.shouldCoverStartOnSubmission === true) {
         this.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
       }

@@ -297,9 +297,6 @@ describe(baseUrl, () => {
           required: [],
         },
       };
-      console.log('before', update);
-      console.log('bigexpected', expected);
-      console.log('after', expected.coverStartDate);
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
     });
