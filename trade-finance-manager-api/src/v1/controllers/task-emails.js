@@ -35,6 +35,10 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
       break;
 
+    case CONSTANTS.TASKS.MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER:
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+      break;
+
     case CONSTANTS.TASKS.MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK:
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
       break;
