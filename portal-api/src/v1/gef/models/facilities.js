@@ -152,7 +152,8 @@ class Facility {
 
       // sets to now date to now
       if (req.shouldCoverStartOnSubmission === true) {
-        this.coverStartDate = new Date();
+        this.coverStartDate = (new Date()).setHours(0,0,0,0);
+        console.log('cpver', this.coverStartDate);
       }
 
       if (req.hasBeenIssued === false) {
