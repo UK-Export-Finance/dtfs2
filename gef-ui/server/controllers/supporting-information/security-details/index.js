@@ -109,7 +109,7 @@ const postSecurityDetails = async (req, res) => {
 
     await updateApplication(applicationId, application);
 
-    if (application.supportingInformation.requiredFields.includes('exportLicence')) {
+    if (application.supportingInformation?.requiredFields?.includes('exportLicence')) {
       return res.redirect('export-licence');
     }
     return res.redirect(`/gef/application-details/${applicationId}`);
