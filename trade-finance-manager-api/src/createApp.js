@@ -4,7 +4,7 @@ const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
@@ -25,11 +25,12 @@ dotenv.config();
 initScheduler();
 
 const app = express();
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-  }),
-);
+// TODO re-enable Helmet (Jira - 4998)
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: false,
+//   }),
+// );
 app.use(express.json());
 app.use(compression());
 
