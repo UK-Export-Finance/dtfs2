@@ -31,11 +31,8 @@ const getCurrency = (currencyCode) => getAPI(`currency/${currencyCode}`);
 
 const getACBSIndustrySector = async (industryId) => getAPI(`map-industry-sector?ukefIndustryId=${industryId}`);
 
-<<<<<<< HEAD
 const getACBSCountryCode = async (country) => getAPI(`country?searchtext=${country}`);
 
-=======
->>>>>>> be930c9bc (Add activity to the deal)
 module.exports = {
   getCurrency,
   getACBSIndustrySector,
