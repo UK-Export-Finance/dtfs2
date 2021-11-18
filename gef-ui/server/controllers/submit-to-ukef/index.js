@@ -23,13 +23,8 @@ const createSubmissionToUkef = async (req, res) => {
   const { user, userToken } = req.session;
   const { applicationId } = params;
   const { comment } = body;
-  let application;
   console.log('GEF Application is being submitted to UKEF--TFM');
-  try {
-    application = await api.getApplication(applicationId);
-  } catch (err) {
-    console.error(err);
-  }
+  const application = await api.getApplication(applicationId);
 
   let checker;
   try {
@@ -69,7 +64,7 @@ const createSubmissionToUkef = async (req, res) => {
     await api.updateApplication(applicationId, application);
     await api.setApplicationStatus(applicationId, PROGRESS.SUBMITTED_TO_UKEF);
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-    return res.render('partials/submit-to-ukef-confirmation.njk');
+    return res.render('partials/submit-to-ukef-confirmation.njk', { applicationType: application.submissionType });
   } catch (err) {
     console.error(err);
     return res.render('partials/problem-with-service.njk');
