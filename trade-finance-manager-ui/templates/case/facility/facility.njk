@@ -18,14 +18,14 @@
 
   {% set scheduleComponentData = {
     facility: facility,
-    premiumSchedule: facilityTfm.premiumSchedule,
-    premiumTotals: facilityTfm.premiumTotals,
+    facilityTfm: facilityTfm,
     user: user
   } %}
-  {{ schedule.render(scheduleComponentData) }}
-  {% endset -%}
-  <div>
+    {{ schedule.render(scheduleComponentData) }}
+  {% endset %}
 
+
+  <div>
     <h2 class="ukef-heading-grey" style="padding-top:90px">Facility {{ facility.ukefFacilityID }}</h2>
     <h3 class="govuk-heading-l">{{ facility.facilityType }}</h3>
   </div>

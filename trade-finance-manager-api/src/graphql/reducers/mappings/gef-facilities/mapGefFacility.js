@@ -24,6 +24,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     value,
     interestPercentage,
     paymentType,
+    feeFrequency,
     hasBeenIssued,
     name,
     type: facilityType,
@@ -52,10 +53,13 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       facilityProduct: facilitySnapshot.facilityProduct,
       facilityStage: facilitySnapshot.facilityStage,
       facilityType: mapFacilityType(facilitySnapshot),
+      currency,
       facilityValueExportCurrency: `${currency} ${formattedFacilityValue}`,
       facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
       feeType: mapGefFacilityFeeType(paymentType),
+      feeFrequency,
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
+      dayCountBasis: facilitySnapshot.dayCountBasis,
 
       // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(facilityType),

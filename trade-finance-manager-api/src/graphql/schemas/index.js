@@ -126,7 +126,7 @@ type FacilityProduct {
 }
 
 type FacilityDates {
-  inclusionNoticeReceived: String!
+  inclusionNoticeReceived: String
   bankIssueNoticeReceived: String
   coverStartDate: String
   coverEndDate: String
@@ -148,6 +148,7 @@ type FacilitySnapshot {
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
+  currency: String
   coveredPercentage: String!
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
@@ -158,7 +159,7 @@ type FacilitySnapshot {
   firstDrawdownAmountInExportCurrency: String
   feeType: String
   feeFrequency: String
-  dayCountBasis: String
+  dayCountBasis: Int
   dates: FacilityDates
   providedOn: [String]
   providedOnOther: String
@@ -313,6 +314,7 @@ type TFMFacilityData {
   premiumSchedule: [PremiumScheduleData]
   premiumTotals: String
   hasBeenAcknowledged: Boolean
+  feeRecord: Float
 }
 
 input TasksFilters {
