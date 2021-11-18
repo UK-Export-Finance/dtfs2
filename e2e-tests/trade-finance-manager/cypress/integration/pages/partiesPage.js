@@ -10,14 +10,20 @@ const partiesPage = {
   bondIssuerEditLink: () => cy.get('[data-cy="bond-issuer-area"] [data-cy="edit-party-link"]'),
   bondBeneficiaryEditLink: () => cy.get('[data-cy="bond-beneficiary-area"] [data-cy="edit-party-link"]'),
   bondIssuerFacilitiesTable: {
-    row: (facilityId) => ({
-      facilityId: () => cy.get('@row').get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
-    }),
+    row: (facilityId) => {
+      cy.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}"]`).as('row');
+      return {
+        facilityId: () => cy.get('@row').get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+      };
+    },
   },
   bondBeneficiaryFacilitiesTable: {
-    row: (facilityId) => ({
-      facilityId: () => cy.get('@row').get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
-    }),
+    row: (facilityId) => {
+      cy.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}"]`).as('row');
+      return {
+        facilityId: () => cy.get('@row').get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+      };
+    },
   },
 };
 

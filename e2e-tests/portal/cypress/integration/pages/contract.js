@@ -36,35 +36,41 @@ const page = {
   eligibilityManualInclusionNoticeSubmissionDate: () => cy.get('[data-cy="manual-inclusion-notice-submission-date"]'),
   bondTransactionsTableRows: () => cy.get('[data-cy="bond-transactions-table"] tbody tr'),
   bondTransactionsTable: {
-    row: (bondId) => ({
-      uniqueNumber: () => cy.get('@row').get(`[data-cy="unique-number-${bondId}"]`),
-      uniqueNumberLink: () => cy.get('@row').get(`[data-cy="unique-number-link-${bondId}"]`),
-      ukefFacilityId: () => cy.get('@row').get(`[data-cy="bond-ukef-facility-id-${bondId}"]`),
-      bondStatus: () => cy.get('@row').get(`[data-cy="bond-status-${bondId}"]`),
-      facilityValue: () => cy.get('@row').get('[data-cy="bond-facility-value"]'),
-      facilityStage: () => cy.get('@row').get(`[data-cy="facility-stage-${bondId}"]`),
-      requestedCoverStartDate: () => cy.get('@row').get('[data-cy="bond-requested-cover-start-date"]'),
-      coverEndDate: () => cy.get('@row').get('[data-cy="bond-cover-end-date"]'),
-      issueFacilityLink: () => cy.get('@row').get(`[data-cy="bond-issue-facility-${bondId}"]`),
-      deleteLink: () => cy.get('@row').get(`[data-cy="bond-delete-${bondId}"]`),
-      changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="bond-change-or-confirm-cover-start-date-${bondId}"]`),
-    }),
+    row: (bondId) => {
+      cy.get(`[data-cy="bond-${bondId}"]`).as('row');
+      return {
+        uniqueNumber: () => cy.get('@row').get(`[data-cy="unique-number-${bondId}"]`),
+        uniqueNumberLink: () => cy.get('@row').get(`[data-cy="unique-number-link-${bondId}"]`),
+        ukefFacilityId: () => cy.get('@row').get(`[data-cy="bond-ukef-facility-id-${bondId}"]`),
+        bondStatus: () => cy.get('@row').get(`[data-cy="bond-status-${bondId}"]`),
+        facilityValue: () => cy.get('@row').get('[data-cy="bond-facility-value"]'),
+        facilityStage: () => cy.get('@row').get(`[data-cy="facility-stage-${bondId}"]`),
+        requestedCoverStartDate: () => cy.get('@row').get('[data-cy="bond-requested-cover-start-date"]'),
+        coverEndDate: () => cy.get('@row').get('[data-cy="bond-cover-end-date"]'),
+        issueFacilityLink: () => cy.get('@row').get(`[data-cy="bond-issue-facility-${bondId}"]`),
+        deleteLink: () => cy.get('@row').get(`[data-cy="bond-delete-${bondId}"]`),
+        changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="bond-change-or-confirm-cover-start-date-${bondId}"]`),
+      };
+    },
   },
   loansTransactionsTableRows: () => cy.get('[data-cy="loan-transactions-table"] tbody tr'),
   loansTransactionsTable: {
-    row: (loanId) => ({
-      bankReferenceNumber: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
-      bankReferenceNumberLink: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
-      ukefFacilityId: () => cy.get('@row').get(`[data-cy="loan-ukef-facility-id-${loanId}"]`),
-      loanStatus: () => cy.get('@row').get(`[data-cy="loan-status-${loanId}"]`),
-      facilityValue: () => cy.get('@row').get('[data-cy="loan-facility-value"]'),
-      facilityStage: () => cy.get('@row').get(`[data-cy="loan-facility-stage-${loanId}"]`),
-      requestedCoverStartDate: () => cy.get('@row').get('[data-cy="loan-requested-cover-start-date"]'),
-      coverEndDate: () => cy.get('@row').get('[data-cy="loan-cover-end-date"]'),
-      issueFacilityLink: () => cy.get('@row').get(`[data-cy="loan-issue-facility-${loanId}"]`),
-      deleteLink: () => cy.get('@row').get(`[data-cy="loan-delete-${loanId}"]`),
-      changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="loan-change-or-confirm-cover-start-date-${loanId}"]`),
-    }),
+    row: (loanId) => {
+      cy.get(`[data-cy="loan-${loanId}"]`).as('row');
+      return {
+        bankReferenceNumber: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
+        bankReferenceNumberLink: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
+        ukefFacilityId: () => cy.get('@row').get(`[data-cy="loan-ukef-facility-id-${loanId}"]`),
+        loanStatus: () => cy.get('@row').get(`[data-cy="loan-status-${loanId}"]`),
+        facilityValue: () => cy.get('@row').get('[data-cy="loan-facility-value"]'),
+        facilityStage: () => cy.get('@row').get(`[data-cy="loan-facility-stage-${loanId}"]`),
+        requestedCoverStartDate: () => cy.get('@row').get('[data-cy="loan-requested-cover-start-date"]'),
+        coverEndDate: () => cy.get('@row').get('[data-cy="loan-cover-end-date"]'),
+        issueFacilityLink: () => cy.get('@row').get(`[data-cy="loan-issue-facility-${loanId}"]`),
+        deleteLink: () => cy.get('@row').get(`[data-cy="loan-delete-${loanId}"]`),
+        changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="loan-change-or-confirm-cover-start-date-${loanId}"]`),
+      };
+    },
   },
 };
 

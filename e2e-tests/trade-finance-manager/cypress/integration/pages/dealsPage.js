@@ -18,9 +18,12 @@ const dealsPage = {
       buyer: () => cy.get('[data-cy="deals-table-heading-buyer"]'),
       buyerSortButton: () => cy.get('[data-cy="deals-table-heading-buyer-button"]'),
     },
-    row: (dealId) => ({
-      dealLink: () => cy.get('@row').get(`[data-cy="deal-${dealId}-ukef-deal-id-link"]`),
-    }),
+    row: (dealId) => {
+      cy.get(`[data-cy="deal-${dealId}"]`).as('row');
+      return {
+        dealLink: () => cy.get('@row').get(`[data-cy="deal-${dealId}-ukef-deal-id-link"]`),
+      };
+    },
   },
 
 };
