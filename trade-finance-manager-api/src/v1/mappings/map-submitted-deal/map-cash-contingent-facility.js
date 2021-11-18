@@ -1,3 +1,4 @@
+const { isValid } = require('date-fns');
 const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
 const CONSTANTS = require('../../../constants');
@@ -13,7 +14,7 @@ const mapCoverStartDate = (facility) => {
     return submittedAsIssuedDate;
   }
 
-  if (coverStartDate) {
+  if (coverStartDate && isValid(new Date(coverStartDate))) {
     return convertDateToTimestamp(coverStartDate);
   }
 
@@ -72,6 +73,9 @@ const mapCashContingentFacility = (facility) => {
   mapped.interestPercentage = facility.interestPercentage;
   mapped.shouldCoverStartOnSubmission = facility.shouldCoverStartOnSubmission;
   mapped.facilityStage = mapFacilityStage(hasBeenIssued);
+
+  // these extra fields are only used in GEF facility fee record calculation
+  mapped.coverEndDateTimestamp = convertDateToTimestamp(coverEndDate);
 
   return mapped;
 };

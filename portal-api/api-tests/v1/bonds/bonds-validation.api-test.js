@@ -38,7 +38,7 @@ describe('/v1/deals/:id/bond', () => {
     coveredPercentage: '2',
     feeType: 'test',
     feeFrequency: 'test',
-    dayCountBasis: 'test',
+    dayCountBasis: '365',
   };
 
   let aBarclaysMaker;

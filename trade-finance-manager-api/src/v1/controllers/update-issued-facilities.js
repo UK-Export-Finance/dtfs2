@@ -1,8 +1,9 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
-const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
+const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
+const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
 
 const updatedIssuedFacilities = async (deal) => {
@@ -53,11 +54,17 @@ const updatedIssuedFacilities = async (deal) => {
         );
       }
 
+      let feeRecord;
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        feeRecord = calculateGefFacilityFeeRecord(facility);
+      }
+
       const facilityUpdate = {
         ...portalFacilityUpdate,
         ...facilityExposurePeriod,
         facilityGuaranteeDates,
         premiumSchedule: facilityPremiumSchedule,
+        feeRecord,
       };
 
       const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
