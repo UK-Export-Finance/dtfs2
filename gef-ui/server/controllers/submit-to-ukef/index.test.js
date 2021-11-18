@@ -15,13 +15,31 @@ const MockRequest = () => {
   req.params = {};
   req.body = { comment: '' };
   req.query = {};
-  req.session = { user: { _id: '007' }, userToken: 'dummy-token' };
-  req.params.applicationId = '123';
+  req.params.applicationId = '1234';
+  req.session = {
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+    },
+    userToken: 'TEST',
+  };
   return req;
 };
 
+const mockExporter = {
+  status: 'NOT_STARTED',
+};
+const MockExporterResponse = () => mockExporter;
+
+const mockFacilities = {
+  status: 'NOT_STARTED',
+};
+
+const MockFacilitiesResponse = () => mockFacilities;
+
 const MockApplicationResponse = () => {
   const res = {};
+  res._id = '1234';
   res.exporterId = '123';
   res.bankInternalRefName = 'My test';
   res.comments = [{
@@ -30,6 +48,10 @@ const MockApplicationResponse = () => {
     createdAt: '1625482095783',
     comment: 'The client needs this asap.',
   }];
+  res.bankId = 'BANKID';
+  res.exporter = mockExporter;
+  res.eligibility = { status: 'Draft' };
+  res.facility = { status: 'Draft' };
   return res;
 };
 
@@ -48,10 +70,15 @@ describe('controllers/submit-to-ukef', () => {
     mockRequest = MockRequest();
     const mockApplicationResponse = MockApplicationResponse();
 
+    const mockExporterResponse = MockExporterResponse();
+    const mockFacilitiesResponse = MockFacilitiesResponse();
+
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
     api.updateApplication.mockResolvedValue(mockApplicationResponse);
     api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
+    api.getExporter.mockResolvedValue(mockExporterResponse);
+    api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
   });
 
   afterEach(() => {
@@ -63,7 +90,7 @@ describe('controllers/submit-to-ukef', () => {
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk');
+        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', { isAutomaticCover: false });
     });
 
     it('renders an error when the comment is over the maximum length', async () => {
