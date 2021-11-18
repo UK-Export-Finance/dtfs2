@@ -49,9 +49,7 @@ const MockApplicationResponse = () => {
     comment: 'The client needs this asap.',
   }];
   res.bankId = 'BANKID';
-  res.exporter = mockExporter;
-  res.eligibility = { status: 'Draft' };
-  res.facility = { status: 'Draft' };
+  res.submissionType = 'Automatic Inclusion Notice';
   return res;
 };
 
@@ -64,11 +62,12 @@ const MockMakerUserResponse = () => ({
 describe('controllers/submit-to-ukef', () => {
   let mockResponse;
   let mockRequest;
+  let mockApplicationResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
-    const mockApplicationResponse = MockApplicationResponse();
+    mockApplicationResponse = MockApplicationResponse();
 
     const mockExporterResponse = MockExporterResponse();
     const mockFacilitiesResponse = MockFacilitiesResponse();
@@ -90,7 +89,7 @@ describe('controllers/submit-to-ukef', () => {
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', { isAutomaticCover: false });
+        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', { applicationType: mockApplicationResponse.submissionType });
     });
 
     it('renders an error when the comment is over the maximum length', async () => {

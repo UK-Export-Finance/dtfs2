@@ -51,8 +51,9 @@ context('Submit to UKEF', () => {
 
     it('submits without comments and displays the confirmation page', () => {
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanel().contains('Manual inclusion application submitted to UKEF');
+      submitToUkefConfirmation.confirmationPanel().contains('Manual Inclusion Application submitted to UKEF');
       submitToUkefConfirmation.dashboardLink();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
     });
   });
 });
