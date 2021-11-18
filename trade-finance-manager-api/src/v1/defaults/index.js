@@ -1,5 +1,4 @@
 const CONSTANTS = require('../../constants');
-const { TASKS } = require('./tasks');
 
 const HISTORY = {
   tasks: [],
@@ -17,7 +16,6 @@ const LOSS_GIVEN_DEFAULT = CONSTANTS.DEALS.LOSS_GIVEN_DEFAULT['50_PERCENT'];
 const PROBABILITY_OF_DEFAULT = CONSTANTS.DEALS.PROBABILITY_OF_DEFAULT.DEFAULT_VALUE;
 
 module.exports = {
-  TASKS,
   HISTORY,
   CREDIT_RATING,
   FACILITY_RISK_PROFILE,
