@@ -72,7 +72,7 @@ const MOCK_DEAL = {
     'supplier-address-line-3': 'test',
     'supplier-address-postcode': 'test',
     'supplier-address-town': 'test',
-    'supplier-companies-house-registration-number': '12345678',
+    'supplier-companies-house-registration-number': '',
     'supplier-correspondence-address-country': {
       code: 'GBR',
       name: 'United Kingdom',

@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 
-const taskDefaults = () => ({
+const NEW_TASK = ({
   status: CONSTANTS.TASKS.STATUS.CANNOT_START,
   assignedTo: {
     userId: CONSTANTS.TASKS.UNASSIGNED,
@@ -26,7 +26,7 @@ const createGroupTasks = (tasks, groupId, excludedTasks = []) => {
         id: String(taskIdCount),
         groupId,
         ...task,
-        ...taskDefaults(groupId, taskIdCount),
+        ...NEW_TASK,
       };
 
       // only the first task in the first group can be started/edited straight away.
@@ -95,7 +95,7 @@ const createTasksMIA = (excludedTasks) => [
 
 const createTasks = (
   submissionType,
-  excludedTasks
+  excludedTasks,
 ) => {
   let tasks = [];
 
@@ -111,7 +111,7 @@ const createTasks = (
 };
 
 module.exports = {
-  taskDefaults,
+  NEW_TASK,
   createGroupTasks,
   createTasksAIN,
   createTasksMIA,
