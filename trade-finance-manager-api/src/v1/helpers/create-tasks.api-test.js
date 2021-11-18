@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 const {
-  taskDefaults,
+  NEW_TASK,
   createGroupTasks,
   createTasksAIN,
   createTasksMIA,
@@ -8,9 +8,8 @@ const {
 } = require('./create-tasks');
 
 describe('defaults - tasks creation', () => {
-  describe('taskDefaults', () => {
+  describe('NEW_TASK', () => {
     it('should return object with `to do` status and unassigned assignedTo object', () => {
-      const result = taskDefaults();
       const expected = {
         status: CONSTANTS.TASKS.STATUS.CANNOT_START,
         assignedTo: {
@@ -20,7 +19,7 @@ describe('defaults - tasks creation', () => {
         canEdit: false,
       };
 
-      expect(result).toEqual(expected);
+      expect(NEW_TASK).toEqual(expected);
     });
   });
 
@@ -45,14 +44,14 @@ describe('defaults - tasks creation', () => {
           groupId: 2,
           title: 'Title A',
           team: 'Team A',
-          ...taskDefaults(),
+          ...NEW_TASK,
         },
         {
           id: '2',
           groupId: 2,
           title: 'Title B',
           team: 'Team B',
-          ...taskDefaults(),
+          ...NEW_TASK,
         },
       ];
 
@@ -69,7 +68,7 @@ describe('defaults - tasks creation', () => {
             groupId: 1,
             title: 'Title A',
             team: 'Team A',
-            ...taskDefaults(),
+            ...NEW_TASK,
             status: 'To do',
             canEdit: true,
           },
@@ -77,7 +76,7 @@ describe('defaults - tasks creation', () => {
             id: '2',
             groupId: 1,
             title: 'Title B',
-            ...taskDefaults(),
+            ...NEW_TASK,
             team: 'Team B',
           },
         ];
@@ -110,7 +109,7 @@ describe('defaults - tasks creation', () => {
             groupId: 1,
             title: 'Task A',
             team: 'Test team',
-            ...taskDefaults(),
+            ...NEW_TASK,
             status: 'To do',
             canEdit: true,
           },
@@ -119,7 +118,7 @@ describe('defaults - tasks creation', () => {
             groupId: 1,
             title: 'Task D',
             team: 'Test team',
-            ...taskDefaults(),
+            ...NEW_TASK,
           },
         ];
 
