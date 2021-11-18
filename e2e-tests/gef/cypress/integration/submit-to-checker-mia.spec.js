@@ -10,7 +10,7 @@ const { format } = require('date-fns');
 
 let applicationId;
 
-context('Submit to UKEF as MIN', () => {
+context('Submit to UKEF as MIA', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.CHECKER)
@@ -63,7 +63,7 @@ context('Submit to UKEF as MIN', () => {
       applicationDetails.submitButton().click();
     });
 
-    it('displays correct MIN checker submission message', () => {
+    it('displays correct MIA checker submission message', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmation().contains('Manual inclusion application submitted for checking at your bank');
     });
