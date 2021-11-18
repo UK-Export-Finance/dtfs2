@@ -1,6 +1,7 @@
 const api = require('../api');
 const DEFAULTS = require('../defaults');
 const CONSTANTS = require('../../constants');
+const { createTasks } = require('../helpers/create-tasks');
 
 const createDealTasks = async (deal) => {
   if (!deal) {
@@ -15,13 +16,20 @@ const createDealTasks = async (deal) => {
 
   let tasks;
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    tasks = DEFAULTS.TASKS.AIN;
+  const exporterPartyUrn = tfm.parties.exporter.partyUrn;
+
+  let excludedTasks = [];
+
+  if (exporterPartyUrn) {
+    excludedTasks = [
+      CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+    ];
   }
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    tasks = DEFAULTS.TASKS.MIA;
-  }
+  tasks = createTasks(
+    submissionType,
+    excludedTasks,
+  );
 
   const dealUpdate = {
     tfm: {
