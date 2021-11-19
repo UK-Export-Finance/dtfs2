@@ -34,6 +34,28 @@ Test coverage will be generated.
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
 
+## GraphQL playground
+
+GraphQL playground is very useful for testing out GraphQL queries and mutations and exploring the schema.
+
+Once the API is running, access the playground on localhost port 5004.
+
+You will need to have an `authorization` http header for any query/mutation. This will be the `UKEF_TFM_API_SYSTEM_KEY` set in your .env.
+
+Example for single deal query in GraphQL playground:
+
+- Query variables
+
+```shell
+{ "_id": "1000192" }
+```
+
+- HTTP headers
+
+```shell
+{ "authorization": "abc-123-def-456" }
+```
+
 ## What this API does
 
 When a deal is submitted to UKEF from the Portal, the deal is sent to TFM API. TFM API has 4 responsibilities:
