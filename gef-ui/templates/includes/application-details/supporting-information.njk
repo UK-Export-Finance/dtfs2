@@ -189,7 +189,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/security-details",
               text: "Change" if supportingInfo.securityDetails else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'security-details-cta' }
             }
           ] if not previewMode
         }
