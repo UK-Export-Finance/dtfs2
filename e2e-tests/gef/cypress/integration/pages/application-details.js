@@ -54,6 +54,7 @@ const applicationDetails = {
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitValidationText: () => cy.get('[data-cy="submit-validation-text"]'),
+  supportingInfoList: () => cy.get('[data-cy="supportingInfo-summary-list"]'),
 };
 
 export default applicationDetails;
