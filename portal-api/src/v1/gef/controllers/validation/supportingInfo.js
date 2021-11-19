@@ -8,7 +8,8 @@ const supportingInfoStatus = (supportingInfo) => {
     delete supportingInfoAnswers.requiredFields;
     delete supportingInfoAnswers.status;
 
-    const answeredCount = supportingInfoAnswers.length;
+    const answeredCount = Object.keys(supportingInfoAnswers).length;
+
     if (!answeredCount) {
       return STATUS.NOT_STARTED;
     }
