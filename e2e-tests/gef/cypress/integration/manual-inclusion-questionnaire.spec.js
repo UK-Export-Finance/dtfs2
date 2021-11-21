@@ -63,8 +63,8 @@ context('manual inclusion Page', () => {
     });
 
     it('does not allow a file greater than 12MB', () => {
-      cy.uploadFile('upload-file-large.pdf', `${manualInclusion.url(id)}/upload`);
-      manualInclusion.uploadFailure('upload-file-large.pdf');
+      cy.uploadFile('upload-larger-file.pdf', `${manualInclusion.url(id)}/upload`);
+      manualInclusion.uploadFailure('upload-larger-file.pdf');
     });
 
     it('does not allow a file of an incorrect type', () => {
