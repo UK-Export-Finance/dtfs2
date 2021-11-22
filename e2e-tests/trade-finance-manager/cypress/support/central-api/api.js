@@ -1,5 +1,3 @@
-const { cy } = require("date-fns/locale");
-
 const api = () => {
   const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
   return url;
