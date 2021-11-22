@@ -19,8 +19,6 @@ context('Users can create and submit comments', () => {
   before(() => {
     cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
 
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
-
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
