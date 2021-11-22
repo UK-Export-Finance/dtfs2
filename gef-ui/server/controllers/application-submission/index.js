@@ -10,9 +10,13 @@ const getApplicationSubmission = async (req, res) => {
   const { applicationId } = params;
   const { user, userToken } = session;
   const application = await Application.findById(applicationId, user, userToken);
-  const isAutomaticCover = (application.submissionType === DEAL_SUBMISSION_TYPE.AIN);
+  const { submissionType } = application;
 
-  return res.render('application-details-comments.njk', { applicationId, isAutomaticCover, maxCommentLength });
+  return res.render('application-details-comments.njk', {
+    applicationId,
+    submissionType,
+    maxCommentLength,
+  });
 };
 
 const postApplicationSubmission = async (req, res, next) => {
