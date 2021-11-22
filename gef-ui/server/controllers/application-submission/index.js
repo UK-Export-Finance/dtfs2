@@ -21,7 +21,8 @@ const postApplicationSubmission = async (req, res, next) => {
   const { applicationId } = params;
   const { comment } = body;
   const application = await Application.findById(applicationId, user, userToken);
-  const isAutomaticCover = (application.submissionType === DEAL_SUBMISSION_TYPE.AIN);
+  const { submissionType } = application;
+
   const maker = await api.getUserDetails(application.userId, userToken);
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
@@ -53,7 +54,10 @@ const postApplicationSubmission = async (req, res, next) => {
     return next(err);
   }
 
-  return res.render('application-details-submitted.njk', { applicationId, isAutomaticCover });
+  return res.render('application-details-submitted.njk', {
+    applicationId,
+    submissionType,
+  });
 };
 
 module.exports = {

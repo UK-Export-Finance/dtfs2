@@ -8,12 +8,14 @@
 
 {% block content %}
 
-  {% set titleComponentData = {
-    submissionType: submissionType
-  } %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {% set titleComponentData = {
+        submissionType: submissionType,
+        text: 'submitted to UKEF'
+      }%}
+
       {{ govukPanel({
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7"

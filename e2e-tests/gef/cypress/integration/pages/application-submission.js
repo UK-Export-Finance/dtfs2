@@ -6,7 +6,7 @@ const applicationSubmission = {
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  confirmation: () => cy.get('[data-cy="application-submission-confirmation"]'),
+  confirmationPanelTitle: () => cy.get('[data-cy="submit-confirmation-title"]'),
   backToDashboadLink: () => cy.get('[data-cy="dashboard-link"]'),
 };
 

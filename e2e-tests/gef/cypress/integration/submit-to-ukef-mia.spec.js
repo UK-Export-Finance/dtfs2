@@ -59,7 +59,7 @@ context('Submit MIA to UKEF', () => {
       applicationDetails.submitButton().click();
 
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
     });
   });
 
