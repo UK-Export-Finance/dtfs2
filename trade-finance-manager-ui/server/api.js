@@ -174,6 +174,7 @@ const createActivity = async (dealId, activityUpdate) => {
     dealId,
     activityUpdate,
   };
+  console.log('updatevairable', updateVariable);
 
   return apollo('PUT', createActivityMutation, updateVariable);
 };

@@ -29,18 +29,11 @@
         }
       }) }}
 
-      {% set componentData = {
-        submissionType: deal.details.submissionType,
-        submittedBy: deal.details.owningBank.name,
-        submissionDate: deal.details.submissionDate,
-        userTimezone: user.timezone,
-        tfm: tfm,
-        activities: activities
-      } %}
-    
-
       {{ mojTimeline({
-        items: activities
+        items: activities,
+        attributes: {
+          'data-cy': 'activities-timeline'
+        }
       }) }}
 
     </div>

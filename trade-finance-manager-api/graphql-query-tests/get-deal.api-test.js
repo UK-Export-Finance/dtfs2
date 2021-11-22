@@ -14,6 +14,12 @@ const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const mapDeal = require('../src/v1/mappings/map-deal');
 const dealReducer = require('../src/graphql/reducers/deal');
 
+const MOCK_AUTHOR = {
+  firstName: 'tester',
+  lastName: 'smith',
+  _id: 12243343242342,
+};
+
 const MOCK_DEAL_TFM = {
   exporterCreditRating: 'Good (BB-)',
   lossGivenDefault: '50%',
@@ -21,196 +27,226 @@ const MOCK_DEAL_TFM = {
   history: {
     tasks: [],
   },
+  activities: [{
+    type: 'COMMENT',
+    timestamp: 13345665,
+    text: 'test1',
+    author: MOCK_AUTHOR,
+    label: 'Comment added',
+  }],
 };
 
 const GET_DEAL = gql`
-  query Deal($_id: String! $tasksFilters: TasksFilters) {
-    deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
-      _id
-      tfm {
-        parties {
-          exporter {
-            partyUrn
-          }
-          buyer {
-            partyUrn
-          }
-          indemnifier {
-            partyUrn
-          }
-          agent {
-            partyUrn
-            commissionRate
-          }
+query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityFilters) {
+  deal(params: { _id: $_id, tasksFilters: $tasksFilters activityFilters: $activityFilters }) {
+    _id
+    tfm {
+      product
+      dateReceived
+      parties {
+        exporter {
+          partyUrn
         }
-        tasks {
-          groupTitle
-          id
-          groupTasks {
-            id,
-            groupId,
-            title,
-            status,
-            assignedTo {
-              userId,
-              userFullName
-            }
-            team {
-              id,
-              name
-            }
-            canEdit
-            dateStarted
-            dateCompleted
-          }
+        buyer {
+          partyUrn
         }
-        exporterCreditRating
-        supplyContractValueInGBP
-        lossGivenDefault
-        probabilityOfDefault
-        product
-        stage
-        underwriterManagersDecision {
-          decision
-          comments
-          internalComments
-          timestamp
-          userFullName
+        indemnifier {
+          partyUrn
         }
-        leadUnderwriter
+        agent {
+          partyUrn
+          commissionRate
+        }
       }
-      dealSnapshot {
-        _id,
-        dealType
-        details {
-          ukefDealId,
+      activities {
+        type
+        timestamp
+        text
+        author {
+          firstName
+          lastName
+          _id
+        }
+        label
+      }
+      tasks {
+        groupTitle
+        id
+        groupTasks {
+          id,
+          groupId,
+          title,
           status,
-          submissionDate,
-          submissionType,
-          owningBank {
-            name,
-            emails
-          },
-          maker {
-            firstname,
-            surname,
-            email,
-          },
-          bankSupplyContractID,
-          bankSupplyContractName,
-        }
-        totals {
-          facilitiesValueInGBP,
-          facilitiesUkefExposure
-        }
-        facilities {
-          _id,
-          facilitySnapshot {
-            _id,
-            ukefFacilityID,
-            facilityProduct {
-              code
-            },
-            facilityType,
-            ukefFacilityType,
-            facilityStage,
-            facilityValueExportCurrency,
-            facilityValue,
-            coveredPercentage,
-            bondIssuer,
-            bondBeneficiary,
-            bankFacilityReference,
-            ukefExposure,
-            banksInterestMargin,
-            firstDrawdownAmountInExportCurrency,
-            dates {
-              inclusionNoticeReceived,
-              bankIssueNoticeReceived,
-              coverStartDate,
-              coverEndDate,
-              tenor
-            }
-          },
-          tfm {
-            bondIssuerPartyUrn,
-            bondBeneficiaryPartyUrn,
-            facilityValueInGBP,
-            exposurePeriodInMonths,
-            ukefExposure {
-              exposure,
-              timestamp
-            }
+          assignedTo {
+            userId,
+            userFullName
           }
-        }
-        eligibility {
-          criteria {
-            id
-            answer
-            description
-            descriptionList
-          }
-          agentAddressCountry {
-            code
+          team {
+            id,
             name
-          },
-          agentAddressLine1,
-          agentAddressLine2,
-          agentAddressLine3,
-          agentAddressPostcode,
-          agentAddressTown,
-          agentName,
-          agentAlias
+          }
+          canEdit
+          dateStarted
+          dateCompleted
         }
-        submissionDetails {
-          supplierName,
-          supplyContractDescription,
-          destinationCountry,
-          supplyContractCurrency,
-          supplyContractValue,
-          buyerName,
-          buyerAddressCountry,
-          buyerAddressLine1,
-          buyerAddressLine2,
-          buyerAddressLine3,
-          buyerAddressPostcode,
-          buyerAddressTown,
-          legallyDistinct,
-          indemnifierCompaniesHouseRegistrationNumber,
-          indemnifierAddressCountry,
-          indemnifierAddressLine1,
-          indemnifierAddressLine2,
-          indemnifierAddressLine3,
-          indemnifierAddressPostcode,
-          indemnifierAddressTown,
-          indemnifierCorrespondenceAddressCountry,
-          indemnifierCorrespondenceAddressLine1,
-          indemnifierCorrespondenceAddressLine2,
-          indemnifierCorrespondenceAddressLine3,
-          indemnifierCorrespondenceAddressPostcode,
-          indemnifierCorrespondenceAddressTown,
-          indemnifierName,
-          industryClass,
-          industrySector,
-          supplierAddressCountry,
-          supplierCountry,
-          supplierAddressLine1,
-          supplierAddressLine2,
-          supplierAddressLine3,
-          supplierAddressPostcode,
-          supplierAddressTown,
-          supplierCompaniesHouseRegistrationNumber,
-          supplierCorrespondenceAddressLine1,
-          supplierCorrespondenceAddressLine2,
-          supplierCorrespondenceAddressLine3,
-          supplierCorrespondenceAddressPostcode,
-          supplierCorrespondenceAddressTown,
-          supplierCorrespondenceAddressCountry,
-          smeType
-        }
-        isFinanceIncreasing
       }
+      exporterCreditRating
+      supplyContractValueInGBP
+      stage
+      lossGivenDefault
+      probabilityOfDefault
+      underwriterManagersDecision {
+        decision
+        comments
+        internalComments
+        timestamp
+        userFullName
+      }
+      estore {
+        siteName
+        buyerName
+        folderName
+      }
+      leadUnderwriter
+    }
+    dealSnapshot {
+      _id,
+      dealType
+      details {
+        ukefDealId,
+        status,
+        submissionDate,
+        submissionType,
+        owningBank {
+          name,
+          emails
+        },
+        maker {
+          firstname,
+          surname,
+          email,
+        },
+        bankSupplyContractID,
+        bankSupplyContractName,
+      }
+      dealFiles {
+        security
+      }
+      totals {
+        facilitiesValueInGBP,
+        facilitiesUkefExposure
+      }
+      facilities {
+        _id,
+        facilitySnapshot {
+          _id,
+          ukefFacilityID,
+          associatedDealId,
+          facilityProduct {
+            code
+          },
+          facilityType,
+          ukefFacilityType,
+          facilityStage,
+          facilityValueExportCurrency,
+          facilityValue,
+          coveredPercentage,
+          bondIssuer,
+          bondBeneficiary,
+          bankFacilityReference,
+          ukefExposure,
+          banksInterestMargin,
+          firstDrawdownAmountInExportCurrency,
+          dates {
+            inclusionNoticeReceived,
+            bankIssueNoticeReceived,
+            coverStartDate,
+            coverEndDate,
+            tenor
+          }
+        },
+        tfm {
+          bondIssuerPartyUrn,
+          bondBeneficiaryPartyUrn,
+          facilityValueInGBP,
+          exposurePeriodInMonths,
+          ukefExposure {
+            exposure,
+            timestamp
+          }
+          riskProfile
+        }
+      }
+      eligibility {
+        criteria {
+          id
+          answer
+          text
+          textList
+        }
+        agentAddressCountry {
+          code
+          name
+        }
+        agentAddressLine1
+        agentAddressLine2
+        agentAddressLine3
+        agentAddressPostcode
+        agentAddressTown
+        agentName
+        agentAlias
+      }
+      submissionDetails {
+        supplierName,
+        supplyContractDescription,
+        destinationCountry,
+        supplyContractCurrency,
+        supplyContractValue,
+        buyerName,
+        buyerAddressCountry,
+        buyerAddressLine1,
+        buyerAddressLine2,
+        buyerAddressLine3,
+        buyerAddressPostcode,
+        buyerAddressTown,
+        legallyDistinct,
+        indemnifierCompaniesHouseRegistrationNumber,
+        indemnifierAddressCountry,
+        indemnifierAddressLine1,
+        indemnifierAddressLine2,
+        indemnifierAddressLine3,
+        indemnifierAddressPostcode,
+        indemnifierAddressTown,
+        indemnifierCorrespondenceAddressCountry,
+        indemnifierCorrespondenceAddressLine1,
+        indemnifierCorrespondenceAddressLine2,
+        indemnifierCorrespondenceAddressLine3,
+        indemnifierCorrespondenceAddressPostcode,
+        indemnifierCorrespondenceAddressTown,
+        indemnifierName,
+        industryClass,
+        industrySector,
+        supplierAddressCountry,
+        supplierCountry,
+        supplierAddressLine1,
+        supplierAddressLine2,
+        supplierAddressLine3,
+        supplierAddressPostcode,
+        supplierAddressTown,
+        supplierCompaniesHouseRegistrationNumber,
+        supplierCorrespondenceAddressLine1,
+        supplierCorrespondenceAddressLine2,
+        supplierCorrespondenceAddressLine3,
+        supplierCorrespondenceAddressPostcode,
+        supplierCorrespondenceAddressTown,
+        supplierCorrespondenceAddressCountry,
+        supplierType,
+        smeType
+      }
+      isFinanceIncreasing
     }
   }
+}
 `;
 
 describe('graphql query - get deal', () => {

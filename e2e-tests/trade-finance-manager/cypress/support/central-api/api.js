@@ -1,3 +1,5 @@
+const { cy } = require("date-fns/locale");
+
 const api = () => {
   const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
   return url;
@@ -65,6 +67,18 @@ module.exports.getAllTfmDeals = () =>
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+    },
+  }).then((resp) => {
+    expect(resp.status).to.equal(200);
+    return resp.body.deals;
+  });
+
+module.exports.updateDeal = (dealId, dealUpdate) => 
+  cy.request({
+    url: `${api()}/v1/tfm/deals/${dealId}`,
+    method: 'PUT',
+    body: {
+      dealUpdate,
     },
   }).then((resp) => {
     expect(resp.status).to.equal(200);

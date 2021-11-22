@@ -14,7 +14,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const { dealSnapshot, ...tfmUpdate } = dealChanges;
 
   let dealUpdate = tfmUpdate;
-
+  console.log('tfmupdate', tfmUpdate);
   /**
    * Ensure tfm.history is not wiped and avoid recursive object creation
    * by checking .recipient property for the emails object and
@@ -49,22 +49,25 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 
   /**
    * Ensure tfm.activities is not wiped and avoid recursive object creation
-   * by checking .type property for the activities object
+   * by checking .type property for the activities object.
+   * tfm.activities to be checked for submitting tfm.tasks
    * */
-  if (existingDeal.tfm && existingDeal.tfm.activities && tfmUpdate.tfm.activities.type) {
-    dealUpdate = {
-      tfm: {
-        ...existingDeal.tfm,
-        ...tfmUpdate.tfm,
-        activities: existingDeal.tfm.activities,
-      },
-    };
+  if (tfmUpdate.tfm.activities) {
+    if (existingDeal.tfm && existingDeal.tfm.activities && tfmUpdate.tfm.activities.type) {
+      dealUpdate = {
+        tfm: {
+          ...existingDeal.tfm,
+          ...tfmUpdate.tfm,
+          activities: existingDeal.tfm.activities,
+        },
+      };
 
-    if (tfmUpdate.tfm.activities) {
-      dealUpdate.tfm.activities = [
-        ...existingDeal.tfm.activities,
-        tfmUpdate.tfm.activities,
-      ];
+      if (tfmUpdate.tfm.activities) {
+        dealUpdate.tfm.activities = [
+          ...existingDeal.tfm.activities,
+          tfmUpdate.tfm.activities,
+        ];
+      }
     }
   }
 

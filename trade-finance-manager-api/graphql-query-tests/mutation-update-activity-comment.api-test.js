@@ -1,7 +1,7 @@
 const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 
 jest.mock('../src/v1/api');
@@ -13,23 +13,23 @@ const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 
 const UPDATE_ACTIVITY = gql`
 mutation createActivity($dealId: ID!, $activityUpdate: TFMActivityInput) {
-    createActivity(dealId: $dealId, activityUpdate: $activityUpdate) {
-        activities {
+  createActivity(dealId: $dealId, activityUpdate: $activityUpdate) {
+      activities {
           type
           timestamp
           text
           author {
-            firstName
-            lastName
-            _id
+              firstName
+              lastName
+              _id
           }
           label
       }
-    }
+  }
 }
 `;
 
-describe('graphql mutation - update activity comment', () => {
+describe('graphql mutation - update activity', () => {
   let query;
 
   beforeAll(() => {
@@ -50,7 +50,7 @@ describe('graphql mutation - update activity comment', () => {
   it('should add a comment', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
-      activityUpdate: {
+      updatedActivity: {
         type: 'COMMENT',
         timestamp: 1234342,
         text: 'test',
@@ -66,6 +66,7 @@ describe('graphql mutation - update activity comment', () => {
       query: UPDATE_ACTIVITY,
       variables: mutationVars,
     });
+    console.log(data);
     expect(data.createActivity).toEqual(mutationVars);
   });
 });

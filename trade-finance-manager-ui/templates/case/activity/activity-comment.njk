@@ -1,39 +1,69 @@
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+
 
 {% extends "index.njk" %}
 
+{% block pageTitle %}
+  Add an activity comment
+{% endblock %}
 
-{% block sub_content %}
-<form
-    method="post"
-    data-cy="form">
-    {{ govukTextarea({
-    name: "comment",
-    id: "comment",
-    rows: "8",
-    label: {
-        text: "Add a comment",
-        classes: "govuk-label--l",
-        isPageHeading: false
-    },
-    hint: {
-        text: ""
-    },
-    attributes: {
-            'data-cy': 'activity-comment'
-        }
+
+{% block content %}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
     }) }}
+  {% endif %}
 
-    <div class="govuk-button-group">
-        {{ govukButton({
-        text: "Add"
-        }) }}
+    <div class="govuk-grid-row govuk-!-padding-top-3">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
+            Add a comment
+        </h1>
+        </div>
 
-        <a class="govuk-link",
-            href="/case/{{ dealId }}/activity",>Cancel</a>
+        <div class="govuk-grid-column-one-half-from-desktop">
+            <form
+                method="post"
+                data-cy="form">
+                {{ govukCharacterCount({
+                    name: "comment",
+                    id: "comment",
+                    value: comment,
+                    rows: "8",
+                    maxlength: maxCommentLength,
+                    errorMessage: errors and errors.fieldErrors.comment and{
+                        text: errors.fieldErrors.comment.text,
+                        attributes: {
+                        'data-cy': 'activity-comment-error'
+                        }
+                    },
+                    attributes: {
+                        'data-cy': 'activity-comment-box'
+                    }
+                    }) }}
+
+                <div class="govuk-button-group">
+                    {{ govukButton({
+                        text: "Add",
+                        attributes: {
+                        'data-cy': 'add-comment-button'
+                        }
+                    }) }}
+
+                    <a class="govuk-link",
+                        href="/case/{{ dealId }}/activity", data-cy="cancel-comment-link">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
- </form>
 
 
 {% endblock %}

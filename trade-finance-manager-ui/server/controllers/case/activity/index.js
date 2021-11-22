@@ -1,6 +1,9 @@
 const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
+const { validationErrorHandler } = require('../helpers');
 const CONSTANTS = require('../../../constants');
+
+const MAX_COMMENT_LENGTH = 1000;
 
 const mappedActivities = (activities) => activities.map((activity) => ({
   label: {
@@ -92,6 +95,7 @@ const getCommentBox = async (req, res) => {
     // dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     dealId,
     user,
+    maxCommentLength: MAX_COMMENT_LENGTH,
   });
 };
 
@@ -102,7 +106,20 @@ const postComment = async (req, res) => {
   const { comment } = body;
 
   try {
-    if (comment) {
+    if (comment.length > MAX_COMMENT_LENGTH) {
+      const errors = validationErrorHandler({
+        errRef: 'comment',
+        errMsg: `Comments must be ${MAX_COMMENT_LENGTH} characters or fewer`,
+      });
+      return res.render('case/activity/activity-comment.njk', {
+        dealId,
+        user,
+        maxCommentLength: MAX_COMMENT_LENGTH,
+        errors,
+        comment,
+      });
+    }
+    if (comment.length > 0) {
       const shortUser = {
         firstName: user.firstName,
         lastName: user.lastName,
