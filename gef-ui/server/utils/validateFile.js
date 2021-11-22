@@ -2,7 +2,24 @@ const filesize = require('filesize');
 
 const DEFAULT_MAX_SIZE = 10; // 10mb
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
-const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'msg', 'pdf', 'png', 'ppt', 'pptx', 'tif', 'txt', 'xls', 'xlsx', 'zip'];
+const DEFAULT_ALLOWED_FORMATS = [
+  'bmp',
+  'doc',
+  'docx',
+  'gif',
+  'jpeg',
+  'jpg',
+  'msg',
+  'pdf',
+  'png',
+  'ppt',
+  'pptx',
+  'tif',
+  'txt',
+  'xls',
+  'xlsx',
+  'zip',
+];
 /**
  * Validates file's for size and format
  *

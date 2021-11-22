@@ -208,7 +208,7 @@ const deleteFile = async (fileId, token, documentPath) => {
     });
     return data;
   } catch (err) {
-    console.error('Unable to delete the file', err);
+    console.error('Unable to delete the file', { err });
     return apiErrorHandler(err);
   }
 };

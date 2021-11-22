@@ -216,7 +216,7 @@ const postSupportingDocuments = async (req, res, next) => {
 
     return res.redirect(nextDocument(application, applicationId, fieldName));
   } catch (err) {
-    console.error(err);
+    console.error('Supporting document post failed', { err });
     return handleError(err, req, res, next);
   }
 };
@@ -260,7 +260,7 @@ const uploadSupportingDocument = async (req, res, next) => {
 
     return res.status(200).send({ file, error: { message: file.error } });
   } catch (err) {
-    console.error(err);
+    console.error('Supporting document upload failed', { err });
     return handleError(err, req, res, next);
   }
 };
