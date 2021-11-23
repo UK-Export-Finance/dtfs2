@@ -1,6 +1,6 @@
 # UKEF Trade Finance Service
 
-This repository contains the code for the UK Export Finance Trade Finance Service. 
+This repository contains the code for the UK Export Finance Trade Finance Service.
 
 ## Getting started
 
@@ -38,7 +38,7 @@ Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
 Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
 
-## Running the world locally 
+## Running the world locally
 
 ```shell
 docker-compose up
@@ -307,7 +307,7 @@ Each function is very similar - at the moment there is not a way to share betwee
 
 ### Notify team members
 
-Only people/email addresses listed in the UKEF Notify 'team members' page, will be able to receive emails and edit templates. 
+Only people/email addresses listed in the UKEF Notify 'team members' page, will be able to receive emails and edit templates.
 
 ### How to test emails locally
 
@@ -324,7 +324,7 @@ The only exception to this is TFM Task emails - these emails are sent to the tea
 
 ### Notify template limitations
 
-Currenty Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration. 
+Currenty Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
 
 We have a requirement to render multiple lists of facilities, also seperated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
 
