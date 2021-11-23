@@ -42,7 +42,7 @@ context('Review application when returned to maker', () => {
     applicationDetails.submitButton().click();
     applicationSubmission.commentsField().type('Hello');
     applicationSubmission.submitButton().click();
-    applicationSubmission.confirmation();
+    applicationSubmission.confirmationPanelTitle();
 
     // then login as the checker and return to the maker with a comment
     cy.login(CREDENTIALS.CHECKER);
@@ -73,7 +73,7 @@ context('Review application when returned to maker', () => {
       // it allows the maker to optionally add additional comments
       applicationSubmission.commentsField().type('Comments from the maker');
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval
       cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));

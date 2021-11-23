@@ -59,7 +59,7 @@ context('Submit MIA to UKEF', () => {
       applicationDetails.submitButton().click();
 
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
     });
   });
 
@@ -91,7 +91,7 @@ context('Submit MIA to UKEF', () => {
 
     it('Submits without comments and displays the confirmation page', () => {
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanel().contains('Manual inclusion application submitted to UKEF.');
+      submitToUkefConfirmation.confirmationPanelTitle().contains('Manual Inclusion Application submitted to UKEF');
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
     });

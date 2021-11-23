@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% import '../_macros/submit-confirmation-title.njk' as submitConfirmationTitle %}
 
 {% block pageTitle %}
   Automatic inclusion notice submitted to UKEF
@@ -9,12 +10,15 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {% set titleComponentData = {
+        submissionType: submissionType,
+        text: 'submitted to UKEF'
+      }%}
+
       {{ govukPanel({
-        titleText: applicationType + " submitted to UKEF",
-        classes: "govuk-!-margin-bottom-7",
-        attributes: {
-          'data-cy': 'ukef-submission-confirmation'
-        }
+        titleHtml: submitConfirmationTitle.render(titleComponentData),
+        classes: "govuk-!-margin-bottom-7"
       }) }}
 
       <p>We'll send you an email shortly to confirm we've accepted your notice</p>
