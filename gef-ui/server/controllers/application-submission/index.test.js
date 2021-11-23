@@ -125,7 +125,7 @@ describe('controllers/application-submission', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
         applicationId: expect.any(String),
-        isAutomaticCover: expect.any(Boolean),
+        submissionType: expect.any(String),
         maxCommentLength: expect.any(Number),
       }));
     });
@@ -141,7 +141,7 @@ describe('controllers/application-submission', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
         applicationId: expect.any(String),
-        isAutomaticCover: expect.any(Boolean),
+        submissionType: expect.any(String),
       }));
     });
 
