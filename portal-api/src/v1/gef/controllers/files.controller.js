@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
   const maxFileSize = maxSize || DEFAULT_MAX_SIZE;
 
   // ensure a parentId exists
-  if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parent');
+  if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parentId');
 
   // Ensure some files have been passed
   if (!files?.length) return res.status(400).send('missing files');
