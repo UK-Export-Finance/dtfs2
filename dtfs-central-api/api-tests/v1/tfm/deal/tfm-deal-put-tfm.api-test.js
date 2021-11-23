@@ -76,6 +76,32 @@ describe('/v1/tfm/deal/:id', () => {
       });
     });
 
+    it('does NOT add anything to the root if for example deal.dealSnapshot or deal.tfm is not passed', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
+
+      const badDealUpdate = {
+        noDealSnapshot: true,
+        noTfmObject: true,
+      };
+
+      const { status } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
+
+      expect(status).toEqual(200);
+
+      const { body } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      const dealAfterUpdate = body.deal;
+
+      expect(dealAfterUpdate.noDealSnapshot).toBeUndefined();
+      expect(dealAfterUpdate.noTfmObject).toBeUndefined();
+    });
+
     it('retains existing deal.tfm.history when adding new history', async () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;

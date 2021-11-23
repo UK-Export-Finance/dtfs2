@@ -11,14 +11,14 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const collection = await db.getCollection('tfm-deals');
 
   /**
-   * Remove dealSnapshot to ensure it's not updated
-   * We only need to consume the existing tfm data,
-   * And the new tfm object received.
+   * Only use the tfm object. Remove anything else.
+   * Only the tfm object should be updated.
+   * - e.g dealSnapshot or any other root level data should not be updatedd.
    * */
-  const { dealSnapshot, ...tfmUpdateObj } = dealChanges;
+  const { tfm } = dealChanges;
 
-  const dealUpdate = tfmUpdateObj;
-  const tfmUpdate = tfmUpdateObj.tfm;
+  const dealUpdate = { tfm };
+  const tfmUpdate = dealUpdate.tfm;
 
   /**
    * Ensure that if a tfmUpdate with activities is an empty object,
