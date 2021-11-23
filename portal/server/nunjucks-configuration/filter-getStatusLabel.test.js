@@ -29,12 +29,12 @@ describe('getStatusLabel filter', () => {
     expect(getStatusLabel('UKEF_IN_PROGRESS')).toEqual('In progress by UKEF');
   });
 
-  it('returns label for UKEF_ACCEPTED_CONDITIONAL', () => {
-    expect(getStatusLabel('UKEF_ACCEPTED_CONDITIONAL')).toEqual('Accepted by UKEF (with conditions)');
+  it('returns label for UKEF_APPROVED_WITH_CONDITIONS', () => {
+    expect(getStatusLabel('UKEF_APPROVED_WITH_CONDITIONS')).toEqual('Accepted by UKEF (with conditions)');
   });
 
-  it('returns label for UKEF_ACCEPTED_UNCONDITIONAL', () => {
-    expect(getStatusLabel('UKEF_ACCEPTED_UNCONDITIONAL')).toEqual('Accepted by UKEF (without conditions)');
+  it('returns label for UKEF_APPROVED_WITHOUT_CONDITIONS', () => {
+    expect(getStatusLabel('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual('Accepted by UKEF (without conditions)');
   });
 
   it('returns label for UKEF_REFUSED', () => {
