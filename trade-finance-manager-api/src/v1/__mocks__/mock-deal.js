@@ -168,6 +168,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: '12345678',
+        ukefFacilityID: '65431',
         facilityType: 'bond',
         createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',

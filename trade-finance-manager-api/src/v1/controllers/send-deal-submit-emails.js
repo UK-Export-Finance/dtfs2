@@ -1,13 +1,11 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
-const {
-  generateFacilityLists,
-  generateFacilitiesListString,
-} = require('../helpers/notify-template-formatters');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
+const { generateFacilityLists } = require('../helpers/notify-template-formatters');
+const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
 
 // make sure the first task is `Match or Create Parties`
@@ -58,11 +56,9 @@ const sendFirstTaskEmail = async (deal) => {
 
 const sendMiaAcknowledgement = async (deal) => {
   const {
-    ukefDealId,
+    dealType,
     submissionType,
-    bankReferenceNumber,
     maker,
-    exporter,
     facilities,
   } = deal;
 
@@ -70,37 +66,43 @@ const sendMiaAcknowledgement = async (deal) => {
     return null;
   }
 
-  const {
-    firstname: recipientName,
-    email: sendToEmailAddress,
-  } = maker;
+  const { email: sendToEmailAddress } = maker;
 
-  const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_RECEIVED;
+  let templateId;
+  let emailVariables;
+  let emailResponse;
 
-  const bonds = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
-  const loans = facilities.filter((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_MIA_RECEIVED;
 
-  const bssList = generateFacilitiesListString(bonds);
-  const ewcsList = generateFacilitiesListString(loans);
+    emailVariables = generateMiaConfirmationEmailVars(deal);
 
-  const emailVariables = {
-    recipientName,
-    exporterName: exporter.companyName,
-    bankReferenceNumber,
-    ukefDealId,
-    bssList,
-    showBssHeader: bssList ? 'yes' : 'no',
-    ewcsList,
-    showEwcsHeader: ewcsList ? 'yes' : 'no',
-  };
+    emailResponse = await sendTfmEmail(
+      templateId,
+      sendToEmailAddress,
+      emailVariables,
+      deal,
+    );
 
-  const emailResponse = await sendTfmEmail(
-    templateId,
-    sendToEmailAddress,
-    emailVariables,
-    deal,
-  );
-  return emailResponse;
+    return emailResponse;
+  }
+
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_MIA_RECEIVED;
+
+    emailVariables = generateMiaConfirmationEmailVars(deal);
+
+    emailResponse = await sendTfmEmail(
+      templateId,
+      sendToEmailAddress,
+      emailVariables,
+      deal,
+    );
+
+    return emailResponse;
+  }
+
+  return null;
 };
 
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
@@ -206,8 +208,6 @@ module.exports = {
   sendFirstTaskEmail,
   sendDealSubmitEmails,
   sendMiaAcknowledgement,
-  generateFacilitiesListString,
-  generateFacilityLists,
   generateBssDealAinMinConfirmationEmailVariables,
   sendAinMinAcknowledgement,
 };

@@ -86,7 +86,7 @@ describe('send-deal-submit-emails - BSS', () => {
         };
       });
 
-      it('should call sendEmail and return object of sent emails ', async () => {
+      it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssuedAndUnissued);
 
         const facilityLists = generateFacilityLists(
@@ -147,7 +147,7 @@ describe('send-deal-submit-emails - BSS', () => {
         };
       });
 
-      it('should call sendEmail and return object of sent emails ', async () => {
+      it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssued);
 
         const facilityLists = generateFacilityLists(
@@ -205,7 +205,7 @@ describe('send-deal-submit-emails - BSS', () => {
         };
       });
 
-      it('should call sendEmail and return object of sent emails ', async () => {
+      it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssuedAndUnissued);
 
         const facilityLists = generateFacilityLists(
@@ -266,7 +266,7 @@ describe('send-deal-submit-emails - BSS', () => {
         };
       });
 
-      it('should call sendEmail and return object of sent emails ', async () => {
+      it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssued);
 
         const facilityLists = generateFacilityLists(

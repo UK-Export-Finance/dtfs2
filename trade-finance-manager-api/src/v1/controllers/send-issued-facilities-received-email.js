@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
 const { capitalizeFirstLetter } = require('../../utils/string');
 
-const generateFacilitiesListString = (facilities) => {
+const generateIssuedFacilitiesListString = (facilities) => {
   let result;
 
   facilities.forEach((facility, index) => {
@@ -47,7 +47,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
       exporterName: exporter.companyName,
       bankReferenceNumber,
       ukefDealID,
-      facilitiesList: generateFacilitiesListString(updatedFacilities),
+      facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
     };
 
     const emailResponse = await sendTfmEmail(
@@ -64,6 +64,6 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
 };
 
 module.exports = {
-  generateFacilitiesListString,
+  generateIssuedFacilitiesListString,
   sendIssuedFacilitiesReceivedEmail,
 };
