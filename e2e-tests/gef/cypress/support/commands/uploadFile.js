@@ -10,7 +10,7 @@ const uploadFile = (fileName, uploadEndpoint, selector = '.moj-multi-file-upload
     fileName, { subjectType: 'drag-n-drop' },
   );
 
-  cy.wait('@upload', { requestTimeout: 3000 });
+  cy.wait('@upload', { requestTimeout: 15000 });
   cy.server({ enable: false });
 };
 

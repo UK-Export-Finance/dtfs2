@@ -168,7 +168,7 @@ describe('update tfm underwriter managers decision', () => {
       const ukefDecision = 'ukefDecision';
 
       await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
-      expect(addUnderwriterCommentToGefDealSpy).toHaveBeenCalledWith(gefDealId, ukefDecision, { text: 'Testing' });
+      expect(addUnderwriterCommentToGefDealSpy).toHaveBeenCalledWith(gefDealId, ukefDecision, { text: 'Testing', decision: 'Declined' });
     });
   });
 });

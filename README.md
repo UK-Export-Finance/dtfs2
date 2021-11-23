@@ -1,6 +1,6 @@
 # UKEF Trade Finance Service
 
-This repository contains the code for the UK Export Finance Trade Finance Service. 
+This repository contains the code for the UK Export Finance Trade Finance Service.
 
 ## Getting started
 
@@ -38,7 +38,7 @@ Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
 Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
 
-## Running the world locally 
+## Running the world locally
 
 ```shell
 docker-compose up
@@ -283,6 +283,52 @@ Not only does this takes a long time (hindering the user/dev experience), it eat
 The solution is to move all of these API calls into background processes, with retries.
 
 This will improve the user experience, make it fail safe, and improve the development lifecycle.
+
+## Email notifications
+
+We use [GOV.UK Notify](https://notifications.service.gov.uk) to trigger email notifications at various stages for example:
+
+* When a deal status changes in Portal
+* When TFM acknowledges a deal submission
+* When a deal is approved or declined in TFM
+* When a TFM task is ready to start
+
+Each service that triggers an email has it's own "send email" function:
+
+* Portal (BSS): `sendEmail` (currently calls Notify directly)
+* Portal (GEF): `sendEmail` (calls Reference Data Proxy which then calls Notify)
+* TFM: `sendTfmEmail` (calls Reference Data Proxy which then calls Notify)
+
+Each function is very similar - at the moment there is not a way to share between different services. Each function requires:
+
+1) Template ID
+2) Email address
+3) Email variables (object of properties/values to display in the template)
+
+### Notify team members
+
+Only people/email addresses listed in the UKEF Notify 'team members' page, will be able to receive emails and edit templates.
+
+### How to test emails locally
+
+Currently, all emails are sent to a bank's email address associated with the user(s) that have been involved with the deal creation and submission process.
+
+Therefore, to test eamils we just need to change these emails to your own email that is listed in the Notify team members. To guarantee receiving all possible emails for all services, you should change the emails in the following places:
+
+1) `banks` MongoDB collection > `emails` array. Typically the bank with ID 9 is used.
+2) `users` MongoDB collection > `bank.emails` array. Typically the user `BANK1_MAKER1` is used
+
+If you want to test an already created BSS deal, you'll need to update `deal.details.owningBank.emails`.
+
+The only exception to this is TFM Task emails - these emails are sent to the teams that own the tasks. To test the emails, simply replace the team's email in `tfm-teams` MongoDB collection.
+
+### Notify template limitations
+
+Currenty Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
+
+We have a requirement to render multiple lists of facilities, also seperated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
+
+We have contacted Notify about this asking for more support.
 
 ## Workflow/typeB integration
 

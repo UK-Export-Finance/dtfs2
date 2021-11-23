@@ -17,7 +17,7 @@
   {% include "includes/application-preview/task-comments.njk" %}
 
 
-   {% if ukefDecision.length %}
+   {% if ukefDecision.length  and ukefDecision[0].decision == 'Declined' %}
       {% include "includes/application-preview/ukef-decision.njk" %}
    {% endif %}
   <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">

@@ -227,6 +227,8 @@ const status = ({
 
 const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
+const isNotice = (type) => type.toLowerCase().includes('notice');
+
 module.exports = {
   apiErrorHandler,
   getApplicationType,
@@ -239,4 +241,5 @@ module.exports = {
   userToken,
   validationErrorHandler,
   stringToBoolean,
+  isNotice,
 };

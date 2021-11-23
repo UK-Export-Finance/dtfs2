@@ -43,7 +43,7 @@ context('Submit application to UKEF', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
 
       // login as a maker/checker and return to the maker with a comment.
       cy.login(CREDENTIALS.MAKER_CHECKER);
@@ -72,7 +72,7 @@ context('Submit application to UKEF', () => {
       // it allows the maker to optionally add additional comments
       applicationSubmission.commentsField().type('Hello');
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval
       // view the application as the maker/checker

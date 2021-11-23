@@ -4,8 +4,8 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const submitDeal = require('../utils/submitDeal');
 const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
+const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 
-const DEFAULTS = require('../../../src/v1/defaults');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
@@ -96,7 +96,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: DEFAULTS.TASKS.AIN,
+          tasks: createDealTasks(body),
         },
       };
 
@@ -118,7 +118,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: DEFAULTS.TASKS.AIN,
+          tasks: createDealTasks(body),
         },
       };
 
@@ -140,7 +140,7 @@ describe('/v1/deals', () => {
               partyUrn: 'testPartyUrn',
             },
           },
-          tasks: DEFAULTS.TASKS.AIN,
+          tasks: createDealTasks(body),
         },
       };
 

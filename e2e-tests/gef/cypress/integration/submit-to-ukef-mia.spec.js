@@ -1,16 +1,16 @@
 import relative from './relativeURL';
-import returnToMaker from './pages/return-to-maker';
 import CREDENTIALS from '../fixtures/credentials.json';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
 import securityDetails from './pages/security-details';
 import applicationSubmission from './pages/application-submission';
-import applicationPreview from './pages/application-preview';
+import submitToUkef from './pages/submit-to-ukef';
+import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 
 let applicationId;
 
-context('Return to Maker as MIN', () => {
+context('Submit MIA to UKEF', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.CHECKER)
@@ -25,17 +25,17 @@ context('Return to Maker as MIN', () => {
       });
   });
 
-  describe('creates and submits MIN', () => {
+  describe('Login as a Maker', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${applicationId}`));
     });
 
-    it('submits as MIN', () => {
+    it('Create MIA', () => {
       cy.visit(relative(`/gef/application-details/${applicationId}`));
 
-      // Make the deal an Manual Inclusion Application
+      // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el, index) => {
         $el.find('[data-cy="automatic-cover-true"]').trigger('click');
@@ -63,49 +63,37 @@ context('Return to Maker as MIN', () => {
     });
   });
 
-  describe('return to maker as checker', () => {
+  describe('Login as a Checker', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${applicationId}`));
     });
 
-    it('returns to maker', () => {
-      applicationPreview.returnButton().click();
-      returnToMaker.comment().type('comment1');
-      returnToMaker.submitButton().click();
-      cy.location('pathname').should('contain', 'dashboard');
+    it('Ensure attachments uploaded are available for download.', () => {
+      applicationDetails.supportingInfoList();
     });
   });
 
-  describe('return to maker', () => {
+  describe('Submit to UKEF', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.login(CREDENTIALS.CHECKER);
+      cy.visit(relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
     });
 
-    it('comments are showing', () => {
-      applicationPreview.task().contains('check manual inclusion application');
-      applicationPreview.comments().contains('comment1');
+    it('Submission page as expected', () => {
+      submitToUkef.mainHeading();
+      submitToUkef.comment();
+      submitToUkef.submitButton();
+      submitToUkef.cancelLink();
     });
 
-    it('Status shows correct status', () => {
-      applicationPreview.status().contains('Further Maker\'s input required');
-    });
-
-    it('can change security details commments', () => {
-      securityDetails.visit(applicationId);
-      securityDetails.exporterSecurity().type(' test3');
-      securityDetails.applicationSecurity().type('test4');
-    });
-
-    it('can submit back to checker', () => {
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitle().contains('Manual Inclusion Application submitted for checking at your bank');
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
-      applicationPreview.status().contains('Ready for Checker\'s approval');
+    it('Submits without comments and displays the confirmation page', () => {
+      submitToUkef.submitButton().click();
+      submitToUkefConfirmation.confirmationPanelTitle().contains('Manual Inclusion Application submitted to UKEF');
+      submitToUkefConfirmation.dashboardLink();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
     });
   });
 });

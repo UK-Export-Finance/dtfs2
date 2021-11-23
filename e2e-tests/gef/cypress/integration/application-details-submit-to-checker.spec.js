@@ -40,13 +40,13 @@ context('Application Details Submission', () => {
 
     it('allows submission without comments', () => {
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
     });
 
     it('allows submission with comments', () => {
       applicationSubmission.commentsField().type('test');
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
     });
 
     it('shows error when comments are too long', () => {
@@ -69,7 +69,7 @@ context('Application Details Submission', () => {
 
     it('takes user back to dashboard if they click the link in the confirmation page', () => {
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmation();
+      applicationSubmission.confirmationPanelTitle();
       // Just asserting the link is there as the error on dashboard page causes test to fail
       applicationSubmission.backToDashboadLink();
       // TODO: Swap this above for below
@@ -91,7 +91,7 @@ context('Application Details Submission', () => {
       applicationDetails.addCashFacilityButton().should('not.exist');
       applicationDetails.addContingentFacilityButton().should('not.exist');
       applicationDetails.deleteFacilityLink().should('not.exist');
-      applicationDetails.abandonLink().should('exist');
+      applicationDetails.abandonLink().should('not.exist');
     });
 
     it('updates status in application banner', () => {

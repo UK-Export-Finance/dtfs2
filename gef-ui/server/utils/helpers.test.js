@@ -7,6 +7,7 @@ import {
   apiErrorHandler,
   isTrueSet,
   stringToBoolean,
+  isNotice,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -410,6 +411,20 @@ describe('isTrueSet()', () => {
 
   it('returns false boolean if string value is equal to `false`', () => {
     expect(isTrueSet('false')).toBe(false);
+  });
+});
+
+describe('isNotice()', () => {
+  it('Should return TRUE for any `Notice` submission type i.e. MIN or AIN', () => {
+    expect(isNotice('Manual inclusion notice')).toEqual(true);
+  });
+
+  it('Should return FALSE for any `Application` submission type i.e. MIA', () => {
+    expect(isNotice('Manual inclusion application')).toEqual(false);
+  });
+
+  it('Should return FALSE for any `Application` submission type i.e. MIA with mixed case', () => {
+    expect(isNotice('manUAL InClUsIoN APPLICATION')).toEqual(false);
   });
 });
 

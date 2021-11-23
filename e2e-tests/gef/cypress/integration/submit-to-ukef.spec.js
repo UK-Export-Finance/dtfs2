@@ -1,4 +1,5 @@
 const { format } = require('date-fns');
+
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
 import submitToUkef from './pages/submit-to-ukef';
@@ -71,14 +72,16 @@ context('Submit to UKEF', () => {
 
     it('submits without comments and displays the confirmation page', () => {
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanel();
+      submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic Inclusion Notice submitted to UKEF');
       submitToUkefConfirmation.dashboardLink();
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
     });
 
     it('submits with comments', () => {
       submitToUkef.comment().type('Test comment');
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanel();
+      submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic Inclusion Notice submitted to UKEF');
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
     });
 
     describe('After submission', () => {
