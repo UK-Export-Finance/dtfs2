@@ -56,7 +56,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/manual-inclusion-questionnaire",
               text: "Change" if supportingInfo.manualInclusion[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'supportingInfo__manual-inclusion-cta' }
             }
           ] if not previewMode
         }
@@ -75,7 +76,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/management-accounts",
               text: "Change" if supportingInfo.managementAccounts[0] else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'supportingInfo__management-accounts-cta' }
             }
           ] if not previewMode
         }
@@ -94,7 +96,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/financial-statements",
               text: "Change" if supportingInfo.financialStatements[0] else "Add",
-              visuallyHiddenText: "financial statements"
+              visuallyHiddenText: "financial statements",
+              attributes: { 'data-cy': 'supportingInfo__financial-statements-cta' }
             }
           ] if not previewMode
         }
@@ -113,7 +116,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/financial-forecasts",
               text: "Change" if supportingInfo.financialForecasts[0] else "Add",
-              visuallyHiddenText: "financial forecasts"
+              visuallyHiddenText: "financial forecasts",
+              attributes: { 'data-cy': 'supportingInfo__financial-forecasts-cta' }
             }
           ] if not previewMode
         }
@@ -132,7 +136,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/financial-commentary",
               text: "Change" if supportingInfo.financialCommentary[0] else "Add",
-              visuallyHiddenText: "financial commentary"
+              visuallyHiddenText: "financial commentary",
+              attributes: { 'data-cy': 'supportingInfo__financial-commentary-cta' }
             }
           ] if not previewMode
         }
@@ -151,7 +156,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/corporate-structure",
               text: "Change" if supportingInfo.corporateStructure[0] else "Add",
-              visuallyHiddenText: "corporate structure"
+              visuallyHiddenText: "corporate structure",
+              attributes: { 'data-cy': 'supportingInfo__corporate-structure-cta' }
             }
           ] if not previewMode
         }
@@ -170,7 +176,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/debtor-creditor-reports",
               text: "Change" if supportingInfo.debtorAndCreditorReports[0] else "Add",
-              visuallyHiddenText: "aged debtor and creditor listing"
+              visuallyHiddenText: "aged debtor and creditor listing",
+              attributes: { 'data-cy': 'supportingInfo__debtor-creditor-cta' }
             }
           ] if not previewMode
         }
@@ -189,7 +196,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/security-details",
               text: "Change" if supportingInfo.securityDetails else "Add",
-              visuallyHiddenText: "security details"
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'security-details-cta' }
             }
           ] if not previewMode
         }
@@ -208,7 +216,8 @@
             {
               href: "/gef/application-details/" + applicationId + "/supporting-information/export-licence",
               text: "Change" if supportingInfo.exportLicence[0] else "Add",
-              visuallyHiddenText: "export licence"
+              visuallyHiddenText: "export licence",
+              attributes: { 'data-cy': 'supportingInfo__export-licence-cta' }
             }
           ] if not previewMode
         }

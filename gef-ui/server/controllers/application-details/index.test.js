@@ -84,7 +84,7 @@ const MockEligibilityCriteriaResponse = () => ({
     {
       id: 12,
       text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibilty',
+      errMsg: '12. Select some eligibility',
     },
   ],
 });

@@ -168,7 +168,7 @@ const getUserDetails = async (id, token) => {
   }
 };
 
-const uploadFile = async (files, id, token, maxSize) => {
+const uploadFile = async (files, id, token, maxSize, documentPath) => {
   if (!files?.length || !id || !token) return false;
 
   const formData = new FormData();
@@ -176,6 +176,7 @@ const uploadFile = async (files, id, token, maxSize) => {
   formData.append('parentId', id);
   if (maxSize) formData.append('maxSize', maxSize);
 
+  formData.append('documentPath', documentPath);
   files.forEach((file) => {
     formData.append(file.fieldname, file.buffer, file.originalname);
   });
@@ -194,19 +195,20 @@ const uploadFile = async (files, id, token, maxSize) => {
 
     return data;
   } catch (err) {
+    console.error(err);
     return apiErrorHandler(err);
   }
 };
 
-const deleteFile = async (fileId, token) => {
+const deleteFile = async (fileId, token, documentPath) => {
   try {
     const { data } = await Axios.delete(`/gef/files/${fileId}`, {
-      headers: {
-        Authorization: token,
-      },
+      data: { documentPath },
+      headers: { Authorization: token },
     });
     return data;
   } catch (err) {
+    console.error('Unable to delete the file', { err });
     return apiErrorHandler(err);
   }
 };
@@ -223,6 +225,7 @@ const downloadFile = async (fileId, token) => {
     });
     return data;
   } catch (err) {
+    console.error('Unable to download the file', err);
     return apiErrorHandler(err);
   }
 };

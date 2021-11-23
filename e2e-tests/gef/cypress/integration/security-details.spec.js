@@ -66,12 +66,12 @@ context('Security Details Page', () => {
       securityDetails.applicationSecurityError();
     });
 
-    it('takes you to `Add export license` page when clicking on `Continue` button', () => {
+    it('takes you to `Application details` page when clicking on `Continue` button', () => {
       securityDetails.visit(applicationId);
       securityDetails.exporterSecurity().type('Valid security details');
       securityDetails.applicationSecurity().type('Valid security details');
       securityDetails.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/export-licence`));
+      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
     });
 
     it('redirects user to application page when clicking on `Return to application` button', () => {

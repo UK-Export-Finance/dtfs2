@@ -45,8 +45,8 @@ context('Submit to UKEF as MIA', () => {
 
       cy.uploadFile('test.pdf', `${manualInclusion.url(applicationId)}/upload`);
       manualInclusion.uploadSuccess('test.pdf');
-      automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
+      cy.visit(relative(`/gef/application-details/${applicationId}`));
 
       applicationDetails.bannerStatus().contains('Draft');
 

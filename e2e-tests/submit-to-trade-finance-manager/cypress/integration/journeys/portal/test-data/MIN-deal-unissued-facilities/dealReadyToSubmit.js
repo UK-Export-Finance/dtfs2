@@ -1,5 +1,5 @@
 const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
-const dealThatJustNeedsDates = require('./dealThatJustNeedsDates');
+const dealThatJustNeedsDates = require('./dealThatJustNeedsDates.json');
 
 module.exports = () => {
   const now = new Date();
