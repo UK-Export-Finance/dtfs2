@@ -19,8 +19,3 @@ module.exports = {
   BSS_DEAL_SUBMIT_CONFIRMATION,
   GEF_DEAL_SUBMIT_CONFIRMATION,
 };
-
-
-
-// should be 
-// 9a5a900d-624d-4fb6-9f99-5de191442e07
