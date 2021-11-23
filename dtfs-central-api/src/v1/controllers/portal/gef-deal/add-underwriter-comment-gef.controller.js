@@ -23,7 +23,6 @@ const addComment = async (_id, commentType, comment) => {
         },
       },
     },
-    { returnOriginal: false },
   );
 
   const { value } = addCommentToGefDeal;
