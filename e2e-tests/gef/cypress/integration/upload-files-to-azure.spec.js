@@ -35,13 +35,11 @@ context('Upload files to Azure', () => {
       cy.uploadFile('file1.png', `${manualInclusion.url(applicationId)}/upload`);
       manualInclusion.uploadSuccess('file1.png');
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/manual-inclusion-questionnaire`));
-    });
 
-    it('should verify the status of the Supporting Information section is set to `In progress`', () => {
+      cy.visit(relative(`/gef/application-details/${applicationId}`));
+
       uploadFiles.supportingInfoStatus().should('contain', 'In progress');
-    });
 
-    it('should verify the status of each supporting information document', () => {
       uploadFiles.supportingInfoManualInclusionButton().parent().parent().find('.govuk-summary-list__value .govuk-link')
         .should('contain', 'file1.png');
       uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value')
@@ -61,6 +59,7 @@ context('Upload files to Azure', () => {
       uploadFiles.supportingInfoExportLicenceButton().parent().parent().find('.govuk-summary-list__value')
         .should('contain', 'Required');
     });
+
     it('should allow the same document to be uploaded in different sections', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/management-accounts`));

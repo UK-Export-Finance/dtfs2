@@ -51,4 +51,11 @@ describe('utils/validateFile', () => {
     mockFile.size = customFileSize - 1;
     expect(validateFile(mockFile, customFileSize)).toEqual([true, null]);
   });
+
+  it('validates if passed custom file extension list', () => {
+    expect(validateFile(mockFile, undefined, ['jpg', 'pdf', 'zip'])).toEqual([false, 'mock-file.doc must be a JPG, PDF or ZIP']);
+
+    mockFile.originalname = 'mock-file.jpg';
+    expect(validateFile(mockFile, undefined, ['jpg', 'pdf', 'zip'])).toEqual([true, null]);
+  });
 });

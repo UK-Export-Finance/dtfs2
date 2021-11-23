@@ -1,3 +1,5 @@
+const { format } = require('date-fns');
+
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
@@ -258,7 +260,26 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by date received in DD/MM/YYYY format', () => {
-    const todayFormatted = new Date().toLocaleDateString('en-GB');
+    const todayFormatted = format(new Date(), 'dd/MM/yyyy');
+
+    const searchString = todayFormatted;
+
+    const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) => deal.details.testId !== 'DEAL_SUBMITTED_YESTERDAY');
+
+    const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
+
+    pages.dealsPage.searchFormInput().type(searchString);
+    pages.dealsPage.searchFormSubmitButton().click();
+
+    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+
+    pages.dealsPage.heading().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
+    });
+  });
+
+  it('search/filter by date received in DD-MM-YYYY format', () => {
+    const todayFormatted = format(new Date(), 'dd-MM-yyyy');
 
     const searchString = todayFormatted;
 
