@@ -92,7 +92,6 @@ const getCommentBox = async (req, res) => {
   const { user } = req.session;
 
   return res.render('case/activity/activity-comment.njk', {
-    // dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     dealId,
     user,
     maxCommentLength: MAX_COMMENT_LENGTH,
@@ -142,6 +141,7 @@ const postComment = async (req, res) => {
 };
 
 module.exports = {
+  mappedActivities,
   getActivity,
   filterActivities,
   getCommentBox,

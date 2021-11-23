@@ -1,6 +1,5 @@
 const ACTIVITY_LABEL = {
   COMMENT: 'Comment added',
-  OTHER: 'TODO',
 };
 
 const ACTIVITY_FILTERS = {
