@@ -6,7 +6,7 @@ const CONSTANTS = require('../../../constants');
 const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
 
 describe('generate MIA confirmation email variables - BSS', () => {
-  it.only('should return object', () => {
+  it('should return object', () => {
     const mockFacilities = [
       ...MOCK_BSS_DEAL.bondTransactions.items,
       ...MOCK_BSS_DEAL.loanTransactions.items,
@@ -41,15 +41,16 @@ describe('generate MIA confirmation email variables - BSS', () => {
     it('should return correct `show issued/unissued header` properties', () => {
       const mockDealWithNoFacilities = {
         ...MOCK_BSS_DEAL,
-        facilities: [],
+        bondTransactions: { items: [] },
+        loanTransactions: { items: [] },
       };
 
       const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: mockDealWithNoFacilities });
 
       const result = bssEmailVariables(mockSubmittedDeal);
 
-      expect(result.showIssuedHeader).toEqual('no');
-      expect(result.showUnissuedHeader).toEqual('no');
+      expect(result.showBssHeader).toEqual('no');
+      expect(result.showEwcsHeader).toEqual('no');
     });
   });
 });
