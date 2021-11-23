@@ -1,4 +1,5 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
     {% set selectedActivityFilter = params.selectedActivityFilter %}
@@ -38,7 +39,22 @@
             }
         ]
         }) }}
+
+        {{ govukButton({
+        text: 'Filter results',
+        classes: 'js-hidden',
+        attributes: {
+          'data-cy': 'submit-button'
+        }
+      }) }}
      </form>
   </section>
+
+   <script type="text/javascript">
+    var element = document.getElementById('tasks-filters');
+    if (element) {
+      element.className = 'js-enabled';
+    }
+  </script>
 
 {% endmacro %}    

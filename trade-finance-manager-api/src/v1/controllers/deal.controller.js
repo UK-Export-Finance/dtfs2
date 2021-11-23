@@ -255,10 +255,7 @@ const updateTfmActivity = async (dealId, activityUpdate) => {
       activities: activityUpdate,
     },
   };
-  console.log('activityupdate', activityUpdate);
-  console.log('updatedactivity',updatedActivity);
   const updatedDeal = await api.updateDeal(dealId, updatedActivity);
-  console.log('updated deal', updatedDeal);
   return updatedDeal.tfm;
 };
 exports.updateTfmActivity = updateTfmActivity;

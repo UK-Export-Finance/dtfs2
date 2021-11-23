@@ -36,7 +36,7 @@ context('Users can create and submit comments', () => {
         });
 
         cy.submitDeal(dealId, dealType);
-
+        // adds a non-comment type
         const otherActivity = {
           tfm: {
             activities: {
@@ -52,7 +52,7 @@ context('Users can create and submit comments', () => {
             },
           },
         };
-        cy.updateDeal(dealId, otherActivity);
+        cy.updateTFMDeal(dealId, otherActivity);
         cy.login(businessSupportUser);
       });
   });
@@ -92,9 +92,12 @@ context('Users can create and submit comments', () => {
     });
 
     it('pressing comment filter should show comments', () => {
+      activitiesPage.activitiesTimeline().contains('Not a comment');
       activitiesPage.filterCommentsOnly().click();
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
+      // ensures that is filtered out
+      activitiesPage.activitiesTimeline().contains('Not a comment').should('not.exist');
     });
 
     it('should not be allowed to add comment over 1000 characters', () => {
