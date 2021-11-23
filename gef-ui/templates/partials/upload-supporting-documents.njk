@@ -37,7 +37,7 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post" data-cy="form" enctype="multipart/form-data">
         {% if formHeaderFragment %}{% include 'includes/supporting-documents/'+ formHeaderFragment +'.njk'  %}{% endif %}
-        
+
         {% if files.length %}
           <p class="govuk-label--s">Uploaded</p>
         {% endif %}

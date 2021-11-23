@@ -48,7 +48,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }];
 
-      const { status } = await as().putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status } = await as(noRoles).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
     });

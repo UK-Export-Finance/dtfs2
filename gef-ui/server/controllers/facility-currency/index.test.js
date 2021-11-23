@@ -32,9 +32,9 @@ afterEach(() => {
 
 describe('GET Facility Currency', () => {
   it('renders the `Facility Currency` template', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
+    const mockFacilityCurrencyResponse = MockFacilityCurrencyResponse();
 
     mockRequest.query.status = 'change';
     mockFacilityCurrencyResponse.details.currency = 'EUR';
@@ -53,8 +53,8 @@ describe('GET Facility Currency', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
 
     api.getFacility = () => Promise.reject();
     await facilityCurrency(mockRequest, mockResponse);
@@ -64,8 +64,8 @@ describe('GET Facility Currency', () => {
 
 describe('Update Facility Currency', () => {
   it('saves and redirects user to application page if saveAndReturn is set to true and currency has been set', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body.currency = 'GBP';
     api.updateFacility = jest.fn();
@@ -77,8 +77,8 @@ describe('Update Facility Currency', () => {
   });
 
   it('redirects user to application page if saveAndReturn is set to true and currency has not been set', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
     mockRequest.query.saveAndReturn = 'true';
     api.updateFacility = jest.fn();
 
@@ -89,9 +89,9 @@ describe('Update Facility Currency', () => {
   });
 
   it('shows error message if no radio buttons have been selected', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
+    const mockFacilityCurrencyResponse = MockFacilityCurrencyResponse();
 
     api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
@@ -104,8 +104,8 @@ describe('Update Facility Currency', () => {
   });
 
   it('calls the update api with the correct data', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
     const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
 
     mockRequest.body.currency = 'EUR';
@@ -118,9 +118,9 @@ describe('Update Facility Currency', () => {
   });
 
   it('redirects user to facility value page with correct query if query status is equal to `change`', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
+    const mockFacilityCurrencyResponse = MockFacilityCurrencyResponse();
     mockRequest.query.status = 'change';
     mockRequest.body.currency = 'EUR';
 
@@ -131,9 +131,9 @@ describe('Update Facility Currency', () => {
   });
 
   it('redirects user to facility value page if everything is successful', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
-    const mockFacilityCurrencyResponse = new MockFacilityCurrencyResponse();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
+    const mockFacilityCurrencyResponse = MockFacilityCurrencyResponse();
 
     mockRequest.body.currency = 'EUR';
 
@@ -143,8 +143,8 @@ describe('Update Facility Currency', () => {
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    const mockResponse = new MockResponse();
-    const mockRequest = new MockRequest();
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
     mockRequest.body.currency = 'EUR';
 
     api.updateFacility = () => Promise.reject();

@@ -112,10 +112,6 @@ describe(baseUrl, () => {
           fieldname: 'files',
           filepath: 'api-tests/fixtures/invalid-file.bat',
         },
-        {
-          fieldname: 'files',
-          filepath: 'api-tests/fixtures/test-file-1.txt',
-        },
       ];
 
       const { status, body } = await as(aMaker)

@@ -10,6 +10,7 @@ const securityDetails = {
   applicationSecurityError: () => cy.get('[data-cy="application-security-error"]'),
   continueButton: () => cy.get('[data-cy="submit-button"]'),
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),
+  securityDetailsChangeCta: () => cy.get('[data-cy="security-details-cta"]'),
 };
 
 export default securityDetails;

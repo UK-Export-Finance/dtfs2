@@ -9,12 +9,11 @@ const pricingAndRiskPage = {
   exporterTableChangeProbabilityOfDefaultLink: () => cy.get('[data-cy="exporter-table-change-probability-of-default-link"]'),
 
   facilityTable: (facilityId) => {
-    const table = cy.get(`[data-cy="facility-${facilityId}-pricing-risk-table"]`);
+    cy.get(`[data-cy="facility-${facilityId}-pricing-risk-table"]`).as('table');
     return {
-      table,
-      facilityLink: () => table.get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
-      riskProfile: () => table.get(`[data-cy="facility-${facilityId}-risk-profile-value"]`),
-      changeRiskProfileLink: () => table.get(`[data-cy="facility-${facilityId}-change-risk-profile-link"]`),
+      facilityLink: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+      riskProfile: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-risk-profile-value"]`),
+      changeRiskProfileLink: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-change-risk-profile-link"]`),
     };
   },
 };

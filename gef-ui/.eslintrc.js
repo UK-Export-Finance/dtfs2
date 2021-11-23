@@ -6,7 +6,7 @@ module.exports = {
   },
   root: true,
   rules: {
-    'max-len': ['error', 120, 2, {
+    'max-len': ['error', 160, 2, {
       ignoreUrls: true,
       ignoreComments: false,
       ignoreRegExpLiterals: true,

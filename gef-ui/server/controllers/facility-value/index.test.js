@@ -238,7 +238,7 @@ describe('controllers/facility-value', () => {
 
   describe('Save and return validation', () => {
     beforeEach(() => {
-      mockRequest = new MockRequest(true);
+      mockRequest = MockRequest(true);
     });
 
     it('shows error message if cover percentage value is not a number', async () => {

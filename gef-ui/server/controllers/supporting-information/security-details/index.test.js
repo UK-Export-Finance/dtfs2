@@ -20,7 +20,7 @@ const MockResponse = () => {
 };
 
 describe('controllers/supporting-information/security-details', () => {
-  const mockResponse = new MockResponse();
+  const mockResponse = MockResponse();
   let mockRequest;
 
   afterEach(() => {

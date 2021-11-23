@@ -43,7 +43,11 @@ const deriveSupportingInfoStatus = (application) => {
 
   requiredFields.forEach((requiredField) => {
     const availableField = application.supportingInformation[requiredField];
-    if (availableField) availableFields.push(requiredField);
+
+    // eslint-disable-next-line no-prototype-builtins
+    if (availableField?.length || availableField?.hasOwnProperty('exporter')) {
+      availableFields.push(requiredField);
+    }
   });
 
   let state = PROGRESS.NOT_STARTED;
@@ -53,7 +57,6 @@ const deriveSupportingInfoStatus = (application) => {
 
   return status[state];
 };
-
 class Application {
   static async findById(id, user, userToken) {
     try {

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -14,7 +13,7 @@ const {
   eligibilityCriteriaStatus,
 } = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
-const { getLatestCriteria: getLatestEligibilityCriteria } = require('../controllers/eligibilityCriteria.controller');
+const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');

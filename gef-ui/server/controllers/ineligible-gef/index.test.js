@@ -13,7 +13,7 @@ describe('GET Mandatory Criteria', () => {
   });
 
   it('renders the `ineligible for GEF` template', async () => {
-    const mockResponse = new MockResponse();
+    const mockResponse = MockResponse();
     await ineligibleGef({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-gef.njk');
   });
