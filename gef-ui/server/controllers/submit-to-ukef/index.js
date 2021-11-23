@@ -1,5 +1,5 @@
 const { PROGRESS } = require('../../../constants/index');
-const { validationErrorHandler } = require('../../utils/helpers');
+const { validationErrorHandler, isNotice } = require('../../utils/helpers');
 const api = require('../../services/api');
 
 const MAX_COMMENT_LENGTH = 400;
@@ -64,7 +64,10 @@ const createSubmissionToUkef = async (req, res) => {
     await api.updateApplication(applicationId, application);
     await api.setApplicationStatus(applicationId, PROGRESS.SUBMITTED_TO_UKEF);
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-    return res.render('partials/submit-to-ukef-confirmation.njk', { submissionType: application.submissionType });
+    return res.render('partials/submit-to-ukef-confirmation.njk', {
+      submissionType: application.submissionType,
+      isNotice: isNotice(application.submissionType),
+    });
   } catch (err) {
     console.error(err);
     return res.render('partials/problem-with-service.njk');
