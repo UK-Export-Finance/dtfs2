@@ -1,6 +1,8 @@
 import { submitToUkef, createSubmissionToUkef } from './index';
 import api from '../../services/api';
 
+const { isNotice } = require('../../utils/helpers');
+
 jest.mock('../../services/api');
 
 const MockResponse = () => {
@@ -89,7 +91,10 @@ describe('controllers/submit-to-ukef', () => {
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', { submissionType: mockApplicationResponse.submissionType });
+        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
+          submissionType: mockApplicationResponse.submissionType,
+          isNotice: isNotice(mockApplicationResponse.submissionType),
+        });
     });
 
     it('renders an error when the comment is over the maximum length', async () => {
