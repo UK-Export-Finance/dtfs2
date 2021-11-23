@@ -31,7 +31,7 @@ describe('generate AIN/MIN confirmation email variables', () => {
     });
   });
 
-  it('should return empty object', () => {
+  it('should return empty object when deal type is invalid', () => {
     const mockDeal = { dealType: 'INVALID' };
     const result = generateAinMinConfirmationEmailVars(mockDeal);
 

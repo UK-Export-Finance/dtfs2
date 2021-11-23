@@ -3,7 +3,7 @@ const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const dealController = require('../../../src/v1/controllers/deal.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
-const { generateFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
+const { generateIssuedFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
 const { calculateGefFacilityFeeRecord } = require('../../../src/v1/helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../../src/constants');
 
@@ -279,7 +279,7 @@ describe('/v1/deals', () => {
             recipientName: mockDeal.details.maker.firstname,
             bankReferenceNumber: mockDeal.details.bankSupplyContractID,
             ukefDealID: mockDeal.details.ukefDealId,
-            facilitiesList: generateFacilitiesListString(allFacilities),
+            facilitiesList: generateIssuedFacilitiesListString(allFacilities),
           },
         };
 
@@ -509,7 +509,7 @@ describe('/v1/deals', () => {
             recipientName: mockDeal.details.maker.firstname,
             bankReferenceNumber: mockDeal.details.bankSupplyContractID,
             ukefDealID: mockDeal.details.ukefDealId,
-            facilitiesList: generateFacilitiesListString(allFacilities),
+            facilitiesList: generateIssuedFacilitiesListString(allFacilities),
           },
         };
 
