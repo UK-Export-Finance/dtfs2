@@ -10,65 +10,73 @@ const withoutId = (obj) => {
 const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const collection = await db.getCollection('tfm-deals');
 
-  // remove dealSnapshot to ensure its not updated
-  const { dealSnapshot, ...tfmUpdate } = dealChanges;
+  /**
+   * Remove dealSnapshot to ensure it's not updated
+   * We only need to consume the existing tfm data,
+   * And the new tfm object received.
+   * */
+  const { dealSnapshot, ...tfmUpdateObj } = dealChanges;
 
-  let dealUpdate = tfmUpdate;
-  console.log('tfmupdate', tfmUpdate);
+  const dealUpdate = tfmUpdateObj;
+  const tfmUpdate = tfmUpdateObj.tfm;
+
+  /**
+   * Ensure that if a tfmUpdate with activities is an empty object,
+   * we do not make activities an empty object.
+   * */
+  if (tfmUpdate.activities && Object.keys(tfmUpdate.activities).length === 0) {
+    dealUpdate.tfm.activities = [];
+  }
+
+  /**
+   * History helper variables
+   * */
+  const existingDealHistory = (existingDeal.tfm && existingDeal.tfm.history);
+  const tfmUpdateHasHistory = tfmUpdate.history;
+  const tfmUpdateHasHistoryTasks = (tfmUpdateHasHistory
+                                    && tfmUpdate.history.tasks
+                                    && Object.keys(tfmUpdate.history.tasks).length > 0);
+  const tfmUpdateHasHistoryEmails = (tfmUpdateHasHistory
+                                     && tfmUpdate.history.emails
+                                     && Object.keys(tfmUpdate.history.emails).length > 0);
+
   /**
    * Ensure tfm.history is not wiped and avoid recursive object creation
-   * by checking .recipient property for the emails object and
-   * by checking .taskId property for the tasks object.
+   * by checking that history.tasks and history.emails is not empty
    * */
+  if (existingDealHistory) {
+    if (tfmUpdateHasHistoryTasks) {
+      dealUpdate.tfm.history.tasks = [
+        ...existingDeal.tfm.history.tasks,
+        ...tfmUpdate.history.tasks,
+      ];
+    }
 
-  if (existingDeal.tfm && existingDeal.tfm.history) {
-    dealUpdate = {
-      tfm: {
-        ...existingDeal.tfm,
-        ...tfmUpdate.tfm,
-        history: existingDeal.tfm.history,
-      },
-    };
-
-    if (tfmUpdate.tfm.history) {
-      if (tfmUpdate.tfm.history.tasks && tfmUpdate.tfm.history.tasks.taskId) {
-        dealUpdate.tfm.history.tasks = [
-          ...existingDeal.tfm.history.tasks,
-          ...tfmUpdate.tfm.history.tasks,
-        ];
-      }
-
-      if (tfmUpdate.tfm.history.emails && tfmUpdate.tfm.history.emails.recipient) {
-        dealUpdate.tfm.history.emails = [
-          ...existingDeal.tfm.history.emails,
-          ...tfmUpdate.tfm.history.emails,
-        ];
-      }
+    if (tfmUpdateHasHistoryEmails) {
+      dealUpdate.tfm.history.emails = [
+        ...existingDeal.tfm.history.emails,
+        ...tfmUpdate.history.emails,
+      ];
     }
   }
+
+  /**
+   * Activities helper variables
+   * */
+  const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
+  const tfmUpdateHasActivities = (tfmUpdate.activities
+                                  && Object.keys(tfmUpdate.activities).length > 0);
 
   /**
    * Ensure tfm.activities is not wiped and avoid recursive object creation
    * by checking .type property for the activities object.
    * tfm.activities to be checked for submitting tfm.tasks
    * */
-  if (tfmUpdate.tfm.activities) {
-    if (existingDeal.tfm && existingDeal.tfm.activities && tfmUpdate.tfm.activities.type) {
-      dealUpdate = {
-        tfm: {
-          ...existingDeal.tfm,
-          ...tfmUpdate.tfm,
-          activities: existingDeal.tfm.activities,
-        },
-      };
-
-      if (tfmUpdate.tfm.activities) {
-        dealUpdate.tfm.activities = [
-          ...existingDeal.tfm.activities,
-          tfmUpdate.tfm.activities,
-        ];
-      }
-    }
+  if (tfmUpdateHasActivities) {
+    dealUpdate.tfm.activities = [
+      ...existingDealActivities,
+      tfmUpdate.activities,
+    ];
   }
 
   dealUpdate.tfm.lastUpdated = new Date().valueOf();

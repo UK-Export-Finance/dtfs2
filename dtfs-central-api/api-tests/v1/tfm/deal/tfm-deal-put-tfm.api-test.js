@@ -38,8 +38,11 @@ describe('/v1/tfm/deal/:id', () => {
   describe('PUT /v1/tfm/deal/:id', () => {
     const dealUpdate = {
       tfm: {
-        submissionDetails: {
-          exporterPartyUrn: '12345',
+        someNewField: true,
+        parties: {
+          exporter: {
+            partUrn: '12345',
+          },
         },
       },
     };
@@ -169,6 +172,102 @@ describe('/v1/tfm/deal/:id', () => {
 
       expect(typeof secondUpdateBody.deal.tfm.lastUpdated).toEqual('number');
       expect(secondUpdateBody.deal.tfm.lastUpdated).not.toEqual(lastUpdatedOriginalValue);
+    });
+
+    it('should not add blank activity object to deal.tfm.activities', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
+
+      const tfmObject = {
+        tfm: {
+          activities: [],
+        },
+      };
+
+      await api.put({ dealUpdate: tfmObject }).to(`/v1/tfm/deals/${dealId}`);
+
+      const blankCommentObj = {};
+
+      const blankActivity = {
+        tfm: {
+          activities: blankCommentObj,
+        },
+      };
+
+      await api.put({ dealUpdate: blankActivity }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(dealAfterUpdate.deal.tfm.activities).toEqual([]);
+    });
+
+    it('should add correct activity object to tfm', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
+
+      const tfmObject = {
+        tfm: {
+          activities: [],
+        },
+      };
+
+      await api.put({ dealUpdate: tfmObject }).to(`/v1/tfm/deals/${dealId}`);
+
+      const MOCK_AUTHOR = {
+        firstName: 'tester',
+        lastName: 'smith',
+        _id: 12243343242342,
+      };
+
+      const commentObj = {
+        type: 'COMMENT',
+        timestamp: 13345665,
+        text: 'test1',
+        author: MOCK_AUTHOR,
+        label: 'Comment added',
+      };
+
+      const singleCommentActivity = {
+        tfm: {
+          activities: commentObj,
+        },
+      };
+
+      await api.put({ dealUpdate: singleCommentActivity }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: firstCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
+
+      const secondCommentObj = {
+        type: 'COMMENT',
+        timestamp: 13345665,
+        text: 'test2',
+        author: MOCK_AUTHOR,
+        label: 'Comment added',
+      };
+
+      const secondCommentActivity = {
+        tfm: {
+          activities: secondCommentObj,
+        },
+      };
+
+      await api.put({ dealUpdate: secondCommentActivity }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentObj, secondCommentObj]);
     });
   });
 });
