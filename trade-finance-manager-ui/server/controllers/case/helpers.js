@@ -17,7 +17,6 @@ const getTask = (groupId, taskId, tasks) => {
   return null;
 };
 
-
 // Checks to see if an element is an object or not
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
@@ -53,5 +52,5 @@ const validationErrorHandler = (errs, href = '') => {
 module.exports = {
   getGroup,
   getTask,
-  validationErrorHandler
+  validationErrorHandler,
 };
