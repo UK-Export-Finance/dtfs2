@@ -89,7 +89,7 @@ describe('controllers/submit-to-ukef', () => {
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', { applicationType: mockApplicationResponse.submissionType });
+        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', { submissionType: mockApplicationResponse.submissionType });
     });
 
     it('renders an error when the comment is over the maximum length', async () => {

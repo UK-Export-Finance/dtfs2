@@ -196,16 +196,20 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
     portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.SPECIAL_CONDITIONS;
   }
 
-  const portalCommentObj = {
-    text: comments,
-  };
-
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const portalCommentObj = {
+      text: comments,
+    };
     api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
   // if it's a GEF deal, update the gef-application collection to include the ukefDecision
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    const portalCommentObj = {
+      text: comments,
+      decision,
+    };
+
     // set the comment type to 'ukefDecision'
     portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
     // create a POST request to Central-api to update the deal that matches the given dealId

@@ -65,7 +65,7 @@ const createSubmissionToUkef = async (req, res) => {
     await api.setApplicationStatus(applicationId, PROGRESS.SUBMITTED_TO_UKEF);
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
-      applicationType: application.submissionType,
+      submissionType: application.submissionType,
       isNotice: isNotice(application.submissionType),
     });
   } catch (err) {
