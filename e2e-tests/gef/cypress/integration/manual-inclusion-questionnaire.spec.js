@@ -62,10 +62,11 @@ context('manual inclusion Page', () => {
       manualInclusion.errorSummary();
     });
 
-    it('does not allow a file greater than 12MB', () => {
-      cy.uploadFile('upload-file-large.pdf', `${manualInclusion.url(id)}/upload`);
-      manualInclusion.uploadFailure('upload-file-large.pdf');
-    });
+    // TODO: DTFS2-5089
+    // it('does not allow a file greater than 12MB', () => {
+    //   cy.uploadFile('upload-larger-file.pdf', `${manualInclusion.url(id)}/upload`);
+    //   manualInclusion.uploadFailure('upload-larger-file.pdf');
+    // });
 
     it('does not allow a file of an incorrect type', () => {
       cy.uploadFile('upload-file-wrong-type.csv', `${manualInclusion.url(id)}/upload`);

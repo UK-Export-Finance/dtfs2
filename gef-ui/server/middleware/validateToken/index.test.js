@@ -17,8 +17,8 @@ const MockResponse = () => {
   return res;
 };
 
-const mockRequest = new MockRequest();
-const mockResponse = new MockResponse();
+const mockRequest = MockRequest();
+const mockResponse = MockResponse();
 const mockNext = jest.fn();
 
 describe('Validate Token', () => {

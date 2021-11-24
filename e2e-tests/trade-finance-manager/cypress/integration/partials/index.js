@@ -1,7 +1,13 @@
+const caseSubNavigation = require('./caseSubNavigation');
+const caseSummary = require('./caseSummary');
+const header = require('./header');
+const underwritingSubNav = require('./underwritingSubNav');
+const primaryNavigation = require('./primaryNavigation');
+
 module.exports = {
-  caseSubNavigation: require('./caseSubNavigation'),
-  caseSummary: require('./caseSummary'),
-  header: require('./header'),
-  underwritingSubNav: require('./underwritingSubNav'),
-  primaryNavigation: require('./primaryNavigation'),
+  caseSubNavigation,
+  caseSummary,
+  header,
+  underwritingSubNav,
+  primaryNavigation,
 };

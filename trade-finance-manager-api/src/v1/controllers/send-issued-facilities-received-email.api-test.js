@@ -1,7 +1,7 @@
-const { generateFacilitiesListString } = require('./send-issued-facilities-received-email');
+const { generateIssuedFacilitiesListString } = require('./send-issued-facilities-received-email');
 const { capitalizeFirstLetter } = require('../../utils/string');
 
-describe('send-issued-facilities-received-email - generateFacilitiesListString', () => {
+describe('send-issued-facilities-received-email - generateIssuedFacilitiesListString', () => {
   it('should return a list in a formatted string', () => {
     const facilities = [
       {
@@ -22,7 +22,7 @@ describe('send-issued-facilities-received-email - generateFacilitiesListString',
 
     const expected = `- ${facility1Type} facility with UKEF facility reference: ${facility1Id}\n- ${facility2Type} facility with UKEF facility reference: ${facility2Id}`;
 
-    const result = generateFacilitiesListString(facilities);
+    const result = generateIssuedFacilitiesListString(facilities);
 
     expect(result).toEqual(expected);
   });

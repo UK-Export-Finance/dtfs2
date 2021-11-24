@@ -1,31 +1,26 @@
 const { STATUS } = require('../../enums');
 
-/* eslint-disable consistent-return */
-const hasRequiredItems = (doc) => {
-  const required = [];
+const supportingInfoStatus = (supportingInfo) => {
+  if (supportingInfo) {
+    const requiredCount = supportingInfo.requiredFields?.length;
 
-  if (!doc?.manualInclusion?.length) {
-    required.push('manualInclusion');
-  }
+    const supportingInfoAnswers = supportingInfo;
+    delete supportingInfoAnswers.requiredFields;
+    delete supportingInfoAnswers.status;
 
-  if (!doc?.securityDetails?.exporter || !doc?.securityDetails?.application) {
-    required.push('securityDetails');
-  }
+    const answeredCount = Object.keys(supportingInfoAnswers).length;
 
-  return required;
-};
+    if (!answeredCount) {
+      return STATUS.NOT_STARTED;
+    }
 
-const supportingInfoStatus = (doc) => {
-  const requiredCount = hasRequiredItems(doc).length;
-  if (requiredCount === 2) {
-    return STATUS.NOT_STARTED;
-  }
-  if (requiredCount > 0) {
+    if (answeredCount === requiredCount) {
+      return STATUS.COMPLETED;
+    }
+
     return STATUS.IN_PROGRESS;
   }
-  if (requiredCount === 0) {
-    return STATUS.COMPLETED;
-  }
+  return STATUS.NOT_STARTED;
 };
 
 module.exports = {

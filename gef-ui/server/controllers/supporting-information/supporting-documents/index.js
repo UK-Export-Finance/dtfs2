@@ -4,9 +4,9 @@ const validateFile = require('../../../utils/validateFile');
 const { uploadAndSaveToDeal, removeFileFromDeal } = require('../../../utils/fileUtils');
 const { docType } = require('./docType');
 
-const MAX_FILE_SIZE = 1024 * 1024 * 12;
+const MAX_FILE_SIZE = 10; // 10 mb default
 
-const mapDocTypeParemeterToProps = (type) => {
+const mapDocTypeParameterToProps = (type) => {
   let mappedValues = null;
   if (Object.prototype.hasOwnProperty.call(docType, type)) {
     mappedValues = docType[type];
@@ -100,7 +100,7 @@ const getSupportingDocuments = async (req, res, next) => {
 
   try {
     application = await getApplication(applicationId, user, userToken);
-    const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, title } = mapDocTypeParameterToProps(documentType);
 
     let files = [];
     if (Object.prototype.hasOwnProperty.call(application.supportingInformation, fieldName)) {
@@ -128,7 +128,8 @@ const postSupportingDocuments = async (req, res, next) => {
   } = req;
   const errRef = 'documents';
   try {
-    const { fieldName, title } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, title, path } = mapDocTypeParameterToProps(documentType);
+    const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
 
     let errors = [];
     let processedFiles = [];
@@ -141,7 +142,7 @@ const postSupportingDocuments = async (req, res, next) => {
       const invalidFiles = [];
 
       files.forEach((file) => {
-        const [isValid, error] = validateFile(file, MAX_FILE_SIZE);
+        const [isValid, error] = validateFile(file, maxFileSize);
 
         if (isValid) {
           validFiles.push(file);
@@ -159,7 +160,7 @@ const postSupportingDocuments = async (req, res, next) => {
         applicationId,
         userToken,
         user,
-        MAX_FILE_SIZE,
+        maxFileSize,
       ) : [];
 
       processedFiles = [
@@ -215,28 +216,27 @@ const postSupportingDocuments = async (req, res, next) => {
 
     return res.redirect(nextDocument(application, applicationId, fieldName));
   } catch (err) {
+    console.error('Supporting document post failed', { err });
     return handleError(err, req, res, next);
   }
 };
 
 const uploadSupportingDocument = async (req, res, next) => {
-  const {
-    file,
-    params: { applicationId, documentType },
-    session: { user, userToken },
-  } = req;
+  const { file, params: { applicationId, documentType }, session: { user, userToken } } = req;
   try {
-    const { fieldName } = mapDocTypeParemeterToProps(documentType);
+    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
 
     if (!file) return res.status(400).send('Missing file');
 
-    const [isValid, error] = validateFile(file, MAX_FILE_SIZE);
+    const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
+    const [isValid, error] = validateFile(file, maxFileSize);
 
     file.error = error;
 
     if (isValid) {
       // check user has access
       await getApplication(applicationId, user, userToken);
+      const documentPath = path;
 
       const [processedFile] = await uploadAndSaveToDeal(
         [file],
@@ -244,7 +244,8 @@ const uploadSupportingDocument = async (req, res, next) => {
         applicationId,
         userToken,
         user,
-        MAX_FILE_SIZE,
+        maxFileSize,
+        documentPath,
       );
 
       const response = processedFile.error
@@ -257,11 +258,9 @@ const uploadSupportingDocument = async (req, res, next) => {
       });
     }
 
-    return res.status(200).send({
-      file,
-      error: { message: file.error },
-    });
+    return res.status(200).send({ file, error: { message: file.error } });
   } catch (err) {
+    console.error('Supporting document upload failed', { err });
     return handleError(err, req, res, next);
   }
 };
@@ -273,13 +272,14 @@ const deleteSupportingDocument = async (req, res, next) => {
     session: { user, userToken },
   } = req;
   try {
-    const { fieldName } = mapDocTypeParemeterToProps(documentType);
-
     if (!fileToDelete) return res.status(400).send('Missing file to delete');
 
-    const application = await getApplication(applicationId, user, userToken);
+    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
 
-    await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
+    const application = await getApplication(applicationId, user, userToken);
+    const documentPath = path;
+
+    await removeFileFromDeal(fileToDelete, fieldName, application, userToken, documentPath);
 
     return res.status(200).send({
       file: fileToDelete,

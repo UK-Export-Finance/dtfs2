@@ -18,8 +18,8 @@ afterEach(() => {
 
 describe('sessionUserToLocals', () => {
   it('calls next()', async () => {
-    const mockRequest = new MockRequest();
-    const mockResponse = new MockResponse();
+    const mockRequest = MockRequest();
+    const mockResponse = MockResponse();
 
     await sessionUserToLocals(mockRequest, mockResponse, mockNext);
 
@@ -27,8 +27,8 @@ describe('sessionUserToLocals', () => {
   });
 
   it('translates session user to res.locals user', async () => {
-    const mockRequest = new MockRequest();
-    const mockResponse = new MockResponse();
+    const mockRequest = MockRequest();
+    const mockResponse = MockResponse();
     mockRequest.session.user = { name: 'User Name' };
 
     await sessionUserToLocals(mockRequest, mockResponse, mockNext);

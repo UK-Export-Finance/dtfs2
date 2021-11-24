@@ -223,23 +223,23 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an array populated by the correct properties', () => {
-    const mockedData = new MockedData();
-    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
 
     expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
   });
 
   it('returns populated items array if href property is required', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
     const { items } = mapSummaryList(mockedData, mockedDisplayItems)[0].actions;
     expect(items.length).toEqual(1);
   });
 
   it('returns the correct link label if href has been required', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
     const item = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
     expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
@@ -249,8 +249,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns the `Required` html element if corresponding dataset is required', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.id = null;
     mockedData.validation.required = ['id'];
@@ -259,8 +259,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a long dash if value is empty and is NOT required', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.id = null;
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
@@ -268,8 +268,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a long dash if Object contains only null values', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.address = {};
     mockedData.details.address.line1 = null;
@@ -282,8 +282,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an unordered list if property contains an object', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.address = {};
     mockedData.details.address.line1 = 'Test Road';
@@ -297,8 +297,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an unordered list with Provided on details if property contains an object', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
     mockedData.details.details = ['OTHER'];
     mockedData.details.detailsOther = 'Other text';
     mockedDisplayItems.slice(1);
@@ -311,8 +311,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns selected industry ', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.selectedIndustry = {
       code: '1017',
@@ -330,8 +330,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns `null` if value is undefined', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.id = '123';
     mockedDisplayItems[0].id = 'abc';
@@ -341,8 +341,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a value with currency', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedDisplayItems[0].id = 'price';
     mockedDisplayItems[0].isCurrency = true;
@@ -355,8 +355,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a value with a prefix', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedDisplayItems[0].id = 'price';
     mockedDisplayItems[0].prefix = '£';
@@ -368,8 +368,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a value with a suffix', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedDisplayItems[0].id = 'percentage';
     mockedDisplayItems[0].suffix = '%';
@@ -381,8 +381,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('alters the value depending on the `method` passed', () => {
-    const mockedDisplayItems = new MockedDisplayItems();
-    const mockedData = new MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     const reverseFunction = (val) => val.split('').reverse().join('');
 
