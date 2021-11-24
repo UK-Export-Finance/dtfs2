@@ -282,12 +282,13 @@ describe('POST activity - post-comment', () => {
           validationErrors: generateValidationErrors(
             'comment',
             'Comments must be 1000 characters or fewer',
-            1,
+            0,
             {},
           ),
           comment: longComment,
         });
     });
+
     it('should return render activities page with all-activity filter after posting comment', async () => {
       const req = {
         params: {
