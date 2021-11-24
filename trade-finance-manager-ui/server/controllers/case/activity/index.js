@@ -116,8 +116,6 @@ const postComment = async (req, res) => {
         validationErrors,
       );
 
-      console.log('--- validationErrors \n', validationErrors);
-
       return res.render('case/activity/activity-comment.njk', {
         dealId,
         user,
