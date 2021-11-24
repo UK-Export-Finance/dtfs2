@@ -8,6 +8,7 @@ const {
   getGroup,
   getTask,
   canUpdateTask,
+  isTaskComplete,
 } = require('../helpers/tasks');
 const sendUpdatedTaskEmail = require('./task-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
@@ -32,7 +33,7 @@ const updateHistory = ({
 const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
-
+      console.log(taskIdToUpdate, taskUpdate);
     group = {
       ...group,
       groupTasks: group.groupTasks.map((t) => {
@@ -77,30 +78,38 @@ const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, 
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t) => {
+      groupTasks: group.groupTasks.map((t, index, array) => {
         const task = t;
-
         if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
           task.canEdit = false;
-        } else if (previousTaskIsComplete(allTaskGroups, group, task.id)) {
+        } else if (isTaskComplete(allTaskGroups, group, task.id)) {
           if (task.id === taskIdToUpdate
             && task.groupId === groupId) {
             if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
               task.canEdit = false;
             }
           } else {
+            if (task.groupId === 3 && task.id === '1') {
+              for (let i = index + 1; i <= index + 2; i += 1) {
+                const nextTask = array[i];
+                nextTask.canEdit = true;
+                nextTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
+                // Send task notification emails
+                sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(nextTask, deal, urlOrigin));
+              }
+            }
             // task can be started
             task.canEdit = true;
             task.status = CONSTANTS.TASKS.STATUS.TO_DO;
-
             // Send task notification emails
             sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
           }
         }
+        console.log('task', task);
         return task;
       }),
     };
-
+    console.log('group', group);
     return group;
   });
 
@@ -128,6 +137,7 @@ const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, stat
   if (miaDeal
     && firstTaskInFirstGroup
     && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
+       console.log('updateeeeeeeeeee')
     return true;
   }
 
@@ -180,6 +190,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       deal,
       urlOrigin,
     );
+    console.log('modified with edit status', modifiedTasksWithEditStatus);
 
     const tfmHistoryUpdate = {
       tasks: [
@@ -208,7 +219,7 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       statusFrom,
       statusTo,
     );
-
+    console.log('status to', statusTo);
     if (updateDealStage) {
       tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS;
     }
