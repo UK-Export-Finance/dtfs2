@@ -1,5 +1,12 @@
 const TEAMS = require('./teams');
 
+/**
+ * NOTE:
+ * Tasks that have isConditional flag are tasks that can either be:
+ * - added (depending on deal data)
+ * - excluded (depending on deal data)
+ * */
+
 const AIN_AND_MIA = {
   GROUP_1: {
     GROUP_TITLE: 'Set up deal',
@@ -15,6 +22,7 @@ const AIN = {
       {
         title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
         team: TEAMS.BUSINESS_SUPPORT,
+        isConditional: true,
       },
       {
         title: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
@@ -28,6 +36,7 @@ const MIA_GROUP_1_TASKS = {
   FILE_ALL_DEAL_EMAILS: 'File all deal emails in this deal',
   CREATE_CREDIT_ANALYSIS_DOCUMENT: 'Create a credit analysis document',
   ASSIGN_AN_UNDERWRITER: 'Assign an underwriter for this deal',
+  COMPLETE_AGENT_CHECK: 'Complete an agent check',
 };
 
 const MIA_GROUP_2_TASKS = {
@@ -38,6 +47,7 @@ const MIA_GROUP_3_TASKS = {
   CHECK_EXPOSURE: 'Check exposure',
   GIVE_EXPORTER_A_CREDIT_RATING: 'Give the exporter a credit rating',
   COMPLETE_CREDIT_ANALYSIS: 'Complete the credit analysis',
+  
 };
 
 const MIA_GROUP_4_TASKS = {
@@ -53,6 +63,7 @@ const MIA = {
       {
         title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
         team: TEAMS.BUSINESS_SUPPORT,
+        isConditional: true,
       },
       {
         title: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
@@ -69,6 +80,11 @@ const MIA = {
       {
         title: MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER,
         team: TEAMS.UNDERWRITER_MANAGERS,
+      },
+      {
+        title: MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
+        team: TEAMS.UNDERWRITERS,
+        isConditional: true,
       },
     ],
   },

@@ -24,7 +24,7 @@ describe('defaults - tasks creation', () => {
   });
 
   describe('createGroupTasks', () => {
-    const mockTasks = [
+    const mockGroupTasks = [
       {
         title: 'Title A',
         team: 'Team A',
@@ -36,7 +36,7 @@ describe('defaults - tasks creation', () => {
     ];
 
     it('should return array of tasks with incremented task id', () => {
-      const result = createGroupTasks(mockTasks, 2);
+      const result = createGroupTasks(mockGroupTasks, 2);
 
       const expected = [
         {
@@ -60,7 +60,7 @@ describe('defaults - tasks creation', () => {
 
     describe('when the given groupId is 1', () => {
       it('should add `canEdit` to the first task in group 1', () => {
-        const result = createGroupTasks(mockTasks, 1);
+        const result = createGroupTasks(mockGroupTasks, 1);
 
         const expected = [
           {
@@ -101,7 +101,11 @@ describe('defaults - tasks creation', () => {
           'Task C',
         ];
 
-        const result = createGroupTasks(mockGroupTasks, mockGroupId, mockExcludedTasks);
+        const result = createGroupTasks(
+          mockGroupTasks,
+          mockGroupId,
+          mockExcludedTasks,
+        );
 
         const expected = [
           {
@@ -120,6 +124,77 @@ describe('defaults - tasks creation', () => {
             team: 'Test team',
             ...NEW_TASK,
           },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when no additionalTasks are passed and a task has isConditional flag', () => {
+      it('should NOT isConditional tasks', () => {
+        const mockGroupTasks = [
+          { title: 'Task A', team: 'Test team' },
+          { title: 'Task B', team: 'Test team', isConditional: true },
+          { title: 'Task C', team: 'Test team' },
+          { title: 'Task D', team: 'Test team', isConditional: true },
+        ];
+
+        const mockGroupId = 1;
+
+        const result = createGroupTasks(
+          mockGroupTasks,
+          mockGroupId,
+        );
+
+        const conditionalTasks = mockGroupTasks.filter((task) => task.isConditional === true);
+
+        const conditionalTask1 = conditionalTasks[0];
+        const conditionalTask2 = conditionalTasks[1];
+
+        const conditionalTask1InResult = result.find((task) => task.title === conditionalTask1.title);
+        expect(conditionalTask1InResult).toBeUndefined();
+
+        const conditionalTask2InResult = result.find((task) => task.title === conditionalTask2.title);
+        expect(conditionalTask2InResult).toBeUndefined();
+      });
+    });
+
+    describe('when additionalTasks array of strings is passed', () => {
+      it('should return any additional tasks (with isConditional flag) in a group that match a title in additionalTasks, retaining incremental task ids', () => {
+        const mockGroupTasks = [
+          { title: 'Task A', team: 'Test team' },
+          { title: 'Task B', team: 'Test team', isConditional: true },
+          { title: 'Task C', team: 'Test team' },
+          { title: 'Task D', team: 'Test team', isConditional: true },
+        ];
+
+        const mockGroupId = 1;
+
+        const mockExcludedTasks = [];
+        const mockAdditionalTasks = [
+          'Task B',
+          'Task D',
+        ];
+
+        const result = createGroupTasks(
+          mockGroupTasks,
+          mockGroupId,
+          mockExcludedTasks,
+          mockAdditionalTasks,
+        );
+
+        const expected = [
+          {
+            id: '1',
+            groupId: mockGroupId,
+            ...mockGroupTasks[0],
+            ...NEW_TASK,
+            status: 'To do',
+            canEdit: true,
+          },
+          { id: '2', groupId: mockGroupId, ...mockGroupTasks[1], ...NEW_TASK },
+          { id: '3', groupId: mockGroupId, ...mockGroupTasks[2], ...NEW_TASK },
+          { id: '4', groupId: mockGroupId, ...mockGroupTasks[3], ...NEW_TASK },
         ];
 
         expect(result).toEqual(expected);
