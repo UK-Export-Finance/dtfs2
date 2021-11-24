@@ -70,3 +70,15 @@ module.exports.getAllTfmDeals = () =>
     expect(resp.status).to.equal(200);
     return resp.body.deals;
   });
+
+module.exports.updateTFMDeal = (dealId, dealUpdate) => 
+  cy.request({
+    url: `${api()}/v1/tfm/deals/${dealId}`,
+    method: 'PUT',
+    body: {
+      dealUpdate,
+    },
+  }).then((resp) => {
+    expect(resp.status).to.equal(200);
+    return resp.body;
+  });
