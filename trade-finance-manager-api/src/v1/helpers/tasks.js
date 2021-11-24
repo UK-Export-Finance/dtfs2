@@ -51,6 +51,20 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
   return false;
 };
 
+const isTaskComplete = (allTaskGroups, group, taskId) => {
+  if (group.id === 3) {
+     console.log('group3');
+    return true;
+  }
+
+  if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
+     console.log('previous');
+    return true;
+  }
+
+  return false;
+};
+
 const firstTaskIsComplete = (groupTasks) => {
   const firstTask = groupTasks.find((t) => t.id === '1');
 
@@ -76,6 +90,7 @@ module.exports = {
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
   previousTaskIsComplete,
+  isTaskComplete,
   firstTaskIsComplete,
   isFirstTask,
   canUpdateTask,
