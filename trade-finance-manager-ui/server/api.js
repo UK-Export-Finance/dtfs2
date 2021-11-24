@@ -14,15 +14,17 @@ const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-
 const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
+const createActivityMutation = require('./graphql/mutations/create-activity');
 
 require('dotenv').config();
 
 const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
 
-const getDeal = async (id, tasksFilters) => {
+const getDeal = async (id, tasksFilters, activityFilters) => {
   const queryParams = {
     _id: id, // eslint-disable-line no-underscore-dangle
     tasksFilters,
+    activityFilters,
   };
 
   const response = await apollo('GET', dealQuery, queryParams);
@@ -167,6 +169,15 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
+const createActivity = async (dealId, activityUpdate) => {
+  const updateVariable = {
+    dealId,
+    activityUpdate,
+  };
+
+  return apollo('PUT', createActivityMutation, updateVariable);
+};
+
 // Temp login for mock users. Active Directory will proabably replace this
 // Just get the user, not really concerned about logging in with passwords for mock users
 const login = async (username) => {
@@ -199,5 +210,6 @@ module.exports = {
   updateProbabilityOfDefault,
   updateUnderwriterManagersDecision,
   updateLeadUnderwriter,
+  createActivity,
   login,
 };

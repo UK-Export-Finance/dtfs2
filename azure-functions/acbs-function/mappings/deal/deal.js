@@ -30,6 +30,7 @@ Issued (straight to Issued)   Cover Start Date        Cover Start Date
 */
 
 const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
+  _id: deal._id,
   dealIdentifier: getDealId(deal),
   currency: getDealCurrency(deal),
   dealValue: to2Decimals(getDealValue(deal)),

@@ -24,6 +24,7 @@ const addTfmDealData = async (deal) => {
       dateReceived: addDateReceived(submissionDate),
       history: DEFAULTS.HISTORY,
       parties: {},
+      activities: [],
       product: addDealProduct(deal),
       stage: addDealStage(status, submissionType),
       ...addDealPricingAndRisk(deal),

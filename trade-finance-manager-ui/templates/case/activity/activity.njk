@@ -1,4 +1,8 @@
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
 {% import './_macros/deal-submitted.njk' as dealSubmitted %}
+{% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 
 {% extends "case/case.njk" %}
 
@@ -10,21 +14,30 @@
 
       <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="activity-heading">Activity and comments</h2>
 
-      <ul>
+        {% set filterCommentData = {
+          selectedActivityFilter: selectedActivityFilter
+        } %}
 
-        {% set componentData = {
-          submissionType: deal.details.submissionType,
-          submittedBy: deal.details.owningBank.name,
-          submissionDate: deal.details.submissionDate,
-          userTimezone: user.timezone
-        }%}
+      {{ activityCommentFilter.render(filterCommentData) }}
 
-        {{dealSubmitted.render(componentData)}}
+      {{ govukButton({
+        text: "Add a comment",
+        classes: "govuk-button--secondary",
+        href: "/case/" + dealId + "/activity" + "/post-comment",
+        attributes: {
+          'data-cy': 'add-comment-button'
+        }
+      }) }}
 
-      </ul>
+      {{ mojTimeline({
+        items: activities,
+        attributes: {
+          'data-cy': 'activities-timeline'
+        }
+      }) }}
 
     </div>
-
+    
   </div>
 
 {% endblock %}

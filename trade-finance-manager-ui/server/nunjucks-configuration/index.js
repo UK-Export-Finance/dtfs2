@@ -1,4 +1,5 @@
 const nunjucks = require('nunjucks');
+let mojFilters = require('../../node_modules/@ministryofjustice/frontend/moj/filters/all')();
 const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
 const filterFormatDateString = require('./filter-formatDateString');
 const dashIfEmpty = require('./filter-dashIfEmpty');
@@ -14,6 +15,7 @@ const configureNunjucks = (opts) => {
   const appViews = [
     'node_modules/govuk-frontend',
     'node_modules/@ministryofjustice/frontend',
+    'node_modules/@ministryofjustice/frontend/filters/all',
     'templates',
   ];
 
@@ -29,6 +31,11 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
+
+  mojFilters = Object.assign(mojFilters);
+  Object.keys(mojFilters).forEach((filterName) => {
+    nunjucksEnvironment.addFilter(filterName, mojFilters[filterName]);
+  });
 
   return nunjucks;
 };
