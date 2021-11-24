@@ -67,6 +67,15 @@ describe('send-deal-submit-emails - TFM tasks', () => {
       expect(result).toEqual(true);
     });
 
+    it('should return true when task title is `Create or link this opportunity in Salesforce`', () => {
+      const mockTask = {
+        title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+      };
+
+      const result = shouldSendFirstTaskEmail(mockTask);
+      expect(result).toEqual(true);
+    });
+
     it('should return false when task title is NOT `match or create parties`', () => {
       const mockTask = {
         title: 'Test',
