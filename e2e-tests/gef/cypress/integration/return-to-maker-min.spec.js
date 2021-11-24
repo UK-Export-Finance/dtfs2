@@ -84,7 +84,6 @@ context('Return to Maker as MIN', () => {
     });
 
     it('comments are showing', () => {
-      applicationPreview.task().contains('check manual inclusion application');
       applicationPreview.comments().contains('comment1');
       applicationPreview.status().contains('Further Maker\'s input required');
     });

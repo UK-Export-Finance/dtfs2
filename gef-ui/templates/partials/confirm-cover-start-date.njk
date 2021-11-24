@@ -1,0 +1,30 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block pageTitle %}
+    Confirm cover start date
+{% endblock %}
+
+{% block content %}
+
+    {% if errors %}
+        {{
+            govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            attributes: {
+                'data-cy': 'error-summary'
+                }
+            })
+        }}
+    {% endif %}
+
+    {% include "includes/application-preview/summary.njk" %}
+
+    {% if isUkefReviewAvailable %}
+        Hello
+    {% else %}
+        Pending UKEF decision.
+    {% endif %}
+
+{% endblock %}

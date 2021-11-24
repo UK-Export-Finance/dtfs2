@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const { mapSummaryList } = require('../../utils/helpers');
+const { mapSummaryList, isUkefReviewAvailable, isUkefReviewPositive } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
 } = require('../../utils/display-items');
@@ -76,6 +76,8 @@ function buildBody(app, previewMode) {
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
     ukefDecision: app.ukefDecision,
+    isUkefReviewAvailable: isUkefReviewAvailable(app.status),
+    isUkefReviewPositive: isUkefReviewPositive(app.status),
     previewMode,
   };
 }
@@ -95,6 +97,36 @@ function buildView(app, previewMode) {
   const actions = buildActions(app);
   return { ...header, ...body, ...actions };
 }
+
+const stateToPartial = (status, url) => {
+  let req = url.split('/');
+  req = req[req.length - 1];
+
+  // Behaviour depending on application state
+  const template = {
+    DRAFT: 'application-details',
+    CHANGES_REQUIRED: 'application-details',
+    BANK_CHECK: 'application-preview',
+    SUBMITTED_TO_UKEF: 'application-preview',
+    ABANDONED: 'application-preview',
+    UKEF_ACKNOWLEDGED: 'application-preview',
+    UKEF_IN_PROGRESS: 'application-details',
+    UKEF_APPROVED_WITHOUT_CONDITIONS: 'application-preview',
+    UKEF_APPROVED_WITH_CONDITIONS: 'application-preview',
+    UKEF_REFUSED: 'application-preview',
+    EXPIRED: '',
+    WITHDRAWN: '',
+  };
+
+  const partials = {
+    'review-ukef-decision': 'review-ukef-decision',
+    'confirm-cover-start-date': 'confirm-cover-start-date',
+  };
+
+  return req in partials
+    ? partials[req]
+    : template[status];
+};
 
 const applicationDetails = async (req, res, next) => {
   const {
@@ -117,28 +149,25 @@ const applicationDetails = async (req, res, next) => {
       maker,
     };
 
-    // Behaviour depending on application state
-    const stateToPartial = {
-      DRAFT: 'application-details',
-      CHANGES_REQUIRED: 'application-details',
-      BANK_CHECK: 'application-preview',
-      SUBMITTED_TO_UKEF: 'application-preview',
-      ABANDONED: 'application-preview',
-      UKEF_ACKNOWLEDGED: 'application-preview',
-      UKEF_IN_PROGRESS: 'application-details',
-      UKEF_APPROVED_WITHOUT_CONDITIONS: 'application-preview',
-      UKEF_APPROVED_WITH_CONDITIONS: 'application-preview',
-      UKEF_REFUSED: 'application-preview',
-      EXPIRED: '',
-      WITHDRAWN: '',
-    };
-    const partial = stateToPartial[application.status];
-    return res.render(`partials/${partial}.njk`, {
-      user,
-      ...buildView(applicationWithMaker, previewMode),
-    });
+    const partial = stateToPartial(application.status, req.url);
+    let params;
+
+    if (req.errors) {
+      params = {
+        user,
+        ...buildView(applicationWithMaker, previewMode),
+        errors: req.errors,
+      };
+    } else {
+      params = {
+        user,
+        ...buildView(applicationWithMaker, previewMode),
+      };
+    }
+
+    return res.render(`partials/${partial}.njk`, params);
   } catch (err) {
-    console.error(err);
+    console.error('Unable to build application view', { err });
     return next(err);
   }
 };

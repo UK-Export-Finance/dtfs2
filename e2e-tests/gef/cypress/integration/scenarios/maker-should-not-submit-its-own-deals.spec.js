@@ -61,7 +61,6 @@ context('Submit application to UKEF', () => {
       applicationDetails.addContingentFacilityButton();
 
       // it displays the comments from the checker
-      applicationPreview.task();
       applicationPreview.comments();
       applicationPreview.comments().contains('nope');
 
