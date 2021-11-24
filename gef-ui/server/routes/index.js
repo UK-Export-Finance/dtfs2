@@ -25,6 +25,7 @@ const facilityConfirmDeletionRoutes = require('./facility-confirm-deletion');
 const returnToMaker = require('./return-to-maker');
 const supportingInformation = require('./supporting-information');
 const file = require('./file');
+const reviewUkefDecision = require('./review-ukef-decision');
 
 const router = express.Router();
 
@@ -55,5 +56,6 @@ router.use(facilityConfirmDeletionRoutes);
 router.use(returnToMaker);
 router.use(supportingInformation);
 router.use(file);
+router.use(reviewUkefDecision);
 
 module.exports = router;

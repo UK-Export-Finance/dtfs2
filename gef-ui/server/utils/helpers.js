@@ -229,6 +229,16 @@ const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
 const isNotice = (type) => type.toLowerCase().includes('notice');
 
+const isUkefReviewAvailable = (applicationStatus) => {
+  const acceptable = ['UKEF_APPROVED_WITH_CONDITIONS', 'UKEF_APPROVED_WITHOUT_CONDITIONS', 'UKEF_REFUSED'];
+  return acceptable.includes(applicationStatus);
+};
+
+const isUkefReviewPositive = (applicationStatus) => {
+  const acceptable = ['UKEF_APPROVED_WITH_CONDITIONS', 'UKEF_APPROVED_WITHOUT_CONDITIONS'];
+  return acceptable.includes(applicationStatus);
+};
+
 module.exports = {
   apiErrorHandler,
   getApplicationType,
@@ -242,4 +252,6 @@ module.exports = {
   validationErrorHandler,
   stringToBoolean,
   isNotice,
+  isUkefReviewAvailable,
+  isUkefReviewPositive,
 };

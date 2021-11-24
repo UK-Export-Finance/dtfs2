@@ -1,0 +1,105 @@
+{% extends "index.njk" %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block pageTitle%}
+    Review UKEF decision
+{% endblock %}
+
+{% block content %}
+
+    {% if errors %}
+        {{
+            govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            attributes: {
+                'data-cy': 'error-summary'
+                }
+            })
+        }}
+    {% endif %}
+
+    {% include "includes/application-preview/summary.njk" %}
+
+    {% if isUkefReviewAvailable %}
+    
+    <header data-cy="ukef-review-decision-page">
+        {% set bannerHtml %}
+            <h2>Review UKEF decision</h2>
+            {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
+                <p>UKEF has approved your application without conditions.</p>
+            {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
+                <p>UKEF has approved your application with the following conditions:</p>
+                <p>{{ ukefDecision[0].text }}</p>
+            {% elif applicationStatus == 'UKEF_REFUSED' %}
+                <p>The manual inclusion application was rejected for the following reasons:</p>
+                <p>{{ ukefDecision[0].text }}</p>
+            {% endif %}
+        {% endset %}
+
+        {{
+            mojBanner({
+                type: 'no-icon',
+                html: bannerHtml
+            })
+        }}
+    </header>
+
+    {% if isUkefReviewPositive %}
+        <div class="govuk-grid-row govuk-body">
+            <div class="govuk-grid-column-two-thirds">
+                <form method="POST" autocomplete="off">
+                    {{ govukRadios({
+                        idPrefix: "decision",
+                        name: "decision",
+                        fieldset: {
+                            legend: {
+                                text: "Do you want to accept these conditions and proceed with UKEF cover?",
+                                isPageHeading: true,
+                                classes: "govuk-fieldset__legend--xl"
+                            }
+                        },
+                        errorMessage: errors.fieldErrors.decision and {
+                        text: errors.fieldErrors.decision.text,
+                        attributes: {
+                            "data-cy": "decision-error"
+                        }
+                        },                   
+                        items: [
+                            {
+                                value: "true",
+                                text: "Yes, accept and proceed",
+                                attributes: {
+                                    "data-cy": "review-ukef-decision-true"
+                                },
+                                hint: {
+                                    "text": "We'll change your application to a manual inclusion notice."
+                                }
+                            }
+                        ]
+                    }) }}
+
+                    <div class="govuk-button-group">
+                        {{ govukButton({
+                            text: "Continue",
+                            attributes: {
+                                "data-cy": "continue-button"
+                            }
+                            })
+                        }}
+
+                        <a class="govuk-link" href="#" data-cy="cancel-button">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {% else %}
+        <h2>Pending UKEF decision</h2>
+    {% endif %}
+
+{% endblock %}

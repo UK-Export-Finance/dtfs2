@@ -63,7 +63,6 @@ context('Review application when returned to maker', () => {
       applicationDetails.addContingentFacilityButton();
 
       // it displays the comments from the checker
-      applicationPreview.task();
       applicationPreview.comments();
       applicationPreview.comments().contains('Nope');
 

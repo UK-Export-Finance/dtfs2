@@ -85,7 +85,21 @@ $govuk-new-link-styles: true;
   }
 }
 
+.moj-banner {
+  .moj-banner__message {
+    p {
+      &:first-child {
+        margin-top: 0;
+      }
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    > h2 {
+      margin-top: 0;
+    }
 
-#ukef-decision {
-    white-space: pre-line;
+    #ukef-review {
+      margin: 0 0 30px 0;
+    }
+  }
 }
