@@ -1,4 +1,8 @@
-const { filterActivities } = require('./filterActivities');
+const {
+  filter,
+  filterByComment,
+  filterActivities,
+} = require('./filterActivities');
 
 const MOCK_AUTHOR = {
   firstName: 'tester',
@@ -6,7 +10,7 @@ const MOCK_AUTHOR = {
   _id: 12243343242342,
 };
 
-const mockTasks = [
+const mockActivities = [
   {
     type: 'COMMENT',
     timestamp: 13345665,
@@ -40,105 +44,128 @@ const mockTasks = [
 const filtersObj = {
   filterType: 'comments-only',
 };
+
 describe('filterActivities', () => {
-  it('should filter by comment when comment filter used', () => {
-    const expected = [
-      {
-        type: 'COMMENT',
-        timestamp: 13345665,
-        text: 'test1',
-        author: MOCK_AUTHOR,
-        label: 'Comment added',
-      },
-      {
-        type: 'COMMENT',
-        timestamp: 13345665,
-        text: 'test2',
-        author: MOCK_AUTHOR,
-        label: 'Comment added',
-      },
-    ];
+  describe('filter', () => {
+    it('should filter activity types by the given FILTER_VALUE', () => {
+      const mockFilterValue = 'OTHER';
+      const result = filter(mockActivities, mockFilterValue);
 
-    const filtered = filterActivities(mockTasks, filtersObj);
-    expect(filtered).toEqual(expected);
+      const expected = mockActivities.filter((activitiy) => activitiy.type === mockFilterValue);
+      expect(result).toEqual(expected);
+    });
   });
 
-  it('if filtersObj set on all, should show all activities', () => {
-    const expected = [
-      {
-        type: 'COMMENT',
-        timestamp: 13345665,
-        text: 'test1',
-        author: MOCK_AUTHOR,
-        label: 'Comment added',
-      },
-      {
-        type: 'OTHER',
-        timestamp: 13345665,
-        text: '',
-        author: MOCK_AUTHOR,
-        label: 'Other',
-      },
-      {
-        type: 'COMMENT',
-        timestamp: 13345665,
-        text: 'test2',
-        author: MOCK_AUTHOR,
-        label: 'Comment added',
-      },
-      {
-        type: 'OTHER',
-        timestamp: 13345665,
-        text: 'test1',
-        author: MOCK_AUTHOR,
-        label: 'Other',
-      },
-    ];
+  describe('filterByComment', () => {
+    it('should filter activity types by `COMMENT`', () => {
+      const mockFilterValue = 'OTHER';
+      const result = filterByComment(mockActivities);
 
-    const filtersObjAll = {
-      filterType: 'all-activity',
-    };
-
-    const filtered = filterActivities(mockTasks, filtersObjAll);
-    expect(filtered).toEqual(expected);
+      const expected = mockActivities.filter((activitiy) => activitiy.type === 'COMMENT');
+      expect(result).toEqual(expected);
+    });
   });
 
-  it('if filtersObj set on null, should show all activities', () => {
-    const expected = [
-      {
-        type: 'COMMENT',
-        timestamp: 13345665,
-        text: 'test1',
-        author: MOCK_AUTHOR,
-        label: 'Comment added',
-      },
-      {
-        type: 'OTHER',
-        timestamp: 13345665,
-        text: '',
-        author: MOCK_AUTHOR,
-        label: 'Other',
-      },
-      {
-        type: 'COMMENT',
-        timestamp: 13345665,
-        text: 'test2',
-        author: MOCK_AUTHOR,
-        label: 'Comment added',
-      },
-      {
-        type: 'OTHER',
-        timestamp: 13345665,
-        text: 'test1',
-        author: MOCK_AUTHOR,
-        label: 'Other',
-      },
-    ];
+  describe('filterActivities', () => {
+    it('should filter by comment when comment filter used', () => {
+      const expected = [
+        {
+          type: 'COMMENT',
+          timestamp: 13345665,
+          text: 'test1',
+          author: MOCK_AUTHOR,
+          label: 'Comment added',
+        },
+        {
+          type: 'COMMENT',
+          timestamp: 13345665,
+          text: 'test2',
+          author: MOCK_AUTHOR,
+          label: 'Comment added',
+        },
+      ];
 
-    const filtersObjNull = {
-    };
+      const filtered = filterActivities(mockActivities, filtersObj);
+      expect(filtered).toEqual(expected);
+    });
 
-    const filtered = filterActivities(mockTasks, filtersObjNull);
-    expect(filtered).toEqual(expected);
+    it('if filtersObj set on all, should show all activities', () => {
+      const expected = [
+        {
+          type: 'COMMENT',
+          timestamp: 13345665,
+          text: 'test1',
+          author: MOCK_AUTHOR,
+          label: 'Comment added',
+        },
+        {
+          type: 'OTHER',
+          timestamp: 13345665,
+          text: '',
+          author: MOCK_AUTHOR,
+          label: 'Other',
+        },
+        {
+          type: 'COMMENT',
+          timestamp: 13345665,
+          text: 'test2',
+          author: MOCK_AUTHOR,
+          label: 'Comment added',
+        },
+        {
+          type: 'OTHER',
+          timestamp: 13345665,
+          text: 'test1',
+          author: MOCK_AUTHOR,
+          label: 'Other',
+        },
+      ];
+
+      const filtersObjAll = {
+        filterType: 'all-activity',
+      };
+
+      const filtered = filterActivities(mockActivities, filtersObjAll);
+      expect(filtered).toEqual(expected);
+    });
+
+    it('if filtersObj set on null, should show all activities', () => {
+      const expected = [
+        {
+          type: 'COMMENT',
+          timestamp: 13345665,
+          text: 'test1',
+          author: MOCK_AUTHOR,
+          label: 'Comment added',
+        },
+        {
+          type: 'OTHER',
+          timestamp: 13345665,
+          text: '',
+          author: MOCK_AUTHOR,
+          label: 'Other',
+        },
+        {
+          type: 'COMMENT',
+          timestamp: 13345665,
+          text: 'test2',
+          author: MOCK_AUTHOR,
+          label: 'Comment added',
+        },
+        {
+          type: 'OTHER',
+          timestamp: 13345665,
+          text: 'test1',
+          author: MOCK_AUTHOR,
+          label: 'Other',
+        },
+      ];
+
+      const filtersObjNull = {
+      };
+
+      const filtered = filterActivities(mockActivities, filtersObjNull);
+      expect(filtered).toEqual(expected);
+    });
   });
 });

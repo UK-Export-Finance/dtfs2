@@ -18,7 +18,6 @@ const addTfmDealData = async (deal) => {
     tfm,
   } = deal;
 
-  // 02/11 added array to store activities including comments
   const dealUpdate = {
     tfm: {
       ...tfm,
