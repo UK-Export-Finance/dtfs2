@@ -17,11 +17,10 @@
       }%}
 
       {{ govukPanel({
-        titleText: submissionType | capitalize + " submitted to UKEF",
         classes: "govuk-!-margin-bottom-7",
         attributes: {
           'data-cy': 'ukef-submission-confirmation'
-        }
+        },
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7"
       }) }}
