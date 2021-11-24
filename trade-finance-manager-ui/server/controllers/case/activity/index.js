@@ -1,6 +1,6 @@
 const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
-const { validationErrorHandler } = require('../helpers');
+const generateValidationErrors = require('../../../helpers/validation');
 const CONSTANTS = require('../../../constants');
 
 const MAX_COMMENT_LENGTH = 1000;
@@ -106,15 +106,23 @@ const postComment = async (req, res) => {
 
   try {
     if (comment.length > MAX_COMMENT_LENGTH) {
-      const errors = validationErrorHandler({
-        errRef: 'comment',
-        errMsg: `Comments must be ${MAX_COMMENT_LENGTH} characters or fewer`,
-      });
+      const errorsCount = 0;
+      let validationErrors = {};
+
+      validationErrors = generateValidationErrors(
+        'comment',
+        `Comments must be ${MAX_COMMENT_LENGTH} characters or fewer`,
+        errorsCount,
+        validationErrors,
+      );
+
+      console.log('--- validationErrors \n', validationErrors);
+
       return res.render('case/activity/activity-comment.njk', {
         dealId,
         user,
         maxCommentLength: MAX_COMMENT_LENGTH,
-        errors,
+        validationErrors,
         comment,
       });
     }

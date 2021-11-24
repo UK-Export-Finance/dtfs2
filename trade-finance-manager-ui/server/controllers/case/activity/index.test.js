@@ -3,6 +3,7 @@ import activityController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import CONSTANTS from '../../../constants';
+const generateValidationErrors = require('../../../helpers/validation');
 
 const res = mockRes();
 
@@ -261,7 +262,7 @@ describe('POST activity - post-comment', () => {
       api.getDeal = () => Promise.resolve(mockDeal);
     });
 
-    it('should return to comment box if longer than 1000 characters', async () => {
+    it('should return to comment box with errors if longer than 1000 characters', async () => {
       const req = {
         params: {
           _id: mockDeal._id,
@@ -278,6 +279,13 @@ describe('POST activity - post-comment', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           maxCommentLength: 1000,
+          validationErrors: generateValidationErrors(
+            'comment',
+            'Comments must be 1000 characters or fewer',
+            1,
+            {},
+          ),
+          comment: longComment,
         });
     });
     it('should return render activities page with all-activity filter after posting comment', async () => {

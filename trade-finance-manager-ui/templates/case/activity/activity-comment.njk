@@ -12,10 +12,10 @@
 
 {% block content %}
 
-  {% if errors %}
+  {% if validationErrors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: errors.errorSummary,
+      errorList: validationErrors.summary,
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -39,8 +39,8 @@
                     value: comment,
                     rows: "8",
                     maxlength: maxCommentLength,
-                    errorMessage: errors and errors.fieldErrors.comment and{
-                        text: errors.fieldErrors.comment.text,
+                    errorMessage: validationErrors and validationErrors.errorList.comment and {
+                        text: validationErrors.errorList.comment.text,
                         attributes: {
                         'data-cy': 'activity-comment-error'
                         }
