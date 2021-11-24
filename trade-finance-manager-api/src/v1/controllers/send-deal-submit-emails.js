@@ -8,10 +8,17 @@ const { generateFacilityLists } = require('../helpers/notify-template-formatters
 const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
 const sendTfmEmail = require('./send-tfm-email');
 
-// make sure the first task is `Match or Create Parties`
-// if the first task changes in the future, we might not want to send an email.
+/**
+ * Make sure the first task is either:
+ * - `Match or Create Parties`
+ * - 'Create or link this opportunity in Salesforce'
+ * Note: the Parties task is not created if a deal has exporter.partyUrn.
+ * If the first task changes in the future, and is not one of these,
+ * we might not want to send an email.
+ * */ 
 const shouldSendFirstTaskEmail = (firstTask) =>
-  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
+  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
+  || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE);
 
 const sendFirstTaskEmail = async (deal) => {
   const {
