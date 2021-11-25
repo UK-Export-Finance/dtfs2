@@ -1,4 +1,4 @@
-const { add, format } = require('date-fns');
+/* eslint-disable no-underscore-dangle */
 
 const wipeDB = require('../../wipeDB');
 const { STATUS, FACILITY_TYPE, ERROR } = require('../../../src/v1/gef/enums');
@@ -226,17 +226,11 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('start cover date to now date if shouldCoverStartOnSubmission is true', async () => {
-      const date = new Date(add(new Date(), {
-        days: 2,
-      }));
-      const endDate = new Date(add(new Date(), {
-        years: 2,
-      }));
+    it('removes start cover date if shouldCoverStartOnSubmission is true', async () => {
       const firstUpdate = {
         shouldCoverStartOnSubmission: false,
-        coverStartDate: date,
-        coverEndDate: endDate,
+        coverStartDate: new Date(),
+        coverEndDate: new Date(),
       };
       const secondUpdate = {
         shouldCoverStartOnSubmission: true,
@@ -247,16 +241,15 @@ describe(baseUrl, () => {
       const res1 = await as(aMaker).put(firstUpdate).to(`${baseUrl}/${item.body.details._id}`);
       expect(res1.status).toEqual(200);
       expect(res1.body.details.shouldCoverStartOnSubmission).toEqual(false);
-      expect(format(new Date(res1.body.details.coverStartDate), 'dd-MM-yyyy')).toEqual(format(new Date(date), 'dd-MM-yyyy'));
-      expect(format(new Date(res1.body.details.coverEndDate), 'dd-MM-yyyy')).toEqual(format(new Date(endDate), 'dd-MM-yyyy'));
+      expect(res1.body.details.coverStartDate).toEqual(expect.any(String));
+      expect(res1.body.details.coverEndDate).toEqual(expect.any(String));
 
       // second update - remove start date
       const res2 = await as(aMaker).put(secondUpdate).to(`${baseUrl}/${item.body.details._id}`);
       expect(res2.status).toEqual(200);
       expect(res2.body.details.shouldCoverStartOnSubmission).toEqual(true);
-      // format to date only as timestamps will be different as expected
-      expect(format(new Date(res2.body.details.coverStartDate), 'dd-MM-yyyy')).toEqual(format(new Date(), 'dd-MM-yyyy'));
-      expect(format(new Date(res2.body.details.coverEndDate), 'dd-MM-yyyy')).toEqual(format(new Date(endDate), 'dd-MM-yyyy'));
+      expect(res2.body.details.coverStartDate).toEqual(null);
+      expect(res2.body.details.coverEndDate).toEqual(expect.any(String));
     });
 
     it('fully update a facility ', async () => {
@@ -265,7 +258,7 @@ describe(baseUrl, () => {
         hasBeenIssued: true,
         name: 'test',
         shouldCoverStartOnSubmission: true,
-        coverStartDate: (new Date()).setHours(0, 0, 0, 0),
+        coverStartDate: null,
         coverEndDate: '2015-01-01T00:00:00.000Z',
         monthsOfCover: 12,
         details: ['test'],
@@ -286,7 +279,6 @@ describe(baseUrl, () => {
         details: {
           ...details,
           ...update,
-          coverStartDate: update.coverStartDate,
           updatedAt: expect.any(Number),
           value: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
@@ -297,6 +289,7 @@ describe(baseUrl, () => {
           required: [],
         },
       };
+
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
     });
@@ -307,7 +300,7 @@ describe(baseUrl, () => {
         hasBeenIssued: true,
         name: null,
         shouldCoverStartOnSubmission: true,
-        coverStartDate: (new Date()).setHours(0, 0, 0, 0),
+        coverStartDate: null,
         coverEndDate: '2015-01-01T00:00:00.000Z',
         monthsOfCover: 12,
         details: ['test'],
@@ -328,7 +321,6 @@ describe(baseUrl, () => {
         details: {
           ...details,
           ...update,
-          coverStartDate: update.coverStartDate,
           updatedAt: expect.any(Number),
           value: expect.any(Number),
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
@@ -399,7 +391,7 @@ describe(baseUrl, () => {
       const { details } = newFacility;
       const facility = await as(aMaker).post({ applicationId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
-      const update = { hasBeenIssued: true };
+      const update = { hasBeenIssued : true };
       await as(aMaker).put(update).to(`${baseUrl}/${facility.body.details._id}`);
 
       // check the deal
