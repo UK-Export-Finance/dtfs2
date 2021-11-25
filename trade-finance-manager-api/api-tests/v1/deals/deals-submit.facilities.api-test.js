@@ -12,7 +12,6 @@ const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-curr
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 
-
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
 ));
@@ -78,7 +77,8 @@ describe('/v1/deals', () => {
           const facilityValueInGBP = Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP, bond.coverPercentage,
+            facilityValueInGBP,
+            bond.coverPercentage,
           );
 
           expect(bond.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
@@ -98,7 +98,8 @@ describe('/v1/deals', () => {
           const facilityValueInGBP = Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP, loan.coverPercentage,
+            facilityValueInGBP,
+            loan.coverPercentage,
           );
 
           expect(loan.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
@@ -115,7 +116,6 @@ describe('/v1/deals', () => {
           const bond = body.facilities.find(({ facilityType }) =>
             facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-
           expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
           expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
         });
@@ -129,7 +129,6 @@ describe('/v1/deals', () => {
 
           const loan = body.facilities.find(({ facilityType }) =>
             facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
-
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
           expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);

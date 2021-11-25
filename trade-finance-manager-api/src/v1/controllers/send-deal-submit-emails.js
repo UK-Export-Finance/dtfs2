@@ -15,7 +15,7 @@ const sendTfmEmail = require('./send-tfm-email');
  * Note: the Parties task is not created if a deal has exporter.partyUrn.
  * If the first task changes in the future, and is not one of these,
  * we might not want to send an email.
- * */ 
+ * */
 const shouldSendFirstTaskEmail = (firstTask) =>
   (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
   || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE);
@@ -66,7 +66,6 @@ const sendMiaAcknowledgement = async (deal) => {
     dealType,
     submissionType,
     maker,
-    facilities,
   } = deal;
 
   if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {

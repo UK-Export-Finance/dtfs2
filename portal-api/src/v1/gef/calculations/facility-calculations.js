@@ -4,6 +4,8 @@ const {
 } = require('../../../utils/number');
 
 const calculateUkefExposure = (requestedUpdate, existingFacility) => {
+  let ukefExposure;
+
   let latestValue = (existingFacility && existingFacility.value);
   let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
 

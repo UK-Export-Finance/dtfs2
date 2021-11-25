@@ -2,7 +2,6 @@ const bssEmailVariables = require('./bss-email-variables');
 const { generateFacilitiesListString } = require('../../helpers/notify-template-formatters');
 const getFacilitiesByType = require('../../helpers/get-facilities-by-type');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
-const CONSTANTS = require('../../../constants');
 const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
 
 describe('generate MIA confirmation email variables - BSS', () => {
