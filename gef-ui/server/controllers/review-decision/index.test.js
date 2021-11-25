@@ -16,7 +16,7 @@ const MockRequest = () => {
   req.body = { decision: true };
   req.query = {};
   req.params.applicationId = '1234';
-  req.url = '/gef/application-details/1234/review-ukef-decision';
+  req.url = '/gef/application-details/1234/review-decision';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -61,7 +61,7 @@ const MockMakerUserResponse = () => ({
   timezone: 'Europe/London',
 });
 
-describe('controller/review-ukef-decision', () => {
+describe('controller/review-decision', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;

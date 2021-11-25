@@ -373,14 +373,14 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it('renders `review-ukef-decision` when page requested is `review-ukef-decision` ', async () => {
+      it('renders `review-decision` when page requested is `review-decision` ', async () => {
         mockApplicationResponse.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-        await applicationDetails(MockRequestUrl('/gef/appliction/123/review-ukef-decision'), mockResponse);
+        await applicationDetails(MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);
 
         expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/review-ukef-decision.njk', expect.objectContaining({
+          .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
           }));
       });

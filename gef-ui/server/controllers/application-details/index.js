@@ -121,7 +121,7 @@ const stateToPartial = (status, url) => {
   };
 
   const partials = {
-    'review-ukef-decision': 'review-ukef-decision',
+    'review-decision': 'review-decision',
     'confirm-cover-start-date': 'confirm-cover-start-date',
   };
 
