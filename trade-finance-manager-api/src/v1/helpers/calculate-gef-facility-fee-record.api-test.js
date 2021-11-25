@@ -5,7 +5,6 @@ const {
   calculateFeeAmount,
   calculateGefFacilityFeeRecord,
 } = require('./calculate-gef-facility-fee-record');
-const { formattedNumber } = require('../../utils/number');
 
 describe('calculate-gef-facility-fee-record', () => {
   // for drawn amount

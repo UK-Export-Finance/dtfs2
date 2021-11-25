@@ -250,16 +250,16 @@ exports.update = async (req, res) => {
 
     if (!userHasAccessTo(req.user, deal)) {
       return res.status(401).send();
-    } else {
-      const updatedDeal = await updateDeal(
-        dealId,
-        req.body,
-        req.user,
-        deal,
-      );
-
-      return res.status(200).json(updatedDeal);
     }
+
+    const updatedDeal = await updateDeal(
+      dealId,
+      req.body,
+      req.user,
+      deal,
+    );
+
+    return res.status(200).json(updatedDeal);
   });
 };
 

@@ -113,10 +113,10 @@ const update = async (id, updateBody) => {
 
   if (existingFacility) {
     // update facilitiesUpdated timestamp in the deal
-    const dealUpdate = {
+    const dealUpdateObj = {
       facilitiesUpdated: new Date().valueOf(),
     };
-    const update = new Application(dealUpdate);
+    const dealUpdate = new Application(dealUpdateObj);
 
     await dealsCollection.findOneAndUpdate(
       { _id: { $eq: ObjectID(existingFacility.applicationId) } },
