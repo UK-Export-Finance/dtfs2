@@ -258,7 +258,18 @@ type TFMDealDecision  {
   userFullName: String
   timestamp: String
 }
-
+type TFMAuthor {
+  firstName: String
+  lastName: String
+  _id: String
+}
+type TFMActivity {
+  type: String
+  timestamp: Int
+  text: String
+  author: TFMAuthor
+  label: String
+}
 type TFMDealData {
   parties: TFMParties
   product: String
@@ -273,6 +284,7 @@ type TFMDealData {
   dateReceived: String
   estore: TFMEstore
   leadUnderwriter: String
+  activities: [TFMActivity]
 }
 
 type PremiumScheduleData {
@@ -311,9 +323,14 @@ input TasksFilters {
   teamId: String
 }
 
+input ActivityFilters {
+  filterType: String
+}
+
 input DealInput {
   _id: String!
   tasksFilters: TasksFilters
+  activityFilters: ActivityFilters
 }
 
 input DealsSortBy {
@@ -427,6 +444,20 @@ input TFMLeadUnderwriterInput {
   userId: String
 }
 
+input TFMAuthorInput {
+  firstName: String
+  lastName: String
+  _id: String
+}
+
+input TFMActivityInput {
+  type: String
+  timestamp: Int
+  text: String
+  author: TFMAuthorInput
+  label: String
+}
+
 type TeamMember {
   _id: String
   firstName: String
@@ -459,6 +490,7 @@ type Mutation {
   updateFacilityRiskProfile(_id: ID!, facilityUpdate: TFMFacilityRiskProfileInput): TFMFacilityData
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
   updateLeadUnderwriter(dealId: ID!, leadUnderwriterUpdate: TFMLeadUnderwriterInput): TFMDealData
+  createActivity(dealId: ID!, activityUpdate: TFMActivityInput): TFMDealData
 }
 `;
 

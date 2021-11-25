@@ -5,6 +5,7 @@ import {
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
+import activityController from '../../controllers/case/activity';
 
 describe('routes - case', () => {
   beforeEach(() => {
@@ -17,7 +18,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(23);
+    expect(get).toHaveBeenCalledTimes(24);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -62,8 +63,12 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 
+    expect(get).toHaveBeenCalledWith('/:_id/activity', activityController.getActivity);
+
+    expect(get).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.getCommentBox);
+
     // POST routes
-    expect(post).toHaveBeenCalledTimes(14);
+    expect(post).toHaveBeenCalledTimes(16);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -92,5 +97,9 @@ describe('routes - case', () => {
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
+
+    expect(post).toHaveBeenCalledWith('/:_id/activity', activityController.filterActivities);
+
+    expect(post).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.postComment);
   });
 });

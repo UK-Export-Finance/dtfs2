@@ -14,9 +14,13 @@ const getAPI = async (type) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => ({
-    status: err.response.status,
+    status: err.response
+      ? err.response.status
+      : err,
     data: {
-      error: err.response.data.error ? err.response.data.error : err,
+      error: err.response
+        ? err.response.data.error
+        : err,
     },
   }));
 

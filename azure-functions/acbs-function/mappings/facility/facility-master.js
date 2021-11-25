@@ -50,6 +50,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
 
   return {
+    _id: deal._id,
     dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId
       ? facility.facilitySnapshot.ukefFacilityId.padStart(10, 0)
@@ -58,7 +59,8 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
-    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
+    capitalConversionFactorCode:
+      helpers.getCapitalConversionFactorCode(facility),
     productTypeName:
       facility.facilityType
       || facility.facilitySnapshot.type
@@ -69,9 +71,11 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
-    delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType
-      ? deal.dealSnapshot.submissionType
-      : deal.dealSnapshot.details.submissionType),
+    delegationType: helpers.getDelegationType(
+      deal.dealSnapshot.submissionType
+        ? deal.dealSnapshot.submissionType
+        : deal.dealSnapshot.details.submissionType,
+    ),
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     facilityStageCode,
     exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
@@ -81,17 +85,15 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
     riskStatusCode: CONSTANTS.FACILITY.RISK.STATUS.TYPE03,
     effectiveDate,
-    foreCastPercentage: helpers.getForecastPercentage(
-      facility.facilitySnapshot,
-      deal.dealSnapshot.dealType,
-    ),
+    foreCastPercentage: helpers.getForecastPercentage(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     issueDate,
     description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
     agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-      ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
-      : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
+    obligorName:
+      deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+        ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
+        : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   };
 };

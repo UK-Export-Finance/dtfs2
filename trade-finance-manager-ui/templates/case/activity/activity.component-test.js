@@ -1,4 +1,5 @@
 const pageRenderer = require('../../../component-tests/pageRenderer');
+
 const page = '../templates/case/activity/activity.njk';
 const render = pageRenderer(page);
 
@@ -13,7 +14,7 @@ describe(page, () => {
     },
     user: {
       timezone: 'Europe/London',
-    }
+    },
   };
 
   beforeEach(() => {
@@ -24,7 +25,16 @@ describe(page, () => {
     wrapper.expectText('[data-cy="activity-heading"]').toRead('Activity and comments');
   });
 
-  it('should render dealSubmitted component', () => {
-    wrapper.expectElement('[data-cy="activity-deal-submitted"]').toExist();
+  it('should render add a comment button', () => {
+    wrapper.expectElement('[data-cy="add-comment-button"]').toExist();
   });
+
+  it('should render activity filter radios', () => {
+    wrapper.expectElement('[data-cy="activity-comment-radio-button-all-activities"]').toExist();
+    wrapper.expectElement('[data-cy="activity-comment-radio-button-comments-only"]').toExist();
+  });
+
+  it('should render timeline', () => {
+   wrapper.expectElement('[data-cy="activities-timeline"]').toExist();
+ });
 });
