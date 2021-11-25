@@ -40,9 +40,9 @@
 
     {% if isUkefReviewAvailable %}
     
-    <header data-cy="ukef-review-decision-page">
+    <header>
         {% set bannerHtml %}
-            <h2>Review UKEF decision</h2>
+            <h2 data-cy="ukef-review-decision-heading">Review UKEF decision</h2>
             {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
                 <p>UKEF has approved your application without conditions.</p>
             {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
@@ -87,7 +87,7 @@
                                 value: "true",
                                 text: "Yes, accept and proceed",
                                 attributes: {
-                                    "data-cy": "review-ukef-decision-true"
+                                    "data-cy": "review-decision-true"
                                 },
                                 hint: {
                                     "text": "We'll change your application to a manual inclusion notice."

@@ -3,7 +3,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block pageTitle %}
-    Confirm cover start date
+    Confirm cover start date for issued facilities
 {% endblock %}
 
 {% block content %}
@@ -35,8 +35,8 @@
         </div>
     </div>
 
-        <header data-cy="confirm-cover-start-date-page">
-            <h1>Confirm cover start date for issued facilities</h1>
+        <header>
+            <h1 data-cy="confirm-cover-start-date-heading">Confirm cover start date for issued facilities</h1>
         </header>
 
     {% if isUkefReviewAvailable %}
