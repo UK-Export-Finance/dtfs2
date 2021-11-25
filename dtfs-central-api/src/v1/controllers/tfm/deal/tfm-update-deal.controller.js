@@ -74,8 +74,8 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
    * */
   if (tfmUpdateHasActivities) {
     dealUpdate.tfm.activities = [
-      ...existingDealActivities,
       tfmUpdate.activities,
+      ...existingDealActivities,
     ];
   }
 
