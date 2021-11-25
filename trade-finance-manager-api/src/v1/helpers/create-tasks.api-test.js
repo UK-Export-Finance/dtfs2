@@ -35,6 +35,13 @@ describe('defaults - tasks creation', () => {
       },
     ];
 
+    const mockGroupTasksWithConditionalFlags = [
+      { title: 'Task A', team: 'Test team' },
+      { title: 'Task B', team: 'Test team', isConditional: true },
+      { title: 'Task C', team: 'Test team' },
+      { title: 'Task D', team: 'Test team', isConditional: true },
+    ];
+
     it('should return array of tasks with incremented task id', () => {
       const result = createGroupTasks(mockGroupTasks, 2);
 
@@ -87,21 +94,14 @@ describe('defaults - tasks creation', () => {
 
     describe('when no additionalTasks are passed and a task has isConditional flag', () => {
       it('should NOT add isConditional tasks', () => {
-        const mockGroupTasks = [
-          { title: 'Task A', team: 'Test team' },
-          { title: 'Task B', team: 'Test team', isConditional: true },
-          { title: 'Task C', team: 'Test team' },
-          { title: 'Task D', team: 'Test team', isConditional: true },
-        ];
-
         const mockGroupId = 1;
 
         const result = createGroupTasks(
-          mockGroupTasks,
+          mockGroupTasksWithConditionalFlags,
           mockGroupId,
         );
 
-        const conditionalTasks = mockGroupTasks.filter((task) => task.isConditional === true);
+        const conditionalTasks = mockGroupTasksWithConditionalFlags.filter((task) => task.isConditional === true);
 
         const conditionalTask1 = conditionalTasks[0];
         const conditionalTask2 = conditionalTasks[1];
@@ -116,13 +116,6 @@ describe('defaults - tasks creation', () => {
 
     describe('when additionalTasks array of strings is passed', () => {
       it('should return any additional tasks (with isConditional flag) in a group that match a title in additionalTasks, retaining incremental task ids', () => {
-        const mockGroupTasks = [
-          { title: 'Task A', team: 'Test team' },
-          { title: 'Task B', team: 'Test team', isConditional: true },
-          { title: 'Task C', team: 'Test team' },
-          { title: 'Task D', team: 'Test team', isConditional: true },
-        ];
-
         const mockGroupId = 1;
 
         const mockAdditionalTasks = [
@@ -131,7 +124,7 @@ describe('defaults - tasks creation', () => {
         ];
 
         const result = createGroupTasks(
-          mockGroupTasks,
+          mockGroupTasksWithConditionalFlags,
           mockGroupId,
           mockAdditionalTasks,
         );
@@ -140,14 +133,14 @@ describe('defaults - tasks creation', () => {
           {
             id: '1',
             groupId: mockGroupId,
-            ...mockGroupTasks[0],
+            ...mockGroupTasksWithConditionalFlags[0],
             ...NEW_TASK,
             status: 'To do',
             canEdit: true,
           },
-          { id: '2', groupId: mockGroupId, ...mockGroupTasks[1], ...NEW_TASK },
-          { id: '3', groupId: mockGroupId, ...mockGroupTasks[2], ...NEW_TASK },
-          { id: '4', groupId: mockGroupId, ...mockGroupTasks[3], ...NEW_TASK },
+          { id: '2', groupId: mockGroupId, ...mockGroupTasksWithConditionalFlags[1], ...NEW_TASK },
+          { id: '3', groupId: mockGroupId, ...mockGroupTasksWithConditionalFlags[2], ...NEW_TASK },
+          { id: '4', groupId: mockGroupId, ...mockGroupTasksWithConditionalFlags[3], ...NEW_TASK },
         ];
 
         expect(result).toEqual(expected);
