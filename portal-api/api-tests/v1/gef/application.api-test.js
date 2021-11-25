@@ -392,7 +392,6 @@ describe(baseUrl, () => {
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
 
-
         // check that the facility has updated submittedAsIssuedDate and cover start date is set to todays date
         const getFacilityResponse = await as(aMaker).get(`${facilitiesUrl}/${facilityId}`);
 
