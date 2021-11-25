@@ -99,9 +99,11 @@ function buildView(app, previewMode) {
 }
 
 const stateToPartial = (status, url) => {
-  let req = url.split('/');
-  req = req[req.length - 1];
-
+  let req;
+  if (url) {
+    req = url.split('/');
+    req = req[req.length - 1];
+  }
   // Behaviour depending on application state
   const template = {
     DRAFT: 'application-details',

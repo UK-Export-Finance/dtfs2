@@ -2,6 +2,7 @@
 {% from "moj/components/banner/macro.njk" import mojBanner %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block pageTitle%}
@@ -22,7 +23,20 @@
         }}
     {% endif %}
 
+    {% set hide_back = 1 %}
     {% include "includes/application-preview/summary.njk" %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {{ govukBackLink({
+                text: "Back",
+                href: "/gef/application-details/" + applicationId,
+                attributes: {
+                'data-cy': 'back-link'
+                }
+            }) }}
+        </div>
+    </div>
 
     {% if isUkefReviewAvailable %}
     
@@ -91,7 +105,7 @@
                             })
                         }}
 
-                        <a class="govuk-link" href="#" data-cy="cancel-button">Cancel</a>
+                        <a class="govuk-link" href="/gef/application-details/{{ applicationId }}" data-cy="cancel-button">Cancel</a>
                     </div>
                 </form>
             </div>

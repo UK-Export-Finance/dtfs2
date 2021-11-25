@@ -1,17 +1,19 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full-from-desktop">
-    {{ govukBackLink({
-      text: "Back",
-      href: "/dashboard",
-      attributes: {
-        'data-cy': 'back-link'
-      }
-    }) }}
+{% if not hide_back %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      {{ govukBackLink({
+        text: "Back",
+        href: "/dashboard",
+        attributes: {
+          'data-cy': 'back-link'
+        }
+      }) }}
+    </div>
   </div>
-</div>
+{% endif %}
 
 {% include "includes/application-details/applicationReferenceAndActions.njk" %}
 
