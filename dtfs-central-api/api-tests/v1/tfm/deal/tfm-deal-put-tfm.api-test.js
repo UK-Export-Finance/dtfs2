@@ -232,7 +232,7 @@ describe('/v1/tfm/deal/:id', () => {
       expect(dealAfterUpdate.deal.tfm.activities).toEqual([]);
     });
 
-    it('should add correct activity object to tfm', async () => {
+    it('should add correct activity object to tfm in reverse order', async () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
@@ -293,7 +293,7 @@ describe('/v1/tfm/deal/:id', () => {
 
       const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
 
-      expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentObj, secondCommentObj]);
+      expect(secondCommentUpdate.deal.tfm.activities).toEqual([secondCommentObj, commentObj]);
     });
   });
 });
