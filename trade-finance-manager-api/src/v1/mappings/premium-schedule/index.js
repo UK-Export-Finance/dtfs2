@@ -21,7 +21,7 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   mapped.guaranteeFeePercentage = facility.guaranteeFee;
   mapped.guaranteePercentage = facility.coverPercentage;
 
-  mapped.dayBasis = facility.dayCountBasis;
+  mapped.dayBasis = String(facility.dayCountBasis);
   mapped.exposurePeriod = facilityExposurePeriod;
   mapped.maximumLiability = facility.ukefExposure;
 
