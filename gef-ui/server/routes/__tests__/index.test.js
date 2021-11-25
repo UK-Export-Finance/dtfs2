@@ -8,6 +8,7 @@ import applicationDetailsRoutes from '../application-details';
 import applicationAbandonRoutes from '../application-abandon';
 import applicationSubmissionRoutes from '../application-submission';
 import submitToUkefRoutes from '../submit-to-ukef';
+import reviewDecisionRoutes from '../review-decision';
 import companiesHouseRoutes from '../companies-house';
 import exportersAddressRoutes from '../exporters-address';
 import enterExportersCorrespondenceAddressRoutes from '../enter-exporters-correspondence-address';
@@ -54,6 +55,7 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(applicationAbandonRoutes);
     expect(useSpy).toHaveBeenCalledWith(applicationSubmissionRoutes);
     expect(useSpy).toHaveBeenCalledWith(submitToUkefRoutes);
+    expect(useSpy).toHaveBeenCalledWith(reviewDecisionRoutes);
     expect(useSpy).toHaveBeenCalledWith(companiesHouseRoutes);
     expect(useSpy).toHaveBeenCalledWith(exportersAddressRoutes);
     expect(useSpy).toHaveBeenCalledWith(enterExportersCorrespondenceAddressRoutes);
