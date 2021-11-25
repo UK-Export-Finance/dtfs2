@@ -47,10 +47,10 @@
                 <p>UKEF has approved your application without conditions.</p>
             {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
                 <p>UKEF has approved your application with the following conditions:</p>
-                <p>{{ ukefDecision[0].text }}</p>
+                <p>{{ ukefDecision[0].text | safe }}</p>
             {% elif applicationStatus == 'UKEF_REFUSED' %}
                 <p>The manual inclusion application was rejected for the following reasons:</p>
-                <p>{{ ukefDecision[0].text }}</p>
+                <p>{{ ukefDecision[0].text |safe }}</p>
             {% endif %}
         {% endset %}
 
