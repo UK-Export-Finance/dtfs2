@@ -11,7 +11,6 @@ const applicationPreview = {
   exporter: () => cy.get('[data-cy="exporter"]'),
   checkedBy: () => cy.get('[data-cy="checked-by"]'),
 
-  task: () => cy.get('[data-cy="task"]'),
   comments: () => cy.get('[data-cy="latest-comment"]'),
 
   applicationPreviewPage: () => cy.get('[data-cy="application-preview-page"]'),

@@ -1,12 +1,14 @@
 {% from "moj/components/banner/macro.njk" import mojBanner %}
 
 <header data-cy="application-preview-page">
-  <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType }}</h1>
 
   {% set bannerHtml %}
-    <h2 class="govuk-heading-m" data-cy="task">
-      Task: check {{ applicationType | lower }}
-    </h2>
+
+    {% if isUkefReviewAvailable %}
+      <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
+        <a href="{{ applicationId }}/review-decision" class="govuk-link">Review UKEF decision</a>
+      </div>
+    {% endif %}
 
     <div data-cy="latest-comment">
       {% for comment in comments %}
@@ -16,6 +18,7 @@
         <p>{{ comment.comment }}</p>
       {% endfor %}
     </div>
+
   {% endset %}
 
   {{ mojBanner({

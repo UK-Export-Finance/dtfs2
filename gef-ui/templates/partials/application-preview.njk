@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-{{ applicationType }}
+  {{ applicationType | capitalize }}
 {% endblock %}
 
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
@@ -16,10 +16,12 @@
   {% include "includes/application-preview/summary.njk" %}
   {% include "includes/application-preview/task-comments.njk" %}
 
-
-   {% if ukefDecision.length  and ukefDecision[0].decision == 'Declined' %}
+  <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType | capitalize }}</h1>
+  
+   {% if not isUkefReviewPositive %}
       {% include "includes/application-preview/ukef-decision.njk" %}
    {% endif %}
+  
   <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
 
   {% include "includes/application-preview/about-exporter.njk" %}

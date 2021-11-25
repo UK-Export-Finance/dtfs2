@@ -52,6 +52,7 @@ class Application {
         'additionalRefName',
         'eligibility',
         'facilitiesUpdated',
+        'ukefDecisionAccepted',
       ];
 
       if (req.eligibility) {

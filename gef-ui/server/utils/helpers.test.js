@@ -8,6 +8,8 @@ import {
   isTrueSet,
   stringToBoolean,
   isNotice,
+  isUkefReviewAvailable,
+  isUkefReviewPositive,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -425,6 +427,30 @@ describe('isNotice()', () => {
 
   it('Should return FALSE for any `Application` submission type i.e. MIA with mixed case', () => {
     expect(isNotice('manUAL InClUsIoN APPLICATION')).toEqual(false);
+  });
+});
+
+describe('isUkefReviewAvailable()', () => {
+  it('Should return TRUE for application with UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_REFUSED status', () => {
+    expect(isUkefReviewAvailable('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual(true);
+  });
+
+  it('Should return FALSE for application with non UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_REFUSED status', () => {
+    expect(isUkefReviewAvailable('UKEF_ACKNOWLEDGED')).toEqual(false);
+  });
+});
+
+describe('isUkefReviewPositive()', () => {
+  it('Should return TRUE for application with UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
+    expect(isUkefReviewPositive('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual(true);
+  });
+
+  it('Should return TRUE for application with UKEF_APPROVED_WITH_CONDITIONS status', () => {
+    expect(isUkefReviewPositive('UKEF_APPROVED_WITH_CONDITIONS')).toEqual(true);
+  });
+
+  it('Should return FALSE for application with UKEF_REFUSED status', () => {
+    expect(isUkefReviewPositive('UKEF_REFUSED')).toEqual(false);
   });
 });
 

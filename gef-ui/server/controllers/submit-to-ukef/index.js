@@ -30,7 +30,7 @@ const createSubmissionToUkef = async (req, res) => {
   try {
     checker = await api.getUserDetails(user._id, userToken);
   } catch (err) {
-    console.error(err);
+    console.error('Unable to get the user details.', { err });
   }
 
   try {
@@ -69,7 +69,7 @@ const createSubmissionToUkef = async (req, res) => {
       isNotice: isNotice(application.submissionType),
     });
   } catch (err) {
-    console.error(err);
+    console.error('Unable to post submit to UKEF', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };
