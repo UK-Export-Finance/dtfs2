@@ -6,7 +6,14 @@ const { mapBssEwcsFacility } = require('../map-submitted-deal/map-bss-ewcs-facil
 const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
 
 describe('mapPremiumScheduleFacility', () => {
-  const mockFacility = mapBssEwcsFacility(MOCK_FACILIIES[1]);
+  const mappedFacility = mapBssEwcsFacility(MOCK_FACILIIES[1]);
+
+  const mockFacility = {
+    ...mappedFacility,
+    // NOTE: BSS dayCountBasis is a string. GEF has an integer.
+    // Mock a number so that we can test it gets converted to a string.
+    dayCountBasis: Number(mappedFacility.dayCountBasis),
+  };
 
   const mockExposurePeriod = 25;
 
@@ -27,7 +34,7 @@ describe('mapPremiumScheduleFacility', () => {
 
     const expected = {
       cumulativeAmount: mockFacility.disbursementAmount,
-      dayBasis: mockFacility.dayCountBasis,
+      dayBasis: String(mockFacility.dayCountBasis),
       exposurePeriod: mockExposurePeriod,
       facilityURN: mockFacility.ukefFacilityID,
       guaranteeCommencementDate: mockGuaranteeDates.guaranteeCommencementDate,
