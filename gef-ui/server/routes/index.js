@@ -26,6 +26,7 @@ const returnToMaker = require('./return-to-maker');
 const supportingInformation = require('./supporting-information');
 const file = require('./file');
 const reviewUkefDecision = require('./review-ukef-decision');
+const confirmCoverStartDate = require('./confirm-cover-start-date');
 
 const router = express.Router();
 
@@ -57,5 +58,6 @@ router.use(returnToMaker);
 router.use(supportingInformation);
 router.use(file);
 router.use(reviewUkefDecision);
+router.use(confirmCoverStartDate);
 
 module.exports = router;

@@ -12,8 +12,7 @@ const acceptUkefDecision = async (req, res) => {
 
       application.ukefDecisionAccepted = true;
       await api.updateApplication(applicationId, application);
-      req.url = 'confirm-cover-start-date';
-      return applicationDetails(req, res);
+      return res.redirect(`/gef/application-details/${applicationId}/confirm-cover-start-date`);
     }
     const errors = validationErrorHandler({
       errRef: 'decision',
