@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template ">
   <head>
     <meta charset="utf-8" />
-    <title{% if pageTitleLang %} lang="{{ pageTitleLang }}"{% endif %}>{% block pageTitle %}{% endblock %} - UK Export Finance</title>
+    <title {% if pageTitleLang %} lang="{{ pageTitleLang }}"{% endif %}>{% block pageTitle %}{% endblock %} - UK Export Finance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0c0c" />
 
@@ -40,7 +40,7 @@
     {% include "includes/header.njk" %}
     {% include "includes/primary-navigation.njk" %}
     <div class="govuk-width-container">
-    
+
       {% if primaryNav == "reports" %}
       {% include "includes/sub-navigation.njk" %}
       {% endif %}

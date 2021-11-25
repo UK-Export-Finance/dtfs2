@@ -1,7 +1,6 @@
 // commands used to interact directly with TFM UI
 Cypress.Commands.add('login', require('./ui/logIn'));
 
-
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
 // right now we only have TFM API that can find a deal, Portal API does the rest.
@@ -12,6 +11,8 @@ Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'
 
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 Cypress.Commands.add('deleteTfmDeals', require('./central-api/deleteTfmDeals'));
+
+Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
 
 Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
 Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));
