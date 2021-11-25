@@ -12,7 +12,6 @@ const NEW_TASK = ({
 const createGroupTasks = (
   tasks,
   groupId,
-  excludedTasks = [],
   additionalTasks = [],
 ) => {
   const mappedTasks = [];
@@ -23,16 +22,15 @@ const createGroupTasks = (
 
     /**
      * Only create the task if:
-     * - task title is NOT in the excludedTasks array
-     * - task is NOT a conditional task
-     * - OR is a conditional task and title is listed in the additionalTasks array
+     * - task title is NOT conditional and always applies.
+     * - OR the task is conditional and the task title is listed in additionalTasks array
      * */
     const shouldCreateTask = (
-      (!excludedTasks.includes(task.title) && !task.isConditional)
+      !task.isConditional
       || (task.isConditional && additionalTasks.includes(task.title)));
 
     if (shouldCreateTask) {
-      // do not rely on index - otherwise if a task is excluded,
+      // do not rely on index - otherwise if a task is conditional,
       // we can end up with e.g id 1 then skipping to id 3
       taskIdCount += 1;
 
@@ -56,27 +54,25 @@ const createGroupTasks = (
   return mappedTasks;
 };
 
-const createTasksAIN = (excludedTasks, additionalTasks) => [
+const createTasksAIN = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
     id: 1,
     groupTasks: createGroupTasks(
       CONSTANTS.TASKS.AIN.GROUP_1.TASKS,
       1,
-      excludedTasks,
       additionalTasks,
     ),
   },
 ];
 
-const createTasksMIA = (excludedTasks, additionalTasks) => [
+const createTasksMIA = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_1.GROUP_TITLE,
     id: 1,
     groupTasks: createGroupTasks(
       CONSTANTS.TASKS.MIA.GROUP_1.TASKS,
       1,
-      excludedTasks,
       additionalTasks,
     ),
   },
@@ -86,7 +82,6 @@ const createTasksMIA = (excludedTasks, additionalTasks) => [
     groupTasks: createGroupTasks(
       CONSTANTS.TASKS.MIA.GROUP_2.TASKS,
       2,
-      excludedTasks,
       additionalTasks,
     ),
   },
@@ -96,7 +91,6 @@ const createTasksMIA = (excludedTasks, additionalTasks) => [
     groupTasks: createGroupTasks(
       CONSTANTS.TASKS.MIA.GROUP_3.TASKS,
       3,
-      excludedTasks,
       additionalTasks,
     ),
   },
@@ -106,7 +100,6 @@ const createTasksMIA = (excludedTasks, additionalTasks) => [
     groupTasks: createGroupTasks(
       CONSTANTS.TASKS.MIA.GROUP_4.TASKS,
       4,
-      excludedTasks,
       additionalTasks,
     ),
   },
@@ -114,17 +107,16 @@ const createTasksMIA = (excludedTasks, additionalTasks) => [
 
 const createTasks = (
   submissionType,
-  excludedTasks,
   additionalTasks,
 ) => {
   let tasks = [];
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    tasks = createTasksAIN(excludedTasks, additionalTasks);
+    tasks = createTasksAIN(additionalTasks);
   }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    tasks = createTasksMIA(excludedTasks, additionalTasks);
+    tasks = createTasksMIA(additionalTasks);
   }
 
   return tasks;

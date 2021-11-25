@@ -3,7 +3,7 @@ const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');
 const formattedTimestamp = require('../../../src/v1/formattedTimestamp');
-const { createTasks } = require('../../../src/v1/helpers/create-tasks');
+const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
 const submitDeal = require('../utils/submitDeal');
 
@@ -49,18 +49,15 @@ describe('/v1/deals', () => {
     describe('deal/case tasks', () => {
       describe('when deal is AIN', () => {
         it('adds AIN tasks to the deal', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_NO_COMPANIES_HOUSE));
+          const { status, body: submittedDeal } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_NO_COMPANIES_HOUSE));
 
           expect(status).toEqual(200);
 
-          const mockExcludedTasks = [];
+          const taskCreation = await createDealTasks(submittedDeal);
 
-          const expected = createTasks(
-            MOCK_DEAL_AIN_NO_COMPANIES_HOUSE.details.submissionType,
-            mockExcludedTasks,
-          );
+          const expected = taskCreation.tfm.tasks;
 
-          expect(body.tfm.tasks).toEqual(expected);
+          expect(submittedDeal.tfm.tasks).toEqual(expected);
         });
 
         it('should call externalApis.sendEmail for first task email', async () => {
@@ -98,15 +95,15 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIA', () => {
         it('adds MIA tasks to the deal', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
+          const { status, body: submittedDeal } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
 
           expect(status).toEqual(200);
 
-          const expected = createTasks(
-            MOCK_DEAL_MIA_SUBMITTED.details.submissionType,
-          );
+          const taskCreation = await createDealTasks(submittedDeal);
 
-          expect(body.tfm.tasks).toEqual(expected);
+          const expected = taskCreation.tfm.tasks;
+
+          expect(submittedDeal.tfm.tasks).toEqual(expected);
         });
 
         it('should call externalApis.sendEmail for first task email', async () => {
@@ -148,30 +145,6 @@ describe('/v1/deals', () => {
         it('should NOT call externalApis.sendEmail', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
           expect(sendEmailApiSpy).not.toHaveBeenCalled();
-        });
-      });
-
-      describe('when a deal has tfm.parties.exporter.partyUrn', () => {
-        // NOTE: from TFM submission logic:
-        // if a BSS deal has a supplier's companies house reg number,
-        // this will be used to get a party URN for exporter.
-        // Therefore for this test we use a mock deal with CH reg number.
-
-        it('should NOT add MATCH_OR_CREATE_PARTIES task', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN));
-
-          expect(status).toEqual(200);
-
-          const expectedExcludedTasks = [
-            CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-          ];
-
-          const expected = createTasks(
-            MOCK_DEAL_AIN.details.submissionType,
-            expectedExcludedTasks,
-          );
-
-          expect(body.tfm.tasks).toEqual(expected);
         });
       });
     });

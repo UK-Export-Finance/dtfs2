@@ -4,33 +4,27 @@ const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
 
 /**
- * Tasks to exclude, depending on deal data.
+ * Conditions for adding 'create or match parties' task
  **/
-const listExcludedTasks = (deal) => {
+const shouldCreatePartiesTask = (deal) => {
   const { tfm } = deal;
   const exporterPartyUrn = tfm.parties.exporter.partyUrn;
 
-  let excludedTasks = [];
-
-  if (exporterPartyUrn) {
-    excludedTasks = [
-      CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-    ];
+  if (exporterPartyUrn && exporterPartyUrn.length) {
+    return false;
   }
 
-  return excludedTasks;
+  return true;
 };
 
 /**
- * Additional tasks to include, depending on deal data.
+ * Conditions for adding 'check agent' task
  **/
-const listAdditionalTasks = (deal) => {
+const shouldCreateAgentCheckTask = (deal) => {
   const {
     dealType,
     submissionType,
   } = deal;
-
-  let additionalTasks = [];
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS
     && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
@@ -42,10 +36,25 @@ const listAdditionalTasks = (deal) => {
     const eligibilityCriteria11isFalse = eligibilityCriterion11.answer === false;
 
     if (eligibilityCriteria11isFalse) {
-      additionalTasks = [
-        CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
-      ];
+      return true;
     }
+  }
+
+  return false;
+};
+
+/**
+ * Additional/conditional tasks to include, depending on deal data.
+ **/
+const listAdditionalTasks = (deal) => {
+  let additionalTasks = [];
+
+  if (shouldCreatePartiesTask(deal)) {
+    additionalTasks.push(CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
+  }
+
+  if (shouldCreateAgentCheckTask(deal)) {
+    additionalTasks.push(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK);
   }
 
   return additionalTasks;
@@ -58,17 +67,14 @@ const createDealTasks = async (deal) => {
 
   const {
     _id: dealId, // eslint-disable-line no-underscore-dangle
-    dealType,
     submissionType,
     tfm,
   } = deal;
 
-  const excludedTasks = listExcludedTasks(deal);
   const additionalTasks = listAdditionalTasks(deal);
 
   const tasks = createTasks(
     submissionType,
-    excludedTasks,
     additionalTasks,
   );
 
@@ -88,7 +94,8 @@ const createDealTasks = async (deal) => {
 };
 
 module.exports = {
-  listExcludedTasks,
+  shouldCreatePartiesTask,
+  shouldCreateAgentCheckTask,
   listAdditionalTasks,
   createDealTasks,
 };

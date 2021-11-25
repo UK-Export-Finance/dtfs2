@@ -85,53 +85,8 @@ describe('defaults - tasks creation', () => {
       });
     });
 
-    describe('when excludedTasks array of strings is passed', () => {
-      it('should NOT return any tasks in a group that match a title in excludedTasks, retaining incremental task ids', () => {
-        const mockGroupTasks = [
-          { title: 'Task A', team: 'Test team' },
-          { title: 'Task B', team: 'Test team' },
-          { title: 'Task C', team: 'Test team' },
-          { title: 'Task D', team: 'Test team' },
-        ];
-
-        const mockGroupId = 1;
-
-        const mockExcludedTasks = [
-          'Task B',
-          'Task C',
-        ];
-
-        const result = createGroupTasks(
-          mockGroupTasks,
-          mockGroupId,
-          mockExcludedTasks,
-        );
-
-        const expected = [
-          {
-            id: '1',
-            groupId: 1,
-            title: 'Task A',
-            team: 'Test team',
-            ...NEW_TASK,
-            status: 'To do',
-            canEdit: true,
-          },
-          {
-            id: '2',
-            groupId: 1,
-            title: 'Task D',
-            team: 'Test team',
-            ...NEW_TASK,
-          },
-        ];
-
-        expect(result).toEqual(expected);
-      });
-    });
-
     describe('when no additionalTasks are passed and a task has isConditional flag', () => {
-      it('should NOT isConditional tasks', () => {
+      it('should NOT add isConditional tasks', () => {
         const mockGroupTasks = [
           { title: 'Task A', team: 'Test team' },
           { title: 'Task B', team: 'Test team', isConditional: true },
@@ -170,7 +125,6 @@ describe('defaults - tasks creation', () => {
 
         const mockGroupId = 1;
 
-        const mockExcludedTasks = [];
         const mockAdditionalTasks = [
           'Task B',
           'Task D',
@@ -179,7 +133,6 @@ describe('defaults - tasks creation', () => {
         const result = createGroupTasks(
           mockGroupTasks,
           mockGroupId,
-          mockExcludedTasks,
           mockAdditionalTasks,
         );
 
@@ -217,18 +170,18 @@ describe('defaults - tasks creation', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return AIN tasks array with createGroupTasks and excludedTasks', () => {
-      const mockExcludedTasks = [
+    it('should return AIN tasks array with createGroupTasks and additionalTasks', () => {
+      const mockAdditionalTasks = [
         CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE
       ];
 
-      const result = createTasksAIN(mockExcludedTasks);
+      const result = createTasksAIN(mockAdditionalTasks);
 
       const expected = [
         {
           groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
           id: 1,
-          groupTasks: createGroupTasks(CONSTANTS.TASKS.AIN.GROUP_1.TASKS, 1, mockExcludedTasks),
+          groupTasks: createGroupTasks(CONSTANTS.TASKS.AIN.GROUP_1.TASKS, 1, mockAdditionalTasks),
         },
       ];
 
@@ -266,33 +219,33 @@ describe('defaults - tasks creation', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return MIA tasks array with createGroupTasks and excludedTasks', () => {
-      const mockExcludedTasks = [
+    it('should return MIA tasks array with createGroupTasks and additionalTasks', () => {
+      const mockAdditionalTasks = [
         CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
       ];
 
-      const result = createTasksMIA(mockExcludedTasks);
+      const result = createTasksMIA(mockAdditionalTasks);
 
       const expected = [
         {
           groupTitle: CONSTANTS.TASKS.MIA.GROUP_1.GROUP_TITLE,
           id: 1,
-          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_1.TASKS, 1, mockExcludedTasks),
+          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_1.TASKS, 1, mockAdditionalTasks),
         },
         {
           groupTitle: CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
           id: 2,
-          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_2.TASKS, 2, mockExcludedTasks),
+          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_2.TASKS, 2, mockAdditionalTasks),
         },
         {
           groupTitle: CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
           id: 3,
-          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_3.TASKS, 3, mockExcludedTasks),
+          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_3.TASKS, 3, mockAdditionalTasks),
         },
         {
           groupTitle: CONSTANTS.TASKS.MIA.GROUP_4.GROUP_TITLE,
           id: 4,
-          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_4.TASKS, 4, mockExcludedTasks),
+          groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_4.TASKS, 4, mockAdditionalTasks),
         },
       ];
 
