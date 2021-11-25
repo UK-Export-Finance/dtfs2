@@ -1,0 +1,51 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block pageTitle %}
+    Confirm cover start date for issued facilities
+{% endblock %}
+
+{% block content %}
+
+    {% if errors %}
+        {{
+            govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            attributes: {
+                'data-cy': 'error-summary'
+                }
+            })
+        }}
+    {% endif %}
+
+    {% set hideBack = true %}
+    {% include "includes/application-preview/summary.njk" %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {{ govukBackLink({
+                text: "Back",
+                href: "/gef/application-details/" + applicationId,
+                attributes: {
+                'data-cy': 'back-link'
+                }
+            }) }}
+        </div>
+    </div>
+
+    <h1 data-cy="confirm-cover-start-date-heading">Confirm cover start date for issued facilities</h1>
+
+    {% if isUkefReviewAvailable %}
+        <div class="govuk-grid-row govuk-body">
+            <div class="govuk-grid-column-two-thirds">
+                <form method="POST" autocomplete="off">
+                </form>
+            </div>
+        </div>
+    {% else %}
+        Pending UKEF decision.
+    {% endif %}
+
+{% endblock %}

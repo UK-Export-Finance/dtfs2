@@ -17,26 +17,26 @@
       }%}
 
       {{ govukPanel({
-        classes: "govuk-!-margin-bottom-7",
         attributes: {
           'data-cy': 'ukef-submission-confirmation'
         },
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7"
       }) }}
+      
       {% if isNotice %}
-        <p>We'll send you an email shortly to confirm we've accepted your notice</p>
+      <p>We'll send you an email shortly to confirm we've accepted your notice</p>
       {% else %}
-        <p>We've sent you a confirmation email.</p>
-        <br/>
-        <h2>What happens next</h2>
-        <p>Our underwriters will review this application and let you know if UKEF can provide a guarantee.</p>
-        <p>They’ll either:</p>
-          <ul>
-            <li>approve it with conditions</li>
-            <li>approve it without conditions</li>
-            <li>decline the application</li>
-          </ul>
+      <p>We've sent you a confirmation email.</p>
+      <br/>
+      <h2>What happens next</h2>
+      <p>Our underwriters will review this application and let you know if UKEF can provide a guarantee.</p>
+      <p>They’ll either:</p>
+        <ul>
+          <li>approve it with conditions</li>
+          <li>approve it without conditions</li>
+          <li>decline the application</li>
+        </ul>
       {% endif %}
       <p><a class="govuk-link" href="/dashboard" data-cy="dashboard-link">Return to all applications and notices</a></p>
     </div>

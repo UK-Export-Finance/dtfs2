@@ -33,6 +33,23 @@ const MockRequest = () => {
   return req;
 };
 
+const MockRequestUrl = (url) => {
+  const req = {};
+  req.params = {};
+  req.query = {};
+  req.params.applicationId = '123';
+  req.url = url;
+  req.session = {
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+      _id: 1235,
+    },
+    userToken: 'TEST',
+  };
+  return req;
+};
+
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
@@ -221,6 +238,8 @@ describe('controllers/application-detaills', () => {
           applicationId: expect.any(String),
           makerCanSubmit: expect.any(Boolean),
           checkerCanSubmit: expect.any(Boolean),
+          isUkefReviewAvailable: expect.any(Boolean),
+          isUkefReviewPositive: expect.any(Boolean),
           previewMode: expect.any(Boolean),
 
           // actions
@@ -350,6 +369,18 @@ describe('controllers/application-detaills', () => {
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `review-decision` when page requested is `review-decision` ', async () => {
+        mockApplicationResponse.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
           }));
       });
