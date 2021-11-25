@@ -73,8 +73,6 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const result = await sendDealSubmitEmails(mappedDeal);
 
-      const facilityLists = gefFacilitiesList(mappedDeal.facilities);
-
       const expectedEmailVariables = generateMiaConfirmationEmailVars(mappedDeal);
 
       expect(sendEmailApiSpy).toHaveBeenCalled();

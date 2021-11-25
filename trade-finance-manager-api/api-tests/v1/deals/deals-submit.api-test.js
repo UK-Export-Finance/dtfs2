@@ -109,7 +109,6 @@ describe('/v1/deals', () => {
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
 
-
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
         tfm: {
