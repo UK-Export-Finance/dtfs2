@@ -50,7 +50,7 @@
                 <p>{{ ukefDecision[0].text | safe }}</p>
             {% elif applicationStatus == 'UKEF_REFUSED' %}
                 <p>The manual inclusion application was rejected for the following reasons:</p>
-                <p>{{ ukefDecision[0].text |safe }}</p>
+                <p>{{ ukefDecision[0].text | safe }}</p>
             {% endif %}
         {% endset %}
 
