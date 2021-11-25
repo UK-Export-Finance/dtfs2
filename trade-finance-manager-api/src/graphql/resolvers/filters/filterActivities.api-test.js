@@ -58,7 +58,6 @@ describe('filterActivities', () => {
 
   describe('filterByComment', () => {
     it('should filter activity types by `COMMENT`', () => {
-      const mockFilterValue = 'OTHER';
       const result = filterByComment(mockActivities);
 
       const expected = mockActivities.filter((activitiy) => activitiy.type === 'COMMENT');
