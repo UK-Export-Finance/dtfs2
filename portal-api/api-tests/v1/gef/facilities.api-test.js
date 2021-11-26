@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 const wipeDB = require('../../wipeDB');
 const { STATUS, FACILITY_TYPE, ERROR } = require('../../../src/v1/gef/enums');
 
@@ -391,7 +389,7 @@ describe(baseUrl, () => {
       const { details } = newFacility;
       const facility = await as(aMaker).post({ applicationId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
-      const update = { hasBeenIssued : true };
+      const update = { hasBeenIssued: true };
       await as(aMaker).put(update).to(`${baseUrl}/${facility.body.details._id}`);
 
       // check the deal

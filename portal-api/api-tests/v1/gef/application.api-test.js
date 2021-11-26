@@ -381,9 +381,12 @@ describe(baseUrl, () => {
         const facilityId = createFacilityResponse.body.details._id;
         // check that the facility does not already have submittedAsIssuedDate
         expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
+        // ensures that should shouldCoverStartOnSubmission is null
+        expect(createFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(null);
 
-        const coverStartDateFacility = await as(aMaker).put(issuedFacility).to(`${facilitiesUrl}/${facilityId}`);
-        expect(coverStartDateFacility.status).toEqual(200);
+        // update facility so that shouldCoverStartOnSubmission and coverStartDate are added to the facility
+        const facilityWithDates = await as(aMaker).put(issuedFacility).to(`${facilitiesUrl}/${facilityId}`);
+        expect(facilityWithDates.status).toEqual(200);
 
         // change deal status to submitted
         const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
@@ -396,6 +399,7 @@ describe(baseUrl, () => {
         expect(getFacilityResponse.status).toEqual(200);
         expect(getFacilityResponse.body.details.submittedAsIssuedDate).toEqual(expect.any(String));
         expect(getFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(true);
+        // in date format to avoid mismatch in times
         const receivedDate = format(new Date(getFacilityResponse.body.details.coverStartDate), 'dd-MMMM-yyyy');
         const expected = format(new Date(), 'dd-MMMM-yyyy');
         expect(receivedDate).toEqual(expected);
