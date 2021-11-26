@@ -16,7 +16,7 @@
           <p><strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
             <br>
             {{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
-          <p>{{ comment.comment }}</p>
+          <p>{{ comment.comment | safe }}</p>
         {% endfor %}
       </div>
 
