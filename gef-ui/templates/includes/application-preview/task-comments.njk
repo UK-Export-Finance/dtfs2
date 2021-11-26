@@ -1,29 +1,31 @@
 {% from "moj/components/banner/macro.njk" import mojBanner %}
 
-<header data-cy="application-preview-page">
+{% if isUkefReviewAvailable or comments.length > 0 %}
+  <header data-cy="application-preview-page">
 
-  {% set bannerHtml %}
+    {% set bannerHtml %}
 
-    {% if isUkefReviewAvailable %}
-      <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
-        <a href="{{ applicationId }}/review-decision" class="govuk-link">Review UKEF decision</a>
+      {% if isUkefReviewAvailable %}
+        <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
+          <a href="{{ applicationId }}/review-decision" class="govuk-link">Review UKEF decision</a>
+        </div>
+      {% endif %}
+
+      <div data-cy="latest-comment">
+        {% for comment in comments %}
+          <p><strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
+            <br>
+            {{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
+          <p>{{ comment.comment | safe }}</p>
+        {% endfor %}
       </div>
-    {% endif %}
 
-    <div data-cy="latest-comment">
-      {% for comment in comments %}
-        <p><strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
-          <br>
-          {{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
-        <p>{{ comment.comment }}</p>
-      {% endfor %}
-    </div>
+    {% endset %}
 
-  {% endset %}
+    {{ mojBanner({
+      type: 'no-icon',
+      html: bannerHtml
+    }) }}
 
-  {{ mojBanner({
-    type: 'no-icon',
-    html: bannerHtml
-  }) }}
-
-</header>
+  </header>
+{% endif %}
