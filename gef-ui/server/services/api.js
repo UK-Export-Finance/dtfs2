@@ -30,6 +30,15 @@ const createApplication = async (payload) => {
   }
 };
 
+const cloneApplication = async (payload) => {
+  try {
+    const { data } = await Axios.post('/gef/application/clone', payload);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getApplication = async (applicationId) => {
   try {
     const { data } = await Axios.get(`/gef/application/${applicationId}`);
@@ -234,6 +243,7 @@ module.exports = {
   validateToken,
   getMandatoryCriteria,
   createApplication,
+  cloneApplication,
   updateApplication,
   getEligibilityCriteria,
   getApplication,
