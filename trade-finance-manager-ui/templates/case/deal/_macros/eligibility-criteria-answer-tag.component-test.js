@@ -6,9 +6,11 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
 
+  // NOTE: the actual answer data is a boolean, but Nunjucks reads this as a string.
+  // Therefore in this test, we pass a string.
   describe('when params.answer is `true`', () => {
     beforeEach(() => {
-      const params = { answer: true };
+      const params = { answer: 'true' };
       wrapper = render(params);
     });
 
@@ -24,7 +26,7 @@ describe(component, () => {
   describe('when params.answer is `false`', () => {
 
     beforeEach(() => {
-      const params = { answer: false };
+      const params = { answer: 'false' };
       wrapper = render(params);
     });
 
