@@ -51,14 +51,25 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
   return false;
 };
 
-const isTaskComplete = (allTaskGroups, group, taskId) => {
-  if (group.id === 3) {
-     console.log('group3');
-    return true;
+const taskStatusValidity = (allTaskGroups, group, taskId) => {
+  let adverseTask;
+  // gets Adverse history check task array
+  const adverse = getGroup(allTaskGroups, CONSTANTS.TASKS.MIA.GROUP_2.id);
+  // gets specific Complete an adverse history check task if MIA
+  if (adverse) {
+    adverseTask = getTask(CONSTANTS.TASKS.MIA_GROUP_2_TASKS_ID.COMPLETE_ADVERSE_HISTORY_CHECK, adverse.groupTasks);
   }
 
+  // allows to complete Underwriting tasks in any order if MIA
+  // checks that status of Complete an adverse history check task is complete and id of task is 3
+  if (adverseTask) {
+    if (adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED && group.id === CONSTANTS.TASKS.MIA.GROUP_3.id) {
+      return true;
+    }
+  }
+
+  // or otherwise checks if previous task is complete
   if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
-     console.log('previous');
     return true;
   }
 
@@ -76,7 +87,7 @@ const firstTaskIsComplete = (groupTasks) => {
 };
 
 const canUpdateTask = (allTaskGroups, group, taskId) => {
-  if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
+  if (taskStatusValidity(allTaskGroups, group, taskId)) {
     return true;
   }
 
@@ -90,7 +101,7 @@ module.exports = {
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
   previousTaskIsComplete,
-  isTaskComplete,
+  taskStatusValidity,
   firstTaskIsComplete,
   isFirstTask,
   canUpdateTask,
