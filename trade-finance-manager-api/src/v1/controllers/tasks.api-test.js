@@ -253,6 +253,114 @@ describe('tasks controller', () => {
 
         expect(result).toEqual(expected);
       });
+
+      describe('when task group 2 is finished, task group 3 should be set on todo and editable', () => {
+        it('should change all of task group 3 tasks', async () => {
+          const mockGroup1Tasks = [
+            {
+              id: '1',
+              groupId: 1,
+              status: 'Done',
+              canEdit: false,
+              title: 'Test',
+            },
+            {
+              id: '2',
+              groupId: 1,
+              status: 'Done',
+              canEdit: false,
+              title: 'Test',
+            },
+            {
+              id: '3',
+              groupId: 1,
+              status: 'Done',
+              canEdit: false,
+              title: 'Test',
+            },
+          ];
+
+          const mockGroup2Tasks = [
+            {
+              id: '1',
+              groupId: 2,
+              status: 'Done',
+              canEdit: false,
+              title: 'Test',
+            },
+          ];
+
+          const mockGroup3Tasks = [
+            {
+              id: '1',
+              groupId: 3,
+              status: 'Cannot start yet',
+              canEdit: false,
+              title: 'Test',
+            },
+            {
+              id: '2',
+              groupId: 3,
+              status: 'Cannot start yet',
+              canEdit: false,
+              title: 'Test',
+            },
+            {
+              id: '3',
+              groupId: 3,
+              status: 'Cannot start yet',
+              canEdit: false,
+              title: 'Test',
+            },
+          ];
+
+          const mockTasks = [
+            {
+              groupTitle: 'Group 1 tasks',
+              id: 1,
+              groupTasks: mockGroup1Tasks,
+            },
+            {
+              groupTitle: 'Group 2 tasks',
+              id: 2,
+              groupTasks: mockGroup2Tasks,
+            },
+            {
+              groupTitle: 'Group 3 tasks',
+              id: 3,
+              groupTasks: mockGroup3Tasks,
+            },
+          ];
+
+          const result = await updateTasksCanEdit(mockTasks, 2, '1', mockDeal);
+
+          const expected = [
+            {
+              groupTitle: 'Group 3 tasks',
+              id: 3,
+              groupTasks: [
+                {
+                  ...mockGroup3Tasks[0],
+                  status: 'To do',
+                  canEdit: true,
+                },
+                {
+                  ...mockGroup3Tasks[1],
+                  status: 'To do',
+                  canEdit: true,
+                },
+                {
+                  ...mockGroup3Tasks[2],
+                  status: 'To do',
+                  canEdit: true,
+                },
+              ],
+            },
+          ];
+
+          expect(result[2]).toEqual(expected[0]);
+        });
+      });
     });
 
     describe('when given a task that is not task #1, and previous task has `Done` status', () => {
@@ -648,5 +756,3 @@ describe('tasks controller', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */
