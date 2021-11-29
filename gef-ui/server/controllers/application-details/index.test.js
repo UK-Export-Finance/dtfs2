@@ -240,6 +240,7 @@ describe('controllers/application-detaills', () => {
           checkerCanSubmit: expect.any(Boolean),
           isUkefReviewAvailable: expect.any(Boolean),
           isUkefReviewPositive: expect.any(Boolean),
+          ukefDecisionAccepted: expect.any(Boolean),
           previewMode: expect.any(Boolean),
 
           // actions

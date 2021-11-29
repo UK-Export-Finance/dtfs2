@@ -78,6 +78,7 @@ function buildBody(app, previewMode) {
     ukefDecision: app.ukefDecision,
     isUkefReviewAvailable: isUkefReviewAvailable(app.status),
     isUkefReviewPositive: isUkefReviewPositive(app.status),
+    ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
     previewMode,
   };
 }
@@ -99,11 +100,6 @@ function buildView(app, previewMode) {
 }
 
 const stateToPartial = (status, url) => {
-  let req;
-  if (url) {
-    req = url.split('/');
-    req = req[req.length - 1];
-  }
   // Behaviour depending on application state
   const template = {
     DRAFT: 'application-details',
@@ -125,8 +121,8 @@ const stateToPartial = (status, url) => {
     'confirm-cover-start-date': 'confirm-cover-start-date',
   };
 
-  return req in partials
-    ? partials[req]
+  return url in partials
+    ? partials[url]
     : template[status];
 };
 
@@ -135,6 +131,13 @@ const applicationDetails = async (req, res, next) => {
     params: { applicationId },
     session: { user, userToken },
   } = req;
+  const facilitiesPartials = [
+    'confirm-cover-start-date',
+  ];
+
+  let facilities;
+  let url;
+
   try {
     const application = await Application.findById(applicationId, user, userToken);
     if (!application) {
@@ -151,19 +154,46 @@ const applicationDetails = async (req, res, next) => {
       maker,
     };
 
-    const partial = stateToPartial(application.status, req.url);
+    if (req.url) {
+      url = req.url.split('/');
+      url = url[url.length - 1];
+    }
+
+    if (facilitiesPartials.includes(url)) {
+      facilities = await api.getFacilities(applicationId);
+      if (facilities.items) {
+        const mappedFacilities = [];
+
+        facilities.items.forEach((facility) => {
+          mappedFacilities.push(
+            { text: facility.details.name },
+            { text: facility.details.ukefFacilityId },
+            { text: facility.details.value },
+            { text: 'abc' },
+          );
+        });
+
+        facilities = mappedFacilities;
+        console.log({ facilities });
+      }
+    }
+
+    const partial = stateToPartial(application.status, url);
+
     let params;
 
     if (req.errors) {
       params = {
         user,
         ...buildView(applicationWithMaker, previewMode),
+        facilities,
         errors: req.errors,
       };
     } else {
       params = {
         user,
         ...buildView(applicationWithMaker, previewMode),
+        facilities,
       };
     }
 

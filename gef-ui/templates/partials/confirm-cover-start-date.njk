@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block pageTitle %}
@@ -23,7 +24,7 @@
     {% set hideBack = true %}
     {% include "includes/application-preview/summary.njk" %}
 
-    <div class="govuk-grid-row">
+    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
         <div class="govuk-grid-column-full-from-desktop">
             {{ govukBackLink({
                 text: "Back",
@@ -35,13 +36,32 @@
         </div>
     </div>
 
-    <h1 data-cy="confirm-cover-start-date-heading">Confirm cover start date for issued facilities</h1>
-
     {% if isUkefReviewAvailable %}
         <div class="govuk-grid-row govuk-body">
-            <div class="govuk-grid-column-two-thirds">
-                <form method="POST" autocomplete="off">
-                </form>
+            <d  iv class="govuk-grid-column-two-thirds">
+                    {{ govukTable
+                        ({
+                                caption: "Confirm cover start date for issued facilities",
+                                captionClasses: "govuk-table__caption--xl",
+                                firstCellIsHeader: true,
+                                head: [
+                                    {
+                                    text: "Faciliy name"
+                                    },
+                                    {
+                                    text: "UKEF Facility ID",
+                                    format: "numeric"
+                                    },
+                                    {
+                                    text: "Value"
+                                    },
+                                    {
+                                    text: ""
+                                    }
+                                ],
+                                rows: facilities
+                        })
+                    }}
             </div>
         </div>
     {% else %}

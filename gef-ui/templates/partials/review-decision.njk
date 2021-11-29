@@ -26,7 +26,7 @@
     {% set hideBack = true %}
     {% include "includes/application-preview/summary.njk" %}
 
-    <div class="govuk-grid-row">
+    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
         <div class="govuk-grid-column-full-from-desktop">
             {{ govukBackLink({
                 text: "Back",
@@ -66,6 +66,7 @@
         <div class="govuk-grid-row govuk-body">
             <div class="govuk-grid-column-two-thirds">
                 <form method="POST" autocomplete="off">
+                
                     {{ govukRadios({
                         idPrefix: "decision",
                         name: "decision",
@@ -86,6 +87,7 @@
                             {
                                 value: "true",
                                 text: "Yes, accept and proceed",
+                                checked: ukefDecisionAccepted,
                                 attributes: {
                                     "data-cy": "review-decision-true"
                                 },
