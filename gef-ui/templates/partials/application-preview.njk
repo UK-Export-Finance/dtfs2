@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-  {{ applicationType | capitalize }}
+  {{ applicationType }}
 {% endblock %}
 
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
@@ -16,7 +16,7 @@
   {% include "includes/application-preview/summary.njk" %}
   {% include "includes/application-preview/task-comments.njk" %}
 
-  <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType | capitalize }}</h1>
+  <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType }}</h1>
   
    {% if not isUkefReviewPositive %}
       {% include "includes/application-preview/ukef-decision.njk" %}
