@@ -5,7 +5,7 @@ const getAssigneeFullName = require('./get-assignee-full-name');
 const {
   taskCanBeEdited,
   isFirstTaskInFirstGroup,
-  getGroup,
+  getGroupById,
   getGroupByTitle,
   getTaskInGroup,
   getTaskInGroupByTitle,
@@ -55,6 +55,12 @@ const updateTask = (allTaskGroups,taskUpdate) =>
     return group;
   });
 
+/**
+* Generate timestamps:
+* - lastEdited
+* - dateStarted
+* - dateCompleted
+* */
 const generateTaskDates = (statusFrom, statusTo) => {
   const dates = {
     lastEdited: getTime(new Date()),
@@ -71,6 +77,10 @@ const generateTaskDates = (statusFrom, statusTo) => {
   return dates;
 };
 
+/**
+ * Get the Adverse History group and
+ * check if the Adverse History Check task is completed.
+ * */
 const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
   const adverseGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY);
 
@@ -106,8 +116,7 @@ const isTaskInUnderwritingGroup = (allTaskGroups, taskTitle) => {
  * */
 const isUnderwritingTasksGroupUnlocked = (allTaskGroups, taskUpdate) => {
   // get the group that the taskUpdate belongs to
-  // TODO: rename to getTaskInGroupById
-  const group = getGroup(allTaskGroups, taskUpdate.groupId);
+  const group = getGroupById(allTaskGroups, taskUpdate.groupId);
 
   // get the full task (so we get the task title)
   const fullTask = getTaskInGroup(taskUpdate.id, group.groupTasks);
@@ -243,7 +252,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
     urlOrigin,
   } = taskUpdate;
 
-  const group = getGroup(allTasks, groupId);
+  const group = getGroupById(allTasks, groupId);
 
   const originalTask = getTaskInGroup(taskIdToUpdate, group.groupTasks);
 
