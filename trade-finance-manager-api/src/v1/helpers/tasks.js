@@ -9,7 +9,7 @@ const getTaskInGroup = (taskId, groupTasks) =>
 const getTaskInGroupByTitle = (groupTasks, title) =>
   groupTasks.find((task) => task.title === title);
 
-const getGroup = (allTaskGroups, groupId) => {
+const getGroupById = (allTaskGroups, groupId) => {
   const group = allTaskGroups.find((g) => g.id === groupId);
 
   return group;
@@ -35,7 +35,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
   if (isFirstTaskInAGroup(taskId, group.id)) {
     // check the last (previous) task in the previous group
     const previousGroupId = group.id - 1;
-    const previousGroup = getGroup(allTaskGroups, previousGroupId);
+    const previousGroup = getGroupById(allTaskGroups, previousGroupId);
 
     const totalTasksInPreviousGroup = previousGroup.groupTasks.length;
     const lastTaskInPreviousGroup = previousGroup.groupTasks[totalTasksInPreviousGroup - 1];
@@ -95,7 +95,7 @@ module.exports = {
   getFirstTask,
   getTaskInGroup,
   getTaskInGroupByTitle,
-  getGroup,
+  getGroupById,
   getGroupByTitle,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,

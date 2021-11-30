@@ -1,7 +1,7 @@
 const {
   getFirstTask,
   getTask,
-  getGroup,
+  getGroupById,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
   previousTaskIsComplete,
@@ -46,7 +46,7 @@ describe('helpers - tasks', () => {
     });
   });
 
-  describe('getGroup', () => {
+  describe('getGroupById', () => {
     it('should return a group by id', () => {
       const mockTasks = [
         {
@@ -61,7 +61,7 @@ describe('helpers - tasks', () => {
         },
       ];
 
-      const result = getGroup(mockTasks, 2);
+      const result = getGroupById(mockTasks, 2);
       expect(result).toEqual(mockTasks[1]);
     });
   });
