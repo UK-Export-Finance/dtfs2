@@ -3,10 +3,12 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const getAssigneeFullName = require('./get-assignee-full-name');
 const {
-  taskStatusValidity,
+  taskCanBeEdited,
   isFirstTaskInFirstGroup,
   getGroup,
-  getTask,
+  getGroupByTitle,
+  getTaskInGroup,
+  getTaskInGroupByTitle,
   canUpdateTask,
 } = require('../helpers/tasks');
 const sendUpdatedTaskEmail = require('./task-emails');
@@ -29,7 +31,7 @@ const updateHistory = ({
   timestamp: getTime(new Date()),
 });
 
-const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
+const updateTask = (allTaskGroups,taskUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -38,8 +40,8 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
       groupTasks: group.groupTasks.map((t) => {
         let task = t;
 
-        if (task.id === taskIdToUpdate
-          && task.groupId === groupId) {
+        if (task.id === taskUpdate.id
+          && task.groupId === taskUpdate.groupId) {
           task = {
             ...task,
             ...taskUpdate,
@@ -69,44 +71,78 @@ const generateTaskDates = (statusFrom, statusTo) => {
   return dates;
 };
 
-const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, urlOrigin) => {
+const updateTasksCanEdit = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
   const sendUpdatedEmailRequests = [];
+  let adverseTaskIsComplete = false;
+
+  const adverseGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY);
+
+  const underwritingGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
+
+  // TODO: rename to getTaskInGroupById
+  const group = getGroup(allTaskGroups, groupId);
+
+  const fullTask = getTaskInGroup(taskUpdate.id, group.groupTasks);
+
+  const taskIsInUnderwritingGroup = getTaskInGroupByTitle(underwritingGroup.groupTasks, fullTask.title);
+
+  if (adverseGroup) {
+    const adverseTaskTitle = CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK;
+
+    const adverseTask = getTaskInGroupByTitle(adverseGroup.groupTasks, adverseTaskTitle);
+
+    if (adverseTask
+      && adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      adverseTaskIsComplete = true;
+    }
+  }
+
+  const taskGroupIsUnlocked = (taskIsInUnderwritingGroup && adverseTaskIsComplete)
 
   const taskGroups = allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t, index, array) => {
+      groupTasks: group.groupTasks.map((t) => {
         const task = t;
+
+        const isTaskThatIsBeingUpdated = (
+          task.id === taskUpdate.id
+          && task.groupId === taskUpdate.groupId);
+
         if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
           task.canEdit = false;
-        } else if (taskStatusValidity(allTaskGroups, group, task.id, task.group)) {
-          if (task.id === taskIdToUpdate
-            && task.groupId === groupId) {
-            if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-              task.canEdit = false;
-            }
+          return task;
+        }
+        
+        // TODO rename canUpdateTask to taskCanBeEdited ?
+        // or just use previousTaskComplete
+        if (canUpdateTask(
+          allTaskGroups,
+          group,
+          task,
+        )) {
+          if (isTaskThatIsBeingUpdated) {
+            return task;
           } else {
-            // if Complete an adverse history check task is complete
-            // opens up all underwriting tasks to be editable and set to 'TO DO'
-            if (task.groupId === CONSTANTS.TASKS.MIA.GROUP_3.id
-               && task.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE
-               && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
-              for (let i = index + 1; i <= index + 2; i += 1) {
-                const nextTask = array[i];
-                nextTask.canEdit = true;
-                nextTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
-                // Send task notification emails
-                sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(nextTask, deal, urlOrigin));
-              }
-            }
             // task can be started
             task.canEdit = true;
             task.status = CONSTANTS.TASKS.STATUS.TO_DO;
-            // Send task notification emails
-            sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
           }
+
+          // Send task notification emails
+          sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
+        }
+
+        if (taskGroupIsUnlocked
+          && task.status !== CONSTANTS.TASKS.STATUS.IN_PROGRESS) {
+          // task can be started
+          task.canEdit = true;
+          task.status = CONSTANTS.TASKS.STATUS.TO_DO;
+
+          // TODO: emails - for each underwriting task that has 'to do' status
+          // BUT only if has been changed from 'cannot start' to 'to do'.
         }
 
         return task;
@@ -146,7 +182,7 @@ const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, stat
   return false;
 };
 
-const updateTfmTask = async (dealId, tfmTaskUpdate) => {
+const updateTfmTask = async (dealId, taskUpdate) => {
   const unmappedDeal = await api.findOneDeal(dealId);
   const deal = mapSubmittedDeal(unmappedDeal);
 
@@ -159,15 +195,15 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     status: statusTo,
     updatedBy,
     urlOrigin,
-  } = tfmTaskUpdate;
+  } = taskUpdate;
 
   const group = getGroup(allTasks, groupId);
 
-  const originalTask = getTask(taskIdToUpdate, group.groupTasks);
+  const originalTask = getTaskInGroup(taskIdToUpdate, group.groupTasks);
 
   const statusFrom = originalTask.status;
 
-  if (canUpdateTask(allTasks, group, taskIdToUpdate, groupId)) {
+  if (canUpdateTask(allTasks, group, taskUpdate)) {
     const { userId: assignedUserId } = assignedTo;
 
     const newAssigneeFullName = await getAssigneeFullName(assignedUserId);
@@ -183,12 +219,12 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       ...generateTaskDates(statusFrom, statusTo),
     };
 
-    const modifiedTasks = updateTask(allTasks, groupId, taskIdToUpdate, updatedTask);
-
+    const modifiedTasks = updateTask(allTasks, updatedTask);
+    
     const modifiedTasksWithEditStatus = await updateTasksCanEdit(
       modifiedTasks,
       groupId,
-      taskIdToUpdate,
+      taskUpdate,
       deal,
       urlOrigin,
     );

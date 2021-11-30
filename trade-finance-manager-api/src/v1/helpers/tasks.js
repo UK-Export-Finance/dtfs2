@@ -3,14 +3,20 @@ const CONSTANTS = require('../../constants');
 const getFirstTask = (tasks) =>
   tasks[0].groupTasks[0];
 
-const getTask = (taskId, tasks) =>
-  tasks.find((t) => t.id === taskId);
+const getTaskInGroup = (taskId, groupTasks) =>
+  groupTasks.find((t) => t.id === taskId);
+
+const getTaskInGroupByTitle = (groupTasks, title) =>
+  groupTasks.find((task) => task.title === title);
 
 const getGroup = (allTaskGroups, groupId) => {
   const group = allTaskGroups.find((g) => g.id === groupId);
 
   return group;
 };
+
+const getGroupByTitle = (allTaskGroups, title) =>
+  allTaskGroups.find(({ groupTitle }) => groupTitle === title);
 
 const isFirstTask = (taskId) => taskId === '1';
 
@@ -41,7 +47,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
     // check the previous task in the current group
     const previousTaskId = String(Number(taskId - 1));
 
-    const previousTask = getTask(previousTaskId, group.groupTasks);
+    const previousTask = getTaskInGroup(previousTaskId, group.groupTasks);
 
     if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
@@ -51,25 +57,12 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
   return false;
 };
 
-const taskStatusValidity = (allTaskGroups, group, taskId) => {
-  let adverseTask;
-  // gets Adverse history check task array
-  const adverse = getGroup(allTaskGroups, CONSTANTS.TASKS.MIA.GROUP_2.id);
-  // gets specific Complete an adverse history check task if MIA
-  if (adverse) {
-    adverseTask = getTask(CONSTANTS.TASKS.MIA_GROUP_2_TASKS_ID.COMPLETE_ADVERSE_HISTORY_CHECK, adverse.groupTasks);
-  }
-
-  // allows to complete Underwriting tasks in any order if MIA
-  // checks that status of Complete an adverse history check task is complete and id of task is 3
-  if (adverseTask) {
-    if (adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED && group.id === CONSTANTS.TASKS.MIA.GROUP_3.id) {
-      return true;
-    }
-  }
-
-  // or otherwise checks if previous task is complete
-  if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
+const taskCanBeEdited = (
+  allTaskGroups,
+  group,
+  taskUpdate,
+) => {
+  if (previousTaskIsComplete(allTaskGroups, group, taskUpdate.id)) {
     return true;
   }
 
@@ -86,22 +79,28 @@ const firstTaskIsComplete = (groupTasks) => {
   return false;
 };
 
-const canUpdateTask = (allTaskGroups, group, taskId) => {
-  if (taskStatusValidity(allTaskGroups, group, taskId)) {
+const canUpdateTask = (allTaskGroups, group, taskUpdate) => {
+  if (taskCanBeEdited(allTaskGroups, group, taskUpdate)) {
     return true;
   }
 
   return false;
 };
 
+const canActuallyUpdateTask = (allTaskGroups, taskUpdate) => {
+  // todo
+};
+
 module.exports = {
   getFirstTask,
-  getTask,
+  getTaskInGroup,
+  getTaskInGroupByTitle,
   getGroup,
+  getGroupByTitle,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
   previousTaskIsComplete,
-  taskStatusValidity,
+  taskCanBeEdited,
   firstTaskIsComplete,
   isFirstTask,
   canUpdateTask,
