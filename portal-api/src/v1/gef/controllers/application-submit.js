@@ -47,12 +47,18 @@ const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   const facilities = await getAllFacilitiesByApplicationId(applicationId);
 
   facilities.forEach(async (facility) => {
-    const { _id, hasBeenIssued } = facility;
+    const { _id, hasBeenIssued, shouldCoverStartOnSubmission } = facility;
 
     if (hasBeenIssued) {
       const update = {
         submittedAsIssuedDate: now(),
       };
+
+      // sets coverstartdate to ukef submission date if starts on submission
+      // sets hour, min, seconds to midnight of the same day
+      if (shouldCoverStartOnSubmission) {
+        update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
+      }
 
       await updateFacility(_id, update);
     }
