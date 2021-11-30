@@ -1,7 +1,6 @@
 const { ObjectID } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const db = require('../../../drivers/db-client');
-const now = require('../../../now');
 
 const cloneExporter = async (exporterId) => {
   const exporterCollection = 'gef-exporter';
@@ -18,15 +17,49 @@ const cloneExporter = async (exporterId) => {
   delete clonedExporter._id;
 
   // update the `createdAt` property to match the current time in EPOCH format
-  clonedExporter.createdAt = getUnixTime(new Date());
+  clonedExporter.createdAt = Date.now();
   // update the `updatedAt` property and set it to null - default value
-  clonedExporter.updatedAt = getUnixTime(new Date());
+  clonedExporter.updatedAt = Date.now();
 
   // insert a new exporter in the database
   const newExporter = await collection.insertOne(clonedExporter);
 
   // return the new inserted ID
   return newExporter.insertedId;
+};
+
+const cloneSupportingInformation = async (applicationId) => {
+  const applicationCollection = 'gef-application';
+  const collection = await db.getCollection(applicationCollection);
+
+  // get the current GEF deal
+  const deal = await collection.findOne({
+    _id: ObjectID(String(applicationId)),
+  });
+
+  const { supportingInformation } = deal;
+
+  // check if there are any documents uploaded
+  if ((Object.keys(supportingInformation).length)) {
+    const extraInfo = ['status', 'securityDetails'];
+    // loop through all document types
+    Object.keys(supportingInformation).forEach((docType) => {
+      // skip `status` and `securityDetails` properties
+      if (!extraInfo.includes(docType)) {
+        // loop through the values of each document type
+        Object.values(supportingInformation[docType]).forEach((docValue) => {
+          // generate a new Object ID for each document
+          docValue._id = (new ObjectID()).toHexString();
+          docValue.parentId = applicationId.toHexString();
+        });
+      }
+    });
+
+    // update the `supportingInformation` to include the new `parentId` & unique `_id`
+    await collection.findOneAndUpdate({ _id: ObjectID(String(applicationId)) }, { $set: { supportingInformation } });
+  }
+
+  return {};
 };
 
 const cloneFacilities = async (applicationId, newApplicationId) => {
@@ -47,13 +80,13 @@ const cloneFacilities = async (applicationId, newApplicationId) => {
     Object.entries(allFacilities).forEach((key, val) => {
       // delete the existing `_id` property - this will be re-created when a new deal is inserted
       delete allFacilities[val]._id;
-      delete allFacilities[val].applicationId;
 
-      // update the `createdAt` property to match the current time in EPOCH format
+      // updated the `applicationId` property to match the new application ID
       allFacilities[val].applicationId = newApplicationId;
-      allFacilities[val].createdAt = now();
+      // update the `createdAt` property to match the current time in EPOCH format
+      allFacilities[val].createdAt = Date.now();
       // update the `updatedAt` property to match the current time in EPOCH format
-      allFacilities[val].updatedAt = now();
+      allFacilities[val].updatedAt = Date.now();
     });
   }
 
@@ -76,10 +109,10 @@ const cloneGEFdeal = async (applicationId, bankInternalRefName, additionalRefNam
   // delete the existing `ukefDecision` property - this does not exist on a new deal
   delete clonedDeal.ukefDecision;
 
-  clonedDeal.createdAt = now();
-  clonedDeal.updatedAt = now();
-  clonedDeal.facilitiesUpdated = now();
-  clonedDeal.eligibility.updatedAt = now();
+  clonedDeal.createdAt = Date.now();
+  clonedDeal.updatedAt = Date.now();
+  clonedDeal.facilitiesUpdated = Date.now();
+  clonedDeal.eligibility.updatedAt = Date.now();
   clonedDeal.status = 'DRAFT';
   clonedDeal.submissionCount = 0;
   clonedDeal.submissionDate = null;
@@ -95,21 +128,26 @@ const cloneGEFdeal = async (applicationId, bankInternalRefName, additionalRefNam
 
   // insert the cloned deal in the database
   const createdApplication = await collection.insertOne(clonedDeal);
+  const newApplicationId = createdApplication.insertedId;
+
   // return the ID for the newly inserted deal
-  return createdApplication.insertedId;
+  return { newApplicationId };
 };
 
 exports.clone = async (req, res) => {
   const {
     body: {
-      applicationId, bankInternalRefName, additionalRefName, userId, bankId,
+      applicationId: existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId,
     },
   } = req;
 
   // clone GEF deal
-  const newApplicationId = await cloneGEFdeal(applicationId, bankInternalRefName, additionalRefName, userId, bankId);
+  const { newApplicationId } = await cloneGEFdeal(existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId);
 
   // clone the corresponding facilities for the cloned deal
-  await cloneFacilities(applicationId, newApplicationId);
+  await cloneFacilities(existingApplicationId, newApplicationId);
+
+  // clone the supporting information
+  await cloneSupportingInformation(newApplicationId);
   res.send({ applicationId: newApplicationId });
 };
