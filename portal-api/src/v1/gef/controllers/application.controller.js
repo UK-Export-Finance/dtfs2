@@ -18,7 +18,7 @@ const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibili
 const { Application } = require('../models/application');
 const { Exporter } = require('../models/exporter');
 const { STATUS } = require('../enums');
-const addSubmissionData = require('./application-submit');
+const { addSubmissionData, submissionPortalActivity } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const {
@@ -232,7 +232,11 @@ exports.changeStatus = async (req, res) => {
       existingApplication,
     );
 
+    // portalActivities array with added submission activity
+    const portalActivities = await submissionPortalActivity(existingApplication);
+
     applicationUpdate = {
+      portalActivities,
       ...applicationUpdate,
       ...submissionData,
     };

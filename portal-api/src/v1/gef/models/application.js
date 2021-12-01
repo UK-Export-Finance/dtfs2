@@ -34,6 +34,7 @@ class Application {
       this.editedBy = editedBy;
       this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
       this.facilitiesUpdated = null;
+      this.portalActivities = [];
     } else {
       // Update
       this.updatedAt = Date.now();
@@ -53,6 +54,7 @@ class Application {
         'eligibility',
         'facilitiesUpdated',
         'ukefDecisionAccepted',
+        'activities',
       ];
 
       if (req.eligibility) {

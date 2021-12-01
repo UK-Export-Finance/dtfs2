@@ -16,7 +16,7 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
 
-const { format } = require('date-fns');
+const { format, fromUnixTime } = require('date-fns');
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
   criteria.version === 1.5).terms;
@@ -86,6 +86,7 @@ describe(baseUrl, () => {
           supportingInformation: {},
           ukefDealId: null,
           checkerId: null,
+          portalActivities: [],
         })),
       };
 
@@ -130,6 +131,7 @@ describe(baseUrl, () => {
         },
         ukefDealId: null,
         checkerId: null,
+        portalActivities: [],
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -189,6 +191,7 @@ describe(baseUrl, () => {
         supportingInformation: {},
         ukefDealId: null,
         checkerId: null,
+        portalActivities: [],
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
             ...criterion,
@@ -436,6 +439,34 @@ describe(baseUrl, () => {
     it('returns a 404 when application does not exist', async () => {
       const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/doesnotexist`);
       expect(status).toEqual(404);
+    });
+
+    it('adds an submission object to portalActivities array', async () => {
+      const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      const applicationId = body._id;
+
+      // adds required fields to the gef deal
+      await as(aChecker).put({ checkerId: aChecker._id, submissionType: 'Manual Inclusion Application' }).to(`${baseUrl}/${applicationId}`);
+      const putResponse = await as(aChecker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${applicationId}`);
+
+      const result = putResponse.body.portalActivities[0];
+      expect(result.type).toEqual('NOTICE');
+
+      // matches date as timestamps may be seconds off
+      const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
+      const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
+      expect(receivedDate).toEqual(expectedDate);
+
+      expect(result.text).toEqual('');
+      expect(result.label).toEqual('Manual inclusion application submitted to UKEF');
+
+      // get author object from achecker
+      const author = {
+        firstName: aChecker.firstname,
+        lastName: aChecker.surname,
+        _id: aChecker._id,
+      };
+      expect(result.author).toEqual(author);
     });
   });
 
