@@ -2,6 +2,7 @@ const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
+const { format } = require('date-fns');
 const { FACILITY_PROVIDED_DETAILS } = require('../../constants');
 
 // Fetches the user token = require( sessio)n
@@ -239,6 +240,46 @@ const isUkefReviewPositive = (applicationStatus) => {
   return acceptable.includes(applicationStatus);
 };
 
+const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed).map(({ details }) =>
+  [
+    { text: details.name },
+    { text: details.ukefFacilityId },
+    { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+    { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/ukef-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
+  ]);
+
+const getFacilityCoverStartDate = (facility) => {
+  const epoch = facility.details.coverStartDate ? facility.details.coverStartDate : null;
+  return {
+    date: format(new Date(epoch), 'd'),
+    month: format(new Date(epoch), 'M'),
+    year: format(new Date(epoch), 'yyyy'),
+  };
+};
+
+const getUTCDate = () => {
+  const date = new Date();
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0);
+};
+
+const getEpoch = ({ day, month, year }) => Date.UTC(year, (month - 1), day);
+
+const pastDate = ({ day, month, year }) => {
+  const input = getEpoch({ day, month, year });
+  const now = getUTCDate();
+  return input < now;
+};
+
+const futureDateInRange = ({ day, month, year }, days) => {
+  if (!pastDate({ day, month, year })) {
+    const input = getEpoch({ day, month, year });
+    let range = getUTCDate();
+    range += (86400000 * days);
+    return input <= range;
+  }
+  return false;
+};
+
 module.exports = {
   apiErrorHandler,
   getApplicationType,
@@ -254,4 +295,10 @@ module.exports = {
   isNotice,
   isUkefReviewAvailable,
   isUkefReviewPositive,
+  getFacilitiesAsArray,
+  getFacilityCoverStartDate,
+  futureDateInRange,
+  pastDate,
+  getEpoch,
+  getUTCDate,
 };

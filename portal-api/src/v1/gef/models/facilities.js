@@ -66,6 +66,7 @@ class Facility {
       this.feeType = null;
       this.feeFrequency = null;
       this.dayCountBasis = null;
+      this.coverDateConfirmed = null;
     } else {
       // update facility
       if (req.hasBeenIssued != null) {
@@ -142,7 +143,7 @@ class Facility {
         this.guaranteeFee = req.guaranteeFee;
       }
 
-      if (req.ukefFacilityId !== null) {
+      if (req.ukefFacilityId && req.ukefFacilityId !== null) {
         this.ukefFacilityId = req.ukefFacilityId;
       }
 
@@ -161,6 +162,10 @@ class Facility {
         this.shouldCoverStartOnSubmission = null;
       } else if (req.hasBeenIssued === true) {
         this.monthsOfCover = null;
+      }
+
+      if (req.coverDateConfirmed) {
+        this.coverDateConfirmed = req.coverDateConfirmed;
       }
 
       this.updatedAt = Date.now();

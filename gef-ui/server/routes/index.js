@@ -27,6 +27,7 @@ const supportingInformation = require('./supporting-information');
 const file = require('./file');
 const reviewUkefDecision = require('./review-decision');
 const confirmCoverStartDate = require('./confirm-cover-start-date');
+const ukefCoverStartDate = require('./ukef-cover-start-date');
 
 const router = express.Router();
 
@@ -59,5 +60,6 @@ router.use(supportingInformation);
 router.use(file);
 router.use(reviewUkefDecision);
 router.use(confirmCoverStartDate);
+router.use(ukefCoverStartDate);
 
 module.exports = router;

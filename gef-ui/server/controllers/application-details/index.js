@@ -1,7 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const { mapSummaryList, isUkefReviewAvailable, isUkefReviewPositive } = require('../../utils/helpers');
+const
+  {
+    mapSummaryList,
+    isUkefReviewAvailable,
+    isUkefReviewPositive,
+    getFacilitiesAsArray,
+    getFacilityCoverStartDate,
+  } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
 } = require('../../utils/display-items');
@@ -119,6 +126,7 @@ const stateToPartial = (status, url) => {
   const partials = {
     'review-decision': 'review-decision',
     'confirm-cover-start-date': 'confirm-cover-start-date',
+    'ukef-cover-start-date': 'ukef-cover-start-date',
   };
 
   return url in partials
@@ -128,14 +136,15 @@ const stateToPartial = (status, url) => {
 
 const applicationDetails = async (req, res, next) => {
   const {
-    params: { applicationId },
+    params: { applicationId, facilityId },
     session: { user, userToken },
   } = req;
   const facilitiesPartials = [
     'confirm-cover-start-date',
+    'ukef-cover-start-date',
   ];
 
-  let facilities;
+  let facility;
   let url;
 
   try {
@@ -160,41 +169,27 @@ const applicationDetails = async (req, res, next) => {
     }
 
     if (facilitiesPartials.includes(url)) {
-      facilities = await api.getFacilities(applicationId);
-      if (facilities.items) {
-        const mappedFacilities = [];
-
-        facilities.items.forEach((facility) => {
-          mappedFacilities.push(
-            { text: facility.details.name },
-            { text: facility.details.ukefFacilityId },
-            { text: facility.details.value },
-            { text: 'abc' },
-          );
-        });
-
-        facilities = mappedFacilities;
-        console.log({ facilities });
+      if (url === 'confirm-cover-start-date') {
+        facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
+      } else if (url === 'ukef-cover-start-date') {
+        facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       }
     }
 
     const partial = stateToPartial(application.status, url);
 
-    let params;
+    const params = {
+      user,
+      ...buildView(applicationWithMaker, previewMode),
+      facility,
+    };
 
     if (req.errors) {
-      params = {
-        user,
-        ...buildView(applicationWithMaker, previewMode),
-        facilities,
-        errors: req.errors,
-      };
-    } else {
-      params = {
-        user,
-        ...buildView(applicationWithMaker, previewMode),
-        facilities,
-      };
+      params.errors = req.errors;
+    }
+
+    if (req.success) {
+      params.success = req.success;
     }
 
     return res.render(`partials/${partial}.njk`, params);
