@@ -131,9 +131,11 @@ const handleTaskEditFlagAndStatus = (
 
     /**
      * Otherwise, the task can be started - because the previous task is complete.
-     * Therefore, update the canEdit flag and change status to 'To do'.
+     * Therefore, if the task is locked,
+     * update the canEdit flag and change status to 'To do'.
      * */
-    if (!isTaskThatIsBeingUpdated) {
+    if (!isTaskThatIsBeingUpdated
+      && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
       updatedTask.canEdit = true;
       updatedTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
 
@@ -147,7 +149,7 @@ const handleTaskEditFlagAndStatus = (
    * */
   if (taskCanBeEditedWithoutPreviousTaskComplete(group, task)) {
     if (isTaskThatIsBeingUpdated) {
-      if (updatedTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
       return { updatedTask };
