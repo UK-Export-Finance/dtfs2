@@ -1,6 +1,6 @@
 const express = require('express');
 const validateToken = require('../middleware/validateToken');
-const downloadFile = require('../controllers/file');
+const downloadFile = require('../controllers/downloadFile');
 
 const router = express.Router();
 
