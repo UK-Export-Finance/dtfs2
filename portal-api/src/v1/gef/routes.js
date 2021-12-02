@@ -27,6 +27,9 @@ router.route('/application/:id')
   .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.update) // checker can add a comment
   .delete(validate({ role: ['maker', 'data-admin'] }), application.delete);
 
+router.route('/application/supporting-information/:id')
+  .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.updateSupportingInformation);
+
 router.route('/application/status/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getStatus)
   .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.changeStatus);

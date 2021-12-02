@@ -57,6 +57,15 @@ const updateApplication = async (applicationId, application) => {
   }
 };
 
+const updateSupportingInformation = async (applicationId, application, field) => {
+  try {
+    const { data } = await Axios.put(`/gef/application/supporting-information/${applicationId}`, { application, field });
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const setApplicationStatus = async (applicationId, status) => {
   try {
     const { data } = await Axios.put(`/gef/application/status/${applicationId}`, {
@@ -261,4 +270,5 @@ module.exports = {
   uploadFile,
   deleteFile,
   downloadFile,
+  updateSupportingInformation,
 };
