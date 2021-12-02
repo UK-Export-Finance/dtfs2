@@ -26,7 +26,7 @@ import facilityConfirmDeletion from '../facility-confirm-deletion';
 import returnToMaker from '../return-to-maker';
 import supportingInformation from '../supporting-information';
 import portalActivities from '../application-activities';
-import file from '../file';
+import file from '../downloadFile';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
