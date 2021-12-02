@@ -7,7 +7,7 @@ const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
-const { assignGroupTasksToOneUser } = require('./tasks.controller');
+const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 const findOneTfmDeal = async (dealId) => {
