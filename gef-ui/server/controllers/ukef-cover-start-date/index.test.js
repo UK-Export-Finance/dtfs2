@@ -1,6 +1,10 @@
 import { processCoverStartDate } from './index';
 import api from '../../services/api';
 
+const Chance = require('chance');
+
+const chance = new Chance();
+
 jest.mock('../../services/api');
 
 const MockResponse = () => {
@@ -36,59 +40,115 @@ const MockRequest = () => {
   return req;
 };
 
-const mockExporter = {
-  status: 'NOT_STARTED',
+const MockRequestUrl = (url) => {
+  const req = {};
+  req.params = {};
+  req.query = {};
+  req.params.applicationId = '123';
+  req.url = url;
+  req.session = {
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+      _id: 1235,
+    },
+    userToken: 'TEST',
+  };
+  return req;
 };
-const MockExporterResponse = () => mockExporter;
-
-const mockFacilities = {
-  status: 'NOT_STARTED',
-};
-
-const MockFacilitiesResponse = () => mockFacilities;
 
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
   res.exporterId = '123';
-  res.bankInternalRefName = 'My test';
-  res.comments = [{
-    role: 'maker',
-    userName: 'Test User',
-    createdAt: '1625482095783',
-    comment: 'The client needs this asap.',
-  }];
   res.bankId = 'BANKID';
-  res.submissionType = 'Manual Inclusion Notice';
-  res.status = 'UKEF_APPROVED_WITH_CONDITIONS';
+  res.bankInternalRefName = 'Internal refernce';
+  res.additionalRefName = 'Additional reference';
+  res.status = 'DRAFT';
+  res.userId = 'mock-user';
+  res.supportingInformation = {
+    status: 'NOT_STARTED',
+  };
+  res.eligibility = {
+    criteria: [
+      { id: 12, answer: null, text: 'Test' },
+    ],
+    status: 'IN_PROGRESS',
+  };
+  res.editedBy = ['MAKER_CHECKER'];
+  res.submissionType = 'Automatic Inclusion Application';
+  res.submissionCount = 0;
+  res.comments = [];
+  res.ukefDealId = null;
+  res.createdAt = chance.timestamp();
+  res.submissionDate = chance.timestamp();
   return res;
 };
 
-const MockMakerUserResponse = () => ({
-  firstName: 'first',
-  surname: 'surname',
+const MockUserResponse = () => ({
+  username: 'maker',
+  bank: { id: 'BANKID' },
+  firstname: 'Joe',
+  surname: 'Bloggs',
   timezone: 'Europe/London',
 });
+
+const MockExporterResponse = () => {
+  const res = {};
+  res.details = {};
+  res.status = 'IN_PROGRESS';
+  res.validation = {};
+  res.details.companiesHouseRegistrationNumber = 'tedsi';
+  res.details.companyName = 'Test Company';
+  res.validation.required = [];
+  return res;
+};
+
+const MockEligibilityCriteriaResponse = () => ({
+  terms: [
+    {
+      id: 12,
+      text: 'Some eligibility criteria',
+      errMsg: '12. Select some eligibility',
+    },
+  ],
+});
+
+const MockFacilityResponse = () => {
+  const res = {};
+  res.status = 'IN_PROGRESS';
+  res.data = [];
+  res.items = [{
+    details: { type: 'CASH' },
+    validation: { required: [] },
+    createdAt: 20,
+  }];
+  return res;
+};
 
 describe('controller/ukef-cover-start-date', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
+  let mockExporterResponse;
+  let mockFacilityResponse;
+  let mockUserResponse;
+  let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
-
-    const mockExporterResponse = MockExporterResponse();
-    const mockFacilitiesResponse = MockFacilitiesResponse();
+    mockExporterResponse = MockExporterResponse();
+    mockFacilityResponse = MockFacilityResponse();
+    mockUserResponse = MockUserResponse();
+    mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
-    api.updateApplication.mockResolvedValue(mockApplicationResponse);
-    api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(mockExporterResponse);
-    api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
+    api.getFacilities.mockResolvedValue(mockFacilityResponse);
+    api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
+    api.getUserDetails.mockResolvedValue(mockUserResponse);
   });
 
   afterEach(() => {
@@ -98,6 +158,8 @@ describe('controller/ukef-cover-start-date', () => {
   describe('Process cover start date for the facility', () => {
     it('Render the expected behaviour', async () => {
       await processCoverStartDate(mockRequest, mockResponse);
+      expect(mockResponse.redirect)
+        .toHaveBeenCalledWith('/gef/application-details/1234/confirm-cover-start-date');
     });
   });
 });

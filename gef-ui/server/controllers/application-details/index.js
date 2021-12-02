@@ -181,8 +181,11 @@ const applicationDetails = async (req, res, next) => {
     const params = {
       user,
       ...buildView(applicationWithMaker, previewMode),
-      facility,
     };
+
+    if (facility) {
+      params.facility = facility;
+    }
 
     if (req.errors) {
       params.errors = req.errors;
@@ -194,7 +197,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (err) {
-    console.error('Unable to build application view', { err });
+    console.log('Unable to build application view', { err });
     return next(err);
   }
 };

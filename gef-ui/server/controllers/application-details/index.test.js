@@ -66,6 +66,7 @@ const MockApplicationResponse = () => {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
     ],
+    status: 'IN_PROGRESS',
   };
   res.editedBy = ['MAKER_CHECKER'];
   res.submissionType = 'Automatic Inclusion Application';
