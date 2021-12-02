@@ -4,6 +4,7 @@ const {
 const api = require('../../services/api');
 const { FACILITY_TYPE } = require('../../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
+const CONSTANTS = require('../../../constants');
 
 const aboutFacility = async (req, res) => {
   const { params, query } = req;
@@ -242,13 +243,12 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
-    const dateFormat = 'MMMM d, yyyy';
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
       monthsOfCover: body.monthsOfCover || null,
-      coverStartDate: coverStartDate ? format(coverStartDate, dateFormat) : null,
-      coverEndDate: coverEndDate ? format(coverEndDate, dateFormat) : null,
+      coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+      coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
     });
 
     if (isTrueSet(saveAndReturn) || status === 'change') {

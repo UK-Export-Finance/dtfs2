@@ -61,6 +61,10 @@ const AUTHORISATION_LEVEL = {
 
 const DEFAULT_COUNTRY = 'United Kingdom';
 
+const DATE_FORMAT = {
+  COVER: 'MMMM d, yyyy',
+};
+
 module.exports = {
   PROGRESS,
   DEAL_SUBMISSION_TYPE,
@@ -72,4 +76,5 @@ module.exports = {
   FACILITY_PAYMENT_TYPE,
   AUTHORISATION_LEVEL,
   DEFAULT_COUNTRY,
+  DATE_FORMAT,
 };
