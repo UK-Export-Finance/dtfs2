@@ -96,7 +96,9 @@ const updateTasksCanEdit = async (allTaskGroups, groupId, taskUpdate, deal, urlO
             task.id === taskUpdate.id
             && task.groupId === taskUpdate.groupId);
 
-          const shouldUpdate = (!isTaskThatIsBeingUpdated && !task.canEdit);
+          const shouldUpdate = (!isTaskThatIsBeingUpdated
+            && !task.canEdit
+            && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START);
 
           if (shouldUpdate) {
             return {
