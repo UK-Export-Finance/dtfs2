@@ -17,6 +17,7 @@ module.exports = {
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
+    'consistent-return': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

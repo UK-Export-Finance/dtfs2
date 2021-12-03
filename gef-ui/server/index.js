@@ -5,23 +5,25 @@ const session = require('express-session');
 const redis = require('redis');
 const flash = require('connect-flash');
 const path = require('path');
-// const helmet = require('helmet');
+const RedisStore = require('connect-redis')(session);
+const dotenv = require('dotenv');
 
 require('./azure-env');
-
-const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const sentry = require('./utils/sentry');
+// const helmet = require('helmet');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
+// TODO: re-enable Helmet (Jira - 4998)
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
 //   }),
 // );
+
+dotenv.config();
 
 app.use(sentry);
 app.use(compression());
