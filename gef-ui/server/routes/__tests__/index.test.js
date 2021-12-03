@@ -9,7 +9,7 @@ import applicationAbandonRoutes from '../application-abandon';
 import applicationSubmissionRoutes from '../application-submission';
 import submitToUkefRoutes from '../submit-to-ukef';
 import reviewDecisionRoutes from '../review-decision';
-import ukefCoverStartDate from '../ukef-cover-start-date';
+import coverStartDateRoutes from '../cover-start-date';
 import confirmCoverStartDateRoutes from '../confirm-cover-start-date';
 import companiesHouseRoutes from '../companies-house';
 import exportersAddressRoutes from '../exporters-address';

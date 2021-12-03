@@ -91,7 +91,7 @@ describe('controller/review-decision', () => {
       await acceptUkefDecision(mockRequest, mockResponse);
 
       expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/1234/confirm-cover-start-date');
+        .toHaveBeenCalledWith('/gef/application-details/1234/cover-start-date');
     });
   });
 });

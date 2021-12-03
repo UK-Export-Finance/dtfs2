@@ -609,7 +609,7 @@ describe('getFacilitiesAsArray', () => {
         { text: 'Facility one' },
         { text: '0030113306' },
         { text: 'GBP 1,000.00' },
-        { html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/ukef-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>" },
+        { html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>" },
       ],
     ];
     expect(getFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);

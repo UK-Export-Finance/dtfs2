@@ -29,7 +29,7 @@ const MockRequest = () => {
   req.success = {
     message: 'Cover start date for 4321 confirmed',
   };
-  req.url = '/gef/application-details/1234/confirm-cover-start-date';
+  req.url = '/gef/application-details/1234/cover-start-date';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -168,6 +168,11 @@ describe('controller/ukef-cover-start-date', () => {
   describe('Process cover start date for the facility', () => {
     it('Render the expected behaviour', async () => {
       expect(await processCoverStartDate(mockRequest, mockResponse));
+
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('partials/cover-start-date.njk', expect.objectContaining({
+          applicationStatus: mockApplicationResponse.status,
+        }));
     });
   });
 });

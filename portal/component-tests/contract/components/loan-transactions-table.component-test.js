@@ -100,7 +100,7 @@ describe(component, () => {
         deal.loanTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-cover-start-date-${facility._id}"]`).toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).notToExist();
         });

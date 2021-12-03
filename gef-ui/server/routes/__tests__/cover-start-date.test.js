@@ -14,7 +14,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('../ukef-cover-start-date');
+    require('../cover-start-date');
   });
 
   afterEach(() => {
@@ -22,7 +22,6 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/:facilityId/ukef-cover-start-date/', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/:facilityId/ukef-cover-start-date/', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/cover-start-date', validateToken, expect.any(Function));
   });
 });
