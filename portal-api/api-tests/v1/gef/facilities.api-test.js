@@ -60,6 +60,7 @@ describe(baseUrl, () => {
         dayCountBasis: null,
         feeType: null,
         feeFrequency: null,
+        coverDateConfirmed: null,
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
@@ -82,6 +83,8 @@ describe(baseUrl, () => {
       dayCountBasis: 365,
       feeType: 'in advance',
       feeFrequency: 'Monthly',
+      coverDateConfirmed: true,
+      ukefFacilityId: 1234,
     };
   });
 
@@ -269,6 +272,8 @@ describe(baseUrl, () => {
         feeType: 'in advance',
         feeFrequency: 'Monthly',
         dayCountBasis: 365,
+        coverDateConfirmed: true,
+        ukefFacilityId: 1234,
       };
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
@@ -282,6 +287,8 @@ describe(baseUrl, () => {
           monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
           ukefExposure: calculateUkefExposure(update, {}),
           guaranteeFee: calculateGuaranteeFee(update, {}),
+          coverDateConfirmed: true,
+          ukefFacilityId: 1234,
         },
         validation: {
           required: [],

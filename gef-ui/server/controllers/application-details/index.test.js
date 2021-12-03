@@ -66,6 +66,7 @@ const MockApplicationResponse = () => {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
     ],
+    status: 'IN_PROGRESS',
   };
   res.editedBy = ['MAKER_CHECKER'];
   res.submissionType = 'Automatic Inclusion Application';
@@ -240,6 +241,7 @@ describe('controllers/application-detaills', () => {
           checkerCanSubmit: expect.any(Boolean),
           isUkefReviewAvailable: expect.any(Boolean),
           isUkefReviewPositive: expect.any(Boolean),
+          ukefDecisionAccepted: expect.any(Boolean),
           previewMode: expect.any(Boolean),
 
           // actions
