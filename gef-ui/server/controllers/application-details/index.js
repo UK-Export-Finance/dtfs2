@@ -1,7 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const { mapSummaryList, isUkefReviewAvailable, isUkefReviewPositive } = require('../../utils/helpers');
+const
+  {
+    mapSummaryList,
+    isUkefReviewAvailable,
+    isUkefReviewPositive,
+    getFacilitiesAsArray,
+    getFacilityCoverStartDate,
+  } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
 } = require('../../utils/display-items');
@@ -78,6 +85,7 @@ function buildBody(app, previewMode) {
     ukefDecision: app.ukefDecision,
     isUkefReviewAvailable: isUkefReviewAvailable(app.status),
     isUkefReviewPositive: isUkefReviewPositive(app.status),
+    ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
     previewMode,
   };
 }
@@ -99,11 +107,6 @@ function buildView(app, previewMode) {
 }
 
 const stateToPartial = (status, url) => {
-  let req;
-  if (url) {
-    req = url.split('/');
-    req = req[req.length - 1];
-  }
   // Behaviour depending on application state
   const template = {
     DRAFT: 'application-details',
@@ -122,19 +125,28 @@ const stateToPartial = (status, url) => {
 
   const partials = {
     'review-decision': 'review-decision',
+    'cover-start-date': 'cover-start-date',
     'confirm-cover-start-date': 'confirm-cover-start-date',
   };
 
-  return req in partials
-    ? partials[req]
+  return url in partials
+    ? partials[url]
     : template[status];
 };
 
 const applicationDetails = async (req, res, next) => {
   const {
-    params: { applicationId },
+    params: { applicationId, facilityId },
     session: { user, userToken },
   } = req;
+  const facilitiesPartials = [
+    'cover-start-date',
+    'confirm-cover-start-date',
+  ];
+
+  let facility;
+  let url;
+
   try {
     const application = await Application.findById(applicationId, user, userToken);
     if (!application) {
@@ -151,20 +163,36 @@ const applicationDetails = async (req, res, next) => {
       maker,
     };
 
-    const partial = stateToPartial(application.status, req.url);
-    let params;
+    if (req.url) {
+      url = req.url.split('/');
+      url = url[url.length - 1];
+    }
+
+    if (facilitiesPartials.includes(url)) {
+      if (url === 'cover-start-date') {
+        facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
+      } else if (url === 'confirm-cover-start-date') {
+        facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
+      }
+    }
+
+    const partial = stateToPartial(application.status, url);
+
+    const params = {
+      user,
+      ...buildView(applicationWithMaker, previewMode),
+    };
+
+    if (facility) {
+      params.facility = facility;
+    }
 
     if (req.errors) {
-      params = {
-        user,
-        ...buildView(applicationWithMaker, previewMode),
-        errors: req.errors,
-      };
-    } else {
-      params = {
-        user,
-        ...buildView(applicationWithMaker, previewMode),
-      };
+      params.errors = req.errors;
+    }
+
+    if (req.success) {
+      params.success = req.success;
     }
 
     return res.render(`partials/${partial}.njk`, params);

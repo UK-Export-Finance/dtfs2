@@ -10,7 +10,82 @@ import {
   isNotice,
   isUkefReviewAvailable,
   isUkefReviewPositive,
+  getUTCDate,
+  getEpoch,
+  pastDate,
+  futureDateInRange,
+  getFacilityCoverStartDate,
+  getFacilitiesAsArray,
 } from './helpers';
+
+const MOCK_FACILITY = {
+  items: [
+    {
+      status: 'COMPLETED',
+      details: {
+        _id: '61a7714f2ae62b0013dae689',
+        applicationId: '61a7710b2ae62b0013dae687',
+        type: 'CASH',
+        hasBeenIssued: true,
+        name: 'Facility one',
+        shouldCoverStartOnSubmission: false,
+        coverStartDate: '2021-12-03T00:00:00.000Z',
+        coverEndDate: '2040-01-01T00:00:00.000Z',
+        monthsOfCover: null,
+        details: [],
+        detailsOther: '',
+        currency: 'GBP',
+        value: 1000,
+        coverPercentage: 80,
+        interestPercentage: 1,
+        paymentType: 'IN_ADVANCE_MONTHLY',
+        createdAt: 1638363471661,
+        updatedAt: 1638446928711,
+        ukefExposure: 800,
+        guaranteeFee: 0.9,
+        submittedAsIssuedDate: '1638363717231',
+        ukefFacilityId: '0030113306',
+        feeType: 'in advance',
+        feeFrequency: 'Monthly',
+        dayCountBasis: 360,
+        coverDateConfirmed: null,
+      },
+      validation: { required: [] },
+    },
+    {
+      status: 'COMPLETED',
+      details: {
+        _id: '61a771cc2ae62b0013dae68a',
+        applicationId: '61a7710b2ae62b0013dae687',
+        type: 'CASH',
+        hasBeenIssued: true,
+        name: 'Facility two',
+        shouldCoverStartOnSubmission: true,
+        coverStartDate: 1638403200000,
+        coverEndDate: '2030-01-01T00:00:00.000Z',
+        monthsOfCover: null,
+        details: [],
+        detailsOther: '',
+        currency: 'GBP',
+        value: 2000,
+        coverPercentage: 80,
+        interestPercentage: 1,
+        paymentType: 'IN_ADVANCE_MONTHLY',
+        createdAt: 1638363596947,
+        updatedAt: 1638442632540,
+        ukefExposure: 1600,
+        guaranteeFee: 0.9,
+        submittedAsIssuedDate: '1638363717231',
+        ukefFacilityId: '0030113305',
+        feeType: 'in advance',
+        feeFrequency: 'Monthly',
+        dayCountBasis: 365,
+        coverDateConfirmed: true,
+      },
+      validation: { required: [] },
+    },
+  ],
+};
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {
@@ -461,5 +536,82 @@ describe('stringToBoolean', () => {
 
   it('returns `false` string as boolean', () => {
     expect(stringToBoolean('false')).toEqual(false);
+  });
+});
+
+describe('getUTCDate', () => {
+  it('Should return EPOCH for the current date time', () => {
+    const date = new Date();
+    const expected = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0);
+    expect(getUTCDate()).toEqual(expected);
+  });
+});
+
+describe('getEpoch', () => {
+  it('Should return EPOCH for the specified day, month and year custom date object', () => {
+    expect(getEpoch({ year: 1970, month: 1, day: 1 })).toEqual(0);
+  });
+  it('Should return EPOCH for the specified day, month and year custom date object', () => {
+    expect(getEpoch({ year: 2021, month: 1, day: 1 })).toEqual(1609459200000);
+  });
+});
+
+describe('pastDate', () => {
+  it('Should return TRUE for the specified date', () => {
+    expect(pastDate({ day: 1, month: 1, year: 1970 })).toEqual(true);
+  });
+  it('Should return TRUE for the specified date', () => {
+    expect(pastDate({ day: 20, month: 9, year: 1989 })).toEqual(true);
+  });
+  it('Should return FALSE for the specified date', () => {
+    const date = new Date();
+    expect(pastDate({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() })).toEqual(false);
+  });
+});
+
+describe('futureDateInRange', () => {
+  it('Should return FALSE for the specified day and range days', () => {
+    expect(futureDateInRange({ day: 1, month: 1, year: 1970 }, 30)).toEqual(false);
+  });
+  it('Should return FALSE for the specified day and range days', () => {
+    expect(futureDateInRange({ day: 1, month: 1, year: 9999 }, 30)).toEqual(false);
+  });
+  it('Should return TRUE for the specified day and range days', () => {
+    const date = new Date();
+    expect(futureDateInRange({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() }, 365)).toEqual(true);
+  });
+
+  describe('getFacilityCoverStartDate', () => {
+    it('Should return expected date object for mock facility', () => {
+      const expected = {
+        date: '2',
+        month: '12',
+        year: '2021',
+      };
+      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[1])).toEqual(expected);
+    });
+
+    it('Should return expected date object for mock facility', () => {
+      const expected = {
+        date: '3',
+        month: '12',
+        year: '2021',
+      };
+      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
+    });
+  });
+});
+
+describe('getFacilitiesAsArray', () => {
+  it('Should return the expected facilities object from mock facilities array where the facility date has not been confirmed by the bank', () => {
+    const expected = [
+      [
+        { text: 'Facility one' },
+        { text: '0030113306' },
+        { text: 'GBP 1,000.00' },
+        { html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>" },
+      ],
+    ];
+    expect(getFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
   });
 });

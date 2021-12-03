@@ -40,7 +40,7 @@ $govuk-new-link-styles: true;
   margin-bottom: 40px;
   display: flex;
   justify-content: space-between;
-
+  
   .govuk-body,
   .govuk-link,
   .govuk-back-link {
@@ -71,12 +71,12 @@ $govuk-new-link-styles: true;
   ol {
     counter-reset: list;
   }
-
+  
   ol > li {
     list-style: none;
     position: relative;
   }
-
+  
   ol > li:before {
     counter-increment: list;
     content: "(" counter(list, lower-roman) ") ";
@@ -97,5 +97,11 @@ $govuk-new-link-styles: true;
     > h2 {
       margin-top: 0;
     }
+  }
+}
+
+.govuk-table__vertical-align {
+  .govuk-table__header, .govuk-table__cell {
+    vertical-align: middle;
   }
 }
