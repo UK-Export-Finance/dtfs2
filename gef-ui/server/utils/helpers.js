@@ -240,12 +240,19 @@ const isUkefReviewPositive = (applicationStatus) => {
   return acceptable.includes(applicationStatus);
 };
 
+/**
+ * This is a bespoke govUkTable mapping function which
+ * returns an array of all the facilities specifically
+ * for the cover-start-date.njk template.
+ * @param {Object} facilities
+ * @returns {Array}
+ */
 const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed).map(({ details }) =>
   [
     { text: details.name },
     { text: details.ukefFacilityId },
     { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-    { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/ukef-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
+    { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
   ]);
 
 const getFacilityCoverStartDate = (facility) => {

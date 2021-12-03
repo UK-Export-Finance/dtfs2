@@ -125,8 +125,8 @@ const stateToPartial = (status, url) => {
 
   const partials = {
     'review-decision': 'review-decision',
+    'cover-start-date': 'cover-start-date',
     'confirm-cover-start-date': 'confirm-cover-start-date',
-    'ukef-cover-start-date': 'ukef-cover-start-date',
   };
 
   return url in partials
@@ -140,8 +140,8 @@ const applicationDetails = async (req, res, next) => {
     session: { user, userToken },
   } = req;
   const facilitiesPartials = [
+    'cover-start-date',
     'confirm-cover-start-date',
-    'ukef-cover-start-date',
   ];
 
   let facility;
@@ -169,9 +169,9 @@ const applicationDetails = async (req, res, next) => {
     }
 
     if (facilitiesPartials.includes(url)) {
-      if (url === 'confirm-cover-start-date') {
+      if (url === 'cover-start-date') {
         facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
-      } else if (url === 'ukef-cover-start-date') {
+      } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       }
     }

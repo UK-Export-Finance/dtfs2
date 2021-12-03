@@ -26,8 +26,8 @@ const returnToMaker = require('./return-to-maker');
 const supportingInformation = require('./supporting-information');
 const file = require('./file');
 const reviewUkefDecision = require('./review-decision');
-const confirmCoverStartDate = require('./confirm-cover-start-date');
-const ukefCoverStartDate = require('./ukef-cover-start-date');
+const confirmCoverStartDate = require('./cover-start-date');
+const ukefCoverStartDate = require('./confirm-cover-start-date');
 
 const router = express.Router();
 
