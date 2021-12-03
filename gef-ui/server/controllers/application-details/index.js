@@ -197,7 +197,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (err) {
-    console.log('Unable to build application view', { err });
+    console.error('Unable to build application view', { err });
     return next(err);
   }
 };
