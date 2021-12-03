@@ -8,7 +8,6 @@ const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 const getStatusLabel = require('./filter-getStatusLabel');
 let mojFilters = require('../../node_modules/@ministryofjustice/frontend/moj/filters/all')();
 
-
 const configureNunjucks = (opts) => {
   const appViews = [
     'node_modules/govuk-frontend',

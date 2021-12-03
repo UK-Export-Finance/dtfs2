@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const Chance = require('chance');
 
 const chance = new Chance();
