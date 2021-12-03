@@ -58,7 +58,7 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(applicationSubmissionRoutes);
     expect(useSpy).toHaveBeenCalledWith(submitToUkefRoutes);
     expect(useSpy).toHaveBeenCalledWith(reviewDecisionRoutes);
-    expect(useSpy).toHaveBeenCalledWith(ukefCoverStartDate);
+    expect(useSpy).toHaveBeenCalledWith(coverStartDateRoutes);
     expect(useSpy).toHaveBeenCalledWith(confirmCoverStartDateRoutes);
     expect(useSpy).toHaveBeenCalledWith(companiesHouseRoutes);
     expect(useSpy).toHaveBeenCalledWith(exportersAddressRoutes);
