@@ -274,6 +274,10 @@ const futureDateInRange = ({ day, month, year }, days) => {
   if (!pastDate({ day, month, year })) {
     const input = getEpoch({ day, month, year });
     let range = getUTCDate();
+    /**
+     * 86400000 = 24 hours * 60 minutes * 60 seconds * 1000 ms
+     * Number of ms in a day
+     * */
     range += (86400000 * days);
     return input <= range;
   }
