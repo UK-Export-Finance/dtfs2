@@ -76,16 +76,16 @@ const MockUserResponse = () => ({
   timezone: 'Europe/London',
 });
 
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.details.companyName = 'Test Company';
-  res.validation.required = [];
-  return res;
-};
+const MockExporterResponse = () => ({
+  status: 'IN_PROGRESS',
+  details: {
+    companiesHouseRegistrationNumber: 'tedsi',
+    companyName: 'Test Company',
+  },
+  validation: {
+    required: [],
+  },
+});
 
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
