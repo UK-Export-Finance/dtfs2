@@ -102,7 +102,34 @@ const MockFacilityResponse = () => {
   res.status = 'IN_PROGRESS';
   res.data = [];
   res.items = [{
-    details: { type: 'CASH' },
+    details: {
+      _id: '61a7714f2ae62b0013dae689',
+      applicationId: '61a7710b2ae62b0013dae687',
+      type: 'CASH',
+      hasBeenIssued: true,
+      name: 'Facility one',
+      shouldCoverStartOnSubmission: false,
+      coverStartDate: '2021-12-03T00:00:00.000Z',
+      coverEndDate: '2040-01-01T00:00:00.000Z',
+      monthsOfCover: null,
+      details: [],
+      detailsOther: '',
+      currency: 'GBP',
+      value: 1000,
+      coverPercentage: 80,
+      interestPercentage: 1,
+      paymentType: 'IN_ADVANCE_MONTHLY',
+      createdAt: 1638363471661,
+      updatedAt: 1638446928711,
+      ukefExposure: 800,
+      guaranteeFee: 0.9,
+      submittedAsIssuedDate: '1638363717231',
+      ukefFacilityId: '0030113306',
+      feeType: 'in advance',
+      feeFrequency: 'Monthly',
+      dayCountBasis: 360,
+      coverDateConfirmed: null,
+    },
     validation: { required: [] },
     createdAt: 20,
   }];
@@ -140,9 +167,7 @@ describe('controller/ukef-cover-start-date', () => {
 
   describe('Process cover start date for the facility', () => {
     it('Render the expected behaviour', async () => {
-      await processCoverStartDate(mockRequest, mockResponse);
-      expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/1234/confirm-cover-start-date');
+      expect(await processCoverStartDate(mockRequest, mockResponse));
     });
   });
 });
