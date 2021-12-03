@@ -232,11 +232,7 @@ exports.changeStatus = async (req, res) => {
       existingApplication,
     );
 
-    // portalActivities array with added submission activity
-    const portalActivities = await submissionPortalActivity(existingApplication);
-
     applicationUpdate = {
-      portalActivities,
       ...applicationUpdate,
       ...submissionData,
     };

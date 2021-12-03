@@ -25,14 +25,14 @@ context('Return to Maker as MIN', () => {
       });
   });
 
-  describe('create and submit an MIN', () => {
+  describe('create and submit an MIA', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${applicationId}`));
       Cypress.Cookies.preserveOnce('connect.sid');
     });
 
-    it('create an MIN as a Maker and submit it to the Checker', () => {
+    it('create an MIA as a Maker and submit it to the Checker', () => {
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el, index) => {

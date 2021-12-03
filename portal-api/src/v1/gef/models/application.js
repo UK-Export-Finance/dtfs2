@@ -54,7 +54,7 @@ class Application {
         'eligibility',
         'facilitiesUpdated',
         'ukefDecisionAccepted',
-        'activities',
+        'portalActivities',
       ];
 
       if (req.eligibility) {

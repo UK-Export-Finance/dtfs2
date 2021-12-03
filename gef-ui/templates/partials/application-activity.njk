@@ -1,0 +1,31 @@
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Application Activities
+{% endblock %}
+
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{{ govukPhaseBanner({
+  tag: {
+    text: "beta"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+
+{% block content %}
+
+  {% include "includes/application-preview/summary.njk" %}
+   {% include "includes/application-preview/application-sub-navigation.njk" %}
+
+  <h1 class="govuk-heading-xl" data-cy="main-activity-heading">Activity and comments</h1>
+
+   {{ mojTimeline({
+        items: portalActivities,
+        attributes: {
+          'data-cy': 'portal-activities-timeline'
+        }
+      }) }}
+
+{% endblock %}

@@ -115,13 +115,13 @@ const submissionTypeToConstant = (submissionType) => {
   let submissionConstant;
 
   switch (submissionType) {
-    case 'Automatic Inclusion Notice':
+    case CONSTANTS.DEAL.SUBMISSION_TYPE.AIN:
       submissionConstant = PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION;
       break;
-    case 'Manual Inclusion Notice':
+    case CONSTANTS.DEAL.SUBMISSION_TYPE.MIN:
       submissionConstant = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
       break;
-    case 'Manual Inclusion Application':
+    case CONSTANTS.DEAL.SUBMISSION_TYPE.MIA:
       submissionConstant = PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION;
       break;
     default:
@@ -152,11 +152,13 @@ const addSubmissionData = async (applicationId, existingApplication) => {
 
   await addSubmissionDateToIssuedFacilities(applicationId);
   await addUkefFacilityIdToFacilities(applicationId);
+  const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   return {
     submissionCount: count,
     submissionDate: date,
     ukefDealId: ukefId,
+    portalActivities: updatedPortalActivity,
   };
 };
 
