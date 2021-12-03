@@ -8,7 +8,7 @@
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}
 
-   <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-cover-start-date-{{ facility._id }}">
+   <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facility._id }}">
       {% if params.hasConfirmedCoverStartDate %} 
          Start date confirmed
       {% else %}
