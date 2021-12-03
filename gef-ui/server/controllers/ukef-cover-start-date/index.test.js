@@ -40,23 +40,6 @@ const MockRequest = () => {
   return req;
 };
 
-const MockRequestUrl = (url) => {
-  const req = {};
-  req.params = {};
-  req.query = {};
-  req.params.applicationId = '123';
-  req.url = url;
-  req.session = {
-    user: {
-      bank: { id: 'BANKID' },
-      roles: ['MAKER'],
-      _id: 1235,
-    },
-    userToken: 'TEST',
-  };
-  return req;
-};
-
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
