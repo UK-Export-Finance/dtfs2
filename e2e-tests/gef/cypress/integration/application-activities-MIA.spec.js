@@ -8,6 +8,7 @@ import securityDetails from './pages/security-details';
 import applicationSubmission from './pages/application-submission';
 import applicationPreview from './pages/application-preview';
 import submitToUkef from './pages/submit-to-ukef';
+import statusBanner from './pages/application-status-banner';
 
 import { format } from 'date-fns';
 
@@ -107,12 +108,12 @@ context('Submit AIN deal and check portalActivities', () => {
     const bannerDate = format(new Date(), 'dd MMM yyyy');
     it('should display the blue status banner', () => {
       applicationActivities.subNavigationBarActivities().click();
-      applicationActivities.applicationBanner().should('exist');
-      applicationActivities.bannerDateCreated().contains(bannerDate);
-      applicationActivities.bannerDateSubmitted().contains(bannerDate);
-      applicationActivities.bannerCreatedBy().contains(CREDENTIALS.MAKER.firstname);
-      applicationActivities.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
-      applicationActivities.bannerSubmissionType().contains('Manual Inclusion Application');
+      statusBanner.applicationBanner().should('exist');
+      statusBanner.bannerDateCreated().contains(bannerDate);
+      statusBanner.bannerDateSubmitted().contains(bannerDate);
+      statusBanner.bannerCreatedBy().contains(CREDENTIALS.MAKER.firstname);
+      statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
+      statusBanner.bannerSubmissionType().contains('Manual Inclusion Application');
     });
   });
 });

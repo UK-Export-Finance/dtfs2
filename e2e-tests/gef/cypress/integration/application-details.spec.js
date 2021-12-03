@@ -3,6 +3,7 @@ import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import facilities from './pages/facilities';
+import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 let applications;
@@ -29,20 +30,20 @@ context('Application Details Page', () => {
     });
 
     it('displays the application banner', () => {
-      applicationDetails.applicationBanner();
+      statusBanner.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
 
-      applicationDetails.bannerStatus().contains('Draft');
-      applicationDetails.bannerProduct().should('have.text','General Export Facility');
+      statusBanner.bannerStatus().contains('Draft');
+      statusBanner.bannerProduct().should('have.text','General Export Facility');
 
       const todayFormatted = format(new Date(), 'dd MMM yyyy')
-      applicationDetails.bannerDateCreated().contains(todayFormatted);
-      applicationDetails.bannerSubmissionType().should('have.text', '-');
-      applicationDetails.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`)
-      applicationDetails.bannerExporter().should('have.text', '-');
-      applicationDetails.bannerCheckedBy().should('have.text', '-');
-      applicationDetails.bannerBuyer().should('have.text', '-');
+      statusBanner.bannerDateCreated().contains(todayFormatted);
+      statusBanner.bannerSubmissionType().should('have.text', '-');
+      statusBanner.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`)
+      statusBanner.bannerExporter().should('have.text', '-');
+      statusBanner.bannerCheckedBy().should('have.text', '-');
+      statusBanner.bannerBuyer().should('have.text', '-');
     });
 
     it('displays the correct headings', () => {
@@ -130,12 +131,12 @@ context('Application Details Page', () => {
     });
 
     it('displays the application banner', () => {
-      applicationDetails.applicationBanner();
+      statusBanner.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
-      applicationDetails.bannerStatus().contains('Draft');
-      applicationDetails.bannerExporter().should('not.contain', '-');
+      statusBanner.bannerStatus().contains('Draft');
+      statusBanner.bannerExporter().should('not.contain', '-');
     });
 
     it('displays the correct submission type heading', () => {
@@ -183,13 +184,13 @@ context('Application Details Page', () => {
     });
 
     it('displays the application banner', () => {
-      applicationDetails.applicationBanner();
+      statusBanner.applicationBanner();
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
-      applicationDetails.bannerStatus().contains('Draft');
-      applicationDetails.bannerSubmissionType().should('have.text', 'Automatic Inclusion Notice');
-      applicationDetails.bannerExporter().should('not.contain', '-');
+      statusBanner.bannerStatus().contains('Draft');
+      statusBanner.bannerSubmissionType().should('have.text', 'Automatic Inclusion Notice');
+      statusBanner.bannerExporter().should('not.contain', '-');
     });
 
     it('displays the correct submission type heading', () => {
@@ -246,7 +247,7 @@ context('Application Details Page', () => {
     it('displays the correct submission type heading and text in banner', () => {
       applicationDetails.mainHeading().contains('Manual Inclusion Application');
 
-      applicationDetails.bannerSubmissionType().should('have.text', 'Manual Inclusion Application');
+      statusBanner.bannerSubmissionType().should('have.text', 'Manual Inclusion Application');
     });
 
     describe('Supporting information section', () => {

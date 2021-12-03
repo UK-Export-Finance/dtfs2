@@ -4,6 +4,7 @@ import manualInclusion from './pages/manual-inclusion-questionnaire';
 import securityDetails from './pages/security-details';
 import applicationDetails from './pages/application-details';
 import applicationSubmission from './pages/application-submission';
+import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const { format } = require('date-fns');
@@ -48,10 +49,10 @@ context('Submit to UKEF as MIA', () => {
       manualInclusion.continueButton().click();
       cy.visit(relative(`/gef/application-details/${applicationId}`));
 
-      applicationDetails.bannerStatus().contains('Draft');
+      statusBanner.bannerStatus().contains('Draft');
 
       const todayFormatted = format(new Date(), 'dd MMM yyyy');
-      applicationDetails.bannerDateCreated().contains(todayFormatted);
+      statusBanner.bannerDateCreated().contains(todayFormatted);
 
       securityDetails.visit(applicationId);
       securityDetails.exporterSecurity().type('test');

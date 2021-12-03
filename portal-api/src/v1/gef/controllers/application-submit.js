@@ -94,7 +94,7 @@ const getUserInfo = async (userId) => {
 
   const userCollection = await db.getCollection(userCollectionName);
   const {
-    firstname: firstName = '',
+    firstname,
     surname = '',
   } = userId
     ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
@@ -102,7 +102,7 @@ const getUserInfo = async (userId) => {
 
   // creates user object which can be used
   const user = {
-    firstname: firstName,
+    firstname,
     surname,
     _id: userId,
   };

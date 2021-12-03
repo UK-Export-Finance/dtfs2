@@ -3,6 +3,7 @@ import applicationActivities from './pages/application-activities';
 import CREDENTIALS from '../fixtures/credentials.json';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
+import statusBanner from './pages/application-status-banner';
 import applicationSubmission from './pages/application-submission';
 import applicationPreview from './pages/application-preview';
 import submitToUkef from './pages/submit-to-ukef';
@@ -95,12 +96,12 @@ context('Submit AIN deal and check portalActivities', () => {
     const bannerDate = format(new Date(), 'dd MMM yyyy');
     it('should display the blue status banner', () => {
       applicationActivities.subNavigationBarActivities().click();
-      applicationActivities.applicationBanner().should('exist');
-      applicationActivities.bannerDateCreated().contains(bannerDate);
-      applicationActivities.bannerDateSubmitted().contains(bannerDate);
-      applicationActivities.bannerCreatedBy().contains(CREDENTIALS.MAKER.firstname);
-      applicationActivities.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
-      applicationActivities.bannerSubmissionType().contains('Automatic Inclusion Notice');
+      statusBanner.applicationBanner().should('exist');
+      statusBanner.bannerDateCreated().contains(bannerDate);
+      statusBanner.bannerDateSubmitted().contains(bannerDate);
+      statusBanner.bannerCreatedBy().contains(CREDENTIALS.MAKER.firstname);
+      statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
+      statusBanner.bannerSubmissionType().contains('Automatic Inclusion Notice');
     });
   });
 });
