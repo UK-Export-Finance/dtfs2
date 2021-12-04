@@ -18,6 +18,7 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'no-param-reassign': 'off',
     'comma-dangle': 'off',
+    'no-loop-func': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

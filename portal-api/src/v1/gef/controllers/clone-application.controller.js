@@ -1,6 +1,7 @@
 const { ObjectID } = require('mongodb');
-const { getUnixTime } = require('date-fns');
 const db = require('../../../drivers/db-client');
+
+const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
 
 const cloneExporter = async (exporterId) => {
   const exporterCollection = 'gef-exporter';
@@ -28,13 +29,13 @@ const cloneExporter = async (exporterId) => {
   return newExporter.insertedId;
 };
 
-const cloneSupportingInformation = async (applicationId) => {
+const cloneSupportingInformation = async (newApplicationId) => {
   const applicationCollection = 'gef-application';
   const collection = await db.getCollection(applicationCollection);
 
   // get the current GEF deal
   const deal = await collection.findOne({
-    _id: ObjectID(String(applicationId)),
+    _id: ObjectID(String(newApplicationId)),
   });
 
   const { supportingInformation } = deal;
@@ -50,19 +51,19 @@ const cloneSupportingInformation = async (applicationId) => {
         Object.values(supportingInformation[docType]).forEach((docValue) => {
           // generate a new Object ID for each document
           docValue._id = (new ObjectID()).toHexString();
-          docValue.parentId = applicationId.toHexString();
+          docValue.parentId = newApplicationId;
         });
       }
     });
 
     // update the `supportingInformation` to include the new `parentId` & unique `_id`
-    await collection.findOneAndUpdate({ _id: ObjectID(String(applicationId)) }, { $set: { supportingInformation } });
+    await collection.findOneAndUpdate({ _id: ObjectID(String(newApplicationId)) }, { $set: { supportingInformation } });
   }
 
   return {};
 };
 
-const cloneFacilities = async (applicationId, newApplicationId) => {
+const cloneFacilities = async (currentApplicationId, newApplicationId) => {
   const facilitiesCollection = 'gef-facilities';
   const collection = await db.getCollection(facilitiesCollection);
 
@@ -70,7 +71,7 @@ const cloneFacilities = async (applicationId, newApplicationId) => {
   const allFacilities = await collection
     .aggregate([
       {
-        $match: { applicationId: ObjectID(String(applicationId)) },
+        $match: { applicationId: ObjectID(String(currentApplicationId)) },
       },
     ])
     .toArray();
@@ -82,7 +83,7 @@ const cloneFacilities = async (applicationId, newApplicationId) => {
       delete allFacilities[val]._id;
 
       // updated the `applicationId` property to match the new application ID
-      allFacilities[val].applicationId = newApplicationId;
+      allFacilities[val].applicationId = new ObjectID(newApplicationId);
       // update the `createdAt` property to match the current time in EPOCH format
       allFacilities[val].createdAt = Date.now();
       // update the `updatedAt` property to match the current time in EPOCH format
@@ -108,6 +109,10 @@ const cloneGEFdeal = async (applicationId, bankInternalRefName, additionalRefNam
   delete clonedDeal._id;
   // delete the existing `ukefDecision` property - this does not exist on a new deal
   delete clonedDeal.ukefDecision;
+  // delete the `comments` property
+  delete clonedDeal.comments;
+  delete clonedDeal.activity;
+  delete clonedDeal.activities;
 
   clonedDeal.createdAt = Date.now();
   clonedDeal.updatedAt = Date.now();
@@ -145,9 +150,13 @@ exports.clone = async (req, res) => {
   const { newApplicationId } = await cloneGEFdeal(existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId);
 
   // clone the corresponding facilities for the cloned deal
-  await cloneFacilities(existingApplicationId, newApplicationId);
+  await cloneFacilities(existingApplicationId, newApplicationId.toHexString());
 
   // clone the supporting information
-  await cloneSupportingInformation(newApplicationId);
+  await cloneSupportingInformation(newApplicationId.toHexString());
+
+  // clone the azure files from one folder to another
+  await cloneAzureFiles(existingApplicationId, newApplicationId.toHexString());
+
   res.send({ applicationId: newApplicationId });
 };
