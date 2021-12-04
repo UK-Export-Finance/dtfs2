@@ -1,29 +1,17 @@
 const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/helpers');
 const api = require('../../services/api');
 
-const cloneDealCreateApplication = async (req, res, next) => {
+exports.cloneDealCreateApplication = async (req, res, next) => {
   const { body, session } = req;
   const { _id: userId, bank: { id: bankId } } = session.user;
 
   try {
-    //  console.log(req);
     const application = await api.cloneApplication({
       applicationId: req.params.applicationId,
       ...body,
       userId,
       bankId,
     });
-    //  console.log(application);
-    console.log('🚀 ~ file: index.js ~ line 17 ~ cloneDealCreateApplication ~ application', application);
-
-    //  // Validation errors
-    //  if (application.status === 422) {
-    //    return res.render('partials/name-application.njk', {
-    //      bankInternalRefName: body.bankInternalRefName,
-    //      additionalRefName: body.additionalRefName,
-    //      errors: validationErrorHandler(application.data),
-    //    });
-    //  }
 
     return res.redirect(`/gef/application-details/${application.applicationId}`);
   } catch (err) {
@@ -31,7 +19,7 @@ const cloneDealCreateApplication = async (req, res, next) => {
   }
 };
 
-const cloneDealValidateMandatoryCriteria = async (req, res) => {
+exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
   const { body } = req;
   const { mandatoryCriteria } = body;
 
@@ -60,10 +48,4 @@ const cloneDealValidateMandatoryCriteria = async (req, res) => {
   }
 };
 
-const cloneDealNameApplication = async (req, res) => {
-  const viewProps = {};
-
-  return res.render('partials/name-application.njk', viewProps);
-};
-
-module.exports = { cloneDealValidateMandatoryCriteria, cloneDealNameApplication, cloneDealCreateApplication };
+exports.cloneDealNameApplication = async (req, res) => res.render('partials/name-application.njk', {});

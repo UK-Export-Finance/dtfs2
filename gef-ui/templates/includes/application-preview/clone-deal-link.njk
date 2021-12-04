@@ -1,13 +1,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% if status %}
-   {% if userRoles.includes('maker') %}
-      {{ govukButton({
-         text: "Clone deal",
-         classes: "govuk-link govuk-!-font-size-14",
-         attributes: { "data-cy": "clone-gef-deal-link" },
-
-         href: applicationId + "/clone",
-         isStartButton: true
-      }) }}
-   {% endif %}
+{% if status and userRoles.includes('maker') %}
+   {{ govukButton({
+      text: "Clone deal",
+      classes: "govuk-link govuk-!-font-size-14",
+      attributes: { "data-cy": "clone-gef-deal-link" },
+      href: applicationId + "/clone",
+      isStartButton: true
+   }) }}
 {% endif %}

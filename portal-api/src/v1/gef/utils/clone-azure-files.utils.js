@@ -5,6 +5,14 @@ const {
 const dotenv = require('dotenv');
 
 dotenv.config();
+const accountName = process.env.AZURE_PORTAL_STORAGE_ACCOUNT;
+const accountKey = process.env.AZURE_PORTAL_STORAGE_ACCESS_KEY;
+const shareName = process.env.AZURE_PORTAL_FILESHARE_NAME;
+const rootFolder = process.env.AZURE_PORTAL_EXPORT_FOLDER;
+const connectionString = `DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${accountKey};EndpointSuffix=core.windows.net`;
+const sharedKeyCredential = new StorageSharedKeyCredential(accountName, accountKey);
+const serviceClient = new ShareServiceClient(`https://${accountName}.file.core.windows.net`, sharedKeyCredential);
+const shareClient = serviceClient.getShareClient(shareName);
 
 /**
  *
@@ -13,18 +21,9 @@ dotenv.config();
  */
 
 exports.cloneAzureFiles = async (currentApplicationId, newApplicationId) => {
-  const accountName = process.env.AZURE_PORTAL_STORAGE_ACCOUNT;
-  const accountKey = process.env.AZURE_PORTAL_STORAGE_ACCESS_KEY;
-  const shareName = process.env.AZURE_PORTAL_FILESHARE_NAME;
-  const rootFolder = process.env.AZURE_PORTAL_EXPORT_FOLDER;
-  const connectionString = `DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${accountKey};EndpointSuffix=core.windows.net`;
-  const sharedKeyCredential = new StorageSharedKeyCredential(accountName, accountKey);
-  // List shares
-  const serviceClient = new ShareServiceClient(`https://${accountName}.file.core.windows.net`, sharedKeyCredential);
-
   let copyFromURL = '';
   let newFileName = '';
-  const shareClient = serviceClient.getShareClient(shareName);
+
   let newDirectory = shareClient.getDirectoryClient(`${rootFolder}/${newApplicationId}`);
   await newDirectory.createIfNotExists();
 
