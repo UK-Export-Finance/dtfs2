@@ -48,4 +48,16 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
   }
 };
 
-exports.cloneDealNameApplication = async (req, res) => res.render('partials/name-application.njk', {});
+exports.cloneDealNameApplication = async (req, res) => {
+  const { params } = req;
+  const applicationId = params?.applicationId;
+
+  const deal = await api.getApplication(applicationId);
+
+  const viewProps = {
+    cloneDeal: true,
+    dealName: deal.bankInternalRefName,
+  };
+
+  return res.render('partials/name-application.njk', viewProps);
+};

@@ -6,11 +6,12 @@ const {
  * Uploads a file to the API, and saves it against the application.
  * Currently configured for supportingInfo section
  *
- * @param {*} files array of files to upload, assumes format from multer
- * @param {*} field field identifier for supplementaryInfo question
- * @param {*} dealId application/deal ID
- * @param {*} token user token
- * @param {*} maxFileSize (optional) maximum file size to allow (defaults to API limits of 10MB otherwise)
+ * @param {array} files array of files to upload, assumes format from multer
+ * @param {string} field field identifier for supplementaryInfo question
+ * @param {string} dealId application/deal ID
+ * @param {string} token user token
+ * @param {number} maxFileSize maximum file size to allow (defaults to API limits of 10MB otherwise)
+ * @param {string} documentPath full document path (i.e. manualInclusion)
  * @returns array of processed files
  */
 const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSize, documentPath) => {

@@ -29,38 +29,46 @@ const cloneExporter = async (exporterId) => {
   return newExporter.insertedId;
 };
 
-const cloneSupportingInformation = async (newApplicationId) => {
-  const applicationCollection = 'gef-application';
-  const collection = await db.getCollection(applicationCollection);
+const cloneSupportingInformation = async (existingApplicationId, newApplicationId) => {
+  const applicationCollectionName = 'gef-application';
+  const applicationCollection = await db.getCollection(applicationCollectionName);
+  const filesCollectionName = 'files';
+  const filesCollection = await db.getCollection(filesCollectionName);
 
-  // get the current GEF deal
-  const deal = await collection.findOne({
-    _id: ObjectID(String(newApplicationId)),
-  });
+  // get all existing files
+  const allFiles = await filesCollection.aggregate([{ $match: { parentId: ObjectID(String(existingApplicationId)) } }]).toArray();
 
-  const { supportingInformation } = deal;
-
-  // check if there are any documents uploaded
-  if ((Object.keys(supportingInformation).length)) {
-    const extraInfo = ['status', 'securityDetails'];
-    // loop through all document types
-    Object.keys(supportingInformation).forEach((docType) => {
-      // skip `status` and `securityDetails` properties
-      if (!extraInfo.includes(docType)) {
-        // loop through the values of each document type
-        Object.values(supportingInformation[docType]).forEach((docValue) => {
-          // generate a new Object ID for each document
-          docValue._id = (new ObjectID()).toHexString();
-          docValue.parentId = newApplicationId;
-        });
-      }
+  // check if there are any files in the db
+  if (allFiles.length) {
+    Object.entries(allFiles).forEach((key, val) => {
+      // delete the existing `_id` property - this will be re-created when a new deal is inserted
+      delete allFiles[val]._id;
+      // updated the `applicationId` property to match the new application ID
+      allFiles[val].parentId = new ObjectID(newApplicationId);
     });
 
-    // update the `supportingInformation` to include the new `parentId` & unique `_id`
-    await collection.findOneAndUpdate({ _id: ObjectID(String(newApplicationId)) }, { $set: { supportingInformation } });
-  }
+    await filesCollection.insertMany(allFiles);
 
-  return {};
+    // get all existing files
+    const existingFiles = await filesCollection.aggregate([{ $match: { parentId: ObjectID(String(newApplicationId)) } }]).toArray();
+
+    if (existingFiles.length) {
+      existingFiles.forEach(async (val) => {
+        // convert the ids to string format
+        val._id = (new ObjectID(val._id)).toHexString();
+        val.parentId = (new ObjectID(val.parentId)).toHexString();
+        await applicationCollection.findOneAndUpdate(
+          { _id: { $eq: ObjectID(newApplicationId) } },
+          {
+            // set the updatedAt property to the current time in EPOCH format
+            $set: { updatedAt: Date.now() },
+            // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
+            $push: { [`supportingInformation.${val.documentPath}`]: val }
+          }
+        );
+      });
+    }
+  }
 };
 
 const cloneFacilities = async (currentApplicationId, newApplicationId) => {
@@ -68,13 +76,7 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
   const collection = await db.getCollection(facilitiesCollection);
 
   // get all existing facilities
-  const allFacilities = await collection
-    .aggregate([
-      {
-        $match: { applicationId: ObjectID(String(currentApplicationId)) },
-      },
-    ])
-    .toArray();
+  const allFacilities = await collection.aggregate([{ $match: { applicationId: ObjectID(String(currentApplicationId)) } }]).toArray();
 
   // check if there are any facilities in the db
   if (allFacilities.length) {
@@ -89,15 +91,15 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
       // update the `updatedAt` property to match the current time in EPOCH format
       allFacilities[val].updatedAt = Date.now();
     });
+    await collection.insertMany(allFacilities);
   }
-
-  const createdFacilities = await collection.insertMany(allFacilities);
-  return createdFacilities;
 };
 
-const cloneGEFdeal = async (applicationId, bankInternalRefName, additionalRefName, userId, bankId) => {
+const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, userId, bankId) => {
   const applicationCollection = 'gef-application';
   const collection = await db.getCollection(applicationCollection);
+  const unusedProperties = ['_id', 'ukefDecision', 'comments', 'previousStatus', 'portalActivities'];
+  const unusedSupportingInfo = ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'];
 
   // get the current GEF deal
   const existingDeal = await collection.findOne({
@@ -105,14 +107,15 @@ const cloneGEFdeal = async (applicationId, bankInternalRefName, additionalRefNam
   });
 
   const clonedDeal = existingDeal;
-  // delete the existing `_id` property - this will be re-created when a new deal is inserted
-  delete clonedDeal._id;
-  // delete the existing `ukefDecision` property - this does not exist on a new deal
-  delete clonedDeal.ukefDecision;
-  // delete the `comments` property
-  delete clonedDeal.comments;
-  delete clonedDeal.activity;
-  delete clonedDeal.activities;
+
+  // delete unused properties
+  unusedProperties.forEach((property) => {
+    delete clonedDeal[property];
+  });
+  // unusedSupportingInfo unused properties
+  unusedSupportingInfo.forEach((property) => {
+    delete clonedDeal.supportingInformation[property];
+  });
 
   clonedDeal.createdAt = Date.now();
   clonedDeal.updatedAt = Date.now();
@@ -136,7 +139,7 @@ const cloneGEFdeal = async (applicationId, bankInternalRefName, additionalRefNam
   const newApplicationId = createdApplication.insertedId;
 
   // return the ID for the newly inserted deal
-  return { newApplicationId };
+  return { newApplicationId: newApplicationId.toHexString() };
 };
 
 exports.clone = async (req, res) => {
@@ -147,16 +150,16 @@ exports.clone = async (req, res) => {
   } = req;
 
   // clone GEF deal
-  const { newApplicationId } = await cloneGEFdeal(existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId);
+  const { newApplicationId } = await cloneDeal(existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId);
 
-  // clone the corresponding facilities for the cloned deal
-  await cloneFacilities(existingApplicationId, newApplicationId.toHexString());
+  // clone the corresponding facilities
+  await cloneFacilities(existingApplicationId, newApplicationId);
 
   // clone the supporting information
-  await cloneSupportingInformation(newApplicationId.toHexString());
+  await cloneSupportingInformation(existingApplicationId, newApplicationId);
 
   // clone the azure files from one folder to another
-  await cloneAzureFiles(existingApplicationId, newApplicationId.toHexString());
+  await cloneAzureFiles(existingApplicationId, newApplicationId);
 
   res.send({ applicationId: newApplicationId });
 };

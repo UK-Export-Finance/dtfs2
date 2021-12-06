@@ -15,9 +15,13 @@
       }
     }) }}
   {% endif %}
-  
+
   <h1 class="govuk-heading-xl" data-cy="main-heading">
-    Name your application
+     {% if cloneDeal %}
+         Clone '{{ dealName }}' deal
+     {% else %}
+         Name your application
+     {% endif %}
   </h1>
 
   <form

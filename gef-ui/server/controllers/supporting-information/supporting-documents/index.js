@@ -277,9 +277,8 @@ const deleteSupportingDocument = async (req, res, next) => {
     const { fieldName } = mapDocTypeParameterToProps(documentType);
 
     const application = await getApplication(applicationId, user, userToken);
-    const documentPath = fieldName;
 
-    await removeFileFromDeal(fileToDelete, fieldName, application, userToken, documentPath);
+    await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
 
     return res.status(200).send({
       file: fileToDelete,
