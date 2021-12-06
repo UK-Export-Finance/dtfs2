@@ -4,120 +4,9 @@ import {
 } from '.';
 import api from '../../services/api';
 
-const Chance = require('chance');
-
-const chance = new Chance();
+import mocks from '../mocks';
 
 jest.mock('../../services/api');
-
-const MockResponse = () => {
-  const res = {};
-  res.redirect = jest.fn();
-  res.render = jest.fn();
-  return res;
-};
-
-const MockRequest = () => {
-  const req = {};
-  req.params = {};
-  req.query = {};
-  req.params.applicationId = '123';
-  req.session = {
-    user: {
-      bank: { id: 'BANKID' },
-      roles: ['MAKER'],
-      _id: 1235,
-    },
-    userToken: 'TEST',
-  };
-  return req;
-};
-
-const MockRequestUrl = (url) => {
-  const req = {};
-  req.params = {};
-  req.query = {};
-  req.params.applicationId = '123';
-  req.url = url;
-  req.session = {
-    user: {
-      bank: { id: 'BANKID' },
-      roles: ['MAKER'],
-      _id: 1235,
-    },
-    userToken: 'TEST',
-  };
-  return req;
-};
-
-const MockApplicationResponse = () => {
-  const res = {};
-  res._id = '1234';
-  res.exporterId = '123';
-  res.bankId = 'BANKID';
-  res.bankInternalRefName = 'Internal refernce';
-  res.additionalRefName = 'Additional reference';
-  res.status = 'DRAFT';
-  res.userId = 'mock-user';
-  res.supportingInformation = {
-    status: 'NOT_STARTED',
-  };
-  res.eligibility = {
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
-    status: 'IN_PROGRESS',
-  };
-  res.editedBy = ['MAKER_CHECKER'];
-  res.submissionType = 'Automatic Inclusion Application';
-  res.submissionCount = 0;
-  res.comments = [];
-  res.ukefDealId = null;
-  res.createdAt = chance.timestamp();
-  res.submissionDate = chance.timestamp();
-  return res;
-};
-
-const MockUserResponse = () => ({
-  username: 'maker',
-  bank: { id: 'BANKID' },
-  firstname: 'Joe',
-  surname: 'Bloggs',
-  timezone: 'Europe/London',
-});
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.details.companyName = 'Test Company';
-  res.validation.required = [];
-  return res;
-};
-
-const MockEligibilityCriteriaResponse = () => ({
-  terms: [
-    {
-      id: 12,
-      text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibility',
-    },
-  ],
-});
-
-const MockFacilityResponse = () => {
-  const res = {};
-  res.status = 'IN_PROGRESS';
-  res.data = [];
-  res.items = [{
-    details: { type: 'CASH' },
-    validation: { required: [] },
-    createdAt: 20,
-  }];
-  return res;
-};
 
 describe('controllers/application-detaills', () => {
   let mockResponse;
@@ -129,13 +18,13 @@ describe('controllers/application-detaills', () => {
   let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockApplicationResponse = MockApplicationResponse();
-    mockExporterResponse = MockExporterResponse();
-    mockFacilityResponse = MockFacilityResponse();
-    mockUserResponse = MockUserResponse();
-    mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
+    mockResponse = mocks.MockResponse();
+    mockRequest = mocks.MockRequest();
+    mockApplicationResponse = mocks.MockApplicationResponseDraft();
+    mockExporterResponse = mocks.MockExporterResponse();
+    mockFacilityResponse = mocks.MockFacilityResponse();
+    mockUserResponse = mocks.MockUserResponse();
+    mockEligibilityCriteriaResponse = mocks.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getExporter.mockResolvedValue(mockExporterResponse);
@@ -196,6 +85,7 @@ describe('controllers/application-detaills', () => {
           comments: mockApplicationResponse.comments,
           applicationType: mockApplicationResponse.submissionType,
           submissionCount: mockApplicationResponse.submissionCount,
+          activeSubNavigation: '/',
 
           // body
           application: {
@@ -379,7 +269,7 @@ describe('controllers/application-detaills', () => {
         mockApplicationResponse.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-        await applicationDetails(MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);
+        await applicationDetails(mocks.MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({

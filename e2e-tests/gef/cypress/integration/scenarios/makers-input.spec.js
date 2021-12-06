@@ -7,6 +7,7 @@ import applicationSubmission from '../pages/application-submission';
 import CREDENTIALS from '../../fixtures/credentials.json';
 import applicationPreview from '../pages/application-preview';
 import returnToMaker from '../pages/return-to-maker';
+import statusBanner from '../pages/application-status-banner';
 
 const applicationIds = [];
 
@@ -76,7 +77,7 @@ context('Review application when returned to maker', () => {
 
       // it changes the status to Ready for Checker's approval
       cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
-      applicationPreview.status().contains("Ready for Checker's approval");
+      statusBanner.bannerStatus().contains("Ready for Checker's approval");
     });
   });
 });

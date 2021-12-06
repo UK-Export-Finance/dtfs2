@@ -34,6 +34,7 @@ function buildHeader(app) {
     comments: app.comments,
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
+    activeSubNavigation: '/',
   };
 
   let checker = {};

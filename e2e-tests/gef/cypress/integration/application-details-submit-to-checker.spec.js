@@ -2,6 +2,7 @@ import relative from './relativeURL';
 import applicationSubmission from './pages/application-submission';
 import applicationDetails from './pages/application-details';
 import applicationPreview from './pages/application-preview';
+import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applicationIds = [];
@@ -95,7 +96,7 @@ context('Application Details Submission', () => {
     });
 
     it('updates status in application banner', () => {
-      applicationDetails.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
     });
   });
 });

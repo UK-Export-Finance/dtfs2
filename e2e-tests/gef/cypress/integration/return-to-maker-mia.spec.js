@@ -7,10 +7,11 @@ import manualInclusion from './pages/manual-inclusion-questionnaire';
 import securityDetails from './pages/security-details';
 import applicationSubmission from './pages/application-submission';
 import applicationPreview from './pages/application-preview';
+import statusBanner from './pages/application-status-banner';
 
 let applicationId;
 
-context('Return to Maker as MIN', () => {
+context('Return to Maker as MIA', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.CHECKER)
@@ -25,14 +26,14 @@ context('Return to Maker as MIN', () => {
       });
   });
 
-  describe('create and submit an MIN', () => {
+  describe('create and submit an MIA', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${applicationId}`));
       Cypress.Cookies.preserveOnce('connect.sid');
     });
 
-    it('create an MIN as a Maker and submit it to the Checker', () => {
+    it('create an MIA as a Maker and submit it to the Checker', () => {
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el, index) => {
@@ -85,7 +86,7 @@ context('Return to Maker as MIN', () => {
 
     it('comments are showing', () => {
       applicationPreview.comments().contains('comment1');
-      applicationPreview.status().contains('Further Maker\'s input required');
+      statusBanner.bannerStatus().contains('Further Maker\'s input required');
     });
 
     it('can change security details comments', () => {
@@ -100,7 +101,7 @@ context('Return to Maker as MIN', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains('Manual Inclusion Application submitted for checking at your bank');
       cy.visit(relative(`/gef/application-details/${applicationId}`));
-      applicationPreview.status().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
     });
   });
 });
