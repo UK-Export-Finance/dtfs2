@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 const getFirstTask = (tasks) =>
   tasks[0].groupTasks[0];
 
-const getTaskInGroup = (taskId, groupTasks) =>
+const getTaskInGroupById = (groupTasks, taskId) =>
   groupTasks.find((t) => t.id === taskId);
 
 const getTaskInGroupByTitle = (groupTasks, title) =>
@@ -77,7 +77,7 @@ const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, stat
 
 module.exports = {
   getFirstTask,
-  getTaskInGroup,
+  getTaskInGroupById,
   getTaskInGroupByTitle,
   getGroupById,
   getGroupByTitle,

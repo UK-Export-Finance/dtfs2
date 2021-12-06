@@ -1,17 +1,16 @@
 const {
   getFirstTask,
-  getTask,
+  getTaskInGroupById,
+  getTaskInGroupByTitle,
   getGroupById,
+  getGroupByTitle,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
-  previousTaskIsComplete,
-  taskStatusValidity,
-  firstTaskIsComplete,
-  isFirstTask,
-  canUpdateTask,
+  taskIsCompletedImmediately,
+  isAdverseHistoryTaskIsComplete,
+  shouldUpdateDealStage,
 } = require('./tasks');
 
-const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
 const { MOCK_GROUP1, MOCK_GROUP2, MOCK_GROUP3 } = require('../__mocks__/mock-MIA-grouped-tasks');
 const CONSTANTS = require('../../constants');
 
@@ -33,15 +32,26 @@ describe('helpers - tasks', () => {
     });
   });
 
-  describe('getTask', () => {
-    it('should return task by id', () => {
+  describe('getTaskInGroupById', () => {
+    it('should return a task in a group', () => {
       const mockGroupTasks = [
-        { id: '1', groupId: 1 },
-        { id: '2', groupId: 1 },
-        { id: '3', groupId: 1 },
+        { id: 1 },
+        { id: 2 },
       ];
 
-      const result = getTask('2', mockGroupTasks);
+      const result = getTaskInGroupById(mockGroupTasks, 2);
+      expect(result).toEqual(mockGroupTasks[1]);
+    });
+  });
+
+  describe('getTaskInGroupByTitle', () => {
+    it('should return a task in a group', () => {
+      const mockGroupTasks = [
+        { id: 1, title: 'Task 1' },
+        { id: 2, title: 'Task 2' },
+      ];
+
+      const result = getTaskInGroupByTitle(mockGroupTasks, 'Task 2');
       expect(result).toEqual(mockGroupTasks[1]);
     });
   });
@@ -63,6 +73,26 @@ describe('helpers - tasks', () => {
 
       const result = getGroupById(mockTasks, 2);
       expect(result).toEqual(mockTasks[1]);
+    });
+  });
+
+  describe('getGroupByTitle', () => {
+    it('should return a group', () => {
+      const mockTasks = [
+        {
+          groupTitle: 'Group 1 tasks',
+          id: 1,
+          groupTasks: [],
+        },
+        {
+          groupTitle: 'Group 2 tasks',
+          id: 2,
+          groupTasks: [],
+        },
+      ];
+
+      const result = getGroupByTitle(mockTasks, 'Group 2 tasks');
+      expect(result).toEqual(mockTasks[1])
     });
   });
 
@@ -100,303 +130,117 @@ describe('helpers - tasks', () => {
     });
   });
 
-  describe('previousTaskIsComplete', () => {
-    describe('when there is no previous task', () => {
-      it('should return true', () => {
-        const mockGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1 },
-          ],
-        };
+  describe('taskIsCompletedImmediately', () => {
+    it('should return true when status changes from `To do` to `Done`', () => {
+      const result = taskIsCompletedImmediately(
+        'To do',
+        'Done',
+      );
 
-        const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '1');
-        expect(result).toEqual(true);
-      });
+      expect(result).toEqual(true);
     });
 
-    describe('when the previous task has status `Done`', () => {
-      it('should return true', () => {
-        const mockGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'Done' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
+    it('should return false when status does NOT change from `To do` to `Done`', () => {
+      const result = taskIsCompletedImmediately(
+        'To do',
+        'In progress',
+      );
 
-        const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '2');
-        expect(result).toEqual(true);
-      });
+      expect(result).toEqual(false);
     });
+  });
 
-    describe('when the group is not the first group and task id is first in the group', () => {
-      it('should return true when the previous group\'s last task has `Done` status', () => {
-        const MOCK_SECOND_GROUP = {
-          id: 2,
-          groupTasks: [
-            { id: '1', groupId: 2, status: 'To do' },
-            { id: '2', groupId: 2, status: 'To do' },
-            { id: '3', groupId: 2, status: 'To do' },
-          ],
-        };
-
-        const MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED = [
+  describe('isAdverseHistoryTaskIsComplete', () => {
+    const mockTasks = [
+      {
+        groupTitle: 'Group 1 tasks',
+        id: 1,
+        groupTasks: [],
+      },
+      {
+        groupTitle: 'Adverse history check',
+        id: 2,
+        groupTasks: [
           {
-            groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
             id: 1,
-            groupTasks: [
-              {
-                id: '1',
-                groupId: 1,
-                title: CONSTANTS.TASKS.AIN.GROUP_1.MATCH_OR_CREATE_PARTIES,
-                team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
-                status: CONSTANTS.TASKS.STATUS.COMPLETED,
-                assignedTo: {
-                  userId: CONSTANTS.TASKS.UNASSIGNED,
-                  userFullName: CONSTANTS.TASKS.UNASSIGNED,
-                },
-              },
-              {
-                id: '2',
-                groupId: 1,
-                title: CONSTANTS.TASKS.AIN.GROUP_1.CREATE_OR_LINK_SALESFORCE,
-                team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
-                status: CONSTANTS.TASKS.STATUS.COMPLETED,
-                assignedTo: {
-                  userId: CONSTANTS.TASKS.UNASSIGNED,
-                  userFullName: CONSTANTS.TASKS.UNASSIGNED,
-                },
-              },
-            ],
+            title: 'Complete an adverse history check',
+            status: 'Done'
           },
-          MOCK_SECOND_GROUP,
-        ];
+        ],
+      },
+    ];
 
-        const result = previousTaskIsComplete(
-          MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED,
-          MOCK_SECOND_GROUP,
-          '1',
-        );
-        expect(result).toEqual(true);
-      });
+    it('should return true when there is an adverse group and `adverse history check` task is completed', () => {
+      const result = isAdverseHistoryTaskIsComplete(mockTasks);
+      expect(result).toEqual(true);
     });
 
-    describe('when the previous task status is NOT `Done`', () => {
-      it('should return false', () => {
-        const mockGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'In progress' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
+    it('should return false when there is no adverse group', () => {
+      const tasksWithNoAdverseGroup = [
+        mockTasks[0],
+      ];
 
-        const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '3');
-        expect(result).toEqual(false);
-      });
+      const result = isAdverseHistoryTaskIsComplete(tasksWithNoAdverseGroup);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false when `adverse history check` task is not completed', () => {
+      const tasksWithNoAdverseHistoryCheckTask = mockTasks;
+      tasksWithNoAdverseHistoryCheckTask[1].groupTasks = [];
+
+      const result = isAdverseHistoryTaskIsComplete(tasksWithNoAdverseHistoryCheckTask);
+      expect(result).toEqual(false);
     });
   });
 
-  describe('firstTaskIsComplete', () => {
-    describe('when the first task has status `Done`', () => {
-      it('should return true', () => {
-        const mockGroupTasks = [
-          { id: '1', groupId: 1, status: 'Done' },
-          { id: '2', groupId: 1, status: 'To do' },
-          { id: '3', groupId: 1, status: 'To do' },
-        ];
+  describe('shouldUpdateDealStage', () => {
+    const submissionType = 'Manual Inclusion Application';
+    const taskId = '1';
+    const groupid = 1;
 
-        const result = firstTaskIsComplete(mockGroupTasks);
-        expect(result).toEqual(true);
-      });
+    it('should return true when submissionType is MIA, is first task in first group, task status changes to `in progress`', () => {
+      const statusFrom = 'To do';
+      const statusTo = 'In progress';
+
+      const result = shouldUpdateDealStage(
+        submissionType,
+        taskId,
+        groupid,
+        statusFrom,
+        statusTo,
+      );
+
+      expect(result).toEqual(true);
     });
 
-    describe('when the first task status is NOT `Done`', () => {
-      it('should return true', () => {
-        const mockGroupTasks = [
-          { id: '1', groupId: 1, status: 'In progress' },
-          { id: '2', groupId: 1, status: 'To do' },
-          { id: '3', groupId: 1, status: 'To do' },
-        ];
+    it('should return true when submissionType is MIA, is first task in first group, task status changes from `To do` to `Done`', () => {
+      const statusFrom = 'To do';
+      const statusTo = 'Done';
 
-        const result = firstTaskIsComplete(mockGroupTasks);
-        expect(result).toEqual(false);
-      });
-    });
-  });
+      const result = shouldUpdateDealStage(
+        submissionType,
+        taskId,
+        groupid,
+        statusFrom,
+        statusTo,
+      );
 
-  describe('isFirstTask', () => {
-    describe('when taskId is `1`', () => {
-      it('should return true', () => {
-        const result = isFirstTask('1');
-        expect(result).toEqual(true);
-      });
+      expect(result).toEqual(true);
     });
 
-    describe('when taskId is NOT `1`', () => {
-      it('should return false', () => {
-        const result = isFirstTask('2');
-        expect(result).toEqual(false);
-      });
-    });
-  });
+    it('should return false when a condition is not met', () => {
+      const statusFrom = 'To do';
+      const statusTo = 'To do';
 
-  describe('canUpdateTask', () => {
-    describe('when previous task is complete', () => {
-      it('should return true', () => {
-        const mockParentGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'Done' },
-            { id: '2', groupId: 1, status: 'Done' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
+      const result = shouldUpdateDealStage(
+        submissionType,
+        taskId,
+        groupid,
+        statusFrom,
+        statusTo,
+      );
 
-        const result = canUpdateTask(MOCK_GROUP1, mockParentGroup, '3');
-
-        expect(result).toEqual(true);
-      });
-    });
-
-    describe('when previous task is NOT complete', () => {
-      it('should return false', () => {
-        const mockParentGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'Done' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
-
-        const result = canUpdateTask(MOCK_GROUP1, mockParentGroup, '3');
-
-        expect(result).toEqual(false);
-      });
-    });
-  });
-
-  // makes sure group 3 can be done in any order once 2 is finished
-  describe('canUpdateTask when in group 3', () => {
-    describe('should allow any order', () => {
-      it('should return true', () => {
-        const mockParentGroup = {
-          id: 3,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
-        // trying 3 first
-        const result = canUpdateTask(MOCK_GROUP2, mockParentGroup, '3');
-        expect(result).toEqual(true);
-
-        const mockParentGroup2 = {
-          id: 3,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
-
-        // then 2, should work even if 1 is not finished as task 3 can be done in any order
-        const result2 = canUpdateTask(MOCK_GROUP2, mockParentGroup2, '2');
-        expect(result2).toEqual(true);
-      });
-    });
-
-    describe('should allow to update group 4 when final of group 3 is done', () => {
-      it('should return true', () => {
-        const mockParentGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-            { id: '2', groupId: 1, status: 'Cannot start yet' },
-            { id: '3', groupId: 1, status: 'Cannot start yet' },
-          ],
-        };
-        // task 3 does not have to be finished to start 4, only final task in 3 must be done
-        const result = canUpdateTask(MOCK_GROUP3, mockParentGroup, '1');
-
-        expect(result).toEqual(true);
-      });
-      it('should return false for trying group 4 in any order', () => {
-        const mockParentGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-            { id: '2', groupId: 1, status: 'Cannot start yet' },
-            { id: '3', groupId: 1, status: 'Cannot start yet' },
-          ],
-        };
-        // ensures that rules are only for task group 3
-        const result = canUpdateTask(MOCK_GROUP3, mockParentGroup, '2');
-
-        expect(result).toEqual(false);
-      });
-    });
-  });
-
-  describe('taskStatusValidity()', () => {
-    describe('if task 2 is completed', () => {
-      it('should return true if trying group 3', () => {
-        const mockParentGroup = {
-          id: 3,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
-        // MOCK 2 has task 2 completed
-        const result = taskStatusValidity(MOCK_GROUP2, mockParentGroup, '1');
-        expect(result).toEqual(true);
-      });
-      it('should return true if trying group 3 in any order', () => {
-        const mockParentGroup = {
-          id: 3,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
-        // MOCK 2 has task 2 completed
-        const result = taskStatusValidity(MOCK_GROUP2, mockParentGroup, '3');
-        expect(result).toEqual(true);
-      });
-    });
-    describe('if task 1 is not completed', () => {
-      it('should return false if start task 2 before finishing task 1', () => {
-        const mockParentGroup = {
-          id: 2,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'To do' },
-          ],
-        };
-        // MOCK 2 does not have task 3 completed
-        const result = taskStatusValidity(MOCK_GROUP1, mockParentGroup, '1');
-        expect(result).toEqual(false);
-      });
-      it('should return true if previous task completed', () => {
-        const mockParentGroup = {
-          id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1, status: 'Done' },
-            { id: '2', groupId: 1, status: 'To do' },
-            { id: '3', groupId: 1, status: 'To do' },
-          ],
-        };
-        // MOCK 2 does not have task 3 completed
-        const result = taskStatusValidity(MOCK_GROUP1, mockParentGroup, '1');
-        expect(result).toEqual(true);
-      });
+      expect(result).toEqual(false);
     });
   });
 });

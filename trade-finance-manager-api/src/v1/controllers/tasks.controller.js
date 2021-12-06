@@ -1,11 +1,10 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 const {
   isFirstTaskInFirstGroup,
   getGroupById,
   getGroupByTitle,
-  getTaskInGroup,
+  getTaskInGroupById,
   getTaskInGroupByTitle,
   taskIsCompletedImmediately,
   isAdverseHistoryTaskIsComplete,
@@ -24,7 +23,7 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 /**
 * Update a task in the task's group.
 * */
-const updateTask = (allTaskGroups,taskUpdate) =>
+const updateTask = (allTaskGroups, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -52,7 +51,7 @@ const updateTask = (allTaskGroups,taskUpdate) =>
  * Update all tasks canEdit flag and status
  * Depending on what task has been changed.
  * */
-const updateTasksCanEdit = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
+const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
   let taskGroups = allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -162,7 +161,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
   } = taskUpdate;
 
   const group = getGroupById(allTasks, groupId);
-  const originalTask = getTaskInGroup(taskIdToUpdate, group.groupTasks);
+  const originalTask = getTaskInGroupById(group.groupTasks, taskIdToUpdate);
   const statusFrom = originalTask.status;
 
   const updatedTask = await mapTaskObject(originalTask, taskUpdate, statusFrom);
@@ -184,7 +183,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
      * Some other special conditions are in here:
      * - e.g if X task is completed, an entire group of tasks can be started.
      * */
-    const modifiedTasksWithEditStatus = await updateTasksCanEdit(
+    const modifiedTasksWithEditStatus = await updateAllTasks(
       modifiedTasks,
       groupId,
       updatedTask,
@@ -248,7 +247,6 @@ const updateTfmTask = async (dealId, taskUpdate) => {
 
 module.exports = {
   updateTask,
-  updateTasksCanEdit,
-  shouldUpdateDealStage,
+  updateAllTasks,
   updateTfmTask,
 };

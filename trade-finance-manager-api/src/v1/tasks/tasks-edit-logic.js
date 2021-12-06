@@ -3,7 +3,7 @@ const {
   isFirstTaskInFirstGroup,
   isFirstTaskInAGroup,
   getGroupById,
-  getTaskInGroup,
+  getTaskInGroupById,
   getTaskInGroupByTitle,
 } = require('../helpers/tasks');
 
@@ -39,7 +39,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
      * */
     const previousTaskId = String(Number(taskId - 1));
 
-    const previousTask = getTaskInGroup(previousTaskId, group.groupTasks);
+    const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
 
     if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
@@ -126,6 +126,7 @@ const handleTaskEditFlagAndStatus = (
       if (updatedTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
+
       return { updatedTask };
     }
 
@@ -138,7 +139,6 @@ const handleTaskEditFlagAndStatus = (
       && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
       updatedTask.canEdit = true;
       updatedTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
-
       emailsArray.push(updatedTask);
     }
   }
