@@ -12,7 +12,7 @@ const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
 const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
-const { MOCK_GROUP1 } = require('../__mocks__/mock-MIA-grouped-tasks');
+const MOCK_MIA_TASKS_POPULATED = require('../__mocks__/mock-MIA-tasks-populated');
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 
 const CONSTANTS = require('../../constants');
@@ -124,7 +124,7 @@ describe('tasks controller', () => {
     });
 
     describe('when adverse history task is complete', () => {
-      const mockTasks = MOCK_GROUP1;
+      const mockTasks = MOCK_MIA_TASKS_POPULATED;
 
       const tasksWithAdverseHistoryTaskComplete = mockTasks;
 
