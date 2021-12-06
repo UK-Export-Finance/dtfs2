@@ -71,3 +71,49 @@ context('View a deal', () => {
     });
   });
 });
+
+context('Sort exporters alphabetically', () => {
+  let deals;
+  let mockDeals = [];
+
+  const dealOne = {
+    bankId: MAKER_LOGIN.bank.id,
+    bankInternalRefName: 'Mock1',
+    userId: MAKER_LOGIN._id,
+    exporter: { companyName: 'ddd', __typename: 'Exporter' },
+  };
+
+  const dealTwo = {
+    bankId: MAKER_LOGIN.bank.id,
+    bankInternalRefName: 'Mock2',
+    userId: MAKER_LOGIN._id,
+    exporter: { companyName: 'aaa', __typename: 'Exporter' },
+  };
+
+  const dealThree = {
+    bankId: MAKER_LOGIN.bank.id,
+    bankInternalRefName: 'Mock3',
+    userId: MAKER_LOGIN._id,
+    exporter: { companyName: 'gggg', __typename: 'Exporter' },
+  };
+
+  mockDeals = [
+    dealOne,
+    dealTwo,
+    dealThree,
+  ];
+
+  beforeEach(() => {
+    // same or gef
+    cy.deleteGefApplications(MAKER_LOGIN);
+    cy.insertManyGefApplications(mockDeals, MAKER_LOGIN).then((insertedDeals) => { deals = insertedDeals; });
+  });
+
+  it('multiple GEF deals appears on the dashboard', () => {
+    // login and go to dashboard
+    cy.login(MAKER_LOGIN);
+    gefDashboard.visit();
+
+    gefDashboard.rows().should('have.length', mockDeals.length);
+  });
+});

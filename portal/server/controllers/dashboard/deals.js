@@ -89,7 +89,7 @@ exports.gefDeals = async (req, res) => {
     api.gefDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-
+   console.log(rawDeals);
   const deals = rawDeals.map((deal) => ({
     _id: deal._id,
     status: deal.status,
@@ -106,7 +106,7 @@ exports.gefDeals = async (req, res) => {
     currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
-
+  console.log('mapped' ,deals);
   return res.render('dashboard/deals.njk', {
     deals,
     pages,
