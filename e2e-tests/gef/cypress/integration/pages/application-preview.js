@@ -2,14 +2,6 @@
 const applicationPreview = {
   backLink: () => cy.get('[data-cy="back-link"]'),
   bankReference: () => cy.get('[data-cy="bank-reference"]'),
-  applicationBanner: () => cy.get('[data-cy="application-banner"]'),
-  status: () => cy.get('[data-cy="status"]'),
-  product: () => cy.get('[data-cy="product"]'),
-  dateCreated: () => cy.get('[data-cy="date-created"]'),
-  submissionType: () => cy.get('[data-cy="submission-type"]'),
-  createdBy: () => cy.get('[data-cy="created-by"]'),
-  exporter: () => cy.get('[data-cy="exporter"]'),
-  checkedBy: () => cy.get('[data-cy="checked-by"]'),
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
 

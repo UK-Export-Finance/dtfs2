@@ -24,6 +24,9 @@
   {% endif %}
 
   {% include "includes/application-preview/summary.njk" %}
+  {% if application.submissionType %}
+  {% include "includes/application-preview/application-sub-navigation.njk" %}
+  {% endif %}
   {% include "includes/application-preview/task-comments.njk" %}
 
   <header data-cy="application-details-page">
@@ -44,11 +47,11 @@
   {% include "includes/application-details/about-exporter.njk" %}
   {% include "includes/application-details/automatic-cover.njk" %}
   {% include "includes/application-details/facilities.njk" %}
-  
+
   {% if isAutomaticCover === false %}
-    {% include "includes/application-details/supporting-information.njk" %} 
+    {% include "includes/application-details/supporting-information.njk" %}
   {% endif %}
-  
+
   {%if not previewMode %}
     <form method="post" data-cy="form">
       {% include "includes/application-details/submit.njk" %}

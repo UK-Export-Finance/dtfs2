@@ -26,8 +26,9 @@ const returnToMaker = require('./return-to-maker');
 const supportingInformation = require('./supporting-information');
 const file = require('./file');
 const reviewUkefDecision = require('./review-decision');
-const confirmCoverStartDate = require('./cover-start-date');
-const ukefCoverStartDate = require('./confirm-cover-start-date');
+const coverStartDate = require('./cover-start-date');
+const confirmCoverStartDate = require('./confirm-cover-start-date');
+const portalActivities = require('./application-activities');
 
 const router = express.Router();
 
@@ -60,6 +61,7 @@ router.use(supportingInformation);
 router.use(file);
 router.use(reviewUkefDecision);
 router.use(confirmCoverStartDate);
-router.use(ukefCoverStartDate);
+router.use(coverStartDate);
+router.use(portalActivities);
 
 module.exports = router;
