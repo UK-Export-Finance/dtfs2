@@ -5,8 +5,6 @@ const api = require('../api');
 const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 
-const CONSTANTS = require('../../constants');
-
 const underwriterManagerUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
 
 const findUserByIdApiSpy = jest.fn(() => Promise.resolve(

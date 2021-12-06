@@ -12,8 +12,6 @@ const mapTaskObject = async (originalTask, updateInput) => {
     groupId,
     assignedTo,
     status: statusTo,
-    updatedBy,
-    urlOrigin,
   } = updateInput;
 
   const { userId: assignedUserId } = assignedTo;

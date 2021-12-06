@@ -11,9 +11,6 @@ const {
   shouldUpdateDealStage,
 } = require('./tasks');
 
-const { MOCK_GROUP1, MOCK_GROUP2, MOCK_GROUP3 } = require('../__mocks__/mock-MIA-grouped-tasks');
-const CONSTANTS = require('../../constants');
-
 describe('helpers - tasks', () => {
   describe('getFirstTask', () => {
     it('should return the first task', () => {
@@ -92,7 +89,7 @@ describe('helpers - tasks', () => {
       ];
 
       const result = getGroupByTitle(mockTasks, 'Group 2 tasks');
-      expect(result).toEqual(mockTasks[1])
+      expect(result).toEqual(mockTasks[1]);
     });
   });
 
@@ -164,7 +161,7 @@ describe('helpers - tasks', () => {
           {
             id: 1,
             title: 'Complete an adverse history check',
-            status: 'Done'
+            status: 'Done',
           },
         ],
       },

@@ -138,9 +138,24 @@ describe('defaults - tasks creation', () => {
             status: 'To do',
             canEdit: true,
           },
-          { id: '2', groupId: mockGroupId, ...mockGroupTasksWithConditionalFlags[1], ...NEW_TASK },
-          { id: '3', groupId: mockGroupId, ...mockGroupTasksWithConditionalFlags[2], ...NEW_TASK },
-          { id: '4', groupId: mockGroupId, ...mockGroupTasksWithConditionalFlags[3], ...NEW_TASK },
+          {
+            id: '2',
+            groupId: mockGroupId,
+            ...mockGroupTasksWithConditionalFlags[1],
+            ...NEW_TASK,
+          },
+          {
+            id: '3',
+            groupId: mockGroupId,
+            ...mockGroupTasksWithConditionalFlags[2],
+            ...NEW_TASK,
+          },
+          {
+            id: '4',
+            groupId: mockGroupId,
+            ...mockGroupTasksWithConditionalFlags[3],
+            ...NEW_TASK,
+          },
         ];
 
         expect(result).toEqual(expected);
@@ -165,7 +180,7 @@ describe('defaults - tasks creation', () => {
 
     it('should return AIN tasks array with createGroupTasks and additionalTasks', () => {
       const mockAdditionalTasks = [
-        CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE
+        CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
       ];
 
       const result = createTasksAIN(mockAdditionalTasks);
@@ -214,7 +229,7 @@ describe('defaults - tasks creation', () => {
 
     it('should return MIA tasks array with createGroupTasks and additionalTasks', () => {
       const mockAdditionalTasks = [
-        CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
+        CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
       ];
 
       const result = createTasksMIA(mockAdditionalTasks);
@@ -263,6 +278,6 @@ describe('defaults - tasks creation', () => {
         const expected = createTasksMIA();
         expect(result).toEqual(expected);
       });
-    });    
+    });
   });
 });

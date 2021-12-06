@@ -1,7 +1,5 @@
 const generateTaskDates = require('./generate-task-dates');
 
-const api = require('../api');
-
 describe('generateTaskDates', () => {
   it('should return object with lastEdited timestamp', () => {
     const result = generateTaskDates();

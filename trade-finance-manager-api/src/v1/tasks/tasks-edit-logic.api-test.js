@@ -201,7 +201,7 @@ describe('tasks edit logic', () => {
       const mockGroup = {
         groupTitle: CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING,
         groupTasks: [
-          { title: 'Mock underwriting task' }
+          { title: 'Mock underwriting task' },
         ],
       };
 
@@ -345,20 +345,36 @@ describe('tasks edit logic', () => {
       const mockGroup = {
         groupTitle: CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING,
         groupTasks: [
-          { id: '1', groupId: 1, status: CONSTANTS.TASKS.STATUS.TO_DO, canEdit: true },
-          { id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.CANNOT_START, canEdit: false },
-          { id: '3', groupId: 1, status: CONSTANTS.TASKS.STATUS.CANNOT_START, canEdit: false },
+          {
+            id: '1',
+            groupId: 1,
+            status: CONSTANTS.TASKS.STATUS.TO_DO,
+            canEdit: true,
+          },
+          {
+            id: '2',
+            groupId: 1,
+            status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+            canEdit: false,
+          },
+          {
+            id: '3',
+            groupId: 1,
+            status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+            canEdit: false,
+          },
         ],
       };
-      const mockTaskGroups = [ mockGroup ];
+
+      const mockTaskGroups = [mockGroup];
 
       const mockTask = {
         id: '3', groupId: 1, status: CONSTANTS.TASKS.STATUS.TO_DO, canEdit: true,
       };
 
-      const isTaskThatIsBeingUpdated = false;
-
       it(`should unlock the task with canEdit = true and ${CONSTANTS.TASKS.STATUS.TO_DO} status`, () => {
+        const isTaskThatIsBeingUpdated = false;
+
         const result = handleTaskEditFlagAndStatus(
           mockTaskGroups,
           mockGroup,
