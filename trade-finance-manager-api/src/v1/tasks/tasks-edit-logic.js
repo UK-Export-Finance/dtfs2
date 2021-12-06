@@ -72,7 +72,6 @@ const isTaskInUnderwritingGroup = (group, taskTitle) => {
  * If required, can be easily extended for other groups.
  * */
 const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
-  const statusTo = task.status;
   const { previousStatus } = task;
 
   if (previousStatus === CONSTANTS.TASKS.STATUS.COMPLETED
@@ -103,7 +102,7 @@ const handleTaskEditFlagAndStatus = (
   task,
   isTaskThatIsBeingUpdated,
 ) => {
-  let updatedTask = task;
+  const updatedTask = task;
   const emailsArray = [];
 
   /**

@@ -1,12 +1,8 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const {
-  isFirstTaskInFirstGroup,
   getGroupById,
-  getGroupByTitle,
   getTaskInGroupById,
-  getTaskInGroupByTitle,
-  taskIsCompletedImmediately,
   isAdverseHistoryTaskIsComplete,
   shouldUpdateDealStage,
 } = require('../helpers/tasks');
@@ -88,7 +84,9 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
   const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
 
   if (canUnlockUnderWritingGroupTasks) {
-    taskGroups = taskGroups.map((group) => {
+    taskGroups = taskGroups.map((g) => {
+      const group = g;
+
       if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
         group.groupTasks = group.groupTasks.map((task) => {
           const isTaskThatIsBeingUpdated = (

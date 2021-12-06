@@ -4,9 +4,9 @@ const {
   listAdditionalTasks,
   createDealTasks,
 } = require('./deal.tasks');
-const externalApis = require('../../../src/v1/api');
+const externalApis = require('../api');
 const CONSTANTS = require('../../constants');
-const MOCK_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
+const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
 const { createTasks } = require('../helpers/create-tasks');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
@@ -34,7 +34,7 @@ describe('createDealTasks', () => {
     tfm: {
       parties: { exporter: { partyUrn: 'test' } },
     },
-  };  
+  };
 
   beforeEach(() => {
     externalApis.updateDeal = updateDealSpy;
@@ -101,7 +101,7 @@ describe('createDealTasks', () => {
           CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
           CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
         ];
-        
+
         expect(result).toEqual(expected);
       });
     });
