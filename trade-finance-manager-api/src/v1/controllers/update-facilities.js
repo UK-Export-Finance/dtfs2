@@ -12,8 +12,9 @@ const updateFacilities = async (deal) => {
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
   const {
-    submissionDate: dealSubmissionDate,
     dealType,
+    submissionDate: dealSubmissionDate,
+    submissionType,
   } = modifiedDeal;
 
   modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
@@ -36,7 +37,11 @@ const updateFacilities = async (deal) => {
     }
 
     let feeRecord;
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+
+    const shouldCalculateFeeRecord = (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+      && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+
+    if (shouldCalculateFeeRecord) {
       feeRecord = calculateGefFacilityFeeRecord(facility);
     }
 

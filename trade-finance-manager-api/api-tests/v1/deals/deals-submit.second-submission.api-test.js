@@ -15,6 +15,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
 const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const submitDeal = require('../utils/submitDeal');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
@@ -557,6 +558,17 @@ describe('/v1/deals', () => {
           !facility.hasBeenIssued);
 
         expect(unissuedFacility.tfm.feeRecord).toEqual(null);
+      });
+
+      it('does NOT add fee record when deal is MIA', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
+
+        expect(status).toEqual(200);
+
+        const issuedFacility = body.facilities.find((facility) =>
+          facility.hasBeenIssued);
+
+        expect(issuedFacility.tfm.feeRecord).toBeUndefined();
       });
     });
   });

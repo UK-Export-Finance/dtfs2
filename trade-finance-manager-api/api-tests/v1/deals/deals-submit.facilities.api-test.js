@@ -11,6 +11,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -247,6 +248,18 @@ describe('/v1/deals', () => {
             expect(unissuedFacility.tfm.feeRecord).toEqual(null);
           });
         });
+
+        it('does NOT add fee record when deal is MIA', async () => {
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
+
+          expect(status).toEqual(200);
+
+          const issuedFacility = body.facilities.find((facility) =>
+            facility.hasBeenIssued);
+
+          expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+        });
+
 
         describe('when facility/dealType is BSS', () => {
           it('does NOT add fee record to any unissued facilities', async () => {
