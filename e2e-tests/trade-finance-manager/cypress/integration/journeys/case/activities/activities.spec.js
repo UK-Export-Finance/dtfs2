@@ -74,14 +74,17 @@ context('Users can create and submit comments', () => {
       activitiesPage.activitiesTimeline().contains(userFullName).should('not.exist');
     });
 
-    it('should submit a comment under 1000 characters', () => {
-      const date = format(new Date(), 'dd MMMM yyyy');
+    it('should submit a comment under 1000 characters and render date of comment', () => {
       activitiesPage.addACommentButton().click();
       activityCommentBoxPage.activityCommentBox().type('test');
       activityCommentBoxPage.addCommentButton().click();
+
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
-      activitiesPage.activitiesTimeline().contains(date);
+
+      const expectedDate = format(new Date(), 'd MMMM yyyy');
+
+      activitiesPage.activitiesTimeline().contains(expectedDate);
     });
 
     it('pressing cancel should not submit a comment', () => {
