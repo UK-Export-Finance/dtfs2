@@ -5,6 +5,7 @@ const {
   dealsReducer,
 } = require('./deals');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
+const mapEligibility = require('./mappings/deal/mapEligibility');
 const mapFacilities = require('./mappings/facilities/mapFacilities');
 const mapTotals = require('./mappings/deal/mapTotals');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
@@ -64,7 +65,7 @@ describe('reducer - deals', () => {
             mockBssDeal.tfm,
           ),
           dealFiles: mockBssDeal.dealSnapshot.dealFiles,
-          eligibilityCriteria: mockBssDeal.dealSnapshot.eligibility.criteria,
+          eligibility: mapEligibility(mockBssDeal.dealSnapshot.eligibility),
           totals: mapTotals(mockBssDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockBssDeal),
@@ -81,6 +82,9 @@ describe('reducer - deals', () => {
         _id: mockGefDeal._id,
         dealSnapshot: {
           _id: mockGefDeal._id,
+          dealType: mockGefDeal.dealSnapshot.dealType,
+          facilitiesUpdated: mockGefDeal.dealSnapshot.facilitiesUpdated,
+          eligibility: mockGefDeal.dealSnapshot.eligibility,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
           facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),

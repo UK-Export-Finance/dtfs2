@@ -100,6 +100,7 @@ const dealQuery = gql`
           facilitiesValueInGBP,
           facilitiesUkefExposure
         }
+        facilitiesUpdated
         facilities {
           _id,
           facilitySnapshot {
