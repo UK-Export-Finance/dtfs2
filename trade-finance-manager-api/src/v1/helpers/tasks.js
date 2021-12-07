@@ -3,16 +3,20 @@ const CONSTANTS = require('../../constants');
 const getFirstTask = (tasks) =>
   tasks[0].groupTasks[0];
 
-const getTask = (taskId, tasks) =>
-  tasks.find((t) => t.id === taskId);
+const getTaskInGroupById = (groupTasks, taskId) =>
+  groupTasks.find((t) => t.id === taskId);
 
-const getGroup = (allTaskGroups, groupId) => {
+const getTaskInGroupByTitle = (groupTasks, title) =>
+  groupTasks.find((task) => task.title === title);
+
+const getGroupById = (allTaskGroups, groupId) => {
   const group = allTaskGroups.find((g) => g.id === groupId);
 
   return group;
 };
 
-const isFirstTask = (taskId) => taskId === '1';
+const getGroupByTitle = (allTaskGroups, title) =>
+  allTaskGroups.find(({ groupTitle }) => groupTitle === title);
 
 const isFirstTaskInAGroup = (taskId, groupId) =>
   (taskId === '1' && groupId > 1);
@@ -20,30 +24,32 @@ const isFirstTaskInAGroup = (taskId, groupId) =>
 const isFirstTaskInFirstGroup = (taskId, groupId) =>
   (taskId === '1' && groupId === 1);
 
-const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
-  if (isFirstTaskInFirstGroup(taskId, group.id)) {
-    // no other tasks/groups before this task, so previous task is irrelevant
+/**
+* Check if a task status is changing from 'To do' to 'Completed'
+* */
+const taskIsCompletedImmediately = (statusFrom, statusTo) => {
+  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO
+    && statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
-  if (isFirstTaskInAGroup(taskId, group.id)) {
-    // check the last (previous) task in the previous group
-    const previousGroupId = group.id - 1;
-    const previousGroup = getGroup(allTaskGroups, previousGroupId);
+  return false;
+};
 
-    const totalTasksInPreviousGroup = previousGroup.groupTasks.length;
-    const lastTaskInPreviousGroup = previousGroup.groupTasks[totalTasksInPreviousGroup - 1];
+/**
+ * Get the Adverse History group and
+ * check if the Adverse History Check task is completed.
+ * */
+const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
+  const adverseGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY);
 
-    if (lastTaskInPreviousGroup.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-      return true;
-    }
-  } else {
-    // check the previous task in the current group
-    const previousTaskId = String(Number(taskId - 1));
+  if (adverseGroup) {
+    const adverseTaskTitle = CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK;
 
-    const previousTask = getTask(previousTaskId, group.groupTasks);
+    const adverseTask = getTaskInGroupByTitle(adverseGroup.groupTasks, adverseTaskTitle);
 
-    if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    if (adverseTask
+      && adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
     }
   }
@@ -51,18 +57,18 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
   return false;
 };
 
-const firstTaskIsComplete = (groupTasks) => {
-  const firstTask = groupTasks.find((t) => t.id === '1');
+/**
+ * Check if the deal is MIA
+ * and if the first task status is being changed to in progress or is completed immediately
+ * */
+const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, statusTo) => {
+  const isMiaDeal = (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+  const firstTaskInFirstGroup = isFirstTaskInFirstGroup(taskId, groupId);
+  const taskCompletedImmediately = taskIsCompletedImmediately(statusFrom, statusTo);
 
-  if (firstTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-    return true;
-  }
-
-  return false;
-};
-
-const canUpdateTask = (allTaskGroups, group, taskId) => {
-  if (previousTaskIsComplete(allTaskGroups, group, taskId)) {
+  if (isMiaDeal
+    && firstTaskInFirstGroup
+    && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
     return true;
   }
 
@@ -71,12 +77,13 @@ const canUpdateTask = (allTaskGroups, group, taskId) => {
 
 module.exports = {
   getFirstTask,
-  getTask,
-  getGroup,
+  getTaskInGroupById,
+  getTaskInGroupByTitle,
+  getGroupById,
+  getGroupByTitle,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
-  previousTaskIsComplete,
-  firstTaskIsComplete,
-  isFirstTask,
-  canUpdateTask,
+  taskIsCompletedImmediately,
+  isAdverseHistoryTaskIsComplete,
+  shouldUpdateDealStage,
 };

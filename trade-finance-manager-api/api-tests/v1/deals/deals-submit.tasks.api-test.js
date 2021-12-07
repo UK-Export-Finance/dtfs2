@@ -7,7 +7,6 @@ const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
 const submitDeal = require('../utils/submitDeal');
 
-const MOCK_DEAL_AIN = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');

@@ -1,35 +1,25 @@
-const { getTime } = require('date-fns');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const getAssigneeFullName = require('./get-assignee-full-name');
+const {
+  getGroupById,
+  getTaskInGroupById,
+  isAdverseHistoryTaskIsComplete,
+  shouldUpdateDealStage,
+} = require('../helpers/tasks');
+const mapTaskObject = require('../tasks/map-task-object');
+const mapTaskHistoryObject = require('../tasks/map-task-history-object');
 const {
   previousTaskIsComplete,
-  isFirstTaskInFirstGroup,
-  getGroup,
-  getTask,
-  canUpdateTask,
-} = require('../helpers/tasks');
+  taskCanBeEditedWithoutPreviousTaskComplete,
+  handleTaskEditFlagAndStatus,
+} = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('./task-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
-const updateHistory = ({
-  taskId,
-  groupId,
-  statusFrom,
-  statusTo,
-  assignedUserId,
-  updatedBy,
-}) => ({
-  taskId,
-  groupId,
-  statusFrom,
-  statusTo,
-  assignedUserId,
-  updatedBy,
-  timestamp: getTime(new Date()),
-});
-
-const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
+/**
+* Update a task in the task's group.
+* */
+const updateTask = (allTaskGroups, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -38,8 +28,8 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
       groupTasks: group.groupTasks.map((t) => {
         let task = t;
 
-        if (task.id === taskIdToUpdate
-          && task.groupId === groupId) {
+        if (task.id === taskUpdate.id
+          && task.groupId === taskUpdate.groupId) {
           task = {
             ...task,
             ...taskUpdate,
@@ -53,26 +43,14 @@ const updateTask = (allTaskGroups, groupId, taskIdToUpdate, taskUpdate) =>
     return group;
   });
 
-const generateTaskDates = (statusFrom, statusTo) => {
-  const dates = {
-    lastEdited: getTime(new Date()),
-  };
+/**
+ * Update all tasks canEdit flag and status
+ * Depending on what task has been changed.
+ * */
+const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
+  let taskEmailsToSend = [];
 
-  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO) {
-    dates.dateStarted = getTime(new Date());
-  }
-
-  if (statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
-    dates.dateCompleted = getTime(new Date());
-  }
-
-  return dates;
-};
-
-const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, urlOrigin) => {
-  const sendUpdatedEmailRequests = [];
-
-  const taskGroups = allTaskGroups.map((tGroup) => {
+  let taskGroups = allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
     group = {
@@ -80,61 +58,97 @@ const updateTasksCanEdit = async (allTaskGroups, groupId, taskIdToUpdate, deal, 
       groupTasks: group.groupTasks.map((t) => {
         const task = t;
 
-        if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-          task.canEdit = false;
-        } else if (previousTaskIsComplete(allTaskGroups, group, task.id)) {
-          if (task.id === taskIdToUpdate
-            && task.groupId === groupId) {
-            if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-              task.canEdit = false;
-            }
-          } else {
-            // task can be started
-            task.canEdit = true;
-            task.status = CONSTANTS.TASKS.STATUS.TO_DO;
+        const isTaskThatIsBeingUpdated = (
+          task.id === taskUpdate.id
+          && task.groupId === taskUpdate.groupId);
 
-            // Send task notification emails
-            sendUpdatedEmailRequests.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
-          }
+        const {
+          updatedTask,
+          sendEmail,
+        } = handleTaskEditFlagAndStatus(
+          allTaskGroups,
+          group,
+          task,
+          isTaskThatIsBeingUpdated,
+        );
+
+        if (sendEmail) {
+          taskEmailsToSend.push(updatedTask);
         }
-        return task;
+
+        return updatedTask;
       }),
     };
 
     return group;
   });
 
-  await Promise.all(sendUpdatedEmailRequests);
+  /**
+   * If 'Adverse History Check' task is completed
+   * All tasks in the Underwriting Group Task become unlocked/able to be started
+   * */
+  const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
+
+  if (canUnlockUnderWritingGroupTasks) {
+    taskGroups = taskGroups.map((g) => {
+      const group = g;
+
+      if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
+        group.groupTasks = group.groupTasks.map((task) => {
+          const isTaskThatIsBeingUpdated = (
+            task.id === taskUpdate.id
+            && task.groupId === taskUpdate.groupId);
+
+          const shouldUpdate = (!isTaskThatIsBeingUpdated
+            && !task.canEdit
+            && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START);
+
+          if (shouldUpdate) {
+            return {
+              ...task,
+              canEdit: true,
+              status: CONSTANTS.TASKS.STATUS.TO_DO,
+            };
+          }
+          return task;
+        });
+      }
+
+      return group;
+    });
+  }
+
+  /**
+   * Send emails for each task in the emails array
+   * ('Task is ready to start')
+   * */
+  const emailPromises = [];
+
+  taskEmailsToSend.forEach((task) => {
+    emailPromises.push(sendUpdatedTaskEmail(
+      task,
+      deal,
+      urlOrigin,
+    ))
+  });
+
+  await Promise.all(emailPromises);
   return taskGroups;
 };
 
-const isMIAdeal = (submissionType) =>
-  submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
-
-const taskIsCompletedImmediately = (statusFrom, statusTo) => {
-  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO
-    && statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
-    return true;
-  }
-
-  return false;
-};
-
-const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, statusTo) => {
-  const miaDeal = isMIAdeal(submissionType);
-  const firstTaskInFirstGroup = isFirstTaskInFirstGroup(taskId, groupId);
-  const taskCompletedImmediately = taskIsCompletedImmediately(statusFrom, statusTo);
-
-  if (miaDeal
-    && firstTaskInFirstGroup
-    && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
-    return true;
-  }
-
-  return false;
-};
-
-const updateTfmTask = async (dealId, tfmTaskUpdate) => {
+/**
+ * Function that is first triggered. This:
+ * - Gets the deal and all tasks.
+ * - Maps the taskUpdate input into schema format, adding dates.
+ * - Finds the group the task belongs to and updates the task in that group.
+ * - Maps over all tasks in every group and updates their status/canEdit flag.
+ * - If previous task is complete, a sendEmail flag for that task is returned.
+ * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
+ * - Updates tfm.history.tasks.
+ * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task)
+ * - Updates the deal.
+ * */
+const updateTfmTask = async (dealId, taskUpdate) => {
   const unmappedDeal = await api.findOneDeal(dealId);
   const deal = mapSubmittedDeal(unmappedDeal);
 
@@ -147,53 +161,58 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
     status: statusTo,
     updatedBy,
     urlOrigin,
-  } = tfmTaskUpdate;
+  } = taskUpdate;
 
-  const group = getGroup(allTasks, groupId);
-
-  const originalTask = getTask(taskIdToUpdate, group.groupTasks);
-
+  const group = getGroupById(allTasks, groupId);
+  const originalTask = getTaskInGroupById(group.groupTasks, taskIdToUpdate);
   const statusFrom = originalTask.status;
 
-  if (canUpdateTask(allTasks, group, taskIdToUpdate)) {
-    const { userId: assignedUserId } = assignedTo;
+  const updatedTask = await mapTaskObject(originalTask, taskUpdate, statusFrom);
 
-    const newAssigneeFullName = await getAssigneeFullName(assignedUserId);
+  const canUpdateTask = (
+    previousTaskIsComplete(allTasks, group, updatedTask.id)
+    || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask));
 
-    const updatedTask = {
-      id: taskIdToUpdate,
-      groupId,
-      status: statusTo,
-      assignedTo: {
-        userFullName: newAssigneeFullName,
-        userId: assignedUserId,
-      },
-      ...generateTaskDates(statusFrom, statusTo),
-    };
+  if (canUpdateTask) {
+    /**
+     * Update the task in the array
+     * */
+    const modifiedTasks = updateTask(allTasks, updatedTask);
 
-    const modifiedTasks = updateTask(allTasks, groupId, taskIdToUpdate, updatedTask);
-
-    const modifiedTasksWithEditStatus = await updateTasksCanEdit(
+    /**
+     * Map over every task in all groups and
+     * update other tasks so they can be started.
+     * E.g If task 1 is completed, task 2 can then be started.
+     * Some other special conditions are in here:
+     * - e.g if X task is completed, an entire group of tasks can be started.
+     * */
+    const modifiedTasksWithEditStatus = await updateAllTasks(
       modifiedTasks,
       groupId,
-      taskIdToUpdate,
+      updatedTask,
       deal,
       urlOrigin,
     );
 
+    /**
+     * Update TFM history.tasks
+     * */
     const tfmHistoryUpdate = {
       tasks: [
-        updateHistory({
+        mapTaskHistoryObject({
           taskId: taskIdToUpdate,
           groupId,
           statusFrom,
           statusTo,
-          assignedUserId,
+          assignedUserId: assignedTo.userId,
           updatedBy,
         }),
       ],
     };
 
+    /**
+     * Construct TFM update object
+     * */
     const tfmDealUpdate = {
       tfm: {
         history: tfmHistoryUpdate,
@@ -201,6 +220,11 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       },
     };
 
+    /**
+     * If the deal is MIA
+     * and the first task status is being changed to in progress or is completed immediately,
+     * the TFM deal stage needs to change to 'in progress'.
+     * */
     const updateDealStage = shouldUpdateDealStage(
       deal.submissionType,
       taskIdToUpdate,
@@ -213,6 +237,9 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
       tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS;
     }
 
+    /**
+     * Update the deal
+     * */
     await api.updateDeal(dealId, tfmDealUpdate);
 
     return updatedTask;
@@ -221,109 +248,8 @@ const updateTfmTask = async (dealId, tfmTaskUpdate) => {
   return originalTask;
 };
 
-/*
-assignTeamTasksToOneUser is no longer consumed.
-Leaving this here for potential future use.
-*/
-const assignTeamTasksToOneUser = async (dealId, teamIds, userId) => {
-  const deal = await api.findOneDeal(dealId);
-  const allTaskGroups = deal.tfm.tasks;
-
-  const newAssigneeFullName = await getAssigneeFullName(userId);
-
-  let modifiedTasks = allTaskGroups;
-
-  modifiedTasks = modifiedTasks.map((tGroup) => {
-    let group = tGroup;
-
-    group = {
-      ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        let task = t;
-
-        if (teamIds.includes(task.team.id)) {
-          task = {
-            ...task,
-            assignedTo: {
-              userFullName: newAssigneeFullName,
-              userId,
-            },
-          };
-        }
-
-        return task;
-      }),
-    };
-
-    return group;
-  });
-
-  const tfmDealUpdate = {
-    tfm: {
-      tasks: modifiedTasks,
-    },
-  };
-
-  await api.updateDeal(dealId, tfmDealUpdate);
-
-  return modifiedTasks;
-};
-
-const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) => {
-  const deal = await api.findOneDeal(dealId);
-  const allTaskGroups = deal.tfm.tasks;
-
-  const newAssigneeFullName = await getAssigneeFullName(userId);
-
-  let modifiedTasks = allTaskGroups;
-
-  modifiedTasks = modifiedTasks.map((tGroup) => {
-    let group = tGroup;
-
-    group = {
-      ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        let task = t;
-
-        // Use group title instead of id.
-        // This ensures that the functionality will still work
-        // if the ordering is changed.
-        if (groupTitlesToAssign.includes(group.groupTitle)) {
-          task = {
-            ...task,
-            assignedTo: {
-              userFullName: newAssigneeFullName,
-              userId,
-            },
-          };
-        }
-
-        return task;
-      }),
-    };
-
-    return group;
-  });
-
-  const tfmDealUpdate = {
-    tfm: {
-      tasks: modifiedTasks,
-    },
-  };
-
-  await api.updateDeal(dealId, tfmDealUpdate);
-
-  return modifiedTasks;
-};
-
 module.exports = {
   updateTask,
-  generateTaskDates,
-  updateTasksCanEdit,
-  isMIAdeal,
-  taskIsCompletedImmediately,
-  shouldUpdateDealStage,
+  updateAllTasks,
   updateTfmTask,
-  assignTeamTasksToOneUser,
-  assignGroupTasksToOneUser,
 };
