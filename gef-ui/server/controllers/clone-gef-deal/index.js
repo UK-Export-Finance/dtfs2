@@ -13,6 +13,15 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
       bankId,
     });
 
+    // Validation errors
+    if (application.status === 422) {
+      return res.render('partials/name-application.njk', {
+        bankInternalRefName: body.bankInternalRefName,
+        additionalRefName: body.additionalRefName,
+        errors: validationErrorHandler(application.data),
+      });
+    }
+
     return res.redirect(`/gef/application-details/${application.applicationId}`);
   } catch (err) {
     return next(err);

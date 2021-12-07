@@ -2,6 +2,7 @@ const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
 
 const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
+const { validateApplicationReferences } = require('./validation/application');
 
 const cloneExporter = async (exporterId) => {
   const exporterCollection = 'gef-exporter';
@@ -98,7 +99,7 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
 const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, userId, bankId) => {
   const applicationCollection = 'gef-application';
   const collection = await db.getCollection(applicationCollection);
-  const unusedProperties = ['_id', 'ukefDecision', 'comments', 'previousStatus', 'portalActivities'];
+  const unusedProperties = ['_id', 'ukefDecision', 'comments', 'previousStatus'];
   const unusedSupportingInfo = ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'];
 
   // get the current GEF deal
@@ -124,7 +125,6 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
   clonedDeal.status = 'DRAFT';
   clonedDeal.submissionCount = 0;
   clonedDeal.submissionDate = null;
-  clonedDeal.submissionType = null;
   clonedDeal.bankInternalRefName = bankInternalRefName;
   clonedDeal.additionalRefName = additionalRefName;
   clonedDeal.userId = userId;
@@ -133,6 +133,7 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
   clonedDeal.checkerId = null;
   clonedDeal.editedBy = [userId];
   clonedDeal.exporterId = await cloneExporter(clonedDeal.exporterId);
+  clonedDeal.portalActivities = [];
 
   // insert the cloned deal in the database
   const createdApplication = await collection.insertOne(clonedDeal);
@@ -149,17 +150,23 @@ exports.clone = async (req, res) => {
     },
   } = req;
 
-  // clone GEF deal
-  const { newApplicationId } = await cloneDeal(existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId);
+  const validateErrs = validateApplicationReferences(req.body);
 
-  // clone the corresponding facilities
-  await cloneFacilities(existingApplicationId, newApplicationId);
+  if (validateErrs) {
+    res.status(422).send(validateErrs);
+  } else {
+    // clone GEF deal
+    const { newApplicationId } = await cloneDeal(existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId);
 
-  // clone the supporting information
-  await cloneSupportingInformation(existingApplicationId, newApplicationId);
+    // clone the corresponding facilities
+    await cloneFacilities(existingApplicationId, newApplicationId);
 
-  // clone the azure files from one folder to another
-  await cloneAzureFiles(existingApplicationId, newApplicationId);
+    // clone the supporting information
+    await cloneSupportingInformation(existingApplicationId, newApplicationId);
 
-  res.send({ applicationId: newApplicationId });
+    // clone the azure files from one folder to another
+    await cloneAzureFiles(existingApplicationId, newApplicationId);
+
+    res.send({ applicationId: newApplicationId });
+  }
 };
