@@ -20,7 +20,7 @@ describe('mapTaskObject', () => {
     api.findUserById.mockClear();
   });
 
-  it('should return mapped object with full assignee name', async () => {
+  it('should return mapped object with full assignee name and lastEdited timestamp', async () => {
     const originalTask = MOCK_MIA_TASKS[0].groupTasks[0];
 
     const updateInput = {
@@ -49,6 +49,10 @@ describe('mapTaskObject', () => {
       ...generateTaskDates(originalTask.status, updateInput.status),
     };
 
+    const { lastEdited, ...resultWithoutLastEdited } = result;
+
     expect(result).toEqual(expected);
+
+    expect(typeof lastEdited).toEqual('number');
   });
 });
