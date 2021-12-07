@@ -39,7 +39,7 @@ const MIA_GROUP_1_TASKS = {
   COMPLETE_AGENT_CHECK: 'Complete an agent check',
 };
 
-const MIA_GROUP_2_TASKS = {
+const MIA_ADVERSE_HISTORY_GROUP_TASKS = {
   COMPLETE_ADVERSE_HISTORY_CHECK: 'Complete an adverse history check',
 };
 
@@ -47,7 +47,6 @@ const MIA_GROUP_3_TASKS = {
   CHECK_EXPOSURE: 'Check exposure',
   GIVE_EXPORTER_A_CREDIT_RATING: 'Give the exporter a credit rating',
   COMPLETE_CREDIT_ANALYSIS: 'Complete the credit analysis',
-  
 };
 
 const MIA_GROUP_4_TASKS = {
@@ -56,28 +55,39 @@ const MIA_GROUP_4_TASKS = {
   APPROVE_OR_DECLINE_THE_DEAL: 'Approve or decline the deal',
 };
 
+const GROUP_TITLES = {
+  ADVERSE_HISTORY: 'Adverse history check',
+  UNDERWRITING: 'Underwriting',
+};
+
 const MIA = {
   GROUP_1: {
+    id: 1,
     GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
     TASKS: [
       {
+        groupId: 1,
         title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
         team: TEAMS.BUSINESS_SUPPORT,
         isConditional: true,
       },
       {
+        groupId: 1,
         title: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
         team: TEAMS.BUSINESS_SUPPORT,
       },
       {
+        groupId: 1,
         title: MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
         team: TEAMS.BUSINESS_SUPPORT,
       },
       {
+        groupId: 1,
         title: MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
         team: TEAMS.UNDERWRITING_SUPPORT,
       },
       {
+        groupId: 1,
         title: MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
@@ -89,43 +99,53 @@ const MIA = {
     ],
   },
   GROUP_2: {
-    GROUP_TITLE: 'Adverse history check',
+    id: 2,
+    GROUP_TITLE: GROUP_TITLES.ADVERSE_HISTORY,
     TASKS: [
       {
-        title: MIA_GROUP_2_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
+        groupId: 2,
+        title: MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
     ],
   },
   GROUP_3: {
-    GROUP_TITLE: 'Underwriting',
+    id: 3,
+    GROUP_TITLE: GROUP_TITLES.UNDERWRITING,
     TASKS: [
       {
+        groupId: 3,
         title: MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
         team: TEAMS.UNDERWRITERS,
       },
       {
+        groupId: 3,
         title: MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
         team: TEAMS.UNDERWRITERS,
       },
       {
+        groupId: 3,
         title: MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
         team: TEAMS.UNDERWRITERS,
       },
     ],
   },
   GROUP_4: {
+    id: 4,
     GROUP_TITLE: 'Approvals',
     TASKS: [
       {
+        groupId: 4,
         title: MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
       {
+        groupId: 4,
         title: MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS,
         team: TEAMS.RISK_MANAGERS,
       },
       {
+        groupId: 4,
         title: MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
         team: TEAMS.UNDERWRITER_MANAGERS,
       },
@@ -143,11 +163,12 @@ const STATUS = {
 const UNASSIGNED = 'Unassigned';
 
 module.exports = {
+  GROUP_TITLES,
   AIN_AND_MIA,
   AIN,
   MIA,
   MIA_GROUP_1_TASKS,
-  MIA_GROUP_2_TASKS,
+  MIA_ADVERSE_HISTORY_GROUP_TASKS,
   MIA_GROUP_3_TASKS,
   MIA_GROUP_4_TASKS,
   STATUS,

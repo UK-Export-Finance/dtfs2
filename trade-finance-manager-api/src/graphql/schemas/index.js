@@ -215,6 +215,7 @@ type TFMTask {
   groupId: Int
   title: String
   status: String
+  previousStatus: String
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
   canEdit: Boolean

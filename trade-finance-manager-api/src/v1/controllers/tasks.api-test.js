@@ -1,16 +1,10 @@
-/* eslint-disable no-underscore-dangle */
-
 const {
   updateTask,
-  generateTaskDates,
-  updateTasksCanEdit,
-  isMIAdeal,
-  taskIsCompletedImmediately,
-  shouldUpdateDealStage,
+  updateAllTasks,
   updateTfmTask,
-  assignTeamTasksToOneUser,
-  assignGroupTasksToOneUser,
 } = require('./tasks.controller');
+const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
+const mapTaskObject = require('../tasks/map-task-object');
 
 const api = require('../api');
 
@@ -18,23 +12,27 @@ const MOCK_USERS = require('../__mocks__/mock-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
 const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
+const MOCK_MIA_TASKS_POPULATED = require('../__mocks__/mock-MIA-tasks-populated');
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
-const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
 
 const CONSTANTS = require('../../constants');
 
-describe('tasks controller', () => {
-  const mockDeal = {
-    _id: MOCK_DEAL_MIA_SUBMITTED._id,
-    ukefDealId: MOCK_DEAL_MIA_SUBMITTED.ukefDealId,
-    exporter: {
-      companyName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
-    },
-    tfm: {
-      history: { emails: [] },
-    },
-  };
+const taskUpdateBase = {
+  assignedTo: {
+    userId: MOCK_USERS[0]._id,
+    userFullName: `${MOCK_USERS[0].firstName} ${MOCK_USERS[0].lastName}`,
+  },
+  status: 'Done',
+  updatedBy: MOCK_USERS[0]._id,
+};
 
+const createTaskUpdateObj = (groupId, taskId) => ({
+  ...taskUpdateBase,
+  id: String(taskId),
+  groupId,
+});
+
+describe('tasks controller', () => {
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
@@ -66,7 +64,7 @@ describe('tasks controller', () => {
         },
       };
 
-      const result = updateTask(mockTasks, 1, '2', taskUpdate);
+      const result = updateTask(mockTasks, taskUpdate);
 
       const expected = [
         {
@@ -92,311 +90,86 @@ describe('tasks controller', () => {
     });
   });
 
-  describe('generateTaskDates', () => {
-    it('should return object with lastEdited timestamp', () => {
-      const result = generateTaskDates();
+  describe('updateAllTasks', () => {
+    it('should map over all tasks and return handleTaskEditFlagAndStatus for each task', async () => {
+      const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-      const expected = {
-        lastEdited: expect.any(Number),
-      };
+      const result = await updateAllTasks(
+        MOCK_MIA_TASKS,
+        tfmTaskUpdate.groupId,
+        tfmTaskUpdate,
+        MOCK_DEAL_MIA_SUBMITTED,
+      );
+
+      const expected = MOCK_MIA_TASKS.map((group) => ({
+        ...group,
+        groupTasks: group.groupTasks.map((task) => {
+          let isTaskThatIsBeingUpdated = false;
+          if (group.id === 1 && task.id === '1') {
+            isTaskThatIsBeingUpdated = true;
+          }
+
+          const { updatedTask } = handleTaskEditFlagAndStatus(
+            MOCK_MIA_TASKS,
+            group,
+            task,
+            isTaskThatIsBeingUpdated,
+          );
+
+          return updatedTask;
+        }),
+      }));
 
       expect(result).toEqual(expected);
     });
 
-    describe('when statusFrom is `To do` and statusTo is `In progress`', () => {
-      it('should return dateStarted', () => {
-        const result = generateTaskDates('To do', 'In progress');
+    describe('when adverse history task is complete', () => {
+      const mockTasks = MOCK_MIA_TASKS_POPULATED;
 
-        const expected = {
-          lastEdited: expect.any(Number),
-          dateStarted: expect.any(Number),
-        };
+      const tasksWithAdverseHistoryTaskComplete = mockTasks;
 
-        expect(result).toEqual(expected);
+      // mark all tasks in group 1 as complete
+      const group1 = tasksWithAdverseHistoryTaskComplete[0];
+      tasksWithAdverseHistoryTaskComplete[0] = {
+        ...group1,
+        groupTasks: group1.groupTasks.map((task) => ({
+          ...task,
+          status: 'Done',
+        })),
+      };
+
+      // mark all tasks in group 2 as complete
+      const group2 = tasksWithAdverseHistoryTaskComplete[1];
+      tasksWithAdverseHistoryTaskComplete[1] = {
+        ...group2,
+        groupTasks: group2.groupTasks.map((task) => ({
+          ...task,
+          status: 'Done',
+        })),
+      };
+
+      it('should unlock all tasks in the Underwriting group', async () => {
+        const tfmTaskUpdate = createTaskUpdateObj(2, 1);
+
+        const result = await updateAllTasks(
+          tasksWithAdverseHistoryTaskComplete,
+          tfmTaskUpdate.groupId,
+          tfmTaskUpdate,
+          MOCK_DEAL_MIA_SUBMITTED,
+        );
+
+        const underwritingGroup = result.find((group) =>
+          group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
+
+        expect(underwritingGroup.groupTasks[0].status).toEqual('To do');
+        expect(underwritingGroup.groupTasks[0].canEdit).toEqual(true);
+
+        expect(underwritingGroup.groupTasks[1].status).toEqual('To do');
+        expect(underwritingGroup.groupTasks[1].canEdit).toEqual(true);
+
+        expect(underwritingGroup.groupTasks[2].status).toEqual('To do');
+        expect(underwritingGroup.groupTasks[2].canEdit).toEqual(true);
       });
-    });
-
-    describe('when statusFrom is `To do` and statusTo is `Done`', () => {
-      it('should return dateStarted and dateCompleted', () => {
-        const result = generateTaskDates('To do', 'Done');
-
-        const expected = {
-          lastEdited: expect.any(Number),
-          dateStarted: expect.any(Number),
-          dateCompleted: expect.any(Number),
-        };
-
-        expect(result).toEqual(expected);
-      });
-    });
-
-    describe('when statusFrom is `In progress` and statusTo is `Done`', () => {
-      it('should return dateCompleted', () => {
-        const result = generateTaskDates('In progress', 'Done');
-
-        const expected = {
-          lastEdited: expect.any(Number),
-          dateCompleted: expect.any(Number),
-        };
-
-        expect(result).toEqual(expected);
-      });
-    });
-  });
-
-  describe('updateTasksCanEdit', () => {
-    describe('when given a task with `Done` status', () => {
-      it('should mark the task as canEdit = false', async () => {
-        const mockGroup1Tasks = [
-          {
-            id: '1',
-            groupId: 1,
-            status: 'Done',
-            canEdit: true,
-            title: 'Test',
-          },
-          {
-            id: '2',
-            groupId: 1,
-            status: 'To do',
-            canEdit: false,
-            title: 'Test',
-          },
-          {
-            id: '3',
-            groupId: 1,
-            status: 'To do',
-            canEdit: false,
-            title: 'Test',
-          },
-        ];
-
-        const mockTasks = [
-          {
-            groupTitle: 'Group 1 tasks',
-            id: 1,
-            groupTasks: mockGroup1Tasks,
-          },
-        ];
-
-        const result = await updateTasksCanEdit(mockTasks, 1, '1', mockDeal);
-
-        const expected = [
-          {
-            groupTitle: 'Group 1 tasks',
-            id: 1,
-            groupTasks: [
-              {
-                ...mockGroup1Tasks[0],
-                canEdit: false,
-              },
-              mockGroup1Tasks[1],
-              mockGroup1Tasks[2],
-            ],
-          },
-        ];
-
-        expect(result).toEqual(expected);
-      });
-    });
-
-    describe('when given a task that is not task #1, and previous task has `Done` status', () => {
-      it('should mark the task as canEdit = false', async () => {
-        const mockGroup1Tasks = [
-          {
-            id: '1',
-            groupId: 1,
-            status: 'Done',
-            canEdit: false,
-            title: 'Test',
-          },
-          {
-            id: '2',
-            groupId: 1,
-            status: 'Done',
-            canEdit: true,
-            title: 'Test',
-          },
-          {
-            id: '3',
-            groupId: 1,
-            status: 'Cannot start yet',
-            canEdit: false,
-            title: 'Test',
-          },
-        ];
-
-        const mockTasks = [
-          {
-            groupTitle: 'Group 1 tasks',
-            id: 1,
-            groupTasks: mockGroup1Tasks,
-          },
-        ];
-
-        const result = await updateTasksCanEdit(mockTasks, 1, '2', mockDeal);
-
-        const expected = [
-          {
-            groupTitle: 'Group 1 tasks',
-            id: 1,
-            groupTasks: [
-              mockGroup1Tasks[0],
-              {
-                ...mockGroup1Tasks[1],
-                canEdit: false,
-              },
-              mockGroup1Tasks[2],
-            ],
-          },
-        ];
-
-        expect(result).toEqual(expected);
-      });
-    });
-
-    describe('when given a task that is not task #1, and previous task has `Done` status', () => {
-      it('should mark the next task as canEdit = true and change status to `To do`', async () => {
-        const mockGroup1Tasks = [
-          {
-            id: '1',
-            groupId: 1,
-            status: 'Done',
-            canEdit: false,
-            title: 'Test',
-          },
-          {
-            id: '2',
-            groupId: 1,
-            status: 'Done',
-            canEdit: true,
-            title: 'Test',
-          },
-          {
-            id: '3',
-            groupId: 1,
-            status: 'Cannot start yet',
-            canEdit: false,
-            title: 'Test',
-          },
-        ];
-
-        const mockTasks = [
-          {
-            groupTitle: 'Group 1 tasks',
-            id: 1,
-            groupTasks: mockGroup1Tasks,
-          },
-        ];
-
-        const result = await updateTasksCanEdit(mockTasks, 1, '2', mockDeal);
-
-        const expected = [
-          {
-            groupTitle: 'Group 1 tasks',
-            id: 1,
-            groupTasks: [
-              mockGroup1Tasks[0],
-              {
-                ...mockGroup1Tasks[1],
-                canEdit: false,
-              },
-              {
-                ...mockGroup1Tasks[2],
-                canEdit: true,
-                status: 'To do',
-              },
-            ],
-          },
-        ];
-
-        expect(result).toEqual(expected);
-      });
-    });
-  });
-
-  describe('isMIAdeal', () => {
-    it('should return true when submissionType is MIA', () => {
-      const result = isMIAdeal(MOCK_DEAL_MIA_SUBMITTED.details.submissionType);
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return false when submissionType is NOT MIA', () => {
-      const result = isMIAdeal('test');
-
-      expect(result).toEqual(false);
-    });
-  });
-
-  describe('taskIsCompletedImmediately', () => {
-    it('should return true when status changes from `To do` to `Done`', () => {
-      const result = taskIsCompletedImmediately(
-        'To do',
-        'Done',
-      );
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return false when status does NOT change from `To do` to `Done`', () => {
-      const result = taskIsCompletedImmediately(
-        'To do',
-        'In progress',
-      );
-
-      expect(result).toEqual(false);
-    });
-  });
-
-  describe('shouldUpdateDealStage', () => {
-    const submissionType = 'Manual Inclusion Application';
-    const taskId = '1';
-    const groupid = 1;
-
-    it('should return true when submissionType is MIA, is first task in first group, task status changes to `in progress`', () => {
-      const statusFrom = 'To do';
-      const statusTo = 'In progress';
-
-      const result = shouldUpdateDealStage(
-        submissionType,
-        taskId,
-        groupid,
-        statusFrom,
-        statusTo,
-      );
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return true when submissionType is MIA, is first task in first group, task status changes from `To do` to `Done`', () => {
-      const statusFrom = 'To do';
-      const statusTo = 'Done';
-
-      const result = shouldUpdateDealStage(
-        submissionType,
-        taskId,
-        groupid,
-        statusFrom,
-        statusTo,
-      );
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return false when a condition is not met', () => {
-      const statusFrom = 'To do';
-      const statusTo = 'To do';
-
-      const result = shouldUpdateDealStage(
-        submissionType,
-        taskId,
-        groupid,
-        statusFrom,
-        statusTo,
-      );
-
-      expect(result).toEqual(false);
     });
   });
 
@@ -422,11 +195,14 @@ describe('tasks controller', () => {
 
       const expectedUpdatedTask = {
         id: tfmTaskUpdate.id,
-        groupId: tfmTaskUpdate.groupId,
+        title: MOCK_MIA_TASKS[0].groupTasks[0].title,
+        groupId: MOCK_MIA_TASKS[0].id,
         assignedTo: {
           userId: tfmTaskUpdate.assignedTo.userId,
           userFullName: `${firstName} ${lastName}`,
         },
+        team: MOCK_MIA_TASKS[0].groupTasks[0].team,
+        previousStatus: 'To do',
         status: tfmTaskUpdate.status,
         lastEdited: expect.any(Number),
         dateStarted: expect.any(Number),
@@ -540,113 +316,55 @@ describe('tasks controller', () => {
         expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
       });
     });
-  });
 
-  describe('assignTeamTasksToOneUser', () => {
-    it('should assign all tasks in a team to the given user', async () => {
-      const dealId = MOCK_MIA_SECOND_SUBMIT._id;
+    describe('api call', () => {
+      const updateDealSpy = jest.fn(() => Promise.resolve({}));
+      const findUserByIdSpy = jest.fn(() => Promise.resolve(MOCK_USERS[0]));
 
-      const mockTeamIds = [
-        'UNDERWRITER_MANAGERS',
-        'UNDERWRITERS',
-      ];
-
-      const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
-      const userId = mockUser._id;
-
-      const tasksThatShouldBeUpdated = [];
-
-      MOCK_MIA_TASKS.forEach((group) => {
-        group.groupTasks.forEach((task) => {
-          if (mockTeamIds.includes(task.team.id)) {
-            tasksThatShouldBeUpdated.push(task);
-          }
-        });
+      beforeEach(() => {
+        api.updateDeal = updateDealSpy;
+        api.findUserById = findUserByIdSpy;
       });
 
-      const result = await assignTeamTasksToOneUser(
-        dealId,
-        mockTeamIds,
-        userId,
-      );
+      it('should call api.updateDeal', async () => {
+        const dealId = MOCK_DEAL_AIN_SUBMITTED._id;
 
-      let filteredTasksResult = [];
+        const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-      result.forEach((group) => {
-        group.groupTasks.forEach((task) => {
-          if (mockTeamIds.includes(task.team.id)) {
-            filteredTasksResult = [
-              ...filteredTasksResult,
-              task,
-            ];
-          }
-        });
+        await updateTfmTask(dealId, tfmTaskUpdate);
+
+        const mappedTaskObj = await mapTaskObject(
+          MOCK_AIN_TASKS[0].groupTasks[0],
+          tfmTaskUpdate,
+        );
+
+        expect(updateDealSpy).toHaveBeenCalled();
+
+        expect(updateDealSpy.mock.calls[0][0]).toEqual(dealId);
+
+        // check first task in history.tasks array
+        const firstTaskInHistorySentToUpdateDealSpy = updateDealSpy.mock.calls[0][1].tfm.history.tasks[0];
+
+        expect(firstTaskInHistorySentToUpdateDealSpy.taskId).toEqual(tfmTaskUpdate.id);
+        expect(firstTaskInHistorySentToUpdateDealSpy.groupId).toEqual(tfmTaskUpdate.groupId);
+        expect(firstTaskInHistorySentToUpdateDealSpy.statusFrom).toEqual('To do');
+        expect(firstTaskInHistorySentToUpdateDealSpy.statusTo).toEqual(tfmTaskUpdate.status);
+        expect(firstTaskInHistorySentToUpdateDealSpy.assignedUserId).toEqual(tfmTaskUpdate.assignedTo.userId);
+        expect(firstTaskInHistorySentToUpdateDealSpy.updatedBy).toEqual(tfmTaskUpdate.updatedBy);
+        expect(typeof firstTaskInHistorySentToUpdateDealSpy.timestamp).toEqual('number');
+
+        // check first task in tasks array
+        const firstTaskSentToUpdateDealSpy = updateDealSpy.mock.calls[0][1].tfm.tasks[0].groupTasks[0];
+
+        expect(firstTaskSentToUpdateDealSpy.id).toEqual(mappedTaskObj.id);
+        expect(firstTaskSentToUpdateDealSpy.groupId).toEqual(mappedTaskObj.groupId);
+        expect(firstTaskSentToUpdateDealSpy.status).toEqual(mappedTaskObj.status);
+        expect(firstTaskSentToUpdateDealSpy.previousStatus).toEqual(mappedTaskObj.previousStatus);
+        expect(firstTaskSentToUpdateDealSpy.assignedTo).toEqual(mappedTaskObj.assignedTo);
+        expect(typeof firstTaskSentToUpdateDealSpy.dateCompleted).toEqual('number');
+        expect(typeof firstTaskSentToUpdateDealSpy.dateStarted).toEqual('number');
+        expect(typeof firstTaskSentToUpdateDealSpy.lastEdited).toEqual('number');
       });
-
-      const expected = tasksThatShouldBeUpdated.map((task) => ({
-        ...task,
-        assignedTo: {
-          userId,
-          userFullName: `${mockUser.firstName} ${mockUser.lastName}`,
-        },
-      }));
-
-      expect(filteredTasksResult).toEqual(expected);
-    });
-  });
-
-  describe('assignGroupTasksToOneUser', () => {
-    it('should assign all tasks in a group to the given user', async () => {
-      const dealId = MOCK_MIA_SECOND_SUBMIT._id;
-
-      const groupTitlesToAssign = [
-        CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
-        CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
-      ];
-
-      const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
-      const userId = mockUser._id;
-
-      const tasksThatShouldBeUpdated = [];
-
-      MOCK_MIA_TASKS.forEach((group) => {
-        group.groupTasks.forEach((task) => {
-          if (groupTitlesToAssign.includes(group.groupTitle)) {
-            tasksThatShouldBeUpdated.push(task);
-          }
-        });
-      });
-
-      const result = await assignGroupTasksToOneUser(
-        dealId,
-        groupTitlesToAssign,
-        userId,
-      );
-
-      let filteredTasksResult = [];
-
-      result.forEach((group) => {
-        group.groupTasks.forEach((task) => {
-          if (groupTitlesToAssign.includes(group.groupTitle)) {
-            filteredTasksResult = [
-              ...filteredTasksResult,
-              task,
-            ];
-          }
-        });
-      });
-
-      const expected = tasksThatShouldBeUpdated.map((task) => ({
-        ...task,
-        assignedTo: {
-          userId,
-          userFullName: `${mockUser.firstName} ${mockUser.lastName}`,
-        },
-      }));
-
-      expect(filteredTasksResult).toEqual(expected);
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */
