@@ -31,6 +31,8 @@ import 'cypress-audit/commands';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
+Cypress.Commands.add('reinsertMocks', require('./utils/reinsertMocks'));
+
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
 Cypress.Commands.add('updateDeal', require('./portal-api/updateDeal'));
@@ -45,6 +47,7 @@ Cypress.Commands.add('setGefApplicationStatus', require('./portal-api/setGefAppl
 Cypress.Commands.add('deleteGefFacilities', require('./portal-api/deleteGefFacilities'));
 Cypress.Commands.add('insertOneGefFacility', require('./portal-api/insertOneGefFacility'));
 Cypress.Commands.add('insertManyGefFacilities', require('./portal-api/insertManyGefFacilities'));
+Cypress.Commands.add('insertManyGefExporters', require('./portal-api/insertManyGefExporters'));
 
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));
