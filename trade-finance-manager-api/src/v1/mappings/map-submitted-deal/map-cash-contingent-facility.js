@@ -4,15 +4,7 @@ const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-fa
 const CONSTANTS = require('../../../constants');
 
 const mapCoverStartDate = (facility) => {
-  const {
-    hasBeenIssued,
-    submittedAsIssuedDate,
-    coverStartDate,
-  } = facility;
-
-  if (hasBeenIssued && submittedAsIssuedDate) {
-    return submittedAsIssuedDate;
-  }
+  const { coverStartDate } = facility;
 
   if (coverStartDate && isValid(new Date(coverStartDate))) {
     return convertDateToTimestamp(coverStartDate);

@@ -9,6 +9,10 @@ const mapGefFacilityFeeType = (paymentType) => {
     return CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.IN_ADVANCE;
   }
 
+  if (paymentType === CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_GEF.AT_MATURITY) {
+    return CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.AT_MATURITY;
+  }
+
   return null;
 };
 
