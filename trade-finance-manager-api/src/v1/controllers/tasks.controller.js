@@ -48,6 +48,8 @@ const updateTask = (allTaskGroups, taskUpdate) =>
  * Depending on what task has been changed.
  * */
 const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
+  let taskEmailsToSend = [];
+
   let taskGroups = allTaskGroups.map((tGroup) => {
     let group = tGroup;
 
@@ -62,13 +64,17 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
 
         const {
           updatedTask,
-          emailsArray,
+          sendEmail,
         } = handleTaskEditFlagAndStatus(
           allTaskGroups,
           group,
           task,
           isTaskThatIsBeingUpdated,
         );
+
+        if (sendEmail) {
+          taskEmailsToSend.push(updatedTask);
+        }
 
         return updatedTask;
       }),
@@ -113,13 +119,12 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
   }
 
   /**
-   * Construct an array of email promises
-   * From the array of tasks that need email notifications ('Task is ready to start')
+   * Send emails for each task in the emails array
+   * ('Task is ready to start')
    * */
-  /*
   const emailPromises = [];
 
-  emailsArray.forEach((task) => {
+  taskEmailsToSend.forEach((task) => {
     emailPromises.push(sendUpdatedTaskEmail(
       task,
       deal,
@@ -128,7 +133,6 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
   });
 
   await Promise.all(emailPromises);
-  */
   return taskGroups;
 };
 
@@ -136,13 +140,14 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
  * Function that is first triggered. This:
  * - Gets the deal and all tasks.
  * - Maps the taskUpdate input into schema format, adding dates.
- * - Finds the group the task belongs to and updates it.
- * - Maps over all tasks and updates their status/canEdit flag.
+ * - Finds the group the task belongs to and updates the task in that group.
+ * - Maps over all tasks in every group and updates their status/canEdit flag.
+ * - If previous task is complete, a sendEmail flag for that task is returned.
+ * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
  * - Updates tfm.history.tasks.
  * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task)
  * - Updates the deal.
  * */
-// TODO ^^^ ADD send emails.
 const updateTfmTask = async (dealId, taskUpdate) => {
   const unmappedDeal = await api.findOneDeal(dealId);
   const deal = mapSubmittedDeal(unmappedDeal);

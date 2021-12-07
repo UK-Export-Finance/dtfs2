@@ -322,7 +322,7 @@ describe('tasks edit logic', () => {
             expect(result.updatedTask).toEqual(expected);
           });
 
-          it('should add the task to returned emailsArray', () => {
+          it('should return sendEmail flag', () => {
             mockTask.status = CONSTANTS.TASKS.STATUS.CANNOT_START;
             const result = handleTaskEditFlagAndStatus(
               mockTaskGroups,
@@ -331,11 +331,7 @@ describe('tasks edit logic', () => {
               isTaskThatIsBeingUpdated,
             );
 
-            const expected = [
-              mockTask,
-            ];
-
-            expect(result.emailsArray).toEqual(expected);
+            expect(result.sendEmail).toEqual(true);
           });
         });
       });
