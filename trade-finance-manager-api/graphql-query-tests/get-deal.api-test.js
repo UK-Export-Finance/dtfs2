@@ -136,6 +136,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         facilitiesValueInGBP,
         facilitiesUkefExposure
       }
+      facilitiesUpdated
       facilities {
         _id,
         facilitySnapshot {

@@ -1,4 +1,5 @@
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
+const mapEligibility = require('./mappings/deal/mapEligibility');
 const mapFacilities = require('./mappings/facilities/mapFacilities');
 const mapTotals = require('./mappings/deal/mapTotals');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
@@ -17,7 +18,7 @@ const mapBssDeal = (deal) => {
       submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
       facilities: mapFacilities(dealSnapshot.facilities, dealSnapshot.details, deal.tfm),
       dealFiles: dealSnapshot.dealFiles,
-      eligibilityCriteria: dealSnapshot.eligibility.criteria,
+      eligibility: mapEligibility(dealSnapshot.eligibility),
       totals: mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
@@ -33,6 +34,9 @@ const mapGefDeal = (deal) => {
     _id,
     dealSnapshot: {
       _id,
+      dealType: dealSnapshot.dealType,
+      facilitiesUpdated: dealSnapshot.facilitiesUpdated,
+      eligibility: dealSnapshot.eligibility,
       details: mapGefDealDetails(dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
       facilities: mapGefFacilities(dealSnapshot, deal.tfm),
