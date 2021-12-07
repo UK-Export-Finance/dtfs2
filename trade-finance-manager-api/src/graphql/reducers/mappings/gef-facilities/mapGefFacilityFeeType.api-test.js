@@ -20,6 +20,15 @@ describe('mapGefFacilityFeeType', () => {
     });
   });
 
+  describe('when feeType is `AT_MATURITY`', () => {
+    it('should return AT_MATURITY', () => {
+      const result = mapGefFacilityFeeType('AT_MATURITY');
+
+      const expected = CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.AT_MATURITY;
+      expect(result).toEqual(expected);
+    });
+  });
+
   it('should return null', () => {
     const result = mapGefFacilityFeeType();
     expect(result).toEqual(null);
