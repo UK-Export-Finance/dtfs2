@@ -7,9 +7,16 @@ const TEAMS = require('./teams');
  * - excluded (depending on deal data)
  * */
 
+const GROUP_TITLES = {
+  SETUP_DEAL: 'Set up deal',
+  ADVERSE_HISTORY: 'Adverse history check',
+  UNDERWRITING: 'Underwriting',
+  APPROVALS: 'Approvals',
+};
+
 const AIN_AND_MIA = {
   GROUP_1: {
-    GROUP_TITLE: 'Set up deal',
+    GROUP_TITLE: GROUP_TITLES.SETUP_DEAL,
     MATCH_OR_CREATE_PARTIES: 'Match or create the parties in this deal',
     CREATE_OR_LINK_SALESFORCE: 'Create or link this opportunity in Salesforce',
   },
@@ -17,7 +24,7 @@ const AIN_AND_MIA = {
 
 const AIN = {
   GROUP_1: {
-    GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
+    GROUP_TITLE: GROUP_TITLES.SETUP_DEAL,
     TASKS: [
       {
         title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
@@ -55,15 +62,10 @@ const MIA_GROUP_4_TASKS = {
   APPROVE_OR_DECLINE_THE_DEAL: 'Approve or decline the deal',
 };
 
-const GROUP_TITLES = {
-  ADVERSE_HISTORY: 'Adverse history check',
-  UNDERWRITING: 'Underwriting',
-};
-
 const MIA = {
   GROUP_1: {
     id: 1,
-    GROUP_TITLE: AIN_AND_MIA.GROUP_1.GROUP_TITLE,
+    GROUP_TITLE: GROUP_TITLES.SETUP_DEAL,
     TASKS: [
       {
         groupId: 1,
@@ -132,7 +134,7 @@ const MIA = {
   },
   GROUP_4: {
     id: 4,
-    GROUP_TITLE: 'Approvals',
+    GROUP_TITLE: GROUP_TITLES.APPROVALS,
     TASKS: [
       {
         groupId: 4,

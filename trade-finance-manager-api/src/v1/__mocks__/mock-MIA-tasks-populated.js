@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 
 const MOCK_MIA_TASKS_POPULATED = [
   {
-    groupTitle: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.GROUP_TITLE,
+    groupTitle: CONSTANTS.TASKS.GROUP_TITLES.SETUP_DEAL,
     id: 1,
     groupTasks: [
       {
@@ -42,7 +42,7 @@ const MOCK_MIA_TASKS_POPULATED = [
     ],
   },
   {
-    groupTitle: CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
+    groupTitle: CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY,
     id: 2,
     groupTasks: [
       {
@@ -98,7 +98,7 @@ const MOCK_MIA_TASKS_POPULATED = [
     ],
   },
   {
-    groupTitle: CONSTANTS.TASKS.MIA.GROUP_4.GROUP_TITLE,
+    groupTitle: CONSTANTS.TASKS.GROUP_TITLES.APPROVALS,
     id: 4,
     groupTasks: [
       {
