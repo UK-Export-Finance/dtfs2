@@ -82,7 +82,6 @@
         {{ deal.bankRef }}
       </a>
     {% endset %}
-
     {% set item = [
       {
         text: deal.exporter,
@@ -116,11 +115,15 @@
 
   {{ govukTable({
     classes: "govuk-table govuk-!-margin-bottom-0",
+    attributes: {
+    'data-module': 'moj-sortable-table'
+   },
     head: [
       {
         text: "Exporter",
         attributes: {
-        "data-cy": "deal__header--exporter"
+        "data-cy": "deal__header--exporter",
+        "aria-sort": "none"
       }
       },
       {

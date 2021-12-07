@@ -21,7 +21,6 @@ module.exports.logIn = (opts) => {
   });
 };
 
-
 module.exports.deleteDeal = (token, deal) => cy.request({
   url: `${api()}/v1/deals/${deal._id}`,
   method: 'DELETE',
@@ -232,5 +231,18 @@ module.exports.insertGefFacility = (deal, token) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(201);
+  return resp.body;
+});
+
+module.exports.updateExporter = async (deal, data, token) => cy.request({
+  url: `${api()}/v1/gef/exporter/${deal.exporterId}`,
+  method: 'PUT',
+  body: data,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
   return resp.body;
 });
