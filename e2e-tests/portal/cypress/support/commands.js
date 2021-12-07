@@ -31,8 +31,6 @@ import 'cypress-audit/commands';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
-Cypress.Commands.add('reinsertMocks', require('./utils/reinsertMocks'));
-
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
 Cypress.Commands.add('updateDeal', require('./portal-api/updateDeal'));
