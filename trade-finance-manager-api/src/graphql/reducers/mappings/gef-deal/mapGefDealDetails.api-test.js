@@ -19,6 +19,7 @@ describe('mapGefDealDetails', () => {
       bankSupplyContractID: mockDeal.dealSnapshot.bankInternalRefName,
       bankSupplyContractName: mockDeal.dealSnapshot.additionalRefName,
       submissionType: mockDeal.dealSnapshot.submissionType,
+      dateOfLastAction: mockDeal.dealSnapshot.updatedAt,
       owningBank: {
         name: mockDeal.dealSnapshot.bank.name,
         emails: mockDeal.dealSnapshot.bank.emails,
