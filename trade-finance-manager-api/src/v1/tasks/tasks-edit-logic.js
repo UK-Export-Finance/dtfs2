@@ -103,7 +103,7 @@ const handleTaskEditFlagAndStatus = (
   isTaskThatIsBeingUpdated,
 ) => {
   const updatedTask = task;
-  const emailsArray = [];
+  let sendEmail = false;
 
   /**
    * If a task is completed, it can no longer be edited.
@@ -125,7 +125,6 @@ const handleTaskEditFlagAndStatus = (
       if (updatedTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
-
       return { updatedTask };
     }
 
@@ -138,7 +137,7 @@ const handleTaskEditFlagAndStatus = (
       && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
       updatedTask.canEdit = true;
       updatedTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
-      emailsArray.push(updatedTask);
+      sendEmail = true;
     }
   }
 
@@ -159,7 +158,7 @@ const handleTaskEditFlagAndStatus = (
 
   return {
     updatedTask,
-    emailsArray,
+    sendEmail,
   };
 };
 
