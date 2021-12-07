@@ -75,7 +75,7 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const drawnAmountAndDays = (drawnAmount * daysOfCover);
 
-      const expected = (drawnAmountAndDays * daysOfCover * 0.1 / mockDayBasis);
+      const expected = (drawnAmountAndDays * daysOfCover * (0.1 / mockDayBasis));
 
       expect(result).toEqual(expected);
     });

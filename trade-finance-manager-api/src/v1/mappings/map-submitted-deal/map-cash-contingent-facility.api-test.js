@@ -11,18 +11,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-conti
 
 describe('mappings - map submitted deal - mapCashContingentFacility', () => {
   describe('mapCoverStartDate', () => {
-    it('should return facility.submittedAsIssuedDate when facility.hasBeenIssued is true', () => {
-      const mockFacility = {
-        hasBeenIssued: true,
-        submittedAsIssuedDate: '1628770126495',
-      };
-
-      const result = mapCoverStartDate(mockFacility);
-
-      expect(result).toEqual(mockFacility.submittedAsIssuedDate);
-    });
-
-    it('should return coverStartDate as a timestamp when facility.hasBeenIssued is NOT true', () => {
+    it('should return coverStartDate as a timestamp', () => {
       const mockFacility = {
         hasBeenIssued: null,
         coverStartDate: '2021-12-12 00:00:00.000Z',

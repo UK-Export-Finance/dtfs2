@@ -11,8 +11,9 @@ const updatedIssuedFacilities = async (deal) => {
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
   const {
-    submissionDate: dealSubmissionDate,
     dealType,
+    submissionDate: dealSubmissionDate,
+    submissionType,
   } = deal;
 
   const updatedFacilities = [];
@@ -55,7 +56,11 @@ const updatedIssuedFacilities = async (deal) => {
       }
 
       let feeRecord;
-      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+
+      const shouldCalculateFeeRecord = (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+        && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+
+      if (shouldCalculateFeeRecord) {
         feeRecord = calculateGefFacilityFeeRecord(facility);
       }
 
