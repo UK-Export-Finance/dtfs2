@@ -4,8 +4,6 @@ require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
 
-// Application
-
 const createApplication = async (data, token) => {
   const response = await axios({
     method: 'post',
@@ -36,7 +34,7 @@ const updateApplication = async (id, data, token) => {
   return response.data;
 };
 
-const deleteApplication = async (data, token) => {
+const deleteDeal = async (data, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -49,21 +47,6 @@ const deleteApplication = async (data, token) => {
 
   return response.data;
 };
-
-const listApplication = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/application`, // ?page=null&pageSize=null
-  }).catch((err) => { console.log(`err: ${err}`); });
-  return response.data.items;
-};
-
-// Exporter
 
 const deleteExporter = async (exporterId, token) => {
   const response = await axios({
@@ -93,8 +76,6 @@ const updateExporter = async (exporterId, data, token) => {
 
   return response;
 };
-
-// Facilties
 
 const createFacilities = async (data, token) => {
   const response = await axios({
@@ -152,8 +133,6 @@ const updateFacilities = async (facility, data, token) => {
 
   return response;
 };
-
-// Eligibility Criteria
 
 const createEligibilityCriteria = async (data, token) => {
   const response = await axios({
@@ -247,8 +226,7 @@ const listMandatoryCriteriaVersioned = async (token) => {
 module.exports = {
   createApplication,
   updateApplication,
-  deleteApplication,
-  listApplication,
+  deleteDeal,
   deleteExporter,
   updateExporter,
   createFacilities,

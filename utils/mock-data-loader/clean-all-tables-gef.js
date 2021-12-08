@@ -1,24 +1,20 @@
+const portalApi = require('./api');
 const api = require('./gef/api');
 const tokenFor = require('./temporary-token-handler');
 
-const cleanApplication = async (token) => {
-  console.log('cleaning application');
-
-  for (data of await api.listApplication(token)) {
-    await api.deleteApplication(data, token);
-  }
-};
-
 const cleanExporter = async (token) => {
-  console.log('cleaning exporter');
+  console.log('cleaning GEF exporter');
 
-  for (data of await api.listApplication(token)) {
-    await api.deleteExporter(data.exporterId, token);
+  const deals = await portalApi.listDeals(token);
+  for (deal of deals) {
+    if (deal.dealType === 'GEF') {
+      await api.deleteExporter(deal.exporterId, token);
+    }
   }
 };
 
 const cleanFacilities = async (token) => {
-  console.log('cleaning facilities');
+  console.log('cleaning GEF facilities');
 
   for (data of await api.listFacilities(token)) {
     await api.deleteFacilities(data.details, token);
@@ -26,7 +22,7 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanEligibilityCriteria = async (token) => {
-  console.log('cleaning eligibility-criteria');
+  console.log('cleaning GEF eligibility-criteria');
 
   for (data of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(data, token);
@@ -34,7 +30,7 @@ const cleanEligibilityCriteria = async (token) => {
 };
 
 const cleanMandatoryCriteriaVersioned = async (token) => {
-  console.log('cleaning mandatory-criteria-versioned');
+  console.log('cleaning GEF mandatory-criteria-versioned');
 
   for (mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
     await api.deleteMandatoryCriteriaVersioned(mandatoryCriteria, token);
@@ -49,7 +45,6 @@ const cleanAllTables = async () => {
     bank: { id: '*' },
   });
 
-  await cleanApplication(token);
   await cleanExporter(token);
   await cleanFacilities(token);
   await cleanEligibilityCriteria(token);

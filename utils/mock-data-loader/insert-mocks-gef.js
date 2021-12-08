@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 
-const bssApi = require('./api');
+const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
 
@@ -19,20 +19,20 @@ const insertMocks = async () => {
     email: 'maker1@ukexportfinance.gov.uk',
   });
 
-  const allUsers = await bssApi.listUsers();
+  const allUsers = await portalApi.listUsers();
   const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
 
-  console.log('inserting mandatory-criteria-versioned');
+  console.log('inserting GEF mandatory-criteria-versioned');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
   }
 
-  console.log('inserting eligibility-criteria');
+  console.log('inserting GEF eligibility-criteria');
   for (const item of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(item, token);
   }
 
-  console.log('inserting application');
+  console.log('inserting GEF deals');
   const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
   
   for (const [index, item] of MOCKS.APPLICATION.entries()) {
@@ -54,27 +54,38 @@ const insertMocks = async () => {
     );
   }
 
-  const application = await api.listApplication(token);
+  const deals = await portalApi.listDeals(token);
 
-  console.log('update exporter information');
-  for (const [index, item] of MOCKS.EXPORTER.entries()) {
-    if (index > 0) {
-      await api.updateExporter(application[index].exporterId, item, token);
-    }
-  }
+  const gefDeals = deals.filter((deal) => deal.dealType === 'GEF');
 
-  console.log('inserting and updating facilities information');
-  for (const [index, item] of MOCKS.FACILITIES.entries()) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const subitem of item) {
-      // eslint-disable-next-line no-param-reassign
-      subitem.applicationId = application[index]._id;
-      const facilty = await api.createFacilities(subitem, token);
-      // eslint-disable-next-line no-param-reassign
-      delete subitem.applicationId;
-      await api.updateFacilities(facilty.details, subitem, token);
-    }
-  }
+  // TODO: when GEF deals are in deals collection,
+  // currently api.listDeals doesn't return any GEF deals.
+  // it uses graphQL and GEF things are not in schema/no resolvers.
+
+  // console.log('update GEF exporter');
+  // for (const [index, item] of MOCKS.EXPORTER.entries()) {
+  //   if (index > 0) {
+  //     await api.updateExporter(gefDeals[index].exporterId, item, token);
+  //   }
+  // }
+
+
+  // TODO: when GEF deals are in deals collection,
+  // currently api.listDeals doesn't return any GEF deals.
+  // it uses graphQL and GEF things are not in schema/no resolvers.
+  
+  // console.log('inserting and updating GEF facilities');
+  // for (const [index, item] of MOCKS.FACILITIES.entries()) {
+  //   // eslint-disable-next-line no-restricted-syntax
+  //   for (const subitem of item) {
+  //     // eslint-disable-next-line no-param-reassign
+  //     // subitem.applicationId = gefDeals[index]._id;
+  //     const facilty = await api.createFacilities(subitem, token);
+  //     // eslint-disable-next-line no-param-reassign
+  //     // delete subitem.applicationId;
+  //     await api.updateFacilities(facilty.details, subitem, token);
+  //   }
+  // }
 };
 
 module.exports = insertMocks;

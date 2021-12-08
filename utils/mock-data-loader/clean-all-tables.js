@@ -1,12 +1,17 @@
 const api = require('./api');
+const gefApi = require('./gef/api');
 const centralApi = require('./centralApi');
 const tokenFor = require('./temporary-token-handler');
 
 const cleanBanks = async (token) => {
   console.log('cleaning banks');
 
-  for (bank of await api.listBanks(token)) {
-    await api.deleteBank(bank, token);
+  const banks = await api.listBanks(token);
+
+  if (banks.length > 0) {
+    for (bank of banks) {
+      await api.deleteBank(bank, token);
+    }
   }
 };
 
@@ -19,18 +24,26 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanDeals = async (token) => {
-  console.log('cleaning deals');
   const deals = await api.listDeals(token);
 
+  // TODO: when GEF deals are in deals collection,
+  // currently api.listDeals doesn't return any GEF deals.
+  // it uses graphQL and GEF things are not in schema/no resolvers.
   if (deals) {
     for (deal of deals) {
-      await api.deleteDeal(deal, token);
+      if (deal.dealType === 'BSS/EWCS') {
+        await api.deleteDeal(deal._id, token);
+      }
+
+      // if (deal.dealType === 'GEF') {
+      //   await gefApi.deleteDeal(deal._id, token);
+      // }
     }
   }
 };
 
 const cleanMandatoryCriteria = async (token) => {
-  console.log('cleaning mandatory-criteria');
+  console.log('cleaning BSS mandatory-criteria');
 
   for (mandatoryCriteria of await api.listMandatoryCriteria(token)) {
     await api.deleteMandatoryCriteria(mandatoryCriteria, token);
@@ -38,7 +51,7 @@ const cleanMandatoryCriteria = async (token) => {
 };
 
 const cleanEligibilityCriteria = async (token) => {
-  console.log('cleaning eligibility-criteria');
+  console.log('cleaning BSS eligibility-criteria');
 
   for (eligibilityCriteria of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(eligibilityCriteria, token);
@@ -46,7 +59,7 @@ const cleanEligibilityCriteria = async (token) => {
 };
 
 const cleanUsers = async () => {
-  console.log('cleaning users');
+  console.log('cleaning Portal users');
 
   for (user of await api.listUsers()) {
     await api.deleteUser(user);
