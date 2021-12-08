@@ -4,10 +4,11 @@ const api = require('../../services/api');
 exports.cloneDealCreateApplication = async (req, res, next) => {
   const { body, session } = req;
   const { _id: userId, bank: { id: bankId } } = session.user;
+  const { applicationId } = req.params;
 
   try {
     const application = await api.cloneApplication({
-      applicationId: req.params.applicationId,
+      applicationId,
       ...body,
       userId,
       bankId,

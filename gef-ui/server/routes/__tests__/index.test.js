@@ -26,7 +26,8 @@ import facilityConfirmDeletion from '../facility-confirm-deletion';
 import returnToMaker from '../return-to-maker';
 import supportingInformation from '../supporting-information';
 import portalActivities from '../application-activities';
-import file from '../downloadFile';
+import downloadFiles from '../downloadFile';
+import cloneGefDeal from '../clone-gef-deal';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -76,6 +77,7 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(returnToMaker);
     expect(useSpy).toHaveBeenCalledWith(supportingInformation);
     expect(useSpy).toHaveBeenCalledWith(portalActivities);
-    expect(useSpy).toHaveBeenCalledWith(file);
+    expect(useSpy).toHaveBeenCalledWith(downloadFiles);
+    expect(useSpy).toHaveBeenCalledWith(cloneGefDeal);
   });
 });

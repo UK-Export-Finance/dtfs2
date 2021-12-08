@@ -7,17 +7,6 @@
     "node": ">=14.0.0 <15.0.0",
     "npm": ">=6.0.0 <7.0.0"
   },
-  "devDependencies": {
-    "cypress": "^8.7.0",
-    "cypress-audit": "^1.1.0",
-    "cypress-file-upload": "^5.0.8",
-    "cypress-plugin-tab": "^1.0.5",
-    "eslint": "^8.0.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-import": "^2.25.1",
-    "prettier": "2.5.0"
-  },
   "scripts": {
     "pipeline": "./bin/pipeline.sh",
     "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src",
@@ -35,6 +24,17 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
-    "date-fns": "^2.25.0"
+    "date-fns": "^2.27.0"
+  },
+  "devDependencies": {
+    "cypress": "^8.7.0",
+    "cypress-audit": "^1.1.0",
+    "cypress-file-upload": "^5.0.8",
+    "cypress-plugin-tab": "^1.0.5",
+    "eslint": "^8.4.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-import": "^2.25.3",
+    "prettier": "2.5.1"
   }
 }
