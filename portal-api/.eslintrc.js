@@ -16,7 +16,6 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
-    'no-param-reassign': 'off',
     'comma-dangle': 'off',
     'no-loop-func': 'off',
   },

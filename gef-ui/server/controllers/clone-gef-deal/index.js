@@ -23,7 +23,13 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
       });
     }
 
-    return res.redirect(`/gef/application-details/${application.applicationId}`);
+    req.flash('successMessage', {
+      text: 'GEF Deal cloned successfully.',
+      href: `/gef/application-details/${application.applicationId}`,
+      hrefText: 'View GEF Deal',
+    });
+
+    return res.redirect('/dashboard');
   } catch (err) {
     return next(err);
   }

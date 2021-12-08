@@ -136,7 +136,8 @@ describe('clone-gef-deal/name-application', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { bankInternalRefName: mockRequest.body.bankInternalRefName, additionalRefName: undefined, errors: { errorSummary: [], fieldErrors: {} } });
   });
 
-  it('redirects user to `application details` page if successful', async () => {
+  it('redirects user to dashboard page', async () => {
+    const mockNext = jest.fn();
     api.cloneApplication = jest.fn();
     api.cloneApplication.mockResolvedValueOnce({
       _id: '123456',
@@ -144,8 +145,8 @@ describe('clone-gef-deal/name-application', () => {
       bankInternalRefName: 'Cloned deal',
     });
 
-    await cloneDealCreateApplication(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123456');
+    const resp = await cloneDealCreateApplication(mockRequest, mockResponse, mockNext);
+    expect(resp).toBeUndefined();
   });
 
   it('shows user generic error page if there is an issue with the API', async () => {

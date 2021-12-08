@@ -13,15 +13,15 @@ import CREDENTIALS from '../fixtures/credentials.json';
 const { format } = require('date-fns');
 
 context('Clone GEF (AIN) deal', () => {
-  let AINapplication;
-  let testApplication;
+  let AINapplicationId;
+  let testApplicationId;
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
-      AINapplication = body.items[2]._id;
-      testApplication = body.items[1]._id;
+      AINapplicationId = body.items[2]._id;
+      testApplicationId = body.items[1]._id;
       cy.login(CREDENTIALS.MAKER);
     });
   });
@@ -29,12 +29,12 @@ context('Clone GEF (AIN) deal', () => {
   describe('Validate the creation of a cloned deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${testApplication}`));
+      cy.visit(relative(`/gef/application-details/${testApplicationId}`));
     });
 
     it('should show an error when the mandatory criteria is false', () => {
       cloneGEFdeal.cloneGefDealLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${testApplication}/clone`));
+      cy.url().should('eq', relative(`/gef/application-details/${testApplicationId}/clone`));
       mandatoryCriteria.falseRadio().click();
       mandatoryCriteria.form().submit();
       cy.url().should('eq', relative('/gef/ineligible-gef'));
@@ -43,7 +43,7 @@ context('Clone GEF (AIN) deal', () => {
 
     it('should show an error when the bank internal reference is empty', () => {
       cloneGEFdeal.cloneGefDealLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${testApplication}/clone`));
+      cy.url().should('eq', relative(`/gef/application-details/${testApplicationId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
       nameApplication.form().submit();
@@ -54,12 +54,12 @@ context('Clone GEF (AIN) deal', () => {
   describe('Clone AIN deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${AINapplication}`));
+      cy.visit(relative(`/gef/application-details/${AINapplicationId}`));
     });
 
     it('should clone an AIN deal', () => {
-      cy.visit(relative(`/gef/application-details/${AINapplication}`));
-      cy.url().should('eq', relative(`/gef/application-details/${AINapplication}`));
+      cy.visit(relative(`/gef/application-details/${AINapplicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${AINapplicationId}`));
       cloneGEFdeal.cloneGefDealLink().should('be.visible');
 
       // Make the deal an AIN
@@ -72,13 +72,13 @@ context('Clone GEF (AIN) deal', () => {
       applicationDetails.submitButton().click();
 
       cy.get('[data-cy="dashboard-link"]').click();
-      cy.get(`[data-cy="deal__link--${AINapplication}"]`).click();
+      cy.get(`[data-cy="deal__link--${AINapplicationId}"]`).click();
 
       cloneGEFdeal.cloneGefDealLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${AINapplication}/clone`));
+      cy.url().should('eq', relative(`/gef/application-details/${AINapplicationId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
-      cy.url().should('eq', relative(`/gef/application-details/${AINapplication}/clone/name-application`));
+      cy.url().should('eq', relative(`/gef/application-details/${AINapplicationId}/clone/name-application`));
       nameApplication.internalRef().type('Cloned AIN deal');
       nameApplication.form().submit();
       nameApplication.applicationDetailsPage();
@@ -123,24 +123,24 @@ context('Clone GEF (AIN) deal', () => {
 });
 
 context('Clone GEF (MIA) deal', () => {
-  let MIAapplication;
+  let MIAapplicationId;
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
-      MIAapplication = body.items[2]._id;
+      MIAapplicationId = body.items[2]._id;
       cy.login(CREDENTIALS.MAKER);
     });
   });
   describe('Clone MIA deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${MIAapplication}`));
+      cy.visit(relative(`/gef/application-details/${MIAapplicationId}`));
     });
 
     it('should create an MIA deal', () => {
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}`));
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}`));
       cloneGEFdeal.cloneGefDealLink().should('be.visible');
 
       // Make the deal an Manual Inclusion Application
@@ -152,67 +152,67 @@ context('Clone GEF (MIA) deal', () => {
       manualInclusion.continueButton().click();
 
       // upload manual inclusion document
-      cy.uploadFile('file1.png', `${manualInclusion.url(MIAapplication)}/upload`);
+      cy.uploadFile('file1.png', `${manualInclusion.url(MIAapplicationId)}/upload`);
       manualInclusion.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Management Accounts` section', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/management-accounts`));
-      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplication}/supporting-information/management-accounts/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/management-accounts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplicationId}/supporting-information/management-accounts/upload`);
       uploadFiles.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Financial Statements` section', () => {
       uploadFiles.supportingInfoFinancialStatementsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/financial-statements`));
-      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplication}/supporting-information/financial-statements/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/financial-statements`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplicationId}/supporting-information/financial-statements/upload`);
       uploadFiles.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Financial Forecasts` section', () => {
       uploadFiles.supportingInfoFinancialForecastsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/financial-forecasts`));
-      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplication}/supporting-information/financial-forecasts/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/financial-forecasts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplicationId}/supporting-information/financial-forecasts/upload`);
       uploadFiles.uploadSuccess('file1.png');
 
-      cy.uploadFile('file2.png', `/gef/application-details/${MIAapplication}/supporting-information/financial-forecasts/upload`);
+      cy.uploadFile('file2.png', `/gef/application-details/${MIAapplicationId}/supporting-information/financial-forecasts/upload`);
       uploadFiles.uploadSuccess('file2.png');
     });
 
     it('should upload files to the `Financial Commentary` section', () => {
       uploadFiles.supportingInfoFinancialCommentaryButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/financial-commentary`));
-      cy.uploadFile('file2.png', `/gef/application-details/${MIAapplication}/supporting-information/financial-commentary/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/financial-commentary`));
+      cy.uploadFile('file2.png', `/gef/application-details/${MIAapplicationId}/supporting-information/financial-commentary/upload`);
       uploadFiles.uploadSuccess('file2.png');
 
-      cy.uploadFile('file3.png', `/gef/application-details/${MIAapplication}/supporting-information/financial-commentary/upload`);
+      cy.uploadFile('file3.png', `/gef/application-details/${MIAapplicationId}/supporting-information/financial-commentary/upload`);
       uploadFiles.uploadSuccess('file3.png');
     });
 
     it('should upload files to the `Corporate Structure` section', () => {
       uploadFiles.supportingInfoCorporateStructureButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/corporate-structure`));
-      cy.uploadFile('file4.png', `/gef/application-details/${MIAapplication}/supporting-information/corporate-structure/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/corporate-structure`));
+      cy.uploadFile('file4.png', `/gef/application-details/${MIAapplicationId}/supporting-information/corporate-structure/upload`);
       uploadFiles.uploadSuccess('file4.png');
 
-      cy.uploadFile('file5.png', `/gef/application-details/${MIAapplication}/supporting-information/corporate-structure/upload`);
+      cy.uploadFile('file5.png', `/gef/application-details/${MIAapplicationId}/supporting-information/corporate-structure/upload`);
       uploadFiles.uploadSuccess('file5.png');
     });
 
     it('should upload files to the `Debtor Creditor` section', () => {
       uploadFiles.supportingInfoDebtorCreditorButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/debtor-creditor-reports`));
-      cy.uploadFile('file4.png', `/gef/application-details/${MIAapplication}/supporting-information/debtor-creditor-reports/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/debtor-creditor-reports`));
+      cy.uploadFile('file4.png', `/gef/application-details/${MIAapplicationId}/supporting-information/debtor-creditor-reports/upload`);
       uploadFiles.uploadSuccess('file4.png');
 
-      cy.uploadFile('file5.png', `/gef/application-details/${MIAapplication}/supporting-information/debtor-creditor-reports/upload`);
+      cy.uploadFile('file5.png', `/gef/application-details/${MIAapplicationId}/supporting-information/debtor-creditor-reports/upload`);
       uploadFiles.uploadSuccess('file5.png');
     });
 
     it('should populate the `Security Details` section', () => {
       uploadFiles.supportingInfoSecurityDetailsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/security-details`));
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.applicationSecurity().type('test2');
       uploadFiles.continueButton().click();
@@ -220,11 +220,11 @@ context('Clone GEF (MIA) deal', () => {
 
     it('should upload files to the `Export Licence` section', () => {
       uploadFiles.supportingInfoExportLicenceButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/supporting-information/export-licence`));
-      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplication}/supporting-information/export-licence/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/supporting-information/export-licence`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAapplicationId}/supporting-information/export-licence/upload`);
       uploadFiles.uploadSuccess('file1.png');
 
-      cy.uploadFile('file6.png', `/gef/application-details/${MIAapplication}/supporting-information/export-licence/upload`);
+      cy.uploadFile('file6.png', `/gef/application-details/${MIAapplicationId}/supporting-information/export-licence/upload`);
       uploadFiles.uploadSuccess('file6.png');
     });
 
@@ -234,10 +234,10 @@ context('Clone GEF (MIA) deal', () => {
 
     it('should clone a GEF deal', () => {
       cloneGEFdeal.cloneGefDealLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/clone`));
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAapplication}/clone/name-application`));
+      cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/clone/name-application`));
       nameApplication.internalRef().type('Cloned MIA deal');
       nameApplication.form().submit();
       nameApplication.applicationDetailsPage();

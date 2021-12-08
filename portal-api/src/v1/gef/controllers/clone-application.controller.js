@@ -91,6 +91,15 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
       allFacilities[val].createdAt = Date.now();
       // update the `updatedAt` property to match the current time in EPOCH format
       allFacilities[val].updatedAt = Date.now();
+
+      const currentTime = new Date();
+      currentTime.setHours(0, 0, 0, 0);
+      const difference = currentTime - (new Date(allFacilities[val].coverStartDate)).getTime();
+      // check if the coverStartDate is in the past
+      if (difference > 0) {
+        // if it is, then ask the user to update it
+        allFacilities[val].coverStartDate = null;
+      }
     });
     await collection.insertMany(allFacilities);
   }
@@ -99,7 +108,10 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
 const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, userId, bankId) => {
   const applicationCollection = 'gef-application';
   const collection = await db.getCollection(applicationCollection);
+  // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
+  // any additional fields that are located at the root of the object and that need removing can be added here
   const unusedProperties = ['_id', 'ukefDecision', 'comments', 'previousStatus'];
+  // removed unused properties inside the `supportingInformation` property
   const unusedSupportingInfo = ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'];
 
   // get the current GEF deal

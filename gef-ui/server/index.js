@@ -90,8 +90,7 @@ app.use('/', routes);
 
 app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.statusCode || 500);
   res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
 });
