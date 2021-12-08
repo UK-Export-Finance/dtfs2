@@ -563,9 +563,9 @@ portalRouter.route('/facilities/:id/status')
  * @openapi
  * /gef/deals:
  *   post:
- *     summary: Create a GEF deal in Portal gef-applications collection
+ *     summary: Create a GEF deal in Portal deals collection
  *     tags: [Portal - GEF]
- *     description: Create a deal in Portal gef-applications collection
+ *     description: Create a deal in Portal deals collection
  *     responses:
  *       200:
  *         description: OK
@@ -656,9 +656,9 @@ portalRouter.route('/gef/deals/:id/status')
  * @openapi
  * /gef/deals/:id/comment:
  *   post:
- *     summary: Add a comment to a GEF deal in gef-application collection
+ *     summary: Add a comment to a GEF deal in deals collection
  *     tags: [Portal - GEF]
- *     description: Add a comment to a GEF deal in gef-application collection
+ *     description: Add a comment to a GEF deal in deals collection
  *     parameters:
  *       - in: path
  *         name: id

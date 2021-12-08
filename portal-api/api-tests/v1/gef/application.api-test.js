@@ -8,7 +8,7 @@ const { as } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef/application';
-const collectionName = 'gef-application';
+const collectionName = 'deals';
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 

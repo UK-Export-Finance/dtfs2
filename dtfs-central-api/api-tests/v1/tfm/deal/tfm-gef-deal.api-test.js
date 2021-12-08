@@ -11,7 +11,7 @@ const newDeal = {
 
 describe('/v1/tfm/deal/:id', () => {
   beforeEach(async () => {
-    await wipeDB.wipe(['gef-application']);
+    await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['gef-facilities']);
     await wipeDB.wipe(['tfm-deals']);
     await wipeDB.wipe(['tfm-facilities']);

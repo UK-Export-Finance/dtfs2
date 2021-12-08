@@ -101,7 +101,7 @@ const findOneDeal = async (_id, callback) => {
 exports.findOneDeal = findOneDeal;
 
 const findOneGefDeal = async (_id, callback) => {
-  const dealsCollection = await db.getCollection('gef-application');
+  const dealsCollection = await db.getCollection('deals');
 
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 
@@ -197,7 +197,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     // },
     // {
     //   $lookup: {
-    //     from: 'gef-application',
+    //     from: 'deals',
     //     pipeline: [
     //       {
     //         $lookup: {

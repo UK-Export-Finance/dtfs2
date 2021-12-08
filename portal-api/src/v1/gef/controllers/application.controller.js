@@ -26,7 +26,7 @@ const {
   DEAL: { GEF_STATUS },
 } = require('../../../constants');
 
-const applicationCollectionName = 'gef-application';
+const dealsCollectionName = 'deals';
 const exporterCollectionName = 'gef-exporter';
 const facilitiesCollectionName = 'gef-facilities';
 const userCollectionName = 'users';
@@ -55,7 +55,7 @@ const userCollectionName = 'users';
 
 exports.create = async (req, res) => {
   const applicationCollection = await db.getCollection(
-    applicationCollectionName,
+    dealsCollectionName,
   );
   const exporterCollection = await db.getCollection(exporterCollectionName);
   const validateErrs = validateApplicationReferences(
@@ -82,7 +82,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
 
   const doc = await collection.find({})
     .toArray();
@@ -98,7 +98,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
   });
@@ -119,7 +119,7 @@ exports.getById = async (req, res) => {
 };
 
 exports.getStatus = async (req, res) => {
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
   });
@@ -133,7 +133,7 @@ exports.getStatus = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
@@ -235,7 +235,7 @@ exports.changeStatus = async (req, res) => {
       .send(enumValidationErr);
   }
 
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
   const existingApplication = await collection.findOne({
     _id: ObjectID(String(applicationId)),
   });
@@ -303,7 +303,7 @@ exports.changeStatus = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const applicationCollection = await db.getCollection(
-    applicationCollectionName,
+    dealsCollectionName,
   );
   const applicationResponse = await applicationCollection.findOneAndDelete({
     _id: ObjectID(String(req.params.id)),
@@ -355,7 +355,7 @@ exports.findDeals = async (
 ) => {
   const sanitisedFilters = dealsFilters(requestingUser, filters);
 
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
 
   const doc = await collection
     .aggregate([

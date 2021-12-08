@@ -13,7 +13,7 @@ const baseUrl = '/v1/gef/exporter';
 const collectionName = 'gef-exporter';
 const allItems = require('../../fixtures/gef/exporter');
 
-const applicationCollectionName = 'gef-application';
+const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 const applicationAllItems = require('../../fixtures/gef/application');
 

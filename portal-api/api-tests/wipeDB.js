@@ -29,7 +29,6 @@ const wipeAll = async () => {
     'eligibilityCriteria',
     'users',
     'gef-mandatoryCriteriaVersioned',
-    'gef-application',
   ]);
   return wiped;
 };

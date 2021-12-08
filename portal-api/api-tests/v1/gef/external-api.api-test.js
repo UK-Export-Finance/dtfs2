@@ -9,7 +9,7 @@ const { as } = require('../../api')(app);
 // const { expectMongoId } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef';
-// const collectionName = 'gef-application';
+// const collectionName = 'deals';
 
 // const allItems = require('../../fixtures/gef/application');
 

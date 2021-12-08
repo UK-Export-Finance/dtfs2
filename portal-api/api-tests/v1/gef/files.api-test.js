@@ -9,7 +9,7 @@ const { uploadFile, deleteFile, readFile } = require('../../../src/drivers/files
 const baseUrl = '/v1/gef/files';
 const collectionName = 'files';
 
-const applicationCollectionName = 'gef-application';
+const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 
 const validFiles = [{
