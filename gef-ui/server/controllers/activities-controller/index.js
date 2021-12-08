@@ -21,6 +21,7 @@ const getPortalActivities = async (req, res) => {
   const { applicationId } = params;
   const { userToken } = session;
   const deal = await getApplication(applicationId);
+  console.log(deal.portalActivities);
 
   // returns objects from IDs stored in gef application
   const maker = await getUserDetails(deal.userId, userToken);

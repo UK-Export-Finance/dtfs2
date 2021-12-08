@@ -132,6 +132,7 @@ describe('controllers/application-detaills', () => {
           isUkefReviewAvailable: expect.any(Boolean),
           isUkefReviewPositive: expect.any(Boolean),
           ukefDecisionAccepted: expect.any(Boolean),
+          coverDatesConfirmed: expect.any(Boolean),
           previewMode: expect.any(Boolean),
 
           // actions

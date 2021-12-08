@@ -8,6 +8,7 @@ const
     isUkefReviewPositive,
     getFacilitiesAsArray,
     getFacilityCoverStartDate,
+    coverDatesConfirmed,
   } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -87,6 +88,7 @@ function buildBody(app, previewMode) {
     isUkefReviewAvailable: isUkefReviewAvailable(app.status),
     isUkefReviewPositive: isUkefReviewPositive(app.status),
     ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
+    coverDatesConfirmed: coverDatesConfirmed(app.facilities),
     previewMode,
   };
 }
@@ -150,6 +152,7 @@ const applicationDetails = async (req, res, next) => {
 
   try {
     const application = await Application.findById(applicationId, user, userToken);
+
     if (!application) {
       // 404 not found or unauthorised
       return res.redirect('/dashboard');

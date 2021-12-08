@@ -291,6 +291,8 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
+const coverDatesConfirmed = (facilities) => (facilities.items.length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length);
+
 module.exports = {
   apiErrorHandler,
   getApplicationType,
@@ -312,4 +314,5 @@ module.exports = {
   pastDate,
   getEpoch,
   getUTCDate,
+  coverDatesConfirmed,
 };

@@ -16,6 +16,7 @@ import {
   futureDateInRange,
   getFacilityCoverStartDate,
   getFacilitiesAsArray,
+  coverDatesConfirmed,
 } from './helpers';
 
 const MOCK_FACILITY = {
@@ -613,5 +614,11 @@ describe('getFacilitiesAsArray', () => {
       ],
     ];
     expect(getFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
+  });
+});
+
+describe('coverDatesConfirmed', () => {
+  it('Should return FALSE as one of the facility\'s cover date has not been confiemed', () => {
+    expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(false);
   });
 });
