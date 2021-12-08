@@ -291,7 +291,17 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
-const coverDatesConfirmed = (facilities) => (facilities.items.length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length);
+const coverDatesConfirmed = (facilities) => (
+  facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length
+);
+
+const makerCanReSubmit = (maker, application) => {
+  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
+  const acceptableStatus = ['UKEF_APPROVED_WITH_CONDITIONS', 'UKEF_APPROVED_WITHOUT_CONDITIONS'];
+  const makerAuthorised = (maker._id === application.maker._id);
+
+  return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
+};
 
 module.exports = {
   apiErrorHandler,
@@ -315,4 +325,5 @@ module.exports = {
   getEpoch,
   getUTCDate,
   coverDatesConfirmed,
+  makerCanReSubmit,
 };

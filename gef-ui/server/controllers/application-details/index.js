@@ -9,6 +9,7 @@ const
     getFacilitiesAsArray,
     getFacilityCoverStartDate,
     coverDatesConfirmed,
+    makerCanReSubmit,
   } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -22,6 +23,8 @@ const {
 } = require('../../../constants');
 
 const Application = require('../../models/application');
+
+let userSession;
 
 function buildHeader(app) {
   const main = {
@@ -84,6 +87,7 @@ function buildBody(app, previewMode) {
     applicationId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
+    makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
     isUkefReviewAvailable: isUkefReviewAvailable(app.status),
     isUkefReviewPositive: isUkefReviewPositive(app.status),
@@ -146,6 +150,7 @@ const applicationDetails = async (req, res, next) => {
     'cover-start-date',
     'confirm-cover-start-date',
   ];
+  userSession = user;
 
   let facility;
   let url;

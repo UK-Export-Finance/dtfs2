@@ -32,10 +32,10 @@
     {% include "includes/application-details/supporting-information.njk" %}
   {% endif %}
 
-  {% if coverDatesConfirmed and (applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' or applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS') %}
-  <form method="post" data-cy="form">
-    {% include "includes/submit/submit-to-checker-post-ukef-approval.njk" %}
-  </form>
+  {% if makerCanReSubmit %}
+    <form method="post" data-cy="form">
+      {% include "includes/submit/submit-to-checker-post-ukef-approval.njk" %}
+    </form>
   {% elif checkerCanSubmit %}
     {% include "includes/submit/submit-to-ukef.njk" %}
   {% endif %}
