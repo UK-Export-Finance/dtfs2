@@ -2,7 +2,6 @@ const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { findOneExporter } = require('../gef-exporter/get-gef-exporter.controller');
 const { findOneBank } = require('../../bank/get-bank.controller');
 const { findOneUser } = require('../../user/get-user.controller');
 
@@ -108,23 +107,17 @@ const findOneGefDeal = async (_id, callback) => {
   if (deal) {
     const promises = await Promise.all([
       findAllGefFacilitiesByDealId(_id),
-      findOneExporter(deal.exporterId),
       findOneBank(deal.bankId),
       findOneUser(deal.userId),
     ]);
 
     const [
       facilities,
-      exporter,
       bank,
       maker,
     ] = [...promises];
 
     deal.facilities = facilities;
-
-    if (exporter) {
-      deal.exporter = exporter;
-    }
 
     if (bank) {
       deal.bank = bank;
