@@ -91,7 +91,9 @@ describe('controllers/application-detaills', () => {
           application: {
             ...mockApplicationResponse,
             maker: mockUserResponse,
+            userRoles: mockRequest.session.user.roles,
           },
+          status: mockApplicationResponse.status,
           isAutomaticCover: expect.any(Boolean),
           exporter: {
             rows: expect.any(Array),
@@ -140,6 +142,7 @@ describe('controllers/application-detaills', () => {
 
           // user in session
           user: mockRequest.session.user,
+          userRoles: mockRequest.session.user.roles,
         });
     });
 

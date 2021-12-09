@@ -236,7 +236,7 @@ const uploadSupportingDocument = async (req, res, next) => {
     if (isValid) {
       // check user has access
       await getApplication(applicationId, user, userToken);
-      const documentPath = path;
+      const documentPath = fieldName;
 
       const [processedFile] = await uploadAndSaveToDeal(
         [file],
@@ -274,12 +274,11 @@ const deleteSupportingDocument = async (req, res, next) => {
   try {
     if (!fileToDelete) return res.status(400).send('Missing file to delete');
 
-    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
+    const { fieldName } = mapDocTypeParameterToProps(documentType);
 
     const application = await getApplication(applicationId, user, userToken);
-    const documentPath = path;
 
-    await removeFileFromDeal(fileToDelete, fieldName, application, userToken, documentPath);
+    await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
 
     return res.status(200).send({
       file: fileToDelete,

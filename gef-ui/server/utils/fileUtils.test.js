@@ -1,14 +1,18 @@
 import { uploadAndSaveToDeal, removeFileFromDeal } from './fileUtils';
-import { uploadFile, deleteFile, updateApplication } from '../services/api';
+import {
+  uploadFile, deleteFile, updateApplication, updateSupportingInformation,
+} from '../services/api';
 import Application from '../models/application';
 
 jest.mock('../services/api', () => ({
   uploadFile: jest.fn(),
   deleteFile: jest.fn(),
   updateApplication: jest.fn(),
+  updateSupportingInformation: jest.fn(),
 }));
 jest.mock('../models/application');
 
+const mockFileSize = 12;
 const mockToken = 'mock-token';
 const mockDocumentPath = 'mock-document-path';
 const mockField = 'mockField';
@@ -46,17 +50,10 @@ describe('utils/fileUtils', () => {
     it('adds files to the deal if upload successful', async () => {
       uploadFile.mockResolvedValueOnce([{ ...mockFile, _id: 'mock-file-id' }]);
 
-      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockDocumentPath));
+      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockFileSize, mockDocumentPath));
 
-      expect(updateApplication).toHaveBeenCalledWith('mock-id', {
-        ...mockDeal,
-        supportingInformation: {
-          mockField: [{ ...mockFile, _id: 'mock-file-id' }],
-        },
-      });
-      expect(response).toEqual([
-        { ...mockFile, _id: 'mock-file-id' },
-      ]);
+      expect(updateSupportingInformation).toHaveBeenCalledWith('mock-id', { ...mockFile, _id: 'mock-file-id' }, mockField);
+      expect(response).toEqual([{ ...mockFile, _id: 'mock-file-id' }]);
     });
   });
 
@@ -87,9 +84,9 @@ describe('utils/fileUtils', () => {
     });
 
     it('deletes the file and removes it from application if it has been uploaded (has an ID)', async () => {
-      await removeFileFromDeal(mockFile.filename, mockField, mockDeal, mockToken, mockDocumentPath);
+      await removeFileFromDeal(mockFile.filename, mockField, mockDeal, mockToken);
 
-      expect(deleteFile).toHaveBeenCalledWith('mock-file-id', mockToken, mockDocumentPath);
+      expect(deleteFile).toHaveBeenCalledWith('mock-file-id', mockToken, mockField);
       expect(updateApplication).toHaveBeenCalledWith(mockDeal._id, {
         ...mockDeal,
         supportingInformation: {

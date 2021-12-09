@@ -6,7 +6,7 @@ module.exports = {
   },
   root: true,
   rules: {
-    'max-len': ['error', 120, 2, {
+    'max-len': ['error', 160, 2, {
       ignoreUrls: true,
       ignoreComments: false,
       ignoreRegExpLiterals: true,
@@ -16,6 +16,8 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
+    'comma-dangle': 'off',
+    'no-loop-func': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

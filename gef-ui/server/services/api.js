@@ -30,6 +30,15 @@ const createApplication = async (payload) => {
   }
 };
 
+const cloneApplication = async (payload) => {
+  try {
+    const { data } = await Axios.post('/gef/application/clone', payload);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getApplication = async (applicationId) => {
   try {
     const { data } = await Axios.get(`/gef/application/${applicationId}`);
@@ -42,6 +51,15 @@ const getApplication = async (applicationId) => {
 const updateApplication = async (applicationId, application) => {
   try {
     const { data } = await Axios.put(`/gef/application/${applicationId}`, application);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const updateSupportingInformation = async (applicationId, application, field) => {
+  try {
+    const { data } = await Axios.put(`/gef/application/supporting-information/${applicationId}`, { application, field });
     return data;
   } catch (err) {
     return apiErrorHandler(err);
@@ -234,6 +252,7 @@ module.exports = {
   validateToken,
   getMandatoryCriteria,
   createApplication,
+  cloneApplication,
   updateApplication,
   getEligibilityCriteria,
   getApplication,
@@ -251,4 +270,5 @@ module.exports = {
   uploadFile,
   deleteFile,
   downloadFile,
+  updateSupportingInformation,
 };

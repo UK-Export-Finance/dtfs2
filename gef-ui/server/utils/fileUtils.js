@@ -1,39 +1,30 @@
-const { uploadFile, deleteFile, updateApplication } = require('../services/api');
-const Application = require('../models/application');
+const {
+  uploadFile, deleteFile, updateApplication, updateSupportingInformation,
+} = require('../services/api');
 
 /**
  * Uploads a file to the API, and saves it against the application.
  * Currently configured for supportingInfo section
  *
- * @param {*} files array of files to upload, assumes format from multer
- * @param {*} field field identifier for supplementaryInfo question
- * @param {*} dealId application/deal ID
- * @param {*} token user token
- * @param {*} maxFileSize (optional) maximum file size to allow (defaults to API limits of 10MB otherwise)
+ * @param {array} files array of files to upload, assumes format from multer
+ * @param {string} field field identifier for supplementaryInfo question
+ * @param {string} dealId application/deal ID
+ * @param {string} token user token
+ * @param {number} maxFileSize maximum file size to allow (defaults to API limits of 10MB otherwise)
+ * @param {string} documentPath full document path (i.e. manualInclusion)
  * @returns array of processed files
  */
 const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSize, documentPath) => {
   const uploadedFiles = await uploadFile(files, dealId, token, maxFileSize, documentPath);
 
   return Promise.all(uploadedFiles.map(async (file) => {
-    const deal = await Application.findById(dealId, user, token);
+    const document = { ...file };
 
-    const fileObject = { ...file, documentPath };
-
-    if (!fileObject.error) {
-      const updatedField = [
-        ...(deal.supportingInformation?.[field] || []),
-        fileObject,
-      ];
-
-      const updatedDeal = { ...deal };
-
-      updatedDeal.supportingInformation[field] = updatedField;
-
-      await updateApplication(dealId, updatedDeal);
+    if (!document.error) {
+      await updateSupportingInformation(dealId, document, field);
     }
 
-    return fileObject;
+    return document;
   }));
 };
 
@@ -45,14 +36,14 @@ const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSiz
  * @param {*} deal application/deal object
  * @param {*} token
  */
-const removeFileFromDeal = async (filename, field, deal, token, documentPath) => {
+const removeFileFromDeal = async (filename, field, deal, token) => {
   const existingFiles = deal.supportingInformation?.[field];
 
   const fileToDelete = existingFiles.find((file) => file.filename === filename);
 
   // files with errors will not have an ID set so don't need removing further
   if (fileToDelete?._id) {
-    await deleteFile(fileToDelete._id, token, documentPath);
+    await deleteFile(fileToDelete._id, token, field);
 
     const updatedDeal = { ...deal };
     updatedDeal.supportingInformation[field] = existingFiles.filter((file) => file._id !== fileToDelete._id);

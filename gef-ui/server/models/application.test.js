@@ -134,7 +134,6 @@ describe('models/application', () => {
       it('sets the requiredSupportingDocuments as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        console.log('--- application.supportingInformation \n', application.supportingInformation);
         expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion', 'exportLicence']);
       });
     });
