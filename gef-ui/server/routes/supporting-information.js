@@ -20,6 +20,7 @@ router.post('/application-details/:applicationId/supporting-information/security
 router.get('/application-details/:applicationId/supporting-information/:documentType', [validateToken], getSupportingDocuments);
 router.post('/application-details/:applicationId/supporting-information/:documentType', [validateToken, multer().array('documents', 20)], postSupportingDocuments);
 router.post('/application-details/:applicationId/supporting-information/:documentType/upload', [validateToken], (req, res, next) => {
+  // eslint-disable-next-line consistent-return
   upload(req, res, (err) => {
     if (!err) {
       next(); // if there are no errors, then continue with the file upload
