@@ -1,3 +1,4 @@
+const { format, fromUnixTime } = require('date-fns');
 const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
@@ -15,8 +16,6 @@ const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
-
-const { format, fromUnixTime } = require('date-fns');
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
   criteria.version === 1.5).terms;

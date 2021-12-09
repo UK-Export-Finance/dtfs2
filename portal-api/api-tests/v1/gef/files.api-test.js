@@ -52,8 +52,7 @@ describe(baseUrl, () => {
         status: 'IN_PROGRESS',
         updatedAt: null,
         submissionCount: 0,
-      })
-      .to(applicationBaseUrl);
+      }).to(applicationBaseUrl);
   });
 
   beforeEach(async () => {

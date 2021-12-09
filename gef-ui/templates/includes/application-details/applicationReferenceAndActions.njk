@@ -3,12 +3,18 @@
 <div class="govuk-width-container" data-cy="application-banner">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full" style="text-align: right;">
+      {% if status and userRoles.includes('maker') %}
+         {{ govukButton({
+            text: "Clone",
+            attributes: { "data-cy": "clone-gef-deal-link" },
+            classes: "govuk-button--secondary govuk-!-margin-right-2",
+            href: applicationId + "/clone"
+         }) }}
+      {% endif %}
       {%if abandon %}
         {{ govukButton({
           text: "Abandon",
-          attributes: {
-            "data-cy": "abandon-link"
-          },
+          attributes: { "data-cy": "abandon-link" },
           classes: "govuk-button--secondary",
           href: "/gef/application-details/"+applicationId+"/abandon"
         }) }}
@@ -40,15 +46,15 @@
       </div>
     </div>
     {%else%}
-    {%if additionalRefName%}
-    <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
-      <div class="govuk-grid-column-two-thirds">
-        <p class="govuk-body" data-cy="additional-reference">
-          <a> {{ additionalRefName }}</a>
-        </p>
-      </div>
-    </div>
-    {%endif%}
+      {%if additionalRefName %}
+         <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
+            <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body" data-cy="additional-reference">
+               <a> {{ additionalRefName }}</a>
+            </p>
+            </div>
+         </div>
+      {%endif%}
     {%endif%}
   </div>
 </div>

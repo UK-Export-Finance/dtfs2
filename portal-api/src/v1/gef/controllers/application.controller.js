@@ -163,6 +163,30 @@ exports.update = async (req, res) => {
     .send(response);
 };
 
+exports.updateSupportingInformation = async (req, res) => {
+  const collection = await db.getCollection(applicationCollectionName);
+
+  const { application, field } = req.body;
+  const { id: applicationId } = req.params;
+
+  const result = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectID(applicationId) } },
+    {
+      // set the updatedAt property to the current time in EPOCH format
+      $set: { updatedAt: Date.now() },
+      // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
+      $push: { [`supportingInformation.${field}`]: application }
+    }
+  );
+
+  let response;
+  if (result.value) {
+    response = result.value;
+  }
+
+  return res.status(utils.mongoStatus(result)).send(response);
+};
+
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   const {
     userId,

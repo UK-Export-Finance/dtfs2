@@ -16,8 +16,8 @@ const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
 const DEFAULT_MAX_SIZE = 10; // 10mb default
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
 
-const collectionName = 'files';
-const dealCollectionName = 'gef-application';
+const filesCollection = 'files';
+const gefApplicationCollection = 'gef-application';
 
 const fileError = (file, maxFileSize) => {
   let error;
@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
   if (!files?.length) return res.status(400).send('missing files');
 
   // Check deal exists
-  const dealCollection = await db.getCollection(dealCollectionName);
+  const dealCollection = await db.getCollection(gefApplicationCollection);
   const deal = await dealCollection.findOne({ _id: ObjectId(String(parentId)) });
   if (!deal) return res.status(422).send('Parent deal not found');
 
@@ -79,7 +79,7 @@ exports.create = async (req, res) => {
 
       const fileObject = { ...file, documentPath };
 
-      const collection = await db.getCollection(collectionName);
+      const collection = await db.getCollection(filesCollection);
       const insertedFile = await collection.insertOne(new File(fileObject, parentId));
       const fileData = await collection.findOne({
         _id: ObjectId(String(insertedFile.insertedId)),
@@ -98,12 +98,12 @@ exports.create = async (req, res) => {
 };
 
 const getFile = async (id) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(filesCollection);
   const file = await collection.findOne({ _id: ObjectId(String(id)) });
   let deal;
 
   if (file) {
-    const dealCollection = await db.getCollection(dealCollectionName);
+    const dealCollection = await db.getCollection(gefApplicationCollection);
     deal = await dealCollection.findOne({ _id: ObjectId(String(file.parentId)) });
   }
 
@@ -168,7 +168,7 @@ exports.delete = async (req, res) => {
     const { documentPath } = req.body;
     await fileshare.deleteFile(FILESHARE, `${EXPORT_FOLDER}/${deal._id}/${documentPath}/${file.filename}`);
 
-    const collection = await db.getCollection(collectionName);
+    const collection = await db.getCollection(filesCollection);
     const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (err) {

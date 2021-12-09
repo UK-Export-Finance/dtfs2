@@ -55,6 +55,20 @@ describe('createApplication()', () => {
   });
 });
 
+describe('cloneApplication()', () => {
+  it('returns the correct response', async () => {
+    Axios.post.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.cloneApplication();
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.post.mockReturnValue(Promise.reject());
+    const response = api.cloneApplication();
+    await expect(response).rejects.toThrowError();
+  });
+});
+
 describe('getApplication()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
@@ -78,6 +92,19 @@ describe('updateApplication()', () => {
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
     await expect(api.updateApplication()).rejects.toThrowError();
+  });
+});
+
+describe('updateSupportingInformation()', () => {
+  it('returns the correct response', async () => {
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.updateSupportingInformation('id', {});
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.put.mockReturnValue(Promise.reject());
+    await expect(api.updateSupportingInformation()).rejects.toThrowError();
   });
 });
 
