@@ -91,7 +91,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
         correspondenceAddress: body,
       },
     };
-  
+
     await api.updateApplication(applicationId, applicationExporterUpdate);
 
     req.session.address = null;

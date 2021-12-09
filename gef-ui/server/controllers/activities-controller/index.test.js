@@ -48,7 +48,6 @@ describe('getPortalActivities()', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
   let mockFacilityResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;

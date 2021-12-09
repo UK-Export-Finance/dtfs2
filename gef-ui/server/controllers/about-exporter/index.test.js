@@ -25,18 +25,6 @@ const MockRequest = () => {
   return req;
 };
 
-// const MockExporterResponse = () => {
-//   const res = {};
-//   res.details = {
-//     industries: null,
-//     smeType: null,
-//     probabilityOfDefault: null,
-//     selectedIndustry: null,
-//     isFinanceIncreasing: null,
-//   };
-//   return res;
-// };
-
 const mockApplication = {
   _id: '123',
   exporter: {
@@ -81,7 +69,6 @@ const mockApplication = {
 describe('controllers/about-exporter', () => {
   let mockResponse;
   let mockRequest;
-  let mockExporterResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();

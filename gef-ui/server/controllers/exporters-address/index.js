@@ -73,7 +73,7 @@ const validateExportersAddress = async (req, res) => {
     if (correspondenceError.length > 0) {
       return res.render('partials/exporters-address.njk', {
         errors: validationErrorHandler(correspondenceError),
-        companyName: companyName,
+        companyName,
         postcode: postcode ? postcode.toUpperCase() : '',
         correspondence,
         applicationId,

@@ -27,7 +27,6 @@ const MockRequest = () => {
   return req;
 };
 
-
 const mockFacilities = {
   status: 'NOT_STARTED',
 };
