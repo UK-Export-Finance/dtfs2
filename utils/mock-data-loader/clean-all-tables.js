@@ -24,20 +24,25 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanDeals = async (token) => {
+  console.log('cleaning Portal deals');
+
   const deals = await api.listDeals(token);
 
-  // TODO: when GEF deals are in deals collection,
-  // currently api.listDeals doesn't return any GEF deals.
-  // it uses graphQL and GEF things are not in schema/no resolvers.
   if (deals) {
     for (deal of deals) {
+
+      // NOTE: BSS and GEF deals use different MongoDB _ids.
+      // Therefore they currently have their own endpoints to delete
+      // to use the correct .find({ _id ... }) with or without ObjectId.
+      // When BSS and GEF have the same _id generation,
+      // they can use the same endpoint.
       if (deal.dealType === 'BSS/EWCS') {
         await api.deleteDeal(deal._id, token);
-      }
 
-      // if (deal.dealType === 'GEF') {
-      //   await gefApi.deleteDeal(deal._id, token);
-      // }
+      }
+      if (deal.dealType === 'GEF') {
+        await gefApi.deleteDeal(deal._id, token);
+      }
     }
   }
 };

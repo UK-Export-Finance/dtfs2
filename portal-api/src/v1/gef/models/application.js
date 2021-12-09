@@ -11,7 +11,7 @@ class Application {
       this.status = STATUS.DRAFT;
       this.bankId = req.bankId ? String(req.bankId) : null;
 
-      this.exporter = {};
+      this.exporter = req.exporter ? req.exporter : {};
 
       this.eligibility = {
         criteria: eligibilityTerms.map((term) => ({

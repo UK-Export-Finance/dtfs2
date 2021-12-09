@@ -51,6 +51,7 @@ type DealDetails {
 
 type Deal {
   _id: String!
+  dealType: String
   details: DealDetails
 }
 

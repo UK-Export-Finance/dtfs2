@@ -34,7 +34,7 @@ const updateApplication = async (id, data, token) => {
   return response.data;
 };
 
-const deleteDeal = async (data, token) => {
+const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -42,7 +42,7 @@ const deleteDeal = async (data, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application/${data._id}`,
+    url: `${urlRoot}/v1/gef/application/${dealId}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;

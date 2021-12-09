@@ -1,17 +1,5 @@
-const portalApi = require('./api');
 const api = require('./gef/api');
 const tokenFor = require('./temporary-token-handler');
-
-const cleanExporter = async (token) => {
-  console.log('cleaning GEF exporter');
-
-  const deals = await portalApi.listDeals(token);
-  for (deal of deals) {
-    if (deal.dealType === 'GEF') {
-      await api.deleteExporter(deal.exporterId, token);
-    }
-  }
-};
 
 const cleanFacilities = async (token) => {
   console.log('cleaning GEF facilities');
@@ -45,7 +33,6 @@ const cleanAllTables = async () => {
     bank: { id: '*' },
   });
 
-  await cleanExporter(token);
   await cleanFacilities(token);
   await cleanEligibilityCriteria(token);
   await cleanMandatoryCriteriaVersioned(token);
