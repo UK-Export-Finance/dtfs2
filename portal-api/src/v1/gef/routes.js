@@ -4,6 +4,7 @@ const { validate } = require('../../role-validator');
 const fileUpload = require('./middleware/fileUpload');
 
 const application = require('./controllers/application.controller');
+const cloneApplication = require('./controllers/clone-application.controller');
 const exporter = require('./controllers/exporter.controller');
 const facilities = require('./controllers/facilities.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
@@ -18,10 +19,16 @@ router.route('/application')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getAll)
   .post(validate({ role: ['maker', 'data-admin'] }), application.create);
 
+router.route('/application/clone')
+  .post(validate({ role: ['maker', 'data-admin'] }), cloneApplication.clone);
+
 router.route('/application/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getById)
   .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.update) // checker can add a comment
   .delete(validate({ role: ['maker', 'data-admin'] }), application.delete);
+
+router.route('/application/supporting-information/:id')
+  .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.updateSupportingInformation);
 
 router.route('/application/status/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getStatus)

@@ -3,33 +3,33 @@ const compression = require('compression');
 const morgan = require('morgan');
 const session = require('express-session');
 const redis = require('redis');
-// const helmet = require('helmet');
-
 const flash = require('connect-flash');
 const path = require('path');
-require('./azure-env');
-
 const RedisStore = require('connect-redis')(session);
+const dotenv = require('dotenv');
+
+require('./azure-env');
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
-
 const configureNunjucks = require('./nunjucks-configuration');
 const sentry = require('./utils/sentry');
+// const helmet = require('helmet');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
+// TODO: re-enable Helmet (Jira - 4998)
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
 //   }),
 // );
 
+dotenv.config();
+
 app.use(sentry);
 app.use(compression());
 const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {
-  // eslint-disable-next-line no-console
   console.error('GEF UI server - SESSION_SECRET missing');
 }
 
@@ -51,17 +51,14 @@ if (process.env.REDIS_KEY) {
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
 redisClient.on('error', (err) => {
-  // eslint-disable-next-line no-console
   console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
 });
 
 redisClient.on('ready', () => {
-  // eslint-disable-next-line no-console
   console.log('REDIS ready');
 });
 
 redisClient.on('connect', () => {
-  // eslint-disable-next-line no-console
   console.log('REDIS connected');
 });
 
@@ -92,15 +89,12 @@ app.use(healthcheck);
 app.use('/', routes);
 
 app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
-// eslint-disable-next-line
-app.use((err, req, res, next) => {
+
+app.use((err, req, res) => {
   res.status(err.statusCode || 500);
   res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
 });
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
-// eslint-disable-next-line no-console
-console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
-
-app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.log(`GEF UI listening on port ${PORT}!`));

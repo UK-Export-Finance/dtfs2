@@ -82,7 +82,7 @@ const EXPORTER = [
       },
     ],
     smeType: "MICRO",
-    probabilityOfDefault: 45.5,
+    probabilityOfDefault: 14,
     isFinanceIncreasing: true,
   },
 ];

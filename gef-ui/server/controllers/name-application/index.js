@@ -38,7 +38,6 @@ const createApplication = async (req, res, next) => {
       });
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     return res.redirect(`/gef/application-details/${application._id}`);
   } catch (err) {
     return next(err);

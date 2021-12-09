@@ -58,6 +58,7 @@ function buildBody(app, previewMode) {
 
   return {
     application: app,
+    status: app.status,
     isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
     exporter: {
       status: app.exporterStatus,
@@ -94,6 +95,7 @@ function buildBody(app, previewMode) {
     ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
     coverDatesConfirmed: coverDatesConfirmed(app.facilities),
     previewMode,
+    userRoles: app.userRoles,
   };
 }
 
@@ -167,9 +169,12 @@ const applicationDetails = async (req, res, next) => {
 
     const maker = await api.getUserDetails(application.userId, userToken);
 
+    const userRoles = user.roles;
+
     const applicationWithMaker = {
       ...application,
       maker,
+      userRoles,
     };
 
     if (req.url) {

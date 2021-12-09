@@ -15,14 +15,16 @@
       }
     }) }}
   {% endif %}
-  
+
   <h1 class="govuk-heading-xl" data-cy="main-heading">
-    Name your application
+     {% if cloneDeal %}
+         Clone '{{ dealName }}' deal
+     {% else %}
+         Name your application
+     {% endif %}
   </h1>
 
-  <form
-    method="post"
-    data-cy="form">
+  <form method="post" data-cy="form">
     {{ govukInput({
       label: {
         text: "Enter your bank’s internal reference or name"
@@ -30,7 +32,7 @@
       classes: "govuk-!-width-one-half",
       id: "bankInternalRefName",
       name: "bankInternalRefName",
-      value: bankInternalRefName,
+      value:  dealName if cloneDeal else bankInternalRefName,
       errorMessage: errors and errors.fieldErrors.bankInternalRefName and{
         text: errors.fieldErrors.bankInternalRefName.text,
         attributes: {

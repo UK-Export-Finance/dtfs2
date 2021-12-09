@@ -43,8 +43,9 @@ const MockApplicationResponse = () => {
 
 describe('controllers/name-application', () => {
   describe('GET Name Application', () => {
-    let mockRequestWithIdParam; let mockResponse; let
-      mockApplicationResponse;
+    let mockRequestWithIdParam;
+    let mockResponse;
+    let mockApplicationResponse;
 
     beforeEach(() => {
       mockRequestWithIdParam = MockRequestWithIdParam();
@@ -105,7 +106,7 @@ describe('controllers/name-application', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123456');
     });
 
-    it('shows user genereic error page if there is an issue with the API', async () => {
+    it('shows user generic error page if there is an issue with the API', async () => {
       const mockNext = jest.fn();
 
       api.createApplication.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
@@ -149,7 +150,7 @@ describe('controllers/name-application', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123456');
     });
 
-    it('shows user genereic error page if there is an issue with the API', async () => {
+    it('shows user generic error page if there is an issue with the API', async () => {
       const mockNext = jest.fn();
 
       api.createApplication.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
