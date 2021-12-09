@@ -1,6 +1,6 @@
 const { findAllPaginatedDeals, findAllDeals } = require('../../v1/controllers/deal.controller');
-
 const { dbHelpers } = require('./helpers');
+const dealsReducer = require('../reducers/deals');
 
 const queryAllDeals = async (_, { params = {} }, ctx) => {
   const {
@@ -15,7 +15,12 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
     ? await findAllPaginatedDeals(ctx.user, start, pagesize, dbFilters, sort)
     : await findAllDeals(ctx.user, dbFilters, sort);
 
-  return deals;
+  const reducedDeals = dealsReducer(deals.deals);
+
+  return {
+    deals: reducedDeals,
+    count: pagesize,
+  };
 };
 
 module.exports = queryAllDeals;

@@ -1,3 +1,4 @@
+// TODO: remove this. Do we need to include any checks/data transforms in other places?
 const { Address } = require('./address');
 const { SME_TYPE } = require('../enums');
 

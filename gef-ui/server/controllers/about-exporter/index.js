@@ -16,18 +16,17 @@ const aboutExporter = async (req, res) => {
   const { status } = query;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const industries = mappedIndustries(details.industries, JSON.stringify(details.selectedIndustry));
-    const isFinanceIncreasing = JSON.stringify(details.isFinanceIncreasing);
-    const probabilityOfDefault = JSON.stringify(details.probabilityOfDefault);
+    const { exporter } = await api.getApplication(applicationId);
+    const industries = mappedIndustries(exporter.industries, JSON.stringify(exporter.selectedIndustry));
+    const isFinanceIncreasing = JSON.stringify(exporter.isFinanceIncreasing);
+    const probabilityOfDefault = JSON.stringify(exporter.probabilityOfDefault);
 
     return res.render('partials/about-exporter.njk', {
-      smeType: details.smeType,
-      probabilityOfDefault: probabilityOfDefault !== 'null' ? probabilityOfDefault : null,
-      isFinanceIncreasing: isFinanceIncreasing !== 'null' ? isFinanceIncreasing : null,
-      selectedIndustry: details.selectedIndustry,
       applicationId,
+      smeType: exporter?.smeType,
+      probabilityOfDefault: probabilityOfDefault !== 'null' ? exporter.probabilityOfDefault : null,
+      isFinanceIncreasing: isFinanceIncreasing !== 'null' ? isFinanceIncreasing : null,
+      selectedIndustry: exporter.selectedIndustry,
       industries,
       status,
     });
@@ -43,11 +42,10 @@ const validateAboutExporter = async (req, res) => {
   const { saveAndReturn, status } = query;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
+    const { exporter } = await api.getApplication(applicationId);
 
     // Only validate industries if it contains more than 1 SIC code
-    if (!saveAndReturn && !body.selectedIndustry && (details.industries && details.industries.length > 1)) {
+    if (!saveAndReturn && !body.selectedIndustry && (exporter.industries && exporter.industries.length > 1)) {
       aboutExporterErrors.push({
         errRef: 'selectedIndustry',
         errMsg: 'Select most appropriate industry',
@@ -88,7 +86,7 @@ const validateAboutExporter = async (req, res) => {
       });
     }
 
-    const industries = mappedIndustries(details.industries, (body.selectedIndustry || details.selectedIndustry));
+    const industries = mappedIndustries(exporter.industries, (body.selectedIndustry || exporter.selectedIndustry));
 
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
@@ -96,19 +94,24 @@ const validateAboutExporter = async (req, res) => {
         smeType: body.smeType,
         probabilityOfDefault: body.probabilityOfDefault,
         isFinanceIncreasing: body.isFinanceIncreasing,
-        selectedIndustry: details.selectedIndustry,
+        selectedIndustry: exporter.selectedIndustry,
         applicationId,
         industries,
         status,
       });
     }
 
-    await api.updateExporter(exporterId, {
-      ...body,
-      selectedIndustry: body.selectedIndustry ? JSON.parse(body.selectedIndustry) : null,
-      probabilityOfDefault: body.probabilityOfDefault || null,
-      isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
-    });
+    const applicationExporterUpdate = {
+      exporter: {
+        ...exporter,
+        ...body,
+        selectedIndustry: body.selectedIndustry ? JSON.parse(body.selectedIndustry) : null,
+        probabilityOfDefault: body.probabilityOfDefault || null,
+        isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
+      },
+    };
+
+    await api.updateApplication(applicationId, applicationExporterUpdate);
 
     return res.redirect(`/gef/application-details/${applicationId}`);
   } catch (err) {
@@ -117,6 +120,7 @@ const validateAboutExporter = async (req, res) => {
 };
 
 module.exports = {
+  mappedIndustries,
   aboutExporter,
   validateAboutExporter,
 };

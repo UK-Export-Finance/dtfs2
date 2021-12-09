@@ -1,30 +1,15 @@
-/* eslint-disable no-underscore-dangle */
-
-// const wipeDB = require('../../wipeDB');
-
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-
 const { as } = require('../../api')(app);
-// const { expectMongoId } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef';
-// const collectionName = 'deals';
-
-// const allItems = require('../../fixtures/gef/application');
 
 xdescribe(baseUrl, () => {
-  // let noRoles;
   let aMaker;
-  // let aChecker;
-  // let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    // noRoles = testUsers().withoutAnyRoles().one();
     aMaker = testUsers().withRole('maker').one();
-    // aChecker = testUsers().withRole('checker').one();
-    // anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
@@ -32,17 +17,32 @@ xdescribe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/company (Companies House)`, () => {
-    it('Returns a company profile', async () => {
+    it('Returns a mapped company profile', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/00000006`);
       expect(status).toEqual(200);
-      expect(body.company_name).toEqual(expect.any(String));
-      expect(body.company_number).toEqual(expect.any(String));
-      expect(body.registered_office_address).toEqual({
-        postal_code: expect.any(String),
-        address_line_2: expect.any(String),
-        country: expect.any(String),
-        address_line_1: expect.any(String),
+      expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));
+      expect(body.companyName).toEqual(expect.any(String));
+      expect(body.registeredAddress).toEqual({
+        organisationName: expect.any(String),
+        addressLine1: expect.any(String),
+        addressLine2: expect.any(String),
+        addressLine3: expect.any(String),
         locality: expect.any(String),
+        postalCode: expect.any(String),
+        country: expect.any(String),
+      });
+      expect(body.updatedAt).toEqual(expect.any(Number));
+      expect(body.selectedIndustry.code).toEqual(expect.any(String));
+      expect(body.selectedIndustry.name).toEqual(expect.any(String));
+      expect(body.selectedIndustry.class).toEqual({
+        code: expect.any(String),
+        name: expect.any(String),
+      });
+      expect(body.industries[0].code).toEqual(expect.any(String));
+      expect(body.industries[0].name).toEqual(expect.any(String));
+      expect(body.industries[0].class).toEqual({
+        code: expect.any(String),
+        name: expect.any(String),
       });
     });
 

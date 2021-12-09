@@ -1,17 +1,17 @@
 const { DEAL_TYPE, STATUS } = require('../enums');
 
 class Application {
-  constructor(req, exporterId, eligibilityTerms) {
+  constructor(req, eligibilityTerms) {
     const editedBy = [];
 
-    if (exporterId && eligibilityTerms) {
+    if (eligibilityTerms) {
       // New Application
       this.dealType = DEAL_TYPE;
       this.userId = req.userId ? String(req.userId) : null;
       this.status = STATUS.DRAFT;
       this.bankId = req.bankId ? String(req.bankId) : null;
 
-      this.exporterId = exporterId;
+      this.exporter = {};
 
       this.eligibility = {
         criteria: eligibilityTerms.map((term) => ({
@@ -41,6 +41,7 @@ class Application {
 
       // Only set properties if they are part of the request otherwise they get cleared
       const updatable = [
+        'exporter',
         'comments',
         'submissionType',
         'submissionCount',
@@ -56,6 +57,10 @@ class Application {
         'ukefDecisionAccepted',
         'portalActivities',
       ];
+
+      if (req.exporter) {
+        req.exporter.updatedAt = Date.now();
+      }
 
       if (req.eligibility) {
         req.eligibility.updatedAt = Date.now();

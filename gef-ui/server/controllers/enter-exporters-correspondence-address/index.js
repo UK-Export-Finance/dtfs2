@@ -11,9 +11,9 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
   const backUrl = req.get('Referrer');
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const { correspondenceAddress } = details;
+    const { exporter } = await api.getApplication(applicationId);
+    const { correspondenceAddress } = exporter;
+
     let mappedAddress;
 
     if (parseAddress) {
@@ -27,8 +27,17 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       };
     }
 
+    let addressForm = {};
+    if (mappedAddress) {
+      addressForm = mappedAddress;
+    }
+
+    if (correspondenceAddress) {
+      addressForm = correspondenceAddress;
+    }
+
     return res.render('partials/enter-exporters-correspondence-address.njk', {
-      addressForm: mappedAddress || correspondenceAddress,
+      addressForm,
       applicationId,
       status,
       backUrl,
@@ -74,8 +83,17 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   body.country = DEFAULT_COUNTRY;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    await api.updateExporter(exporterId, { correspondenceAddress: body });
+    const { exporter } = await api.getApplication(applicationId);
+
+    const applicationExporterUpdate = {
+      exporter: {
+        ...exporter,
+        correspondenceAddress: body,
+      },
+    };
+  
+    await api.updateApplication(applicationId, applicationExporterUpdate);
+
     req.session.address = null;
     if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${applicationId}`);

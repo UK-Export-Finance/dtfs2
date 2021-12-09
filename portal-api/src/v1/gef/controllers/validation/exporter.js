@@ -42,6 +42,8 @@ const exporterStatus = (doc) => {
   if (requiredCount === 0) {
     return STATUS.COMPLETED;
   }
+
+  return STATUS.NOT_STARTED;
 };
 
 const exporterCheckEnums = (doc) => {

@@ -33,7 +33,7 @@ describe('controllers/return-to-maker', () => {
     getApplication.mockResolvedValue({
       _id: '1234',
       status: PROGRESS.BANK_CHECK,
-      exporterId: '123',
+      exporter: {},
       bankInternalRefName: 'My test',
     });
 
@@ -101,7 +101,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(updateApplication).toHaveBeenCalledWith('1234', expect.objectContaining({
         _id: '1234',
-        exporterId: '123',
+        exporter: {},
         bankInternalRefName: 'My test',
         comments: [
           {

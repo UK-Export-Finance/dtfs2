@@ -1,6 +1,5 @@
 const {
   getApplication,
-  getExporter,
   getFacilities,
   getUserDetails,
 } = require('../services/api');
@@ -66,14 +65,10 @@ class Application {
       }
 
       application.id = id;
-
-      const exporterPro = getExporter(application.exporterId);
-      const facilitiesPro = getFacilities(id);
-
-      const all = await Promise.all([exporterPro, facilitiesPro]);
-      [application.exporter, application.facilities] = [...all];
+      application.facilities = await getFacilities(id);
 
       application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
+
       application.eligibilityCriteriaStatus = status[application.eligibility.status || PROGRESS.NOT_STARTED];
       application.facilitiesStatus = status[application.facilities.status || PROGRESS.NOT_STARTED];
       if (application.supportingInformation) {

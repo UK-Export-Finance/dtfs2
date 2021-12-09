@@ -16,9 +16,8 @@ const { isSuperUser } = require('../../users/checks');
 const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
-const { Exporter } = require('../models/exporter');
 const { STATUS } = require('../enums');
-const { addSubmissionData, submissionPortalActivity } = require('./application-submit');
+const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const {
@@ -27,7 +26,6 @@ const {
 } = require('../../../constants');
 
 const dealsCollectionName = 'deals';
-const exporterCollectionName = 'gef-exporter';
 const facilitiesCollectionName = 'gef-facilities';
 const userCollectionName = 'users';
 
@@ -57,7 +55,6 @@ exports.create = async (req, res) => {
   const applicationCollection = await db.getCollection(
     dealsCollectionName,
   );
-  const exporterCollection = await db.getCollection(exporterCollectionName);
   const validateErrs = validateApplicationReferences(
     req.body,
   );
@@ -65,11 +62,10 @@ exports.create = async (req, res) => {
     res.status(422)
       .send(validateErrs);
   } else {
-    const exporter = await exporterCollection.insertOne(new Exporter());
     const eligibility = await getLatestEligibilityCriteria();
 
     const createdApplication = await applicationCollection.insertOne(
-      new Application(req.body, exporter.insertedId, eligibility.terms),
+      new Application(req.body, eligibility.terms),
     );
 
     const application = await applicationCollection.findOne({
@@ -192,6 +188,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
     userId,
     status: previousStatus,
     bankInternalRefName,
+    exporter,
   } = existingApplication;
 
   // get maker user details
@@ -203,13 +200,8 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
     ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
     : {};
 
-  const exporterCollection = await db
-    .getCollection(exporterCollectionName);
-
   // get exporter name
-  const { companyName = '' } = await exporterCollection.findOne({
-    _id: ObjectID(String(existingApplication.exporterId)),
-  });
+  const { companyName = '' } = exporter;
 
   user.bank.emails.forEach(async (email) => {
     await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
@@ -309,13 +301,6 @@ exports.delete = async (req, res) => {
     _id: ObjectID(String(req.params.id)),
   });
   if (applicationResponse.value) {
-    // remove exporter information related to the application
-    if (applicationResponse.value.exporterId) {
-      const exporterCollection = await db.getCollection(exporterCollectionName);
-      await exporterCollection.findOneAndDelete({
-        _id: ObjectID(String(applicationResponse.value.exporterId)),
-      });
-    }
     // remove facility information related to the application
     const facilitiesCollection = await db.getCollection(
       facilitiesCollectionName,
@@ -359,15 +344,6 @@ exports.findDeals = async (
 
   const doc = await collection
     .aggregate([
-      {
-        $lookup: {
-          from: 'gef-exporter',
-          localField: 'exporterId',
-          foreignField: '_id',
-          as: 'exporter',
-        },
-      },
-      { $unwind: '$exporter' },
       { $match: sanitisedFilters },
       {
         $sort: {

@@ -1,13 +1,10 @@
 const axios = require('axios');
-const { ObjectID } = require('mongodb');
-const db = require('../../../drivers/db-client');
 const { companiesHouseError } = require('./validation/external');
 require('dotenv').config();
 const { ERROR } = require('../enums');
+const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
-
-const collectionName = 'gef-exporter';
 
 const findSicCodes = async (companySicCodes) => {
   const response = await axios({
@@ -32,7 +29,6 @@ const findSicCodes = async (companySicCodes) => {
 };
 
 exports.getByRegistrationNumber = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
   try {
     const companyNumber = req.params.number;
     if (!companyNumber || companyNumber === '') {
@@ -55,36 +51,11 @@ exports.getByRegistrationNumber = async (req, res) => {
       }]);
     }
 
-    if (req.query.exporterId) {
-      const industries = await findSicCodes(response.data.sic_codes);
-      let selectedIndustry = null;
-      if (industries && industries.length === 1) {
-        // eslint-disable-next-line prefer-destructuring
-        selectedIndustry = industries[0];
-      }
-      const address = response.data.registered_office_address;
-      await collection.findOneAndUpdate(
-        { _id: { $eq: ObjectID(String(req.query.exporterId)) } }, {
-          $set: {
-            companiesHouseRegistrationNumber: response.data.company_number,
-            companyName: response.data.company_name,
-            registeredAddress: {
-              organisationName: address.organisation_name,
-              addressLine1: address.address_line_1,
-              addressLine2: address.address_line_2,
-              addressLine3: address.address_line_3,
-              locality: address.locality,
-              postalCode: address.postal_code,
-              country: address.country,
-            },
-            updatedAt: Date.now(),
-            selectedIndustry,
-            industries,
-          },
-        }, { returnOriginal: false },
-      );
-    }
-    return res.status(200).send(response.data);
+    const industries = await findSicCodes(response.data.sic_codes);
+
+    const mappedData = mapCompaniesHouseData(response.data, industries);
+
+    return res.status(200).send(mappedData);
   } catch (err) {
     const response = companiesHouseError(err);
     let { status } = err.response;

@@ -27,10 +27,6 @@ const MockRequest = () => {
   return req;
 };
 
-const mockExporter = {
-  status: 'NOT_STARTED',
-};
-const MockExporterResponse = () => mockExporter;
 
 const mockFacilities = {
   status: 'NOT_STARTED',
@@ -41,7 +37,7 @@ const MockFacilitiesResponse = () => mockFacilities;
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankInternalRefName = 'My test';
   res.comments = [{
     role: 'maker',
@@ -71,14 +67,12 @@ describe('controller/review-decision', () => {
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
 
-    const mockExporterResponse = MockExporterResponse();
     const mockFacilitiesResponse = MockFacilitiesResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
     api.updateApplication.mockResolvedValue(mockApplicationResponse);
     api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
   });
 

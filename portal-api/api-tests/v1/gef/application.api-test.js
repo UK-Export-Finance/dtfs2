@@ -69,7 +69,7 @@ describe(baseUrl, () => {
       const expected = {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
-          exporterId: expect.any(String),
+          exporter: {},
           eligibility: {
             criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
               ...criterion,
@@ -111,7 +111,7 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
         ...mockApplications[0],
-        exporterId: expect.any(String),
+        exporter: {},
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
             ...criterion,
@@ -180,7 +180,7 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const expected = {
         ...mockApplications[0],
-        exporterId: expect.any(String),
+        exporter: {},
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
