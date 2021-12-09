@@ -93,7 +93,7 @@ exports.gefDeals = async (req, res) => {
     _id: deal._id,
     status: deal.status,
     bankRef: deal.bankInternalRefName,
-    exporter: deal.exporter.companyName,
+    exporter: deal.exporter?.companyName,
     product: PRODUCT.GEF,
     type: deal.submissionType,
     lastUpdate: deal.updatedAt || deal.createdAt,
