@@ -8,7 +8,7 @@ const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
   submissionCount: 1,
-  exporter {},
+  exporter: {},
 };
 
 const newFacility = {
