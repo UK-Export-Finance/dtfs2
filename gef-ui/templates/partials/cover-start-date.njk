@@ -30,7 +30,7 @@
         <div class="govuk-grid-column-full-from-desktop">
             {{ govukBackLink({
                 text: "Back",
-                href: "/gef/application-details/" + applicationId,
+                href: "/gef/application-details/" + applicationId + "/review-decision",
                 attributes: {
                 'data-cy': 'back-link'
                 }
@@ -58,7 +58,7 @@
                         ({
                             caption: "Confirm cover start date for issued facilities",
                             captionClasses: "govuk-table__caption--xl",
-                            firstCellIsHeader: true,
+                            firstCellIsHeader: false,
                             classes: "govuk-table__vertical-align",
                             head: [
                                 {
