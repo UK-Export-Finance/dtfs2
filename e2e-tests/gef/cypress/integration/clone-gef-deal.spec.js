@@ -46,6 +46,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.url().should('eq', relative(`/gef/application-details/${testApplicationId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
+      nameApplication.internalRef().clear();
       nameApplication.form().submit();
       nameApplication.formError().should('contain', 'Application reference name is mandatory');
     });
@@ -81,7 +82,6 @@ context('Clone GEF (AIN) deal', () => {
       cy.url().should('eq', relative(`/gef/application-details/${AINapplicationId}/clone/name-application`));
       nameApplication.internalRef().type('Cloned AIN deal');
       nameApplication.form().submit();
-      nameApplication.applicationDetailsPage();
     });
 
     it('should validate the information in the banner', () => {
@@ -100,9 +100,9 @@ context('Clone GEF (AIN) deal', () => {
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.mainHeading().contains('Automatic Inclusion Notice');
         applicationDetails.automaticCoverStatus().contains('Completed');
-        applicationDetails.facilityStatus().contains('Completed');
+        applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
-        applicationDetails.submitButton().should('be.visible');
+        applicationDetails.submitButton().should('not.exist');
       });
     });
 
@@ -232,15 +232,14 @@ context('Clone GEF (MIA) deal', () => {
       uploadFiles.supportingInfoStatus().should('contain', 'Complete');
     });
 
-    it('should clone a GEF deal', () => {
+    it('should clone a GEF (MIA) deal', () => {
       cloneGEFdeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MIAapplicationId}/clone/name-application`));
-      nameApplication.internalRef().type('Cloned MIA deal');
+      nameApplication.internalRef().clear().type('Cloned MIA deal');
       nameApplication.form().submit();
-      nameApplication.applicationDetailsPage();
     });
 
     it('should modify the Exporter details', () => {
@@ -273,9 +272,9 @@ context('Clone GEF (MIA) deal', () => {
         applicationDetails.bankRefName().contains('Cloned MIA deal');
         applicationDetails.mainHeading().contains('Manual Inclusion Application');
         applicationDetails.automaticCoverStatus().contains('Completed');
-        applicationDetails.facilityStatus().contains('Completed');
+        applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
-        applicationDetails.submitButton().should('be.visible');
+        applicationDetails.submitButton().should('not.exist');
       });
     });
   });
