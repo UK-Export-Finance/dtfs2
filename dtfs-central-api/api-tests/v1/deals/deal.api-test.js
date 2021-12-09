@@ -226,7 +226,7 @@ describe('/v1/portal/deals', () => {
       expect(body.deal).toEqual(expectAddedFields(newDeal));
     });
 
-    describe('when a deal has facilities', () => {
+    describe('when a BSS deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
         const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
         const dealId = postResult.body._id;
