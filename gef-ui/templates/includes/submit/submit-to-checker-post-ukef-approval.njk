@@ -1,0 +1,12 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<p class="govuk-heading-l" data-cy="submit-heading">
+  Submit
+</p>
+
+{{ govukButton({
+  text: "Submit to be checked at your bank",
+  attributes: {
+    'data-cy': 'submit-ukef-approved-application-to-checker'
+  }
+}) }}

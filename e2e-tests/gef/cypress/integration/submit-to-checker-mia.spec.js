@@ -66,7 +66,7 @@ context('Submit to UKEF as MIA', () => {
 
     it('displays correct MIA checker submission message', () => {
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitle().contains('Manual Inclusion Application submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
     });
   });
 });

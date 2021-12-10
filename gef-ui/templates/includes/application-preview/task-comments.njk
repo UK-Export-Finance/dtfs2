@@ -4,18 +4,26 @@
   <header data-cy="application-preview-page">
 
     {% set bannerHtml %}
-
-      {% if isUkefReviewAvailable %}
+    
+      {% if isUkefReviewAvailable and not coverDatesConfirmed %}
         <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
           <a href="/gef/application-details/{{ applicationId }}/review-decision" class="govuk-link">Review UKEF decision</a>
         </div>
       {% endif %}
 
+      {% if coverDatesConfirmed %}
+        {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
+            <strong>You are proceeding with UKEF cover</strong>
+        {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
+            <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
+            <p>{{ ukefDecision[0].text | safe }}</p>
+        {% endif %}
+      {% endif %}
+
       <div data-cy="latest-comment">
         {% for comment in comments %}
-          <p><strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
-            <br>
-            {{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
+          <strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
+          <p>{{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
           <p>{{ comment.comment | safe }}</p>
         {% endfor %}
       </div>
