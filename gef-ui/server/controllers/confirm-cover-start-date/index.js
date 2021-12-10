@@ -59,7 +59,8 @@ const processCoverStartDate = async (req, res) => {
          * are met.
          */
       // 1. Check date components have valid values
-      if (!Number(day) || !Number(month) || !Number(year)) {
+
+      if (!Number(day) || !Number(month) || !Number(year) || (`${year}`.length < 4)) {
         req.errors = setError('ukefCoverStartDateInput', 'Enter the cover start date');
       } else if (pastDate({ day, month, year })) {
       // 2. Check date is not in the past

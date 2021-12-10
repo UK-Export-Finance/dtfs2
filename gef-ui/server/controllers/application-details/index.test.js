@@ -130,10 +130,12 @@ describe('controllers/application-detaills', () => {
           additionalRefName: mockApplicationResponse.additionalRefName,
           applicationId: expect.any(String),
           makerCanSubmit: expect.any(Boolean),
+          makerCanReSubmit: expect.any(Boolean),
           checkerCanSubmit: expect.any(Boolean),
           isUkefReviewAvailable: expect.any(Boolean),
           isUkefReviewPositive: expect.any(Boolean),
           ukefDecisionAccepted: expect.any(Boolean),
+          coverDatesConfirmed: expect.any(Boolean),
           previewMode: expect.any(Boolean),
 
           // actions

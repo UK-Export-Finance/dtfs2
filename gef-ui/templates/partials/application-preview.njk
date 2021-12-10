@@ -31,8 +31,13 @@
   {% if not isAutomaticCover %}
     {% include "includes/application-details/supporting-information.njk" %}
   {% endif %}
-  {% if checkerCanSubmit %}
-    {% include "includes/application-preview/submit.njk" %}
+
+  {% if makerCanReSubmit %}
+    <form method="post" data-cy="form">
+      {% include "includes/submit/submit-to-checker-post-ukef-approval.njk" %}
+    </form>
+  {% elif checkerCanSubmit %}
+    {% include "includes/submit/submit-to-ukef.njk" %}
   {% endif %}
 
 {% endblock %}

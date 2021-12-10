@@ -99,7 +99,7 @@ context('Return to Maker as MIA', () => {
     it('can submit back to checker', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitle().contains('Manual Inclusion Application submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       cy.visit(relative(`/gef/application-details/${applicationId}`));
       statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
     });

@@ -16,7 +16,101 @@ import {
   futureDateInRange,
   getFacilityCoverStartDate,
   getFacilitiesAsArray,
+  coverDatesConfirmed,
+  makerCanReSubmit,
 } from './helpers';
+
+const MOCK_REQUEST = {
+  username: 'BANK1_MAKER1',
+  firstname: 'ABC',
+  surname: 'DEF',
+  email: 'test',
+  roles: ['maker'],
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+    mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
+    emails: [
+      'maker1@ukexportfinance.gov.uk',
+      'checker1@ukexportfinance.gov.uk',
+    ],
+    companiesHouseNo: 'UKEF0001',
+    partyUrn: '00318345',
+  },
+  timezone: 'Europe/London',
+  lastLogin: '1638791497263',
+  'user-status': 'active',
+  _id: '619bae3467cc7c002069fc1e',
+};
+
+const MOCK_DEAL = {
+  _id: '61a7710b2ae62b0013dae687',
+  dealType: 'GEF',
+  userId: '619bae3467cc7c002069fc1e',
+  status: 'BANK_CHECK',
+  bankId: '9',
+  exporterId: '61a7710b2ae62b0013dae686',
+  eligibility: {
+    criteria: [],
+    updatedAt: 1638535562287,
+    status: 'COMPLETED',
+  },
+  bankInternalRefName: 'abc',
+  mandatoryVersionId: null,
+  createdAt: 1638363403942,
+  updatedAt: 1638983294975,
+  submissionType: 'Manual Inclusion Application',
+  submissionCount: 1,
+  submissionDate: '1638363716309',
+  supportingInformation: {
+    manualInclusion: [],
+    securityDetails: {},
+    status: 'IN_PROGRESS',
+    requiredFields: [],
+  },
+  ukefDealId: '0030113304',
+  checkerId: '619bae3467cc7c002069fc21',
+  editedBy: ['619bae3467cc7c002069fc1e'],
+  additionalRefName: null,
+  facilitiesUpdated: 1638542220497,
+  comments: [],
+  previousStatus: 'UKEF_IN_PROGRESS',
+  ukefDecision: [],
+  ukefDecisionAccepted: true,
+  id: '61a7710b2ae62b0013dae687',
+  exporter: { status: 'COMPLETED', details: [], validation: [] },
+  facilities: { status: 'COMPLETED', items: [] },
+  exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  canSubmit: false,
+  checkerCanSubmit: false,
+  maker: {
+    username: 'BANK1_MAKER1',
+    firstname: 'ABC',
+    surname: 'DEF',
+    email: 'test',
+    roles: [],
+    bank: {},
+    timezone: 'Europe/London',
+    lastLogin: '1638807320335',
+    'user-status': 'active',
+    _id: '619bae3467cc7c002069fc1e',
+  },
+  checker: {
+    username: 'BANK1_CHECKER1',
+    firstname: 'DEF',
+    surname: 'GHJ',
+    email: 'test2',
+    roles: ['maker'],
+    bank: {},
+    timezone: 'Europe/London',
+    lastLogin: '1638964634607',
+    'user-status': 'active',
+    _id: '619bae3467cc7c002069fc21',
+  },
+};
 
 const MOCK_FACILITY = {
   items: [
@@ -613,5 +707,21 @@ describe('getFacilitiesAsArray', () => {
       ],
     ];
     expect(getFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
+  });
+});
+
+describe('coverDatesConfirmed', () => {
+  it('Should return FALSE as one of the facility\'s cover date has not been confirmed', () => {
+    expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(false);
+  });
+});
+
+describe('makerCanReSubmit', () => {
+  it('Should return FALSE since the deal status is BANK_CHECK', () => {
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+  it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS', () => {
+    MOCK_DEAL.status = 'UKEF_APPROVED_WITH_CONDITIONS';
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(true);
   });
 });
