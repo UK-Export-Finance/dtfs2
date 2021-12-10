@@ -67,6 +67,10 @@ class Facility {
       this.feeFrequency = null;
       this.dayCountBasis = null;
       this.coverDateConfirmed = null;
+      this.changedToIssued = null;
+      if (req.changedToIssued != null) {
+        this.changedToIssued = Boolean(req.changedToIssued);
+      }
     } else {
       // update facility
       if (req.hasBeenIssued != null) {
@@ -166,6 +170,10 @@ class Facility {
 
       if (req.coverDateConfirmed) {
         this.coverDateConfirmed = req.coverDateConfirmed;
+      }
+
+      if (req.changedToIssued != null) {
+        this.changedToIssued = Boolean(req.changedToIssued);
       }
 
       this.updatedAt = Date.now();

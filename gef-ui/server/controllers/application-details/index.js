@@ -6,10 +6,14 @@ const
     mapSummaryList,
     isUkefReviewAvailable,
     isUkefReviewPositive,
+    areUnissuedFacilitiesPresent,
     getFacilitiesAsArray,
+    getUnissuedFacilitiesAsArray,
+    facilitiesChangedToIssuedAsArray,
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
+    userType,
   } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -51,7 +55,7 @@ function buildHeader(app) {
   return { ...main, ...checker };
 }
 
-function buildBody(app, previewMode) {
+function buildBody(app, previewMode, user) {
   const exporterUrl = `/gef/application-details/${app.id}`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
@@ -63,7 +67,7 @@ function buildBody(app, previewMode) {
       status: app.exporterStatus,
       rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
         showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
-      }), previewMode),
+      }), app, user, previewMode),
     },
     eligibility: {
       status: app.eligibilityCriteriaStatus,
@@ -72,7 +76,7 @@ function buildBody(app, previewMode) {
       status: app.facilitiesStatus,
       data: app.facilities.items.map((item) => ({
         heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
-        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), previewMode),
+        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), app, user, previewMode),
         createdAt: item.details.createdAt,
         facilityId: item.details._id,
       }))
@@ -91,10 +95,13 @@ function buildBody(app, previewMode) {
     ukefDecision: app.ukefDecision,
     isUkefReviewAvailable: isUkefReviewAvailable(app.status),
     isUkefReviewPositive: isUkefReviewPositive(app.status),
+    unissuedFacilitiesPresent: areUnissuedFacilitiesPresent(app),
+    facilitiesChangedToIssued: facilitiesChangedToIssuedAsArray(app),
     ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
     coverDatesConfirmed: coverDatesConfirmed(app.facilities),
     previewMode,
     userRoles: app.userRoles,
+    userString: userType(user),
   };
 }
 
@@ -107,9 +114,9 @@ function buildActions(app) {
   };
 }
 
-function buildView(app, previewMode) {
+function buildView(app, previewMode, user) {
   const header = buildHeader(app);
-  const body = buildBody(app, previewMode);
+  const body = buildBody(app, previewMode, user);
   const actions = buildActions(app);
   return { ...header, ...body, ...actions };
 }
@@ -135,6 +142,7 @@ const stateToPartial = (status, url) => {
     'review-decision': 'review-decision',
     'cover-start-date': 'cover-start-date',
     'confirm-cover-start-date': 'confirm-cover-start-date',
+    'unissued-facilities': 'unissued-facilities',
   };
 
   return url in partials
@@ -150,6 +158,7 @@ const applicationDetails = async (req, res, next) => {
   const facilitiesPartials = [
     'cover-start-date',
     'confirm-cover-start-date',
+    'unissued-facilities',
   ];
   userSession = user;
 
@@ -186,6 +195,8 @@ const applicationDetails = async (req, res, next) => {
         facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
+      } else if (url === 'unissued-facilities') {
+        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(applicationId), application.submissionDate);
       }
     }
 
@@ -193,7 +204,7 @@ const applicationDetails = async (req, res, next) => {
 
     const params = {
       user,
-      ...buildView(applicationWithMaker, previewMode),
+      ...buildView(applicationWithMaker, previewMode, user),
     };
 
     if (facility) {

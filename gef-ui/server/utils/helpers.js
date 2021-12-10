@@ -2,7 +2,7 @@ const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
-const { format } = require('date-fns');
+const { format, add } = require('date-fns');
 const CONSTANTS = require('../../constants');
 
 // Fetches the user token = require( sessio)n
@@ -80,12 +80,79 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
+/*
+   Maps through facilities to check for changedToIssued to be true
+   if true, adds to array and returns array
+*/
+
+const facilitiesChangedToIssuedAsArray = (application) => {
+  const hasChanged = [];
+
+  application.facilities.items.map((facility) => {
+    if (facility.details.changedToIssued === true) {
+      const changed = {
+        name: facility.details.name,
+        id: facility.details._id,
+      };
+      hasChanged.push(changed);
+    }
+    return hasChanged;
+  });
+  return hasChanged;
+};
+
 /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
   properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
-const mapSummaryList = (data, itemsToShow, preview = false) => {
+const summaryItemsConditions = (preview, item, details, app, user, data) => {
+  const {
+    id, href, shouldCoverStartOnSubmission,
+  } = item;
+  const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
+  const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
+  const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
+  const changedToIssueShow = (id === 'name' || id === 'coverStartDate' || id === 'coverEndDate');
+  const unissuedShow = (id === 'hasBeenIssued');
+  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities-change/${data.details._id}/about-facility?status=change`;
+
+  let summaryItems = [];
+  if (!preview) {
+    summaryItems = [
+      ...(href ? [{
+        href,
+        /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
+           properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+           Object is empty or not. */
+        text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
+        visuallyHiddenText: item.label,
+      }] : []),
+    ];
+  } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.changedToIssued === true) {
+    summaryItems = [
+      ...(unissuedHref ? [{
+        href: unissuedHref,
+        /*  */
+        text: `${changedToIssueShow ? 'Change' : ''}`,
+        visuallyHiddenText: item.label,
+      }] : []),
+    ];
+  } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
+    summaryItems = [
+      ...(unissuedHref ? [{
+        href: unissuedHref,
+        /*  */
+        text: `${unissuedShow ? 'Add' : ''}`,
+        visuallyHiddenText: item.label,
+      }] : []),
+    ];
+  }
+
+  return summaryItems;
+};
+
+const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
   if (!data || lodashIsEmpty(data)) { return []; }
   const { details, validation } = data;
   const { required } = validation;
@@ -138,31 +205,19 @@ const mapSummaryList = (data, itemsToShow, preview = false) => {
 
   return itemsToShow.map((item) => {
     const {
-      id, label, href, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden,
+      label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden,
       shouldCoverStartOnSubmission,
     } = item;
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
     const isRequired = required.includes(item.id);
-    const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
 
     // Don't show row if value is undefined
     if (value === undefined || isHidden) { return null; }
 
-    let summaryItems = [];
-    if (!preview) {
-      summaryItems = [
-        ...(href ? [{
-          href,
-          /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
-          properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
-          Object is empty or not. */
-          text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
-          visuallyHiddenText: item.label,
-        }] : []),
-      ];
-    }
+    const summaryItems = summaryItemsConditions(preview, item, details, app, user, data);
+
     return {
       key: {
         text: label,
@@ -248,6 +303,37 @@ const isUkefReviewPositive = (applicationStatus) => {
 };
 
 /**
+   * this function checks that the deal is an AIN
+   * checks that it has been submitted to UKEF
+   * if any unissued facilitites
+ if changes required to include MIA, add to application type and status
+ * */
+
+const areUnissuedFacilitiesPresent = (application) => {
+  const acceptableStatuses = ['UKEF_ACKNOWLEDGED'];
+  const accepableApplicationType = ['Automatic Inclusion Notice'];
+
+  if (!accepableApplicationType.includes(application.submissionType)) {
+    return false;
+  }
+  if (!acceptableStatuses.includes(application.status)) {
+    return false;
+  }
+
+  let hasUnissuedFacilities = false;
+
+  application.facilities.items.map((facility) => {
+    if (facility.details.hasBeenIssued === false) {
+      hasUnissuedFacilities = true;
+      return hasUnissuedFacilities;
+    }
+    return hasUnissuedFacilities;
+  });
+
+  return hasUnissuedFacilities;
+};
+
+/**
  * This is a bespoke govUkTable mapping function which
  * returns an array of all the facilities specifically
  * for the cover-start-date.njk template.
@@ -260,6 +346,21 @@ const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details 
     { text: details.ukefFacilityId },
     { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
     { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
+  ]);
+
+const facilityIssueDeadline = (submissionDate) => {
+  const date = Date(submissionDate);
+  const deadlineDate = add(new Date(date), { months: 3 });
+
+  return format(deadlineDate, 'dd MMM yyyy');
+};
+const getUnissuedFacilitiesAsArray = (facilities, submissionDate) => facilities.items.filter(({ details }) => !details.hasBeenIssued).map(({ details }) =>
+  [
+    { text: details.name },
+    { text: details.ukefFacilityId },
+    { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+    { text: facilityIssueDeadline(submissionDate) },
+    { html: `<a href = '/gef/application-details/${details.applicationId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
   ]);
 
 const getFacilityCoverStartDate = (facility) => {
@@ -313,6 +414,17 @@ const makerCanReSubmit = (maker, application) => {
   return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
 };
 
+const userType = (user) => {
+  let userString;
+
+  if (user.roles.includes('maker')) {
+    userString = 'maker';
+  } else {
+    userString = 'checker';
+  }
+  return userString;
+};
+
 module.exports = {
   apiErrorHandler,
   getApplicationType,
@@ -328,7 +440,10 @@ module.exports = {
   isNotice,
   isUkefReviewAvailable,
   isUkefReviewPositive,
+  areUnissuedFacilitiesPresent,
   getFacilitiesAsArray,
+  getUnissuedFacilitiesAsArray,
+  facilitiesChangedToIssuedAsArray,
   getFacilityCoverStartDate,
   futureDateInRange,
   pastDate,
@@ -336,4 +451,5 @@ module.exports = {
   getUTCDate,
   coverDatesConfirmed,
   makerCanReSubmit,
+  userType,
 };
