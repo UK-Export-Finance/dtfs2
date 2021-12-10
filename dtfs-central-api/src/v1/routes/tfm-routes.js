@@ -275,6 +275,8 @@ tfmRouter.route('/deals/:id/facilities')
     tfmGetFacilitiesController.findFacilitiesGet,
   );
 
+tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
+
 /**
  * @openapi
  * /tfm/facilities/:id:
