@@ -7,6 +7,7 @@
   Trade Finance Manager
 {% endblock %}
 
+Facilities page
 {% block content %}
   <div class="govuk-grid-row">
 
@@ -27,7 +28,8 @@
         deals: deals,
         user: user,
         activeSortByOrder: activeSortByOrder,
-        activeSortByField: activeSortByField
+        activeSortByField: activeSortByField,
+        activePrimaryNavigation: activePrimaryNavigation
       } %}
 
       {{ dealsTable.render(componentData) }}
