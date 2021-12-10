@@ -303,11 +303,11 @@ const coverDatesConfirmed = (facilities) => (
 );
 
 const makerCanReSubmit = (maker, application) => {
-  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
   const acceptableStatus = [
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
+  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
   const makerAuthorised = (maker._id === application.maker._id);
 
   return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
