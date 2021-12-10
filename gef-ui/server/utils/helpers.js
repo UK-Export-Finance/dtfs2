@@ -88,7 +88,6 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 const mapSummaryList = (data, itemsToShow, preview = false) => {
   if (!data || lodashIsEmpty(data)) { return []; }
   const { details, validation } = data;
-  const { required: [] } = validation;
 
   const valueObj = (val, isRequired, currency, detailsOther, options = {}) => {
     if (isRequired && val === null) {
@@ -144,7 +143,7 @@ const mapSummaryList = (data, itemsToShow, preview = false) => {
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
-    const isRequired = required.includes(item.id);
+    const isRequired = (validation.required && validation.required.includes(item.id));
     const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
 
     // Don't show row if value is undefined
