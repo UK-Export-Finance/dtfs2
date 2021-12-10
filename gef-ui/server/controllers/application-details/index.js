@@ -61,9 +61,13 @@ function buildBody(app, previewMode) {
     isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
     exporter: {
       status: app.exporterStatus,
-      rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
-        showIndustryChangeLink: app.exporter?.industries && app.exporter?.industries.length > 1,
-      }), previewMode),
+      rows: mapSummaryList(
+        { details: app.exporter }, // wrap in details because mapSummaryList relies this.
+        exporterItems(exporterUrl, {
+          showIndustryChangeLink: app.exporter?.industries && app.exporter?.industries.length > 1,
+        }),
+        previewMode,
+      ),
     },
     eligibility: {
       status: app.eligibilityCriteriaStatus,
