@@ -15,11 +15,14 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
     ? await findAllPaginatedDeals(ctx.user, start, pagesize, dbFilters, sort)
     : await findAllDeals(ctx.user, dbFilters, sort);
 
-  const reducedDeals = dealsReducer(deals.deals);
+  const dealsArray = deals[0].deals;
+  const count = deals[0].count;
+ 
+  const reducedDeals = dealsReducer(dealsArray);
 
   return {
     deals: reducedDeals,
-    count: reducedDeals.length,
+    count: count,
   };
 };
 

@@ -143,6 +143,5 @@ context('Delete a Bond', () => {
     });
 
     pages.contract.bondTransactionsTableRows().should('have.length', 2);
-    pages.contract.bondTransactionsTable.row(bondToDeleteId).row.should('not.exist');
   });
 });

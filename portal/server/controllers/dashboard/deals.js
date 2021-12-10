@@ -50,8 +50,12 @@ exports.bssDeals = async (req, res) => {
     });
   }
 
-  // eslint-disable-next-line max-len
-  const { count, deals } = await getApiData(api.allDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
+  const { count, deals } = await getApiData(api.allDeals(
+    req.params.page * PAGESIZE,
+    PAGESIZE,
+    filters,
+    userToken,
+  ), res);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),

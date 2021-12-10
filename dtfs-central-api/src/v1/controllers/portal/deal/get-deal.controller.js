@@ -238,7 +238,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   ])
     .toArray();
 
-  return deals[0];
+  return deals;
 };
 
 exports.queryAllDeals = async (req, res) => {

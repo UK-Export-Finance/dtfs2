@@ -2,15 +2,19 @@ const CONSTANTS = require('../../constants');
 const mapGefDeal = require('../mappings/map-gef-deal');
 
 const dealsReducer = (deals) => {
-  const mappedDeals = deals.map((deal) => {
-    const { dealType } = deal;
+  let mappedDeals = [];
 
-    if (dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF) {
-      return mapGefDeal(deal);
-    }
+  if (deals && deals.length) {
+    mappedDeals = deals.map((deal) => {
+      const { dealType } = deal;
 
-    return deal;
-  });
+      if (dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF) {
+        return mapGefDeal(deal);
+      }
+
+      return deal;
+    });
+  }
 
   return mappedDeals;
 };

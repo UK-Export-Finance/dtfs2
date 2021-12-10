@@ -51,4 +51,12 @@ describe('/graphql reducers - deals', () => {
       expect(result).toEqual(expected);
     });
   }); 
+
+  describe(`when there are no deals`, () => {
+    it('should return an empty array', () => {
+      const result = dealsReducer([]);
+
+      expect(result).toEqual([]);
+    });
+  }); 
 });
