@@ -34,6 +34,19 @@ const updateApplication = async (id, data, token) => {
   return response.data;
 };
 
+const listDeals = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/application`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+  return response.data.items;
+};
+
 const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
@@ -226,6 +239,7 @@ const listMandatoryCriteriaVersioned = async (token) => {
 module.exports = {
   createApplication,
   updateApplication,
+  listDeals,
   deleteDeal,
   deleteExporter,
   updateExporter,

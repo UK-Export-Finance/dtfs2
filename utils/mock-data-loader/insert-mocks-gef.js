@@ -54,38 +54,20 @@ const insertMocks = async () => {
     );
   }
 
-  const deals = await portalApi.listDeals(token);
-
-  const gefDeals = deals.filter((deal) => deal.dealType === 'GEF');
-
-  // TODO: when GEF deals are in deals collection,
-  // currently api.listDeals doesn't return any GEF deals.
-  // it uses graphQL and GEF things are not in schema/no resolvers.
-
-  // console.log('update GEF exporter');
-  // for (const [index, item] of MOCKS.EXPORTER.entries()) {
-  //   if (index > 0) {
-  //     await api.updateExporter(gefDeals[index].exporterId, item, token);
-  //   }
-  // }
-
-
-  // TODO: when GEF deals are in deals collection,
-  // currently api.listDeals doesn't return any GEF deals.
-  // it uses graphQL and GEF things are not in schema/no resolvers.
+  const gefDeals = await api.listDeals(token);
   
-  // console.log('inserting and updating GEF facilities');
-  // for (const [index, item] of MOCKS.FACILITIES.entries()) {
-  //   // eslint-disable-next-line no-restricted-syntax
-  //   for (const subitem of item) {
-  //     // eslint-disable-next-line no-param-reassign
-  //     // subitem.applicationId = gefDeals[index]._id;
-  //     const facilty = await api.createFacilities(subitem, token);
-  //     // eslint-disable-next-line no-param-reassign
-  //     // delete subitem.applicationId;
-  //     await api.updateFacilities(facilty.details, subitem, token);
-  //   }
-  // }
+  console.log('inserting and updating GEF facilities');
+  for (const [index, item] of MOCKS.FACILITIES.entries()) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const subitem of item) {
+      // eslint-disable-next-line no-param-reassign
+      subitem.applicationId = gefDeals[index]._id;
+      const facilty = await api.createFacilities(subitem, token);
+      // eslint-disable-next-line no-param-reassign
+      delete subitem.applicationId;
+      await api.updateFacilities(facilty.details, subitem, token);
+    }
+  }
 };
 
 module.exports = insertMocks;
