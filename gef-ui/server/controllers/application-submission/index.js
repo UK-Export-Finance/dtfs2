@@ -1,5 +1,5 @@
 const api = require('../../services/api');
-const { validationErrorHandler } = require('../../utils/helpers');
+const { validationErrorHandler, hasChangedToIssued } = require('../../utils/helpers');
 const { PROGRESS } = require('../../../constants');
 const Application = require('../../models/application');
 
@@ -16,6 +16,7 @@ const getApplicationSubmission = async (req, res) => {
     applicationId,
     submissionType,
     maxCommentLength,
+    isAutomaticCover: application.submissionType,
   });
 };
 
@@ -61,6 +62,7 @@ const postApplicationSubmission = async (req, res, next) => {
   return res.render('application-details-submitted.njk', {
     applicationId,
     submissionType,
+    unissuedToIssued: hasChangedToIssued(application),
   });
 };
 

@@ -106,16 +106,29 @@ const facilitiesChangedToIssuedAsArray = (application) => {
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
-const summaryItemsConditions = (preview, item, details, app, user, data) => {
+/* summaryItemsConditions runs through the the table rows and decides if change/add should be added
+   on end of row.  On application details, all relevant rows are set to change/add if required.  On
+   application preview (once submitted to UKEF) - for facilities, certain rows are set to change add
+   and given personalised href.
+*/
+
+const summaryItemsConditions = (summaryItemsObj) => {
+  const {
+    preview, item, details, app, user, data,
+  } = summaryItemsObj;
   const {
     id, href, shouldCoverStartOnSubmission,
   } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
-  const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
+  // column keys to display change if facility has been changed to issued
   const changedToIssueShow = (id === 'name' || id === 'coverStartDate' || id === 'coverEndDate');
+  // column key to display add if facility not yet issued
   const unissuedShow = (id === 'hasBeenIssued');
+  // personalised href for facility to change to issued (once submitted to UKEF)
   const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities-change/${data.details._id}/about-facility?status=change`;
+  // array of facilities which have been changed to issued
+  const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
 
   let summaryItems = [];
   if (!preview) {
@@ -130,6 +143,11 @@ const summaryItemsConditions = (preview, item, details, app, user, data) => {
       }] : []),
     ];
   } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.changedToIssued === true) {
+    /**
+      *  if submitted to UKEF && logged in as maker && facility changed to issued
+      * can change name, coverStartDate and coverEndDate column
+      * change link displayed taking to unissued-facility-change change page
+   */
     summaryItems = [
       ...(unissuedHref ? [{
         href: unissuedHref,
@@ -139,6 +157,12 @@ const summaryItemsConditions = (preview, item, details, app, user, data) => {
       }] : []),
     ];
   } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
+    /**
+      *  if submitted to UKEF && logged in as maker && facility still unissued
+      * only shows if other facilities have been changed to issued
+      * changes to issued
+      * add link displayed taking to unissued-facility-change change page
+   */
     summaryItems = [
       ...(unissuedHref ? [{
         href: unissuedHref,
@@ -216,7 +240,16 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
     // Don't show row if value is undefined
     if (value === undefined || isHidden) { return null; }
 
-    const summaryItems = summaryItemsConditions(preview, item, details, app, user, data);
+    const summaryItemsObj = {
+      preview,
+      item,
+      details,
+      app,
+      user,
+      data,
+    };
+
+    const summaryItems = summaryItemsConditions(summaryItemsObj);
 
     return {
       key: {
@@ -348,12 +381,21 @@ const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details 
     { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
   ]);
 
+/*
+   This function sets the deadline to display for unissued
+   facilities on the unissued facilities table 3 months
+   from date of submission
+*/
 const facilityIssueDeadline = (submissionDate) => {
   const date = Date(submissionDate);
   const deadlineDate = add(new Date(date), { months: 3 });
 
   return format(deadlineDate, 'dd MMM yyyy');
 };
+
+/* govukTable mapping function to return array of facilities which are
+   not yet issued for the cover-start-date.njk template.
+*/
 const getUnissuedFacilitiesAsArray = (facilities, submissionDate) => facilities.items.filter(({ details }) => !details.hasBeenIssued).map(({ details }) =>
   [
     { text: details.name },
@@ -407,6 +449,7 @@ const makerCanReSubmit = (maker, application) => {
   const acceptableStatus = [
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   ];
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
   const makerAuthorised = (maker._id === application.maker._id);
@@ -414,15 +457,20 @@ const makerCanReSubmit = (maker, application) => {
   return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
 };
 
-const userType = (user) => {
-  let userString;
+/*
+   function returns true or false based on length of array
+   of facilities that have changed to issued from unissued
+*/
+const hasChangedToIssued = (application) => {
+  let changed = false;
 
-  if (user.roles.includes('maker')) {
-    userString = 'maker';
-  } else {
-    userString = 'checker';
+  const changedToIssued = facilitiesChangedToIssuedAsArray(application);
+
+  if (changedToIssued.length > 0) {
+    changed = true;
   }
-  return userString;
+
+  return changed;
 };
 
 module.exports = {
@@ -451,5 +499,5 @@ module.exports = {
   getUTCDate,
   coverDatesConfirmed,
   makerCanReSubmit,
-  userType,
+  hasChangedToIssued,
 };

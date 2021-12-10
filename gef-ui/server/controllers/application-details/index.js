@@ -13,7 +13,6 @@ const
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
-    userType,
   } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -101,7 +100,6 @@ function buildBody(app, previewMode, user) {
     coverDatesConfirmed: coverDatesConfirmed(app.facilities),
     previewMode,
     userRoles: app.userRoles,
-    userString: userType(user),
   };
 }
 

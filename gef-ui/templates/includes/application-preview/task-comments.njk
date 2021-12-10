@@ -18,9 +18,11 @@
             <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
             <p>{{ ukefDecision[0].text | safe }}</p>
         {% endif %}
+      {% endif %}
+
       {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 %}
-      <h2>Update facility stage for unissued facilities</h2>
-        <div class="govuk-!-margin-bottom-6" data-cy="unissued-facilities-link">
+         <h2>Update facility stage for unissued facilities</h2>
+         <div class="govuk-!-margin-bottom-6" data-cy="unissued-facilities-link">
           <a href="/gef/application-details/{{ applicationId }}/unissued-facilities" class="govuk-link">View unissued facilities</a>
         </div>
       {% endif %}

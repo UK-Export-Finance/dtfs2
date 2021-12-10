@@ -280,6 +280,7 @@ const postChangeUnissuedAboutFacility = async (req, res) => {
       coverEndDate: coverEndDate ? format(coverEndDate, 'MMMM d, yyyy') : null,
       hasBeenIssued: true,
       changedToIssued: true,
+      coverDateConfirmed: true,
     },
     req.success = {
       message: `${body.facilityName} is updated`,
@@ -494,6 +495,7 @@ const postChangeUnissuedAboutFacilityChange = async (req, res) => {
       coverEndDate: coverEndDate ? format(coverEndDate, 'MMMM d, yyyy') : null,
       hasBeenIssued: true,
       changedToIssued: true,
+      coverDateConfirmed: true,
     },
     req.url = `/gef/application-details/${applicationId}`);
 
