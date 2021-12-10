@@ -88,7 +88,7 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 const mapSummaryList = (data, itemsToShow, preview = false) => {
   if (!data || lodashIsEmpty(data)) { return []; }
   const { details, validation } = data;
-  const { required } = validation;
+  const { required: [] } = validation;
 
   const valueObj = (val, isRequired, currency, detailsOther, options = {}) => {
     if (isRequired && val === null) {

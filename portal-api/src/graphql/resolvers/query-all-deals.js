@@ -19,7 +19,7 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
 
   return {
     deals: reducedDeals,
-    count: pagesize,
+    count: reducedDeals.length,
   };
 };
 

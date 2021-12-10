@@ -89,15 +89,23 @@ exports.gefDeals = async (req, res) => {
     api.gefDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  const deals = rawDeals.map((deal) => ({
-    _id: deal._id,
-    status: deal.status,
-    bankRef: deal.bankInternalRefName,
-    exporter: deal.exporter.companyName,
-    product: PRODUCT.GEF,
-    type: deal.submissionType,
-    lastUpdate: deal.updatedAt || deal.createdAt,
-  }))
+  const deals = rawDeals.map((deal) => {
+    let exporter = '';
+
+    if (deal.exporter && deal.exporter.companyName) {
+      exporter = deal.exporter.companyName;
+    }
+
+    return {
+      _id: deal._id,
+      status: deal.status,
+      bankRef: deal.bankInternalRefName,
+      exporter,
+      product: PRODUCT.GEF,
+      type: deal.submissionType,
+      lastUpdate: deal.updatedAt || deal.createdAt,
+    };
+  })
     .sort((a, b) => b.lastUpdate - a.lastUpdate);
 
   const pages = {

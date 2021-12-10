@@ -22,7 +22,7 @@ const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const {
   EMAIL_TEMPLATE_IDS,
-  DEAL: { GEF_STATUS },
+  DEAL: { GEF_STATUS, DEAL_TYPE },
 } = require('../../../constants');
 
 const dealsCollectionName = 'deals';
@@ -80,8 +80,9 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(dealsCollectionName);
 
-  const doc = await collection.find({})
-    .toArray();
+  const doc = await collection.find({
+    dealType: DEAL_TYPE.GEF,
+  }).toArray();
 
   if (doc.length && doc.supportingInformation) {
     doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
