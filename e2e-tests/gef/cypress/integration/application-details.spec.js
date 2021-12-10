@@ -41,7 +41,7 @@ context('Application Details Page', () => {
       statusBanner.bannerDateCreated().contains(todayFormatted);
       statusBanner.bannerSubmissionType().should('have.text', '-');
       statusBanner.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`)
-      statusBanner.bannerExporter().should('have.text', '-');
+      statusBanner.bannerExporter().should('have.text', applications[0].exporter.companyName);
       statusBanner.bannerCheckedBy().should('have.text', '-');
       statusBanner.bannerBuyer().should('have.text', '-');
     });
