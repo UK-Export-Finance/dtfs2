@@ -3,7 +3,7 @@ const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
 const { format } = require('date-fns');
-const { FACILITY_PROVIDED_DETAILS } = require('../../constants');
+const CONSTANTS = require('../../constants');
 
 // Fetches the user token = require( sessio)n
 const userToken = (req) => {
@@ -114,9 +114,9 @@ const mapSummaryList = (data, itemsToShow, preview = false) => {
         if (value) {
           if (options.isDetails) {
             if (value === 'OTHER') {
-              list.push(`<li>${FACILITY_PROVIDED_DETAILS[value]} ${detailsOther ? '-' : ''} ${detailsOther}</li>`);
+              list.push(`<li>${CONSTANTS.FACILITY_PROVIDED_DETAILS[value]} ${detailsOther ? '-' : ''} ${detailsOther}</li>`);
             } else {
-              list.push(`<li>${FACILITY_PROVIDED_DETAILS[value]}</li>`);
+              list.push(`<li>${CONSTANTS.FACILITY_PROVIDED_DETAILS[value]}</li>`);
             }
           } else {
             list.push(`<li>${value}</li>`);
@@ -231,12 +231,19 @@ const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 const isNotice = (type) => type.toLowerCase().includes('notice');
 
 const isUkefReviewAvailable = (applicationStatus) => {
-  const acceptable = ['UKEF_APPROVED_WITH_CONDITIONS', 'UKEF_APPROVED_WITHOUT_CONDITIONS', 'UKEF_REFUSED'];
+  const acceptable = [
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_REFUSED,
+  ];
   return acceptable.includes(applicationStatus);
 };
 
 const isUkefReviewPositive = (applicationStatus) => {
-  const acceptable = ['UKEF_APPROVED_WITH_CONDITIONS', 'UKEF_APPROVED_WITHOUT_CONDITIONS'];
+  const acceptable = [
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+  ];
   return acceptable.includes(applicationStatus);
 };
 
@@ -297,7 +304,10 @@ const coverDatesConfirmed = (facilities) => (
 
 const makerCanReSubmit = (maker, application) => {
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const acceptableStatus = ['UKEF_APPROVED_WITH_CONDITIONS', 'UKEF_APPROVED_WITHOUT_CONDITIONS'];
+  const acceptableStatus = [
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+  ];
   const makerAuthorised = (maker._id === application.maker._id);
 
   return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
