@@ -212,8 +212,6 @@ module.exports = {
   updateApplication,
   listDeals,
   deleteDeal,
-  deleteExporter,
-  updateExporter,
   createFacilities,
   listFacilities,
   deleteFacilities,
