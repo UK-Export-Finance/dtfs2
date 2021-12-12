@@ -61,35 +61,6 @@ const deleteDeal = async (dealId, token) => {
   return response.data;
 };
 
-const deleteExporter = async (exporterId, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/exporter/${exporterId}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response;
-};
-
-const updateExporter = async (exporterId, data, token) => {
-  const response = await axios({
-    method: 'put',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/exporter/${exporterId}`,
-    data,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response;
-};
-
 const createFacilities = async (data, token) => {
   const response = await axios({
     method: 'post',
