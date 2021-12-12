@@ -49,7 +49,6 @@ const MOCK_DEAL = {
   userId: '619bae3467cc7c002069fc1e',
   status: 'BANK_CHECK',
   bankId: '9',
-  exporter: {},
   eligibility: {
     criteria: [],
     updatedAt: 1638535562287,
