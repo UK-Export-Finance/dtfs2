@@ -16,7 +16,7 @@ const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
 const DEFAULT_MAX_SIZE = 10; // 10mb default
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
 
-const collectionName = 'files';
+const filesCollection = 'files';
 const dealCollectionName = 'deals';
 
 const fileError = (file, maxFileSize) => {

@@ -4,30 +4,15 @@ const db = require('../../../drivers/db-client');
 const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
 const { validateApplicationReferences } = require('./validation/application');
 
-const cloneExporter = async (exporterId) => {
-  const exporterCollection = 'gef-exporter';
-  const collection = await db.getCollection(exporterCollection);
-
-  // get the current exporter
-  const currentExporter = await collection.findOne({
-    _id: ObjectID(String(exporterId))
-  });
-
+const cloneExporter = (exporter) => {
   const clonedExporter = currentExporter;
-
-  // delete the existing `_id` property - this will be re-created when a new deal is inserted
-  delete clonedExporter._id;
 
   // update the `createdAt` property to match the current time in EPOCH format
   clonedExporter.createdAt = Date.now();
   // update the `updatedAt` property and set it to null - default value
   clonedExporter.updatedAt = Date.now();
 
-  // insert a new exporter in the database
-  const newExporter = await collection.insertOne(clonedExporter);
-
-  // return the new inserted ID
-  return newExporter.insertedId;
+  return clonedExporter;
 };
 
 const cloneSupportingInformation = async (existingApplicationId, newApplicationId) => {
@@ -146,7 +131,7 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
   clonedDeal.ukefDealId = null;
   clonedDeal.checkerId = null;
   clonedDeal.editedBy = [userId];
-  clonedDeal.exporterId = await cloneExporter(clonedDeal.exporterId);
+  clonedDeal.exporter = cloneExporter(clonedDeal.exporter);
   clonedDeal.portalActivities = [];
 
   // insert the cloned deal in the database

@@ -9,13 +9,11 @@ describe('/graphql reducers - deals', () => {
         { dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF },
       ];
 
-      const result = dealsReducer(mockDeals)
+      const result = dealsReducer(mockDeals);
 
       const expected = [
         mapGefDeal(mockDeal),
       ];
-
-      const result = dealsReducer(mockDeals);
 
       expect(result).toEqual(expected);
     });

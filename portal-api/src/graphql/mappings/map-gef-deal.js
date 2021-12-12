@@ -20,3 +20,5 @@ const mapGefDeal = (deal) => {
     lastUpdate: updatedAt,
   };
 };
+
+module.exports = mapGefDeal;
