@@ -71,6 +71,8 @@ exports.create = async (req, res) => {
 
     if (newDeal.exporter) {
       newDeal.exporter.status = exporterStatus(newDeal.exporter);
+
+      newDeal.exporter.updatedAt = Date.now();
     }
 
     const createdApplication = await applicationCollection.insertOne(
@@ -156,6 +158,7 @@ exports.update = async (req, res) => {
 
   if (update.exporter) {
     update.exporter.status = exporterStatus(update.exporter);
+    update.exporter.updatedAt = Date.now();
   }
 
   updateAction.$set = update;

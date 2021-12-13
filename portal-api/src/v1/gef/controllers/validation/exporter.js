@@ -33,9 +33,7 @@ const hasRequiredItems = (doc) => {
 
 const exporterStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
-  if (!doc.updatedAt) {
-    return STATUS.NOT_STARTED;
-  }
+
   if (requiredCount > 0) {
     return STATUS.IN_PROGRESS;
   }

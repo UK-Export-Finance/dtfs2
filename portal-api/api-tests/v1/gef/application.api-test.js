@@ -256,7 +256,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(204);
     });
 
-    it('adds exporter.status when exporter is passed', async () => {
+    it('adds exporter.status and timestamp when exporter is passed', async () => {
       const exporterUpdate = {
         exporter: {
           test: true,
@@ -268,6 +268,7 @@ describe(baseUrl, () => {
 
       const expected = exporterStatus(exporterUpdate.exporter);
       expect(body.exporter.status).toEqual(expected);
+      expect(typeof body.exporter.updatedAt).toEqual('number');
     });
   });
 
@@ -305,6 +306,7 @@ describe(baseUrl, () => {
 
       const expected = exporterStatus(exporterUpdate.exporter);
       expect(body.exporter.status).toEqual(expected);
+      expect(typeof body.exporter.updatedAt).toEqual('number');
     });
 
     describe('when new status is `SUBMITTED_TO_UKEF`', () => {

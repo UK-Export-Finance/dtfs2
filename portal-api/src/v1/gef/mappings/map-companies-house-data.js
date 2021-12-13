@@ -19,7 +19,6 @@ const mapCompaniesHouseData = (data, industries) => {
       postalCode: address.postal_code,
       country: address.country,
     },
-    updatedAt: Date.now(),
     selectedIndustry,
     industries,
   };

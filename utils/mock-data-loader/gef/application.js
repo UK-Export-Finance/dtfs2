@@ -9,7 +9,7 @@ const APPLICATION = [{
   bankInternalRefName: 'Barclays 123',
   additionalRefName: null,
   mandatoryVersionId: '123', // further down the line you may want exact mongoIDs
-  exporter: {},
+  exporter: EXPORTER_COMPLETED,
 }, {
   // in progress
   bankId: '9',

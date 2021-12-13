@@ -40,7 +40,6 @@ describe('mapCompaniesHouseData', () => {
       postalCode: expect.any(String),
       country: expect.any(String),
     });
-    expect(result.updatedAt).toEqual(expect.any(Number));
     expect(result.selectedIndustry.code).toEqual(expect.any(String));
     expect(result.selectedIndustry.name).toEqual(expect.any(String));
     expect(result.selectedIndustry.class).toEqual({

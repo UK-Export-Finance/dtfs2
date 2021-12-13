@@ -6,7 +6,7 @@ const mockApplications = require('../../fixtures/gef/application');
 const api = require('../../../src/v1/api');
 
 const baseUrl = '/v1/gef/application';
-const collectionName = 'gef-application';
+const collectionName = 'deals';
 
 const mockApplication = {
   ...mockApplications[0],
