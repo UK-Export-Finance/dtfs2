@@ -102,7 +102,7 @@ const dealCanBeSubmittedToACBS = async (dealId) => {
     CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
   ];
 
-  if (deal) {
+  if (deal && deal.dealSnapshot) {
     return acceptable.includes(deal.dealSnapshot.details.submissionType);
   }
 
