@@ -3,7 +3,7 @@ import api from '../services/api';
 
 jest.mock('../services/api');
 
-const { PROGRESS } = require('../../constants');
+const { PROGRESS } = require('../constants');
 
 const MockEligibilityCriteria = () => ({
   criteria: [

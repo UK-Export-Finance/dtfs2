@@ -3,9 +3,8 @@ const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
 const { format } = require('date-fns');
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('../constants');
 
-// Fetches the user token = require( sessio)n
 const userToken = (req) => {
   const token = req.session.userToken;
   return token;

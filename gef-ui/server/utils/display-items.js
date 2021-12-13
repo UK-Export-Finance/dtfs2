@@ -2,7 +2,7 @@ const moment = require('moment');
 const { isTrueSet } = require('./helpers');
 const {
   SME_TYPE, BOOLEAN, STAGE, FACILITY_TYPE,
-} = require('../../constants');
+} = require('../constants');
 
 const exporterItems = (exporterUrl, options = {}) => [
   {
