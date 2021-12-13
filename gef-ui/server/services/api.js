@@ -140,6 +140,7 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
   } catch (err) {
+    console.error('Unable to get company house details', { err });
     return apiErrorHandler(err);
   }
 };
