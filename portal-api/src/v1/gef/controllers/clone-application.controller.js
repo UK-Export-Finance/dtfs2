@@ -91,6 +91,8 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
       allFacilities[val].createdAt = Date.now();
       // update the `updatedAt` property to match the current time in EPOCH format
       allFacilities[val].updatedAt = Date.now();
+      // reset the ukefFacilityId
+      allFacilities[val].ukefFacilityId = null;
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
