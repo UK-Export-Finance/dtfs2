@@ -72,7 +72,10 @@ describe(baseUrl, () => {
       const expected = {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
-          exporter: {},
+          exporter: {
+            status: expect.any(String),
+            updatedAt: expect.any(Number),
+          },
           eligibility: {
             criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
               ...criterion,
@@ -114,7 +117,10 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
         ...mockApplications[0],
-        exporter: {},
+        exporter: {
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+        },
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
             ...criterion,
@@ -201,7 +207,12 @@ describe(baseUrl, () => {
           })),
         },
       };
-      expect(body).toEqual(expectMongoId(expected));
+      expect(body).toEqual({
+        ...expectMongoId(expected),
+        exporter: {
+
+        }
+      });
     });
 
     it('it tells me the Bank Internal Ref Name is null', async () => {
@@ -293,20 +304,6 @@ describe(baseUrl, () => {
         errRef: 'status',
         errMsg: 'Unrecognised enum',
       }]);
-    });
-
-    it('adds exporter.status when exporter is passed in the update', async () => {
-      const exporterUpdate = {
-        exporter: {
-          test: true,
-        },
-      };
-
-      const { body } = await as(aMaker).put(exporterUpdate).to(`${baseUrl}/status/${body._id}`);
-
-      const expected = exporterStatus(exporterUpdate.exporter);
-      expect(body.exporter.status).toEqual(expected);
-      expect(typeof body.exporter.updatedAt).toEqual('number');
     });
 
     describe('when new status is `SUBMITTED_TO_UKEF`', () => {

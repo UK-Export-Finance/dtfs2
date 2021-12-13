@@ -4,28 +4,28 @@ const { SME_TYPE, STATUS } = require('../../enums');
 
 const hasRequiredItems = (doc) => {
   const required = [];
-  if (doc.companiesHouseRegistrationNumber === null) {
+  if (!doc.companiesHouseRegistrationNumber) {
     required.push('companiesHouseRegistrationNumber');
   }
-  if (doc.companyName === null) {
+  if (!doc.companyName) {
     required.push('companyName');
   }
-  if (doc.registeredAddress === null) {
+  if (!doc.registeredAddress) {
     required.push('registeredAddress');
   }
-  if (doc.selectedIndustry === null) {
+  if (!doc.selectedIndustry) {
     required.push('selectedIndustry');
   }
-  if (doc.industries === null) {
+  if (!doc.industries) {
     required.push('industries');
   }
-  if (doc.smeType === null) {
+  if (!doc.smeType) {
     required.push('smeType');
   }
-  if (doc.probabilityOfDefault === null) {
+  if (!doc.probabilityOfDefault) {
     required.push('probabilityOfDefault');
   }
-  if (doc.isFinanceIncreasing === null) {
+  if (!doc.isFinanceIncreasing) {
     required.push('isFinanceIncreasing');
   }
   return required;

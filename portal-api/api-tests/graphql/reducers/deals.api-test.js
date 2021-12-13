@@ -24,9 +24,12 @@ describe('/graphql reducers - deals', () => {
       const mockDeals = [
         { dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS },
       ];
+
       const expected = [
         mockDeals[0],
       ];
+
+      const result = dealsReducer(mockDeals);
 
       expect(result).toEqual(expected);
     });
