@@ -12,7 +12,7 @@ describe('/graphql reducers - deals', () => {
       const result = dealsReducer(mockDeals);
 
       const expected = [
-        mapGefDeal(mockDeal),
+        mapGefDeal(mockDeals[0]),
       ];
 
       expect(result).toEqual(expected);
@@ -25,7 +25,7 @@ describe('/graphql reducers - deals', () => {
         { dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS },
       ];
       const expected = [
-        mockDeal[0],
+        mockDeals[0],
       ];
 
       expect(result).toEqual(expected);
@@ -40,8 +40,8 @@ describe('/graphql reducers - deals', () => {
       ];
 
       const expected = [
-        mapGefDeal(mockDeal),
-        mockDeal[0],
+        mapGefDeal(mockDeals[0]),
+        mockDeals[1],
       ];
 
       const result = dealsReducer(mockDeals);
