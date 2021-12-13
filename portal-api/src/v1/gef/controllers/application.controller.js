@@ -6,6 +6,9 @@ const {
   validatorStatusCheckEnums,
 } = require('./validation/application');
 const {
+  exporterStatus,
+} = require('./validation/exporter');
+const {
   supportingInfoStatus,
 } = require('./validation/supportingInfo');
 
@@ -52,11 +55,13 @@ const userCollectionName = 'users';
 // };
 
 exports.create = async (req, res) => {
+  const newDeal = req.body;
+
   const applicationCollection = await db.getCollection(
     dealsCollectionName,
   );
   const validateErrs = validateApplicationReferences(
-    req.body,
+    newDeal,
   );
   if (validateErrs) {
     res.status(422)
@@ -64,8 +69,12 @@ exports.create = async (req, res) => {
   } else {
     const eligibility = await getLatestEligibilityCriteria();
 
+    if (newDeal.exporter) {
+      newDeal.exporter.status = exporterStatus(newDeal.exporter);
+    }
+
     const createdApplication = await applicationCollection.insertOne(
-      new Application(req.body, eligibility.terms),
+      new Application(newDeal, eligibility.terms),
     );
 
     const application = await applicationCollection.findOne({
@@ -144,6 +153,11 @@ exports.update = async (req, res) => {
     updateAction.$addToSet = { editedBy: update.editorId };
     delete update.editorId;
   }
+
+  if (update.exporter) {
+    update.exporter.status = exporterStatus(update.exporter);
+  }
+
   updateAction.$set = update;
 
   const result = await collection.findOneAndUpdate(
@@ -161,7 +175,7 @@ exports.update = async (req, res) => {
 };
 
 exports.updateSupportingInformation = async (req, res) => {
-  const collection = await db.getCollection(applicationCollectionName);
+  const collection = await db.getCollection(dealsCollectionName);
 
   const { application, field } = req.body;
   const { id: applicationId } = req.params;

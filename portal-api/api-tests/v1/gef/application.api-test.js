@@ -7,8 +7,8 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
-const baseUrl = '/v1/gef/application';
-const collectionName = 'deals';
+const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
+
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 
@@ -16,6 +16,9 @@ const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
+
+const baseUrl = '/v1/gef/application';
+const collectionName = 'deals';
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
   criteria.version === 1.5).terms;
@@ -252,6 +255,20 @@ describe(baseUrl, () => {
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(204);
     });
+
+    it('adds exporter.status when exporter is passed', async () => {
+      const exporterUpdate = {
+        exporter: {
+          test: true,
+        },
+      };
+
+      const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      const { body } = await as(aMaker).put(updated).to(`${baseUrl}/${createdDeal._id}`);
+
+      const expected = exporterStatus(exporterUpdate.exporter);
+      expect(body.exporter.status).toEqual(expected);
+    });
   });
 
   describe(`PUT ${baseUrl}/status/:id`, () => {
@@ -275,6 +292,19 @@ describe(baseUrl, () => {
         errRef: 'status',
         errMsg: 'Unrecognised enum',
       }]);
+    });
+
+    it('adds exporter.status when exporter is passed in the update', async () => {
+      const exporterUpdate = {
+        exporter: {
+          test: true,
+        },
+      };
+
+      const { body } = await as(aMaker).put(exporterUpdate).to(`${baseUrl}/status/${body._id}`);
+
+      const expected = exporterStatus(exporterUpdate.exporter);
+      expect(body.exporter.status).toEqual(expected);
     });
 
     describe('when new status is `SUBMITTED_TO_UKEF`', () => {
