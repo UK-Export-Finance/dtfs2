@@ -38,6 +38,11 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+  dealCanBeSubmittedToACBS: jest.fn(),
+}));
+
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: mockDeal.dealType,
