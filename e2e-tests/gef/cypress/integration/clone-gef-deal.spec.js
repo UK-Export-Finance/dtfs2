@@ -103,6 +103,7 @@ context('Clone GEF (AIN) deal', () => {
         applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
+        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
 
@@ -275,6 +276,7 @@ context('Clone GEF (MIA) deal', () => {
         applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
+        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
   });
