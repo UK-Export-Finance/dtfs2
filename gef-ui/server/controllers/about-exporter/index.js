@@ -24,8 +24,8 @@ const aboutExporter = async (req, res) => {
     return res.render('partials/about-exporter.njk', {
       applicationId,
       smeType: exporter?.smeType,
-      probabilityOfDefault: probabilityOfDefault !== 'null' ? exporter.probabilityOfDefault : null,
-      isFinanceIncreasing: isFinanceIncreasing !== 'null' ? isFinanceIncreasing : null,
+      isFinanceIncreasing,
+      probabilityOfDefault,
       selectedIndustry: exporter.selectedIndustry,
       industries,
       status,
@@ -45,7 +45,7 @@ const validateAboutExporter = async (req, res) => {
     const { exporter } = await api.getApplication(applicationId);
 
     // Only validate industries if it contains more than 1 SIC code
-    if (!saveAndReturn && !body.selectedIndustry && (exporter.industries && exporter.industries.length > 1)) {
+    if (!saveAndReturn && !body.selectedIndustry && exporter?.industries?.length > 1) {
       aboutExporterErrors.push({
         errRef: 'selectedIndustry',
         errMsg: 'Select most appropriate industry',

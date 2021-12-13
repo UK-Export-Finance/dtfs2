@@ -3,8 +3,7 @@ const mapCompaniesHouseData = (data, industries) => {
 
   let selectedIndustry = null;
   if (industries && industries.length === 1) {
-    // eslint-disable-next-line prefer-destructuring
-    selectedIndustry = industries[0];
+    [selectedIndustry] = industries;
   }
 
   const mapped = {
