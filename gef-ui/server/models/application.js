@@ -4,7 +4,7 @@ const {
   getUserDetails,
 } = require('../services/api');
 const { status } = require('../utils/helpers');
-const { PROGRESS, DEAL_SUBMISSION_TYPE } = require('../../constants');
+const { PROGRESS, DEAL_SUBMISSION_TYPE } = require('../constants');
 
 const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],

@@ -20,7 +20,7 @@ const {
   AUTHORISATION_LEVEL,
   PROGRESS,
   DEAL_SUBMISSION_TYPE,
-} = require('../../../constants');
+} = require('../../constants');
 const Application = require('../../models/application');
 
 let userSession;

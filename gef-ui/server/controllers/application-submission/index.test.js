@@ -3,7 +3,7 @@ import {
   postApplicationSubmission,
 } from './index';
 import api from '../../services/api';
-import { PROGRESS } from '../../../constants';
+import { PROGRESS } from '../../constants';
 
 jest.mock('../../services/api');
 

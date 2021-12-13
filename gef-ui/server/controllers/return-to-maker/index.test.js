@@ -6,7 +6,7 @@ import {
 import {
   getApplication, updateApplication, setApplicationStatus, getUserDetails,
 } from '../../services/api';
-import { PROGRESS } from '../../../constants';
+import { PROGRESS } from '../../constants';
 
 jest.mock('../../services/api', () => ({
   __esModule: true,

@@ -1,6 +1,6 @@
 import { enterExportersCorrespondenceAddress, validateEnterExportersCorrespondenceAddress } from './index';
 import api from '../../services/api';
-import { DEFAULT_COUNTRY } from '../../../constants';
+import { DEFAULT_COUNTRY } from '../../constants';
 
 jest.mock('../../services/api');
 
