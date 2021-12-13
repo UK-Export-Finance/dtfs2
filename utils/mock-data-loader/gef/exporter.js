@@ -80,7 +80,13 @@ const EXPORTER_COMPLETED = {
   isFinanceIncreasing: true,
 };
 
+const EXPORTER_NO_INDUSTRIES = {
+  ...EXPORTER_HALF_COMPLETE,
+  industries: [],
+};
+
 module.exports = {
   EXPORTER_HALF_COMPLETE,
   EXPORTER_COMPLETED,
+  EXPORTER_NO_INDUSTRIES,
 };

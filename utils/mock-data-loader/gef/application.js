@@ -1,4 +1,7 @@
-const { EXPORTER_COMPLETED } = require('./exporter');
+const {
+  EXPORTER_COMPLETED,
+  EXPORTER_NO_INDUSTRIES,
+} = require('./exporter');
 
 const APPLICATION = [{
   // not started
@@ -6,14 +9,14 @@ const APPLICATION = [{
   bankInternalRefName: 'Barclays 123',
   additionalRefName: null,
   mandatoryVersionId: '123', // further down the line you may want exact mongoIDs
-  exporter: EXPORTER_COMPLETED,
+  exporter: {},
 }, {
   // in progress
   bankId: '9',
   bankInternalRefName: 'UKEF Test 123',
   additionalRefName: '',
   mandatoryVersionId: '123',
-  exporter: EXPORTER_COMPLETED,
+  exporter: EXPORTER_NO_INDUSTRIES,
 }, {
   // completed
   bankId: '9',

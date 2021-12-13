@@ -3,6 +3,8 @@ import aboutExporter from './pages/about-exporter';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applicationIds = [];
+let dealWithNoExporterIndustries;
+let dealWithExporterNotStarted;
 let token;
 
 context('About Exporter Page', () => {
@@ -17,6 +19,13 @@ context('About Exporter Page', () => {
         body.items.forEach((item) => {
           applicationIds.push(item._id);
         });
+
+        dealWithNoExporterIndustries = body.items.find((deal) =>
+           deal.exporter?.industries?.length === 0);
+
+        dealWithExporterNotStarted = body.items.find((deal) =>
+          !Object.keys(deal.exporter).length);
+
       });
     cy.login(CREDENTIALS.MAKER);
   });
@@ -27,7 +36,7 @@ context('About Exporter Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
 
       aboutExporter.backLink();
       aboutExporter.headingCaption();
@@ -47,16 +56,16 @@ context('About Exporter Page', () => {
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
       aboutExporter.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[1]}/exporters-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/exporters-address`));
     });
 
     it('displays selected Industry string', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
       aboutExporter.industry();
     });
 
     it('displays no industry options', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[1]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
       aboutExporter.industries().should('not.exist');
     });
   });
@@ -70,7 +79,7 @@ context('About Exporter Page', () => {
 
   describe('Clicking on Done', () => {
     it('validates form', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithExporterNotStarted._id}/about-exporter`));
       aboutExporter.doneButton().click();
       aboutExporter.errorSummary();
       aboutExporter.probabilityOfDefaultError();
@@ -78,20 +87,20 @@ context('About Exporter Page', () => {
     });
 
     it('takes user back to application details page when form has been filled in', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithExporterNotStarted._id}/about-exporter`));
       aboutExporter.microRadioButton().click();
       aboutExporter.probabilityOfDefaultInput().type('10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
       aboutExporter.doneButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithExporterNotStarted._id}`));
     });
   });
 
   describe('Clicking on Save and return, bypasses validation and takes user back to application details page', () => {
     it('validates form', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithExporterNotStarted._id}/about-exporter`));
       aboutExporter.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithExporterNotStarted._id}`));
     });
   });
 });
