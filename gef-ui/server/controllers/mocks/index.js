@@ -68,7 +68,7 @@ const MockApplicationResponseDraft = () => ({
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
-  res.status = CONSTANTS.DEAL_STATUS.DRAFT,
+  status: CONSTANTS.DEAL_STATUS.DRAFT,
   userId: 'mock-user',
   supportingInformation: {
     status: CONSTANTS.DEAL_STATUS.NOT_STARTED,

@@ -208,19 +208,19 @@ const selectDropdownAddresses = (addresses) => {
 
 const status = ({
   [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
-    text: 'Not started',
+    text: CONSTANTS.DEAL_STATUS.NOT_STARTED,
     class: 'govuk-tag--grey',
-    code: 'NOT_STARTED',
+    code: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
   [CONSTANTS.DEAL_STATUS.IN_PROGRESS]: {
-    text: 'In progress',
+    text: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     class: 'govuk-tag--blue',
-    code: 'IN_PROGRESS',
+    code: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   },
   [CONSTANTS.DEAL_STATUS.COMPLETED]: {
-    text: 'Completed',
+    text: CONSTANTS.DEAL_STATUS.COMPLETED,
     class: 'govuk-tag--green',
-    code: 'COMPLETED',
+    code: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
 });
 

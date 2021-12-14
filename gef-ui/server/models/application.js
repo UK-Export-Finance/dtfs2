@@ -90,7 +90,9 @@ class Application {
         && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(application.status)
         && user.roles.includes('maker');
 
-      application.checkerCanSubmit = ['BANK_CHECK'].includes(application.status) && !application.editedBy.includes(user._id) && user.roles.includes('checker');
+      application.checkerCanSubmit = [DEAL_STATUS.BANK_CHECK].includes(application.status)
+        && !application.editedBy.includes(user._id)
+        && user.roles.includes('checker');
 
       if (![DEAL_STATUS.DRAFT].includes(application.status)) {
         application.maker = await getUserDetails(application.userId, userToken);

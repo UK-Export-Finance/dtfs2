@@ -109,7 +109,7 @@ function buildActions(app) {
     submit: app.canSubmit,
     abandon: [
       DEAL_STATUS.DRAFT,
-      DEAL_STATUS.CHANGES_REQUIRED].includes(app.status.toUpperCase()),
+      DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
   };
 }
 

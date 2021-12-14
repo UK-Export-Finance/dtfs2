@@ -171,7 +171,7 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it(`renders `application-preview` when status is BANK_CHECK`, async () => {
+      it('renders `application-preview` when status is BANK_CHECK', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
@@ -268,8 +268,8 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it('renders `review-decision` when page requested is `review-decision` ', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS';
+      it('renders `review-decision` when page requested is `review-decision`', async () => {
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mocks.MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);

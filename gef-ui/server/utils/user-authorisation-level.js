@@ -46,12 +46,11 @@ statesWhereCheckerHasCommentAccess.forEach((state) => {
 
 const getUserAuthorisationLevelsToApplication = (user, application) => {
   const { roles } = user;
-  const applicationState = application.status.toUpperCase();
 
   try {
     let levels = [];
     roles.forEach((role) => {
-      levels = levels.concat(authorisationMap[role.toUpperCase()][applicationState]);
+      levels = levels.concat(authorisationMap[role.toUpperCase()][application.status]);
     });
     const unique = new Set(levels);
     return [...unique];
