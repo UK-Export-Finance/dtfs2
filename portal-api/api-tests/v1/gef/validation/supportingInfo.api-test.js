@@ -1,9 +1,10 @@
 const { STATUS } = require('../../../../src/v1/gef/enums');
 const { supportingInfoStatus } = require('../../../../src/v1/gef/controllers/validation/supportingInfo');
+const CONSTANTS = require('../../../../src/constants');
 
 describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`, () => {
   const mockObject = {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
     requiredFields: ['manualInclusion'],
   };
   it('should return all items that have true or false answers', () => {

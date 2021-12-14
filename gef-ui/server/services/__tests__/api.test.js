@@ -1,5 +1,6 @@
 import Axios from '../axios';
 import api from '../api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../axios');
 
@@ -111,13 +112,13 @@ describe('updateSupportingInformation()', () => {
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.setApplicationStatus('id', { status: 'BANK_CHECK' });
+    const response = await api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.BANK_CHECK });
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.setApplicationStatus('id', { status: 'BANK_CHECK' })).rejects.toThrowError();
+    await expect(api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.BANK_CHECK })).rejects.toThrowError();
   });
 });
 

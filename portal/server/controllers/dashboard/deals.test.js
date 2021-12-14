@@ -123,7 +123,7 @@ describe('controllers/dashboard', () => {
 
       expect(api.gefDeals).toHaveBeenCalledWith(20, 20, [{
         field: 'status',
-        value: 'BANK_CHECK',
+        value: 'Ready for Checker\'s approval',
       }], 'mock-token');
     });
   });

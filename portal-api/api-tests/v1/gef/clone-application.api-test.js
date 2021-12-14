@@ -4,6 +4,7 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const mockApplications = require('../../fixtures/gef/application');
 const api = require('../../../src/v1/api');
+const CONSTANTS = require('../../../src/constants');
 
 const baseUrl = '/v1/gef/application';
 const collectionName = 'deals';
@@ -44,7 +45,7 @@ describe(baseUrl, () => {
         exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
-        status: 'IN_PROGRESS',
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         updatedAt: null,
         submissionCount: 0,
       }).to(baseUrl);
@@ -65,7 +66,7 @@ describe(baseUrl, () => {
         exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
-        status: 'IN_PROGRESS',
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         updatedAt: null,
         submissionCount: 0,
       }).to(baseUrl);
@@ -85,7 +86,7 @@ describe(baseUrl, () => {
         exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
-        status: 'IN_PROGRESS',
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         updatedAt: null,
         submissionCount: 0,
       }).to(baseUrl);
@@ -106,7 +107,7 @@ describe(baseUrl, () => {
         exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
-        status: 'IN_PROGRESS',
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         updatedAt: null,
         submissionCount: 0,
       }).to(baseUrl);

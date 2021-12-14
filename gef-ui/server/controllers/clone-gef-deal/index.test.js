@@ -1,5 +1,6 @@
 import { cloneDealCreateApplication, cloneDealValidateMandatoryCriteria, cloneDealNameApplication } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -9,10 +10,10 @@ const MockApplicationResponse = () => ({
   bankId: 'BANKID',
   bankInternalRefName: 'Cloned deal',
   additionalRefName: 'additional',
-  status: 'DRAFT',
+  status: CONSTANTS.DEAL_STATUS.DRAFT,
   userId: 'mock-user',
   supportingInformation: {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
 });
 

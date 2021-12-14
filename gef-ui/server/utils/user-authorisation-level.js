@@ -1,22 +1,26 @@
-const { PROGRESS, AUTHORISATION_LEVEL } = require('../constants');
+const {
+  DEAL_STATUS,
+  AUTHORISATION_LEVEL,
+} = require('../constants');
 
 const statesWhereMakerHasEditAccess = [
-  PROGRESS.DRAFT,
-  PROGRESS.NOT_STARTED,
-  PROGRESS.IN_PROGRESS,
-  PROGRESS.CHANGES_REQUIRED,
+  DEAL_STATUS.DRAFT,
+  DEAL_STATUS.NOT_STARTED,
+  DEAL_STATUS.IN_PROGRESS,
+  DEAL_STATUS.CHANGES_REQUIRED,
 ];
-const statesWhereMakerHasReadAccess = [PROGRESS.BANK_CHECK];
-const statesWhereMakerHasCommentAccess = [PROGRESS.BANK_CHECK];
+const statesWhereMakerHasReadAccess = [DEAL_STATUS.BANK_CHECK];
+const statesWhereMakerHasCommentAccess = [DEAL_STATUS.BANK_CHECK];
 const statesWhereCheckerHasEditAccess = [];
-const statesWhereCheckerHasReadAccess = [PROGRESS.BANK_CHECK];
-const statesWhereCheckerHasCommentAccess = [PROGRESS.BANK_CHECK];
+const statesWhereCheckerHasReadAccess = [DEAL_STATUS.BANK_CHECK];
+const statesWhereCheckerHasCommentAccess = [DEAL_STATUS.BANK_CHECK];
 
 const authorisationMap = {
   MAKER: {},
   CHECKER: {},
 };
-Object.values(PROGRESS).forEach((state) => {
+
+Object.values(DEAL_STATUS).forEach((state) => {
   authorisationMap.MAKER[state] = [];
   authorisationMap.CHECKER[state] = [];
 });

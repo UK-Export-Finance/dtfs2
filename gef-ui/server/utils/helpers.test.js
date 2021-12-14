@@ -19,6 +19,7 @@ import {
   coverDatesConfirmed,
   makerCanReSubmit,
 } from './helpers';
+import CONSTANTS from '../constants';
 
 const MOCK_REQUEST = {
   username: 'BANK1_MAKER1',
@@ -47,12 +48,12 @@ const MOCK_DEAL = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
-  status: 'BANK_CHECK',
+  status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bankId: '9',
   eligibility: {
     criteria: [],
     updatedAt: 1638535562287,
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
   bankInternalRefName: 'abc',
   mandatoryVersionId: null,
@@ -64,7 +65,7 @@ const MOCK_DEAL = {
   supportingInformation: {
     manualInclusion: [],
     securityDetails: {},
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     requiredFields: [],
   },
   ukefDealId: '0030113304',
@@ -73,12 +74,12 @@ const MOCK_DEAL = {
   additionalRefName: null,
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: 'UKEF_IN_PROGRESS',
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   ukefDecision: [],
   ukefDecisionAccepted: true,
   id: '61a7710b2ae62b0013dae687',
-  exporter: { status: 'COMPLETED', details: [], validation: [] },
-  facilities: { status: 'COMPLETED', items: [] },
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
+  facilities: { status: CONSTANTS.DEAL_STATUS.COMPLETED, items: [] },
   exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
@@ -114,7 +115,7 @@ const MOCK_DEAL = {
 const MOCK_FACILITY = {
   items: [
     {
-      status: 'COMPLETED',
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
       details: {
         _id: '61a7714f2ae62b0013dae689',
         applicationId: '61a7710b2ae62b0013dae687',
@@ -146,7 +147,7 @@ const MOCK_FACILITY = {
       validation: { required: [] },
     },
     {
-      status: 'COMPLETED',
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
       details: {
         _id: '61a771cc2ae62b0013dae68a',
         applicationId: '61a7710b2ae62b0013dae687',
@@ -600,25 +601,25 @@ describe('isNotice()', () => {
 
 describe('isUkefReviewAvailable()', () => {
   it('Should return TRUE for application with UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_REFUSED status', () => {
-    expect(isUkefReviewAvailable('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual(true);
+    expect(isUkefReviewAvailable(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS)).toEqual(true);
   });
 
   it('Should return FALSE for application with non UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_REFUSED status', () => {
-    expect(isUkefReviewAvailable('UKEF_ACKNOWLEDGED')).toEqual(false);
+    expect(isUkefReviewAvailable(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED)).toEqual(false);
   });
 });
 
 describe('isUkefReviewPositive()', () => {
   it('Should return TRUE for application with UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
-    expect(isUkefReviewPositive('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual(true);
+    expect(isUkefReviewPositive(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS)).toEqual(true);
   });
 
   it('Should return TRUE for application with UKEF_APPROVED_WITH_CONDITIONS status', () => {
-    expect(isUkefReviewPositive('UKEF_APPROVED_WITH_CONDITIONS')).toEqual(true);
+    expect(isUkefReviewPositive(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS)).toEqual(true);
   });
 
   it('Should return FALSE for application with UKEF_REFUSED status', () => {
-    expect(isUkefReviewPositive('UKEF_REFUSED')).toEqual(false);
+    expect(isUkefReviewPositive(CONSTANTS.DEAL_STATUS.UKEF_REFUSED)).toEqual(false);
   });
 });
 
@@ -720,7 +721,7 @@ describe('makerCanReSubmit', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
   });
   it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS', () => {
-    MOCK_DEAL.status = 'UKEF_APPROVED_WITH_CONDITIONS';
+    MOCK_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(true);
   });
   it('Should return FALSE as the Maker is from a different Bank', () => {

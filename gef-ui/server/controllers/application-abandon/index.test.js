@@ -3,6 +3,7 @@ import {
   abandonApplication,
 } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -33,7 +34,7 @@ const MockApplicationResponse = () => {
   res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.status = 'Draft';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.eligibility = {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
@@ -54,7 +55,7 @@ const MockEligibilityCriteriaResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
   return res;
 };
@@ -90,7 +91,7 @@ describe('controllers/application-abandon', () => {
     });
 
     it('redirects to the application details page if application is not abondonable', async () => {
-      mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+      mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await confirmAbandonApplication(mockRequest, mockResponse);

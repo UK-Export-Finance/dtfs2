@@ -1,5 +1,6 @@
 import { acceptUkefDecision } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -28,7 +29,7 @@ const MockRequest = () => {
 };
 
 const mockFacilities = {
-  status: 'NOT_STARTED',
+  status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
 };
 
 const MockFacilitiesResponse = () => mockFacilities;
@@ -46,7 +47,7 @@ const MockApplicationResponse = () => {
   }];
   res.bankId = 'BANKID';
   res.submissionType = 'Automatic Inclusion Notice';
-  res.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
+  res.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
   return res;
 };
 

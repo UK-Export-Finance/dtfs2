@@ -63,7 +63,7 @@ exports.gefFacilities = async (req, res) => {
   const { user } = req.session;
   const facilityFilters = [];
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: 'BANK_CHECK', operator: 'eq' });
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: 'Ready for Checker\'s approval', operator: 'eq' });
 
   const filters = [...facilityFilters];
 

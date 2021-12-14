@@ -207,17 +207,17 @@ const selectDropdownAddresses = (addresses) => {
 };
 
 const status = ({
-  NOT_STARTED: {
+  [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
     text: 'Not started',
     class: 'govuk-tag--grey',
     code: 'NOT_STARTED',
   },
-  IN_PROGRESS: {
+  [CONSTANTS.DEAL_STATUS.IN_PROGRESS]: {
     text: 'In progress',
     class: 'govuk-tag--blue',
     code: 'IN_PROGRESS',
   },
-  COMPLETED: {
+  [CONSTANTS.DEAL_STATUS.COMPLETED]: {
     text: 'Completed',
     class: 'govuk-tag--green',
     code: 'COMPLETED',

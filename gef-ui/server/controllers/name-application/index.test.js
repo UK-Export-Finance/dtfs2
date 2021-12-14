@@ -1,5 +1,6 @@
 import { nameApplication, createApplication, updateApplicationReferences } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -33,10 +34,10 @@ const MockApplicationResponse = () => {
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.additionalRefName = 'additional';
-  res.status = 'DRAFT';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.userId = 'mock-user';
   res.supportingInformation = {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   };
   return res;
 };

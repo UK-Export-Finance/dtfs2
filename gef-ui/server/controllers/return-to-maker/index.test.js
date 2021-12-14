@@ -6,7 +6,7 @@ import {
 import {
   getApplication, updateApplication, setApplicationStatus, getUserDetails,
 } from '../../services/api';
-import { PROGRESS } from '../../constants';
+import { DEAL_STATUS } from '../../constants';
 
 jest.mock('../../services/api', () => ({
   __esModule: true,
@@ -32,7 +32,7 @@ describe('controllers/return-to-maker', () => {
 
     getApplication.mockResolvedValue({
       _id: '1234',
-      status: PROGRESS.BANK_CHECK,
+      status: DEAL_STATUS.BANK_CHECK,
       exporter: {},
       bankInternalRefName: 'My test',
     });
@@ -70,7 +70,7 @@ describe('controllers/return-to-maker', () => {
     });
 
     it('redirects to dashboard if application is not in correct status', async () => {
-      getApplication.mockResolvedValue({ status: PROGRESS.DRAFT });
+      getApplication.mockResolvedValue({ status: DEAL_STATUS.DRAFT });
 
       await getReturnToMaker(mockRequest, mockResponse);
 
@@ -112,7 +112,7 @@ describe('controllers/return-to-maker', () => {
           },
         ],
       }));
-      expect(setApplicationStatus).toHaveBeenCalledWith('1234', PROGRESS.CHANGES_REQUIRED);
+      expect(setApplicationStatus).toHaveBeenCalledWith('1234', DEAL_STATUS.CHANGES_REQUIRED);
       expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 

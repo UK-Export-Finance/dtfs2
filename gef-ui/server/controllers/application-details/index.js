@@ -18,7 +18,7 @@ const getUserAuthorisationLevelsToApplication = require('../../utils/user-author
 const {
   FACILITY_TYPE,
   AUTHORISATION_LEVEL,
-  PROGRESS,
+  DEAL_STATUS,
   DEAL_SUBMISSION_TYPE,
 } = require('../../constants');
 const Application = require('../../models/application');
@@ -108,8 +108,8 @@ function buildActions(app) {
   return {
     submit: app.canSubmit,
     abandon: [
-      PROGRESS.DRAFT,
-      PROGRESS.CHANGES_REQUIRED].includes(app.status.toUpperCase()),
+      DEAL_STATUS.DRAFT,
+      DEAL_STATUS.CHANGES_REQUIRED].includes(app.status.toUpperCase()),
   };
 }
 
@@ -123,18 +123,18 @@ function buildView(app, previewMode) {
 const stateToPartial = (status, url) => {
   // Behaviour depending on application state
   const template = {
-    DRAFT: 'application-details',
-    CHANGES_REQUIRED: 'application-details',
-    BANK_CHECK: 'application-preview',
-    SUBMITTED_TO_UKEF: 'application-preview',
-    ABANDONED: 'application-preview',
-    UKEF_ACKNOWLEDGED: 'application-preview',
-    UKEF_IN_PROGRESS: 'application-details',
-    UKEF_APPROVED_WITHOUT_CONDITIONS: 'application-preview',
-    UKEF_APPROVED_WITH_CONDITIONS: 'application-preview',
-    UKEF_REFUSED: 'application-preview',
-    EXPIRED: '',
-    WITHDRAWN: '',
+    [DEAL_STATUS.DRAFT]: 'application-details',
+    [DEAL_STATUS.CHANGES_REQUIRED]: 'application-details',
+    [DEAL_STATUS.BANK_CHECK]: 'application-preview',
+    [DEAL_STATUS.SUBMITTED_TO_UKEF]: 'application-preview',
+    [DEAL_STATUS.ABANDONED]: 'application-preview',
+    [DEAL_STATUS.UKEF_ACKNOWLEDGED]: 'application-preview',
+    [DEAL_STATUS.UKEF_IN_PROGRESS]: 'application-details',
+    [DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS]: 'application-preview',
+    [DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS]: 'application-preview',
+    [DEAL_STATUS.UKEF_REFUSED]: 'application-preview',
+    [DEAL_STATUS.EXPIRED]: '',
+    [DEAL_STATUS.WITHDRAWN]: '',
   };
 
   const partials = {

@@ -1,5 +1,6 @@
 import { facilityValue, updateFacilityValue } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -39,7 +40,7 @@ const MockApplicationResponse = () => {
   res.exporter = {};
   res.bankId = 'BANK_ID';
   res.bankInternalRefName = 'My test';
-  res.status = 'DRAFT';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   return res;
 };
 

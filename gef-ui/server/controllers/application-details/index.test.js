@@ -5,6 +5,7 @@ import {
 import api from '../../services/api';
 
 import mocks from '../mocks';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -147,7 +148,7 @@ describe('controllers/application-detaills', () => {
 
     describe('template rendering from deal.status', () => {
       it('renders `application-details` when status is DRAFT', async () => {
-        mockApplicationResponse.status = 'DRAFT';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.DRAFT;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -159,7 +160,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-details` when status is CHANGES_REQUIRED', async () => {
-        mockApplicationResponse.status = 'CHANGES_REQUIRED';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -170,8 +171,8 @@ describe('controllers/application-detaills', () => {
           }));
       });
 
-      it('renders `application-preview` when status is BANK_CHECK', async () => {
-        mockApplicationResponse.status = 'BANK_CHECK';
+      it(`renders `application-preview` when status is BANK_CHECK`, async () => {
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -184,7 +185,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-preview` when status is SUBMITTED_TO_UKEF', async () => {
-        mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -196,7 +197,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-preview` when status is ABANDONED', async () => {
-        mockApplicationResponse.status = 'ABANDONED';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.ABANDONED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -208,7 +209,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-preview` when status is UKEF_ACKNOWLEDGED', async () => {
-        mockApplicationResponse.status = 'UKEF_ACKNOWLEDGED';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -220,7 +221,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-details` when status is UKEF_IN_PROGRESS', async () => {
-        mockApplicationResponse.status = 'UKEF_IN_PROGRESS';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -232,7 +233,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-preview` when status is UKEF_APPROVED_WITH_CONDITIONS', async () => {
-        mockApplicationResponse.status = 'UKEF_APPROVED_WITH_CONDITIONS';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -244,7 +245,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-preview` when status is UKEF_APPROVED_WITHOUT_CONDITIONS', async () => {
-        mockApplicationResponse.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -256,7 +257,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `application-preview` when status is UKEF_REFUSED', async () => {
-        mockApplicationResponse.status = 'UKEF_REFUSED';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_REFUSED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -268,7 +269,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `review-decision` when page requested is `review-decision` ', async () => {
-        mockApplicationResponse.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS';
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mocks.MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);

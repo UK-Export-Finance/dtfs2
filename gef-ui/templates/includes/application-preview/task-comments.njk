@@ -12,9 +12,9 @@
       {% endif %}
 
       {% if coverDatesConfirmed %}
-        {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
+        {% if applicationStatus == 'Accepted (without conditions)' %}
             <strong>You are proceeding with UKEF cover</strong>
-        {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
+        {% elif applicationStatus == 'Accepted (with conditions)' %}
             <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
             <p>{{ ukefDecision[0].text | safe }}</p>
         {% endif %}

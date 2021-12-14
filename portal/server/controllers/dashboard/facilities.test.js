@@ -161,7 +161,7 @@ describe('controllers/facilities', () => {
     it('passes the expected filter for checker', async () => {
       await gefFacilities(checkerReq, res);
 
-      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: 'BANK_CHECK' }], 'mock-token');
+      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: 'Ready for Checker\'s approval' }], 'mock-token');
     });
 
     it('renders the correct template', async () => {

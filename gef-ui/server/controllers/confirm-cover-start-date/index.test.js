@@ -1,5 +1,6 @@
 import { processCoverStartDate } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 const Chance = require('chance');
 
@@ -47,16 +48,16 @@ const MockApplicationResponse = () => {
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'Internal refernce';
   res.additionalRefName = 'Additional reference';
-  res.status = 'DRAFT';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.userId = 'mock-user';
   res.supportingInformation = {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   };
   res.eligibility = {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
     ],
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   };
   res.editedBy = ['MAKER_CHECKER'];
   res.submissionType = 'Automatic Inclusion Application';
@@ -88,7 +89,7 @@ const MockEligibilityCriteriaResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
   res.items = [{
     details: {

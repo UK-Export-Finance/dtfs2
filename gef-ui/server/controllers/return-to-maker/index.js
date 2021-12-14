@@ -2,7 +2,7 @@ const {
   getApplication, getUserDetails, updateApplication, setApplicationStatus,
 } = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { PROGRESS } = require('../../constants');
+const { DEAL_STATUS } = require('../../constants');
 
 const MAX_COMMENT_LENGTH = 400;
 
@@ -11,7 +11,7 @@ const getReturnToMaker = async (req, res) => {
   const { applicationId } = params;
   const { status } = await getApplication(applicationId);
 
-  if (status !== PROGRESS.BANK_CHECK) {
+  if (status !== DEAL_STATUS.BANK_CHECK) {
     // eslint-disable-next-line no-console
     console.log('Incorrect status or permissions, redirecting to dashboard');
     return res.redirect('/dashboard');
@@ -53,7 +53,7 @@ const postReturnToMaker = async (req, res, next) => {
     }
     application.checkerId = user._id;
     await updateApplication(applicationId, application);
-    await setApplicationStatus(applicationId, PROGRESS.CHANGES_REQUIRED);
+    await setApplicationStatus(applicationId, DEAL_STATUS.CHANGES_REQUIRED);
   } catch (err) {
     return next(err);
   }

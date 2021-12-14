@@ -52,7 +52,7 @@ const postApplicationSubmission = async (req, res, next) => {
     } else {
       await api.updateApplication(applicationId, { editorId: user._id });
     }
-    await api.setApplicationStatus(applicationId, PROGRESS.BANK_CHECK);
+    await api.setApplicationStatus(applicationId, DEAL_STATUS.BANK_CHECK);
   } catch (err) {
     console.error(err);
     return next(err);

@@ -4,7 +4,7 @@ const {
   getUserDetails,
 } = require('../services/api');
 const { status } = require('../utils/helpers');
-const { PROGRESS, DEAL_SUBMISSION_TYPE } = require('../constants');
+const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
 
 const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
@@ -49,10 +49,10 @@ const deriveSupportingInfoStatus = (application) => {
     }
   });
 
-  let state = PROGRESS.NOT_STARTED;
-  state = availableFields.length === requiredFields.length ? PROGRESS.COMPLETED : state;
-  state = availableFields.length < requiredFields.length ? PROGRESS.IN_PROGRESS : state;
-  state = availableFields.length === 0 ? PROGRESS.NOT_STARTED : state;
+  let state = DEAL_STATUS.NOT_STARTED;
+  state = availableFields.length === requiredFields.length ? DEAL_STATUS.COMPLETED : state;
+  state = availableFields.length < requiredFields.length ? DEAL_STATUS.IN_PROGRESS : state;
+  state = availableFields.length === 0 ? DEAL_STATUS.NOT_STARTED : state;
 
   return status[state];
 };
@@ -67,32 +67,32 @@ class Application {
       application.id = id;
       application.facilities = await getFacilities(id);
 
-      application.exporterStatus = status[application.exporter.status || PROGRESS.NOT_STARTED];
+      application.exporterStatus = status[application.exporter.status || DEAL_STATUS.NOT_STARTED];
 
-      application.eligibilityCriteriaStatus = status[application.eligibility.status || PROGRESS.NOT_STARTED];
-      application.facilitiesStatus = status[application.facilities.status || PROGRESS.NOT_STARTED];
+      application.eligibilityCriteriaStatus = status[application.eligibility.status || DEAL_STATUS.NOT_STARTED];
+      application.facilitiesStatus = status[application.facilities.status || DEAL_STATUS.NOT_STARTED];
       if (application.supportingInformation) {
         application.supportingInfoStatus = deriveSupportingInfoStatus(application);
         application.supportingInformation.requiredFields = deriveSupportingInfoRequiredDocuments(application);
       } else {
-        application.supportingInfoStatus = status[PROGRESS.NOT_STARTED];
+        application.supportingInfoStatus = status[DEAL_STATUS.NOT_STARTED];
       }
 
       // Can only submit when all section statuses are set to complete
       // and the application is in Draft or CHANGES_REQUIRED
-      application.canSubmit = application.exporterStatus.code === PROGRESS.COMPLETED
-        && application.eligibilityCriteriaStatus.code === PROGRESS.COMPLETED
-        && application.facilitiesStatus.code === PROGRESS.COMPLETED
+      application.canSubmit = application.exporterStatus.code === DEAL_STATUS.COMPLETED
+        && application.eligibilityCriteriaStatus.code === DEAL_STATUS.COMPLETED
+        && application.facilitiesStatus.code === DEAL_STATUS.COMPLETED
         && (
           application.submissionType === DEAL_SUBMISSION_TYPE.AIN
-          || application.supportingInfoStatus.code === PROGRESS.COMPLETED
+          || application.supportingInfoStatus.code === DEAL_STATUS.COMPLETED
         )
-        && [PROGRESS.DRAFT, PROGRESS.CHANGES_REQUIRED].includes(application.status)
+        && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(application.status)
         && user.roles.includes('maker');
 
       application.checkerCanSubmit = ['BANK_CHECK'].includes(application.status) && !application.editedBy.includes(user._id) && user.roles.includes('checker');
 
-      if (![PROGRESS.DRAFT].includes(application.status)) {
+      if (![DEAL_STATUS.DRAFT].includes(application.status)) {
         application.maker = await getUserDetails(application.userId, userToken);
       }
       if (application.checkerId) {
