@@ -3,7 +3,7 @@ import {
   postApplicationSubmission,
 } from './index';
 import api from '../../services/api';
-import { PROGRESS } from '../../../constants';
+import { PROGRESS } from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -49,7 +49,7 @@ const MockSubmissionRequest = () => ({
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.eligibility = {
@@ -68,16 +68,6 @@ const MockUserResponse = () => ({
   username: 'maker',
   bank: { id: 'BANKID' },
 });
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.validation.required = [];
-  return res;
-};
 
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
@@ -107,7 +97,6 @@ describe('controllers/application-submission', () => {
     mockApplicationResponse = MockApplicationResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(MockExporterResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.getUserDetails.mockResolvedValue(MockUserResponse());

@@ -5,7 +5,7 @@ jest.mock('../../services/api');
 
 const MockApplicationResponse = () => ({
   _id: '1234',
-  exporterId: '123',
+  exporter: {},
   bankId: 'BANKID',
   bankInternalRefName: 'Cloned deal',
   additionalRefName: 'additional',

@@ -2,7 +2,6 @@ const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { findOneExporter } = require('../gef-exporter/get-gef-exporter.controller');
 const { findOneBank } = require('../../bank/get-bank.controller');
 const { findOneUser } = require('../../user/get-user.controller');
 
@@ -58,8 +57,12 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
 
   const extendedDeals = [];
   for await (const deal of deals) {
-    const extendedDeal = await extendDealWithFacilities(deal);
-    extendedDeals.push(extendedDeal);
+    if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+      const extendedDeal = await extendDealWithFacilities(deal);
+      extendedDeals.push(extendedDeal);
+    } else {
+      extendedDeals.push(deal);
+    }
   }
 
   return {
@@ -101,30 +104,24 @@ const findOneDeal = async (_id, callback) => {
 exports.findOneDeal = findOneDeal;
 
 const findOneGefDeal = async (_id, callback) => {
-  const dealsCollection = await db.getCollection('gef-application');
+  const dealsCollection = await db.getCollection('deals');
 
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 
   if (deal) {
     const promises = await Promise.all([
       findAllGefFacilitiesByDealId(_id),
-      findOneExporter(deal.exporterId),
       findOneBank(deal.bankId),
       findOneUser(deal.userId),
     ]);
 
     const [
       facilities,
-      exporter,
       bank,
       maker,
     ] = [...promises];
 
     deal.facilities = facilities;
-
-    if (exporter) {
-      deal.exporter = exporter;
-    }
 
     if (bank) {
       deal.bank = bank;
@@ -197,7 +194,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     // },
     // {
     //   $lookup: {
-    //     from: 'gef-application',
+    //     from: 'deals',
     //     pipeline: [
     //       {
     //         $lookup: {
@@ -241,7 +238,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   ])
     .toArray();
 
-  return deals[0];
+  return deals;
 };
 
 exports.queryAllDeals = async (req, res) => {

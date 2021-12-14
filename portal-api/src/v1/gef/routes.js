@@ -5,7 +5,6 @@ const fileUpload = require('./middleware/fileUpload');
 
 const application = require('./controllers/application.controller');
 const cloneApplication = require('./controllers/clone-application.controller');
-const exporter = require('./controllers/exporter.controller');
 const facilities = require('./controllers/facilities.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
@@ -33,11 +32,6 @@ router.route('/application/supporting-information/:id')
 router.route('/application/status/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getStatus)
   .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.changeStatus);
-
-// Exporter
-router.route('/exporter/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), exporter.getById)
-  .put(validate({ role: ['maker', 'data-admin'] }), exporter.update);
 
 // Facilities
 router.route('/facilities')

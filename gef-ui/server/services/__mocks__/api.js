@@ -5,8 +5,6 @@ module.exports = {
   updateApplication: jest.fn(),
   getEligibilityCriteria: jest.fn(),
   getApplication: jest.fn(),
-  getExporter: jest.fn(),
-  updateExporter: jest.fn(),
   getFacilities: jest.fn(),
   createFacility: jest.fn(),
   getFacility: jest.fn(),

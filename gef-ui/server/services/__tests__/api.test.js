@@ -121,34 +121,6 @@ describe('setApplicationStatus()', () => {
   });
 });
 
-describe('getExporter()', () => {
-  it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getExporter('fakeId');
-    expect(response).toEqual({ status: 200 });
-  });
-
-  it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
-    const response = api.getExporter();
-    await expect(response).rejects.toThrowError();
-  });
-});
-
-describe('updateExporter()', () => {
-  it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateExporter('fakeId', { payload: 'payload' });
-    expect(response).toEqual({ status: 200 });
-  });
-
-  it('throws an error if there is an api error', async () => {
-    Axios.put.mockReturnValue(Promise.reject());
-    const response = api.updateExporter();
-    await expect(response).rejects.toThrowError();
-  });
-});
-
 describe('getFacilities()', () => {
   it('returns an empty Array if no application Id is passed', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));

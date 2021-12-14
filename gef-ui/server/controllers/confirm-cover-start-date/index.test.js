@@ -43,7 +43,7 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'Internal refernce';
   res.additionalRefName = 'Additional reference';
@@ -74,17 +74,6 @@ const MockUserResponse = () => ({
   firstname: 'Joe',
   surname: 'Bloggs',
   timezone: 'Europe/London',
-});
-
-const MockExporterResponse = () => ({
-  status: 'IN_PROGRESS',
-  details: {
-    companiesHouseRegistrationNumber: 'tedsi',
-    companyName: 'Test Company',
-  },
-  validation: {
-    required: [],
-  },
 });
 
 const MockEligibilityCriteriaResponse = () => ({
@@ -140,7 +129,6 @@ describe('controller/ukef-cover-start-date', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
   let mockFacilityResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
@@ -149,13 +137,11 @@ describe('controller/ukef-cover-start-date', () => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
-    mockExporterResponse = MockExporterResponse();
     mockFacilityResponse = MockFacilityResponse();
     mockUserResponse = MockUserResponse();
     mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);

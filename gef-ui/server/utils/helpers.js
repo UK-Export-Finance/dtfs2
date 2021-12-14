@@ -3,9 +3,8 @@ const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
 const { format } = require('date-fns');
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('../constants');
 
-// Fetches the user token = require( sessio)n
 const userToken = (req) => {
   const token = req.session.userToken;
   return token;
@@ -88,7 +87,6 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 const mapSummaryList = (data, itemsToShow, preview = false) => {
   if (!data || lodashIsEmpty(data)) { return []; }
   const { details, validation } = data;
-  const { required } = validation;
 
   const valueObj = (val, isRequired, currency, detailsOther, options = {}) => {
     if (isRequired && val === null) {
@@ -144,7 +142,7 @@ const mapSummaryList = (data, itemsToShow, preview = false) => {
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
-    const isRequired = required.includes(item.id);
+    const isRequired = validation?.required?.includes(item.id);
     const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
 
     // Don't show row if value is undefined
@@ -308,7 +306,7 @@ const makerCanReSubmit = (maker, application) => {
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = (maker._id === application.maker._id);
+  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bankId);
 
   return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
 };

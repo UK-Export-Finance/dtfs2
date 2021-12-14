@@ -1,5 +1,5 @@
 const { fromUnixTime } = require('date-fns');
-const { getApplication, getUserDetails, getExporter } = require('../../services/api');
+const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
 const mapPortalActivities = (portalActivities) => portalActivities.map((portalActivity) => ({
@@ -25,7 +25,6 @@ const getPortalActivities = async (req, res) => {
   // returns objects from IDs stored in gef application
   const maker = await getUserDetails(deal.userId, userToken);
   const checker = await getUserDetails(deal.checkerId, userToken);
-  const exporter = await getExporter(deal.exporterId);
 
   const mappedPortalActivities = mapPortalActivities(deal.portalActivities);
 
@@ -45,7 +44,7 @@ const getPortalActivities = async (req, res) => {
     submissionCount: deal.submissionCount,
     checkedBy: `${checker.firstname} ${checker.surname}`,
     createdBy: `${maker.firstname} ${maker.surname}`,
-    companyName: exporter.details.companyName,
+    companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
     timezone: maker.timezone || 'Europe/London',
     submissionDate: deal.submissionDate,

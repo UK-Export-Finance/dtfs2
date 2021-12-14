@@ -7,8 +7,8 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
-const baseUrl = '/v1/gef/application';
-const collectionName = 'gef-application';
+const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
+
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 
@@ -16,6 +16,9 @@ const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
+
+const baseUrl = '/v1/gef/application';
+const collectionName = 'deals';
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
   criteria.version === 1.5).terms;
@@ -69,7 +72,10 @@ describe(baseUrl, () => {
       const expected = {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
-          exporterId: expect.any(String),
+          exporter: {
+            status: expect.any(String),
+            updatedAt: expect.any(Number),
+          },
           eligibility: {
             criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
               ...criterion,
@@ -111,7 +117,10 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
         ...mockApplications[0],
-        exporterId: expect.any(String),
+        exporter: {
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+        },
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
             ...criterion,
@@ -180,7 +189,7 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const expected = {
         ...mockApplications[0],
-        exporterId: expect.any(String),
+        exporter: {},
         status: 'DRAFT',
         createdAt: expect.any(Number),
         dealType: 'GEF',
@@ -198,7 +207,13 @@ describe(baseUrl, () => {
           })),
         },
       };
-      expect(body).toEqual(expectMongoId(expected));
+      expect(body).toEqual({
+        ...expectMongoId(expected),
+        exporter: {
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+        },
+      });
     });
 
     it('it tells me the Bank Internal Ref Name is null', async () => {
@@ -251,6 +266,21 @@ describe(baseUrl, () => {
     it('returns a 204 - "No Content" if there are no records', async () => {
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(204);
+    });
+
+    it('adds exporter.status and timestamp when exporter is passed', async () => {
+      const exporterUpdate = {
+        exporter: {
+          test: true,
+        },
+      };
+
+      const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      const { body } = await as(aMaker).put(updated).to(`${baseUrl}/${createdDeal._id}`);
+
+      const expected = exporterStatus(exporterUpdate.exporter);
+      expect(body.exporter.status).toEqual(expected);
+      expect(typeof body.exporter.updatedAt).toEqual('number');
     });
   });
 

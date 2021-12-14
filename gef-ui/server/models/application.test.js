@@ -3,7 +3,7 @@ import api from '../services/api';
 
 jest.mock('../services/api');
 
-const { PROGRESS } = require('../../constants');
+const { PROGRESS } = require('../constants');
 
 const MockEligibilityCriteria = () => ({
   criteria: [
@@ -21,7 +21,7 @@ const MockEligibilityCriteria = () => ({
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.status = 'DRAFT';
@@ -36,16 +36,6 @@ const MockUserResponse = () => ({
   username: 'maker',
   bank: { id: 'BANKID' },
 });
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.validation.required = [];
-  return res;
-};
 
 const MockFacilityResponse = () => {
   const res = {};
@@ -62,16 +52,13 @@ const MockFacilityResponse = () => {
 describe('models/application', () => {
   describe('findById()', () => {
     let mockApplicationResponse;
-    let mockExporterResponse;
     let mockFacilityResponse;
 
     beforeEach(() => {
       mockApplicationResponse = MockApplicationResponse();
-      mockExporterResponse = MockExporterResponse();
       mockFacilityResponse = MockFacilityResponse();
 
       api.getApplication.mockResolvedValue(mockApplicationResponse);
-      api.getExporter.mockResolvedValue(mockExporterResponse);
       api.getFacilities.mockResolvedValue(mockFacilityResponse);
       api.getUserDetails.mockResolvedValue(MockUserResponse());
     });

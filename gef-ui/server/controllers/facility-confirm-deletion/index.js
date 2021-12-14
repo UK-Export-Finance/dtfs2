@@ -1,5 +1,5 @@
 const startCase = require('lodash/startCase');
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilityConfirmDeletion = async (req, res) => {

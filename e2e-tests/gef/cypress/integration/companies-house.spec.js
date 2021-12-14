@@ -4,7 +4,7 @@ import relative from './relativeURL';
 import companiesHouse from './pages/companies-house';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationId;
+let dealWithEmptyExporter;
 
 context('Companies House Page', () => {
   before(() => {
@@ -15,14 +15,15 @@ context('Companies House Page', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[0]._id;
+        dealWithEmptyExporter = body.items.find((deal) =>
+          deal.exporter.status === 'IN_PROGRESS');
       });
     cy.login(CREDENTIALS.MAKER);
   });
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationId}/companies-house`));
+    cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/companies-house`));
   });
 
   describe('Visiting page for the first time', () => {
@@ -41,14 +42,14 @@ context('Companies House Page', () => {
   describe('Clicking on Back link', () => {
     it('takes you to application page', () => {
       companiesHouse.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });
 
   describe('Clicking on Cancel button', () => {
     it('takes you to application page', () => {
       companiesHouse.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });
 
@@ -69,20 +70,20 @@ context('Companies House Page', () => {
     it('takes user to `exporters address` page if company registration number exists', () => {
       companiesHouse.regNumberField().type('06388542'); // HSBC company number
       companiesHouse.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/exporters-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}/exporters-address`));
     });
   });
 
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
-      cy.visit(relative(`/gef/application-details/${applicationId}/companies-house?status=change`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/companies-house?status=change`));
       companiesHouse.backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {
-      cy.visit(relative(`/gef/application-details/${applicationId}/companies-house?status=change`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/companies-house?status=change`));
       companiesHouse.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });
 });

@@ -12,6 +12,7 @@ context('View a deal with checker role', () => {
   let checkerDeal;
 
   const checkerDealData = {
+    dealType: 'BSS/EWCS',
     details: {
       bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
@@ -21,6 +22,7 @@ context('View a deal with checker role', () => {
     },
   };
   const draftDealData = {
+    dealType: 'BSS/EWCS',
     details: {
       bankSupplyContractID: 'abc-2-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',

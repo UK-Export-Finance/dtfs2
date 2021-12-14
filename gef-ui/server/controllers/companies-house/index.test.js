@@ -20,16 +20,11 @@ const MockResponse = () => {
 };
 
 const MockApplicationResponse = () => {
-  const res = {};
+  const res = {
+    exporter: {},
+  };
   res.params = {};
-  res.params.exporterId = 'abc';
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.details.companiesHouseRegistrationNumber = '';
+  res.params.exporter = {};
   return res;
 };
 
@@ -42,15 +37,14 @@ const MockCHResponse = () => {
 describe('controllers/about-exporter', () => {
   let mockRequest;
   let mockResponse;
-  let mockExporterResponse;
+  let mockApplicationResponse;
 
   beforeEach(() => {
     mockRequest = MockRequest();
     mockResponse = MockResponse();
-    mockExporterResponse = MockExporterResponse();
+    mockApplicationResponse = MockApplicationResponse();
 
-    api.getApplication.mockResolvedValue(MockApplicationResponse());
-    api.getExporter.mockResolvedValue(mockExporterResponse);
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getCompaniesHouseDetails.mockResolvedValue(MockCHResponse());
   });
 
@@ -60,8 +54,7 @@ describe('controllers/about-exporter', () => {
 
   describe('GET Comapnies House', () => {
     it('renders the `companies-house` template with empty field', async () => {
-      mockExporterResponse.details.companiesHouseRegistrationNumber = '';
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = '';
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
@@ -72,8 +65,7 @@ describe('controllers/about-exporter', () => {
     });
 
     it('renders the `companies-house` template with pre-populated field', async () => {
-      mockExporterResponse.details.companiesHouseRegistrationNumber = 'xyz';
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = 'xyz';
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {

@@ -17,7 +17,7 @@ const DEFAULT_MAX_SIZE = 10; // 10mb default
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
 
 const filesCollection = 'files';
-const gefApplicationCollection = 'gef-application';
+const dealCollectionName = 'deals';
 
 const fileError = (file, maxFileSize) => {
   let error;
@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
   if (!files?.length) return res.status(400).send('missing files');
 
   // Check deal exists
-  const dealCollection = await db.getCollection(gefApplicationCollection);
+  const dealCollection = await db.getCollection(dealCollectionName);
   const deal = await dealCollection.findOne({ _id: ObjectId(String(parentId)) });
   if (!deal) return res.status(422).send('Parent deal not found');
 
@@ -103,7 +103,7 @@ const getFile = async (id) => {
   let deal;
 
   if (file) {
-    const dealCollection = await db.getCollection(gefApplicationCollection);
+    const dealCollection = await db.getCollection(dealCollectionName);
     deal = await dealCollection.findOne({ _id: ObjectId(String(file.parentId)) });
   }
 

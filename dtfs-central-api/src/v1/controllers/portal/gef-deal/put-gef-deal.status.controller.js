@@ -3,7 +3,7 @@ const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
 
 const updateDealStatus = async (dealId, previousStatus, newStatus) => {
-  const collection = await db.getCollection('gef-application');
+  const collection = await db.getCollection('deals');
 
   console.log(`Updating Portal GEF deal status to ${newStatus}`);
 

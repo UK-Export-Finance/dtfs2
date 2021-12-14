@@ -6,8 +6,8 @@ const db = require('../../../../drivers/db-client');
 const timestamp = getUnixTime(new Date());
 
 const addComment = async (_id, commentType, comment) => {
-  // get the 'gef-application collection'
-  const collection = await db.getCollection('gef-application');
+  // get the deals collection
+  const collection = await db.getCollection('deals');
 
   // add the comment to the matching deal (based on _id)
   const addCommentToGefDeal = await collection.findOneAndUpdate(
