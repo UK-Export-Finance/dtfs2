@@ -92,7 +92,7 @@ const validateAboutExporter = async (req, res) => {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
         smeType: body.smeType,
-        probabilityOfDefault: body.probabilityOfDefault,
+        probabilityOfDefault: Number(body.probabilityOfDefault),
         isFinanceIncreasing: body.isFinanceIncreasing,
         selectedIndustry: exporter.selectedIndustry,
         applicationId,
