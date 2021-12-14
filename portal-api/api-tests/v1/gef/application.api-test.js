@@ -210,8 +210,9 @@ describe(baseUrl, () => {
       expect(body).toEqual({
         ...expectMongoId(expected),
         exporter: {
-
-        }
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+        },
       });
     });
 
