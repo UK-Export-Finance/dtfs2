@@ -4,7 +4,8 @@ import CREDENTIALS from '../fixtures/credentials.json';
 
 const applicationIds = [];
 let dealWithNoExporterIndustries;
-let dealWithExporterNotStarted;
+let dealWithExporterIndustries;
+let dealWithEmptyExporter;
 let token;
 
 context('About Exporter Page', () => {
@@ -23,8 +24,11 @@ context('About Exporter Page', () => {
         dealWithNoExporterIndustries = body.items.find((deal) =>
            deal.exporter?.industries?.length === 0);
 
-        dealWithExporterNotStarted = body.items.find((deal) =>
-          !Object.keys(deal.exporter).length);
+        dealWithExporterIndustries = body.items.find((deal) =>
+          deal.exporter?.industries?.length);
+
+        dealWithEmptyExporter = body.items.find((deal) =>
+          deal.exporter.status === 'NOT_STARTED');
 
       });
     cy.login(CREDENTIALS.MAKER);
@@ -72,14 +76,14 @@ context('About Exporter Page', () => {
 
   describe('Visiting page with multiple industries', () => {
     it('displays the correct amount of industries', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithExporterIndustries._id}/about-exporter`));
       aboutExporter.industries().find('input[type="radio"]').its('length').should('be.eq', 3);
     });
   });
 
   describe('Clicking on Done', () => {
     it('validates form', () => {
-      cy.visit(relative(`/gef/application-details/${dealWithExporterNotStarted._id}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.doneButton().click();
       aboutExporter.errorSummary();
       aboutExporter.probabilityOfDefaultError();
@@ -87,20 +91,20 @@ context('About Exporter Page', () => {
     });
 
     it('takes user back to application details page when form has been filled in', () => {
-      cy.visit(relative(`/gef/application-details/${dealWithExporterNotStarted._id}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.microRadioButton().click();
       aboutExporter.probabilityOfDefaultInput().type('10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
       aboutExporter.doneButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealWithExporterNotStarted._id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });
 
   describe('Clicking on Save and return, bypasses validation and takes user back to application details page', () => {
     it('validates form', () => {
-      cy.visit(relative(`/gef/application-details/${dealWithExporterNotStarted._id}/about-exporter`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealWithExporterNotStarted._id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });
 });
