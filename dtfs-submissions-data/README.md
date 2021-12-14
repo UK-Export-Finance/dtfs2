@@ -25,8 +25,9 @@ We currently have 2 different services/APIs that generate and submit new deals -
 - BSS (portal-api) generates a new id by checking the latest value in the `idCounters` collection.
 - GEF (seperate endpoints in portal-api), generates a standard MongoDB ObjectId
 
-- BSS has it's own collections called `deals` and `facilities`
-- GEF has it's own collections called `gef-application` and `gef-facilities`
+- BSS and GEF share the same collection for deals, called `deals`.
+- BSS has it's own collection for facilities, called `facilities`
+- GEF has it's own collections for facilities, called `gef-facilities`
 
 BSS should be changed to generate a standard ObjectId. However, if this change is made, there could be a possibility of both BSS and GEF generating the same ID.
 

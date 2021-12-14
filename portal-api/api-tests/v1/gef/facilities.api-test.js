@@ -10,7 +10,7 @@ const baseUrl = '/v1/gef/facilities';
 const collectionName = 'gef-facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
-const applicationCollectionName = 'gef-application';
+const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../fixtures/gef/application');
 const {

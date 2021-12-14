@@ -77,24 +77,6 @@ const setApplicationStatus = async (applicationId, status) => {
   }
 };
 
-const getExporter = async (exporterId) => {
-  try {
-    const { data } = await Axios.get(`/gef/exporter/${exporterId}`);
-    return data;
-  } catch (err) {
-    return apiErrorHandler(err);
-  }
-};
-
-const updateExporter = async (exporterId, payload) => {
-  try {
-    const { data } = await Axios.put(`/gef/exporter/${exporterId}`, payload);
-    return data;
-  } catch (err) {
-    return apiErrorHandler(err);
-  }
-};
-
 const getFacilities = async (applicationId) => {
   if (!applicationId) {
     return [];
@@ -153,11 +135,12 @@ const getEligibilityCriteria = async () => {
   }
 };
 
-const getCompaniesHouseDetails = async (companyRegNumber, exporterId) => {
+const getCompaniesHouseDetails = async (companyRegNumber) => {
   try {
-    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, { params: { exporterId } });
+    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
   } catch (err) {
+    console.error('Unable to get company house details', { err });
     return apiErrorHandler(err);
   }
 };
@@ -256,8 +239,6 @@ module.exports = {
   updateApplication,
   getEligibilityCriteria,
   getApplication,
-  getExporter,
-  updateExporter,
   getFacilities,
   createFacility,
   getFacility,

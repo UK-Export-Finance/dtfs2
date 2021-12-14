@@ -12,7 +12,6 @@ describe('controllers/application-detaills', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
   let mockFacilityResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
@@ -21,13 +20,11 @@ describe('controllers/application-detaills', () => {
     mockResponse = mocks.MockResponse();
     mockRequest = mocks.MockRequest();
     mockApplicationResponse = mocks.MockApplicationResponseDraft();
-    mockExporterResponse = mocks.MockExporterResponse();
     mockFacilityResponse = mocks.MockFacilityResponse();
     mockUserResponse = mocks.MockUserResponse();
     mockEligibilityCriteriaResponse = mocks.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
@@ -77,7 +74,7 @@ describe('controllers/application-detaills', () => {
           // header
           ukefDealId: mockApplicationResponse.ukefDealId,
           submissionDate: mockApplicationResponse.submissionDate,
-          companyName: mockExporterResponse.details.companyName,
+          companyName: mockApplicationResponse.exporter.companyName,
           applicationStatus: mockApplicationResponse.status,
           dateCreated: mockApplicationResponse.createdAt,
           timezone: mockUserResponse.timezone,

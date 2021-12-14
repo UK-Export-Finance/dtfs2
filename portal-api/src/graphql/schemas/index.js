@@ -51,6 +51,7 @@ type DealDetails {
 
 type Deal {
   _id: String!
+  dealType: String
   details: DealDetails
 }
 
@@ -174,7 +175,6 @@ type GefDeal {
   userId: String
   status: String
   bankId: String
-  exporterId: String
   bankInternalRefName: String
   mandatoryVersionId: String
   additionalRefName: String

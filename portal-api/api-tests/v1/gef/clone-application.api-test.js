@@ -6,7 +6,7 @@ const mockApplications = require('../../fixtures/gef/application');
 const api = require('../../../src/v1/api');
 
 const baseUrl = '/v1/gef/application';
-const collectionName = 'gef-application';
+const collectionName = 'deals';
 
 const mockApplication = {
   ...mockApplications[0],
@@ -41,7 +41,7 @@ describe(baseUrl, () => {
         bankId: aMaker.bank.id,
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
-        exporterId: '1234567890',
+        exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
         status: 'IN_PROGRESS',
@@ -62,7 +62,7 @@ describe(baseUrl, () => {
         bankId: aMaker.bank.id,
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
-        exporterId: '1234567890',
+        exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
         status: 'IN_PROGRESS',
@@ -82,7 +82,7 @@ describe(baseUrl, () => {
         bankId: aMaker.bank.id,
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
-        exporterId: '1234567890',
+        exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
         status: 'IN_PROGRESS',
@@ -103,7 +103,7 @@ describe(baseUrl, () => {
         bankId: aMaker.bank.id,
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
-        exporterId: '1234567890',
+        exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
         status: 'IN_PROGRESS',

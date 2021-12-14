@@ -2,7 +2,7 @@ const {
   getApplication, getUserDetails, updateApplication, setApplicationStatus,
 } = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { PROGRESS } = require('../../../constants');
+const { PROGRESS } = require('../../constants');
 
 const MAX_COMMENT_LENGTH = 400;
 

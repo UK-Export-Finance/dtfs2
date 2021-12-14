@@ -1,8 +1,9 @@
 const dealsQuery = `
 query {
   deals {
-    deals{
+    deals {
       _id
+      dealType
     }
   }
 }`;

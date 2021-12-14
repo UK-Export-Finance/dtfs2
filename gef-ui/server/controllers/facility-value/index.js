@@ -1,4 +1,4 @@
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityValue = require('./facility-value');

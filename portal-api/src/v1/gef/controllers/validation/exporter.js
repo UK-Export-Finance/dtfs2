@@ -2,30 +2,33 @@
 
 const { SME_TYPE, STATUS } = require('../../enums');
 
+const TOTAL_REQUIRED = 8;
+
 const hasRequiredItems = (doc) => {
   const required = [];
-  if (doc.companiesHouseRegistrationNumber === null) {
+
+  if (!doc.companiesHouseRegistrationNumber) {
     required.push('companiesHouseRegistrationNumber');
   }
-  if (doc.companyName === null) {
+  if (!doc.companyName) {
     required.push('companyName');
   }
-  if (doc.registeredAddress === null) {
+  if (!doc.registeredAddress) {
     required.push('registeredAddress');
   }
-  if (doc.selectedIndustry === null) {
+  if (!doc.selectedIndustry) {
     required.push('selectedIndustry');
   }
-  if (doc.industries === null) {
+  if (!doc.industries) {
     required.push('industries');
   }
-  if (doc.smeType === null) {
+  if (!doc.smeType) {
     required.push('smeType');
   }
-  if (doc.probabilityOfDefault === null) {
+  if (!doc.probabilityOfDefault) {
     required.push('probabilityOfDefault');
   }
-  if (doc.isFinanceIncreasing === null) {
+  if (!doc.isFinanceIncreasing) {
     required.push('isFinanceIncreasing');
   }
   return required;
@@ -33,15 +36,19 @@ const hasRequiredItems = (doc) => {
 
 const exporterStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
-  if (!doc.updatedAt) {
+
+  if (requiredCount === TOTAL_REQUIRED) {
     return STATUS.NOT_STARTED;
   }
+
   if (requiredCount > 0) {
     return STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
     return STATUS.COMPLETED;
   }
+
+  return STATUS.IN_PROGRESS;
 };
 
 const exporterCheckEnums = (doc) => {
