@@ -95,14 +95,14 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
 };
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
-const dealCanBeSubmittedToACBS = async (submissionType) => {
+const canDealBeSubmittedToACBS = (submissionType) => {
   const acceptable = [
     CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
   ];
   return acceptable.includes(submissionType);
 };
-exports.dealCanBeSubmittedToACBS = dealCanBeSubmittedToACBS;
+exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
 
 const updateTfmParty = async (dealId, tfmUpdate) => {
   const partyUpdate = {
@@ -114,7 +114,7 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
 
   if (updatedDeal.dealSnapshot.details) {
-    if (await dealCanBeSubmittedToACBS(updatedDeal.dealSnapshot.details.submissionType)) {
+    if (await canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.details.submissionType)) {
       await submitACBSIfAllPartiesHaveUrn(dealId);
     }
   }
