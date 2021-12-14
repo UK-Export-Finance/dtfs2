@@ -40,7 +40,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 
 jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  dealCanBeSubmittedToACBS: jest.fn(),
+  canDealBeSubmittedToACBS: jest.fn(),
 }));
 
 const createSubmitBody = (mockDeal) => ({
