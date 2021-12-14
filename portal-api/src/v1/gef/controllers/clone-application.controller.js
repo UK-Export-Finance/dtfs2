@@ -3,35 +3,20 @@ const db = require('../../../drivers/db-client');
 
 const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
 const { validateApplicationReferences } = require('./validation/application');
+const { exporterStatus } = require('./validation/exporter');
 
-const cloneExporter = async (exporterId) => {
-  const exporterCollection = 'gef-exporter';
-  const collection = await db.getCollection(exporterCollection);
-
-  // get the current exporter
-  const currentExporter = await collection.findOne({
-    _id: ObjectID(String(exporterId))
-  });
-
+const cloneExporter = (currentExporter) => {
   const clonedExporter = currentExporter;
 
-  // delete the existing `_id` property - this will be re-created when a new deal is inserted
-  delete clonedExporter._id;
-
-  // update the `createdAt` property to match the current time in EPOCH format
-  clonedExporter.createdAt = Date.now();
   // update the `updatedAt` property and set it to null - default value
   clonedExporter.updatedAt = Date.now();
+  clonedExporter.status = exporterStatus(clonedExporter);
 
-  // insert a new exporter in the database
-  const newExporter = await collection.insertOne(clonedExporter);
-
-  // return the new inserted ID
-  return newExporter.insertedId;
+  return clonedExporter;
 };
 
 const cloneSupportingInformation = async (existingApplicationId, newApplicationId) => {
-  const applicationCollectionName = 'gef-application';
+  const applicationCollectionName = 'deals';
   const applicationCollection = await db.getCollection(applicationCollectionName);
   const filesCollectionName = 'files';
   const filesCollection = await db.getCollection(filesCollectionName);
@@ -108,7 +93,7 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
 };
 
 const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, userId, bankId) => {
-  const applicationCollection = 'gef-application';
+  const applicationCollection = 'deals';
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
   // any additional fields that are located at the root of the object and that need removing can be added here
@@ -125,7 +110,9 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
 
   // delete unused properties
   unusedProperties.forEach((property) => {
-    delete clonedDeal[property];
+    if (clonedDeal[property]) {
+      delete clonedDeal[property];
+    }
   });
   // unusedSupportingInfo unused properties
   unusedSupportingInfo.forEach((property) => {
@@ -146,7 +133,7 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
   clonedDeal.ukefDealId = null;
   clonedDeal.checkerId = null;
   clonedDeal.editedBy = [userId];
-  clonedDeal.exporterId = await cloneExporter(clonedDeal.exporterId);
+  clonedDeal.exporter = cloneExporter(clonedDeal.exporter);
   clonedDeal.portalActivities = [];
 
   // insert the cloned deal in the database

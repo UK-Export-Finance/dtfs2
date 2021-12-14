@@ -216,7 +216,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
     api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
-  // if it's a GEF deal, update the gef-application collection to include the ukefDecision
+  // if it's a GEF deal, update the deal in deals collection to include the ukefDecision
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     const portalCommentObj = {
       text: comments,

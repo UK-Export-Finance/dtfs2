@@ -4,8 +4,6 @@ require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
 
-// Application
-
 const createApplication = async (data, token) => {
   const response = await axios({
     method: 'post',
@@ -36,21 +34,7 @@ const updateApplication = async (id, data, token) => {
   return response.data;
 };
 
-const deleteApplication = async (data, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/application/${data._id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response.data;
-};
-
-const listApplication = async (token) => {
+const listDeals = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
@@ -58,14 +42,12 @@ const listApplication = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application`, // ?page=null&pageSize=null
+    url: `${urlRoot}/v1/gef/application`,
   }).catch((err) => { console.log(`err: ${err}`); });
   return response.data.items;
 };
 
-// Exporter
-
-const deleteExporter = async (exporterId, token) => {
+const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -73,28 +55,11 @@ const deleteExporter = async (exporterId, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/exporter/${exporterId}`,
+    url: `${urlRoot}/v1/gef/application/${dealId}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
-  return response;
+  return response.data;
 };
-
-const updateExporter = async (exporterId, data, token) => {
-  const response = await axios({
-    method: 'put',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/exporter/${exporterId}`,
-    data,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response;
-};
-
-// Facilties
 
 const createFacilities = async (data, token) => {
   const response = await axios({
@@ -152,8 +117,6 @@ const updateFacilities = async (facility, data, token) => {
 
   return response;
 };
-
-// Eligibility Criteria
 
 const createEligibilityCriteria = async (data, token) => {
   const response = await axios({
@@ -247,10 +210,8 @@ const listMandatoryCriteriaVersioned = async (token) => {
 module.exports = {
   createApplication,
   updateApplication,
-  deleteApplication,
-  listApplication,
-  deleteExporter,
-  updateExporter,
+  listDeals,
+  deleteDeal,
   createFacilities,
   listFacilities,
   deleteFacilities,

@@ -1,4 +1,4 @@
-const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
+const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 
 const getValidationErrors = (fields, allCriteria) => {
   const receivedFields = Object.keys(fields);

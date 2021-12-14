@@ -1,4 +1,4 @@
-const { PROGRESS, AUTHORISATION_LEVEL } = require('../../constants');
+const { PROGRESS, AUTHORISATION_LEVEL } = require('../constants');
 
 const statesWhereMakerHasEditAccess = [
   PROGRESS.DRAFT,

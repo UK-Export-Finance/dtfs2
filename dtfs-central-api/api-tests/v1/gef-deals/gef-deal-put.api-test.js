@@ -5,7 +5,7 @@ const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/portal/gef/deals/:id/status', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['gef-application']);
+    await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['gef-facilities']);
   });
 

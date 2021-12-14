@@ -13,7 +13,7 @@ const {
 } = require('../calculations/facility-calculations');
 
 const collectionName = 'gef-facilities';
-const dealsCollectionName = 'gef-application';
+const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
@@ -193,7 +193,7 @@ exports.findFacilities = async (
     .aggregate([
       {
         $lookup: {
-          from: 'gef-application',
+          from: 'deals',
           localField: 'applicationId',
           foreignField: '_id',
           as: 'deal',

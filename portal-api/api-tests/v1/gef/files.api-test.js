@@ -9,7 +9,7 @@ const { uploadFile, deleteFile, readFile } = require('../../../src/drivers/files
 const baseUrl = '/v1/gef/files';
 const collectionName = 'files';
 
-const applicationCollectionName = 'gef-application';
+const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 
 const validFiles = [{
@@ -46,7 +46,7 @@ describe(baseUrl, () => {
         bankId: aMaker.bank.id,
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
-        exporterId: '1234567890',
+        exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
         status: 'IN_PROGRESS',

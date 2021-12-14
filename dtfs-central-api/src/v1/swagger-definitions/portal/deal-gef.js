@@ -19,9 +19,9 @@
  *       bankId:
  *         type: string
  *         example: '9'
- *       exporterId:
- *         type: string
- *         example: 123abc
+ *       exporter:
+ *         type: object
+ *         example: {}
  *       bankInternalRefName:
  *         type: string
  *         example: Example name

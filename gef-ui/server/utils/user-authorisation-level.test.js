@@ -33,7 +33,7 @@ const draftApplication = {
   userId: '11112',
   status: 'DRAFT',
   bankId: '9',
-  exporterId: '60fa98b4f4464a001459a588',
+  exporter: {},
   bankInternalRefName: 'ref0001',
   mandatoryVersionId: null,
   createdAt: 1627035828247,

@@ -132,6 +132,5 @@ context('Delete a Loan', () => {
     });
 
     pages.contract.loansTransactionsTableRows().should('have.length', 2);
-    pages.contract.loansTransactionsTable.row(loanToDeleteId).row.should('not.exist');
   });
 });

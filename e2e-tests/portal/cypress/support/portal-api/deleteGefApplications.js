@@ -1,8 +1,9 @@
 const { listGefApplications, logIn, deleteGefApplication } = require('./api');
 
 const deleteGefApplications = (token, deals) => {
+  
   if (!deals || !deals.length) return;
-  deals.forEach(async (deal) => deleteGefApplication(token, deal));
+  deals.forEach(async (deal) => deleteGefApplication(token, deal._id));
 };
 
 module.exports = (opts) => logIn(opts).then((token) => {

@@ -2,7 +2,7 @@ const {
   getFacility,
   getApplication,
 } = require('../services/api');
-const { FACILITY_TYPE } = require('../../constants');
+const { FACILITY_TYPE } = require('../constants');
 
 class Facility {
   static async find(applicationId, facilityId, status, user) {

@@ -2,7 +2,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
-const { FACILITY_PAYMENT_TYPE } = require('../../../constants');
+const { FACILITY_PAYMENT_TYPE } = require('../../constants');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;

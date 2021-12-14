@@ -191,21 +191,14 @@ describe('/v1/portal/deals', () => {
 
       expect(status).toEqual(200);
       expect(body.count).toEqual(3);
-      expect(body.deals).toEqual([
-        deal1.deal,
-        deal3.deal,
-        deal2.deal,
-      ]);
 
-      expect(body.deals[0].bondTransactions.items).toEqual([
-        bond1,
-        bond2,
-      ]);
+      const deal1InBody = body.deals.filter((deal) => deal._id === createdDeal1._id);
+      const deal2InBody = body.deals.filter((deal) => deal._id === createdDeal2._id);
+      const deal3InBody = body.deals.filter((deal) => deal._id === createdDeal3._id);
 
-      expect(body.deals[0].loanTransactions.items).toEqual([
-        loan1,
-        loan2,
-      ]);
+      expect(deal1InBody.length).toEqual(1);
+      expect(deal2InBody.length).toEqual(1);
+      expect(deal3InBody.length).toEqual(1);
     });
   });
 
@@ -226,7 +219,7 @@ describe('/v1/portal/deals', () => {
       expect(body.deal).toEqual(expectAddedFields(newDeal));
     });
 
-    describe('when a deal has facilities', () => {
+    describe('when a BSS deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
         const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
         const dealId = postResult.body._id;

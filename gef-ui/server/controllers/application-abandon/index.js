@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { PROGRESS } = require('../../../constants');
+const { PROGRESS } = require('../../constants');
 const Application = require('../../models/application');
 const api = require('../../services/api');
 
