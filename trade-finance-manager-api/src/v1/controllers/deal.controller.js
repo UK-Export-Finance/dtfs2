@@ -90,7 +90,6 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
 
   if (allRequiredPartiesHaveUrn) {
-    console.log('TO ACBS----');
     await acbsController.createACBS(deal);
   }
 };
@@ -113,7 +112,6 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   };
 
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
-  console.log(updatedDeal.dealSnapshot.details.submissionType);
   if (await dealCanBeSubmittedToACBS(updatedDeal.dealSnapshot.details.submissionType)) {
     await submitACBSIfAllPartiesHaveUrn(dealId);
   }
