@@ -1,4 +1,5 @@
 const Chance = require('chance');
+
 import CONSTANTS from '../../constants';
 
 const chance = new Chance();

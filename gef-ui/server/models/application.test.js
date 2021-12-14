@@ -1,6 +1,7 @@
 import Application from './application';
 import api from '../services/api';
 import CONSTANTS from '../constants';
+
 jest.mock('../services/api');
 
 const MockEligibilityCriteria = () => ({
