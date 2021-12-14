@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-const { DEAL_STATUS } = require('../../constants');
+const CONSTANTS = require('../../constants');
 const Application = require('../../models/application');
 const api = require('../../services/api');
 
-const applicationIsAbandonable = (application) => [DEAL_STATUS.DRAFT,
-  DEAL_STATUS.CHANGES_REQUIRED,
-  DEAL_STATUS.BANK_CHECK].includes(application.status);
+const applicationIsAbandonable = (application) => [CONSTANTS.DEAL_STATUS.DRAFT,
+  CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
+  CONSTANTS.DEAL_STATUS.BANK_CHECK].includes(application.status);
 
 const dashboardUrl = '/dashboard';
 
@@ -39,7 +39,7 @@ const abandonApplication = async (req, res, next) => {
   try {
     const application = await Application.findById(applicationId, user, userToken);
     if (applicationIsAbandonable(application)) {
-      await api.setApplicationStatus(applicationId, DEAL_STATUS.ABANDONED);
+      await api.setApplicationStatus(applicationId, CONSTANTS.DEAL_STATUS.ABANDONED);
     }
   } catch (err) {
     return next(err);
