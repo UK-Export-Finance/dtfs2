@@ -88,7 +88,7 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         applicationId: '123',
         smeType: mockApplication.exporter.smeType,
-        probabilityOfDefault: JSON.stringify(mockApplication.exporter.probabilityOfDefault),
+        probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
         isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
         selectedIndustry: mockApplication.exporter.selectedIndustry,
         industries: mappedIndustries(
@@ -170,7 +170,7 @@ describe('controllers/about-exporter', () => {
         errors: expect.any(Object),
         applicationId: '123',
         smeType: mockApplication.exporter.smeType,
-        probabilityOfDefault: JSON.stringify(mockApplication.exporter.probabilityOfDefault),
+        probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
         isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
         selectedIndustry: mockApplication.exporter.selectedIndustry,
         industries: expect.any(Array),

@@ -19,7 +19,7 @@ const aboutExporter = async (req, res) => {
     const { exporter } = await api.getApplication(applicationId);
     const industries = mappedIndustries(exporter.industries, JSON.stringify(exporter.selectedIndustry));
     const isFinanceIncreasing = JSON.stringify(exporter.isFinanceIncreasing);
-    const probabilityOfDefault = JSON.stringify(exporter.probabilityOfDefault);
+    const probabilityOfDefault = Number(exporter.probabilityOfDefault);
 
     return res.render('partials/about-exporter.njk', {
       applicationId,
