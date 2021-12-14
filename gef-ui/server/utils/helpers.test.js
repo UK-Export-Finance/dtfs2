@@ -724,4 +724,16 @@ describe('makerCanReSubmit', () => {
     MOCK_DEAL.status = 'UKEF_APPROVED_WITH_CONDITIONS';
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(true);
   });
+  it('Should return FALSE as the Maker is from a different Bank', () => {
+    MOCK_REQUEST.bank.id = 10;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+  it('Should return FALSE as the user does not have `maker` role', () => {
+    MOCK_REQUEST.roles = ['checker'];
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+  it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
+    MOCK_DEAL.bankId = 1;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
 });
