@@ -95,7 +95,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Current requirement only allows AIN & MIN deals to be send to ACBS
        */
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-      if (dealController.dealCanBeSubmittedToACBS(dealId)) {
+      if (dealController.dealCanBeSubmittedToACBS(mappedDeal.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
 
