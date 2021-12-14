@@ -24,6 +24,13 @@ const APPLICATION = [{
   additionalRefName: 'Some Additional Reference',
   mandatoryVersionId: '123',
   exporter: EXPORTER_COMPLETED,
+}, {
+  // in progress - no exporter
+  bankId: '9',
+  bankInternalRefName: 'UKEF Test 123',
+  additionalRefName: '',
+  mandatoryVersionId: '123',
+  exporter: {},
 }];
 
 module.exports = APPLICATION;

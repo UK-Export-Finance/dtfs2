@@ -26,7 +26,7 @@ const EXPORTER_HALF_COMPLETE = {
     },
   ],
   smeType: "MEDIUM",
-  probabilityOfDefault: 67,
+  probabilityOfDefault: 10,
   isFinanceIncreasing: false,
 };
 
