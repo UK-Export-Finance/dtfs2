@@ -308,7 +308,7 @@ const makerCanReSubmit = (maker, application) => {
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = (maker._id === application.maker._id);
+  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bankId);
 
   return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
 };
