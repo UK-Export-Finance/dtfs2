@@ -21,7 +21,7 @@ describe('/v1/portal/gef/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['gef-application']);
+    await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['gef-facilities']);
   });
 

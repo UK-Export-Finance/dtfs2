@@ -1,5 +1,5 @@
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilities = async (req, res) => {

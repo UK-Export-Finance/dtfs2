@@ -1,6 +1,6 @@
 import { automaticCover, validateAutomaticCover } from './index';
 import api from '../../services/api';
-import { DEAL_SUBMISSION_TYPE } from '../../../constants';
+import { DEAL_SUBMISSION_TYPE } from '../../constants';
 
 jest.mock('../../services/api');
 

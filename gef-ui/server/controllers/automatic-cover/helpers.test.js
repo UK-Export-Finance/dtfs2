@@ -1,5 +1,5 @@
 const { getValidationErrors, deriveCoverType } = require('./helpers');
-const { DEAL_SUBMISSION_TYPE } = require('../../../constants');
+const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 
 describe('controllers/automatic-cover/helpers', () => {
   const mockAllCriteria = [

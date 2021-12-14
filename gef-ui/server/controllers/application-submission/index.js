@@ -1,6 +1,6 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { PROGRESS } = require('../../../constants');
+const { PROGRESS } = require('../../constants');
 const Application = require('../../models/application');
 
 const maxCommentLength = 400;

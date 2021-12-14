@@ -29,7 +29,7 @@ const MockRequestWithIdParam = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.additionalRefName = 'additional';

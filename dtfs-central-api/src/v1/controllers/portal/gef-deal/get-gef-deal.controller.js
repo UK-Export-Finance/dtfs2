@@ -2,7 +2,7 @@ const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const findOneDeal = async (_id, callback) => {
-  const dealsCollection = await db.getCollection('gef-application');
+  const dealsCollection = await db.getCollection('deals');
 
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 

@@ -1,4 +1,4 @@
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 

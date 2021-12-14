@@ -24,9 +24,6 @@ const getGefDealController = require('../controllers/portal/gef-deal/get-gef-dea
 const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
 const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
 
-const createGefExporterController = require('../controllers/portal/gef-exporter/create-gef-exporter.controller');
-const getGefExporterController = require('../controllers/portal/gef-exporter/get-gef-exporter.controller');
-
 const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
 
@@ -563,9 +560,9 @@ portalRouter.route('/facilities/:id/status')
  * @openapi
  * /gef/deals:
  *   post:
- *     summary: Create a GEF deal in Portal gef-applications collection
+ *     summary: Create a GEF deal in Portal deals collection
  *     tags: [Portal - GEF]
- *     description: Create a deal in Portal gef-applications collection
+ *     description: Create a deal in Portal deals collection
  *     responses:
  *       200:
  *         description: OK
@@ -656,9 +653,9 @@ portalRouter.route('/gef/deals/:id/status')
  * @openapi
  * /gef/deals/:id/comment:
  *   post:
- *     summary: Add a comment to a GEF deal in gef-application collection
+ *     summary: Add a comment to a GEF deal in deals collection
  *     tags: [Portal - GEF]
- *     description: Add a comment to a GEF deal in gef-application collection
+ *     description: Add a comment to a GEF deal in deals collection
  *     parameters:
  *       - in: path
  *         name: id
@@ -698,55 +695,6 @@ portalRouter.route('/gef/deals/:id/status')
  *         description: Deal not found
  */
 portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwriterCommentToGefDeal);
-
-/**
- * @openapi
- * /gef/exporter:
- *   post:
- *     summary: Create a GEF exporter in Portal gef-exporter collection
- *     tags: [Portal - GEF]
- *     description: Create a exporter in Portal gef-exporter collection
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             example:
- *               _id: '123456abc'
- */
-portalRouter.route('/gef/exporter')
-  .post(
-    createGefExporterController.createExporterPost,
-  );
-
-/**
- * @openapi
- * /gef/exporter/:id:
- *   get:
- *     summary: Get a GEF exporter
- *     tags: [Portal - GEF]
- *     description: Get a GEF exporter
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Exporter ID to get
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/GEFExporter'
- *       404:
- *         description: Not found
- */
-portalRouter.route('/gef/exporter/:id')
-  .get(
-    getGefExporterController.findOneExporterGet,
-  );
 
 /**
  * @openapi

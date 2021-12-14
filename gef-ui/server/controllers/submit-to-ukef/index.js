@@ -1,4 +1,4 @@
-const { PROGRESS } = require('../../../constants/index');
+const { PROGRESS } = require('../../constants');
 const { validationErrorHandler, isNotice } = require('../../utils/helpers');
 const api = require('../../services/api');
 

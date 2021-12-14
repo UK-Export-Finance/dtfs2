@@ -7,6 +7,9 @@ import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 let applications;
+let dealWithEmptyExporter;
+let dealWithInProgressExporter;
+let dealWithCompletedExporterAndFacilities;
 
 context('Application Details Page', () => {
   before(() => {
@@ -18,6 +21,17 @@ context('Application Details Page', () => {
       })
       .then(({ body }) => {
         applications = body.items;
+
+        dealWithEmptyExporter = body.items.find((deal) =>
+          deal.exporter.status === 'NOT_STARTED');
+
+        dealWithInProgressExporter = body.items.find((deal) =>
+          deal.exporter.status === 'IN_PROGRESS');
+
+        dealWithCompletedExporterAndFacilities = body.items.find((deal) =>
+          deal.exporter.status === 'COMPLETED'
+          && deal.facilitiesUpdated);
+
       });
 
     cy.login(CREDENTIALS.MAKER);
@@ -26,13 +40,13 @@ context('Application Details Page', () => {
   describe('Visiting page for the first time - NOT STARTED', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
-      cy.visit(relative(`/gef/application-details/${applications[0]._id}`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
 
     it('displays the application banner', () => {
       statusBanner.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
+      applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerProduct().should('have.text','General Export Facility');
@@ -56,7 +70,7 @@ context('Application Details Page', () => {
 
     it('shows a valid link to edit the reference', () => {
       applicationDetails.editRefNameLink().click();
-      cy.url().should('eq', relative(`/gef/applications/${applications[0]._id}/name`));
+      cy.url().should('eq', relative(`/gef/applications/${dealWithEmptyExporter._id}/name`));
     });
 
     it('displays the correct exporter elements', () => {
@@ -90,30 +104,30 @@ context('Application Details Page', () => {
 
     it('takes you to companies house page when clicking on `Enter details`', () => {
       applicationDetails.exporterDetailsLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[0]._id}/companies-house`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}/companies-house`));
     });
 
     it('keeps you on the same page for now when clicking on `Abandon` link', () => {
       applicationDetails.abandonLink().click();
-      cy.visit(relative(`/gef/application-details/${applications[0]._id}`));
-      cy.url().should('eq', relative(`/gef/application-details/${applications[0]._id}`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
 
     it('takes you to Cash facility page when clicking on `Add a cash facility` button', () => {
       applicationDetails.addCashFacilityButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[0]._id}/facilities`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}/facilities`));
       facilities.hasBeenIssuedHeading().contains('cash');
     });
 
     it('takes you to Contingent facility page when clicking on `Add a contingent facility` button', () => {
       applicationDetails.addContingentFacilityButton().click();
-      cy.visit(relative(`/gef/application-details/${applications[0]._id}/facilities?facilityType=CONTINGENT`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/facilities?facilityType=CONTINGENT`));
     });
   });
 
   describe('Visiting page when IN PROGRESS status', () => {
     before(() => {
-      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
+      cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Start the Eligibility Criteria selection, but don't complete it.
       // This puts the Eligibility Criteira section in an "in progress" state.
@@ -169,7 +183,7 @@ context('Application Details Page', () => {
 
   describe('Visiting page when COMPLETED status', () => {
     before(() => {
-      cy.visit(relative(`/gef/application-details/${applications[2]._id}`));
+      cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -230,7 +244,7 @@ context('Application Details Page', () => {
   context('Manual Inclusion Application', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applications[1]._id}`));
+      cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -259,7 +273,7 @@ context('Application Details Page', () => {
 
       it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {
         applicationDetails.supportingInfoStartLink().click();
-        cy.url().should('eq', relative(`/gef/application-details/${applications[1]._id}/supporting-information/manual-inclusion-questionnaire`));
+        cy.url().should('eq', relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/manual-inclusion-questionnaire`));
       });
     });
   });

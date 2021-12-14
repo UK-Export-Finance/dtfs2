@@ -63,7 +63,7 @@ const MockRequestUrlChecker = (url) => ({
 
 const MockApplicationResponseDraft = () => ({
   _id: '1234',
-  exporterId: '123',
+  exporter: {},
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
@@ -88,7 +88,7 @@ const MockApplicationResponseDraft = () => ({
 
 const MockApplicationResponseSubmitted = () => ({
   _id: '1234',
-  exporterId: '123',
+  exporter: {},
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
@@ -139,16 +139,6 @@ const MockUserResponseChecker = () => ({
   timezone: 'Europe/London',
 });
 
-const MockExporterResponse = () => ({
-  details: {
-    companiesHouseRegistrationNumber: 'tedsi',
-    companyName: 'Test Company',
-  },
-  status: 'IN_PROGRESS',
-  validation: { required: [] },
-
-});
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
@@ -179,7 +169,6 @@ module.exports = {
   MockApplicationResponseSubmitted,
   MockUserResponse,
   MockUserResponseChecker,
-  MockExporterResponse,
   MockEligibilityCriteriaResponse,
   MockFacilityResponse,
 };

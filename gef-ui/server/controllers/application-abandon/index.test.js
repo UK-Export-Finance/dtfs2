@@ -30,7 +30,7 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.status = 'Draft';
@@ -39,16 +39,6 @@ const MockApplicationResponse = () => {
       { id: 12, answer: null, text: 'Test' },
     ],
   };
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.validation.required = [];
   return res;
 };
 
@@ -80,7 +70,6 @@ describe('controllers/application-abandon', () => {
     mockApplicationResponse = MockApplicationResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(MockExporterResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.setApplicationStatus.mockResolvedValue({});

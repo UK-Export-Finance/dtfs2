@@ -20,7 +20,7 @@ const {
   AUTHORISATION_LEVEL,
   PROGRESS,
   DEAL_SUBMISSION_TYPE,
-} = require('../../../constants');
+} = require('../../constants');
 const Application = require('../../models/application');
 
 let userSession;
@@ -29,7 +29,7 @@ function buildHeader(app) {
   const main = {
     ukefDealId: app.ukefDealId,
     submissionDate: app.submissionDate,
-    companyName: app.exporter.details.companyName,
+    companyName: app.exporter?.companyName,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
     timezone: app.maker.timezone || 'Europe/London',
@@ -55,15 +55,19 @@ function buildBody(app, previewMode) {
   const exporterUrl = `/gef/application-details/${app.id}`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
-  return {
+  const appBody = {
     application: app,
     status: app.status,
     isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
     exporter: {
       status: app.exporterStatus,
-      rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
-        showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
-      }), previewMode),
+      rows: mapSummaryList(
+        { details: app.exporter }, // wrap in details because mapSummaryList relies this.
+        exporterItems(exporterUrl, {
+          showIndustryChangeLink: app.exporter?.industries?.length > 1,
+        }),
+        previewMode,
+      ),
     },
     eligibility: {
       status: app.eligibilityCriteriaStatus,
@@ -96,6 +100,8 @@ function buildBody(app, previewMode) {
     previewMode,
     userRoles: app.userRoles,
   };
+
+  return appBody;
 }
 
 function buildActions(app) {

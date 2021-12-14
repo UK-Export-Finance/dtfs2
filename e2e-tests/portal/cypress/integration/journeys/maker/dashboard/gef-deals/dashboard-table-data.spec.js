@@ -7,7 +7,6 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.roles.length === 1));
 
 const mockDeal = require('../../../../../fixtures/mockDeals');
-const mockExporter = require('../../../../../fixtures/mockExporter');
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
@@ -85,19 +84,10 @@ context('Sort exporters alphabetically', () => {
     mockDeal.MOCK_DEAL_FOUR,
   ];
 
-  const mockExporters = [
-    mockExporter.exporterOne,
-    mockExporter.exporterTwo,
-    mockExporter.exporterThree,
-    mockExporter.exporterFour,
-  ];
-
   beforeEach(() => {
-    // if inserting deals, ensure the relevant mockExporter is produced for the deal
     cy.deleteGefApplications(MAKER_LOGIN);
     cy.insertManyGefApplications(mockDeals, MAKER_LOGIN).then((insertedDeals) => {
       deals = insertedDeals;
-      cy.insertManyGefExporters(deals, mockExporters, MAKER_LOGIN);
     });
   });
 
@@ -113,22 +103,22 @@ context('Sort exporters alphabetically', () => {
     ensures that whole row changes and not just exporter
     */
     cy.get('table tr').eq(1).find(`[data-cy="deal__exporter--${deals[3]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterFour.companyName);
+      .should('contain', deals[3].exporter.companyName);
     cy.get('table tr').eq(1).find(`[data-cy="deal__bankRef--${deals[3]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_FOUR.bankInternalRefName);
 
     cy.get('table tr').eq(2).find(`[data-cy="deal__exporter--${deals[2]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterThree.companyName);
+      .should('contain', deals[2].exporter.companyName);
     cy.get('table tr').eq(2).find(`[data-cy="deal__bankRef--${deals[2]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_THREE.bankInternalRefName);
 
     cy.get('table tr').eq(3).find(`[data-cy="deal__exporter--${deals[1]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterTwo.companyName);
+      .should('contain', deals[1].exporter.companyName);
     cy.get('table tr').eq(3).find(`[data-cy="deal__bankRef--${deals[1]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_TWO.bankInternalRefName);
 
     cy.get('table tr').eq(4).find(`[data-cy="deal__exporter--${deals[0]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterOne.companyName);
+      .should('contain', deals[0].exporter.companyName);
     cy.get('table tr').eq(4).find(`[data-cy="deal__bankRef--${deals[0]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_ONE.bankInternalRefName);
   });
@@ -148,22 +138,22 @@ context('Sort exporters alphabetically', () => {
 
     // check order
     cy.get('table tr').eq(1).find(`[data-cy="deal__exporter--${deals[3]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterFour.companyName);
+      .should('contain', deals[3].exporter.companyName);
     cy.get('table tr').eq(1).find(`[data-cy="deal__bankRef--${deals[3]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_FOUR.bankInternalRefName);
 
     cy.get('table tr').eq(2).find(`[data-cy="deal__exporter--${deals[2]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterThree.companyName);
+      .should('contain', deals[2].exporter.companyName);
     cy.get('table tr').eq(2).find(`[data-cy="deal__bankRef--${deals[2]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_THREE.bankInternalRefName);
 
     cy.get('table tr').eq(3).find(`[data-cy="deal__exporter--${deals[1]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterTwo.companyName);
+      .should('contain', deals[1].exporter.companyName);
     cy.get('table tr').eq(3).find(`[data-cy="deal__bankRef--${deals[1]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_TWO.bankInternalRefName);
 
     cy.get('table tr').eq(4).find(`[data-cy="deal__exporter--${deals[0]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterOne.companyName);
+      .should('contain', deals[0].exporter.companyName);
     cy.get('table tr').eq(4).find(`[data-cy="deal__bankRef--${deals[0]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_ONE.bankInternalRefName);
   });
@@ -179,22 +169,22 @@ context('Sort exporters alphabetically', () => {
     gefDashboard.tableHeader('exporter').invoke('attr', 'aria-sort').should('eq', 'descending');
 
     cy.get('table tr').eq(4).find(`[data-cy="deal__exporter--${deals[3]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterFour.companyName);
+      .should('contain', deals[3].exporter.companyName);
     cy.get('table tr').eq(4).find(`[data-cy="deal__bankRef--${deals[3]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_FOUR.bankInternalRefName);
 
     cy.get('table tr').eq(3).find(`[data-cy="deal__exporter--${deals[2]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterThree.companyName);
+      .should('contain', deals[2].exporter.companyName);
     cy.get('table tr').eq(3).find(`[data-cy="deal__bankRef--${deals[2]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_THREE.bankInternalRefName);
 
     cy.get('table tr').eq(2).find(`[data-cy="deal__exporter--${deals[1]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterTwo.companyName);
+      .should('contain', deals[1].exporter.companyName);
     cy.get('table tr').eq(2).find(`[data-cy="deal__bankRef--${deals[1]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_TWO.bankInternalRefName);
 
     cy.get('table tr').eq(1).find(`[data-cy="deal__exporter--${deals[0]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterOne.companyName);
+      .should('contain', deals[0].exporter.companyName);
     cy.get('table tr').eq(1).find(`[data-cy="deal__bankRef--${deals[0]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_ONE.bankInternalRefName);
   });
@@ -214,22 +204,22 @@ context('Sort exporters alphabetically', () => {
     gefDashboard.tableHeader('exporter').invoke('attr', 'aria-sort').should('eq', 'none');
 
     cy.get('table tr').eq(1).find(`[data-cy="deal__exporter--${deals[3]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterFour.companyName);
+      .should('contain', deals[3].exporter.companyName);
     cy.get('table tr').eq(1).find(`[data-cy="deal__bankRef--${deals[3]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_FOUR.bankInternalRefName);
 
     cy.get('table tr').eq(2).find(`[data-cy="deal__exporter--${deals[2]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterThree.companyName);
+      .should('contain', deals[2].exporter.companyName);
     cy.get('table tr').eq(2).find(`[data-cy="deal__bankRef--${deals[2]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_THREE.bankInternalRefName);
 
     cy.get('table tr').eq(3).find(`[data-cy="deal__exporter--${deals[1]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterTwo.companyName);
+      .should('contain', deals[1].exporter.companyName);
     cy.get('table tr').eq(3).find(`[data-cy="deal__bankRef--${deals[1]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_TWO.bankInternalRefName);
 
     cy.get('table tr').eq(4).find(`[data-cy="deal__exporter--${deals[0]._id}"]`).should('exist')
-      .should('contain', mockExporter.exporterOne.companyName);
+      .should('contain', deals[0].exporter.companyName);
     cy.get('table tr').eq(4).find(`[data-cy="deal__bankRef--${deals[0]._id}"]`).should('exist')
       .should('contain', mockDeal.MOCK_DEAL_ONE.bankInternalRefName);
   });

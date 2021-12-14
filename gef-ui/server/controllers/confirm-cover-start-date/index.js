@@ -8,7 +8,7 @@ const
   } = require('../../utils/helpers');
 const { applicationDetails } = require('../application-details');
 const api = require('../../services/api');
-const CONSTANTS = require('../../../constants');
+const CONSTANTS = require('../../constants');
 
 const setError = (field, message) => validationErrorHandler({
   errRef: field,
