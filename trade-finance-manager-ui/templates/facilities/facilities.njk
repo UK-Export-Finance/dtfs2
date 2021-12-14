@@ -1,5 +1,7 @@
-{% import './_macros/deals-table.njk' as dealsTable %}
-{% import './_macros/deals-table-search-form.njk' as dealsTableSearchForm %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/button-menu/macro.njk" import mojButtonMenu %}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% extends "index.njk" %}
 
@@ -7,38 +9,109 @@
   Trade Finance Manager
 {% endblock %}
 
-Facilities page
 {% block content %}
+
   <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-three-quarters">
       <h2 class="header-label" data-cy="deals-heading">{{ heading }}</h2>
     </div>
 
-    <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ dealsTableSearchForm.render() }}
-    </div>
+
 
   </div>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
 
-      {% set componentData = {
-        deals: deals,
-        user: user,
-        activeSortByOrder: activeSortByOrder,
-        activeSortByField: activeSortByField,
-        activePrimaryNavigation: activePrimaryNavigation
-      } %}
+  {% set items = [] %}
+  {% for facility in facilities %}
+    {% set facilityLink %}
+      <a
+         class="govuk-link"
+         href="/case/{{ facility.applicationId }}/facility/{{ facility.facilityId }}"
+         aria-label="View facility details"
+         data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link">
+         <span data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link-text">{{ facility.ukefFacilityId }}</span>
+      </a>
+    {% endset %}
 
-      {{ dealsTable.render(componentData) }}
+    {% set coverEndDate %}
+      {% if facility.coverEndDate %}
+         <span>
+         {{ facility.coverEndDate | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
+         {% if facility.hasBeenIssued %}
+            (issued)
+         {% else %}
+            (unissued)
+         {% endif %}
+         </span>
+      {% else %}
+         -
+      {% endif %}
+    {% endset %}
 
-    </div>
-  </div>
+    {% set item = [
+      {
+        html: facilityLink,
+        attributes: { "data-cy": "deal__ukefFacilityId--" + facility.ukefFacilityId  }
+      },
+      {
+        text: facility.dealType or "-",
+        attributes: { "data-cy": "deal__product--" + facility.dealType }
+      },
+      {
+        text: facility.facilityType or "-",
+        attributes: { "data-cy": "deal__product--" + facility.facilityType }
+      },
+      {
+        text: facility.companyName or "-",
+        attributes: { "data-cy": "deal__product--" + facility.companyName }
+      },
+      {
+        text: facility.facilityValue or "-",
+        attributes: { "data-cy": "deal__type--" + facility.facilityValue }
+      },
+      {
+        html: coverEndDate,
+        attributes: { "data-cy": "deal__type--" + facility.coverEndDate }
+      }
+    ] %}
 
-{% endblock %}
+    {% set items = (items.push(item), items) %}
+  {% endfor %}
 
-{% block sub_content %}
+
+   {{ govukTable({
+    classes: "govuk-table govuk-!-margin-bottom-0",
+    attributes: {
+    'data-module': 'moj-sortable-table'
+   },
+    head: [
+      {
+        text: "Facility ID",
+        attributes: { "data-cy": "deal__header--ukefFacilityId", "aria-sort": "none" }
+      },
+      {
+        text: "Product",
+        attributes: { "data-cy": "deal__header--product", "aria-sort": "none" }
+      },
+      {
+        text: "Type",
+        attributes: { "data-cy": "deal__header--dataType" }
+      },
+      {
+        text: "Exporter",
+        attributes: { "data-cy": "deal__header--exporter" }
+      },
+      {
+        text: "Value (export currency)",
+        attributes: { "data-cy": "deal__header--value" }
+      },
+      {
+        text: "Cover end date",
+        attributes: { "data-cy": "deal__header--coverEndDate" }
+      }
+    ],
+    rows: items
+  }) }}
 
 {% endblock %}

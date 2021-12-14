@@ -3,14 +3,12 @@ const generateHeadingText = require('../helpers');
 const CONSTANTS = require('../../constants');
 
 const getFacilities = async (req, res) => {
-  const queryParams = { };
+  const apiResponse = await api.getFacilities();
 
-  const apiResponse = await api.getDeals(queryParams);
-
-  if (apiResponse && apiResponse.deals) {
+  if (apiResponse) {
     return res.render('facilities/facilities.njk', {
       heading: 'All facilities',
-      deals: apiResponse.deals,
+      facilities: apiResponse.facilities,
       activePrimaryNavigation: 'all facilities',
       activeSubNavigation: 'facility',
       user: req.session.user,
@@ -48,10 +46,10 @@ const queryFacilities = async (req, res) => {
     activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
   }
 
-  return res.render('deals/deals.njk', {
+  return res.render('facilities/facilities.njk', {
     heading: generateHeadingText(count, searchString),
     deals,
-    activePrimaryNavigation: 'all deals',
+    activePrimaryNavigation: 'all facilities',
     activeSubNavigation: 'deal',
     user: req.session.user,
     activeSortByField,

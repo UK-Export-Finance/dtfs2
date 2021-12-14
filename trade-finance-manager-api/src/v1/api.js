@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const axios = require('axios');
 
 require('dotenv').config();
@@ -622,6 +621,21 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   }
 };
 
+const getAllFacilities = async () => {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `${centralApiUrl}/v1/tfm/facilities`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    return response;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -633,6 +647,7 @@ module.exports = {
   updateDeal,
   updateDealSnapshot,
   submitDeal,
+  getAllFacilities,
   findOneFacility,
   findFacilitesByDealId,
   updateFacility,

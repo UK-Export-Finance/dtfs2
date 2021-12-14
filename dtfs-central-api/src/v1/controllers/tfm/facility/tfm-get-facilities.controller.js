@@ -50,17 +50,21 @@ exports.getAllFacilities = async (req, res) => {
     {
       $project: {
         _id: 0,
-        facilities: {
+        tfmFacilities: {
           $map: {
             input: '$dealSnapshot.facilities',
             as: 'facilities',
             in: {
+              applicationId: '$$facilities.applicationId',
+              facilityId: '$$facilities._id',
               ukefFacilityId: '$$facilities.ukefFacilityId',
-              type: '$$facilities.type',
-              value: '$$facilities.value',
+              dealType: '$dealSnapshot.dealType',
+              facilityType: '$$facilities.type',
+              facilityValue: '$$facilities.value',
               coverEndDate: '$$facilities.coverEndDate',
-              exporter: '$dealSnapshot.exporter.companyName',
-
+              companyName: '$dealSnapshot.exporter.companyName',
+              hasBeenIssued: '$$facilities.hasBeenIssued',
+              currency: '$$facilities.currency',
             },
           },
         },
@@ -68,7 +72,7 @@ exports.getAllFacilities = async (req, res) => {
     },
   ]).toArray();
 
-  res.status(200).send(facilities);
+  res.status(200).send(facilities[0].tfmFacilities);
 };
 
 // db.tweets.aggregate([

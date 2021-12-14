@@ -349,6 +349,10 @@ input DealsInput {
   byField: [DealsByField]
 }
 
+input FacilitiesInput {
+   searchString: String
+}
+
 type DealSnapshot {
   _id: String!
   dealType: String!
@@ -385,6 +389,23 @@ type DealsQuery {
   status: StatusType
   count: Int,
   deals: [Deal]
+}
+
+type DealSnapshotFacilities {
+   applicationId: String!
+   facilityId: String!
+   ukefFacilityId: String!
+   dealType: String!
+   facilityType: String!
+   facilityValue: String!
+   coverEndDate: String
+   companyName: String!
+   hasBeenIssued: Boolean!
+   currency: String!
+}
+
+type FacilitiesQuery {
+   tfmFacilities: [DealSnapshotFacilities]
 }
 
 input TFMPartyInput {
@@ -482,6 +503,7 @@ type Query {
   deals(params: DealsInput): DealsQuery
   dealsLight(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
+  facilities(params: FacilitiesInput): FacilitiesQuery
   teamMembers(teamId: String!): [TeamMember]
   user(userId: String!): User
 }
