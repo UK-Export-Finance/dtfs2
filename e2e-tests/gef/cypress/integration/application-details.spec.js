@@ -200,7 +200,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       statusBanner.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.editRefNameLink().should('have.text', 'Barclays 123');
+      applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerSubmissionType().should('have.text', 'Automatic Inclusion Notice');
