@@ -112,11 +112,13 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   };
 
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
-  const submissionType = updatedDeal.dealSnapshot ? updatedDeal.dealSnapshot.details.submissionType : null;
 
-  if (submissionType && await dealCanBeSubmittedToACBS(submissionType)) {
-    await submitACBSIfAllPartiesHaveUrn(dealId);
+  if (updatedDeal.dealSnapshot.details) {
+    if (await dealCanBeSubmittedToACBS(updatedDeal.dealSnapshot.details.submissionType)) {
+      await submitACBSIfAllPartiesHaveUrn(dealId);
+    }
   }
+
   return updatedDeal.tfm;
 };
 exports.updateTfmParty = updateTfmParty;
