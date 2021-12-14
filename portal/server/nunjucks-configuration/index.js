@@ -5,7 +5,6 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
-const getStatusLabel = require('./filter-getStatusLabel');
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -22,7 +21,6 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
-  nunjucksEnvironment.addFilter('getStatusLabel', getStatusLabel);
   return nunjucks;
 };
 
