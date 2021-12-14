@@ -32,12 +32,14 @@ const ErrorMessagesMap = {
   bankInternalRefName: {
     MANDATORY_FIELD: 'Application reference name is mandatory',
     FIELD_TOO_LONG: 'Application reference name can only be up to 30 characters in length',
-    FIELD_INVALID_CHARACTERS: 'Application reference must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
+    FIELD_INVALID_CHARACTERS:
+      'Application reference must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
   },
   additionalRefName: {
     MANDATORY_FIELD: 'Additional reference name is mandatory',
     FIELD_TOO_LONG: 'Additional reference name can only be up to 30 characters in length',
-    FIELD_INVALID_CHARACTERS: 'Additional reference name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
+    FIELD_INVALID_CHARACTERS:
+      'Additional reference name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes”',
   },
 };
 
@@ -50,7 +52,9 @@ const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
 
-  if (!errs) { return false; }
+  if (!errs) {
+    return false;
+  }
 
   const errors = isObject(errs) ? [errs] : errs;
 
@@ -113,18 +117,14 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 */
 
 const summaryItemsConditions = (summaryItemsObj) => {
-  const {
-    preview, item, details, app, user, data,
-  } = summaryItemsObj;
-  const {
-    id, href, shouldCoverStartOnSubmission,
-  } = item;
+  const { preview, item, details, app, user, data } = summaryItemsObj;
+  const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
-  const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
+  const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
   // column keys to display change if facility has been changed to issued
-  const changedToIssueShow = (id === 'name' || id === 'coverStartDate' || id === 'coverEndDate');
+  const changedToIssueShow = id === 'name' || id === 'coverStartDate' || id === 'coverEndDate';
   // column key to display add if facility not yet issued
-  const unissuedShow = (id === 'hasBeenIssued');
+  const unissuedShow = id === 'hasBeenIssued';
   // personalised href for facility to change to issued (once submitted to UKEF)
   const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities-change/${data.details._id}/about-facility?status=change`;
   // array of facilities which have been changed to issued
@@ -133,43 +133,55 @@ const summaryItemsConditions = (summaryItemsObj) => {
   let summaryItems = [];
   if (!preview) {
     summaryItems = [
-      ...(href ? [{
-        href,
-        /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
+      ...(href
+        ? [
+            {
+              href,
+              /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
            properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
            Object is empty or not. */
-        text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
-        visuallyHiddenText: item.label,
-      }] : []),
+              text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
+              visuallyHiddenText: item.label,
+            },
+          ]
+        : []),
     ];
   } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.changedToIssued === true) {
     /**
-      *  if submitted to UKEF && logged in as maker && facility changed to issued
-      * can change name, coverStartDate and coverEndDate column
-      * change link displayed taking to unissued-facility-change change page
-   */
+     *  if submitted to UKEF && logged in as maker && facility changed to issued
+     * can change name, coverStartDate and coverEndDate column
+     * change link displayed taking to unissued-facility-change change page
+     */
     summaryItems = [
-      ...(unissuedHref ? [{
-        href: unissuedHref,
-        /*  */
-        text: `${changedToIssueShow ? 'Change' : ''}`,
-        visuallyHiddenText: item.label,
-      }] : []),
+      ...(unissuedHref
+        ? [
+            {
+              href: unissuedHref,
+              /*  */
+              text: `${changedToIssueShow ? 'Change' : ''}`,
+              visuallyHiddenText: item.label,
+            },
+          ]
+        : []),
     ];
   } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
     /**
-      *  if submitted to UKEF && logged in as maker && facility still unissued
-      * only shows if other facilities have been changed to issued
-      * changes to issued
-      * add link displayed taking to unissued-facility-change change page
-   */
+     *  if submitted to UKEF && logged in as maker && facility still unissued
+     * only shows if other facilities have been changed to issued
+     * changes to issued
+     * add link displayed taking to unissued-facility-change change page
+     */
     summaryItems = [
-      ...(unissuedHref ? [{
-        href: unissuedHref,
-        /*  */
-        text: `${unissuedShow ? 'Add' : ''}`,
-        visuallyHiddenText: item.label,
-      }] : []),
+      ...(unissuedHref
+        ? [
+            {
+              href: unissuedHref,
+              /*  */
+              text: `${unissuedShow ? 'Add' : ''}`,
+              visuallyHiddenText: item.label,
+            },
+          ]
+        : []),
     ];
   }
 
@@ -177,7 +189,9 @@ const summaryItemsConditions = (summaryItemsObj) => {
 };
 
 const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
-  if (!data || lodashIsEmpty(data)) { return []; }
+  if (!data || lodashIsEmpty(data)) {
+    return [];
+  }
   const { details, validation } = data;
   const { required } = validation;
 
@@ -228,17 +242,16 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
   };
 
   return itemsToShow.map((item) => {
-    const {
-      label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden,
-      shouldCoverStartOnSubmission,
-    } = item;
+    const { label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission } = item;
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
     const isRequired = required.includes(item.id);
 
     // Don't show row if value is undefined
-    if (value === undefined || isHidden) { return null; }
+    if (value === undefined || isHidden) {
+      return null;
+    }
 
     const summaryItemsObj = {
       preview,
@@ -256,7 +269,13 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
         text: label,
       },
       value: valueObj(value, isRequired, currency, detailsOther, {
-        prefix, suffix, method, isCurrency, isIndustry, isDetails, shouldCoverStartOnSubmission,
+        prefix,
+        suffix,
+        method,
+        isCurrency,
+        isIndustry,
+        isDetails,
+        shouldCoverStartOnSubmission,
       }),
       actions: {
         items: summaryItems,
@@ -284,19 +303,23 @@ const getApplicationType = (isAutomaticCover) => {
 };
 
 const selectDropdownAddresses = (addresses) => {
-  if (!addresses) { return null; }
+  if (!addresses) {
+    return null;
+  }
 
   const ADDRESS = addresses.length <= 1 ? 'Address' : 'Addresses';
   const placeholder = [{ text: `${addresses.length} ${ADDRESS} Found` }];
   const mappedAddresses = addresses.map((address, index) => ({
     value: index,
-    text: Object.values(address).filter((el) => el).join(', '), // filter removes any nulls
+    text: Object.values(address)
+      .filter((el) => el)
+      .join(', '), // filter removes any nulls
   }));
 
   return placeholder.concat(mappedAddresses);
 };
 
-const status = ({
+const status = {
   NOT_STARTED: {
     text: 'Not started',
     class: 'govuk-tag--grey',
@@ -312,7 +335,7 @@ const status = ({
     class: 'govuk-tag--green',
     code: 'COMPLETED',
   },
-});
+};
 
 const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
@@ -328,10 +351,7 @@ const isUkefReviewAvailable = (applicationStatus) => {
 };
 
 const isUkefReviewPositive = (applicationStatus) => {
-  const acceptable = [
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-  ];
+  const acceptable = [CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS];
   return acceptable.includes(applicationStatus);
 };
 
@@ -373,13 +393,17 @@ const areUnissuedFacilitiesPresent = (application) => {
  * @param {Object} facilities
  * @returns {Array}
  */
-const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed).map(({ details }) =>
-  [
-    { text: details.name },
-    { text: details.ukefFacilityId },
-    { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-    { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
-  ]);
+const getFacilitiesAsArray = (facilities) =>
+  facilities.items
+    .filter(({ details }) => !details.coverDateConfirmed)
+    .map(({ details }) => [
+      { text: details.name },
+      { text: details.ukefFacilityId },
+      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+      {
+        html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
+      },
+    ]);
 
 /*
    This function sets the deadline to display for unissued
@@ -387,7 +411,8 @@ const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details 
    from date of submission
 */
 const facilityIssueDeadline = (submissionDate) => {
-  const date = Date(submissionDate);
+  // converts to timestamp from epoch - '+' to convert from str to int
+  const date = new Date(+submissionDate);
   const deadlineDate = add(new Date(date), { months: 3 });
 
   return format(deadlineDate, 'dd MMM yyyy');
@@ -396,14 +421,18 @@ const facilityIssueDeadline = (submissionDate) => {
 /* govukTable mapping function to return array of facilities which are
    not yet issued for the cover-start-date.njk template.
 */
-const getUnissuedFacilitiesAsArray = (facilities, submissionDate) => facilities.items.filter(({ details }) => !details.hasBeenIssued).map(({ details }) =>
-  [
-    { text: details.name },
-    { text: details.ukefFacilityId },
-    { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-    { text: facilityIssueDeadline(submissionDate) },
-    { html: `<a href = '/gef/application-details/${details.applicationId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
-  ]);
+const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
+  facilities.items
+    .filter(({ details }) => !details.hasBeenIssued)
+    .map(({ details }) => [
+      { text: details.name },
+      { text: details.ukefFacilityId },
+      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+      { text: facilityIssueDeadline(submissionDate) },
+      {
+        html: `<a href = '/gef/application-details/${details.applicationId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
+      },
+    ]);
 
 const getFacilityCoverStartDate = (facility) => {
   const epoch = facility.details.coverStartDate ? facility.details.coverStartDate : null;
@@ -419,7 +448,7 @@ const getUTCDate = () => {
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0);
 };
 
-const getEpoch = ({ day, month, year }) => Date.UTC(year, (month - 1), day);
+const getEpoch = ({ day, month, year }) => Date.UTC(year, month - 1, day);
 
 const pastDate = ({ day, month, year }) => {
   const input = getEpoch({ day, month, year });
@@ -435,27 +464,14 @@ const futureDateInRange = ({ day, month, year }, days) => {
      * 86400000 = 24 hours * 60 minutes * 60 seconds * 1000 ms
      * Number of ms in a day
      * */
-    range += (86400000 * days);
+    range += 86400000 * days;
     return input <= range;
   }
   return false;
 };
 
-const coverDatesConfirmed = (facilities) => (
-  facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length
-);
-
-const makerCanReSubmit = (maker, application) => {
-  const acceptableStatus = [
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-  ];
-  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = (maker._id === application.maker._id);
-
-  return (coverDateConfirmed && acceptableStatus.includes(application.status) && makerAuthorised);
-};
+const coverDatesConfirmed = (facilities) =>
+  facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
 
 /*
    function returns true or false based on length of array
@@ -471,6 +487,24 @@ const hasChangedToIssued = (application) => {
   }
 
   return changed;
+};
+
+const makerCanReSubmit = (maker, application) => {
+  const acceptableStatus = [
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  ];
+  let facilitiesChangedToIssued = true;
+
+  // only if AIN -> ensures a facility has changed to issued before resubmitting to bank
+  if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
+    facilitiesChangedToIssued = hasChangedToIssued(application);
+  }
+  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
+  const makerAuthorised = maker._id === application.maker._id;
+
+  return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 
 module.exports = {
