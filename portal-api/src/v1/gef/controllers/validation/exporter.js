@@ -2,8 +2,11 @@
 
 const { SME_TYPE, STATUS } = require('../../enums');
 
+const TOTAL_REQUIRED = 8;
+
 const hasRequiredItems = (doc) => {
   const required = [];
+
   if (!doc.companiesHouseRegistrationNumber) {
     required.push('companiesHouseRegistrationNumber');
   }
@@ -34,6 +37,10 @@ const hasRequiredItems = (doc) => {
 const exporterStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
 
+  if (requiredCount === TOTAL_REQUIRED) {
+    return STATUS.NOT_STARTED;
+  }
+
   if (requiredCount > 0) {
     return STATUS.IN_PROGRESS;
   }
@@ -41,7 +48,7 @@ const exporterStatus = (doc) => {
     return STATUS.COMPLETED;
   }
 
-  return STATUS.NOT_STARTED;
+  return STATUS.IN_PROGRESS;
 };
 
 const exporterCheckEnums = (doc) => {
