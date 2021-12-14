@@ -25,7 +25,7 @@ dotenv.config();
 initScheduler();
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
+// TODO: re-enable Helmet (Jira - 4998)
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
