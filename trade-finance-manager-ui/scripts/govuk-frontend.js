@@ -1,3 +1,12 @@
-import { initAll } from 'govuk-frontend';
+import $ from 'jquery';
+import MOJFrontend, { initAll } from '@ministryofjustice/frontend';
 
-export default initAll();
+const init = () => {
+  window.$ = $;
+
+  initAll();
+
+  window.MOJFrontend = MOJFrontend;
+};
+
+export default init();

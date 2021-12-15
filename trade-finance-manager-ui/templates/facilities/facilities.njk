@@ -16,9 +16,6 @@
     <div class="govuk-grid-column-three-quarters">
       <h2 class="header-label" data-cy="deals-heading">{{ heading }}</h2>
     </div>
-
-
-
   </div>
 
 
@@ -52,27 +49,27 @@
     {% set item = [
       {
         html: facilityLink,
-        attributes: { "data-cy": "deal__ukefFacilityId--" + facility.ukefFacilityId  }
+        attributes: { "data-sort-value": facility.ukefFacilityId  }
       },
       {
         text: facility.dealType or "-",
-        attributes: { "data-cy": "deal__product--" + facility.dealType }
+        attributes: { "data-cy": "deal__product--" + facility.dealType, "data-sort-value": facility.ukefFacilityId}
       },
       {
         text: facility.facilityType or "-",
-        attributes: { "data-cy": "deal__product--" + facility.facilityType }
+        attributes: { "data-cy": "deal__facilityType--" + facility.facilityType }
       },
       {
         text: facility.companyName or "-",
-        attributes: { "data-cy": "deal__product--" + facility.companyName }
+        attributes: { "data-cy": "deal__companyName--" + facility.companyName }
       },
       {
         text: facility.facilityValue or "-",
-        attributes: { "data-cy": "deal__type--" + facility.facilityValue }
+        attributes: { "data-cy": "deal__facilityValue--" + facility.facilityValue }
       },
       {
         html: coverEndDate,
-        attributes: { "data-cy": "deal__type--" + facility.coverEndDate }
+        attributes: { "data-cy": "deal__coverEndDate--" + facility.coverEndDate }
       }
     ] %}
 
@@ -80,19 +77,20 @@
   {% endfor %}
 
 
-   {{ govukTable({
-    classes: "govuk-table govuk-!-margin-bottom-0",
-    attributes: {
-    'data-module': 'moj-sortable-table'
-   },
+{{ govukTable({
+      attributes: {
+      'data-module': 'moj-sortable-table'
+      },
     head: [
       {
         text: "Facility ID",
-        attributes: { "data-cy": "deal__header--ukefFacilityId", "aria-sort": "none" }
+        attributes: { "data-cy": "deal__header--ukefFacilityId", "aria-sort": "ascending" }
       },
       {
         text: "Product",
-        attributes: { "data-cy": "deal__header--product", "aria-sort": "none" }
+         attributes: {
+            "aria-sort": "ascending"
+         }
       },
       {
         text: "Type",
