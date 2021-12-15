@@ -9,18 +9,19 @@ describe(component, () => {
   const params = {
     caseId: '100123',
     facilityId: '123',
-    ukefFacilityID: '0040004833', 
+    ukefFacilityId: '0040004833',
   };
 
   beforeEach(() => {
     wrapper = render(params);
   });
 
-  it('should render ukefFacilityID link, linking to facility id', () => {
+  it('should render ukefFacilityId link, linking to facility id', () => {
     const selector = `[data-cy="facility-${params.facilityId}-ukef-facility-id-link"]`;
 
     wrapper.expectLink(selector).toLinkTo(
       `/case/${params.caseId}/facility/${params.facilityId}`,
-      params.ukefFacilityID);
+      params.ukefFacilityId,
+    );
   });
 });

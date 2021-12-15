@@ -9,7 +9,7 @@ const isFacilityValidForPremiumSchedule = (
   if (!facility.feeType) {
     return false;
   }
-  if (!facility.ukefFacilityID) {
+  if (!facility.ukefFacilityId) {
     return false;
   }
   if (!facilityGuaranteeDates.guaranteeCommencementDate) {

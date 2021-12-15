@@ -21,9 +21,7 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
     ? facility.tfm.facilityGuaranteeDates
     : '';
   return {
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId
-      ? facility.facilitySnapshot.ukefFacilityId.padStart(10, 0)
-      : facility.facilitySnapshot.ukefFacilityID.padStart(10, 0),
+    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     guaranteeCommencementDate,
     guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
     limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,

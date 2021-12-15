@@ -1,5 +1,5 @@
 const GENERIC_LIST_ITEM_TITLES = {
-  ukefFacilityID: 'UKEF facility ID',
+  ukefFacilityId: 'UKEF facility ID',
   facilityStage: 'Facility stage',
   requestedCoverStartDate: 'Requested cover start date',
   coverStartDate: 'Cover start date',
@@ -17,7 +17,7 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
   LIST_ITEM_TITLES: {
     // keep the same names as the actual field names, for easy reference/usage
     CASH: {
-      ukefFacilityID: GENERIC_LIST_ITEM_TITLES.ukefFacilityID,
+      ukefFacilityId: GENERIC_LIST_ITEM_TITLES.ukefFacilityId,
       bankReference: 'Cash facility ID',
       facilityStage: GENERIC_LIST_ITEM_TITLES.facilityStage,
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
@@ -33,7 +33,7 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
       dayCountBasis: GENERIC_LIST_ITEM_TITLES.dayCountBasis,
     },
     CONTINGENT: {
-      ukefFacilityID: GENERIC_LIST_ITEM_TITLES.ukefFacilityID,
+      ukefFacilityId: GENERIC_LIST_ITEM_TITLES.ukefFacilityId,
       bankReference: 'Bank\'s Contingent facility ID',
       facilityStage: GENERIC_LIST_ITEM_TITLES.facilityStage,
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,

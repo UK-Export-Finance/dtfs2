@@ -36,7 +36,7 @@ describe('mapPremiumScheduleFacility', () => {
       cumulativeAmount: mockFacility.disbursementAmount,
       dayBasis: String(mockFacility.dayCountBasis),
       exposurePeriod: mockExposurePeriod,
-      facilityURN: mockFacility.ukefFacilityID,
+      facilityURN: mockFacility.ukefFacilityId,
       guaranteeCommencementDate: mockGuaranteeDates.guaranteeCommencementDate,
       guaranteeExpiryDate: mockGuaranteeDates.guaranteeExpiryDate,
       guaranteeFeePercentage: mockFacility.guaranteeFee,

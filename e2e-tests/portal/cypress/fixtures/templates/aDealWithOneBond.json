@@ -117,7 +117,7 @@
               "id" : "GBP"
           },
           "uniqueIdentificationNumberRequiredForIssuance" : true,
-          "ukefFacilityID" : [
+          "ukefFacilityId" : [
               "12345"
           ],
           "issuedDate-day" : "18",
@@ -145,7 +145,7 @@
               "bank" : {
                   "id" : "9",
                   "name" : "UKEF test bank (Delegated)"
-                  
+
               },
               "firstname" : "Emilio",
               "surname" : "Largo"

@@ -62,7 +62,7 @@ const createUkefIds = async (entityId, deal, user) => {
     const { ukefId } = facilitiesNumGenRes.pop();
 
     const modifiedFacility = {
-      ukefFacilityID: ukefId,
+      ukefFacilityId: ukefId,
     };
 
     facilitiesUpdatePromises.push(

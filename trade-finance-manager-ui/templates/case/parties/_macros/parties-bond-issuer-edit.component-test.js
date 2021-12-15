@@ -13,7 +13,7 @@ describe(page, () => {
         _id: '123',
         facilitySnapshot: {
           _id: '123',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           ukefFacilityType: 'bond',
           bondIssuer: 'test bond issuer',
         },

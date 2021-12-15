@@ -18,7 +18,7 @@ const updatePortalDeal = async (input, { ukefId }) => {
 
   if (input.entityType === 'facility') {
     return api.updatePortalFacility(input.entityId, {
-      ukefFacilityID: ukefId,
+      ukefFacilityId: ukefId,
     });
   }
 

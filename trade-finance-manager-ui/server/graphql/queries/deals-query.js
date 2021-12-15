@@ -99,7 +99,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         facilities {
           facilitySnapshot {
             _id,
-            ukefFacilityID
+            ukefFacilityId
             bankFacilityReference
             facilityValue
             facilityStage
