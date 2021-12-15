@@ -28,7 +28,7 @@ context('About Exporter Page', () => {
           deal.exporter?.industries?.length);
 
         dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'NOT_STARTED');
+          deal.exporter.status === 'Not started');
 
       });
     cy.login(CREDENTIALS.MAKER);

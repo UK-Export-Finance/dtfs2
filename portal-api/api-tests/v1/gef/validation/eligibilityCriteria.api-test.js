@@ -3,7 +3,7 @@ const {
   isAutomaticCover,
   eligibilityCriteriaStatus,
 } = require('../../../../src/v1/gef/controllers/validation/eligibilityCriteria');
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../../src/constants');
 
 describe('GEF controllers validation - eligibilityCriteria', () => {
   describe('getAnsweredItems', () => {

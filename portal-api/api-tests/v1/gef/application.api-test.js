@@ -129,7 +129,7 @@ describe(baseUrl, () => {
           })),
           status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         },
-        status: CONSTANTS.DEAL_STATUS.DRAFT,
+        status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
