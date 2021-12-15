@@ -82,7 +82,7 @@ describe('getPortalActivities()', () => {
   it('it should call getApplication to produce mojTimeline array format', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
-    expect(api.getApplication).toHaveBeenCalledWith(mockRequest.params.applicationId);
+    expect(api.getApplication).toHaveBeenCalledWith(mockRequest.params.dealId);
   });
 
   it('it should render application-activity template', async () => {
@@ -96,7 +96,7 @@ describe('getPortalActivities()', () => {
     expect(mockResponse.render)
       .toHaveBeenCalledWith('partials/application-activity.njk', {
         activeSubNavigation: 'activities',
-        applicationId: '123',
+        dealId: '123',
         portalActivities: mappedPortalActivities,
         bankInternalRefName: mockApplicationResponse.bankInternalRefName,
         additionalRefName: mockApplicationResponse.additionalRefName,

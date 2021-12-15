@@ -4,10 +4,10 @@ const db = require('../../../../drivers/db-client');
 const findFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('tfm-facilities');
 
-  // NOTE: only GEF facilities have applicationId.
+  // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,
-  // then search for either dealId or applicationId.
-  const facilities = await collection.find({ 'facilitySnapshot.applicationId': { $eq: ObjectID(dealId) } }).toArray();
+  // then search for either dealId or dealId.
+  const facilities = await collection.find({ 'facilitySnapshot.dealId': { $eq: ObjectID(dealId) } }).toArray();
 
   return facilities;
 };

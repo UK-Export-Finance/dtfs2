@@ -24,7 +24,7 @@ const MockRequest = () => {
     year: 2021,
   };
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.params.facilityId = '4321';
   req.success = {
     message: 'Cover start date for 4321 confirmed',
@@ -93,7 +93,7 @@ const MockFacilityResponse = () => {
   res.items = [{
     details: {
       _id: '61a7714f2ae62b0013dae689',
-      applicationId: '61a7710b2ae62b0013dae687',
+      dealId: '61a7710b2ae62b0013dae687',
       type: 'CASH',
       hasBeenIssued: true,
       name: 'Facility one',

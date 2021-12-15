@@ -40,7 +40,7 @@ exports.create = async (req, res) => {
   }
 };
 
-const getAllFacilitiesByApplicationId = async (dealId) => {
+const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(collectionName);
   let find = {};
 
@@ -52,13 +52,13 @@ const getAllFacilitiesByApplicationId = async (dealId) => {
 
   return doc;
 };
-exports.getAllFacilitiesByApplicationId = getAllFacilitiesByApplicationId;
+exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
 exports.getAllGET = async (req, res) => {
   let doc;
 
   if (req.query && req.query.dealId) {
-    doc = await getAllFacilitiesByApplicationId(req.query.dealId);
+    doc = await getAllFacilitiesByDealId(req.query.dealId);
   }
 
   const facilities = [];
@@ -155,7 +155,7 @@ exports.delete = async (req, res) => {
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
-exports.deleteByApplicationId = async (req, res) => {
+exports.deleteByDealId = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const response = await collection.deleteMany({ dealId: req.query.dealId });
   res.status(200).send(response);

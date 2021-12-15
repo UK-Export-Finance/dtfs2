@@ -23,10 +23,10 @@ const fetchAllApplications = (token) => cy.request({
   },
 }).then((res) => res);
 
-const fetchAllFacilities = (applicationId, token) => cy.request({
+const fetchAllFacilities = (dealId, token) => cy.request({
   url: `${BASE_URL}/gef/facilities`,
   qs: {
-    applicationId,
+    dealId,
   },
   method: 'GET',
   headers: {
@@ -35,8 +35,8 @@ const fetchAllFacilities = (applicationId, token) => cy.request({
   },
 }).then((res) => res);
 
-const updateApplication = (applicationId, token, update) => cy.request({
-  url: `${BASE_URL}/gef/application/${applicationId}`,
+const updateApplication = (dealId, token, update) => cy.request({
+  url: `${BASE_URL}/gef/application/${dealId}`,
   method: 'PUT',
   body: update,
   headers: {
@@ -45,8 +45,8 @@ const updateApplication = (applicationId, token, update) => cy.request({
   },
 }).then((res) => res);
 
-const setApplicationStatus = (applicationId, token, status) => cy.request({
-  url: `${BASE_URL}/gef/application/status/${applicationId}`,
+const setApplicationStatus = (dealId, token, status) => cy.request({
+  url: `${BASE_URL}/gef/application/status/${dealId}`,
   method: 'PUT',
   body: { status },
   headers: {

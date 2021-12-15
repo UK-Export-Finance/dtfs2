@@ -15,7 +15,7 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
 };
@@ -58,7 +58,7 @@ describe('controllers/provided-facility', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
         details: ['TERMS', 'RESOLVING'],
         facilityTypeString: 'cash',
-        applicationId: '123',
+        dealId: '123',
         facilityId: 'xyz',
         status: 'change',
       }));

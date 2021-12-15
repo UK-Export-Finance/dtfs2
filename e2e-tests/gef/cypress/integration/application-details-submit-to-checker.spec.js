@@ -5,7 +5,7 @@ import applicationPreview from './pages/application-preview';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const applicationIds = [];
+const dealIds = [];
 
 context('Application Details Submission', () => {
   before(() => {
@@ -17,7 +17,7 @@ context('Application Details Submission', () => {
       })
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push(item._id);
+          dealIds.push(item._id);
         });
       });
 
@@ -26,7 +26,7 @@ context('Application Details Submission', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationIds[0]}/submit`));
+    cy.visit(relative(`/gef/application-details/${dealIds[0]}/submit`));
   });
 
   describe('Submission confirmation and comments', () => {
@@ -81,7 +81,7 @@ context('Application Details Submission', () => {
 
   describe('maker no longer sees editable content in details screen', () => {
     beforeEach(() => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}`));
     });
 
     it('no longer shows the "edit" links on the application details page', () => {

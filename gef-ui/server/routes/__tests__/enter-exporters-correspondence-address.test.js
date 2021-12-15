@@ -22,7 +22,7 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/enter-exporters-correspondence-address', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/enter-exporters-correspondence-address', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/enter-exporters-correspondence-address', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/enter-exporters-correspondence-address', validateToken, expect.any(Function));
   });
 });

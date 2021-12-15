@@ -20,6 +20,6 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/ineligible-automatic-cover', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/ineligible-automatic-cover', validateToken, expect.any(Function));
   });
 });

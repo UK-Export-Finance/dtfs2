@@ -8,7 +8,7 @@ import applicationDetails from './pages/application-details';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationId;
+let dealId;
 
 context('Submit to UKEF', () => {
   before(() => {
@@ -19,11 +19,11 @@ context('Submit to UKEF', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[2]._id;
+        dealId = body.items[2]._id;
 
         cy.login(CREDENTIALS.MAKER);
 
-        cy.visit(relative(`/gef/application-details/${applicationId}`));
+        cy.visit(relative(`/gef/application-details/${dealId}`));
 
         // Make the deal an Automatic Inclusion Application
         applicationDetails.automaticCoverDetailsLink().click();
@@ -38,7 +38,7 @@ context('Submit to UKEF', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
+    cy.visit(relative(`/gef/application-details/${dealId}/submit-to-ukef`));
   });
 
   // TODO: DTFS2-4761 - add negative tests
@@ -62,7 +62,7 @@ context('Submit to UKEF', () => {
     it('takes checker back to application review page when cancelled', () => {
       submitToUkef.comment().type('Some comments here ....');
       submitToUkef.cancelLink().click();
-      cy.location('pathname').should('eq', `/gef/application-details/${applicationId}`);
+      cy.location('pathname').should('eq', `/gef/application-details/${dealId}`);
     });
 
     it('takes checker to dashboard from the confirmation page', () => {
@@ -75,19 +75,19 @@ context('Submit to UKEF', () => {
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic inclusion notice submitted to UKEF');
       submitToUkefConfirmation.dashboardLink();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
 
     it('submits with comments', () => {
       submitToUkef.comment().type('Test comment');
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic inclusion notice submitted to UKEF');
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
 
     describe('After submission', () => {
       it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
-        cy.visit(relative(`/gef/application-details/${applicationId}`));
+        cy.visit(relative(`/gef/application-details/${dealId}`));
 
         statusBanner.bannerStatus().contains('Submitted');
         statusBanner.bannerUkefDealId();

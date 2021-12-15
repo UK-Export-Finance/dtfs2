@@ -62,8 +62,8 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const dealId = createDealBody._id;
 
     // create facilities
-    const newFacility1 = { ...newFacility, applicationId: dealId };
-    const newFacility2 = { ...newFacility, applicationId: dealId };
+    const newFacility1 = { ...newFacility, dealId };
+    const newFacility2 = { ...newFacility, dealId };
 
     const { body: facility1Body } = await api.post(newFacility1).to('/v1/portal/gef/facilities');
     const { body: facility2Body } = await api.post(newFacility2).to('/v1/portal/gef/facilities');
