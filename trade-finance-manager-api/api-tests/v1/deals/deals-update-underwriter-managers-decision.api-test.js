@@ -56,7 +56,7 @@ describe('update tfm underwriter managers decision', () => {
         sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
-          exporterName: MOCK_DEAL_BSS_MIA.submissionDetails['supplier-name'],
+          exporterName: MOCK_DEAL_BSS_MIA.exporterName.companyName,
           bankReferenceNumber: MOCK_DEAL_BSS_MIA.details.bankSupplyContractID,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           conditions: comments,
@@ -89,7 +89,7 @@ describe('update tfm underwriter managers decision', () => {
         sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
-          exporterName: MOCK_DEAL_BSS_MIA.submissionDetails['supplier-name'],
+          exporterName: MOCK_DEAL_BSS_MIA.exporterName.companyName,
           bankReferenceNumber: MOCK_DEAL_BSS_MIA.details.bankSupplyContractID,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
         },
@@ -121,7 +121,7 @@ describe('update tfm underwriter managers decision', () => {
         sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
-          exporterName: MOCK_DEAL_BSS_MIA.submissionDetails['supplier-name'],
+          exporterName: MOCK_DEAL_BSS_MIA.exporterName.companyName,
           bankReferenceNumber: MOCK_DEAL_BSS_MIA.details.bankSupplyContractID,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           reasonForRejection: comments,

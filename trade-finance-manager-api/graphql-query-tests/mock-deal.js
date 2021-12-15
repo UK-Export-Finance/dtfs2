@@ -233,6 +233,9 @@ const MOCK_DEAL = {
         },
       ],
     },
+    exporter: {
+      companyName: 'test',
+    },
   },
   tfm: {
     submissionDetails: {
