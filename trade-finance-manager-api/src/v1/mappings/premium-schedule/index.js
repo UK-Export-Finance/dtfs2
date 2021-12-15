@@ -14,7 +14,7 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
 
   mapped.productGroup = mapProductGroup(facility.facilityType);
 
-  mapped.facilityURN = facility.ukefFacilityID;
+  mapped.facilityURN = facility.ukefFacilityId;
 
   mapped.guaranteeCommencementDate = facilityGuaranteeDates.guaranteeCommencementDate;
   mapped.guaranteeExpiryDate = facilityGuaranteeDates.guaranteeExpiryDate;

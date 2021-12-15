@@ -78,7 +78,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
   });
 
-  it('clicking `ukefFacilityID` link in the legend goes to the Facility page', () => {
+  it('clicking `ukefFacilityId` link in the legend goes to the Facility page', () => {
     cy.login(underWritingManagerUser);
     cy.visit(relative(`/case/${dealId}/deal`));
 

@@ -58,7 +58,7 @@ describe('mapGefFacility', () => {
         guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee),
         dayCountBasis: facilitySnapshot.dayCountBasis,
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
-        ukefFacilityID: facilitySnapshot.ukefFacilityId,
+        ukefFacilityId: facilitySnapshot.ukefFacilityId,
         ukefExposure: `${facilitySnapshot.currency} ${facilitySnapshot.ukefExposure}`,
         providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),
         providedOnOther: facilitySnapshot.detailsOther,

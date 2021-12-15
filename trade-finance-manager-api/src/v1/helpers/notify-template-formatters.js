@@ -28,7 +28,7 @@ const generateFacilitiesListHeading = (facilityType) => {
 
 const generateFacilitiesListString = (facilities) => {
   const list = facilities.reduce((acc, facility) => {
-    const { ukefFacilityID } = facility;
+    const { ukefFacilityId } = facility;
 
     let string = `${acc}`;
     let bankRef;
@@ -47,7 +47,7 @@ const generateFacilitiesListString = (facilities) => {
       string += bankRefString;
     }
 
-    string += `*UKEF facility ID: ${ukefFacilityID}\n\n`;
+    string += `*UKEF facility ID: ${ukefFacilityId}\n\n`;
 
     return string;
   }, '');

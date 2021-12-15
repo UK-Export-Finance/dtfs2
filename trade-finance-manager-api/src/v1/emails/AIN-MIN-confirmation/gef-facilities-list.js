@@ -12,7 +12,7 @@ const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 */
 const facilityFieldsObj = (facility) => {
   const fields = (({
-    ukefFacilityID,
+    ukefFacilityId,
     bankReference,
     facilityStage,
     coverStartDate,
@@ -26,7 +26,7 @@ const facilityFieldsObj = (facility) => {
     feeFrequency,
     dayCountBasis,
   }) => ({
-    ukefFacilityID,
+    ukefFacilityId,
     bankReference,
     facilityStage,
     coverStartDate,
