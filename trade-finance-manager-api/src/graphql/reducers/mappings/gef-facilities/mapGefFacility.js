@@ -18,7 +18,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   } = facility;
 
   const {
-    applicationId,
+    dealId,
     coverPercentage,
     currency,
     value,
@@ -45,7 +45,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     facilitySnapshot: {
       _id: facility._id, // eslint-disable-line no-underscore-dangle
-      associatedDealId: applicationId,
+      associatedDealId: dealId,
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,
       coveredPercentage: `${coverPercentage}%`,

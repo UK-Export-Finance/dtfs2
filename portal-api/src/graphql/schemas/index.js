@@ -196,7 +196,7 @@ type GefDealsQuery {
 
 type GefFacility {
   _id: String
-  applicationId: String
+  dealId: String
   type: String
   hasBeenIssued: Boolean
   name: String

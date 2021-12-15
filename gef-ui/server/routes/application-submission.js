@@ -7,7 +7,7 @@ const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
-router.get('/application-details/:applicationId/submit', validateToken, getApplicationSubmission);
-router.post('/application-details/:applicationId/submit', validateToken, postApplicationSubmission);
+router.get('/application-details/:dealId/submit', validateToken, getApplicationSubmission);
+router.post('/application-details/:dealId/submit', validateToken, postApplicationSubmission);
 
 module.exports = router;

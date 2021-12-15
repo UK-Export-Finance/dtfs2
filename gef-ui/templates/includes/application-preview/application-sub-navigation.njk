@@ -6,14 +6,14 @@
          label: 'Sub navigation',
          items: [{
             text: 'Application/notice',
-            href: '/gef/application-details/' + applicationId,
+            href: '/gef/application-details/' + dealId,
             active: (activeSubNavigation=='/'),
             attributes: {
                "data-cy": "application-preview-link"
             }
          }, {
             text: 'Activity',
-            href: '/gef/application-details/' + applicationId + '/activities',
+            href: '/gef/application-details/' + dealId + '/activities',
             active: (activeSubNavigation=='activities'),
             attributes: {
                "data-cy": "application-activities-link"

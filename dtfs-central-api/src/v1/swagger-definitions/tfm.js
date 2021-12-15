@@ -49,7 +49,7 @@
  *           _id:
  *             type: string
  *             example: 123abc
- *           applicationId:
+ *           dealId:
  *             type: string
  *             example: 456abc
  *           type:

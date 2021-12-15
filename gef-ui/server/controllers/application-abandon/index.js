@@ -14,17 +14,17 @@ const confirmAbandonApplication = async (req, res, next) => {
     params,
     session,
   } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { user, userToken } = session;
   let application;
   try {
-    application = await Application.findById(applicationId, user, userToken);
+    application = await Application.findById(dealId, user, userToken);
 
     if (!application) {
       return res.redirect(dashboardUrl);
     }
     if (!applicationIsAbandonable(application)) {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
   } catch (err) {
     return next(err);
@@ -34,12 +34,12 @@ const confirmAbandonApplication = async (req, res, next) => {
 
 const abandonApplication = async (req, res, next) => {
   const { params, session } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { user, userToken } = session;
   try {
-    const application = await Application.findById(applicationId, user, userToken);
+    const application = await Application.findById(dealId, user, userToken);
     if (applicationIsAbandonable(application)) {
-      await api.setApplicationStatus(applicationId, PROGRESS.ABANDONED);
+      await api.setApplicationStatus(dealId, PROGRESS.ABANDONED);
     }
   } catch (err) {
     return next(err);

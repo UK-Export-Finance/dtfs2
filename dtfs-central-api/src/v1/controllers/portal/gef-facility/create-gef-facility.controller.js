@@ -6,7 +6,7 @@ const createFacility = async (newFacility) => {
   const facility = newFacility;
   const collection = await db.getCollection('gef-facilities');
 
-  facility.applicationId = new ObjectId(facility.applicationId);
+  facility.dealId = new ObjectId(facility.dealId);
 
   const response = await collection.insertOne(facility);
   const { insertedId } = response;
@@ -19,7 +19,7 @@ const createFacility = async (newFacility) => {
 exports.createFacilityPost = async (req, res) => {
   const facility = req.body;
 
-  return findOneDeal(facility.applicationId, async (deal) => {
+  return findOneDeal(facility.dealId, async (deal) => {
     if (deal) {
       const updatedFacility = await createFacility(facility);
 

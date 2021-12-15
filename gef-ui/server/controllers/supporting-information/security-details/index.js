@@ -6,22 +6,22 @@ const MAX_INPUT_LENGTH = 400;
 
 const getSecurityDetails = async (req, res) => {
   const {
-    params: { applicationId },
+    params: { dealId },
     session: { user, userToken },
   } = req;
   try {
-    const application = await Application.findById(applicationId, user, userToken);
+    const application = await Application.findById(dealId, user, userToken);
 
     // if application not found not authorised to view route
     if (!application) {
-      console.error(`User unauthorised to view application ${applicationId} security details`);
+      console.error(`User unauthorised to view application ${dealId} security details`);
       return res.sendStatus(404);
     }
 
     const { supportingInformation: { securityDetails = {} } } = application;
 
     return res.render('partials/security-details.njk', {
-      applicationId,
+      dealId,
       inputMaxLength: MAX_INPUT_LENGTH,
       exporterSecurity: securityDetails.exporter,
       applicationSecurity: securityDetails.application,
@@ -35,7 +35,7 @@ const getSecurityDetails = async (req, res) => {
 const postSecurityDetails = async (req, res) => {
   const {
     body: { exporterSecurity = '', applicationSecurity = '' },
-    params: { applicationId },
+    params: { dealId },
     session: { user, userToken },
   } = req;
 
@@ -83,7 +83,7 @@ const postSecurityDetails = async (req, res) => {
     if (securityDetailsErrors.length) {
       return res.render('partials/security-details.njk', {
         errors: validationErrorHandler(securityDetailsErrors),
-        applicationId,
+        dealId,
         inputMaxLength: MAX_INPUT_LENGTH,
         exporterSecurity,
         applicationSecurity,
@@ -95,10 +95,10 @@ const postSecurityDetails = async (req, res) => {
       application: applicationSecurity,
     };
 
-    const application = await Application.findById(applicationId, user, userToken);
+    const application = await Application.findById(dealId, user, userToken);
 
     if (!application) {
-      console.error(`User unauthorised to update application ${applicationId} security details`);
+      console.error(`User unauthorised to update application ${dealId} security details`);
       return res.sendStatus(404);
     }
 
@@ -107,12 +107,12 @@ const postSecurityDetails = async (req, res) => {
       securityDetails,
     };
 
-    await updateApplication(applicationId, application);
+    await updateApplication(dealId, application);
 
     if (application.supportingInformation?.requiredFields?.includes('exportLicence')) {
       return res.redirect('export-licence');
     }
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.error(`Error updating security details ${err}`);
     return res.sendStatus(500);

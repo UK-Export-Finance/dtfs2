@@ -13,7 +13,7 @@ const queryFacility = async ({ _id }) => {
   let dealId;
 
   if (isGefFacility(facilitySnapshot.type)) {
-    dealId = facilitySnapshot.applicationId;
+    dealId = facilitySnapshot.dealId;
   } else {
     dealId = facilitySnapshot.associatedDealId;
   }
