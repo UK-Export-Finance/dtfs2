@@ -69,13 +69,14 @@ const mockApplication = {
 describe('controllers/about-exporter', () => {
   let mockResponse;
   let mockRequest;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
 
     api.getApplication.mockResolvedValue(mockApplication);
-    api.updateApplication.mockResolvedValue({});
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -308,6 +309,24 @@ describe('controllers/about-exporter', () => {
       }));
     });
     */
+
+    it('calls api.updateApplication with submitted information, retaining existing application.exporter data', async () => {
+      mockRequest.body.smeType = 'MICRO';
+      mockRequest.body.probabilityOfDefault = '5';
+      mockRequest.body.isFinanceIncreasing = 'true';
+
+      await validateAboutExporter(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        exporter: {
+          ...mockApplication.exporter,
+          ...mockRequest.body,
+          isFinanceIncreasing: true,
+        },
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockApplication._id, expectedUpdateObj);
+    });
 
     it('redirects user to `application` page if response from api is successful', async () => {
       mockRequest.body.smeType = 'MICRO';

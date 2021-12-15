@@ -274,7 +274,7 @@ context('Clone GEF (MIA) deal', () => {
         applicationDetails.mainHeading().contains('Manual Inclusion Application');
         applicationDetails.automaticCoverStatus().contains('Completed');
         applicationDetails.facilityStatus().contains('In progress');
-        applicationDetails.exporterStatus().contains('In progress');
+        applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
         cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
