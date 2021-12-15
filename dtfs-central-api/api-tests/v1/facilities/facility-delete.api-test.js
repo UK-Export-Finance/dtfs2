@@ -15,7 +15,7 @@ const mockUser = {
 };
 
 const newBondFacility = {
-  associatedDealId: 123,
+  dealId: 123,
   facilityType: 'bond',
 };
 
@@ -49,7 +49,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     dealId = deal._id;
-    newBondFacility.associatedDealId = dealId;
+    newBondFacility.dealId = dealId;
 
     const { data: facility } = await axios({
       method: 'post',
@@ -77,7 +77,7 @@ describe('/v1/portal/facilities', () => {
 
     it('deletes the facility', async () => {
       const removeBody = {
-        associatedDealId: newBondFacility.associatedDealId,
+        dealId: newBondFacility.dealId,
         user: mockUser,
       };
 

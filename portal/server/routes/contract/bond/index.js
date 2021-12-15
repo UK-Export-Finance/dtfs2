@@ -58,16 +58,9 @@ const userCanAccessBondPreview = (user) => {
 };
 
 router.get('/contract/:_id/bond/create', async (req, res) => {
-  const { _id: dealId, userToken } = requestParams(req);
+  const { dealId, bondId } = await api.createBond(req.params._id, req.session.userToken);
 
-  const {
-    associatedDealId,
-    bondId,
-  } = await api.createBond(dealId, userToken); // eslint-disable-line no-underscore-dangle
-
-  req.params._id = associatedDealId; // eslint-disable-line no-underscore-dangle
-
-  return res.redirect(`/contract/${associatedDealId}/bond/${bondId}/details`); // eslint-disable-line no-underscore-dangle
+  return res.redirect(`/contract/${dealId}/bond/${bondId}/details`);
 });
 
 router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, res) => {

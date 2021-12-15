@@ -1,13 +1,10 @@
 const moment = require('moment');
-const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
-const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/reference-data/api');
@@ -21,12 +18,11 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
   let aBarclaysChecker;
   let aSuperuser;
   let updatedDeal;
-  let completedDealWithFacilities;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
+    [aBarclaysMaker] = barclaysMakers;
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     aSuperuser = testUsers().superuser().one();
   });

@@ -154,7 +154,7 @@ const createFacility = async (facility, user) => {
   }
 };
 
-const createMultipleFacilities = async (facilities, associatedDealId, user) => {
+const createMultipleFacilities = async (facilities, dealId, user) => {
   try {
     return await axios({
       method: 'post',
@@ -164,7 +164,7 @@ const createMultipleFacilities = async (facilities, associatedDealId, user) => {
       },
       data: {
         facilities,
-        associatedDealId,
+        dealId,
         user,
       },
     });

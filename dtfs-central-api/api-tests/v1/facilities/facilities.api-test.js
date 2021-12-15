@@ -15,7 +15,7 @@ const mockUser = {
 
 const mockFacility = {
   facilityType: 'bond',
-  associatedDealId: '123123456',
+  dealId: '123123456',
 };
 
 const newDeal = aDeal({
@@ -46,7 +46,7 @@ describe('/v1/portal/facilities', () => {
     const deal = await createDeal();
 
     dealId = deal._id;
-    mockFacility.associatedDealId = dealId;
+    mockFacility.dealId = dealId;
   });
 
   describe('GET /v1/portal/facilities/', () => {
@@ -84,7 +84,7 @@ describe('/v1/portal/facilities', () => {
       const postBody = {
         facilities,
         user: mockUser,
-        associatedDealId: dealId,
+        dealId,
       };
 
       const { status, body } = await api.post(postBody).to('/v1/portal/multiple-facilities');
@@ -103,7 +103,7 @@ describe('/v1/portal/facilities', () => {
 
       const postBody = {
         facilities,
-        associatedDealId: dealId,
+        dealId,
       };
 
       const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');
@@ -121,7 +121,7 @@ describe('/v1/portal/facilities', () => {
 
       const postBody = {
         facilities,
-        associatedDealId: '1234',
+        dealId: '1234',
       };
 
       const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');

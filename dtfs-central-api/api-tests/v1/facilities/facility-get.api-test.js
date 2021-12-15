@@ -15,7 +15,7 @@ const mockUser = {
 
 const newFacility = {
   facilityType: 'bond',
-  associatedDealId: '123123456',
+  dealId: '123123456',
 };
 
 const newDeal = aDeal({
@@ -46,7 +46,7 @@ describe('/v1/portal/facilities', () => {
     const deal = await createDeal();
 
     dealId = deal._id;
-    newFacility.associatedDealId = dealId;
+    newFacility.dealId = dealId;
   });
 
   describe('GET /v1/portal/facilities/:id', () => {
