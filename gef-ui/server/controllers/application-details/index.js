@@ -6,7 +6,7 @@ const
     mapSummaryList,
     isUkefReviewAvailable,
     isUkefReviewPositive,
-    getFacilitiesAsArray,
+    getIssuedFacilitiesAsArray,
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
@@ -189,7 +189,7 @@ const applicationDetails = async (req, res, next) => {
 
     if (facilitiesPartials.includes(url)) {
       if (url === 'cover-start-date') {
-        facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
+        facility = getIssuedFacilitiesAsArray(await api.getFacilities(applicationId));
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       }
