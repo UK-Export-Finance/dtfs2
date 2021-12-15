@@ -252,13 +252,14 @@ const isUkefReviewPositive = (applicationStatus) => {
  * @param {Object} facilities
  * @returns {Array}
  */
-const getFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed).map(({ details }) =>
-  [
-    { text: details.name },
-    { text: details.ukefFacilityId },
-    { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-    { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
-  ]);
+const getIssuedFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
+  .map(({ details }) =>
+    [
+      { text: details.name },
+      { text: details.ukefFacilityId },
+      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+      { html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
+    ]);
 
 const getFacilityCoverStartDate = (facility) => {
   const epoch = facility.details.coverStartDate ? facility.details.coverStartDate : null;
@@ -326,7 +327,7 @@ module.exports = {
   isNotice,
   isUkefReviewAvailable,
   isUkefReviewPositive,
-  getFacilitiesAsArray,
+  getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   futureDateInRange,
   pastDate,
