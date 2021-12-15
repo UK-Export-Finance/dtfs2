@@ -22,9 +22,11 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
     };
   }
 
-  const dealsArray = deals[0].deals;
   const [dealsObj] = deals;
-  const { count } = dealsObj;
+  const {
+    deals: dealsArray,
+    count,
+  } = dealsObj;
 
   const reducedDeals = dealsReducer(dealsArray);
 
