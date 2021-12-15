@@ -4,38 +4,39 @@ const { SME_TYPE, STATUS } = require('../../enums');
 
 const TOTAL_REQUIRED = 8;
 
-const hasRequiredItems = (doc) => {
+const unansweredFields = (answers) => {
   const required = [];
 
-  if (!doc.companiesHouseRegistrationNumber) {
+  if (!answers.companiesHouseRegistrationNumber) {
     required.push('companiesHouseRegistrationNumber');
   }
-  if (!doc.companyName) {
+  if (!answers.companyName) {
     required.push('companyName');
   }
-  if (!doc.registeredAddress) {
+  if (!answers.registeredAddress) {
     required.push('registeredAddress');
   }
-  if (!doc.selectedIndustry) {
+  if (!answers.selectedIndustry) {
     required.push('selectedIndustry');
   }
-  if (!doc.industries) {
+  if (!answers.industries) {
     required.push('industries');
   }
-  if (!doc.smeType) {
+  if (!answers.smeType) {
     required.push('smeType');
   }
-  if (!doc.probabilityOfDefault) {
+  if (!answers.probabilityOfDefault) {
     required.push('probabilityOfDefault');
   }
-  if (!doc.isFinanceIncreasing) {
+  if (answers.isFinanceIncreasing !== false && !answers.isFinanceIncreasing) {
     required.push('isFinanceIncreasing');
   }
+
   return required;
 };
 
-const exporterStatus = (doc) => {
-  const requiredCount = hasRequiredItems(doc).length;
+const exporterStatus = (answers) => {
+  const requiredCount = unansweredFields(answers).length;
 
   if (requiredCount === TOTAL_REQUIRED) {
     return STATUS.NOT_STARTED;
@@ -44,6 +45,7 @@ const exporterStatus = (doc) => {
   if (requiredCount > 0) {
     return STATUS.IN_PROGRESS;
   }
+
   if (requiredCount === 0) {
     return STATUS.COMPLETED;
   }
@@ -73,7 +75,8 @@ const exporterValidation = (doc) => ({
 });
 
 module.exports = {
-  exporterValidation,
-  exporterCheckEnums,
+  unansweredFields,
   exporterStatus,
+  exporterCheckEnums,
+  exporterValidation,
 };
