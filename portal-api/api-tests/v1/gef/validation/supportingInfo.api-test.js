@@ -1,7 +1,7 @@
 const { supportingInfoStatus } = require('../../../../src/v1/gef/controllers/validation/supportingInfo');
 const CONSTANTS = require('../../../../src/constants');
 
-describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`, () => {
+describe(`should return ${CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED} if no documents have been upload`, () => {
   const mockObject = {
     status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
     requiredFields: ['manualInclusion'],
@@ -12,7 +12,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED);
   });
 
-  it(`should return ${STATUS.IN_PROGRESS} if 2 documents are required and only one is uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS} if 2 documents are required and only one is uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence'];
     mockObject.manualInclusion = [{}];
 
@@ -20,7 +20,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (1 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (1 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion'];
     mockObject.manualInclusion = [{ }];
 
@@ -28,7 +28,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (2 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (2 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence'];
     mockObject.exporterLicence = [{ }];
 
@@ -36,7 +36,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (3 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (3 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports'];
     mockObject.debtorAndCreditorReports = [{ }];
 
@@ -44,7 +44,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (4 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (4 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure'];
     mockObject.corporateStructure = [{ }];
 
@@ -52,7 +52,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (5 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (5 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary'];
     mockObject.financialCommentary = [{ }];
 
@@ -60,7 +60,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (6 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (6 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary', 'financialForecasts'];
     mockObject.financialForecasts = [{ }];
 
@@ -68,7 +68,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (7 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (7 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary', 'financialForecasts', 'financialStatements'];
     mockObject.financialStatements = [{ }];
 
@@ -76,7 +76,7 @@ describe(`should return ${STATUS.NOT_STARTED} if no documents have been upload`,
     expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
   });
 
-  it(`should return ${STATUS.COMPLETED} if all required documents (8 in total) have been uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED} if all required documents (8 in total) have been uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary', 'financialForecasts', 'financialStatements', 'managementAccounts'];
     mockObject.managementAccounts = [{ }];
 
