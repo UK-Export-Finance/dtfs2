@@ -56,14 +56,15 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
     .toArray();
 
   const extendedDeals = [];
-  for await (const deal of deals) {
+
+  deals.forEach(async (deal) => {
     if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const extendedDeal = await extendDealWithFacilities(deal);
       extendedDeals.push(extendedDeal);
     } else {
       extendedDeals.push(deal);
     }
-  }
+  });
 
   return {
     count,
