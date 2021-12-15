@@ -5,18 +5,18 @@ exports.queryAllFacilities = async () => {
   const allFacilities = await getAllFacilities();
 
   const facilities = [];
-  allFacilities.forEach((val) => {
+  allFacilities.forEach((facility) => {
     facilities.push({
-      applicationId: val.applicationId,
-      companyName: val.companyName,
-      coverEndDate: val.coverEndDate,
-      dealType: val.dealType,
-      facilityType: val.facilityType,
-      hasBeenIssued: val.hasBeenIssued,
-      ukefFacilityId: val.ukefFacilityId,
-      facilityId: val.facilityId,
-      facilityValue: `${val.currency} ${formattedNumber(val.facilityValue)}`,
-      currency: val.currency,
+      applicationId: facility.applicationId,
+      companyName: facility.companyName,
+      coverEndDate: facility.coverEndDate,
+      dealType: facility.dealType,
+      facilityType: facility.facilityType,
+      hasBeenIssued: facility.hasBeenIssued,
+      ukefFacilityId: facility.ukefFacilityId,
+      facilityId: facility.facilityId,
+      facilityValue: `${facility.currency} ${formattedNumber(facility.facilityValue)}`,
+      currency: facility.currency,
     });
   });
 

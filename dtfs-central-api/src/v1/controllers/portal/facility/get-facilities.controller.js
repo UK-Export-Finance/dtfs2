@@ -14,8 +14,8 @@ exports.findAll = findAll;
 
 const findAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('facilities');
-  const facilities = collection.find({ dealId });
-  return facilities.toArray();
+  const facilities = await collection.find({ dealId }).toArray();
+  return facilities;
 };
 exports.findAllFacilitiesByDealId = findAllFacilitiesByDealId;
 
