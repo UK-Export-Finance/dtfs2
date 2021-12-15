@@ -158,7 +158,7 @@ describe('/v1/portal/deals', () => {
 
       // create some facilities
       const mockFacility = {
-        associatedDealId: createdDeal1._id,
+        dealId: createdDeal1._id,
         facilityValue: 123456,
         user: mockUser,
       };
@@ -226,7 +226,7 @@ describe('/v1/portal/deals', () => {
 
         // create some facilities
         const mockFacility = {
-          associatedDealId: dealId,
+          dealId,
           facilityValue: 123456,
           user: mockUser,
         };

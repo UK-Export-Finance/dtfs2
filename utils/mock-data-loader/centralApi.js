@@ -12,14 +12,14 @@ const getDeal = async (dealId) => {
   return response.data;
 };
 
-const createFacility = async (facility, associatedDealId, user) => {
+const createFacility = async (facility, dealId, user) => {
   const response = await axios({
     method: 'post',
     url: `${urlRoot}/v1/portal/facilities`,
     data: {
       facility: {
         ...facility,
-        associatedDealId,
+        dealId,
       },
       user,
     },

@@ -144,7 +144,7 @@ module.exports.createFacilities = (dealId, facilities, user, token) => cy.reques
   method: 'POST',
   body: {
     facilities,
-    associatedDealId: dealId,
+    dealId,
     user,
   },
   headers: {

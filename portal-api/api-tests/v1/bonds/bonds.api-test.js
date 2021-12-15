@@ -241,7 +241,7 @@ describe('/v1/deals/:id/bond', () => {
 
       const newBond = {
         facilityType: 'bond',
-        associatedDealId: dealId,
+        dealId,
       };
 
       await as(aBarclaysMaker).put(newBond).to(`/v1/deals/${dealId}/bond/create`);
@@ -339,7 +339,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const expectedUpdatedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
-          associatedDealId: dealId,
+          dealId,
           ...allBondFields,
           ...coverEndDate(),
           currency: {
@@ -408,7 +408,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
-          associatedDealId: dealId,
+          dealId,
           ...updatedBondAsIssued,
           currency: {
             currencyId: expectedCurrency.currencyId,
@@ -481,7 +481,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
-          associatedDealId: dealId,
+          dealId,
           ...updatedBondAsUnissued,
           currency: {
             currencyId: expectedCurrency.currencyId,
@@ -540,7 +540,7 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(updatedBond).toEqual({
         _id: bondId, // eslint-disable-line no-underscore-dangle
-        associatedDealId: dealId,
+        dealId,
         ...bondBody,
         currency: {
           currencyId: expectedCurrency.currencyId,

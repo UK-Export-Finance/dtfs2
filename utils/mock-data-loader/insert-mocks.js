@@ -59,10 +59,10 @@ const insertMocks = async () => {
 
     const facilityToInsert = {
       ...facility,
-      associatedDealId: associatedDeal._id,
+      dealId: associatedDeal._id,
     };
 
-    await centralApi.createFacility(facilityToInsert, facilityToInsert.associatedDealId, tfmMakerToken);
+    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, tfmMakerToken);
   }
 };
 

@@ -77,15 +77,9 @@ const handleBankReferenceNumberField = (loanBody) => {
 };
 
 router.get('/contract/:_id/loan/create', async (req, res) => {
-  const { _id: dealId, userToken } = requestParams(req);
-  const {
-    associatedDealId,
-    loanId,
-  } = await api.createLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
+  const { dealId, loanId } = await api.createLoan(req.params._id, req.session.userToken);
 
-  req.params._id = associatedDealId; // eslint-disable-line no-underscore-dangle
-
-  return res.redirect(`/contract/${associatedDealId}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
+  return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
 router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
