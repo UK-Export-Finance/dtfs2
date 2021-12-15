@@ -30,7 +30,7 @@ describe('controllers/supporting-information/security-details', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         },
         session: {
           user: { roles: ['MAKER'] },
@@ -45,7 +45,7 @@ describe('controllers/supporting-information/security-details', () => {
 
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', {
-        applicationId: 'mock-id',
+        dealId: 'mock-id',
         inputMaxLength: MAX_INPUT_LENGTH,
       });
     });
@@ -64,7 +64,7 @@ describe('controllers/supporting-information/security-details', () => {
 
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', {
-        applicationId: 'mock-id',
+        dealId: 'mock-id',
         inputMaxLength: MAX_INPUT_LENGTH,
         applicationSecurity: 'mock applications security details',
         exporterSecurity: 'mock exporter security details',
@@ -94,7 +94,7 @@ describe('controllers/supporting-information/security-details', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         },
         session: {
           user: { roles: ['MAKER'] },
@@ -120,7 +120,7 @@ describe('controllers/supporting-information/security-details', () => {
             { href: '#applicationSecurity', text: expect.any(String) },
           ]),
         }),
-        applicationId: 'mock-id',
+        dealId: 'mock-id',
         inputMaxLength: MAX_INPUT_LENGTH,
       }));
     });

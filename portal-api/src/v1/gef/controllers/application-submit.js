@@ -3,7 +3,7 @@ const now = require('../../../now');
 const refDataApi = require('../../../reference-data/api');
 const db = require('../../../drivers/db-client');
 const {
-  getAllFacilitiesByApplicationId,
+  getAllFacilitiesByDealId,
   update: updateFacility,
 } = require('./facilities.controller');
 const CONSTANTS = require('../../../constants');
@@ -48,7 +48,7 @@ const generateUkefFacilityId = async (facility) => facility.ukefDealId || genera
 });
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
-  const facilities = await getAllFacilitiesByApplicationId(dealId);
+  const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
     const { _id, hasBeenIssued, shouldCoverStartOnSubmission } = facility;
@@ -72,7 +72,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
 };
 
 const addUkefFacilityIdToFacilities = async (dealId) => {
-  const facilities = await getAllFacilitiesByApplicationId(dealId);
+  const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(facilities.map(async (facility) => {
     const { ukefId } = await generateUkefFacilityId(facility);

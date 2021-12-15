@@ -50,7 +50,7 @@ describe('controllers/return-to-maker', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         },
         query: {},
         session: {
@@ -64,7 +64,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
-        applicationId: 'mock-id',
+        dealId: 'mock-id',
         maxCommentLength: MAX_COMMENT_LENGTH,
       }));
     });
@@ -83,7 +83,7 @@ describe('controllers/return-to-maker', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: '1234',
+          dealId: '1234',
         },
         query: {},
         body: {
@@ -124,7 +124,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
-        applicationId: '1234',
+        dealId: '1234',
         comment: longComment,
         maxCommentLength: MAX_COMMENT_LENGTH,
         errors: expect.any(Object),

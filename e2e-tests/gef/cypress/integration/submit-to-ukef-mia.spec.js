@@ -8,7 +8,7 @@ import applicationSubmission from './pages/application-submission';
 import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 
-let applicationId;
+let dealId;
 
 context('Submit MIA to UKEF', () => {
   before(() => {
@@ -19,7 +19,7 @@ context('Submit MIA to UKEF', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[2]._id;
+        dealId = body.items[2]._id;
 
         cy.login(CREDENTIALS.MAKER);
       });
@@ -29,11 +29,11 @@ context('Submit MIA to UKEF', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('Create MIA', () => {
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -46,14 +46,14 @@ context('Submit MIA to UKEF', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(applicationId)}/upload`);
+      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealId)}/upload`);
       manualInclusion.uploadSuccess('upload-file-valid.doc');
       manualInclusion.continueButton().click();
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.applicationSecurity().type('test2');
       securityDetails.continueButton().click();
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.cancelButton().click();
 
       applicationDetails.submitButton().click();
@@ -67,7 +67,7 @@ context('Submit MIA to UKEF', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.CHECKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('Ensure attachments uploaded are available for download.', () => {
@@ -79,7 +79,7 @@ context('Submit MIA to UKEF', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.CHECKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
+      cy.visit(relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
 
     it('Submission page as expected', () => {
@@ -93,7 +93,7 @@ context('Submit MIA to UKEF', () => {
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains('Manual inclusion application submitted to UKEF');
       submitToUkefConfirmation.dashboardLink();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/submit-to-ukef`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
   });
 });

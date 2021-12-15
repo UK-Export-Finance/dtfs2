@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationId;
+let dealId;
 
 context('Automatic Cover Page', () => {
   before(() => {
@@ -13,14 +13,14 @@ context('Automatic Cover Page', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[0]._id;
+        dealId = body.items[0]._id;
       });
     cy.login(CREDENTIALS.MAKER);
   });
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationId}/automatic-cover`));
+    cy.visit(relative(`/gef/application-details/${dealId}/automatic-cover`));
   });
 
   describe('Visiting page', () => {
@@ -57,7 +57,7 @@ context('Automatic Cover Page', () => {
         }
       });
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/ineligible-automatic-cover`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
     });
 
     it('takes user to `eligible for automatic cover` page if all true fields have been selected', () => {
@@ -65,12 +65,12 @@ context('Automatic Cover Page', () => {
         $el.find('[data-cy="automatic-cover-true"]').click();
       });
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/eligible-automatic-cover`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/eligible-automatic-cover`));
     });
 
     it('takes user to `automatic application details` page if they click on the save and return button', () => {
       automaticCover.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });
 });

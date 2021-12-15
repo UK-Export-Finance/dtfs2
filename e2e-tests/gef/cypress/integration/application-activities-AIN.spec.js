@@ -10,7 +10,7 @@ import submitToUkef from './pages/submit-to-ukef';
 
 import { format } from 'date-fns';
 
-let applicationId;
+let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
@@ -21,7 +21,7 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[2]._id;
+        dealId = body.items[2]._id;
 
         cy.login(CREDENTIALS.MAKER);
       });
@@ -31,11 +31,11 @@ context('Submit AIN deal and check portalActivities', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('submits to checked as AIN', () => {
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
 
       // Make the deal an Automatic Inclusion Notice
       applicationDetails.automaticCoverDetailsLink().click();
@@ -54,7 +54,7 @@ context('Submit AIN deal and check portalActivities', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.CHECKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('submits detail to UKEF', () => {
@@ -67,7 +67,7 @@ context('Submit AIN deal and check portalActivities', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     // ensures that can click between both tabs and correct info is shown

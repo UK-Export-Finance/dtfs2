@@ -22,12 +22,12 @@ describe('GET Ineligible Automatic Cover', () => {
     const mockResponse = MockResponse();
     const mockRequest = MockRequest();
 
-    mockRequest.params.applicationId = '123';
+    mockRequest.params.dealId = '123';
 
     await ineligibleAutomaticCover(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-automatic-cover.njk', {
-      applicationId: '123',
+      dealId: '123',
     });
   });
 });

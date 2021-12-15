@@ -20,7 +20,7 @@ context('Dashboard Deals pagination controls', () => {
         deal = insertedDeal;
 
         const dummyFacilities = new Array(21).fill('').map((_, i) => ({
-          applicationId: deal._id,
+          dealId: deal._id,
           type: 'CASH',
           name: `abc-${i + 1}-def`,
         }));
