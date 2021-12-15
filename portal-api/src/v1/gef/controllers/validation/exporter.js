@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 
-const { SME_TYPE, STATUS } = require('../../enums');
+const CONSTANTS = require('../../../../constants');
+const { SME_TYPE } = require('../../enums');
 
 const TOTAL_REQUIRED = 8;
 
@@ -38,17 +39,17 @@ const exporterStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
 
   if (requiredCount === TOTAL_REQUIRED) {
-    return STATUS.NOT_STARTED;
+    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
   }
 
   if (requiredCount > 0) {
-    return STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
-    return STATUS.COMPLETED;
+    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
   }
 
-  return STATUS.IN_PROGRESS;
+  return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
 };
 
 const exporterCheckEnums = (doc) => {

@@ -1,4 +1,4 @@
-const { STATUS } = require('../../enums');
+const CONSTANTS = require('../../../../constants');
 
 const getAnsweredItems = (answers) =>
   answers.filter((a) => (a.answer === true || a.answer === false));
@@ -20,14 +20,14 @@ const eligibilityCriteriaStatus = (answers) => {
   const answeredCount = getAnsweredItems(answers).length;
 
   if (answeredCount === 0) {
-    return STATUS.NOT_STARTED;
+    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
   }
 
   if (answeredCount === requiredCount) {
-    return STATUS.COMPLETED;
+    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
   }
 
-  return STATUS.IN_PROGRESS;
+  return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
 };
 
 module.exports = {

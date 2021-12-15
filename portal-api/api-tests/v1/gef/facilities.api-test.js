@@ -1,5 +1,6 @@
 const wipeDB = require('../../wipeDB');
-const { STATUS, FACILITY_TYPE, ERROR } = require('../../../src/v1/gef/enums');
+const CONSTANTS = require('../../../src/constants');
+const { FACILITY_TYPE, ERROR } = require('../../../src/v1/gef/enums');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -33,7 +34,7 @@ describe(baseUrl, () => {
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     newFacility = {
-      status: STATUS.IN_PROGRESS,
+      status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
       details: {
         _id: expect.any(String),
         applicationId: mockApplication.body._id,
@@ -116,7 +117,7 @@ describe(baseUrl, () => {
 
       const { body, status } = await as(aChecker).get(baseUrl, mockQuery);
 
-      expect(body).toEqual({ status: STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
+      expect(body).toEqual({ status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
     });
 
@@ -135,14 +136,14 @@ describe(baseUrl, () => {
 
       const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${mockApplication.body._id}`);
 
-      expect(body).toEqual({ status: STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
+      expect(body).toEqual({ status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
     });
 
     it('returns a empty object if there are no records', async () => {
       const { body } = await as(aMaker).get(`${baseUrl}?applicationId=doesnotexist`);
       expect(body).toEqual({
-        status: STATUS.NOT_STARTED,
+        status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         items: [],
       });
     });
@@ -212,7 +213,7 @@ describe(baseUrl, () => {
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
 
       const expected = {
-        status: STATUS.IN_PROGRESS,
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         details: {
           ...details,
           ...update,
@@ -278,7 +279,7 @@ describe(baseUrl, () => {
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
-        status: STATUS.COMPLETED,
+        status: CONSTANTS.DEAL.GEF_STATUS.COMPLETED,
         details: {
           ...details,
           ...update,
@@ -322,7 +323,7 @@ describe(baseUrl, () => {
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
-        status: STATUS.IN_PROGRESS,
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         details: {
           ...details,
           ...update,
@@ -349,7 +350,7 @@ describe(baseUrl, () => {
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
-        status: STATUS.IN_PROGRESS,
+        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         details: {
           ...details,
           ...update,
@@ -369,7 +370,7 @@ describe(baseUrl, () => {
       const item = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
-        status: STATUS.COMPLETED,
+        status: CONSTANTS.DEAL.GEF_STATUS.COMPLETED,
         details: {
           ...details,
           ...completeUpdate,
@@ -438,7 +439,7 @@ describe(baseUrl, () => {
   });
 
   describe(`Overall Status: ${baseUrl}`, () => {
-    it(`overall status shows as "${STATUS.NOT_STARTED}" if all status is marked as "${STATUS.NOT_STARTED}"`, async () => {
+    it(`overall status shows as "${CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED}" if all status is marked as "${CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED}"`, async () => {
       await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
@@ -447,11 +448,11 @@ describe(baseUrl, () => {
       const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
 
       expect(status).toEqual(200);
-      expect(body.status).toEqual(STATUS.IN_PROGRESS);
+      expect(body.status).toEqual(CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
-    it(`overall status shows as "${STATUS.IN_PROGRESS}" if some status is marked as "${STATUS.IN_PROGRESS}"`, async () => {
+    it(`overall status shows as "${CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS}" if some status is marked as "${CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS}"`, async () => {
       const item1 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const item3 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put({ name: 'test' }).to(`${baseUrl}/${item1.body.details._id}`);
@@ -461,11 +462,11 @@ describe(baseUrl, () => {
       const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
 
       expect(status).toEqual(200);
-      expect(body.status).toEqual(STATUS.IN_PROGRESS);
+      expect(body.status).toEqual(CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
-    it(`overall status shows as "${STATUS.COMPLETED}" if all status is marked as "${STATUS.COMPLETED}"`, async () => {
+    it(`overall status shows as "${CONSTANTS.DEAL.GEF_STATUS.COMPLETED}" if all status is marked as "${CONSTANTS.DEAL.GEF_STATUS.COMPLETED}"`, async () => {
       const item1 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const item2 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const item3 = await as(aMaker).post({ applicationId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
@@ -477,7 +478,7 @@ describe(baseUrl, () => {
       const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
 
       expect(status).toEqual(200);
-      expect(body.status).toEqual(STATUS.COMPLETED);
+      expect(body.status).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
   });
