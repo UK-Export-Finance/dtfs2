@@ -4,7 +4,7 @@ const db = require('../../../../drivers/db-client');
 const findAllGefFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('gef-facilities');
 
-  const facilities = await collection.find({ applicationId: ObjectId(dealId) }).toArray();
+  const facilities = await collection.find({ dealId: ObjectId(dealId) }).toArray();
 
   return facilities;
 };

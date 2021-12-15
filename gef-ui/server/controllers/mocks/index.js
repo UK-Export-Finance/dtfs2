@@ -8,7 +8,7 @@ const MockResponse = () => ({
 });
 
 const MockRequest = () => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   session: {
     user: {
@@ -21,7 +21,7 @@ const MockRequest = () => ({
 });
 
 const MockRequestChecker = () => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   session: {
     user: {
@@ -34,7 +34,7 @@ const MockRequestChecker = () => ({
 });
 
 const MockRequestUrl = (url) => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   url,
   session: {
@@ -48,7 +48,7 @@ const MockRequestUrl = (url) => ({
 });
 
 const MockRequestUrlChecker = (url) => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   url,
   session: {

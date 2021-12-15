@@ -4,21 +4,21 @@ const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
 
-const updateSubmissionType = async (applicationId, coverType) => {
-  await api.updateApplication(applicationId, { submissionType: coverType });
+const updateSubmissionType = async (dealId, coverType) => {
+  await api.updateApplication(dealId, { submissionType: coverType });
 };
 
 const automaticCover = async (req, res) => {
   const { params } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
 
   try {
-    const application = await api.getApplication(applicationId);
+    const application = await api.getApplication(dealId);
     const { eligibility } = application;
 
     return res.render('partials/automatic-cover.njk', {
       terms: eligibility.criteria,
-      applicationId,
+      dealId,
     });
   } catch (err) {
     console.error(err);
@@ -29,9 +29,9 @@ const automaticCover = async (req, res) => {
 const validateAutomaticCover = async (req, res, next) => {
   try {
     const { body, params, query } = req;
-    const { applicationId } = params;
+    const { dealId } = params;
     const { saveAndReturn } = query;
-    const application = await api.getApplication(applicationId);
+    const application = await api.getApplication(dealId);
     const { eligibility } = application;
 
     const automaticCoverErrors = getValidationErrors(body, eligibility.criteria);
@@ -50,11 +50,11 @@ const validateAutomaticCover = async (req, res, next) => {
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
         terms: mappedTerms,
-        applicationId,
+        dealId,
       });
     }
 
-    await updateSubmissionType(applicationId, coverType);
+    await updateSubmissionType(dealId, coverType);
 
     // copy existing answers
     const newAnswers = eligibility.criteria;
@@ -71,24 +71,24 @@ const validateAutomaticCover = async (req, res, next) => {
       },
     };
 
-    await api.updateApplication(applicationId, applicationUpdate);
+    await api.updateApplication(dealId, applicationUpdate);
 
     if (saveAndReturn) {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     if (coverType === DEAL_SUBMISSION_TYPE.MIA) {
       return res.redirect(
-        `/gef/application-details/${applicationId}/ineligible-automatic-cover`,
+        `/gef/application-details/${dealId}/ineligible-automatic-cover`,
       );
     }
     if (coverType === DEAL_SUBMISSION_TYPE.AIN) {
       return res.redirect(
-        `/gef/application-details/${applicationId}/eligible-automatic-cover`,
+        `/gef/application-details/${dealId}/eligible-automatic-cover`,
       );
     }
 
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.error(err);
     return next(err);

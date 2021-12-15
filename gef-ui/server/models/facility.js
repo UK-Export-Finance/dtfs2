@@ -5,10 +5,10 @@ const {
 const { FACILITY_TYPE } = require('../constants');
 
 class Facility {
-  static async find(applicationId, facilityId, status, user) {
+  static async find(dealId, facilityId, status, user) {
     try {
       const { details } = await getFacility(facilityId);
-      const { bankId } = await getApplication(applicationId);
+      const { bankId } = await getApplication(dealId);
       if (bankId !== user.bank.id) {
         return null;
       }
@@ -26,7 +26,7 @@ class Facility {
         coverPercentage: coverPercentage !== 'null' ? coverPercentage : null,
         interestPercentage: interestPercentage !== 'null' ? interestPercentage : null,
         facilityTypeString,
-        applicationId,
+        dealId,
         facilityId,
         status,
         feeFrequency: details.feeFrequency,

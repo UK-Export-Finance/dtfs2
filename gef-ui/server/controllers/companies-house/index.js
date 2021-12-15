@@ -3,16 +3,16 @@ const { validationErrorHandler } = require('../../utils/helpers');
 
 const companiesHouse = async (req, res) => {
   const { params, query } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { status } = query;
 
   try {
-    const { exporter } = await api.getApplication(applicationId);
+    const { exporter } = await api.getApplication(dealId);
     const { companiesHouseRegistrationNumber } = exporter;
 
     return res.render('partials/companies-house.njk', {
       regNumber: companiesHouseRegistrationNumber,
-      applicationId,
+      dealId,
       status,
     });
   } catch (err) {
@@ -24,7 +24,7 @@ const companiesHouse = async (req, res) => {
 const validateCompaniesHouse = async (req, res) => {
   const { params, body, query } = req;
   const { regNumber } = body;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { status } = query;
   const companiesHouseErrors = [];
   let companiesHouseDetails;
@@ -37,7 +37,7 @@ const validateCompaniesHouse = async (req, res) => {
   }
 
   try {
-    const { exporter } = await api.getApplication(applicationId);
+    const { exporter } = await api.getApplication(dealId);
 
     if (companiesHouseErrors.length === 0) {
       companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber);
@@ -53,7 +53,7 @@ const validateCompaniesHouse = async (req, res) => {
       return res.render('partials/companies-house.njk', {
         errors: validationErrorHandler(companiesHouseErrors),
         regNumber,
-        applicationId,
+        dealId,
         status,
       });
     }
@@ -66,10 +66,10 @@ const validateCompaniesHouse = async (req, res) => {
       },
     };
 
-    await api.updateApplication(applicationId, applicationExporterUpdate);
+    await api.updateApplication(dealId, applicationExporterUpdate);
 
     if (status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     return res.redirect('exporters-address');

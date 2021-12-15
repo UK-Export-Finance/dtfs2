@@ -38,7 +38,7 @@ const validateFileQuestion = (application, field, errRef) => {
   return errors;
 };
 
-const nextDocument = (application, applicationId, fieldName) => {
+const nextDocument = (application, dealId, fieldName) => {
   let supportingDocument = 'manual-inclusion-questionnaire'; // default page
   const currentIndex = application.supportingInformation?.requiredFields?.indexOf(fieldName);
   if (application.supportingInformation?.requiredFields?.length > 0) {
@@ -54,17 +54,17 @@ const nextDocument = (application, applicationId, fieldName) => {
     });
   }
 
-  let nextDoc = `/gef/application-details/${applicationId}/supporting-information/${supportingDocument}`;
+  let nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
   if (!application.supportingInformation?.requiredFields?.length
       || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
-    nextDoc = `/gef/application-details/${applicationId}`;
+    nextDoc = `/gef/application-details/${dealId}`;
   }
 
   return nextDoc;
 };
 
-const getApplication = async (applicationId, user, userToken) => {
-  const application = await Application.findById(applicationId, user, userToken);
+const getApplication = async (dealId, user, userToken) => {
+  const application = await Application.findById(dealId, user, userToken);
   if (!application) {
     throw new Error('NO_APPLICATION');
   }
@@ -73,7 +73,7 @@ const getApplication = async (applicationId, user, userToken) => {
 };
 
 const handleError = (err, req, res, next) => {
-  const { params: { applicationId, documentType } } = req;
+  const { params: { dealId, documentType } } = req;
 
   if (err.message === 'NOT_SUPPORTED') {
     const errMessage = `No support for document type ${documentType}`;
@@ -82,7 +82,7 @@ const handleError = (err, req, res, next) => {
     return next(new Error(errMessage));
   }
   if (err.message === 'NO_APPLICATION') {
-    const errMessage = `User unauthorised to access application ${applicationId}`;
+    const errMessage = `User unauthorised to access application ${dealId}`;
     console.error(errMessage);
 
     return next(new Error(errMessage));
@@ -94,12 +94,12 @@ const handleError = (err, req, res, next) => {
 const getSupportingDocuments = async (req, res, next) => {
   const {
     session: { user, userToken },
-    params: { applicationId, documentType },
+    params: { dealId, documentType },
   } = req;
   let application;
 
   try {
-    application = await getApplication(applicationId, user, userToken);
+    application = await getApplication(dealId, user, userToken);
     const { fieldName, title } = mapDocTypeParameterToProps(documentType);
 
     let files = [];
@@ -110,7 +110,7 @@ const getSupportingDocuments = async (req, res, next) => {
       title,
       formHeaderFragment: fieldName,
       user,
-      applicationId,
+      dealId,
       files,
     });
   } catch (err) {
@@ -123,7 +123,7 @@ const postSupportingDocuments = async (req, res, next) => {
   const {
     body: { delete: fileToDelete, submit },
     files,
-    params: { applicationId, documentType },
+    params: { dealId, documentType },
     session: { user, userToken },
   } = req;
   const errRef = 'documents';
@@ -134,7 +134,7 @@ const postSupportingDocuments = async (req, res, next) => {
     let errors = [];
     let processedFiles = [];
 
-    let application = await getApplication(applicationId, user, userToken);
+    let application = await getApplication(dealId, user, userToken);
 
     // Check if files have been sent via non-JS upload
     if (files && Array.isArray(files) && files.length) {
@@ -157,7 +157,7 @@ const postSupportingDocuments = async (req, res, next) => {
       const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(
         validFiles,
         fieldName,
-        applicationId,
+        dealId,
         userToken,
         user,
         maxFileSize,
@@ -181,7 +181,7 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     // Need to re-get the application here if any file changes
-    if (processedFiles.length) application = await Application.findById(applicationId, user, userToken);
+    if (processedFiles.length) application = await Application.findById(dealId, user, userToken);
 
     if (fileToDelete) {
       try {
@@ -206,7 +206,7 @@ const postSupportingDocuments = async (req, res, next) => {
         formHeaderFragment: fieldName,
         errors: errors.length && validationErrorHandler(errors),
         user,
-        applicationId,
+        dealId,
         files: [
           ...processedFiles,
           ...(application.supportingInformation?.[fieldName] || []),
@@ -214,7 +214,7 @@ const postSupportingDocuments = async (req, res, next) => {
       });
     }
 
-    return res.redirect(nextDocument(application, applicationId, fieldName));
+    return res.redirect(nextDocument(application, dealId, fieldName));
   } catch (err) {
     console.error('Supporting document post failed', { err });
     return handleError(err, req, res, next);
@@ -222,7 +222,7 @@ const postSupportingDocuments = async (req, res, next) => {
 };
 
 const uploadSupportingDocument = async (req, res, next) => {
-  const { file, params: { applicationId, documentType }, session: { user, userToken } } = req;
+  const { file, params: { dealId, documentType }, session: { user, userToken } } = req;
   try {
     const { fieldName, path } = mapDocTypeParameterToProps(documentType);
 
@@ -235,13 +235,13 @@ const uploadSupportingDocument = async (req, res, next) => {
 
     if (isValid) {
       // check user has access
-      await getApplication(applicationId, user, userToken);
+      await getApplication(dealId, user, userToken);
       const documentPath = fieldName;
 
       const [processedFile] = await uploadAndSaveToDeal(
         [file],
         fieldName,
-        applicationId,
+        dealId,
         userToken,
         user,
         maxFileSize,
@@ -268,7 +268,7 @@ const uploadSupportingDocument = async (req, res, next) => {
 const deleteSupportingDocument = async (req, res, next) => {
   const {
     body: { delete: fileToDelete },
-    params: { applicationId, documentType },
+    params: { dealId, documentType },
     session: { user, userToken },
   } = req;
   try {
@@ -276,7 +276,7 @@ const deleteSupportingDocument = async (req, res, next) => {
 
     const { fieldName } = mapDocTypeParameterToProps(documentType);
 
-    const application = await getApplication(applicationId, user, userToken);
+    const application = await getApplication(dealId, user, userToken);
 
     await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
 

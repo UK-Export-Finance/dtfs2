@@ -30,7 +30,7 @@
         <div class="govuk-grid-column-full-from-desktop">
             {{ govukBackLink({
                 text: "Back",
-                href: "/gef/application-details/" + applicationId + "/review-decision",
+                href: "/gef/application-details/" + dealId + "/review-decision",
                 attributes: {
                 'data-cy': 'back-link'
                 }
@@ -88,10 +88,10 @@
                         {{
                             govukButton({
                             text: "Continue",
-                            href: "/gef/application-details/" + applicationId
+                            href: "/gef/application-details/" + dealId
                             })
                         }}
-                    </div>                    
+                    </div>
                 {% endif %}
             </div>
         </div>

@@ -29,7 +29,7 @@ const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverSta
 };
 
 const processCoverStartDate = async (req, res) => {
-  const { applicationId, facilityId } = req.params;
+  const { dealId, facilityId } = req.params;
   const {
     ukefCoverStartDate,
     day,
@@ -82,7 +82,7 @@ const processCoverStartDate = async (req, res) => {
       req.success = {
         message: `Cover start date for ${facility.details.name} confirmed`,
       };
-      req.url = `/gef/application-details/${applicationId}/cover-start-date`;
+      req.url = `/gef/application-details/${dealId}/cover-start-date`;
     }
 
     return applicationDetails(req, res);
