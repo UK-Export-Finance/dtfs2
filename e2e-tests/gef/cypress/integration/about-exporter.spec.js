@@ -33,7 +33,7 @@ context('About Exporter Page', () => {
           deal.exporter.status === 'Not started');
 
         dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === 'COMPLETED');
+          deal.exporter.status === 'Completed');
 
       });
     cy.login(CREDENTIALS.MAKER);
