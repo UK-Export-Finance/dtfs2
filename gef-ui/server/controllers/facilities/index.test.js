@@ -15,7 +15,7 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   return req;
 };
 
@@ -24,7 +24,7 @@ const MockFacilityResponse = () => {
   res.details = {
     _id: 'abc',
     facilityType: 'CASH',
-    applicationId: '123',
+    dealId: '123',
     hasBeenIssued: true,
   };
   return res;
@@ -59,7 +59,7 @@ describe('controllers/facilities', () => {
       await facilities(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
         facilityType: 'cash',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       }));
     });
@@ -72,7 +72,7 @@ describe('controllers/facilities', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
         facilityType: 'cash',
-        applicationId: '123',
+        dealId: '123',
         hasBeenIssued: 'true',
         status: 'change',
       }));
@@ -95,7 +95,7 @@ describe('controllers/facilities', () => {
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
         }),
-        applicationId: '123',
+        dealId: '123',
       }));
     });
 
@@ -105,7 +105,7 @@ describe('controllers/facilities', () => {
 
       expect(api.updateFacility).not.toHaveBeenCalled();
       expect(api.createFacility).toHaveBeenCalledWith({
-        applicationId: '123',
+        dealId: '123',
         hasBeenIssued: true,
         type: 'CASH',
       });

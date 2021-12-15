@@ -6,7 +6,7 @@ jest.mock('../../services/api');
 const MockRequest = () => {
   const req = {};
   req.params = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {};
   req.body = {};
   return req;
@@ -50,7 +50,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/select-exporters-correspondence-address.njk', {
         postcode: 'W1 7PD',
-        applicationId: '123',
+        dealId: '123',
         addressesForSelection: [
           {
             text: '1 Address Found',
@@ -82,7 +82,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/select-exporters-correspondence-address.njk', expect.objectContaining({
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
       }));
     });
 

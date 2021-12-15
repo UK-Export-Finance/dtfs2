@@ -19,7 +19,7 @@
 
   {{ govukBackLink({
     text: "Back to previous page",
-    href: '/gef/application-details/' + applicationId + '/exporters-address',
+    href: '/gef/application-details/' + dealId + '/exporters-address',
     attributes: {
       'data-cy': 'back-link'
     }
@@ -41,7 +41,7 @@
         <p class="govuk-body" data-cy="postcode">
           {{ postcode }}
           <a class="govuk-link govuk-!-margin-left-6"
-            href="/gef/application-details/{{applicationId}}/exporters-address"
+            href="/gef/application-details/{{dealId}}/exporters-address"
             data-cy="change-link">
             Change
           </a>
@@ -73,7 +73,7 @@
 
         <div class="govuk-!-margin-bottom-6">
         <a class="govuk-link"
-          href="/gef/application-details/{{applicationId}}/enter-exporters-correspondence-address"
+          href="/gef/application-details/{{dealId}}/enter-exporters-correspondence-address"
           data-cy="cant-find-address">
           I can't find the address in the list
         </a>

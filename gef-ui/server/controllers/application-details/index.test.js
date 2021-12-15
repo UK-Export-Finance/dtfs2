@@ -126,7 +126,7 @@ describe('controllers/application-detaills', () => {
           },
           bankInternalRefName: mockApplicationResponse.bankInternalRefName,
           additionalRefName: mockApplicationResponse.additionalRefName,
-          applicationId: expect.any(String),
+          dealId: expect.any(String),
           makerCanSubmit: expect.any(Boolean),
           makerCanReSubmit: expect.any(Boolean),
           checkerCanSubmit: expect.any(Boolean),

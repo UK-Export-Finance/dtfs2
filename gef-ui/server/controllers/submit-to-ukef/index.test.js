@@ -18,7 +18,7 @@ const MockRequest = () => {
   req.params = {};
   req.body = { comment: '' };
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -99,7 +99,7 @@ describe('controllers/submit-to-ukef', () => {
 
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef.njk', expect.objectContaining({
-          applicationId: expect.any(String),
+          dealId: expect.any(String),
           comment: longComments,
           maxCommentLength: expect.any(Number),
           errors: expect.any(Object),
@@ -114,7 +114,7 @@ describe('controllers/submit-to-ukef', () => {
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef.njk',
           expect.objectContaining({
-            applicationId: expect.any(String),
+            dealId: expect.any(String),
             maxCommentLength: expect.any(Number),
           }));
     });

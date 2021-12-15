@@ -50,7 +50,7 @@ describe(baseUrl, () => {
         submissionCount: 0,
       }).to(baseUrl);
 
-      mockApplication.applicationId = mockDeal.body._id;
+      mockApplication.dealId = mockDeal.body._id;
 
       const { status } = await as().post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(401);
@@ -71,7 +71,7 @@ describe(baseUrl, () => {
         submissionCount: 0,
       }).to(baseUrl);
 
-      mockApplication.applicationId = mockDeal.body._id;
+      mockApplication.dealId = mockDeal.body._id;
       const { status } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(200);
     });
@@ -91,10 +91,10 @@ describe(baseUrl, () => {
         submissionCount: 0,
       }).to(baseUrl);
 
-      mockApplication.applicationId = mockDeal.body._id;
+      mockApplication.dealId = mockDeal.body._id;
 
       const { body } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
-      expect(body).toEqual({ applicationId: expect.any(String) });
+      expect(body).toEqual({ dealId: expect.any(String) });
     });
 
     it('returns an error message when Bank Internal Ref Name is null', async () => {
@@ -113,7 +113,7 @@ describe(baseUrl, () => {
       }).to(baseUrl);
 
       const payload = {
-        applicationId: mockDeal.body._id,
+        dealId: mockDeal.body._id,
         ...mockApplications[0],
         bankInternalRefName: null,
       };

@@ -6,7 +6,7 @@ const
     mapSummaryList,
     isUkefReviewAvailable,
     isUkefReviewPositive,
-    getFacilitiesAsArray,
+    getIssuedFacilitiesAsArray,
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
@@ -88,7 +88,7 @@ function buildBody(app, previewMode) {
     },
     bankInternalRefName: app.bankInternalRefName,
     additionalRefName: app.additionalRefName,
-    applicationId: app.id,
+    dealId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
@@ -150,7 +150,7 @@ const stateToPartial = (status, url) => {
 
 const applicationDetails = async (req, res, next) => {
   const {
-    params: { applicationId, facilityId },
+    params: { dealId, facilityId },
     session: { user, userToken },
   } = req;
   const facilitiesPartials = [
@@ -163,7 +163,7 @@ const applicationDetails = async (req, res, next) => {
   let url;
 
   try {
-    const application = await Application.findById(applicationId, user, userToken);
+    const application = await Application.findById(dealId, user, userToken);
 
     if (!application) {
       // 404 not found or unauthorised
@@ -189,7 +189,7 @@ const applicationDetails = async (req, res, next) => {
 
     if (facilitiesPartials.includes(url)) {
       if (url === 'cover-start-date') {
-        facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
+        facility = getIssuedFacilitiesAsArray(await api.getFacilities(dealId));
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       }
@@ -223,8 +223,8 @@ const applicationDetails = async (req, res, next) => {
 
 const postApplicationDetails = (req, res) => {
   const { params } = req;
-  const { applicationId } = params;
-  return res.redirect(`/gef/application-details/${applicationId}/submit`);
+  const { dealId } = params;
+  return res.redirect(`/gef/application-details/${dealId}/submit`);
 };
 
 module.exports = {

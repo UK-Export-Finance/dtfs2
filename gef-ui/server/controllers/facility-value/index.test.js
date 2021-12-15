@@ -23,7 +23,7 @@ const MockRequest = (saveAndReturn = false) => {
     },
     userToken: 'secret-token',
   };
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
 };
@@ -81,7 +81,7 @@ describe('controllers/facility-value', () => {
         coverPercentage: '20',
         interestPercentage: '10',
         facilityTypeString: 'cash',
-        applicationId: '123',
+        dealId: '123',
         facilityId: 'xyz',
         status: 'change',
       }));

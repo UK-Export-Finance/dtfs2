@@ -12,17 +12,17 @@ const mappedIndustries = (industries, selectedIndustry) => {
 
 const aboutExporter = async (req, res) => {
   const { params, query } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { status } = query;
 
   try {
-    const { exporter } = await api.getApplication(applicationId);
+    const { exporter } = await api.getApplication(dealId);
     const industries = mappedIndustries(exporter.industries, JSON.stringify(exporter.selectedIndustry));
     const isFinanceIncreasing = JSON.stringify(exporter.isFinanceIncreasing);
     const probabilityOfDefault = Number(exporter.probabilityOfDefault);
 
     return res.render('partials/about-exporter.njk', {
-      applicationId,
+      dealId,
       smeType: exporter?.smeType,
       isFinanceIncreasing,
       probabilityOfDefault,
@@ -37,12 +37,12 @@ const aboutExporter = async (req, res) => {
 
 const validateAboutExporter = async (req, res) => {
   const { body, params, query } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const aboutExporterErrors = [];
   const { saveAndReturn, status } = query;
 
   try {
-    const { exporter } = await api.getApplication(applicationId);
+    const { exporter } = await api.getApplication(dealId);
 
     // Only validate industries if it contains more than 1 SIC code
     if (!saveAndReturn && !body.selectedIndustry && exporter?.industries?.length > 1) {
@@ -95,7 +95,7 @@ const validateAboutExporter = async (req, res) => {
         probabilityOfDefault: Number(body.probabilityOfDefault),
         isFinanceIncreasing: body.isFinanceIncreasing,
         selectedIndustry: exporter.selectedIndustry,
-        applicationId,
+        dealId,
         industries,
         status,
       });
@@ -111,9 +111,9 @@ const validateAboutExporter = async (req, res) => {
       },
     };
 
-    await api.updateApplication(applicationId, applicationExporterUpdate);
+    await api.updateApplication(dealId, applicationExporterUpdate);
 
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

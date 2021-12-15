@@ -1,5 +1,5 @@
 const MOCK_CASH_FACILITY = {
-  applicationId: 'MOCK_GEF_DEAL',
+  dealId: 'MOCK_GEF_DEAL',
   coverEndDate: '2021-08-12T00:00:00.000Z',
   coverStartDate: '2021-10-08T00:00:00.000Z',
   coverPercentage: 12,
@@ -25,7 +25,7 @@ const MOCK_CASH_FACILITY = {
 };
 
 const MOCK_CONTINGENT_FACILITY = {
-  applicationId: 'MOCK_GEF_DEAL',
+  dealId: 'MOCK_GEF_DEAL',
   coverEndDate: '2021-10-12T00:00:00.000Z',
   coverStartDate: '2021-12-08T00:00:00.000Z',
   coverPercentage: 12,

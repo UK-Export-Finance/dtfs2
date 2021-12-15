@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const applicationIds = [];
+const dealIds = [];
 let token;
 
 context('Facilities Page', () => {
@@ -15,7 +15,7 @@ context('Facilities Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push(item._id);
+          dealIds.push(item._id);
         });
       });
     cy.login(CREDENTIALS.MAKER);
@@ -27,7 +27,7 @@ context('Facilities Page', () => {
 
   describe('Visiting facility page', () => {
     it('displays the correct elements for cash faciltiy', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.backLink();
       facilities.headingCaption();
       facilities.hasBeenIssuedHeading().contains('cash');
@@ -39,7 +39,7 @@ context('Facilities Page', () => {
     });
 
     it('displays the correct elements for contingent faciltiy', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities?facilityType=CONTINGENT`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=CONTINGENT`));
       facilities.backLink();
       facilities.headingCaption();
       facilities.hasBeenIssuedHeading().contains('contingent');
@@ -51,35 +51,35 @@ context('Facilities Page', () => {
     });
 
     it('redirects user back to application details page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0]}`));
     });
 
     it('redirects user back to application details page when clicking on `Cancel` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.cancelLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0]}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0]}`));
     });
   });
 
 
   describe('Clicking on Continue button', () => {
     it('validates form', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.continueButton().click();
       facilities.errorSummary();
       facilities.hasBeenIssuedError();
     });
 
     it('takes you to `about facility` page when selecting one of the radio buttons', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioYesRadioButton().click();
       facilities.continueButton().click();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,
       });
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/facilities`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioNoRadioButton().click();
       facilities.continueButton().click();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {

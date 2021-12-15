@@ -8,7 +8,7 @@
             text: "Clone",
             attributes: { "data-cy": "clone-gef-deal-link" },
             classes: "govuk-button--secondary govuk-!-margin-right-2",
-            href: applicationId + "/clone"
+            href: dealId + "/clone"
          }) }}
       {% endif %}
       {%if abandon %}
@@ -16,7 +16,7 @@
           text: "Abandon",
           attributes: { "data-cy": "abandon-link" },
           classes: "govuk-button--secondary",
-          href: "/gef/application-details/"+applicationId+"/abandon"
+          href: "/gef/application-details/"+dealId+"/abandon"
         }) }}
       {% endif %}
     </div>
@@ -27,7 +27,7 @@
       <div class="govuk-grid-column-two-thirds">
         {%if abandon %}
         <p class="govuk-body" data-cy="bank-reference">
-          <a class="govuk-link" href="/gef/applications/{{applicationId}}/name" data-cy="edit-refname-link">{{ bankInternalRefName }}</a>
+          <a class="govuk-link" href="/gef/applications/{{dealId}}/name" data-cy="edit-refname-link">{{ bankInternalRefName }}</a>
         </p>
         {%else%}
         <p class="govuk-body" data-cy="bank-reference">
@@ -41,7 +41,7 @@
       <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
       <div class="govuk-grid-column-two-thirds">
         <p class="govuk-body" data-cy="additional-reference">
-          <a class="govuk-link" href="/gef/applications/{{applicationId}}/name" data-cy="edit-addrefname-link">{{ additionalRefName or 'Add' }}</a>
+          <a class="govuk-link" href="/gef/applications/{{dealId}}/name" data-cy="edit-addrefname-link">{{ additionalRefName or 'Add' }}</a>
         </p>
       </div>
     </div>

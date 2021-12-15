@@ -4,15 +4,15 @@ const api = require('../../services/api');
 
 const selectExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { postcode, addresses } = session;
 
   try {
-    await api.getApplication(applicationId); // We fetch application to make sure it exists
+    await api.getApplication(dealId); // We fetch application to make sure it exists
     return res.render('partials/select-exporters-correspondence-address.njk', {
       addressesForSelection: selectDropdownAddresses(JSON.parse(addresses)),
       postcode,
-      applicationId,
+      dealId,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -23,7 +23,7 @@ const validateSelectExportersCorrespondenceAddress = (req, res) => {
   const { params, body, session } = req;
   const { postcode, addresses } = session;
   const { selectedAddress } = body;
-  const { applicationId } = params;
+  const { dealId } = params;
   const parseAddresses = JSON.parse(addresses);
   let selectedAddressError;
 
@@ -37,13 +37,13 @@ const validateSelectExportersCorrespondenceAddress = (req, res) => {
       errors: validationErrorHandler(selectedAddressError),
       addressesForSelection: selectDropdownAddresses(parseAddresses),
       postcode,
-      applicationId,
+      dealId,
     });
   }
 
   req.session.address = JSON.stringify(parseAddresses[parseFloat(selectedAddress)]);
 
-  return res.redirect(`/gef/application-details/${applicationId}/enter-exporters-correspondence-address`);
+  return res.redirect(`/gef/application-details/${dealId}/enter-exporters-correspondence-address`);
 };
 
 module.exports = {

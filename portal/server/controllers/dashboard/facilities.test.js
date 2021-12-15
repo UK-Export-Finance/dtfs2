@@ -133,14 +133,14 @@ describe('controllers/facilities', () => {
           {
             _id: 'mockFacility1',
             name: 'mock-facility',
-            applicationId: 'mock-deal-1',
+            dealId: 'mock-deal-1',
             type: 'mock-type',
             hasBeenIssued: true,
             deal: { _id: 'mock-deal-1' },
           },
           {
             _id: 'mockFacility2',
-            applicationId: 'mock-deal-1',
+            dealId: 'mock-deal-1',
             type: 'mock-type',
             deal: { _id: 'mock-deal-1' },
           },

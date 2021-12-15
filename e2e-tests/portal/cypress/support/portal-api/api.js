@@ -190,8 +190,8 @@ module.exports.insertGefApplication = (deal, token) => cy.request({
   return resp.body;
 });
 
-module.exports.setGefApplicationStatus = (applicationId, token, status) => cy.request({
-  url: `${api()}/v1/gef/application/status/${applicationId}`,
+module.exports.setGefApplicationStatus = (dealId, token, status) => cy.request({
+  url: `${api()}/v1/gef/application/status/${dealId}`,
   method: 'PUT',
   body: { status },
   headers: {
@@ -200,8 +200,8 @@ module.exports.setGefApplicationStatus = (applicationId, token, status) => cy.re
   },
 }).then((res) => res);
 
-module.exports.listGefFacilities = (token, applicationId) => cy.request({
-  url: `${api()}/v1/gef/facilities/?applicationId=${applicationId}`,
+module.exports.listGefFacilities = (token, dealId) => cy.request({
+  url: `${api()}/v1/gef/facilities/?dealId=${dealId}`,
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',

@@ -37,9 +37,9 @@ function checkPaymentType(paymentType) {
 
 class Facility {
   constructor(req) {
-    if (req.applicationId) {
+    if (req.dealId) {
       // new facility
-      this.applicationId = req.applicationId ? new ObjectID(req.applicationId) : null;
+      this.dealId = req.dealId ? new ObjectID(req.dealId) : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {

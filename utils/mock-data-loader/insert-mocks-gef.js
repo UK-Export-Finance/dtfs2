@@ -34,7 +34,7 @@ const insertMocks = async () => {
 
   console.log('inserting GEF deals');
   const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
-  
+
   for (const [index, item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, token);
@@ -55,16 +55,16 @@ const insertMocks = async () => {
   }
 
   const gefDeals = await api.listDeals(token);
-  
+
   console.log('inserting and updating GEF facilities');
   for (const [index, item] of MOCKS.FACILITIES.entries()) {
     // eslint-disable-next-line no-restricted-syntax
     for (const subitem of item) {
       // eslint-disable-next-line no-param-reassign
-      subitem.applicationId = gefDeals[index]._id;
+      subitem.dealId = gefDeals[index]._id;
       const facilty = await api.createFacilities(subitem, token);
       // eslint-disable-next-line no-param-reassign
-      delete subitem.applicationId;
+      delete subitem.dealId;
       await api.updateFacilities(facilty.details, subitem, token);
     }
   }

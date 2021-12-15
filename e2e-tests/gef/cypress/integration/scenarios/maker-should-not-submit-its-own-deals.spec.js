@@ -7,7 +7,7 @@ import applicationPreview from '../pages/application-preview';
 import returnToMaker from '../pages/return-to-maker';
 import statusBanner from '../pages/application-status-banner';
 
-const applicationIds = [];
+const dealIds = [];
 context('Submit application to UKEF', () => {
   before(() => {
     cy.reinsertMocks();
@@ -18,7 +18,7 @@ context('Submit application to UKEF', () => {
       })
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push(item._id);
+          dealIds.push(item._id);
         });
       });
   });
@@ -31,7 +31,7 @@ context('Submit application to UKEF', () => {
     it('does not allow a maker/checker to submit own edited deals', () => {
       // login as a maker and submit
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -48,12 +48,12 @@ context('Submit application to UKEF', () => {
 
       // login as a maker/checker and return to the maker with a comment.
       cy.login(CREDENTIALS.MAKER_CHECKER);
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('nope');
       returnToMaker.submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
@@ -76,7 +76,7 @@ context('Submit application to UKEF', () => {
 
       // it changes the status to Ready for Checker's approval
       // view the application as the maker/checker
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       statusBanner.bannerStatus().contains("Ready for Checker's approval");
 
       // the ability to return the application or submit to ukef should not be visible

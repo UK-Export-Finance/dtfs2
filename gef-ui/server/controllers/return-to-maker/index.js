@@ -8,8 +8,8 @@ const MAX_COMMENT_LENGTH = 400;
 
 const getReturnToMaker = async (req, res) => {
   const { params } = req;
-  const { applicationId } = params;
-  const { status } = await getApplication(applicationId);
+  const { dealId } = params;
+  const { status } = await getApplication(dealId);
 
   if (status !== CONSTANTS.DEAL_STATUS.BANK_CHECK) {
     // eslint-disable-next-line no-console
@@ -17,15 +17,15 @@ const getReturnToMaker = async (req, res) => {
     return res.redirect('/dashboard');
   }
 
-  return res.render('partials/return-to-maker.njk', { applicationId, maxCommentLength: MAX_COMMENT_LENGTH });
+  return res.render('partials/return-to-maker.njk', { dealId, maxCommentLength: MAX_COMMENT_LENGTH });
 };
 
 const postReturnToMaker = async (req, res, next) => {
   const { params, body, session } = req;
   const { user, userToken } = session;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { comment } = body;
-  const application = await getApplication(applicationId);
+  const application = await getApplication(dealId);
   const checker = await getUserDetails(user._id, userToken);
 
   try {
@@ -36,7 +36,7 @@ const postReturnToMaker = async (req, res, next) => {
       });
 
       return res.render('partials/return-to-maker.njk', {
-        applicationId, maxCommentLength: MAX_COMMENT_LENGTH, errors, comment,
+        dealId, maxCommentLength: MAX_COMMENT_LENGTH, errors, comment,
       });
     }
 
@@ -52,8 +52,8 @@ const postReturnToMaker = async (req, res, next) => {
       ];
     }
     application.checkerId = user._id;
-    await updateApplication(applicationId, application);
-    await setApplicationStatus(applicationId, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
+    await updateApplication(dealId, application);
+    await setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
   } catch (err) {
     return next(err);
   }

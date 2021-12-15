@@ -40,7 +40,7 @@ describe('controllers/supporting-documents', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
@@ -79,7 +79,7 @@ describe('controllers/supporting-documents', () => {
             'MAKER',
           ],
         },
-        applicationId: 'mock-id',
+        dealId: 'mock-id',
         files: [{
           _id: 'mockFileId',
           filename: 'mock-file.pdf',
@@ -93,7 +93,7 @@ describe('controllers/supporting-documents', () => {
       mockRequest = {
         body: {},
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
@@ -137,7 +137,7 @@ describe('controllers/supporting-documents', () => {
             originalname: 'mock-file.pdf',
             error: 'mock error',
           }],
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         }));
       });
 
@@ -180,7 +180,7 @@ describe('controllers/supporting-documents', () => {
               originalname: 'another-file.pdf',
             },
           ],
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         }));
       });
     });
@@ -211,7 +211,7 @@ describe('controllers/supporting-documents', () => {
               { href: '#documents', text: expect.any(String) },
             ]),
           }),
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         }));
       });
 
@@ -254,7 +254,7 @@ describe('controllers/supporting-documents', () => {
               { href: '#documents', text: expect.any(String) },
             ]),
           }),
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         }));
       });
 
@@ -277,7 +277,7 @@ describe('controllers/supporting-documents', () => {
               { href: '#documents', text: expect.any(String) },
             ]),
           }),
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         }));
       });
 
@@ -303,7 +303,7 @@ describe('controllers/supporting-documents', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
@@ -413,7 +413,7 @@ describe('controllers/supporting-documents', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
@@ -471,37 +471,37 @@ describe('controllers/supporting-documents', () => {
         requiredFields: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'],
       },
     };
-    const applicationId = 1234;
+    const dealId = 1234;
 
     it('moves to the financial statements page', () => {
-      expect(nextDocument(application, applicationId, 'managementAccounts')).toContain('/financial-statements');
+      expect(nextDocument(application, dealId, 'managementAccounts')).toContain('/financial-statements');
     });
     it('moves to the financial forecasts page', () => {
-      expect(nextDocument(application, applicationId, 'financialStatements')).toContain('/financial-forecasts');
+      expect(nextDocument(application, dealId, 'financialStatements')).toContain('/financial-forecasts');
     });
     it('moves to the Brief commentary on the financial information page', () => {
-      expect(nextDocument(application, applicationId, 'financialForecasts')).toContain('/financial-commentary');
+      expect(nextDocument(application, dealId, 'financialForecasts')).toContain('/financial-commentary');
     });
     it('moves to the Corporate structure diagram page', () => {
-      expect(nextDocument(application, applicationId, 'financialCommentary')).toContain('/corporate-structure');
+      expect(nextDocument(application, dealId, 'financialCommentary')).toContain('/corporate-structure');
     });
     it('moves to the Aged debtor and aged creditor listing page', () => {
-      expect(nextDocument(application, applicationId, 'corporateStructure')).toContain('/debtor-creditor-reports');
+      expect(nextDocument(application, dealId, 'corporateStructure')).toContain('/debtor-creditor-reports');
     });
     it('moves to the Exporter licence page', () => {
-      expect(nextDocument(application, applicationId, 'debtorAndCreditorReports')).toContain('/export-licence');
+      expect(nextDocument(application, dealId, 'debtorAndCreditorReports')).toContain('/export-licence');
     });
     it('moves to the main application page when user reaches the final step', () => {
-      expect(nextDocument(application, applicationId, 'exportLicence')).toBe(`/gef/application-details/${applicationId}`);
+      expect(nextDocument(application, dealId, 'exportLicence')).toBe(`/gef/application-details/${dealId}`);
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {
       application.supportingInformation.requiredFields = ['manualInclusion', 'financialStatements', 'financialForecasts'];
-      expect(nextDocument(application, applicationId, 'financialStatements')).toContain('/financial-forecasts');
+      expect(nextDocument(application, dealId, 'financialStatements')).toContain('/financial-forecasts');
     });
     it('returns to the main applications page', () => {
       application.supportingInformation = {};
-      expect(nextDocument(application, applicationId, 'manualInclusion')).toBe(`/gef/application-details/${applicationId}`);
+      expect(nextDocument(application, dealId, 'manualInclusion')).toBe(`/gef/application-details/${dealId}`);
     });
   });
 });

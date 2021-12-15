@@ -21,10 +21,10 @@ describe('GET Eligible Automatic Cover', () => {
   it('renders the `eligible for Automatic Cover` template with the correct paramaters', async () => {
     const mockResponse = MockResponse();
     const mockRequest = MockRequest();
-    mockRequest.params.applicationId = '123';
+    mockRequest.params.dealId = '123';
     await eligibleAutomaticCover(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/eligible-automatic-cover.njk', {
-      applicationId: '123',
+      dealId: '123',
     });
   });
 });

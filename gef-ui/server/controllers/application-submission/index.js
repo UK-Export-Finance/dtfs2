@@ -7,13 +7,13 @@ const maxCommentLength = 400;
 
 const getApplicationSubmission = async (req, res) => {
   const { params, session } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { user, userToken } = session;
-  const application = await Application.findById(applicationId, user, userToken);
+  const application = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
 
   return res.render('application-details-comments.njk', {
-    applicationId,
+    dealId,
     submissionType,
     maxCommentLength,
   });
@@ -22,9 +22,9 @@ const getApplicationSubmission = async (req, res) => {
 const postApplicationSubmission = async (req, res, next) => {
   const { params, session, body } = req;
   const { user, userToken } = session;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { comment } = body;
-  const application = await Application.findById(applicationId, user, userToken);
+  const application = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
 
   const maker = await api.getUserDetails(application.userId, userToken);
@@ -38,7 +38,7 @@ const postApplicationSubmission = async (req, res, next) => {
       });
 
       return res.render('application-details-comments.njk', {
-        applicationId, maxCommentLength, errors, comment,
+        dealId, maxCommentLength, errors, comment,
       });
     }
     if (comment) {
@@ -48,18 +48,18 @@ const postApplicationSubmission = async (req, res, next) => {
       const comments = application.comments || [];
       comments.push(commentObj);
 
-      await api.updateApplication(applicationId, { comments, editorId: user._id });
+      await api.updateApplication(dealId, { comments, editorId: user._id });
     } else {
-      await api.updateApplication(applicationId, { editorId: user._id });
+      await api.updateApplication(dealId, { editorId: user._id });
     }
-    await api.setApplicationStatus(applicationId, CONSTANTS.DEAL_STATUS.BANK_CHECK);
+    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.BANK_CHECK);
   } catch (err) {
     console.error(err);
     return next(err);
   }
 
   return res.render('application-details-submitted.njk', {
-    applicationId,
+    dealId,
     submissionType,
   });
 };

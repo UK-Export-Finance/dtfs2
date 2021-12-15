@@ -18,7 +18,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
