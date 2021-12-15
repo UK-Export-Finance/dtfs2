@@ -96,6 +96,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        */
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
+        console.log('*************YES***************');
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
 

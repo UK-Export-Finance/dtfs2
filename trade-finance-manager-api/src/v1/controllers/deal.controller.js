@@ -90,6 +90,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
 
   if (allRequiredPartiesHaveUrn) {
+    console.log('*******ACBS*************');
     await acbsController.createACBS(deal);
   }
 };
