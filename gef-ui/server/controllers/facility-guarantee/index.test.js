@@ -22,7 +22,7 @@ const MockRequest = () => {
     },
     userToken: 'secret-token',
   };
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
 };
@@ -78,7 +78,7 @@ describe('controllers/facility-guarantee', () => {
         inAdvanceFrequency: 'Monthly',
         dayCountBasis: '365',
         feeType: 'in advance',
-        applicationId: '123',
+        dealId: '123',
         facilityId: 'xyz',
       }));
     });

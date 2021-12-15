@@ -29,12 +29,12 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType', [validateToken], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType', [validateToken, multer().array('documents', 2)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType/upload', [validateToken], expect.any(Function), expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/:documentType/delete', [validateToken], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/:documentType', [validateToken], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/:documentType', [validateToken, multer().array('documents', 2)], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/:documentType/upload', [validateToken], expect.any(Function), expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/:documentType/delete', [validateToken], expect.any(Function));
 
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/security-details', [validateToken], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/supporting-information/security-details', [validateToken], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/security-details', [validateToken], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/security-details', [validateToken], expect.any(Function));
   });
 });

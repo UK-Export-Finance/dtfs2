@@ -9,7 +9,7 @@ const companyName = 'Test Company';
 const MockRequest = () => {
   const req = {};
   req.params = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {};
   req.body = {};
   return req;
@@ -61,7 +61,7 @@ describe('controllers/excorters-address', () => {
 
       await exportersAddress(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
-        applicationId: '123',
+        dealId: '123',
         companyName: 'Test company',
         registeredAddress: expect.any(Object),
       });
@@ -74,7 +74,7 @@ describe('controllers/excorters-address', () => {
 
       await exportersAddress(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
-        applicationId: '123',
+        dealId: '123',
         companyName: 'Test company',
         registeredAddress: null,
       });
@@ -96,7 +96,7 @@ describe('controllers/excorters-address', () => {
       await validateExportersAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
-        applicationId: '123',
+        dealId: '123',
         errors: {
           errorSummary: [
             {
@@ -130,7 +130,7 @@ describe('controllers/excorters-address', () => {
       await validateExportersAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
-        applicationId: '123',
+        dealId: '123',
         errors: {
           errorSummary: [
             {
@@ -193,7 +193,7 @@ describe('controllers/excorters-address', () => {
         },
         correspondence: 'true',
         postcode,
-        applicationId: mockRequest.params.applicationId,
+        dealId: mockRequest.params.dealId,
       });
     });
 
@@ -228,7 +228,7 @@ describe('controllers/excorters-address', () => {
           companyName,
           postcode,
           correspondence,
-          applicationId: mockRequest.params.applicationId,
+          dealId: mockRequest.params.dealId,
         },
       );
     });

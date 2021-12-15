@@ -22,6 +22,6 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/cover-start-date', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/cover-start-date', validateToken, expect.any(Function));
   });
 });

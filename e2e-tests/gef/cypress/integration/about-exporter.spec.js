@@ -3,7 +3,7 @@ import aboutExporter from './pages/about-exporter';
 import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const applicationIds = [];
+const dealIds = [];
 let dealWithNoExporterIndustries;
 let dealWithExporterIndustries;
 let dealWithEmptyExporter;
@@ -20,7 +20,7 @@ context('About Exporter Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push(item._id);
+          dealIds.push(item._id);
         });
 
         dealWithNoExporterIndustries = body.items.find((deal) =>

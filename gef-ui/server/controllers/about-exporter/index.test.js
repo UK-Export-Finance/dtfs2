@@ -21,7 +21,7 @@ const MockRequest = () => {
   req.query = {
     status: 'test',
   };
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   return req;
 };
 
@@ -87,7 +87,7 @@ describe('controllers/about-exporter', () => {
     it('renders the `About Exporter` template', async () => {
       await aboutExporter(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-        applicationId: '123',
+        dealId: '123',
         smeType: mockApplication.exporter.smeType,
         probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
         isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
@@ -113,7 +113,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockRequest.params.applicationId}`);
+      expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockRequest.params.dealId}`);
     });
 
     it('returns validation errors if `save and return` is set to true and probabilityOfDefault field has invalid value', async () => {
@@ -136,7 +136,7 @@ describe('controllers/about-exporter', () => {
             },
           },
         },
-        applicationId: '123',
+        dealId: '123',
         smeType: mockRequest.body.smeType,
         probabilityOfDefault: Number(mockRequest.body.probabilityOfDefault),
         isFinanceIncreasing: mockRequest.body.isFinanceIncreasing,
@@ -154,7 +154,7 @@ describe('controllers/about-exporter', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', {
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
         smeType: mockApplication.exporter.smeType,
         probabilityOfDefault: Number(mockRequest.body.probabilityOfDefault),
         isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
@@ -169,7 +169,7 @@ describe('controllers/about-exporter', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
         smeType: mockApplication.exporter.smeType,
         probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
         isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
@@ -222,7 +222,7 @@ describe('controllers/about-exporter', () => {
         smeType: mockRequest.body.smeType,
         probabilityOfDefault: Number(mockRequest.body.probabilityOfDefault),
         isFinanceIncreasing: mockRequest.body.isFinanceIncreasing,
-        applicationId: '123',
+        dealId: '123',
         status: mockRequest.query.status,
       });
 
@@ -250,7 +250,7 @@ describe('controllers/about-exporter', () => {
         probabilityOfDefault: '123',
         isFinanceIncreasing: undefined,
         selectedIndustry: null,
-        applicationId: '123',
+        dealId: '123',
       });
 
       // value of mock passed, should result in error

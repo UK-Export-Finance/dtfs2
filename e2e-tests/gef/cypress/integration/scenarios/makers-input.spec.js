@@ -9,7 +9,7 @@ import applicationPreview from '../pages/application-preview';
 import returnToMaker from '../pages/return-to-maker';
 import statusBanner from '../pages/application-status-banner';
 
-const applicationIds = [];
+const dealIds = [];
 
 context('Review application when returned to maker', () => {
   before(() => {
@@ -21,7 +21,7 @@ context('Review application when returned to maker', () => {
       })
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push(item._id);
+          dealIds.push(item._id);
         });
       });
   });
@@ -30,7 +30,7 @@ context('Review application when returned to maker', () => {
     Cypress.Cookies.preserveOnce('connect.sid');
     // login as the maker
     cy.login(CREDENTIALS.MAKER);
-    cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+    cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
     // Make the deal an Automatic Inclusion Application
     applicationDetails.automaticCoverDetailsLink().click();
@@ -47,14 +47,14 @@ context('Review application when returned to maker', () => {
 
     // then login as the checker and return to the maker with a comment
     cy.login(CREDENTIALS.CHECKER);
-    cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+    cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
     applicationPreview.returnButton().click();
     returnToMaker.comment().type('Nope');
     returnToMaker.submitButton().click();
     cy.location('pathname').should('contain', 'dashboard');
     cy.login(CREDENTIALS.MAKER);
 
-    cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+    cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
   });
 
   describe('DTFS2-4536 Review AIN when returned to maker', () => {
@@ -76,7 +76,7 @@ context('Review application when returned to maker', () => {
       applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval
-      cy.visit(relative(`/gef/application-details/${applicationIds[2]}`));
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       statusBanner.bannerStatus().contains("Ready for Checker's approval");
     });
   });

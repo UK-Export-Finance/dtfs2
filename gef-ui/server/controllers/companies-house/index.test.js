@@ -7,7 +7,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.body = {};
   return req;
 };
@@ -52,14 +52,14 @@ describe('controllers/about-exporter', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET Comapnies House', () => {
+  describe('GET Companies House', () => {
     it('renders the `companies-house` template with empty field', async () => {
       mockApplicationResponse.exporter.companiesHouseRegistrationNumber = '';
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         regNumber: '',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       });
     });
@@ -70,7 +70,7 @@ describe('controllers/about-exporter', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         regNumber: 'xyz',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       });
     });
@@ -92,7 +92,7 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
         errors: expect.any(Object),
         regNumber: '',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       }));
     });
@@ -107,7 +107,7 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
         errors: expect.any(Object),
         regNumber: 'invalidregnumber',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       }));
     });

@@ -8,7 +8,7 @@ const MockRequest = () => {
   const req = {};
   req.query = {};
   req.params = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {};
   req.body = {};
   req.get = () => '/url';
@@ -59,7 +59,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
         addressForm: {},
-        applicationId: '123',
+        dealId: '123',
         backUrl: '/url',
       });
     });
@@ -77,7 +77,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           organisationName: undefined,
           postalCode: undefined,
         },
-        applicationId: '123',
+        dealId: '123',
         backUrl: '/url',
       });
     });
@@ -91,7 +91,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           addressLine1: 'LINE1',
           addressLine2: 'LINE2',
         },
-        applicationId: '123',
+        dealId: '123',
         backUrl: '/url',
       });
     });
@@ -114,7 +114,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
         addressForm: { addressLine1: '', postalCode: '' },
       }));
     });
@@ -127,7 +127,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
         addressForm: { addressLine1: 'Line1', postalCode: '' },
       }));
     });

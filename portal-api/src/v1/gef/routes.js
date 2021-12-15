@@ -37,7 +37,7 @@ router.route('/application/status/:id')
 router.route('/facilities')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getAllGET)
   .post(validate({ role: ['maker', 'data-admin'] }), facilities.create)
-  .delete(validate({ role: ['maker', 'data-admin'] }), facilities.deleteByApplicationId);
+  .delete(validate({ role: ['maker', 'data-admin'] }), facilities.deleteByDealId);
 
 router.route('/facilities/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getById)

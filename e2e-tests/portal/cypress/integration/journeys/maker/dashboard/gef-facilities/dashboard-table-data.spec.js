@@ -23,7 +23,7 @@ context('View a deal', () => {
       deal = insertedDeal;
 
       cy.insertOneGefFacility({
-        applicationId: deal._id,
+        dealId: deal._id,
         ukefFacilityId: '00000001',
         type: 'CASH',
         name: 'abc-1-def',

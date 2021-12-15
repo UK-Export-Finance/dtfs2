@@ -15,7 +15,7 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
 };
@@ -46,7 +46,7 @@ describe('GET Facility Currency', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-currency.njk', expect.objectContaining({
       currency: 'EUR',
       facilityTypeString: 'cash',
-      applicationId: '123',
+      dealId: '123',
       facilityId: 'xyz',
       status: 'change',
     }));

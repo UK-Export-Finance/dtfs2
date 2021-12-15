@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import returnToMaker from './pages/return-to-maker';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationIds = [];
+let dealIds = [];
 
 context('Return to Maker', () => {
   before(() => {
@@ -13,7 +13,7 @@ context('Return to Maker', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationIds = body.items.map((item) => item._id);
+        dealIds = body.items.map((item) => item._id);
       });
   });
 
@@ -22,11 +22,11 @@ context('Return to Maker', () => {
     cy.apiLogin(CREDENTIALS.CHECKER)
       .then((token) => token)
       .then((token) => {
-        cy.apiSetApplicationStatus(applicationIds[2], token, 'BANK_CHECK');
+        cy.apiSetApplicationStatus(dealIds[2], token, 'BANK_CHECK');
       });
 
     cy.login(CREDENTIALS.MAKER);
-    cy.visit(relative(`/gef/application-details/${applicationIds[2]}/return-to-maker`));
+    cy.visit(relative(`/gef/application-details/${dealIds[2]}/return-to-maker`));
   });
 
   describe('Return to maker', () => {
@@ -38,7 +38,7 @@ context('Return to Maker', () => {
     });
 
     it('does not display for applications that aren\'t in checking state', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0]}/return-to-maker`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/return-to-maker`));
       cy.location('pathname').should('contain', 'dashboard');
     });
 
@@ -64,7 +64,7 @@ context('Return to Maker', () => {
     it('takes checker back to application preview page when cancelled', () => {
       returnToMaker.comment().type('Some comments here ....');
       returnToMaker.cancelLink().click();
-      cy.location('pathname').should('eq', `/gef/application-details/${applicationIds[2]}`);
+      cy.location('pathname').should('eq', `/gef/application-details/${dealIds[2]}`);
     });
   });
 });

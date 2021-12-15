@@ -15,7 +15,7 @@ const MockRequest = () => {
   req.params = {};
   req.body = { decision: true };
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.url = '/gef/application-details/1234/review-decision';
   req.session = {
     user: {
