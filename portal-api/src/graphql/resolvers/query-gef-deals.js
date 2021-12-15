@@ -12,7 +12,8 @@ const queryGefDeals = async (_, { params = {} }, ctx) => {
   const deals = await findDeals(ctx.user, dbFilters, start, pagesize);
 
   const dealsArray = deals[0].deals;
-  const count = deals[0].count;
+  const [dealsObj] = deals;
+  const { count } = dealsObj;
 
   return {
     deals: dealsArray,
