@@ -51,7 +51,7 @@ describe('mapTaskObject', () => {
 
     const { lastEdited, ...resultWithoutLastEdited } = result;
 
-    expect(result).toEqual(expected);
+    expect(resultWithoutLastEdited).toEqual(expected);
 
     expect(typeof lastEdited).toEqual('number');
   });
