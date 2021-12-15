@@ -36,6 +36,7 @@ const expectAddedFields = (obj) => {
       status: 'Draft',
     },
     editedBy: [],
+    exporter: {},
   });
 
   return expectation;

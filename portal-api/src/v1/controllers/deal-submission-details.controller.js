@@ -30,6 +30,19 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
     },
   };
 
+  /**
+   * Portal BSS UI gives us a field name called supplier-name.
+   * This maybe eventually changed to 'exporter name'.
+   * Every other service (TFM, ABCS), uses this value
+   * as the 'exporter name'.
+   * Therefore, we add this value to the deal object under exporter.
+   * */
+  if (submissionDetails['supplier-name']) {
+    update.exporter = {
+      companyName: submissionDetails['supplier-name'],
+    };
+  }
+
   const updateDealResponse = await updateDeal(
     dealId,
     update,
@@ -141,6 +154,7 @@ exports.update = (req, res) => {
         submissionDetails.supplyContractCurrency,
       );
     }
+
     const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);
 
     const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
