@@ -32,7 +32,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       bondType: findPortalValue(bond.BSS_Guarantee_details.BSS_type, 'BSS_type', 'FACILITIES', 'TYPE', logError),
       facilityStage,
       bondBeneficiary: bond.BSS_Guarantee_details.BSS_beneficiary,
-      facilityValue: bond.BSS_Financial_details.BSS_value,
+      value: bond.BSS_Financial_details.BSS_value,
       currency: getCurrencyById(bond.BSS_Financial_details.BSS_currency_code),
       currencySameAsSupplyContractCurrency: (bond.BSS_Financial_details.BSS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
       conversionRate: bond.BSS_Financial_details.BSS_conversion_rate_deal,

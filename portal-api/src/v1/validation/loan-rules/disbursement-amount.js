@@ -11,7 +11,7 @@ const MAX_DECIMALS = 2;
 
 const isGreaterThanMinValue = (disbursementAmount) => disbursementAmount >= MIN_VALUE;
 
-const isLessThanFacilityValue = (disbursementAmount, facilityValue) => disbursementAmount <= facilityValue;
+const isLessThanFacilityValue = (disbursementAmount, value) => disbursementAmount <= value;
 
 const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {
@@ -20,12 +20,12 @@ const isValidFormat = (value) => {
   return false;
 };
 
-const isValid = (disbursementAmount, facilityValue) => {
+const isValid = (disbursementAmount, value) => {
   if (!hasValue(disbursementAmount)) {
     return false;
   }
 
-  const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
+  const sanitizedFacilityValue = sanitizeCurrency(value);
   const { sanitizedValue } = sanitizeCurrency(disbursementAmount);
 
   if (!isNumeric(Number(sanitizedValue))) {
@@ -40,7 +40,7 @@ const isValid = (disbursementAmount, facilityValue) => {
     return false;
   }
 
-  if (hasValue(facilityValue)
+  if (hasValue(value)
       && !isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))
   ) {
     return false;
@@ -49,23 +49,23 @@ const isValid = (disbursementAmount, facilityValue) => {
   return true;
 };
 
-const canValidateAgainstFacilityValue = (disbursementAmount, facilityValue) => {
+const canValidateAgainstFacilityValue = (disbursementAmount, value) => {
   if (hasValue(disbursementAmount)
     && isNumeric(Number(disbursementAmount))
     && isGreaterThanMinValue(Number(disbursementAmount))
     && isValidFormat(Number(disbursementAmount))
-    && hasValue(facilityValue)) {
+    && hasValue(value)) {
     return true;
   }
   return false;
 };
 
-const validationText = (disbursementAmount, facilityValue, fieldTitle) => {
+const validationText = (disbursementAmount, value, fieldTitle) => {
   if (!hasValue(disbursementAmount)) {
     return `Enter the ${fieldTitle}`;
   }
 
-  const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
+  const sanitizedFacilityValue = sanitizeCurrency(value);
   const { isCurrency, sanitizedValue } = sanitizeCurrency(disbursementAmount);
 
   if (!isCurrency) {
@@ -82,7 +82,7 @@ const validationText = (disbursementAmount, facilityValue, fieldTitle) => {
 
   if (canValidateAgainstFacilityValue(sanitizedValue, sanitizedFacilityValue.sanitizedValue)) {
     if (!isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))) {
-      return `${fieldTitle} must be less than the Loan facility value (${facilityValue})`;
+      return `${fieldTitle} must be less than the Loan facility value (${value})`;
     }
   }
 
@@ -92,15 +92,15 @@ const validationText = (disbursementAmount, facilityValue, fieldTitle) => {
 module.exports = (loan, errorList) => {
   const newErrorList = { ...errorList };
   const {
-    facilityValue,
+    value,
     disbursementAmount,
   } = loan;
 
-  if (!isValid(disbursementAmount, facilityValue)) {
+  if (!isValid(disbursementAmount, value)) {
     newErrorList.disbursementAmount = {
       text: validationText(
         disbursementAmount,
-        facilityValue,
+        value,
         'Disbursement amount',
       ),
       order: orderNumber(newErrorList),

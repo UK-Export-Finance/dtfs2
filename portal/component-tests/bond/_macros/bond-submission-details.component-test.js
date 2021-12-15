@@ -65,7 +65,7 @@ describe(component, () => {
   });
 
   it('should render facilityValue', () => {
-    wrapper.expectText('[data-cy="facility-value"]').toRead(bond.facilityValue);
+    wrapper.expectText('[data-cy="facility-value"]').toRead(bond.value);
   });
 
   describe('currencySameAsSupplyContractCurrency', () => {

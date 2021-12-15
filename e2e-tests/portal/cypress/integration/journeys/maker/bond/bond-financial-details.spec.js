@@ -186,7 +186,7 @@ context('Bond Financial Details', () => {
       assertBondFormValues.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
     });
 
-    describe('after form submit and navigating back to `Bond Financal Details` page', () => {
+    describe('after form submit and navigating back to `Bond Financial Details` page', () => {
       it('should render validation errors for required fields and `currency is NOT the same` required fields', () => {
         goToBondFinancialDetailsPage(deal);
         pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
@@ -212,7 +212,7 @@ context('Bond Financial Details', () => {
     it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
       goToBondFinancialDetailsPage(deal);
 
-      pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+      pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.value);
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
       pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
 
@@ -227,7 +227,7 @@ context('Bond Financial Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
         row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
+          const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
           expect(text.trim()).equal(expectedValue);
         });
       });
@@ -324,7 +324,7 @@ context('Bond Financial Details', () => {
   });
 
   describe('When a user clicks `save and go back` button', () => {
-    it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
+    it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();

@@ -109,7 +109,7 @@ type Transaction {
   bankFacilityId: String
   ukefFacilityId: String
   transactionType: String
-  facilityValue: String
+  value: String
   transactionStage: String
   createdDate: String
   lastEdited: String

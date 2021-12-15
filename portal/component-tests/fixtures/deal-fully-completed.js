@@ -39,7 +39,7 @@ const deal = {
         uniqueIdentificationNumber: '1234567890',
         bondBeneficiary: 'test',
         status: 'Completed',
-        facilityValue: '1234',
+        value: '1234',
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
@@ -73,7 +73,7 @@ const deal = {
         uniqueIdentificationNumber: '1234567890',
         bondBeneficiary: 'test',
         status: 'Completed',
-        facilityValue: '5678',
+        value: '5678',
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
@@ -108,7 +108,7 @@ const deal = {
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '12345678',
         guaranteeFeePayableByBank: '10.8000',
-        facilityValue: '12345678.00',
+        value: '12345678.00',
         currencySameAsSupplyContractCurrency: 'false',
         currency: {
           text: 'AUD - Australian Dollars',
@@ -140,7 +140,7 @@ const deal = {
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '12345678',
         guaranteeFeePayableByBank: '10.8000',
-        facilityValue: '12345678.00',
+        value: '12345678.00',
         currencySameAsSupplyContractCurrency: 'false',
         currency: {
           text: 'AUD - Australian Dollars',

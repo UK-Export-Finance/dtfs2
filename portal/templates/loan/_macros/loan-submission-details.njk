@@ -80,13 +80,13 @@
 
     <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-      {% if loan.facilityValue %}
+      {% if loan.value %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Loan facility value
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-value" data-mask="currency">
-            {{ loan.facilityValue }}
+            {{ loan.value }}
           </dd>
         </div>
       {% endif %}
@@ -128,7 +128,7 @@
             </dd>
           </div>
         {% endif %}
-      
+
         {% if loan['conversionRateDate-day'] and loan['conversionRateDate-month'] and loan['conversionRateDate-year'] %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-body-s">
@@ -177,7 +177,7 @@
       {% if loan.minimumQuarterlyFee %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
-            Minimum quarterly fee 
+            Minimum quarterly fee
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimum-quarterly-fee">
             {{ loan.minimumQuarterlyFee  }}
@@ -238,7 +238,7 @@
       {% if loan.dayCountBasis %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
-            Day count basis 
+            Day count basis
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="day-count-basis">
             {{ loan.dayCountBasis  }}

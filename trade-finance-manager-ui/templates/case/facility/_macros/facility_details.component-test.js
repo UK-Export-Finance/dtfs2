@@ -19,7 +19,7 @@ describe(component, () => {
       coverEndDate: '1 Feb 2021',
       coveredPercentage: '10%',
       facilityValueExportCurrency: 'GBP 12,345.00',
-      facilityValue: 'GBP 12,345.00',
+      value: 'GBP 12,345.00',
       ukefExposure: 'GBP 1,234.00',
       bankFacilityReference: '123456',
       guaranteeFeePayableToUkef: '10%',
@@ -113,7 +113,7 @@ describe(component, () => {
     });
 
     it('should render facilityValue', () => {
-      wrapper.expectText('[data-cy="facility-value-gbp"]').toRead(params.facility.facilityValue);
+      wrapper.expectText('[data-cy="facility-value-gbp"]').toRead(params.facility.value);
     });
 
     it('should render UKEF cover / coveredPercentage', () => {

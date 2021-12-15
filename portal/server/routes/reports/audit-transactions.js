@@ -47,7 +47,7 @@ function downloadTransactions(transactions, timezone, res) {
     prop: 'deal_supplierName',
     label: 'Supplier name',
   }, {
-    prop: 'facilityValue',
+    prop: 'value',
     label: 'Facility value',
   }, {
     prop: 'transactionStage',
