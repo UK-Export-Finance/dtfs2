@@ -1,5 +1,4 @@
 const mapTaskObject = require('./map-task-object');
-const generateTaskDates = require('./generate-task-dates');
 const api = require('../api');
 
 const MOCK_USERS = require('../__mocks__/mock-users');
@@ -46,7 +45,6 @@ describe('mapTaskObject', () => {
         userFullName: `${underwriterManagerUser.firstName} ${underwriterManagerUser.lastName}`,
         userId: updateInput.assignedTo.userId,
       },
-      ...generateTaskDates(originalTask.status, updateInput.status),
     };
 
     const { lastEdited, ...resultWithoutLastEdited } = result;
