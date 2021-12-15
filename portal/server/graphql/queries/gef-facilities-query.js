@@ -6,7 +6,7 @@ query gefFacilities($start: Int, $pagesize: Int, $filters: [TransactionFilters])
     count
     facilities {
       _id
-      applicationId
+      dealId
       ukefFacilityId
       type
       value

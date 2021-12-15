@@ -3,16 +3,16 @@ const { applicationDetails } = require('../application-details');
 const api = require('../../services/api');
 
 const acceptUkefDecision = async (req, res) => {
-  const { applicationId } = req.params;
+  const { dealId } = req.params;
   const { decision } = req.body;
 
   try {
     if (decision) {
-      const application = await api.getApplication(applicationId);
+      const application = await api.getApplication(dealId);
 
       application.ukefDecisionAccepted = true;
-      await api.updateApplication(applicationId, application);
-      return res.redirect(`/gef/application-details/${applicationId}/cover-start-date`);
+      await api.updateApplication(dealId, application);
+      return res.redirect(`/gef/application-details/${dealId}/cover-start-date`);
     }
     const errors = validationErrorHandler({
       errRef: 'decision',

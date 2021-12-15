@@ -1,11 +1,11 @@
 const { ObjectId } = require('bson');
 const db = require('../../drivers/db-client');
 
-const updateGefApplication = async (applicationId, applicationUpdate) => {
+const updateGefApplication = async (dealId, applicationUpdate) => {
   const collection = await db.getCollection('deals');
 
   const updatedApplication = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(applicationId)) } },
+    { _id: { $eq: ObjectId(String(dealId)) } },
     {
       $set: applicationUpdate,
     },

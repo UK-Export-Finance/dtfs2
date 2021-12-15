@@ -29,7 +29,7 @@ const cloneSupportingInformation = async (existingApplicationId, newApplicationI
     Object.entries(allFiles).forEach((key, val) => {
       // delete the existing `_id` property - this will be re-created when a new deal is inserted
       delete allFiles[val]._id;
-      // updated the `applicationId` property to match the new application ID
+      // updated the `dealId` property to match the new application ID
       allFiles[val].parentId = new ObjectID(newApplicationId);
     });
 
@@ -62,7 +62,7 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
   const collection = await db.getCollection(facilitiesCollection);
 
   // get all existing facilities
-  const allFacilities = await collection.aggregate([{ $match: { applicationId: ObjectID(String(currentApplicationId)) } }]).toArray();
+  const allFacilities = await collection.aggregate([{ $match: { dealId: ObjectID(String(currentApplicationId)) } }]).toArray();
 
   // check if there are any facilities in the db
   if (allFacilities.length) {
@@ -70,8 +70,8 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
       // delete the existing `_id` property - this will be re-created when a new deal is inserted
       delete allFacilities[val]._id;
 
-      // updated the `applicationId` property to match the new application ID
-      allFacilities[val].applicationId = new ObjectID(newApplicationId);
+      // updated the `dealId` property to match the new application ID
+      allFacilities[val].dealId = new ObjectID(newApplicationId);
       // update the `createdAt` property to match the current time in EPOCH format
       allFacilities[val].createdAt = Date.now();
       // update the `updatedAt` property to match the current time in EPOCH format
@@ -92,7 +92,7 @@ const cloneFacilities = async (currentApplicationId, newApplicationId) => {
   }
 };
 
-const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, userId, bankId) => {
+const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId, bankId) => {
   const applicationCollection = 'deals';
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
@@ -103,7 +103,7 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
 
   // get the current GEF deal
   const existingDeal = await collection.findOne({
-    _id: ObjectID(String(applicationId)),
+    _id: ObjectID(String(dealId)),
   });
 
   const clonedDeal = existingDeal;
@@ -147,7 +147,7 @@ const cloneDeal = async (applicationId, bankInternalRefName, additionalRefName, 
 exports.clone = async (req, res) => {
   const {
     body: {
-      applicationId: existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId,
+      dealId: existingApplicationId, bankInternalRefName, additionalRefName, userId, bankId,
     },
   } = req;
 
@@ -168,6 +168,6 @@ exports.clone = async (req, res) => {
     // clone the azure files from one folder to another
     await cloneAzureFiles(existingApplicationId, newApplicationId);
 
-    res.send({ applicationId: newApplicationId });
+    res.send({ dealId: newApplicationId });
   }
 };

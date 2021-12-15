@@ -11,12 +11,12 @@ const facilityValue = async (req, res) => {
     query,
     session,
   } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
   const { user } = session;
 
   try {
-    const facility = await Facility.find(applicationId, facilityId, status, user);
+    const facility = await Facility.find(dealId, facilityId, status, user);
     if (!facility) {
       // eslint-disable-next-line no-console
       console.log('Facility not found, or not authorised');
@@ -24,7 +24,7 @@ const facilityValue = async (req, res) => {
     }
 
     if (!facility.currency) {
-      return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-currency`);
+      return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-currency`);
     }
 
     return res.render('partials/facility-value.njk', facility);
@@ -35,7 +35,7 @@ const facilityValue = async (req, res) => {
 
 const updateFacilityValue = async (req, res) => {
   const { params, body, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const {
     value, interestPercentage, coverPercentage, facilityType, currency,
   } = body;
@@ -52,9 +52,9 @@ const updateFacilityValue = async (req, res) => {
         value: value ? value.replace(/,/g, '') : null,
       });
       if (saveAndReturn) {
-        return res.redirect(`/gef/application-details/${applicationId}`);
+        return res.redirect(`/gef/application-details/${dealId}`);
       }
-      return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-guarantee`);
+      return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`);
     } catch (err) {
       return res.render('partials/problem-with-service.njk');
     }
@@ -72,7 +72,7 @@ const updateFacilityValue = async (req, res) => {
         interestPercentage,
         facilityType,
         facilityTypeString,
-        applicationId,
+        dealId,
         facilityId,
         status,
       });
@@ -89,7 +89,7 @@ const updateFacilityValue = async (req, res) => {
       interestPercentage,
       facilityType,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });

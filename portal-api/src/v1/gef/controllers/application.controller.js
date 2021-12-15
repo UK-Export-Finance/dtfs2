@@ -181,10 +181,10 @@ exports.updateSupportingInformation = async (req, res) => {
   const collection = await db.getCollection(dealsCollectionName);
 
   const { application, field } = req.body;
-  const { id: applicationId } = req.params;
+  const { id: dealId } = req.params;
 
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(applicationId) } },
+    { _id: { $eq: ObjectID(dealId) } },
     {
       // set the updatedAt property to the current time in EPOCH format
       $set: { updatedAt: Date.now() },
@@ -237,7 +237,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 };
 
 exports.changeStatus = async (req, res) => {
-  const applicationId = req.params.id;
+  const dealId = req.params.id;
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);
   if (enumValidationErr) {
@@ -247,7 +247,7 @@ exports.changeStatus = async (req, res) => {
 
   const collection = await db.getCollection(dealsCollectionName);
   const existingApplication = await collection.findOne({
-    _id: ObjectID(String(applicationId)),
+    _id: ObjectID(String(dealId)),
   });
 
   if (!existingApplication) {
@@ -262,7 +262,7 @@ exports.changeStatus = async (req, res) => {
   // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
   if (status === STATUS.SUBMITTED_TO_UKEF) {
     const submissionData = await addSubmissionData(
-      applicationId,
+      dealId,
       existingApplication,
     );
 
@@ -273,7 +273,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(String(applicationId)) } },
+    { _id: { $eq: ObjectID(String(dealId)) } },
     {
       $set: applicationUpdate,
     },
@@ -288,7 +288,7 @@ exports.changeStatus = async (req, res) => {
     // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
     if (status === STATUS.SUBMITTED_TO_UKEF) {
       await api.tfmDealSubmit(
-        applicationId,
+        dealId,
         existingApplication.dealType,
         req.user,
       );
@@ -323,7 +323,7 @@ exports.delete = async (req, res) => {
     const facilitiesCollection = await db.getCollection(
       facilitiesCollectionName,
     );
-    await facilitiesCollection.deleteMany({ applicationId: req.params.id });
+    await facilitiesCollection.deleteMany({ dealId: req.params.id });
   }
   res
     .status(utils.mongoStatus(applicationResponse))

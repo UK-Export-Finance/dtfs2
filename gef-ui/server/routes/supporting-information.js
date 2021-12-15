@@ -14,12 +14,12 @@ const router = express.Router();
 
 const upload = multer({ fileFilter: multerFilter }).single('documents');
 
-router.get('/application-details/:applicationId/supporting-information/security-details', [validateToken], getSecurityDetails);
-router.post('/application-details/:applicationId/supporting-information/security-details', [validateToken], postSecurityDetails);
+router.get('/application-details/:dealId/supporting-information/security-details', [validateToken], getSecurityDetails);
+router.post('/application-details/:dealId/supporting-information/security-details', [validateToken], postSecurityDetails);
 
-router.get('/application-details/:applicationId/supporting-information/:documentType', [validateToken], getSupportingDocuments);
-router.post('/application-details/:applicationId/supporting-information/:documentType', [validateToken, multer().array('documents', 20)], postSupportingDocuments);
-router.post('/application-details/:applicationId/supporting-information/:documentType/upload', [validateToken], (req, res, next) => {
+router.get('/application-details/:dealId/supporting-information/:documentType', [validateToken], getSupportingDocuments);
+router.post('/application-details/:dealId/supporting-information/:documentType', [validateToken, multer().array('documents', 20)], postSupportingDocuments);
+router.post('/application-details/:dealId/supporting-information/:documentType/upload', [validateToken], (req, res, next) => {
   // eslint-disable-next-line consistent-return
   upload(req, res, (err) => {
     if (!err) {
@@ -30,6 +30,6 @@ router.post('/application-details/:applicationId/supporting-information/:documen
     }
   });
 }, uploadSupportingDocument);
-router.post('/application-details/:applicationId/supporting-information/:documentType/delete', [validateToken], deleteSupportingDocument);
+router.post('/application-details/:dealId/supporting-information/:documentType/delete', [validateToken], deleteSupportingDocument);
 
 module.exports = router;

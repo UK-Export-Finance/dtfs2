@@ -38,7 +38,7 @@
               onClick: "correspondenceAddress.toggle(true)"
             }
           }
-        ] }) 
+        ] })
       }}
 
       <div id="conditional-correspondence">
@@ -67,7 +67,7 @@
         {%if errors and errors.fieldErrors.postcode %}
           <p class="govuk-!-margin-bottom-6">
             <a class="govuk-link"
-              href="/gef/application-details/{{applicationId}}/enter-exporters-correspondence-address"
+              href="/gef/application-details/{{dealId}}/enter-exporters-correspondence-address"
               data-cy="enter-address-manually">
               Enter address manually
             </a>

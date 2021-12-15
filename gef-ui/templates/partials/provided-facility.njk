@@ -22,7 +22,7 @@
   {% if status !== 'change' %}
     {{ govukBackLink({
       text: "Back to previous page",
-      href: "/gef/application-details/" + applicationId + "/facilities/" + facilityId + "/about-facility",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/about-facility",
       attributes: {
         'data-cy': 'back-link'
       }
@@ -154,5 +154,5 @@
       </form>
     </div>
   </div>
-  
+
 {% endblock %}
