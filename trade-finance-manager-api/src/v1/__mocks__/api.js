@@ -98,7 +98,7 @@ module.exports = {
     };
 
     if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SECOND_SUBMIT') {
-      if (deal.dealSnapshot.details.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details.submissionCount === 2) {
+      if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details.submissionCount === 2) {
         deal.tfm.underwriterManagersDecision = {
           decision: 'Approved (without conditions)',
         };

@@ -97,7 +97,7 @@ describe(component, () => {
   });
 
   it('should render submission type', () => {
-    wrapper.expectText('[data-cy="submission-type"]').toRead(params.deal.details.submissionType);
+    wrapper.expectText('[data-cy="submission-type"]').toRead(params.deal.submissionType);
   });
 
   describe('when there is no date received', () => {

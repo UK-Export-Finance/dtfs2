@@ -303,7 +303,7 @@ describe('/v1/deals', () => {
     describe('MIA deal - on second submission', () => {
       it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot', async () => {
         // check submission type before submission
-        expect(MOCK_MIA_SECOND_SUBMIT.details.submissionType).toEqual('Manual Inclusion Application');
+        expect(MOCK_MIA_SECOND_SUBMIT.submissionType).toEqual('Manual Inclusion Application');
 
         const { status, body } = await submitDeal({
           ...createSubmitBody(MOCK_MIA_SECOND_SUBMIT),

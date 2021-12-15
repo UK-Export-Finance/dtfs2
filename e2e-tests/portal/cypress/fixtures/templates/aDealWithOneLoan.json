@@ -1,9 +1,9 @@
 {
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "aDealWithOneLoan",
     "bankSupplyContractName": "aDealWithOneLoan",
     "ukefDealId": "ukef:aDealWithOneLoan",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "9",

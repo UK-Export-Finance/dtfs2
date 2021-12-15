@@ -11,7 +11,7 @@ const DEAL_PREVIOUS_STATUS = 'details.previousStatus';
 const TRANSACTION_PREVIOUS_COVER_START_DATE = 'transaction.previousCoverStartDate';
 const DEAL_BANK = 'details.owningBank.id';
 const UKEF_DEAL_ID = 'details.ukefDealId';
-const DEAL_SUBMISSION_TYPE = 'details.submissionType';
+const DEAL_SUBMISSION_TYPE = 'submissionType';
 const SUBMISSION_SUPPLIER_NAME = 'submissionDetails.supplier-name';
 const FILTER_SEARCH = 'filterSearch';
 
@@ -95,7 +95,7 @@ const constructor = (user, filters) => {
         return listSoFar.concat([dealwithSupplyID]);
       }
       if (DEAL_SUBMISSION_TYPE === filterField) {
-        const deal = { 'details.submissionType': filter[filterField] };
+        const deal = { 'submissionType': filter[filterField] };
 
         return listSoFar.concat([deal]);
       }

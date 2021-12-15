@@ -74,7 +74,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
         { 'dealSnapshot.details.ukefDealId': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.details.owningBank.name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchString, $options: 'i' } },
-        { 'dealSnapshot.details.submissionType': { $regex: searchString, $options: 'i' } },
+        { 'dealSnapshot.submissionType': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchString, $options: 'i' } },
         { 'tfm.stage': { $regex: searchString, $options: 'i' } },
         { 'tfm.product': { $regex: searchString, $options: 'i' } },

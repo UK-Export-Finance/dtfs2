@@ -213,9 +213,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
           updatedDeal = {
             ...newDeal,
+            submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionType: 'Automatic Inclusion Notice',
               submissionDate: moment().subtract(2, 'day').utc().valueOf()
             },
           };
@@ -271,9 +271,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
           updatedDeal = {
             ...newDeal,
+            submissionType: 'Manual Inclusion Application',
             details: {
               ...newDeal.details,
-              submissionType: 'Manual Inclusion Application',
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
               status: 'Accepted by UKEF (without conditions)',
@@ -360,9 +360,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
           updatedDeal = {
             ...newDeal,
+            submissionType: 'Manual Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionType: 'Manual Inclusion Notice',
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
               status: 'Accepted by UKEF (without conditions)',

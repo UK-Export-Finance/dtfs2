@@ -154,7 +154,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         beforeEach(async () => {
           ainDeal = completedDeal;
-          ainDeal.details.submissionType = 'Automatic Inclusion Notice';
+          ainDeal.submissionType = 'Automatic Inclusion Notice';
 
           const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDeal))).to('/v1/deals');
 
@@ -266,7 +266,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         beforeEach(async () => {
           completedDeal.status = 'Accepted by UKEF (without conditions)';
-          completedDeal.details.submissionType = 'Manual Inclusion Application';
+          completedDeal.submissionType = 'Manual Inclusion Application';
           completedDeal.details.approvalDate = moment().utc().valueOf().toString();
 
           const submittedDeal = JSON.parse(JSON.stringify(completedDeal));

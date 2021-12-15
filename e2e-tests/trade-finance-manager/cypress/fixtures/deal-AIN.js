@@ -1,5 +1,6 @@
 const MOCK_DEAL = {
   dealType: 'BSS/EWCS',
+  submissionType: 'Automatic Inclusion Notice',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
@@ -17,7 +18,6 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
     submissionCount: 1,
     owningBank: {

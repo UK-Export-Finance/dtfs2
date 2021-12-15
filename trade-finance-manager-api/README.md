@@ -150,8 +150,8 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
 {
   _id: '1',
   dealType: 'BSS/EWCS',
+  submissionType: 'Automatic Inclusion Notice',
   details: {
-    submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
   },
   submissionDetails: {

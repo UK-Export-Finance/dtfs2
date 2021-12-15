@@ -26,7 +26,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
     mockDeal = {
       _id: mockDealMia._id,
       ukefDealId: mockDealMia.dealSnapshot.details.ukefDealId,
-      submissionType: mockDealMia.dealSnapshot.details.submissionType,
+      submissionType: mockDealMia.dealSnapshot.submissionType,
       bankReferenceNumber: mockDealMia.dealSnapshot.details.bankSupplyContractID,
       maker: mockDealMia.dealSnapshot.details.maker,
       exporter: {

@@ -15,7 +15,7 @@ const getUnderwriterManagersDecision = async (req, res) => {
 
   const userCanEdit = canUserEditManagersDecision(
     user,
-    deal.dealSnapshot.details.submissionType,
+    deal.dealSnapshot.submissionType,
     deal.tfm,
   );
 
@@ -43,7 +43,7 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
 
   const userCanEdit = canUserEditManagersDecision(
     user,
-    deal.dealSnapshot.details.submissionType,
+    deal.dealSnapshot.submissionType,
     deal.tfm,
   );
 
@@ -74,7 +74,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
 
   const userCanEdit = canUserEditManagersDecision(
     user,
-    deal.dealSnapshot.details.submissionType,
+    deal.dealSnapshot.submissionType,
     deal.tfm,
   );
 

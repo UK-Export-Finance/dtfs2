@@ -1,6 +1,7 @@
 const MOCK_DEAL_NO_PARTY_DB = {
   _id: 'NO_PARTY_DB',
   dealType: 'BSS/EWCS',
+  submissionType: 'Automatic Inclusion Notice',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
@@ -18,7 +19,6 @@ const MOCK_DEAL_NO_PARTY_DB = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
     submissionCount: 1,
     owningBank: {

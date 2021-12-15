@@ -76,23 +76,23 @@ const mapDetails = (portalDealId, v1Deal) => {
 
   const applicationRoute = v1Deal.Application_route;
 
-  details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+  submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
 
   if (applicationRoute === 'ATP') {
     const statusToCompare = ['ready_for_approval', 'further_input_required'].includes(v1Deal.Deal_information.Extra_fields.Deal_status)
       ? v1Deal.Deal_information.Extra_fields.Deal_previous_status
       : v1Deal.Deal_information.Extra_fields.Deal_status;
 
-    details.submissionType = ['confirmed_by_bank', 'confirmation_acknowledged'].includes(statusToCompare)
+    submissionType = ['confirmed_by_bank', 'confirmation_acknowledged'].includes(statusToCompare)
       ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
       : CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   }
 
-  if (details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
+  if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     details.manualInclusionApplicationSubmissionDate = convertV1Date(submissionDate);
   }
 
-  if (details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+  if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
     details.manualInclusionNoticeSubmissionDate = convertV1Date(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
   }
 
@@ -101,12 +101,5 @@ const mapDetails = (portalDealId, v1Deal) => {
     hasError,
   ];
 };
-/*
-
-    submissionType: 'Manual Inclusion Application',
-
-  }
-  */
-
 
 module.exports = mapDetails;

@@ -98,7 +98,7 @@ exports.update = (req, res) => {
 
       if (
         ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
-        && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        && dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
       ) {
         // Is changing MIA to MIN
         const minDealMakerUpdate = {
@@ -145,7 +145,7 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
       }
 
-      if (dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+      if (dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
         && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
@@ -187,13 +187,13 @@ exports.update = (req, res) => {
 
       if (
         ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
-        && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        && dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
       ) {
         // Must be confirming acceptance of MIA so change to MIN
         // Add 'MIN submission date'
         const minUpdate = {
+          submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
           details: {
-            submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
             manualInclusionNoticeSubmissionDate: now(),
             checkerMIN: req.user,
           },

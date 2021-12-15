@@ -182,7 +182,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         bankRef: '$details.bankSupplyContractName',
         status: '$details.status',
         product: 'BSS/EWCS',
-        type: '$details.submissionType',
+        type: '$submissionType',
         exporter: '$submissionDetails.supplier-name',
         lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
         userId: '$details.maker._id',

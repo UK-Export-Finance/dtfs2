@@ -9,9 +9,9 @@ describe(component, () => {
   const user = { roles: ['maker'], timezone: 'Europe/London' };
 
   const deal = {
+    submissionType: 'Manual Inclusion Application',
     details: {
       status: 'Ready for Checker\'s approval',
-      submissionType: 'Manual Inclusion Application',
     },
     bondTransactions: {
       items: [

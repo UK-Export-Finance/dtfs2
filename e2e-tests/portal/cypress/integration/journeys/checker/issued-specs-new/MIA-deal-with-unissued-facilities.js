@@ -1,10 +1,10 @@
 const deal = {
+  submissionType: 'Manual Inclusion Application',
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'testing',
     dateOfLastAction: new Date().valueOf(),
-    submissionType: 'Manual Inclusion Application',
     maker: {
       username: 'MAKER',
       roles: [

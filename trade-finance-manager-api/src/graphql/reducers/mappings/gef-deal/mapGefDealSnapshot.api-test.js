@@ -32,6 +32,7 @@ describe('mapGefDealSnapshot', () => {
       _id: MOCK_GEF_DEAL._id,
       dealType: MOCK_GEF_DEAL.dealType,
       isFinanceIncreasing: MOCK_GEF_DEAL.exporter.isFinanceIncreasing,
+      submissionType: MOCK_GEF_DEAL.submissionType,
       details: mapGefDealDetails(mockDeal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(mockDeal.dealSnapshot),
       eligibility: MOCK_GEF_DEAL.eligibility,

@@ -126,7 +126,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       // Without this, it would involve additional API calls going around in circles.
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
-      updatedDeal.submissionType = dealSnapshot.details.submissionType;
+      updatedDeal.submissionType = dealSnapshot.submissionType;
       updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
       updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
 

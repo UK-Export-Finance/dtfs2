@@ -74,7 +74,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     delegationType: helpers.getDelegationType(
       deal.dealSnapshot.submissionType
         ? deal.dealSnapshot.submissionType
-        : deal.dealSnapshot.details.submissionType,
+        : deal.dealSnapshot.submissionType,
     ),
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
     facilityStageCode,

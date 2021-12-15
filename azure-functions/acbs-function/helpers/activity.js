@@ -29,7 +29,7 @@ const getAuthor = () => {
 
 const getLabel = () => {
   const dealType = deal.dealSnapshot.details
-    ? labelCase(deal.dealSnapshot.details.submissionType)
+    ? labelCase(deal.dealSnapshot.submissionType)
     : labelCase(deal.dealSnapshot.submissionType);
   const text = updateRecord ? 'updated' : 'submitted';
 

@@ -119,7 +119,7 @@ describe('/v1/deals', () => {
               'mock-origin-url',
               firstTask,
               body.dealSnapshot.submissionDetails['supplier-name'],
-              body.dealSnapshot.details.submissionType,
+              body.dealSnapshot.submissionType,
               moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
               body.dealSnapshot.details.owningBank.name,
             ),

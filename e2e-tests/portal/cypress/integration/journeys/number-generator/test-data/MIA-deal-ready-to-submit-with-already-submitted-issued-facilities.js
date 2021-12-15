@@ -2,6 +2,7 @@ const now = new Date().valueOf();
 
 const deal = {
   _id: '1000998',
+  submissionType: 'Manual Inclusion Application',
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'test-deal',
@@ -36,7 +37,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Manual Inclusion Application',
     previousStatus: 'Draft',
   },
   eligibility: {

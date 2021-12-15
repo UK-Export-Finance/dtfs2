@@ -69,7 +69,7 @@ describe(page, () => {
   });
 
   it('should render type of work subheading', () => {
-    wrapper.expectText('[data-cy="type-of-work-subheading"]').toRead(params.deal.details.submissionType);
+    wrapper.expectText('[data-cy="type-of-work-subheading"]').toRead(params.deal.submissionType);
   });
 
   it('should render team heading', () => {
