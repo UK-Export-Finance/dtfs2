@@ -69,7 +69,7 @@ const mockApplication = {
 describe('controllers/about-exporter', () => {
   let mockResponse;
   let mockRequest;
-  let updateApplicationSpy = jest.fn();
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
