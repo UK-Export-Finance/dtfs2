@@ -1,5 +1,4 @@
 const wipeDB = require('../../wipeDB');
-const aDeal = require('./deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
@@ -55,6 +54,7 @@ dealToClone.specialConditions = [
 describe('/v1/deals/:id/clone', () => {
   let noRoles;
   let anHSBCMaker;
+  let aBarclaysMaker;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);

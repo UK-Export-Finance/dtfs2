@@ -63,7 +63,7 @@ describe('/v1/tfm/deal/:id', () => {
 
         // create some facilities
         const mockFacility = {
-          associatedDealId: dealId,
+          dealId,
           facilityValue: 123456,
           user: mockUser,
         };

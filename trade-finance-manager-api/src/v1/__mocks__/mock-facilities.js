@@ -1,7 +1,7 @@
 const MOCK_FACILIIES = [
   {
     _id: '12345678',
-    associatedDealId: '123456789',
+    dealId: '123456789',
     facilityType: 'bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -33,7 +33,7 @@ const MOCK_FACILIIES = [
   {
     _id: '23456789',
     ukefFacilityId: '65432',
-    associatedDealId: '123456789',
+    dealId: '123456789',
     facilityType: 'loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Conditional',
@@ -71,7 +71,7 @@ const MOCK_FACILIIES = [
   },
   {
     _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
-    associatedDealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+    dealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     facilityType: 'bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -100,7 +100,7 @@ const MOCK_FACILIIES = [
   },
   {
     _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
-    associatedDealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+    dealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     facilityType: 'loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Unconditional',
@@ -133,7 +133,7 @@ const MOCK_FACILIIES = [
   },
   {
     _id: 'MOCK_DEAL_FACILITY_ISSUED_BOND',
-    associatedDealId: 'MOCK_DEAL_ISSUED_FACILTIES',
+    dealId: 'MOCK_DEAL_ISSUED_FACILTIES',
     facilityType: 'bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -160,7 +160,7 @@ const MOCK_FACILIIES = [
   },
   {
     _id: 'MOCK_DEAL_FACILITY_ISSUED_LOAN',
-    associatedDealId: 'MOCK_DEAL_ISSUED_FACILTIES',
+    dealId: 'MOCK_DEAL_ISSUED_FACILTIES',
     facilityType: 'loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Unconditional',

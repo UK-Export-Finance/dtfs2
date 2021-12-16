@@ -1,5 +1,3 @@
-const moment = require('moment');
-const aDeal = require('./deal-builder');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -7,7 +5,6 @@ const { as } = require('../../api')(app);
 
 describe('/v1/deals', () => {
   let aBarclaysMaker;
-  let dealId;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);

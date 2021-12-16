@@ -560,7 +560,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const newLoan = {
         facilityType: 'loan',
-        associatedDealId: dealId,
+        dealId,
       };
 
       await as(aBarclaysMaker).put(newLoan).to(`/v1/deals/${dealId}/loan/create`);

@@ -16,7 +16,7 @@ const mockUser = {
 
 const newFacility = {
   facilityType: 'bond',
-  associatedDealId: '123123456',
+  dealId: '123123456',
 };
 
 const newDeal = aDeal({
@@ -44,7 +44,7 @@ describe('/v1/portal/facilities', () => {
     const { body: deal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
 
     dealId = deal._id;
-    newFacility.associatedDealId = dealId;
+    newFacility.dealId = dealId;
   });
 
   describe('PUT /v1/portal/facilities/:id', () => {
@@ -96,13 +96,13 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('updates `editedBy` in the associated deal', async () => {
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
       const updatedFacility = {
@@ -113,7 +113,7 @@ describe('/v1/portal/facilities', () => {
 
       await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacilityResponse.body._id}`);
 
-      const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const { body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(body.deal.editedBy[1].userId).toEqual(updatedFacility.user._id);
       expect(body.deal.editedBy[1].bank).toEqual(updatedFacility.user.bank);
@@ -141,7 +141,7 @@ describe('/v1/portal/facilities', () => {
 
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('does NOT update `editedBy` in the associated deal', async () => {
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
@@ -152,7 +152,7 @@ describe('/v1/portal/facilities', () => {
 
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities');
 
-      const getDealResponse = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
+      const getDealResponse = await api.get(`/v1/tfm/deals/${newFacility.dealId}`);
       expect(getDealResponse.body.deal.dealSnapshot.editedBy.length).toEqual(0);
 
       const updatedFacility = {
@@ -163,7 +163,7 @@ describe('/v1/portal/facilities', () => {
 
       await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}`);
 
-      const { body } = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
+      const { body } = await api.get(`/v1/tfm/deals/${newFacility.dealId}`);
 
       expect(body.deal.dealSnapshot.editedBy.length).toEqual(0);
     });
@@ -181,7 +181,7 @@ describe('/v1/portal/facilities', () => {
     };
 
     it('changes facility status', async () => {
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
@@ -200,20 +200,20 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('does NOT update `editedBy` in the associated deal', async () => {
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       // editedBy is updated once when `create facility` is called
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
       await api.put(updateFacilityStatusBody).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}/status`);
 
-      const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const { body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(body.deal.editedBy.length).toEqual(1);
     });

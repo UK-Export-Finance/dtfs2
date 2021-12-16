@@ -8,7 +8,6 @@ exports.deleteDeal = async (req, res) => {
       const facilitiesCollection = await db.getCollection('tfm-facilities');
       const status = await collection.deleteOne({ _id: req.params.id });
 
-      await facilitiesCollection.deleteMany({ 'facilitySnapshot.associatedDealId': { $eq: deal._id } });
       await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });
       return res.status(200).send(status);
     }
