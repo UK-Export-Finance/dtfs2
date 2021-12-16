@@ -36,7 +36,7 @@ describe('mapFacilities', () => {
       facilitySnapshot: {
         _id: '12345678',
         ukefFacilityId: '0040004833',
-        associatedDealId: '123456789',
+        dealId: '123456789',
         facilityType: 'bond',
         ...mockCoverEndDate,
         coveredPercentage: mockCoveredPercentage,
@@ -64,7 +64,7 @@ describe('mapFacilities', () => {
       facilitySnapshot: {
         _id: '23456789',
         ukefFacilityId: '0040004833',
-        associatedDealId: '123456789',
+        dealId: '123456789',
         facilityType: 'loan',
         ...mockCoverEndDate,
         coveredPercentage: mockCoveredPercentage,

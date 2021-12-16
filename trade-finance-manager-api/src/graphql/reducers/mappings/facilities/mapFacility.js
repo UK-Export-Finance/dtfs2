@@ -35,7 +35,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
   const mapped = {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
-    associatedDealId: facility.associatedDealId,
+    dealId: facility.dealId,
     ukefFacilityId: facility.ukefFacilityId,
 
     // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.

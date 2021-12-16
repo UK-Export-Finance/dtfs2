@@ -11,7 +11,7 @@ const createFacilities = async (facilities, dealId) => {
     const facility = f;
     facility.createdDate = now();
     facility._id = await generateFacilityId();
-    facility.associatedDealId = dealId;
+    facility.dealId = dealId;
     return facility;
   }));
 
@@ -39,7 +39,7 @@ const createFacilities = async (facilities, dealId) => {
 exports.createMultipleFacilitiesPost = async (req, res) => {
   const {
     facilities,
-    associatedDealId,
+    dealId,
     user,
   } = req.body;
 
@@ -47,9 +47,9 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
     return res.status(404).send();
   }
 
-  return findOneDeal(associatedDealId, async (deal) => {
+  return findOneDeal(dealId, async (deal) => {
     if (deal) {
-      const insertedFacilities = await createFacilities(facilities, associatedDealId);
+      const insertedFacilities = await createFacilities(facilities, dealId);
 
       return res.status(200).send(insertedFacilities);
     }

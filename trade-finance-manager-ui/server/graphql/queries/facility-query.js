@@ -6,7 +6,7 @@ const facilityQuery = gql`
       _id,
       facilitySnapshot {
         ukefFacilityId,
-        associatedDealId,
+        dealId,
         facilityProduct {
           name
         },

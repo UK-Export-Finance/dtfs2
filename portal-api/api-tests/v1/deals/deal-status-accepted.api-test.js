@@ -13,16 +13,15 @@ jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code
 
 describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
   let aBarclaysMaker;
+  let aBarclaysChecker;
   let aSuperuser;
-  let submittedMinDeal;
-  let updatedDeal;
 
   beforeAll(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
+    [aBarclaysMaker] = barclaysMakers;
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     aSuperuser = testUsers().superuser().one();
   });

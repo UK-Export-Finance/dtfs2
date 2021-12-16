@@ -16,7 +16,7 @@ exports.deleteFacility = async (req, res) => {
       } = req.body;
 
       await removeFacilityIdFromDeal(
-        facility.associatedDealId,
+        facility.dealId,
         facilityId,
         user,
         req.routePath,

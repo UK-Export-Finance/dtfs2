@@ -165,8 +165,8 @@ const getCaseFacility = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const { associatedDealId } = facility.facilitySnapshot;
-  const deal = await api.getDeal(associatedDealId);
+  const { dealId } = facility.facilitySnapshot;
+  const deal = await api.getDeal(dealId);
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,

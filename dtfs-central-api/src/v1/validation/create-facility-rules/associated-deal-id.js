@@ -3,10 +3,10 @@ const { hasValue } = require('../../../utils/string');
 
 module.exports = (facility = {}, errorList) => {
   const newErrorList = { ...errorList };
-  const { associatedDealId } = facility;
+  const { dealId } = facility;
 
-  if (!hasValue(associatedDealId)) {
-    newErrorList.associatedDealId = {
+  if (!hasValue(dealId)) {
+    newErrorList.dealId = {
       order: orderNumber(newErrorList),
       text: 'Enter the Associated deal id',
     };

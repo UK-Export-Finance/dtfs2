@@ -42,7 +42,7 @@ describe('mapGefFacility', () => {
       _id: mockFacility._id,
       facilitySnapshot: {
         _id: mockFacility._id,
-        associatedDealId: facilitySnapshot.dealId,
+        dealId: facilitySnapshot.dealId,
         bankFacilityReference: facilitySnapshot.name,
         banksInterestMargin: `${facilitySnapshot.interestPercentage}%`,
         coveredPercentage: `${facilitySnapshot.coverPercentage}%`,

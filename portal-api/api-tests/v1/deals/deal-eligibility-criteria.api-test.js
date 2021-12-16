@@ -5,7 +5,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields } = require('./expectAddedFields');
 
 const {
   updatedECPartial,
@@ -284,7 +283,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       const firstUpdateTimeStamp = firstUpdate.eligibility.lastUpdated;
 
-      const { body: secondUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`)
+      const { body: secondUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`);
 
       expect(typeof secondUpdate.eligibility.lastUpdated).toEqual('number');
       expect(typeof secondUpdate.eligibility.lastUpdated).not.toEqual(firstUpdateTimeStamp);

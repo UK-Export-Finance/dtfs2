@@ -7,7 +7,7 @@
  *       _id:
  *         type: string
  *         example: 123abc
- *       associatedDealId:
+ *       dealId:
  *         type: string
  *         example: 456abc
  *       facilityType:

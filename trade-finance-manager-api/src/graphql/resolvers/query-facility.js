@@ -15,7 +15,7 @@ const queryFacility = async ({ _id }) => {
   if (isGefFacility(facilitySnapshot.type)) {
     dealId = facilitySnapshot.dealId;
   } else {
-    dealId = facilitySnapshot.associatedDealId;
+    dealId = facilitySnapshot.dealId;
   }
 
   const deal = await findOneTfmDeal(dealId);
