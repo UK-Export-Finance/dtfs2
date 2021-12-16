@@ -27,9 +27,7 @@ const facilityCovenant = (deal, facility, covenantType) => {
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     covenantType,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
-    currency: facility.facilitySnapshot.currency.id
-      ? facility.facilitySnapshot.currency.id
-      : facility.facilitySnapshot.currency,
+    currency: facility.facilitySnapshot.currency.id,
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,

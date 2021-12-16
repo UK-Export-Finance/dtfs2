@@ -63,9 +63,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
       facility.facilityType
       || facility.facilitySnapshot.type
       || facility.facilitySnapshot.facilityType,
-    currency: facility.facilitySnapshot.currency.id
-      ? facility.facilitySnapshot.currency.id
-      : facility.facilitySnapshot.currency,
+    currency: facility.facilitySnapshot.currency.id,
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),

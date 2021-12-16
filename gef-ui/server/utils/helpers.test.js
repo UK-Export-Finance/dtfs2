@@ -519,7 +519,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].isCurrency = true;
 
     mockedData.details.price = 200;
-    mockedData.details.currency = 'GBP';
+    mockedData.details.currency.id = 'GBP';
 
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(text).toEqual('200 GBP');

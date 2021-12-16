@@ -52,7 +52,7 @@ class Facility {
       this.monthsOfCover = null;
       this.details = null;
       this.detailsOther = null;
-      this.currency = req.currency || null;
+      this.currency = { id: req.currency || null };
       this.value = req.value || null;
       this.coverPercentage = null;
       this.interestPercentage = null;
@@ -104,7 +104,7 @@ class Facility {
       }
 
       if (req.currency != null) {
-        this.currency = req.currency;
+        this.currency = { id: req.currency || null };
       }
 
       if (req.value != null) {

@@ -23,7 +23,9 @@ const facilityQuery = gql`
         ukefExposure,
         banksInterestMargin,
         firstDrawdownAmountInExportCurrency,
-        currency,
+        currency {
+            id
+        },
         feeType,
         feeFrequency,
         dayCountBasis,

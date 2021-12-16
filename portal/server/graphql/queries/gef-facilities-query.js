@@ -11,7 +11,9 @@ query gefFacilities($start: Int, $pagesize: Int, $filters: [TransactionFilters])
       type
       value
       name
-      currency
+      currency {
+         id
+      }
       hasBeenIssued
       submittedAsIssuedDate
       deal {
