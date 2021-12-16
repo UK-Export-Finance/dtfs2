@@ -18,9 +18,9 @@ const mapPortalActivities = (portalActivities) => portalActivities.map((portalAc
 
 const getPortalActivities = async (req, res) => {
   const { params, session } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { userToken } = session;
-  const deal = await getApplication(applicationId);
+  const deal = await getApplication(dealId);
 
   // returns objects from IDs stored in gef application
   const maker = await getUserDetails(deal.userId, userToken);
@@ -34,7 +34,7 @@ const getPortalActivities = async (req, res) => {
   */
   return res.render('partials/application-activity.njk', {
     activeSubNavigation: 'activities',
-    applicationId,
+    dealId,
     portalActivities: mappedPortalActivities,
     bankInternalRefName: deal.bankInternalRefName,
     additionalRefName: deal.additionalRefName,

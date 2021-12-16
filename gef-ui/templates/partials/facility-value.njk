@@ -20,7 +20,7 @@
   {% if status === 'change' %}
     {{ govukBackLink({
       text: "Back to previous page",
-      href: "/gef/application-details/" + applicationId + "/facilities/" + facilityId + "/facility-currency?status=change",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/facility-currency?status=change",
       attributes: {
         'data-cy': 'back-link'
       }
@@ -28,7 +28,7 @@
   {% else %}
     {{ govukBackLink({
       text: "Back to previous page",
-      href: "/gef/application-details/" + applicationId + "/facilities/" + facilityId + "/facility-currency",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/facility-currency",
       attributes: {
         'data-cy': 'back-link'
       }

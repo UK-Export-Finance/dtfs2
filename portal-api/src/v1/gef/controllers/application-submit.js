@@ -3,7 +3,7 @@ const now = require('../../../now');
 const refDataApi = require('../../../reference-data/api');
 const db = require('../../../drivers/db-client');
 const {
-  getAllFacilitiesByApplicationId,
+  getAllFacilitiesByDealId,
   update: updateFacility,
 } = require('./facilities.controller');
 const CONSTANTS = require('../../../constants');
@@ -44,11 +44,11 @@ const generateUkefDealId = async (application) => application.ukefDealId || gene
 const generateUkefFacilityId = async (facility) => facility.ukefDealId || generateId({
   entityId: facility._id,
   entityType: 'facility',
-  dealId: facility.applicationId,
+  dealId: facility.dealId,
 });
 
-const addSubmissionDateToIssuedFacilities = async (applicationId) => {
-  const facilities = await getAllFacilitiesByApplicationId(applicationId);
+const addSubmissionDateToIssuedFacilities = async (dealId) => {
+  const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
     const { _id, hasBeenIssued, shouldCoverStartOnSubmission } = facility;
@@ -71,8 +71,8 @@ const addSubmissionDateToIssuedFacilities = async (applicationId) => {
   return facilities;
 };
 
-const addUkefFacilityIdToFacilities = async (applicationId) => {
-  const facilities = await getAllFacilitiesByApplicationId(applicationId);
+const addUkefFacilityIdToFacilities = async (dealId) => {
+  const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(facilities.map(async (facility) => {
     const { ukefId } = await generateUkefFacilityId(facility);
@@ -146,12 +146,12 @@ const submissionPortalActivity = async (application) => {
   return portalActivities;
 };
 
-const addSubmissionData = async (applicationId, existingApplication) => {
+const addSubmissionData = async (dealId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
   const { ukefId } = await generateUkefDealId(existingApplication);
 
-  await addSubmissionDateToIssuedFacilities(applicationId);
-  await addUkefFacilityIdToFacilities(applicationId);
+  await addSubmissionDateToIssuedFacilities(dealId);
+  await addUkefFacilityIdToFacilities(dealId);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   return {

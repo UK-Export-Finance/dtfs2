@@ -47,11 +47,12 @@ const DEAL_STATUS_PORTAL_BSS = {
 };
 
 const DEAL_STATUS_PORTAL_GEF = {
+  COMPLETED: 'Completed',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
   UKEF_IN_PROGRESS: 'In progress by UKEF',
-  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted (with conditions)',
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted (without conditions)',
+  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted (with conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 

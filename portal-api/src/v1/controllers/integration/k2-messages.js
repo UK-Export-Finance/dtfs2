@@ -174,8 +174,8 @@ const generateTypeA = async (deal, fromStatus) => {
       }
 
       let bondUkefFacilityId;
-      if (bond.ukefFacilityID) {
-        bondUkefFacilityId = Array.isArray(bond.ukefFacilityID) ? bond.ukefFacilityID[0] : bond.ukefFacilityID;
+      if (bond.ukefFacilityId) {
+        bondUkefFacilityId = Array.isArray(bond.ukefFacilityId) ? bond.ukefFacilityId[0] : bond.ukefFacilityId;
       }
 
       const bss = builder.createBSS()
@@ -236,8 +236,8 @@ const generateTypeA = async (deal, fromStatus) => {
         const loanConversionDate = calculateFacilityConversionDate(loan, dealCurrencyId);
 
         let loanUkefFacilityId;
-        if (loan.ukefFacilityID) {
-          loanUkefFacilityId = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
+        if (loan.ukefFacilityId) {
+          loanUkefFacilityId = Array.isArray(loan.ukefFacilityId) ? loan.ukefFacilityId[0] : loan.ukefFacilityId;
         }
 
         const ewcs = builder.createEWCS()

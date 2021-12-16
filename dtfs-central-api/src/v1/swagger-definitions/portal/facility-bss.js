@@ -25,7 +25,7 @@
  *       previousStatus:
  *         type: string
  *         example: Completed
- *       ukefFacilityID:
+ *       ukefFacilityId:
  *         type: string
  *         example: '0030034644'
  *       facilityStage:

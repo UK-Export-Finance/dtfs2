@@ -4,6 +4,6 @@ const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
-router.get('/application-details/:applicationId/activities', validateToken, (req, res) => getPortalActivities(req, res));
+router.get('/application-details/:dealId/activities', validateToken, (req, res) => getPortalActivities(req, res));
 
 module.exports = router;

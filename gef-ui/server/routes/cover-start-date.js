@@ -4,6 +4,6 @@ const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
-router.get('/application-details/:applicationId/cover-start-date', validateToken, (req, res) => applicationDetails(req, res));
+router.get('/application-details/:dealId/cover-start-date', validateToken, (req, res) => applicationDetails(req, res));
 
 module.exports = router;

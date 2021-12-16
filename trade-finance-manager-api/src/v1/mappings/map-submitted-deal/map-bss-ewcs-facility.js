@@ -31,7 +31,7 @@ const mapCoverEndDate = (facility) => {
 const mapBssEwcsFacility = (facility) => {
   const {
     _id,
-    ukefFacilityID,
+    ukefFacilityId,
     facilityType,
     facilityValue,
     currency,
@@ -56,7 +56,7 @@ const mapBssEwcsFacility = (facility) => {
 
   return {
     _id,
-    ukefFacilityID: Number(ukefFacilityID),
+    ukefFacilityId: Number(ukefFacilityId),
     facilityType,
     currencyCode: currency && currency.id,
     value: Number(facilityValue.replace(/,/g, '')),

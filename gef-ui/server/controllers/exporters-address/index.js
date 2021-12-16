@@ -4,15 +4,15 @@ const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/help
 const exportersAddress = async (req, res) => {
   try {
     const { params } = req;
-    const { applicationId } = params;
+    const { dealId } = params;
 
-    const { exporter } = await api.getApplication(applicationId);
+    const { exporter } = await api.getApplication(dealId);
     const { companyName, registeredAddress } = exporter;
 
     return res.render('partials/exporters-address.njk', {
       companyName,
       registeredAddress,
-      applicationId,
+      dealId,
     });
   } catch (err) {
     console.error(err);
@@ -24,9 +24,9 @@ const validateExportersAddress = async (req, res) => {
   try {
     const { params, body } = req;
     const { correspondence, postcode } = body;
-    const { applicationId } = params;
+    const { dealId } = params;
 
-    const { exporter } = await api.getApplication(applicationId);
+    const { exporter } = await api.getApplication(dealId);
     const { companyName = '' } = exporter;
 
     const correspondenceError = [];
@@ -76,7 +76,7 @@ const validateExportersAddress = async (req, res) => {
         companyName,
         postcode: postcode ? postcode.toUpperCase() : '',
         correspondence,
-        applicationId,
+        dealId,
       });
     }
 

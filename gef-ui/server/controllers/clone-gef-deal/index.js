@@ -4,11 +4,11 @@ const api = require('../../services/api');
 exports.cloneDealCreateApplication = async (req, res, next) => {
   const { body, session } = req;
   const { _id: userId, bank: { id: bankId } } = session.user;
-  const { applicationId } = req.params;
+  const { dealId } = req.params;
 
   try {
     const application = await api.cloneApplication({
-      applicationId,
+      dealId,
       ...body,
       userId,
       bankId,
@@ -25,7 +25,7 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
 
     req.flash('successMessage', {
       text: 'GEF Deal cloned successfully.',
-      href: `/gef/application-details/${application.applicationId}`,
+      href: `/gef/application-details/${application.dealId}`,
       hrefText: 'View GEF Deal',
     });
 
@@ -66,9 +66,9 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
 
 exports.cloneDealNameApplication = async (req, res) => {
   const { params } = req;
-  const applicationId = params?.applicationId;
+  const dealId = params?.dealId;
 
-  const deal = await api.getApplication(applicationId);
+  const deal = await api.getApplication(dealId);
 
   const viewProps = {
     cloneDeal: true,

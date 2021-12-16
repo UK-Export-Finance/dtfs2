@@ -4,7 +4,7 @@ const api = require('../../services/api');
 
 const facilityConfirmDeletion = async (req, res) => {
   const { params } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
 
   try {
     const { details } = await api.getFacility(facilityId);
@@ -12,7 +12,7 @@ const facilityConfirmDeletion = async (req, res) => {
 
     return res.render('partials/facility-confirm-deletion.njk', {
       heading,
-      applicationId,
+      dealId,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -21,12 +21,12 @@ const facilityConfirmDeletion = async (req, res) => {
 
 const deleteFacility = async (req, res) => {
   const { params } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
 
   try {
     await api.deleteFacility(facilityId);
 
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

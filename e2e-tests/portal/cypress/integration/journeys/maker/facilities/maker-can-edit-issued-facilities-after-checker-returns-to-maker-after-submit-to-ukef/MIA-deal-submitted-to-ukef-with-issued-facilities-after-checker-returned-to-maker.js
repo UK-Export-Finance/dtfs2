@@ -214,7 +214,7 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      ukefFacilityID: [
+      ukefFacilityId: [
         '12345',
       ],
       'issuedDate-day': now.getDate(),
@@ -251,7 +251,7 @@ const deal = {
       ukefExposure: '493.60',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      ukefFacilityID: [
+      ukefFacilityId: [
         '56789',
       ],
       'issuedDate-day': now.getDate(),

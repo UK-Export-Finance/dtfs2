@@ -1,6 +1,6 @@
 const COVER_TERMS = [
   [{
-    applicationId: 'IGNORE_POST-POPULATED',
+    dealId: 'IGNORE_POST-POPULATED',
     coverStart: false,
     noticeDate: false,
     facilityLimit: false,
@@ -10,7 +10,7 @@ const COVER_TERMS = [
     facilityBaseCurrency: false,
     facilityPaymentCurrency: false,
   }, {
-    applicationId: 'IGNORE_POST-POPULATED',
+    dealId: 'IGNORE_POST-POPULATED',
     coverStart: null,
     noticeDate: null,
     facilityLimit: null,
@@ -20,7 +20,7 @@ const COVER_TERMS = [
     facilityBaseCurrency: null,
     facilityPaymentCurrency: null,
   }, {
-    applicationId: 'IGNORE_POST-POPULATED',
+    dealId: 'IGNORE_POST-POPULATED',
     coverStart: true,
     noticeDate: true,
     facilityLimit: true,

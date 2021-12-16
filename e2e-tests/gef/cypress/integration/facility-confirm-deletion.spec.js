@@ -19,7 +19,7 @@ context('Facility Confirm Deletion Page', () => {
             .then((res) => {
               applications.push({
                 id: item._id,
-                facilities: res.body.items.filter((it) => it.details.applicationId === item._id),
+                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
               });
             });
         });

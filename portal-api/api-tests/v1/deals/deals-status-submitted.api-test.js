@@ -9,7 +9,6 @@ const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/reference-data/api');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const CONSTANTS = require('../../../src/constants');
 
@@ -20,30 +19,19 @@ jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code
 // jest.unmock('@azure/storage-file-share');
 
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
-  let noRoles;
   let aBarclaysMaker;
-  let anotherBarclaysMaker;
-  let anHSBCMaker;
   let aBarclaysChecker;
-  let aBarclaysMakerChecker;
   let aSuperuser;
-  let tfmMaker;
-  let tfmChecker;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
   const originalFacilities = completedDeal.mockFacilities;
   const MOCK_NUMBER_GENERATOR_ID = 'MOCK_NUMBER_GENERATOR_ID';
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
-    anotherBarclaysMaker = barclaysMakers[1];
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    [aBarclaysMaker] = barclaysMakers;
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
 
-    const barclaysMakerChecker = testUsers().withMultipleRoles('maker', 'checker').withBankName('Barclays Bank').one();
-    aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -210,13 +198,13 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       expect(body.deal.details.ukefDealId).toEqual(MOCK_NUMBER_GENERATOR_ID);
 
       body.deal.bondTransactions.items.forEach((bond) => {
-        expect(bond.ukefFacilityID).toBeDefined();
-        expect(bond.ukefFacilityID).toEqual(MOCK_NUMBER_GENERATOR_ID);
+        expect(bond.ukefFacilityId).toBeDefined();
+        expect(bond.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
       });
 
       body.deal.loanTransactions.items.forEach((loan) => {
-        expect(loan.ukefFacilityID).toBeDefined();
-        expect(loan.ukefFacilityID).toEqual(MOCK_NUMBER_GENERATOR_ID);
+        expect(loan.ukefFacilityId).toBeDefined();
+        expect(loan.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
       });
     });
 
@@ -250,14 +238,14 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
           const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((b) =>
             b._id === bond._id);
 
-          expect(bond.ukefFacilityID).toEqual(bondInFirstSubmission.ukefFacilityID);
+          expect(bond.ukefFacilityId).toEqual(bondInFirstSubmission.ukefFacilityId);
         });
 
         dealAfterSecondSubmission.body.deal.loanTransactions.items.forEach((loan) => {
           const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((l) =>
             l._id === loan._id);
 
-          expect(loan.ukefFacilityID).toEqual(loanInFirstSubmission.ukefFacilityID);
+          expect(loan.ukefFacilityId).toEqual(loanInFirstSubmission.ukefFacilityId);
         });
       });
     });

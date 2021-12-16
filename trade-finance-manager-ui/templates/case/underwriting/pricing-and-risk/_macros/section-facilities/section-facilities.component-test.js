@@ -1,4 +1,5 @@
 const componentRenderer = require('../../../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-facilities/section-facilities.njk';
 
 const render = componentRenderer(component);
@@ -11,21 +12,21 @@ describe(component, () => {
       {
         _id: '1',
         facilitySnapshot: {
-          ukefFacilityID: '100',
+          ukefFacilityId: '100',
           facilityType: 'loan',
         },
       },
       {
         _id: '2',
         facilitySnapshot: {
-          ukefFacilityID: '100',
+          ukefFacilityId: '100',
           facilityType: 'loan',
         },
       },
       {
         _id: '3',
         facilitySnapshot: {
-          ukefFacilityID: '100',
+          ukefFacilityId: '100',
           facilityType: 'loan',
         },
       },
@@ -36,18 +37,16 @@ describe(component, () => {
     wrapper = render(params);
   });
 
-
   it('should render Facilities heading', () => {
-    const wrapper = render(params);
+    wrapper = render(params);
     wrapper.expectText('[data-cy="facilities-heading"]').toRead('Facilities');
   });
 
   it('should render facility-pricing-risk-table for each facility', () => {
-    const wrapper = render(params);
+    wrapper = render(params);
 
     params.facilities.forEach((facility) => {
       wrapper.expectElement(`[data-cy="facility-${facility._id}-pricing-risk-table"]`).toExist();
     });
   });
-
 });

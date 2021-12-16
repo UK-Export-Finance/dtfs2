@@ -16,7 +16,7 @@ context('Companies House Page', () => {
       })
       .then(({ body }) => {
         dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'IN_PROGRESS');
+          deal.exporter.status === 'In progress');
       });
     cy.login(CREDENTIALS.MAKER);
   });

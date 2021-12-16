@@ -9,7 +9,7 @@ import CREDENTIALS from '../fixtures/credentials.json';
 
 const { format } = require('date-fns');
 
-let applicationId;
+let dealId;
 
 context('Submit to UKEF as MIA', () => {
   before(() => {
@@ -20,7 +20,7 @@ context('Submit to UKEF as MIA', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[2]._id;
+        dealId = body.items[2]._id;
         cy.login(CREDENTIALS.MAKER);
       });
   });
@@ -31,7 +31,7 @@ context('Submit to UKEF as MIA', () => {
 
   describe('Submit to UKEF', () => {
     it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
 
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -44,21 +44,21 @@ context('Submit to UKEF as MIA', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile('test.pdf', `${manualInclusion.url(applicationId)}/upload`);
+      cy.uploadFile('test.pdf', `${manualInclusion.url(dealId)}/upload`);
       manualInclusion.uploadSuccess('test.pdf');
       manualInclusion.continueButton().click();
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
 
       statusBanner.bannerStatus().contains('Draft');
 
       const todayFormatted = format(new Date(), 'dd MMM yyyy');
       statusBanner.bannerDateCreated().contains(todayFormatted);
 
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.applicationSecurity().type('test');
       securityDetails.continueButton().click();
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.cancelButton().click();
 
       applicationDetails.submitButton().click();

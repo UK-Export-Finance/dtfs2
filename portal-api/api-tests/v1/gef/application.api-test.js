@@ -129,7 +129,11 @@ describe(baseUrl, () => {
           })),
           status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         },
+<<<<<<< HEAD
         status: CONSTANTS.DEAL_STATUS.DRAFT,
+=======
+        status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
+>>>>>>> main
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
@@ -354,11 +358,11 @@ describe(baseUrl, () => {
       it('adds a ukefFacilityId to each issued facility associated with the application', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-        const applicationId = body._id;
+        const dealId = body._id;
 
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
-        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -379,11 +383,11 @@ describe(baseUrl, () => {
       it('adds submittedAsIssuedDate to each issued facility associated with the application', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-        const applicationId = body._id;
+        const dealId = body._id;
 
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
-        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -404,11 +408,11 @@ describe(baseUrl, () => {
       it('adds coverStartDate if cover starts on submission (shouldCoverStartOnSubmission === true)', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-        const applicationId = body._id;
+        const dealId = body._id;
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.shouldCoverStartOnSubmission === true);
 
-        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -443,9 +447,9 @@ describe(baseUrl, () => {
         const { body } = await as(aMaker).post(mockApplication).to(baseUrl);
         expect(body.submissionCount).toEqual(0);
 
-        const applicationId = body._id;
+        const dealId = body._id;
 
-        await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${applicationId}`);
+        await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
         const expectedChecker = {
           _id: expect.any(Object),
@@ -460,7 +464,7 @@ describe(baseUrl, () => {
           'user-status': 'active',
         };
 
-        expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(applicationId);
+        expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);
         expect(tfmDealSubmitSpy.mock.calls[0][1]).toEqual(mockApplication.dealType);
         expect(tfmDealSubmitSpy.mock.calls[0][2]).toEqual(expectedChecker);
       });
@@ -473,11 +477,11 @@ describe(baseUrl, () => {
 
     it('adds an submission object to portalActivities array', async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const applicationId = body._id;
+      const dealId = body._id;
 
       // adds required fields to the gef deal
-      await as(aChecker).put({ checkerId: aChecker._id, submissionType: 'Manual Inclusion Application' }).to(`${baseUrl}/${applicationId}`);
-      const putResponse = await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${applicationId}`);
+      await as(aChecker).put({ checkerId: aChecker._id, submissionType: 'Manual Inclusion Application' }).to(`${baseUrl}/${dealId}`);
+      const putResponse = await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
       const result = putResponse.body.portalActivities[0];
       expect(result.type).toEqual('NOTICE');

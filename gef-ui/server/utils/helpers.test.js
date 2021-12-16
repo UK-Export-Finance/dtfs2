@@ -15,7 +15,7 @@ import {
   pastDate,
   futureDateInRange,
   getFacilityCoverStartDate,
-  getFacilitiesAsArray,
+  getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
   makerCanReSubmit,
 } from './helpers';
@@ -118,7 +118,7 @@ const MOCK_FACILITY = {
       status: CONSTANTS.DEAL_STATUS.COMPLETED,
       details: {
         _id: '61a7714f2ae62b0013dae689',
-        applicationId: '61a7710b2ae62b0013dae687',
+        dealId: '61a7710b2ae62b0013dae687',
         type: 'CASH',
         hasBeenIssued: true,
         name: 'Facility one',
@@ -150,7 +150,7 @@ const MOCK_FACILITY = {
       status: CONSTANTS.DEAL_STATUS.COMPLETED,
       details: {
         _id: '61a771cc2ae62b0013dae68a',
-        applicationId: '61a7710b2ae62b0013dae687',
+        dealId: '61a7710b2ae62b0013dae687',
         type: 'CASH',
         hasBeenIssued: true,
         name: 'Facility two',
@@ -696,7 +696,7 @@ describe('futureDateInRange', () => {
   });
 });
 
-describe('getFacilitiesAsArray', () => {
+describe('getIssuedFacilitiesAsArray', () => {
   it('Should return the expected facilities object from mock facilities array where the facility date has not been confirmed by the bank', () => {
     const expected = [
       [
@@ -706,12 +706,19 @@ describe('getFacilitiesAsArray', () => {
         { html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>" },
       ],
     ];
-    expect(getFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
+    expect(getIssuedFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
+  });
+
+  it('Should return the empty array', () => {
+    const expected = [];
+    MOCK_FACILITY.items[0].details.hasBeenIssued = false;
+    expect(getIssuedFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
   });
 });
 
 describe('coverDatesConfirmed', () => {
   it('Should return FALSE as one of the facility\'s cover date has not been confirmed', () => {
+    MOCK_FACILITY.items[0].details.hasBeenIssued = true;
     expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(false);
   });
 });

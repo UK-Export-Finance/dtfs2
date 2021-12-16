@@ -1,4 +1,5 @@
-const { ERROR, STATUS } = require('../../enums');
+const CONSTANTS = require('../../../../constants');
+const { ERROR } = require('../../enums');
 
 const validateMandatoryField = (fieldName, fieldValue) => {
   const value = fieldValue ?? '';
@@ -50,13 +51,13 @@ const validateApplicationReferences = (body = {}) => {
 const validatorStatusCheckEnums = (doc) => {
   const enumErrors = [];
   switch (doc.status) {
-    case STATUS.NOT_STARTED:
-    case STATUS.IN_PROGRESS:
-    case STATUS.CHANGES_REQUIRED:
-    case STATUS.COMPLETED:
-    case STATUS.BANK_CHECK:
-    case STATUS.SUBMITTED_TO_UKEF:
-    case STATUS.ABANDONED:
+    case CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED:
+    case CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS:
+    case CONSTANTS.DEAL.GEF_STATUS.CHANGES_REQUIRED:
+    case CONSTANTS.DEAL.GEF_STATUS.COMPLETED:
+    case CONSTANTS.DEAL.GEF_STATUS.BANK_CHECK:
+    case CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF:
+    case CONSTANTS.DEAL.GEF_STATUS.ABANDONED:
     case null:
     case undefined:
       break;

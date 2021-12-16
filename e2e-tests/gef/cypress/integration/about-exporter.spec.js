@@ -1,11 +1,13 @@
 import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
+import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const applicationIds = [];
+const dealIds = [];
 let dealWithNoExporterIndustries;
 let dealWithExporterIndustries;
 let dealWithEmptyExporter;
+let dealWithCompletedExporter;
 let token;
 
 context('About Exporter Page', () => {
@@ -18,7 +20,7 @@ context('About Exporter Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push(item._id);
+          dealIds.push(item._id);
         });
 
         dealWithNoExporterIndustries = body.items.find((deal) =>
@@ -28,7 +30,10 @@ context('About Exporter Page', () => {
           deal.exporter?.industries?.length);
 
         dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'NOT_STARTED');
+          deal.exporter.status === 'Not started');
+
+        dealWithCompletedExporter = body.items.find((deal) =>
+          deal.exporter.status === 'Completed');
 
       });
     cy.login(CREDENTIALS.MAKER);
@@ -36,6 +41,13 @@ context('About Exporter Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  describe('With no exporter fields provided', () => {
+    it('should render `Not started` status in the main deal page', () => {
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
+      applicationDetails.exporterStatus().should('contain', 'Not started');
+    });
   });
 
   describe('Visiting page', () => {
@@ -90,13 +102,14 @@ context('About Exporter Page', () => {
       aboutExporter.isFinancingIncreasingError();
     });
 
-    it('takes user back to application details page when form has been filled in', () => {
+    it('takes user back to application details page when form has been filled in and renders `In progress` status', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.microRadioButton().click();
       aboutExporter.probabilityOfDefaultInput().type('10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
       aboutExporter.doneButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
+      applicationDetails.exporterStatus().should('contain', 'In progress');
     });
   });
 
@@ -105,6 +118,13 @@ context('About Exporter Page', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
+    });
+  });
+
+  describe('when all exporter fields are completed', () => {
+    it('should render `Completed` status in the main deal page', () => {
+      cy.visit(relative(`/gef/application-details/${dealWithCompletedExporter._id}`));
+      applicationDetails.exporterStatus().should('contain', 'Completed');
     });
   });
 });

@@ -162,7 +162,7 @@
       {
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan6",
-        "ukefFacilityID": "ukef:aDealWithTenLoans-loan6",
+        "ukefFacilityId": "ukef:aDealWithTenLoans-loan6",
         "facilityValue": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",

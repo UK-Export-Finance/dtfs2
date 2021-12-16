@@ -193,7 +193,7 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
         'coverEndDate-month': '10',
         'coverEndDate-year': '2020',
         status: 'Submitted',
-        ukefFacilityID: '65431',
+        ukefFacilityId: '65431',
       },
     ],
   },
@@ -226,7 +226,7 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
         bankReferenceNumberRequiredForIssuance: true,
         requestedCoverStartDate: 1610369832226.0,
         status: 'Submitted',
-        ukefFacilityID: '65432',
+        ukefFacilityId: '65432',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',

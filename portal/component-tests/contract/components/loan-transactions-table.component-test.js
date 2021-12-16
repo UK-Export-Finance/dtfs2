@@ -17,7 +17,7 @@ describe(component, () => {
       items: [
         {
           _id: '1',
-          ukefFacilityID: '5678',
+          ukefFacilityId: '5678',
           status: 'Incomplete',
           facilityValue: '100',
           currency: { id: 'GBP' },
@@ -28,7 +28,7 @@ describe(component, () => {
         },
         {
           _id: '2',
-          ukefFacilityID: '5678',
+          ukefFacilityId: '5678',
           status: 'Incomplete',
           facilityValue: '100',
           currency: { id: 'GBP' },
@@ -58,14 +58,16 @@ describe(component, () => {
 
   describe('table rows', () => {
     it('should render columns/elements/text for each loan', () => {
-      const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [], editable: true });
+      const wrapper = render({
+        user, deal, confirmedRequestedCoverStartDates: [], editable: true,
+      });
 
       deal.loanTransactions.items.forEach((facility) => {
         const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
         wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).toExist();
 
-        wrapper.expectText(`${facilityIdSelector} [data-cy="loan-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityID);
+        wrapper.expectText(`${facilityIdSelector} [data-cy="loan-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
 
         wrapper.expectText(`${facilityIdSelector} [data-cy="loan-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
 
@@ -134,6 +136,5 @@ describe(component, () => {
         });
       });
     });
-
   });
 });

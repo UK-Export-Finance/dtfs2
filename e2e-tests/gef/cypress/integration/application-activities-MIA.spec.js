@@ -12,7 +12,7 @@ import statusBanner from './pages/application-status-banner';
 
 import { format } from 'date-fns';
 
-let applicationId;
+let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
@@ -23,7 +23,7 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[2]._id;
+        dealId = body.items[2]._id;
 
         cy.login(CREDENTIALS.MAKER);
       });
@@ -32,7 +32,7 @@ context('Submit AIN deal and check portalActivities', () => {
   describe('create and submit an MIA', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
       Cypress.Cookies.preserveOnce('connect.sid');
     });
 
@@ -46,12 +46,12 @@ context('Submit AIN deal and check portalActivities', () => {
         }
       });
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/ineligible-automatic-cover`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/manual-inclusion-questionnaire`));
-      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(applicationId)}/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
+      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealId)}/upload`);
       manualInclusion.uploadSuccess('upload-file-valid.doc');
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.applicationSecurity().type('test2');
       securityDetails.continueButton().click();
@@ -66,7 +66,7 @@ context('Submit AIN deal and check portalActivities', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.CHECKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('submits detail to UKEF', () => {
@@ -79,7 +79,7 @@ context('Submit AIN deal and check portalActivities', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     // ensures that can click between both tabs and correct info is shown

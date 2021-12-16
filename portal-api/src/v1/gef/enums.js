@@ -28,6 +28,7 @@ const STATUS = {
   DRAFT: 'Draft',
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
+  COMPLETED: 'Completed',
   BANK_CHECK: 'Ready for Checker\'s approval',
   CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',

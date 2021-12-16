@@ -35,7 +35,7 @@ describe('mapFacilities', () => {
       _id: '12345678',
       facilitySnapshot: {
         _id: '12345678',
-        ukefFacilityID: '0040004833',
+        ukefFacilityId: '0040004833',
         associatedDealId: '123456789',
         facilityType: 'bond',
         ...mockCoverEndDate,
@@ -63,7 +63,7 @@ describe('mapFacilities', () => {
       _id: '23456789',
       facilitySnapshot: {
         _id: '23456789',
-        ukefFacilityID: '0040004833',
+        ukefFacilityId: '0040004833',
         associatedDealId: '123456789',
         facilityType: 'loan',
         ...mockCoverEndDate,

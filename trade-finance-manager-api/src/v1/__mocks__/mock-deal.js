@@ -168,7 +168,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: '12345678',
-        ukefFacilityID: '65431',
+        ukefFacilityId: '65431',
         facilityType: 'bond',
         createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',
@@ -227,7 +227,7 @@ const MOCK_DEAL = {
         issuedDate: 1610369832226.0,
         issueFacilityDetailsProvided: true,
         status: 'Acknowledged',
-        ukefFacilityID: '65432',
+        ukefFacilityId: '65432',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',

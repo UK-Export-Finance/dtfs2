@@ -9,7 +9,7 @@ const newDeal = {
 };
 
 const newFacility = {
-  applicationId: 12345,
+  dealId: 12345,
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
 };
 
@@ -29,14 +29,14 @@ describe('/v1/portal/gef/facilities', () => {
     const deal = await createDeal();
 
     dealId = deal._id;
-    newFacility.applicationId = dealId;
+    newFacility.dealId = dealId;
   });
 
   describe('POST /v1/portal/gef/facilities', () => {
     it('returns 404 when the associated deal is not found', async () => {
       const facilityWithInvalidDealId = {
         ...newFacility,
-        applicationId: '123456789f0ffe00219319c1',
+        dealId: '123456789f0ffe00219319c1',
       };
 
       const { status } = await api.post(facilityWithInvalidDealId).to('/v1/portal/gef/facilities');

@@ -3,12 +3,12 @@ const api = require('../../services/api');
 
 const nameApplication = async (req, res, next) => {
   const { params } = req;
-  const applicationId = params?.id;
+  const dealId = params?.id;
   const viewProps = {};
 
   try {
-    if (applicationId) {
-      const application = await api.getApplication(applicationId);
+    if (dealId) {
+      const application = await api.getApplication(dealId);
       viewProps.bankInternalRefName = application.bankInternalRefName;
       viewProps.additionalRefName = application.additionalRefName;
     }
@@ -46,12 +46,12 @@ const createApplication = async (req, res, next) => {
 
 const updateApplicationReferences = async (req, res, next) => {
   const { body, params } = req;
-  const applicationId = params.id;
+  const dealId = params.id;
 
   body.bankInternalRefName = body.bankInternalRefName ?? '';
   body.additionalRefName = body.additionalRefName ?? '';
   try {
-    const application = await api.updateApplication(applicationId, body);
+    const application = await api.updateApplication(dealId, body);
 
     if (application.status === 422) {
       return res.render('partials/name-application.njk', {

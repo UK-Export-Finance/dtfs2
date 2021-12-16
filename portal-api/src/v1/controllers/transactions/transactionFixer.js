@@ -24,8 +24,8 @@ const constructor = (user, filters) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
 
       if (FILTER_SEARCH === filterField) {
-        const bondMatchesOnUkefFacilityId = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: { $regex: `^${filter[FILTER_SEARCH]}`, $options: 'i' } } } };
-        const loanMatchesOnUkefFacilityId = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: { $regex: `^${filter[FILTER_SEARCH]}`, $options: 'i' } } } };
+        const bondMatchesOnUkefFacilityId = { 'bondTransactions.items': { $elemMatch: { ukefFacilityId: { $regex: `^${filter[FILTER_SEARCH]}`, $options: 'i' } } } };
+        const loanMatchesOnUkefFacilityId = { 'loanTransactions.items': { $elemMatch: { ukefFacilityId: { $regex: `^${filter[FILTER_SEARCH]}`, $options: 'i' } } } };
 
         const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: { $regex: `^${filter[FILTER_SEARCH]}`, $options: 'i' } } } };
         const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: { $regex: `^${filter[FILTER_SEARCH]}`, $options: 'i' } } } };
