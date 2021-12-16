@@ -42,7 +42,7 @@ describe('mapFacility', () => {
   const mockFacility = {
     _id: '12345678',
     associatedDealId: '100200300',
-    ukefFacilityID: '0040004833',
+    ukefFacilityId: '0040004833',
     facilityType: mockFacilityType,
     ukefFacilityType: mockFacilityType,
     ...mockCoverEndDate,
@@ -106,7 +106,7 @@ describe('mapFacility', () => {
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       associatedDealId: mockFacility.associatedDealId,
-      ukefFacilityID: mockFacility.ukefFacilityID,
+      ukefFacilityId: mockFacility.ukefFacilityId,
       facilityType: expectedFacilityType,
       ukefFacilityType: mockFacilityType,
       facilityProduct: expectedFacilityProduct,

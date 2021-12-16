@@ -140,7 +140,7 @@ type FacilityUkefExposure {
 
 type FacilitySnapshot {
   _id: String!
-  ukefFacilityID: String
+  ukefFacilityId: String
   associatedDealId: String!
   facilityProduct: FacilityProduct!
   facilityType: String
@@ -292,7 +292,7 @@ type PremiumScheduleData {
   id: Int
   facilityURN: String
   calculationDate: String
-  income: Float 
+  income: Float
   incomePerDay: Float
   exposure: Int
   period: Int

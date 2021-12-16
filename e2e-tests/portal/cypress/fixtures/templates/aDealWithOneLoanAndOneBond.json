@@ -100,7 +100,7 @@
           "bondIssuer": "issuer",
           "bondType": "bond type",
           "facilityStage": "Issued",
-          "ukefFacilityID": "ukef:aDealWithOneLoanAndOneBond-bond1",
+          "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-bond1",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithOneLoanAndOneBond-bond1",
           "bondBeneficiary": "test",
@@ -131,7 +131,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithOneLoanAndOneBond-loan1",
-        "ukefFacilityID": "ukef:aDealWithOneLoanAndOneBond-loan1",
+        "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-loan1",
         "facilityValue": "456",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",

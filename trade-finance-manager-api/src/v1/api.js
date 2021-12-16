@@ -453,7 +453,7 @@ const updateACBSfacility = async (facility, supplierName) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityID}/issue`,
+        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityId}/issue`,
         headers: {
           'Content-Type': 'application/json',
         },

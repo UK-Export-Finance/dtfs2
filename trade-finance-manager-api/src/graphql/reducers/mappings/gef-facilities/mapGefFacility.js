@@ -63,7 +63,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
 
       // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(facilityType),
-      ukefFacilityID: ukefFacilityId,
+      ukefFacilityId,
       ukefExposure: `${currency} ${ukefExposure}`,
       providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),
       providedOnOther: facilitySnapshot.detailsOther,

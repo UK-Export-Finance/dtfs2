@@ -72,14 +72,14 @@ describe('notify-template-formatters', () => {
 
   describe('generateFacilitiesListString', () => {
     const expectedString = (facility, bankRefField) => {
-      const { ukefFacilityID } = facility;
+      const { ukefFacilityId } = facility;
 
       let bankRefStr;
       if (bankRefField) {
         bankRefStr = `*Your bank ref: ${facility[bankRefField]}\n`;
       }
 
-      const ukefIdString = `*UKEF facility ID: ${ukefFacilityID}\n\n`;
+      const ukefIdString = `*UKEF facility ID: ${ukefFacilityId}\n\n`;
 
       return `${bankRefStr}${ukefIdString}`;
     };
@@ -88,12 +88,12 @@ describe('notify-template-formatters', () => {
       const mockFacilities = [
         {
           facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-          ukefFacilityID: '1',
+          ukefFacilityId: '1',
           uniqueIdentificationNumber: '123',
         },
         {
           facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-          ukefFacilityID: '2',
+          ukefFacilityId: '2',
           uniqueIdentificationNumber: '456',
         },
       ];
@@ -116,7 +116,7 @@ describe('notify-template-formatters', () => {
         const mockFacilities = [
           {
             facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-            ukefFacilityID: '1',
+            ukefFacilityId: '1',
             bankReference: '123',
           },
         ];
@@ -138,7 +138,7 @@ describe('notify-template-formatters', () => {
         const mockFacilities = [
           {
             facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-            ukefFacilityID: '1',
+            ukefFacilityId: '1',
           },
         ];
 
@@ -146,7 +146,7 @@ describe('notify-template-formatters', () => {
 
         const heading = generateFacilitiesListHeading(mockFacilities[0].facilityType);
 
-        const string = `*UKEF facility ID: ${mockFacilities[0].ukefFacilityID}\n\n`;
+        const string = `*UKEF facility ID: ${mockFacilities[0].ukefFacilityId}\n\n`;
 
         const expected = `${heading}${string}`;
 

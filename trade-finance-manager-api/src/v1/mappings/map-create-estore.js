@@ -34,7 +34,7 @@ const mapCreateEstore = (deal) => {
     dealIdentifier: ukefDealId,
     destinationMarket,
     riskMarket,
-    facilityIdentifiers: facilities.map((facility) => facility.ukefFacilityID),
+    facilityIdentifiers: facilities.map((facility) => facility.ukefFacilityId),
   };
 };
 module.exports = mapCreateEstore;

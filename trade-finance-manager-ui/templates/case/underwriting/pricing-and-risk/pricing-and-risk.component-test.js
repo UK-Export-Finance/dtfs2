@@ -1,11 +1,11 @@
 const pageRenderer = require('../../../../component-tests/pageRenderer');
-const page = '../templates/case/underwriting/pricing-and-risk/pricing-and-risk.njk'
+
+const page = '../templates/case/underwriting/pricing-and-risk/pricing-and-risk.njk';
 
 const render = pageRenderer(page);
 
 describe(page, () => {
-  let wrapper;
-  let params = {
+  const params = {
     dealId: '1234',
     deal: {
       submissionDetails: {
@@ -15,21 +15,21 @@ describe(page, () => {
         {
           _id: '1',
           facilitySnapshot: {
-            ukefFacilityID: '100',
+            ukefFacilityId: '100',
             facilityType: 'loan',
           },
         },
         {
           _id: '2',
           facilitySnapshot: {
-            ukefFacilityID: '100',
+            ukefFacilityId: '100',
             facilityType: 'loan',
           },
         },
         {
           _id: '3',
           facilitySnapshot: {
-            ukefFacilityID: '100',
+            ukefFacilityId: '100',
             facilityType: 'loan',
           },
         },
@@ -56,5 +56,4 @@ describe(page, () => {
     const wrapper = render(params);
     wrapper.expectElement('[data-cy="section-facilities"]').toExist();
   });
-
 });

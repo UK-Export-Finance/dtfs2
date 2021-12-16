@@ -46,7 +46,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const result = facilityFieldsObj(mockFacility);
 
       const expected = {
-        ukefFacilityID: mockFacility.ukefFacilityID,
+        ukefFacilityId: mockFacility.ukefFacilityId,
         bankReference: mockFacility.bankReference,
         facilityStage: mockFacility.facilityStage,
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),

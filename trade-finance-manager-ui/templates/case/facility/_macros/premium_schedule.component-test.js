@@ -5,7 +5,6 @@ const page = '../templates/case/facility/_macros/premium_schedule.njk';
 
 const render = pageRenderer(page);
 
-
 describe(page, () => {
   let wrapper;
   const params = {
@@ -18,7 +17,7 @@ describe(page, () => {
     ...params,
     facility: {
       _id: '12345678',
-      ukefFacilityID: '0040004833',
+      ukefFacilityId: '0040004833',
       facilityType: 'Performance Bond',
       facilityStage: 'Commitment',
       facilityProduct: {
@@ -141,7 +140,7 @@ describe(page, () => {
           wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(premiumFrequencyParams.facility.premiumFrequency);
         });
       });
-      
+
       describe('when there is no frequency', () => {
         it('should render dash', () => {
           wrapper = render({});

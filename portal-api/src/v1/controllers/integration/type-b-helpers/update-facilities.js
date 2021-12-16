@@ -103,7 +103,7 @@ const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueF
 
   modifiedBond = {
     ...modifiedBond,
-    ukefFacilityID: Array.isArray(workflowBond.BSS_ukef_facility_id)
+    ukefFacilityId: Array.isArray(workflowBond.BSS_ukef_facility_id)
       ? workflowBond.BSS_ukef_facility_id[0]
       : workflowBond.BSS_ukef_facility_id,
     // fail safe to make sure we have associatedDealId.
@@ -141,7 +141,7 @@ const updateLoan = async (loan, dealId, workflowDeal, interfaceUser, checkIssueF
 
   modifiedLoan = {
     ...modifiedLoan,
-    ukefFacilityID: Array.isArray(workflowLoan.EWCS_ukef_facility_id)
+    ukefFacilityId: Array.isArray(workflowLoan.EWCS_ukef_facility_id)
       ? workflowLoan.EWCS_ukef_facility_id[0]
       : workflowLoan.EWCS_ukef_facility_id,
 

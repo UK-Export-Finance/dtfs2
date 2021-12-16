@@ -141,7 +141,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         _id,
         facilitySnapshot {
           _id,
-          ukefFacilityID,
+          ukefFacilityId,
           associatedDealId,
           facilityProduct {
             code

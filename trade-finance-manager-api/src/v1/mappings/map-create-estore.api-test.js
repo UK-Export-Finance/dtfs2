@@ -19,8 +19,8 @@ describe('mapCreateEstore', () => {
     },
     ukefDealId: '123456',
     facilities: [
-      { ukefFacilityID: '1' },
-      { ukefFacilityID: '2' },
+      { ukefFacilityId: '1' },
+      { ukefFacilityId: '2' },
     ],
   };
 
@@ -31,8 +31,8 @@ describe('mapCreateEstore', () => {
     },
     ukefDealId: '123456',
     facilities: [
-      { ukefFacilityID: '1' },
-      { ukefFacilityID: '2' },
+      { ukefFacilityId: '1' },
+      { ukefFacilityId: '2' },
     ],
   };
 

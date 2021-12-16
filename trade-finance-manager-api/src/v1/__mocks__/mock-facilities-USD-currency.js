@@ -54,7 +54,7 @@ const MOCK_FACILITIES = [
     issuedDate: 1610369832226.0,
     issueFacilityDetailsProvided: true,
     status: 'Acknowledged',
-    ukefFacilityID: '65432',
+    ukefFacilityId: '65432',
     currency: {
       text: 'USD - US Dollars',
       id: 'USD',
