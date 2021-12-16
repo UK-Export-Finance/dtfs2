@@ -8,9 +8,9 @@ describe(page, () => {
   const params = {
     dealId: '100200',
     deal: {
+      submissionType: 'Automatic Inclusion Notice',
       details: {
         ukefDealId: '1234',
-        submissionType: 'Automatic Inclusion Notice',
       },
       submissionDetails: {
         supplierName: 'Supplier name',
@@ -69,7 +69,7 @@ describe(page, () => {
   });
 
   it('should render type of work subheading', () => {
-    wrapper.expectText('[data-cy="type-of-work-subheading"]').toRead(params.deal.details.submissionType);
+    wrapper.expectText('[data-cy="type-of-work-subheading"]').toRead(params.deal.submissionType);
   });
 
   it('should render team heading', () => {

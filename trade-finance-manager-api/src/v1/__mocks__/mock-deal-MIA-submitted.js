@@ -1,6 +1,7 @@
 const MOCK_DEAL = {
   _id: 'MOCK_MIA_SUBMITTED',
   dealType: 'BSS/EWCS',
+  submissionType: 'Manual Inclusion Application',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
@@ -19,7 +20,6 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Manual Inclusion Application',
     submissionDate: '1606900616651',
     submissionCount: 1,
     owningBank: {

@@ -1,6 +1,7 @@
 const MOCK_DEAL = {
   _id: 'MOCK_DEAL_MIN',
   dealType: 'BSS/EWCS',
+  submissionType: 'Manual Inclusion Notice',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
@@ -19,7 +20,6 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Manual Inclusion Notice',
     submissionDate: '1606900616651',
     submissionCount: 1,
     owningBank: {

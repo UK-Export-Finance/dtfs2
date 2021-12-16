@@ -87,9 +87,9 @@ exports.update = async (req, res) => {
 
       const updatedDeal = {
         ...deal,
+        submissionType,
         details: {
           ...deal.details,
-          submissionType,
         },
         eligibility: {
           status,

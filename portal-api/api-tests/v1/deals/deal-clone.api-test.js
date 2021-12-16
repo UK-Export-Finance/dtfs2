@@ -8,7 +8,7 @@ const createFacilities = require('../../createFacilities');
 
 const dealToClone = completedDeal;
 
-dealToClone.details.submissionType = 'Automatic Inclusion Notice';
+dealToClone.submissionType = 'Automatic Inclusion Notice';
 dealToClone.eligibility = {
   status: 'Incomplete',
   criteria: completedDeal.eligibility.criteria,
@@ -116,7 +116,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
         expect(cloned.deal.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
         expect(cloned.deal.details.dateOfLastAction).toBeDefined();
-        expect(cloned.deal.details.submissionType).toEqual(originalDeal.details.submissionType);
+        expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
 
         expect(cloned.deal.details.maker.username).toEqual(aBarclaysMaker.username);
         expect(cloned.deal.details.maker.roles).toEqual(aBarclaysMaker.roles);
@@ -226,14 +226,14 @@ describe('/v1/deals/:id/clone', () => {
           };
 
           const minDeal = originalDeal;
-          minDeal.details.submissionType = 'Manual Inclusion Notice';
+          minDeal.submissionType = 'Manual Inclusion Notice';
 
           const { body: minDealBody } = await as(anHSBCMaker).put(minDeal).to(`/v1/deals/${minDeal._id}`);
 
           const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
 
           const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
-          expect(cloned.deal.details.submissionType).toEqual('Manual Inclusion Application');
+          expect(cloned.deal.submissionType).toEqual('Manual Inclusion Application');
         });
       });
 

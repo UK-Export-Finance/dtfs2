@@ -37,9 +37,7 @@ const MOCK_DEAL = {
   _id: '1000023',
   dealSnapshot: {
     _id: '1000023',
-    details: {
-      submissionType: 'Manual Inclusion Application',
-    },
+    submissionType: 'Manual Inclusion Application',
   },
   tfm: {
     leadUnderwriter: '12345678910',

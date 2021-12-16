@@ -9,11 +9,11 @@ const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp
 
 describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
   const newDeal = aDeal({
+    submissionType: 'Manual Inclusion Notice',
     details: {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
       status: 'Acknowledged by UKEF',
-      submissionType: 'Manual Inclusion Notice',
       submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
@@ -123,9 +123,9 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
           updatedDeal = {
             ...newDeal,
+            submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionType: 'Automatic Inclusion Notice',
               submissionDate: moment().subtract(2, 'day').utc().valueOf()
             },
           };
@@ -181,9 +181,9 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
           updatedDeal = {
             ...newDeal,
+            submissionType: 'Manual Inclusion Application',
             details: {
               ...newDeal.details,
-              submissionType: 'Manual Inclusion Application',
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
               manualInclusionApplicationSubmissionDate: moment().subtract(3, 'day').utc().valueOf(),
@@ -271,9 +271,9 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
           updatedDeal = {
             ...newDeal,
+            submissionType: 'Manual Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionType: 'Manual Inclusion Notice',
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
               status: 'Accepted by UKEF (without conditions)',

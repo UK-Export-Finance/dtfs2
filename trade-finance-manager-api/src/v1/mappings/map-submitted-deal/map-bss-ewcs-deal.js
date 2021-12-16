@@ -6,6 +6,7 @@ const mapBssEwcsDeal = (deal) => {
   const {
     _id,
     dealType,
+    submissionType,
     details,
     submissionDetails,
     bondTransactions,
@@ -18,7 +19,6 @@ const mapBssEwcsDeal = (deal) => {
     bankSupplyContractID,
     bankSupplyContractName,
     submissionCount,
-    submissionType,
     submissionDate,
     status,
     ukefDealId,
@@ -31,6 +31,7 @@ const mapBssEwcsDeal = (deal) => {
   const mapped = {
     _id,
     dealType,
+    submissionType,
     bankReferenceNumber: bankSupplyContractID,
     bankAdditionalReferenceName: bankSupplyContractName,
     submissionCount,

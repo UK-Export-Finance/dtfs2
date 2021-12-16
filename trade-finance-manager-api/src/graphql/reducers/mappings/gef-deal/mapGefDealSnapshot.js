@@ -7,6 +7,7 @@ const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   _id: dealSnapshot._id,
   dealType: dealSnapshot.dealType,
   isFinanceIncreasing: dealSnapshot.exporter.isFinanceIncreasing,
+  submissionType: dealSnapshot.submissionType,
   details: mapGefDealDetails(dealSnapshot),
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibility: dealSnapshot.eligibility,

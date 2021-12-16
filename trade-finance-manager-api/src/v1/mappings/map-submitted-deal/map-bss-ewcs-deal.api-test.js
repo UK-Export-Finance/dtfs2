@@ -14,6 +14,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
     const {
       _id,
       dealType,
+      submissionType,
       details,
       submissionDetails,
       bondTransactions,
@@ -26,7 +27,6 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       bankSupplyContractID,
       bankSupplyContractName,
       submissionCount,
-      submissionType,
       submissionDate,
       status,
       ukefDealId,
@@ -36,6 +36,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
     const expected = {
       _id,
       dealType,
+      submissionType,
       bankReferenceNumber: bankSupplyContractID,
       bankAdditionalReferenceName: bankSupplyContractName,
       submissionCount,

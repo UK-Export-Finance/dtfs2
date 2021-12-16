@@ -100,7 +100,7 @@ const constructor = (listOfFilters) => {
       deal_owningBank: deal.details.owningBank.name,
       deal_created: deal.details.created,
       deal_submissionDate: deal.details.submissionDate,
-      deal_submissionType: deal.details.submissionType,
+      deal_submissionType: deal.submissionType,
       transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: loan.bankReferenceNumber,
       ukefFacilityId: loan.ukefFacilityId,
