@@ -157,14 +157,14 @@ describe('update tfm underwriter managers decision', () => {
     const gefDealId = MOCK_DEAL_GEF_MIA._id;
 
     it('should call api.updatePortalGefDealStatus', async () => {
-      const decision = 'Declined';
+      const decision = 'Rejected by UKEF';
 
       await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
       expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(gefDealId, mapTfmDealStageToPortalStatus(CONSTANTS.DEALS.DEAL_TYPE.GEF, decision));
     });
 
     it('should call api.addUnderwriterCommentToGefDeal', async () => {
-      const decision = 'Declined';
+      const decision = 'Rejected by UKEF';
       const ukefDecision = 'ukefDecision';
 
       await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);

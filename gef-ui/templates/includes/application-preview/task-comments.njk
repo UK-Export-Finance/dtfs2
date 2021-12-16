@@ -5,7 +5,7 @@
 
     {% set bannerHtml %}
 
-      {% if isUkefReviewAvailable and isUkefReviewPositive and not coverDatesConfirmed %}
+      {% if renderReviewDecisionLink %}
         <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
           <a href="/gef/application-details/{{ dealId }}/review-decision" class="govuk-link">Review UKEF decision</a>
         </div>

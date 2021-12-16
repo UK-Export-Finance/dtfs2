@@ -606,12 +606,12 @@ describe('isUkefReviewAvailable()', () => {
       decision: 'Accepted (with conditions)',
       timestamp: 1639657163,
     }];
-    expect(isUkefReviewAvailable(MOCK_DEAL)).toEqual(true);
+    expect(isUkefReviewAvailable(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(true);
   });
 
   it('Should return FALSE for application with no UkefDecision and status set to `Ready for Checkers approval`', () => {
     MOCK_DEAL.ukefDecision = [];
-    expect(isUkefReviewAvailable(MOCK_DEAL)).toEqual(false);
+    expect(isUkefReviewAvailable(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(false);
   });
 });
 
@@ -622,7 +622,7 @@ describe('isUkefReviewPositive()', () => {
       decision: 'Accepted (with conditions)',
       timestamp: 1639657163,
     }];
-    expect(isUkefReviewPositive(MOCK_DEAL)).toEqual(true);
+    expect(isUkefReviewPositive(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(true);
   });
 
   it('Should return FALSE for application with UkefDecision set to `Rejected by UKEF` and status set to `Ready for Checkers approval`', () => {
@@ -633,12 +633,12 @@ describe('isUkefReviewPositive()', () => {
         timestamp: 1639657163,
       },
     ];
-    expect(isUkefReviewPositive(MOCK_DEAL)).toEqual(false);
+    expect(isUkefReviewPositive(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(false);
   });
 
   it('Should return FALSE for application with no UkefDecision and status set to `Ready for Checkers approval`', () => {
     MOCK_DEAL.ukefDecision = [];
-    expect(isUkefReviewPositive(MOCK_DEAL)).toEqual(false);
+    expect(isUkefReviewPositive(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(false);
   });
 
   it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
@@ -649,7 +649,7 @@ describe('isUkefReviewPositive()', () => {
       decision: 'Accepted (with conditions)',
       timestamp: 1639657163,
     }];
-    expect(isUkefReviewPositive(UKEF_APPPROVED_DEAL)).toEqual(true);
+    expect(isUkefReviewPositive(UKEF_APPPROVED_DEAL.status, UKEF_APPPROVED_DEAL.ukefDecision)).toEqual(true);
   });
 });
 

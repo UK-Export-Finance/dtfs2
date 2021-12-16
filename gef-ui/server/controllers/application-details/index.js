@@ -54,6 +54,9 @@ function buildHeader(app) {
 function buildBody(app, previewMode) {
   const exporterUrl = `/gef/application-details/${app.id}`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
+  const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
+  const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
+  const coverDates = coverDatesConfirmed(app.facilities);
 
   const appBody = {
     application: app,
@@ -93,10 +96,11 @@ function buildBody(app, previewMode) {
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
-    isUkefReviewAvailable: isUkefReviewAvailable(app),
-    isUkefReviewPositive: isUkefReviewPositive(app),
+    isUkefReviewAvailable: ukefReviewAvailable,
+    isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
-    coverDatesConfirmed: coverDatesConfirmed(app.facilities),
+    coverDatesConfirmed: coverDates,
+    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
     previewMode,
     userRoles: app.userRoles,
   };
