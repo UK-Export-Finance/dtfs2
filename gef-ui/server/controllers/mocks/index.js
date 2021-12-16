@@ -1,5 +1,7 @@
 const Chance = require('chance');
 
+const CONSTANTS = require('../../constants');
+
 const chance = new Chance();
 
 const MockResponse = () => ({
@@ -67,10 +69,10 @@ const MockApplicationResponseDraft = () => ({
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
-  status: 'DRAFT',
+  status: CONSTANTS.DEAL_STATUS.DRAFT,
   userId: 'mock-user',
   supportingInformation: {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
   eligibility: {
     criteria: [
@@ -92,11 +94,11 @@ const MockApplicationResponseSubmitted = () => ({
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
-  status: 'UKEF_IN_PROGRESS',
+  status: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   userId: 'mock-user',
   checkerId: 1235,
   supportingInformation: {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
   eligibility: {
     criteria: [
@@ -150,7 +152,7 @@ const MockEligibilityCriteriaResponse = () => ({
 });
 
 const MockFacilityResponse = () => ({
-  status: 'IN_PROGRESS',
+  status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   data: [],
   items: [{
     details: { type: 'CASH' },

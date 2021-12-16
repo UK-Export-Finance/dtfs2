@@ -19,7 +19,6 @@ const { isSuperUser } = require('../../users/checks');
 const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
-const { STATUS } = require('../enums');
 const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
@@ -260,7 +259,7 @@ exports.changeStatus = async (req, res) => {
   let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
 
   // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
-  if (status === STATUS.SUBMITTED_TO_UKEF) {
+  if (status === GEF_STATUS.SUBMITTED_TO_UKEF) {
     const submissionData = await addSubmissionData(
       dealId,
       existingApplication,
@@ -286,7 +285,7 @@ exports.changeStatus = async (req, res) => {
     response = updatedDocument.value;
 
     // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
-    if (status === STATUS.SUBMITTED_TO_UKEF) {
+    if (status === GEF_STATUS.SUBMITTED_TO_UKEF) {
       await api.tfmDealSubmit(
         dealId,
         existingApplication.dealType,
@@ -298,9 +297,9 @@ exports.changeStatus = async (req, res) => {
   // If status of correct type, send update email
   if (
     [
-      STATUS.BANK_CHECK,
-      STATUS.CHANGES_REQUIRED,
-      STATUS.SUBMITTED_TO_UKEF,
+      GEF_STATUS.BANK_CHECK,
+      GEF_STATUS.CHANGES_REQUIRED,
+      GEF_STATUS.SUBMITTED_TO_UKEF,
     ].includes(status)
   ) {
     const { user } = req;

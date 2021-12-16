@@ -30,10 +30,10 @@ context('About Exporter Page', () => {
           deal.exporter?.industries?.length);
 
         dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'NOT_STARTED');
+          deal.exporter.status === 'Not started');
 
         dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === 'COMPLETED');
+          deal.exporter.status === 'Completed');
 
       });
     cy.login(CREDENTIALS.MAKER);

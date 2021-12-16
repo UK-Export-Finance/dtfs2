@@ -3,7 +3,7 @@ import {
   postApplicationSubmission,
 } from './index';
 import api from '../../services/api';
-import { PROGRESS } from '../../constants';
+import { DEAL_STATUS } from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -81,7 +81,7 @@ const MockEligibilityCriteriaResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = 'IN_DEAL_STATUS';
   res.data = [];
   return res;
 };
@@ -181,7 +181,7 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, PROGRESS.BANK_CHECK);
+      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, DEAL_STATUS.BANK_CHECK);
     });
   });
 });

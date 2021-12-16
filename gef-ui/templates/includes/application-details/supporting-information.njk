@@ -23,7 +23,7 @@
   </div>
 </div>
 
-{% if supportingInfo.status.code === 'NOT_STARTED' and not previewMode %}
+{% if supportingInfo.status.code === 'Not started' and not previewMode %}
   <a class="govuk-link" href="/gef/application-details/{{dealId}}/supporting-information/manual-inclusion-questionnaire" data-cy="supportingInfo-start-link">Add supporting information</a>
 {% else %}
   {% set securityDetailsHtml %}

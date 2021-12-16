@@ -23,13 +23,13 @@ context('Application Details Page', () => {
         applications = body.items;
 
         dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'NOT_STARTED');
+          deal.exporter.status === 'Not started');
 
         dealWithInProgressExporter = body.items.find((deal) =>
-          deal.exporter.status === 'IN_PROGRESS');
+          deal.exporter.status === 'In progress');
 
         dealWithCompletedExporterAndFacilities = body.items.find((deal) =>
-          deal.exporter.status === 'COMPLETED'
+          deal.exporter.status === 'Completed'
           && deal.facilitiesUpdated);
 
       });

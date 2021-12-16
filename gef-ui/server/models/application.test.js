@@ -1,9 +1,8 @@
 import Application from './application';
 import api from '../services/api';
+import CONSTANTS from '../constants';
 
 jest.mock('../services/api');
-
-const { PROGRESS } = require('../constants');
 
 const MockEligibilityCriteria = () => ({
   criteria: [
@@ -24,7 +23,7 @@ const MockApplicationResponse = () => {
   res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.status = 'DRAFT';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.userId = 'mock-user';
   res.supportingInformation = {};
   res.eligibility = MockEligibilityCriteria();
@@ -39,7 +38,7 @@ const MockUserResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
   res.items = [{
     details: { type: 'CASH' },
@@ -76,7 +75,7 @@ describe('models/application', () => {
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInfoStatus.code).toEqual(PROGRESS.NOT_STARTED);
+        expect(application.supportingInfoStatus.code).toEqual(CONSTANTS.DEAL_STATUS.NOT_STARTED);
       });
 
       it('sets the requiredSupportingDocuments as expected', async () => {
@@ -95,7 +94,7 @@ describe('models/application', () => {
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInfoStatus.code).toEqual(PROGRESS.NOT_STARTED);
+        expect(application.supportingInfoStatus.code).toEqual(CONSTANTS.DEAL_STATUS.NOT_STARTED);
       });
 
       it('sets the requiredSupportingDocuments as expected', async () => {
@@ -115,7 +114,7 @@ describe('models/application', () => {
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInfoStatus.code).toEqual(PROGRESS.NOT_STARTED);
+        expect(application.supportingInfoStatus.code).toEqual(CONSTANTS.DEAL_STATUS.NOT_STARTED);
       });
 
       it('sets the requiredSupportingDocuments as expected', async () => {
@@ -138,7 +137,7 @@ describe('models/application', () => {
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInfoStatus.code).toEqual(PROGRESS.NOT_STARTED);
+        expect(application.supportingInfoStatus.code).toEqual(CONSTANTS.DEAL_STATUS.NOT_STARTED);
       });
 
       it('sets the requiredSupportingDocuments as expected', async () => {
@@ -159,7 +158,7 @@ describe('models/application', () => {
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInfoStatus.code).toEqual(PROGRESS.IN_PROGRESS);
+        expect(application.supportingInfoStatus.code).toEqual(CONSTANTS.DEAL_STATUS.IN_PROGRESS);
       });
 
       it('sets the requiredSupportingDocuments as expected', async () => {
@@ -182,7 +181,7 @@ describe('models/application', () => {
       it('sets supportingInfoStatus as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInfoStatus.code).toEqual(PROGRESS.COMPLETED);
+        expect(application.supportingInfoStatus.code).toEqual(CONSTANTS.DEAL_STATUS.COMPLETED);
       });
 
       it('sets the requiredSupportingDocuments as expected', async () => {
