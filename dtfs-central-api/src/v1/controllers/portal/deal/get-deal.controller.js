@@ -32,6 +32,7 @@ const extendDealWithFacilities = async (deal) => {
       }
     }
   });
+
   if (facilityIds && facilityIds.length > 0) {
     mappedDeal.bondTransactions = {
       items: mappedBonds,
@@ -55,15 +56,15 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
     .limit(pagesize)
     .toArray();
 
-  const extendedDeals = [];
+  const extendedDeals = deals;
 
-  deals.forEach(async (deal) => {
+  extendedDeals.map(async (deal) => {
     if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const extendedDeal = await extendDealWithFacilities(deal);
-      extendedDeals.push(extendedDeal);
-    } else {
-      extendedDeals.push(deal);
+      return extendedDeal;
     }
+
+    return deal;
   });
 
   return {
