@@ -48,7 +48,7 @@ const updateTask = (allTaskGroups, taskUpdate) =>
  * Depending on what task has been changed.
  * */
 const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
-  let taskEmailsToSend = [];
+  const taskEmailsToSend = [];
 
   let taskGroups = allTaskGroups.map((tGroup) => {
     let group = tGroup;
@@ -129,7 +129,7 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
       task,
       deal,
       urlOrigin,
-    ))
+    ));
   });
 
   await Promise.all(emailPromises);
