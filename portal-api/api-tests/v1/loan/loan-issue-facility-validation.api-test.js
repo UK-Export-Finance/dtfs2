@@ -11,11 +11,11 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   const submissionDate = moment().subtract(1, 'week');
 
   const newDeal = aDeal({
+    submissionType: 'Manual Inclusion Notice',
     details: {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
       status: 'Acknowledged by UKEF',
-      submissionType: 'Manual Inclusion Notice',
       submissionDate: moment(submissionDate).utc().valueOf(),
     },
     submissionDetails: {
