@@ -153,9 +153,7 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
   submissionType: 'Automatic Inclusion Notice',
   details: {
     submissionDate: '1606900616651',
-  },
-  submissionDetails: {
-    'supplier-name': 'Test'
+    dateOfLastAction: '1639589760162'
   },
   facilities: [ '1', '2' ],
   ...
@@ -170,9 +168,7 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
   dealType: 'GEF',
   submissionType: 'Automatic Inclusion Notice',
   submissionDate: '1606900616651',
-  exporter: {
-    companyName: 'Test'
-  },
+  updatedAt: 1639580324306.0
   ...
 }
 ```

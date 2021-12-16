@@ -30,7 +30,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
       bankReferenceNumber: mockDealMia.dealSnapshot.details.bankSupplyContractID,
       maker: mockDealMia.dealSnapshot.details.maker,
       exporter: {
-        companyName: mockDealMia.dealSnapshot.submissionDetails['supplier-name'],
+        companyName: mockDealMia.dealSnapshot.exporter.companyName,
       },
       facilities: [
         ...mockDealMia.dealSnapshot.bondTransactions.items,

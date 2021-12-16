@@ -236,6 +236,9 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
       },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED;

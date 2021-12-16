@@ -389,5 +389,8 @@ module.exports = {
 		"security" : "Test"
 	},
 	"ukefComments" : [ ],
-	"specialConditions" : [ ]
+	"specialConditions" : [ ],
+	"exporter": {
+		"companyName": "Manual Test 2"
+	}
 }

@@ -22,6 +22,7 @@ const DEFAULTS = {
     comments: [],
     editedBy: [],
     facilities: [],
+    exporter: {},
   },
 };
 

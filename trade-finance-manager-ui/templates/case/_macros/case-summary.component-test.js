@@ -7,10 +7,11 @@ const formatDateString = require('../../../server/nunjucks-configuration/filter-
 
 const render = componentRenderer(component);
 
-const rawdata = fs.readFileSync('templates/case/mock_data/deal.json');
+const rawData = fs.readFileSync('templates/case/mock_data/deal.json');
+
 let params = {
   deal: {
-    ...JSON.parse(rawdata),
+    ...JSON.parse(rawData),
     totals: {
       facilitiesValueInGBP: 'GBP 2,740.41',
       facilitiesUkefExposure: 'GBP 123,456.12',
@@ -43,8 +44,8 @@ describe(component, () => {
   });
 
 
-  it('should render supplier name', () => {
-    wrapper.expectText('[data-cy="supplier-name"]').toRead(params.deal.submissionDetails.supplierName);
+  it('should render exporter (supplier) name', () => {
+    wrapper.expectText('[data-cy="exporter-name"]').toRead(params.deal.exporter.companyName);
   });
 
   it('should render buyer name', () => {

@@ -23,7 +23,7 @@ describe(page, () => {
         },
       },
       submissionDetails: {
-        supplierName: 'The Supplier name',
+        supplierName: 'The company name',
         buyerName: 'The Buyer name',
         supplyContractDescription: 'supplyContractDescription',
         destinationCountry: 'United Kingdom',
@@ -75,6 +75,9 @@ describe(page, () => {
         agentAddressTown: 'City',
         agentName: 'AGENT NAME',
       },
+      exporter: {
+        companyName: 'The company name'
+      },
     },
   };
 
@@ -89,7 +92,7 @@ describe(page, () => {
   it('should render exporter name', () => {
     wrapper
       .expectText('[data-cy="exporter-name"]')
-      .toRead(params.deal.submissionDetails.supplierName);
+      .toRead(params.deal.exporter.companyName);
   });
   it('should render industry class', () => {
     wrapper

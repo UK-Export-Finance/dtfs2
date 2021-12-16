@@ -161,6 +161,9 @@ const MOCK_DEAL = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
+  exporter: {
+    companyName: 'Mock company',
+  },
   mockFacilities: [
     {
       facilityType: 'bond',

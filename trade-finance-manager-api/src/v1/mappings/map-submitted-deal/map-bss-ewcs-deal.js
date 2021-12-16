@@ -12,6 +12,7 @@ const mapBssEwcsDeal = (deal) => {
     bondTransactions,
     loanTransactions,
     eligibility,
+    exporter,
   } = dealSnapshot;
 
   const {
@@ -40,7 +41,7 @@ const mapBssEwcsDeal = (deal) => {
     ukefDealId,
     maker,
     exporter: {
-      companyName: submissionDetails['supplier-name'],
+      companyName: exporter.companyName,
       companiesHouseRegistrationNumber: submissionDetails['supplier-companies-house-registration-number'],
     },
     buyer: {

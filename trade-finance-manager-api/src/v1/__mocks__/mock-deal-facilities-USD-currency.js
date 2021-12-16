@@ -179,6 +179,9 @@ const MOCK_DEAL = {
       { ...MOCK_FACILITIES_USD_CURRENCY[1] },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL;

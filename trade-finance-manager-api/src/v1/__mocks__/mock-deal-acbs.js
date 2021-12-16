@@ -170,6 +170,9 @@ const MOCK_DEAL = {
   loanTransactions: {
     items: [],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL;

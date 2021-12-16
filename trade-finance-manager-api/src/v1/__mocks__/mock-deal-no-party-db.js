@@ -233,6 +233,9 @@ const MOCK_DEAL_NO_PARTY_DB = {
       },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL_NO_PARTY_DB;

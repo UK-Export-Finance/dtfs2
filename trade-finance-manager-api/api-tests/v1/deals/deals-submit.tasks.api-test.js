@@ -77,7 +77,7 @@ describe('/v1/deals', () => {
               'mock-origin-url',
               firstTask,
               dealId,
-              body.dealSnapshot.submissionDetails['supplier-name'],
+              body.dealSnapshot.exporter.companyName,
               body.dealSnapshot.details.ukefDealId,
             ),
           };
@@ -118,8 +118,8 @@ describe('/v1/deals', () => {
             emailVariables: generateTaskEmailVariables(
               'mock-origin-url',
               firstTask,
-              body.dealSnapshot.submissionDetails['supplier-name'],
-              body.dealSnapshot.submissionType,
+              body.dealSnapshot.exporter.companyName,
+              body.dealSnapshot.details.submissionType,
               moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
               body.dealSnapshot.details.owningBank.name,
             ),

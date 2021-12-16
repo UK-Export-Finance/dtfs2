@@ -20,8 +20,10 @@ query DealsLight($searchString: String, $sortBy: DealsSortBy, $start: Int, $page
           }
         }
         submissionDetails {
-          supplierName
           buyerName
+        }
+        exporter {
+          companyName
         }
       }
     }

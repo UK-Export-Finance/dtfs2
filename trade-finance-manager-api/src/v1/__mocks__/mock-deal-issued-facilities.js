@@ -235,6 +235,9 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
       },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL_ISSUED_FACILITIES;

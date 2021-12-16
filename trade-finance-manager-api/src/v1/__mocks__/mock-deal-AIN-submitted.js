@@ -233,6 +233,9 @@ const MOCK_DEAL_AIN_SUBMITTED = {
       },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL_AIN_SUBMITTED;
