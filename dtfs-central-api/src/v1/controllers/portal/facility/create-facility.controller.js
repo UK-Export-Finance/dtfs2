@@ -9,7 +9,7 @@ const createFacility = async (facility, user, routePath) => {
   const collection = await db.getCollection('facilities');
   const facilityId = await generateFacilityId();
 
-  const { associatedDealId } = facility;
+  const { dealId } = facility;
 
   const newFacility = {
     ...facility,
@@ -21,7 +21,7 @@ const createFacility = async (facility, user, routePath) => {
   const { insertedId } = response;
 
   await addFacilityIdToDeal(
-    associatedDealId,
+    dealId,
     insertedId,
     user,
     routePath,
@@ -47,7 +47,7 @@ exports.createFacilityPost = async (req, res) => {
     });
   }
 
-  const deal = await findOneDeal(facility.associatedDealId);
+  const deal = await findOneDeal(facility.dealId);
 
   if (deal) {
     const createdFacility = await createFacility(facility, user, req.routePath);

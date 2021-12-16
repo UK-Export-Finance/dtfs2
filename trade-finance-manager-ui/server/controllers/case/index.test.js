@@ -579,7 +579,7 @@ describe('controllers - case', () => {
         _id: '1000023',
         facilitySnapshot: {
           _id: '1000023',
-          associatedDealId: '12345678',
+          dealId: '12345678',
           mock: true,
         },
         tfm: {

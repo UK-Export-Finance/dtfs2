@@ -144,7 +144,7 @@ type FacilityUkefExposure {
 type FacilitySnapshot {
   _id: String!
   ukefFacilityId: String
-  associatedDealId: String!
+  dealId: String!
   facilityProduct: FacilityProduct!
   facilityType: String
   ukefFacilityType: String!

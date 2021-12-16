@@ -6,7 +6,6 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 const createFacilities = require('../../createFacilities');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
@@ -15,9 +14,8 @@ jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code
 
 describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover start dates', () => {
   let aBarclaysMaker;
+  let aBarclaysChecker;
   let aSuperuser;
-  let submittedMinDeal;
-  let updatedDeal;
 
   const isUnsubmittedIssuedFacility = (facility) => {
     if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
@@ -34,7 +32,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     await wipeDB.wipe(['facilities']);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
+    [aBarclaysMaker] = barclaysMakers;
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     aSuperuser = testUsers().superuser().one();
   });
@@ -136,7 +134,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
       completedDeal.mockFacilities = createdFacilities;
-      
+
       const statusUpdate = {
         status: 'Ready for Checker\'s approval',
         comments: 'test',

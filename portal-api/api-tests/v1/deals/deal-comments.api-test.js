@@ -1,4 +1,3 @@
-
 const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');

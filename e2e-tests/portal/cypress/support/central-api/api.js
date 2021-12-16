@@ -3,14 +3,14 @@ const api = () => {
   return url;
 };
 
-module.exports.createFacility = async (facility, associatedDealId, user) =>
+module.exports.createFacility = async (facility, dealId, user) =>
   cy.request({
     method: 'POST',
     url: `${api()}/v1/portal/facilities`,
     body: {
       facility: {
         ...facility,
-        associatedDealId,
+        dealId,
       },
       user,
     },

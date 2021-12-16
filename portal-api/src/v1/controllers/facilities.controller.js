@@ -42,9 +42,9 @@ exports.delete = async (facilityId, user) =>
   api.deleteFacility(facilityId, user);
 
 exports.createMultiple = async (req, res) => {
-  const { facilities, associatedDealId, user } = req.body;
+  const { facilities, dealId, user } = req.body;
 
-  const { data: ids } = await api.createMultipleFacilities(facilities, associatedDealId, user);
+  const { data: ids } = await api.createMultipleFacilities(facilities, dealId, user);
 
   const allFacilities = await Promise.all(
     ids.map(async (id) => {
@@ -56,5 +56,5 @@ exports.createMultiple = async (req, res) => {
   return res.status(200).send(allFacilities);
 };
 
-exports.createMultipleFacilities = async (facilities, associatedDealId, user) =>
-  api.createMultipleFacilities(facilities, associatedDealId, user);
+exports.createMultipleFacilities = async (facilities, dealId, user) =>
+  api.createMultipleFacilities(facilities, dealId, user);
