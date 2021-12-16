@@ -12,9 +12,9 @@ query DealsLight($searchString: String, $sortBy: DealsSortBy, $start: Int, $page
         dateReceived
       }
       dealSnapshot {
+        submissionType
         details {
           ukefDealId
-          submissionType
           owningBank {
             name
           }

@@ -12,10 +12,10 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
       _id
       dealSnapshot {
         dealType
+        submissionType
         details {
           status
           ukefDealId
-          submissionType
           submissionDate
           maker {
             firstname
