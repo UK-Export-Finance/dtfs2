@@ -10,7 +10,7 @@ describe(component, () => {
   const now = moment();
 
   const deal = {
-    updatedAt: Date().now(),
+    updatedAt: Date.now(),
     details: {
       bankSupplyContractID: 'bankSupplyContractID',
       ukefDealId: 'ukefDealId',

@@ -4,7 +4,7 @@ const now = moment();
 
 const deal = {
   _id: 123456,
-  updatedAt: Date().now(),
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',

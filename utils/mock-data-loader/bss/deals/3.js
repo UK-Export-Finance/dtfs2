@@ -3,7 +3,7 @@ const { nowTimestamp } = require('../dates');
 module.exports = {
 	"mockId": 3,
 	"dealType": "BSS/EWCS",
-	"submissionType": "Manual Inclusion Application"
+	"submissionType": "Manual Inclusion Application",
 	"updatedAt": Date.now(),
 	"details" : {
 		"status" : "Draft",

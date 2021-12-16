@@ -123,7 +123,7 @@ describe('/v1/portal/facilities', () => {
       expect(body.deal.editedBy[0].bank).toEqual(mockUser.bank);
       expect(body.deal.editedBy[0].roles).toEqual(mockUser.roles);
       expect(body.deal.editedBy[0].username).toEqual(mockUser.username);
-      expect(typeof body.deal.editedBy[0].date).toEqual('string');
+      expect(typeof body.deal.editedBy[0].date).toEqual('number');
     });
 
     describe('when required fields are missing', () => {
