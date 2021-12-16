@@ -276,7 +276,7 @@ describe('/v1/deals', () => {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
           sendToEmailAddress: mockDeal.details.maker.email,
           emailVariables: {
-            exporterName: mockDeal.submissionDetails['supplier-name'],
+            exporterName: mockDeal.exporter.companyName,
             recipientName: mockDeal.details.maker.firstname,
             bankReferenceNumber: mockDeal.details.bankSupplyContractID,
             ukefDealID: mockDeal.details.ukefDealId,
@@ -506,7 +506,7 @@ describe('/v1/deals', () => {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
           sendToEmailAddress: mockDeal.details.maker.email,
           emailVariables: {
-            exporterName: mockDeal.submissionDetails['supplier-name'],
+            exporterName: mockDeal.exporter.companyName,
             recipientName: mockDeal.details.maker.firstname,
             bankReferenceNumber: mockDeal.details.bankSupplyContractID,
             ukefDealID: mockDeal.details.ukefDealId,

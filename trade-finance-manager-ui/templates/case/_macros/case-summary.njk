@@ -24,7 +24,7 @@
         <div class="label">
           {{ supplierType.render(deal.submissionDetails.supplierType) }}
         </div>
-        <div class="ukef-heading-l" data-cy="supplier-name">{{ deal.submissionDetails.supplierName | dashIfEmpty }}</div>
+        <div class="ukef-heading-l" data-cy="exporter-name">{{ deal.exporter.companyName | dashIfEmpty }}</div>
       </div>
 
       {% if deal.submissionDetails.buyerName %}

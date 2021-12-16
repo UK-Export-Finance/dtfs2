@@ -16,7 +16,7 @@ describe('task emails functions', () => {
     _id: MOCK_DEAL_MIA_SUBMITTED._id,
     ukefDealId: MOCK_DEAL_MIA_SUBMITTED.ukefDealId,
     exporter: {
-      companyName: MOCK_DEAL_MIA_SUBMITTED.submissionDetails['supplier-name'],
+      companyName: MOCK_DEAL_MIA_SUBMITTED.exporter.companyName,
     },
     tfm: {
       history: { emails: [] },

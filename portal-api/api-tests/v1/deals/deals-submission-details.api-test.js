@@ -289,5 +289,24 @@ describe('/v1/deals/:id/submission-details', () => {
 
       expect(body.deal.details.dateOfLastAction).not.toEqual(dealInOriginalShape.deal.details.dateOfLastAction);
     });
+
+    it('updates deal.exporter.companyName with the provided `supplier-name` field', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+
+      const { body: dealInOriginalShape } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      const submissionDetails = {
+        'supplier-name': 'Mock supplier name',
+      };
+
+      await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+
+      expect(body.deal.exporter.companyName).toEqual(submissionDetails['supplier-name']);
+    });
   });
 });

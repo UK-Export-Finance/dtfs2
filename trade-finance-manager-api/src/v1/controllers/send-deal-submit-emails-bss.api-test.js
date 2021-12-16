@@ -31,7 +31,7 @@ describe('send-deal-submit-emails - BSS', () => {
       bankReferenceNumber: mockDealMia.dealSnapshot.details.bankSupplyContractID,
       maker: mockDealMia.dealSnapshot.details.maker,
       exporter: {
-        companyName: mockDealMia.dealSnapshot.submissionDetails['supplier-name'],
+        companyName: mockDealMia.dealSnapshot.exporter.companyName,
       },
       facilities: [
         ...mockDealMia.dealSnapshot.bondTransactions.items,
@@ -70,7 +70,7 @@ describe('send-deal-submit-emails - BSS', () => {
           bankReferenceNumber: mockDealMin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealMin.dealSnapshot.details.maker,
           exporter: {
-            companyName: mockDealMin.dealSnapshot.submissionDetails['supplier-name'],
+            companyName: mockDealMin.dealSnapshot.exporter.companyName,
           },
           facilities: [
             {
@@ -131,7 +131,7 @@ describe('send-deal-submit-emails - BSS', () => {
           bankReferenceNumber: mockDealMin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealMin.dealSnapshot.details.maker,
           exporter: {
-            companyName: mockDealMin.dealSnapshot.submissionDetails['supplier-name'],
+            companyName: mockDealMin.dealSnapshot.exporter.companyName,
           },
           facilities: [
             {
@@ -189,7 +189,7 @@ describe('send-deal-submit-emails - BSS', () => {
           bankReferenceNumber: mockDealAin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealAin.dealSnapshot.details.maker,
           exporter: {
-            companyName: mockDealAin.dealSnapshot.submissionDetails['supplier-name'],
+            companyName: mockDealAin.dealSnapshot.exporter.companyName,
           },
           facilities: [
             {
@@ -250,7 +250,7 @@ describe('send-deal-submit-emails - BSS', () => {
           bankReferenceNumber: mockDealAin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealAin.dealSnapshot.details.maker,
           exporter: {
-            companyName: mockDealAin.dealSnapshot.submissionDetails['supplier-name'],
+            companyName: mockDealAin.dealSnapshot.exporter.companyName,
           },
           facilities: [
             {

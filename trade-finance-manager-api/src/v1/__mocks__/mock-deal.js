@@ -235,6 +235,9 @@ const MOCK_DEAL = {
       },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL;
