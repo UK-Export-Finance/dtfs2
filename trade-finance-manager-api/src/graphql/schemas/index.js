@@ -100,6 +100,10 @@ type DealFiles {
   security: String
 }
 
+type DealExporter {
+  companyName: String
+}
+
 type DealEligibilityCriterion {
   id: Int
   text: String
@@ -362,6 +366,7 @@ type DealSnapshot {
   isFinanceIncreasing: Boolean
   eligibility: DealEligibility
   dealFiles: DealFiles
+  exporter: DealExporter
   facilitiesUpdated: Float
 }
 

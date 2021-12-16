@@ -208,6 +208,9 @@ const dealQuery = gql`
           supplierType,
           smeType
         }
+        exporter {
+          companyName
+        }
         isFinanceIncreasing
       }
     }

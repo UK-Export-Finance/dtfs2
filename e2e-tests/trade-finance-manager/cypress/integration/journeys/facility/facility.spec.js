@@ -46,9 +46,9 @@ context('Facility page', () => {
       expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
     });
 
-    partials.caseSummary.supplierName().should('be.visible');
-    partials.caseSummary.supplierName().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL_AIN.submissionDetails['supplier-name']);
+    partials.caseSummary.exporterName().should('be.visible');
+    partials.caseSummary.exporterName().invoke('text').then((text) => {
+      expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
     });
   });
 

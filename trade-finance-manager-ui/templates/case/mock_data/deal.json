@@ -152,5 +152,8 @@
     "smeType": "Small",
     "__typename": "DealSubmissionDetails"
   },
+  "exporter": {
+    "companyName": "test"
+  },
   "__typename": "DealSnapshot"
 }

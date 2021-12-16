@@ -673,5 +673,8 @@ module.exports = {
 		"security" : "TEST"
 	},
 	"ukefComments" : [ ],
-	"specialConditions" : [ ]
+	"specialConditions" : [ ],
+	"exporter": {
+		"companyName": "Auto Test 2"
+	}
 }

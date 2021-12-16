@@ -33,11 +33,7 @@ const exporter = ({ deal, acbsReference }) => {
     ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
     : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
 
-  const partyNames = getPartyNames(
-    product === CONSTANTS.PRODUCT.TYPE.GEF
-      ? submissionDetails.exporter.companyName
-      : submissionDetails['supplier-name'],
-  );
+  const partyNames = getPartyNames(deal.dealSnapshot.exporter.companyName);
 
   return {
     alternateIdentifier: deal.tfm.parties.exporter.partyUrn.substring(0, 20),
