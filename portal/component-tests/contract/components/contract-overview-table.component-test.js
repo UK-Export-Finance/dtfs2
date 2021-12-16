@@ -30,9 +30,9 @@ describe(component, () => {
 
   const dealWithManualInclusionApplicationSubmissionDate = {
     ...deal,
+    submissionType: 'Manual Inclusion Notice',
     details: {
       ...deal.details,
-      submissionType: 'Manual Inclusion Notice',
       manualInclusionApplicationSubmissionDate: now.valueOf(),
     },
   };

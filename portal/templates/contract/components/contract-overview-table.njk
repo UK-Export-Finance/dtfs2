@@ -1,5 +1,6 @@
 {% macro render(params) %}
-  {% set details = params.deal.details %}
+  {% set deal = params.deal %}
+  {% set details = deal.details %}
   {% set user = params.user %}
   {% set maker = details.makerMIN or details.maker %}
   {% set checker = details.checkerMIN or details.checker %}
@@ -13,7 +14,7 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
 
-        {% if submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
+        {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
           <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">MIA Submission date</th>
           {% else %}
           <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">Submission date</th>
@@ -51,7 +52,7 @@
 
         <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
 
-        {% if submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
+        {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
           {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
           {% else %}
           {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
