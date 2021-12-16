@@ -61,8 +61,8 @@ type AllDeal {
   bankRef: String
   exporter: String
   product: String
-  type: String
-  lastUpdate: Float
+  submissionType: String
+  updatedAt: Float
 }
 
 type DealsQuery {

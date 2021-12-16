@@ -105,11 +105,11 @@ exports.gefDeals = async (req, res) => {
       bankRef: deal.bankInternalRefName,
       exporter,
       product: PRODUCT.GEF,
-      type: deal.submissionType,
-      lastUpdate: deal.updatedAt || deal.createdAt,
+      submissionType: deal.submissionType,
+      updatedAt: deal.updatedAt || deal.createdAt,
     };
   })
-    .sort((a, b) => b.lastUpdate - a.lastUpdate);
+    .sort((a, b) => b.updatedAt - a.updatedAt);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),

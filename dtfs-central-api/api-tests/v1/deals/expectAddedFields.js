@@ -7,7 +7,7 @@ const expectAddedFields = (obj) => {
   }
 
   const expectation = expectMongoId({
-    updatedAt: expect.any(String),
+    updatedAt: expect.any(Number),
     eligibility: {
       status: 'Not started',
       criteria: expect.any(Array),
@@ -34,7 +34,7 @@ const expectAddedFields = (obj) => {
 };
 
 const expectedEditedByObject = (user) => ({
-  date: expect.any(String),
+  date: expect.any(Number),
   username: user.username,
   roles: user.roles,
   bank: user.bank,
