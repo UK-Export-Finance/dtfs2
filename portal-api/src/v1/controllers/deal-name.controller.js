@@ -1,7 +1,6 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userOwns } = require('../users/checks');
 const validateNameChange = require('../validation/deal-name');
-const now = require('../../now');
 
 const updateName = async (dealId, to, user) => {
   const modifiedDeal = {

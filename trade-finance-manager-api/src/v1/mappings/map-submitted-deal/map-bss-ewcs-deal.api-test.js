@@ -40,7 +40,6 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       bankReferenceNumber: bankSupplyContractID,
       bankAdditionalReferenceName: bankSupplyContractName,
       submissionCount,
-      submissionType,
       submissionDate,
       status,
       ukefDealId,

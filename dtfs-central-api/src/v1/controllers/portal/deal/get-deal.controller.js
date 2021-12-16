@@ -51,7 +51,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   const dealResults = await collection.find(query);
   const count = await dealResults.count();
   const deals = await dealResults
-    .sort({ 'updatedAt': -1 })
+    .sort({ updatedAt: -1 })
     .skip(start)
     .limit(pagesize)
     .toArray();
