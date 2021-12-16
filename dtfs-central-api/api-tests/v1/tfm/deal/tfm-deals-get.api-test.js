@@ -14,6 +14,7 @@ const mockUser = {
 };
 
 const newDeal = (dealOverrides) => ({
+  ...dealOverrides,
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',

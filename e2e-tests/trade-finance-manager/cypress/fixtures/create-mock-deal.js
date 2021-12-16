@@ -16,6 +16,7 @@ const createMockDeal = (overrides) => {
 
   return {
     ...MOCK_DEAL_AIN,
+    ...overrides,
     details: {
       ...MOCK_DEAL_AIN.details,
       ...overrides.details,
