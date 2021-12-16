@@ -19,7 +19,7 @@
 
   <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType }}</h1>
 
-   {% if not isUkefReviewPositive %}
+   {% if not isUkefReviewPositive and isUkefReviewAvailable %}
       {% include "includes/application-preview/ukef-decision.njk" %}
    {% endif %}
 

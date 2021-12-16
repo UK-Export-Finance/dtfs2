@@ -5,17 +5,21 @@
 
     {% set bannerHtml %}
 
-      {% if isUkefReviewAvailable and not coverDatesConfirmed %}
+      {% if isUkefReviewAvailable and isUkefReviewPositive and not coverDatesConfirmed %}
         <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
           <a href="/gef/application-details/{{ dealId }}/review-decision" class="govuk-link">Review UKEF decision</a>
         </div>
       {% endif %}
 
       {% if coverDatesConfirmed %}
-        {% if applicationStatus == 'Accepted (without conditions)' %}
+        {% if ukefDecision[0].decision == 'Accepted (without conditions)' %}
             <strong>You are proceeding with UKEF cover</strong>
-        {% elif applicationStatus == 'Accepted (with conditions)' %}
-            <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
+        {% elif ukefDecision[0].decision == 'Accepted (with conditions)' %}
+            {% if applicationStatus == "Ready for Checker\'s approval" %}
+              <strong>{{ application.maker.firstname }} {{ application.maker.surname }} has accepted the following conditions</strong>
+            {% else %}
+              <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
+            {% endif %}
             <p>{{ ukefDecision[0].text | safe }}</p>
         {% endif %}
       {% endif %}
