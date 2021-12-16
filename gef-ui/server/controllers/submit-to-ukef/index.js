@@ -1,4 +1,4 @@
-const { PROGRESS } = require('../../../constants/index');
+const CONSTANTS = require('../../constants');
 const { validationErrorHandler, isNotice } = require('../../utils/helpers');
 const api = require('../../services/api');
 
@@ -6,10 +6,10 @@ const MAX_COMMENT_LENGTH = 400;
 
 const submitToUkef = async (req, res) => {
   const { params } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   try {
     return res.render('partials/submit-to-ukef.njk', {
-      applicationId,
+      dealId,
       maxCommentLength: MAX_COMMENT_LENGTH,
     });
   } catch (err) {
@@ -21,10 +21,10 @@ const submitToUkef = async (req, res) => {
 const createSubmissionToUkef = async (req, res) => {
   const { params, body } = req;
   const { user, userToken } = req.session;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { comment } = body;
   console.log('GEF Application is being submitted to UKEF--TFM');
-  const application = await api.getApplication(applicationId);
+  const application = await api.getApplication(dealId);
 
   let checker;
   try {
@@ -41,7 +41,7 @@ const createSubmissionToUkef = async (req, res) => {
       });
 
       return res.render('partials/submit-to-ukef.njk', {
-        applicationId,
+        dealId,
         maxCommentLength: MAX_COMMENT_LENGTH,
         errors,
         comment,
@@ -61,8 +61,8 @@ const createSubmissionToUkef = async (req, res) => {
     }
     // Always update with the latest checkers details.
     application.checkerId = user._id;
-    await api.updateApplication(applicationId, application);
-    await api.setApplicationStatus(applicationId, PROGRESS.SUBMITTED_TO_UKEF);
+    await api.updateApplication(dealId, application);
+    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType: application.submissionType,

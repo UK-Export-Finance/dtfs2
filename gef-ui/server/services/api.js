@@ -39,36 +39,36 @@ const cloneApplication = async (payload) => {
   }
 };
 
-const getApplication = async (applicationId) => {
+const getApplication = async (dealId) => {
   try {
-    const { data } = await Axios.get(`/gef/application/${applicationId}`);
+    const { data } = await Axios.get(`/gef/application/${dealId}`);
     return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
 };
 
-const updateApplication = async (applicationId, application) => {
+const updateApplication = async (dealId, application) => {
   try {
-    const { data } = await Axios.put(`/gef/application/${applicationId}`, application);
+    const { data } = await Axios.put(`/gef/application/${dealId}`, application);
     return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
 };
 
-const updateSupportingInformation = async (applicationId, application, field) => {
+const updateSupportingInformation = async (dealId, application, field) => {
   try {
-    const { data } = await Axios.put(`/gef/application/supporting-information/${applicationId}`, { application, field });
+    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field });
     return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
 };
 
-const setApplicationStatus = async (applicationId, status) => {
+const setApplicationStatus = async (dealId, status) => {
   try {
-    const { data } = await Axios.put(`/gef/application/status/${applicationId}`, {
+    const { data } = await Axios.put(`/gef/application/status/${dealId}`, {
       status,
     }, { timeout: 10000 }); // Application status has multiple api calls in portal api
     return data;
@@ -77,31 +77,13 @@ const setApplicationStatus = async (applicationId, status) => {
   }
 };
 
-const getExporter = async (exporterId) => {
-  try {
-    const { data } = await Axios.get(`/gef/exporter/${exporterId}`);
-    return data;
-  } catch (err) {
-    return apiErrorHandler(err);
-  }
-};
-
-const updateExporter = async (exporterId, payload) => {
-  try {
-    const { data } = await Axios.put(`/gef/exporter/${exporterId}`, payload);
-    return data;
-  } catch (err) {
-    return apiErrorHandler(err);
-  }
-};
-
-const getFacilities = async (applicationId) => {
-  if (!applicationId) {
+const getFacilities = async (dealId) => {
+  if (!dealId) {
     return [];
   }
 
   try {
-    const { data } = await Axios.get('/gef/facilities', { params: { applicationId } });
+    const { data } = await Axios.get('/gef/facilities', { params: { dealId } });
     return data;
   } catch (err) {
     return apiErrorHandler(err);
@@ -153,11 +135,12 @@ const getEligibilityCriteria = async () => {
   }
 };
 
-const getCompaniesHouseDetails = async (companyRegNumber, exporterId) => {
+const getCompaniesHouseDetails = async (companyRegNumber) => {
   try {
-    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, { params: { exporterId } });
+    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
   } catch (err) {
+    console.error('Unable to get company house details', { err });
     return apiErrorHandler(err);
   }
 };
@@ -256,8 +239,6 @@ module.exports = {
   updateApplication,
   getEligibilityCriteria,
   getApplication,
-  getExporter,
-  updateExporter,
   getFacilities,
   createFacility,
   getFacility,

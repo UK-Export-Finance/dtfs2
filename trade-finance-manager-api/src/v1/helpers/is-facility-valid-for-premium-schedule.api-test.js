@@ -4,7 +4,7 @@ const CONSTANTS = require('../../constants');
 const facility = {
   facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
   feeType: 'At maturity',
-  ukefFacilityID: 1234,
+  ukefFacilityId: 1234,
   guaranteeFee: 10,
   coverPercentage: 80,
   dayCountBasis: 2,
@@ -47,11 +47,11 @@ describe('isFacilityValidForPremiumSchedule', () => {
       });
     });
 
-    describe('ukefFacilityID', () => {
-      it('should be invalid if no ukefFacilityID', () => {
+    describe('ukefFacilityId', () => {
+      it('should be invalid if no ukefFacilityId', () => {
         const invalidFacility = {
           ...facility,
-          ukefFacilityID: '',
+          ukefFacilityId: '',
         };
         const result = isFacilityValidForPremiumSchedule(invalidFacility, exposurePeriod, facilityGuaranteeDates);
         expect(result).toEqual(false);

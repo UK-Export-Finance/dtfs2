@@ -13,11 +13,11 @@ const {
 } = require('../calculations/facility-calculations');
 
 const collectionName = 'gef-facilities';
-const dealsCollectionName = 'gef-application';
+const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (req.body.type && req.body.applicationId) {
+  if (req.body.type && req.body.dealId) {
     if (enumValidationErr) {
       res.status(422).send(enumValidationErr);
     } else {
@@ -40,25 +40,25 @@ exports.create = async (req, res) => {
   }
 };
 
-const getAllFacilitiesByApplicationId = async (applicationId) => {
+const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(collectionName);
   let find = {};
 
-  if (applicationId) {
-    find = { applicationId: ObjectID(applicationId) };
+  if (dealId) {
+    find = { dealId: ObjectID(dealId) };
   }
 
   const doc = await collection.find(find).toArray();
 
   return doc;
 };
-exports.getAllFacilitiesByApplicationId = getAllFacilitiesByApplicationId;
+exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
 exports.getAllGET = async (req, res) => {
   let doc;
 
-  if (req.query && req.query.applicationId) {
-    doc = await getAllFacilitiesByApplicationId(req.query.applicationId);
+  if (req.query && req.query.dealId) {
+    doc = await getAllFacilitiesByDealId(req.query.dealId);
   }
 
   const facilities = [];
@@ -119,7 +119,7 @@ const update = async (id, updateBody) => {
     const dealUpdate = new Application(dealUpdateObj);
 
     await dealsCollection.findOneAndUpdate(
-      { _id: { $eq: ObjectID(existingFacility.applicationId) } },
+      { _id: { $eq: ObjectID(existingFacility.dealId) } },
       { $set: dealUpdate },
       { returnOriginal: false },
     );
@@ -155,9 +155,9 @@ exports.delete = async (req, res) => {
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
-exports.deleteByApplicationId = async (req, res) => {
+exports.deleteByDealId = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.deleteMany({ applicationId: req.query.applicationId });
+  const response = await collection.deleteMany({ dealId: req.query.dealId });
   res.status(200).send(response);
 };
 
@@ -193,8 +193,8 @@ exports.findFacilities = async (
     .aggregate([
       {
         $lookup: {
-          from: 'gef-application',
-          localField: 'applicationId',
+          from: 'deals',
+          localField: 'dealId',
           foreignField: '_id',
           as: 'deal',
         },

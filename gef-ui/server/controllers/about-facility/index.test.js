@@ -16,7 +16,7 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
 };
@@ -71,7 +71,7 @@ describe('controllers/about-facility', () => {
         coverEndDateMonth: null,
         coverEndDateYear: null,
         facilityTypeString: 'cash',
-        applicationId: '123',
+        dealId: '123',
         facilityId: 'xyz',
         status: 'change',
       }));

@@ -19,6 +19,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       bondTransactions,
       loanTransactions,
       eligibility,
+      exporter,
     } = mockDeal.dealSnapshot;
 
     const {
@@ -44,7 +45,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       ukefDealId,
       maker,
       exporter: {
-        companyName: submissionDetails['supplier-name'],
+        companyName: exporter.companyName,
         companiesHouseRegistrationNumber: submissionDetails['supplier-companies-house-registration-number'],
       },
       buyer: {

@@ -51,7 +51,14 @@ const STATUS = {
 };
 
 const GEF_STATUS = {
+  // these statuses can be either on the top level
+  // or in a child object, not specific to the entire deal.
   DRAFT: 'Draft',
+  NOT_STARTED: 'Not started',
+  IN_PROGRESS: 'In progress',
+  COMPLETED: 'Completed',
+
+  // statuses specific to the entire deal
   BANK_CHECK: "Ready for Checker's approval",
   CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',

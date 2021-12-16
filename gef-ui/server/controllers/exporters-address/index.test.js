@@ -5,12 +5,11 @@ jest.mock('../../services/api');
 
 const postcode = 'EE1 1EE';
 const companyName = 'Test Company';
-const registeredAddress = { addressLine1: 'line 1', addressLine2: 'line 2' };
 
 const MockRequest = () => {
   const req = {};
   req.params = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {};
   req.body = {};
   return req;
@@ -24,18 +23,10 @@ const MockResponse = () => {
 };
 
 const MockApplicationResponse = () => {
-  const res = {};
-  res.params = {};
-  res.params.exporterId = 'abc';
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {
-    companyName,
-    registeredAddress,
+  const res = {
+    exporter: {},
   };
+  res.params = {};
   return res;
 };
 
@@ -47,17 +38,14 @@ describe('controllers/excorters-address', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
-    mockExporterResponse = MockExporterResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
-    api.updateExporter.mockResolvedValue({});
+    api.updateApplication.mockResolvedValue({});
     api.getAddressesByPostcode.mockResolvedValue([{ addressLine1: 'line 1', addressLine2: 'line 2' }]);
   });
 
@@ -67,26 +55,26 @@ describe('controllers/excorters-address', () => {
 
   describe('GET Exporters Address', () => {
     it('renders the `exporters-address` template', async () => {
-      mockExporterResponse.details.companyName = 'Test company';
-      mockExporterResponse.details.registeredAddress = { line1: 'Line 1', line2: 'Line 2' };
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.companyName = 'Test company';
+      mockApplicationResponse.exporter.registeredAddress = { line1: 'Line 1', line2: 'Line 2' };
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await exportersAddress(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
-        applicationId: '123',
+        dealId: '123',
         companyName: 'Test company',
         registeredAddress: expect.any(Object),
       });
     });
 
     it('renders the `exporters-address` template without registered address', async () => {
-      mockExporterResponse.details.companyName = 'Test company';
-      mockExporterResponse.details.registeredAddress = null;
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.companyName = 'Test company';
+      mockApplicationResponse.exporter.registeredAddress = null;
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await exportersAddress(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
-        applicationId: '123',
+        dealId: '123',
         companyName: 'Test company',
         registeredAddress: null,
       });
@@ -107,13 +95,25 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-        companyName,
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+        dealId: '123',
+        errors: {
+          errorSummary: [
+            {
+              href: '#correspondence',
+              text: 'Select whether there’s a separate correspondence address for the exporter',
+            },
+          ],
+          fieldErrors: {
+            correspondence: {
+              text: 'Select whether there’s a separate correspondence address for the exporter',
+            },
+          },
+        },
+        companyName: '',
         correspondence: '',
-        errors: expect.any(Object),
         postcode: '',
-        registeredAddress,
-      }));
+      });
     });
 
     it('redirects user to `about exporter` page if user selects `false` from the radio buttons', async () => {
@@ -129,12 +129,25 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-        companyName,
-        errors: expect.any(Object),
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+        dealId: '123',
+        errors: {
+          errorSummary: [
+            {
+              href: '#postcode',
+              text: 'Enter a postcode',
+            },
+          ],
+          fieldErrors: {
+            postcode: {
+              text: 'Enter a postcode',
+            },
+          },
+        },
         correspondence: 'true',
-        registeredAddress,
-      }));
+        postcode: '',
+        companyName: '',
+      });
     });
 
     it('fetchs addresses if there are currently no validation errors and stores them as a string in session storage', async () => {
@@ -163,13 +176,25 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', expect.objectContaining({
-        companyName,
-        errors: expect.any(Object),
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+        companyName: '',
+        errors: {
+          errorSummary: [
+            {
+              text: 'Error looking up postcode. Try again.',
+              href: '#postcode',
+            },
+          ],
+          fieldErrors: {
+            postcode: {
+              text: 'Error looking up postcode. Try again.',
+            },
+          },
+        },
         correspondence: 'true',
-        registeredAddress,
-        applicationId: mockRequest.params.applicationId,
-      }));
+        postcode,
+        dealId: mockRequest.params.dealId,
+      });
     });
 
     it('shows user an error, allowing retry, if there is an issue with the address api', async () => {
@@ -178,7 +203,7 @@ describe('controllers/excorters-address', () => {
 
       mockRequest.body.correspondence = correspondence;
       mockRequest.body.postcode = postcode;
-      mockExporterResponse.details.companyName = companyName;
+      mockApplicationResponse.exporter.companyName = companyName;
 
       api.getAddressesByPostcode.mockRejectedValueOnce({ response: { status: 500, message: 'Whoops' } });
 
@@ -202,9 +227,8 @@ describe('controllers/excorters-address', () => {
           },
           companyName,
           postcode,
-          registeredAddress,
           correspondence,
-          applicationId: mockRequest.params.applicationId,
+          dealId: mockRequest.params.dealId,
         },
       );
     });

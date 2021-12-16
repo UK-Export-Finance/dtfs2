@@ -61,9 +61,9 @@ const constructor = (listOfFilters) => {
 
       if (keyFields.search) {
         const regex = new RegExp(`^${keyFields.search}`, 'i');
-        const ukefFacilityID = Array.isArray(bond.ukefFacilityID) ? bond.ukefFacilityID[0] : bond.ukefFacilityID;
+        const ukefFacilityId = Array.isArray(bond.ukefFacilityId) ? bond.ukefFacilityId[0] : bond.ukefFacilityId;
 
-        const matchesUKEFId = ukefFacilityID && ukefFacilityID.match(regex);
+        const matchesUKEFId = ukefFacilityId && ukefFacilityId.match(regex);
         const matchesUniqueId = bond.uniqueIdentificationNumber && bond.uniqueIdentificationNumber.match(regex);
         if (!matchesUniqueId && !matchesUKEFId) return false;
       }
@@ -77,8 +77,8 @@ const constructor = (listOfFilters) => {
 
       if (keyFields.filterByUkefFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`, 'i');
-        const ukefFacilityID = Array.isArray(bond.ukefFacilityID) ? bond.ukefFacilityID[0] : bond.ukefFacilityID;
-        if (ukefFacilityID && !ukefFacilityID.match(regex)) {
+        const ukefFacilityId = Array.isArray(bond.ukefFacilityId) ? bond.ukefFacilityId[0] : bond.ukefFacilityId;
+        if (ukefFacilityId && !ukefFacilityId.match(regex)) {
           return false;
         }
       }
@@ -104,7 +104,7 @@ const constructor = (listOfFilters) => {
       deal_submissionType: deal.details.submissionType,
       transaction_id: bond._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: bond.uniqueIdentificationNumber,
-      ukefFacilityId: bond.ukefFacilityID,
+      ukefFacilityId: bond.ukefFacilityId,
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
       currency: bond.currency,

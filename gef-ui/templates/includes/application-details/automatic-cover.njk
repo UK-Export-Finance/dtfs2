@@ -21,8 +21,8 @@
   </div>
 </div>
 {%if not previewMode %}
-  {% if eligibility.status.code === 'NOT_STARTED' or eligibility.status.code === 'IN_PROGRESS' %}
-    <a class="govuk-link" href="/gef/application-details/{{applicationId}}/automatic-cover" data-cy="automatic-cover-details-link">
+  {% if eligibility.status.code === 'Not started' or eligibility.status.code === 'In progress' %}
+    <a class="govuk-link" href="/gef/application-details/{{dealId}}/automatic-cover" data-cy="automatic-cover-details-link">
       Check if you're eligible for automatic cover
     </a>
   {% else %}
@@ -36,7 +36,7 @@
         value: { text: captionText },
         actions: {
           items: [] if previewMode else [{
-            href: applicationId + '/automatic-cover',
+            href: dealId + '/automatic-cover',
             text: "Change",
             visuallyHiddenText: "automatic cover"
           }]

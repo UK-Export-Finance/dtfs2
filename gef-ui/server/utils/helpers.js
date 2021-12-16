@@ -3,9 +3,8 @@ const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
 const { format, add } = require('date-fns');
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('../constants');
 
-// Fetches the user token = require( sessio)n
 const userToken = (req) => {
   const token = req.session.userToken;
   return token;
@@ -191,7 +190,6 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
     return [];
   }
   const { details, validation } = data;
-  const { required } = validation;
 
   const valueObj = (val, isRequired, currency, detailsOther, options = {}) => {
     if (isRequired && val === null) {
@@ -247,7 +245,8 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
-    const isRequired = required.includes(item.id);
+    const isRequired = validation?.required?.includes(item.id);
+    // const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
 
     // Don't show row if value is undefined
     if (value === undefined || isHidden) {
@@ -319,23 +318,23 @@ const selectDropdownAddresses = (addresses) => {
   return placeholder.concat(mappedAddresses);
 };
 
-const status = {
-  NOT_STARTED: {
-    text: 'Not started',
+const status = ({
+  [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
+    text: CONSTANTS.DEAL_STATUS.NOT_STARTED,
     class: 'govuk-tag--grey',
-    code: 'NOT_STARTED',
+    code: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
-  IN_PROGRESS: {
-    text: 'In progress',
+  [CONSTANTS.DEAL_STATUS.IN_PROGRESS]: {
+    text: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     class: 'govuk-tag--blue',
-    code: 'IN_PROGRESS',
+    code: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   },
-  COMPLETED: {
-    text: 'Completed',
+  [CONSTANTS.DEAL_STATUS.COMPLETED]: {
+    text: CONSTANTS.DEAL_STATUS.COMPLETED,
     class: 'govuk-tag--green',
-    code: 'COMPLETED',
+    code: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-};
+});
 
 const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
@@ -386,25 +385,6 @@ const areUnissuedFacilitiesPresent = (application) => {
   return hasUnissuedFacilities;
 };
 
-/**
- * This is a bespoke govUkTable mapping function which
- * returns an array of all the facilities specifically
- * for the cover-start-date.njk template.
- * @param {Object} facilities
- * @returns {Array}
- */
-const getFacilitiesAsArray = (facilities) =>
-  facilities.items
-    .filter(({ details }) => !details.coverDateConfirmed)
-    .map(({ details }) => [
-      { text: details.name },
-      { text: details.ukefFacilityId },
-      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-      {
-        html: `<a href = '/gef/application-details/${details.applicationId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
-      },
-    ]);
-
 /*
    This function sets the deadline to display for unissued
    facilities on the unissued facilities table 3 months
@@ -432,6 +412,22 @@ const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
       {
         html: `<a href = '/gef/application-details/${details.applicationId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
       },
+    ]);
+
+/**
+ * This is a bespoke govUkTable mapping function which
+ * returns an array of all the facilities specifically
+ * for the cover-start-date.njk template.
+ * @param {Object} facilities
+ * @returns {Array}
+ */
+const getIssuedFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
+  .map(({ details }) =>
+    [
+      { text: details.name },
+      { text: details.ukefFacilityId },
+      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+      { html: `<a href = '/gef/application-details/${details.dealId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
     ]);
 
 const getFacilityCoverStartDate = (facility) => {
@@ -502,7 +498,7 @@ const makerCanReSubmit = (maker, application) => {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = maker._id === application.maker._id;
+  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bankId);
 
   return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
@@ -523,9 +519,9 @@ module.exports = {
   isUkefReviewAvailable,
   isUkefReviewPositive,
   areUnissuedFacilitiesPresent,
-  getFacilitiesAsArray,
   getUnissuedFacilitiesAsArray,
   facilitiesChangedToIssuedAsArray,
+  getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   futureDateInRange,
   pastDate,

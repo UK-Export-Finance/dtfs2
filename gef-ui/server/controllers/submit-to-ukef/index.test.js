@@ -1,5 +1,6 @@
 import { submitToUkef, createSubmissionToUkef } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 const { isNotice } = require('../../utils/helpers');
 
@@ -17,7 +18,7 @@ const MockRequest = () => {
   req.params = {};
   req.body = { comment: '' };
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -28,13 +29,8 @@ const MockRequest = () => {
   return req;
 };
 
-const mockExporter = {
-  status: 'NOT_STARTED',
-};
-const MockExporterResponse = () => mockExporter;
-
 const mockFacilities = {
-  status: 'NOT_STARTED',
+  status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
 };
 
 const MockFacilitiesResponse = () => mockFacilities;
@@ -42,7 +38,7 @@ const MockFacilitiesResponse = () => mockFacilities;
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankInternalRefName = 'My test';
   res.comments = [{
     role: 'maker',
@@ -71,14 +67,12 @@ describe('controllers/submit-to-ukef', () => {
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
 
-    const mockExporterResponse = MockExporterResponse();
     const mockFacilitiesResponse = MockFacilitiesResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
     api.updateApplication.mockResolvedValue(mockApplicationResponse);
     api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
   });
 
@@ -105,7 +99,7 @@ describe('controllers/submit-to-ukef', () => {
 
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef.njk', expect.objectContaining({
-          applicationId: expect.any(String),
+          dealId: expect.any(String),
           comment: longComments,
           maxCommentLength: expect.any(Number),
           errors: expect.any(Object),
@@ -120,7 +114,7 @@ describe('controllers/submit-to-ukef', () => {
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef.njk',
           expect.objectContaining({
-            applicationId: expect.any(String),
+            dealId: expect.any(String),
             maxCommentLength: expect.any(Number),
           }));
     });

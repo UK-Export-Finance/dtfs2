@@ -48,7 +48,6 @@ describe('getPortalActivities()', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
   let mockFacilityResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
@@ -57,13 +56,11 @@ describe('getPortalActivities()', () => {
     mockResponse = mocks.MockResponse();
     mockRequest = mocks.MockRequestChecker();
     mockApplicationResponse = mocks.MockApplicationResponseSubmitted();
-    mockExporterResponse = mocks.MockExporterResponse();
     mockFacilityResponse = mocks.MockFacilityResponse();
     mockUserResponse = mocks.MockUserResponseChecker();
     mockEligibilityCriteriaResponse = mocks.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
@@ -82,10 +79,10 @@ describe('getPortalActivities()', () => {
     );
   });
 
-  it('it should call mapPortalActivities to produce mojTimeline array format', async () => {
+  it('it should call getApplication to produce mojTimeline array format', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
-    expect(api.getExporter).toHaveBeenCalledWith(mockApplicationResponse.exporterId);
+    expect(api.getApplication).toHaveBeenCalledWith(mockRequest.params.dealId);
   });
 
   it('it should render application-activity template', async () => {
@@ -93,14 +90,13 @@ describe('getPortalActivities()', () => {
 
     const maker = await api.getUserDetails(mockApplicationResponse.userId, mockRequest.session.userToken);
     const checker = await api.getUserDetails(mockApplicationResponse.checkerId, mockRequest.session.userToken);
-    const exporter = await api.getExporter(mockApplicationResponse.exporterId);
 
     const mappedPortalActivities = mapPortalActivities(mockApplicationResponse.portalActivities);
 
     expect(mockResponse.render)
       .toHaveBeenCalledWith('partials/application-activity.njk', {
         activeSubNavigation: 'activities',
-        applicationId: '123',
+        dealId: '123',
         portalActivities: mappedPortalActivities,
         bankInternalRefName: mockApplicationResponse.bankInternalRefName,
         additionalRefName: mockApplicationResponse.additionalRefName,
@@ -110,7 +106,7 @@ describe('getPortalActivities()', () => {
         submissionCount: mockApplicationResponse.submissionCount,
         checkedBy: `${checker.firstname} ${checker.surname}`,
         createdBy: `${maker.firstname} ${maker.surname}`,
-        companyName: exporter.details.companyName,
+        companyName: mockApplicationResponse.exporter.companyName,
         dateCreated: mockApplicationResponse.createdAt,
         timezone: maker.timezone || 'Europe/London',
         submissionDate: mockApplicationResponse.submissionDate,

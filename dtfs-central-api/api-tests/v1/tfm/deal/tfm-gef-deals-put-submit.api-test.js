@@ -8,6 +8,7 @@ const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
   submissionCount: 1,
+  exporter: {},
 };
 
 const newFacility = {
@@ -16,9 +17,8 @@ const newFacility = {
 
 describe('/v1/tfm/deals/submit - GEF deal', () => {
   beforeEach(async () => {
-    await wipeDB.wipe(['gef-application']);
+    await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['gef-facilities']);
-    await wipeDB.wipe(['gef-exporter']);
     await wipeDB.wipe(['tfm-deals']);
     await wipeDB.wipe(['tfm-facilities']);
   });
@@ -62,8 +62,8 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const dealId = createDealBody._id;
 
     // create facilities
-    const newFacility1 = { ...newFacility, applicationId: dealId };
-    const newFacility2 = { ...newFacility, applicationId: dealId };
+    const newFacility1 = { ...newFacility, dealId };
+    const newFacility2 = { ...newFacility, dealId };
 
     const { body: facility1Body } = await api.post(newFacility1).to('/v1/portal/gef/facilities');
     const { body: facility2Body } = await api.post(newFacility2).to('/v1/portal/gef/facilities');
@@ -103,32 +103,5 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       },
       tfm: DEFAULTS.FACILITY_TFM,
     });
-  });
-
-  it('adds deal exporter to the response', async () => {
-    // create exporter
-    const newExporter = {
-      companyName: 'Testing',
-      companiesHouseRegistrationNumber: '12345678',
-    };
-
-    const { body: createdExporter } = await api.post(newExporter).to('/v1/portal/gef/exporter');
-
-    const { body: exporterAfterCreate } = await api.get(`/v1/portal/gef/exporter/${createdExporter._id}`);
-
-    // create deal with exporterId
-    newDeal.exporterId = createdExporter._id;
-    const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
-    const dealId = postResult.body._id;
-
-    // submit deal
-    const { status, body } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId,
-    }).to('/v1/tfm/deals/submit');
-
-    expect(status).toEqual(200);
-
-    expect(body.dealSnapshot.exporter).toEqual(exporterAfterCreate);
   });
 });

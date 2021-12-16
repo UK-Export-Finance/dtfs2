@@ -1,6 +1,7 @@
 import { bssFacilities, gefFacilities } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
+import { PRODUCT, STATUS } from '../../constants';
 import api from '../../api';
 
 jest.mock('../../helpers', () => ({
@@ -81,7 +82,7 @@ describe('controllers/facilities', () => {
     it('passes the expected filter for checker', async () => {
       await bssFacilities(checkerReq, res);
 
-      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'details.status', operator: 'eq', value: "Ready for Checker's approval" }], 'mock-token');
+      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'details.status', operator: 'eq', value: STATUS.readyForApproval }], 'mock-token');
     });
 
     it('renders the correct template', async () => {
@@ -94,7 +95,7 @@ describe('controllers/facilities', () => {
             bankId: 'mock-facility',
             dealId: 'mock-deal-1',
             facilityType: 'bond',
-            product: 'BSS/EWCS',
+            product: PRODUCT.BSS_EWCS,
             ukefStage: '-',
             value: { currency: 'GBP' },
             url: '/contract/mock-deal-1/bond/mockFacility1/details',
@@ -104,7 +105,7 @@ describe('controllers/facilities', () => {
             bankId: 'Not entered',
             dealId: 'mock-deal-1',
             facilityType: 'another-type',
-            product: 'BSS/EWCS',
+            product: PRODUCT.BSS_EWCS,
             ukefStage: '-',
             value: { currency: 'GBP' },
             url: '/contract/mock-deal-1/another-type/mockFacility2/guarantee-details',
@@ -133,14 +134,14 @@ describe('controllers/facilities', () => {
           {
             _id: 'mockFacility1',
             name: 'mock-facility',
-            applicationId: 'mock-deal-1',
+            dealId: 'mock-deal-1',
             type: 'mock-type',
             hasBeenIssued: true,
             deal: { _id: 'mock-deal-1' },
           },
           {
             _id: 'mockFacility2',
-            applicationId: 'mock-deal-1',
+            dealId: 'mock-deal-1',
             type: 'mock-type',
             deal: { _id: 'mock-deal-1' },
           },
@@ -161,7 +162,7 @@ describe('controllers/facilities', () => {
     it('passes the expected filter for checker', async () => {
       await gefFacilities(checkerReq, res);
 
-      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: 'BANK_CHECK' }], 'mock-token');
+      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: STATUS.readyForApproval }], 'mock-token');
     });
 
     it('renders the correct template', async () => {
@@ -175,7 +176,7 @@ describe('controllers/facilities', () => {
             dealId: 'mock-deal-1',
             facilityType: 'mock-type',
             bankStage: 'Issued',
-            product: 'GEF',
+            product: PRODUCT.GEF,
             ukefStage: '-',
             url: '/gef/application-details/mock-deal-1/facilities/mockFacility1/',
             value: { amount: 0, currency: '' },
@@ -186,7 +187,7 @@ describe('controllers/facilities', () => {
             dealId: 'mock-deal-1',
             facilityType: 'mock-type',
             bankStage: 'Unissued',
-            product: 'GEF',
+            product: PRODUCT.GEF,
             ukefStage: '-',
             url: '/gef/application-details/mock-deal-1/facilities/mockFacility2/',
             value: { amount: 0, currency: '' },

@@ -3,7 +3,7 @@ import {
   postApplicationSubmission,
 } from './index';
 import api from '../../services/api';
-import { PROGRESS } from '../../../constants';
+import { DEAL_STATUS } from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -18,7 +18,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -30,7 +30,7 @@ const MockRequest = () => {
 
 const MockSubmissionRequest = () => ({
   params: {
-    applicationId: '1234',
+    dealId: '1234',
   },
   query: {},
   body: {
@@ -49,7 +49,7 @@ const MockSubmissionRequest = () => ({
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
   res.eligibility = {
@@ -69,16 +69,6 @@ const MockUserResponse = () => ({
   bank: { id: 'BANKID' },
 });
 
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.validation.required = [];
-  return res;
-};
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
@@ -91,7 +81,7 @@ const MockEligibilityCriteriaResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = 'IN_DEAL_STATUS';
   res.data = [];
   res.items = [];
   res.details = {
@@ -118,7 +108,6 @@ describe('controllers/application-submission', () => {
     mockApplicationResponse = MockApplicationResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(MockExporterResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.getUserDetails.mockResolvedValue(MockUserResponse());
@@ -134,7 +123,7 @@ describe('controllers/application-submission', () => {
     it('renders submission page as expected', async () => {
       await getApplicationSubmission(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-        applicationId: expect.any(String),
+        dealId: expect.any(String),
         submissionType: expect.any(String),
         maxCommentLength: expect.any(Number),
         isAutomaticCover: expect.any(String),
@@ -150,7 +139,7 @@ describe('controllers/application-submission', () => {
     it('renders confirmation if successfully submitted', async () => {
       await postApplicationSubmission(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
-        applicationId: expect.any(String),
+        dealId: expect.any(String),
         submissionType: expect.any(String),
         unissuedToIssued: expect.any(Boolean),
       }));
@@ -163,7 +152,7 @@ describe('controllers/application-submission', () => {
       await postApplicationSubmission(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-        applicationId: expect.any(String),
+        dealId: expect.any(String),
         comment: longComments,
         maxCommentLength: expect.any(Number),
         errors: expect.any(Object),
@@ -203,7 +192,7 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, PROGRESS.BANK_CHECK);
+      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, DEAL_STATUS.BANK_CHECK);
     });
   });
 });

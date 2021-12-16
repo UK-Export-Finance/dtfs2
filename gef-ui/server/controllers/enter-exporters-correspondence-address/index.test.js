@@ -1,6 +1,6 @@
 import { enterExportersCorrespondenceAddress, validateEnterExportersCorrespondenceAddress } from './index';
 import api from '../../services/api';
-import { DEFAULT_COUNTRY } from '../../../constants';
+import { DEFAULT_COUNTRY } from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -8,7 +8,7 @@ const MockRequest = () => {
   const req = {};
   req.query = {};
   req.params = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {};
   req.body = {};
   req.get = () => '/url';
@@ -23,16 +23,11 @@ const MockResponse = () => {
 };
 
 const MockApplicationResponse = () => {
-  const res = {};
+  const res = {
+    _id: '123',
+    exporter: {},
+  };
   res.params = {};
-  res.params.exporterId = 'abc';
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.details.correspondenceAddress = '';
   return res;
 };
 
@@ -44,29 +39,27 @@ describe('controllers/enter-exporters-correspondence-address', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
-    mockExporterResponse = MockExporterResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
-    api.updateExporter.mockResolvedValue(mockExporterResponse);
+    api.updateApplication.mockResolvedValue({});
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
+
   describe('GET Enter Exporters Correspondence Address', () => {
     it('renders the `enter-exporters-correspondence-address` template with empty field', async () => {
       await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
-        addressForm: '',
-        applicationId: '123',
+        addressForm: {},
+        dealId: '123',
         backUrl: '/url',
       });
     });
@@ -84,14 +77,13 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           organisationName: undefined,
           postalCode: undefined,
         },
-        applicationId: '123',
+        dealId: '123',
         backUrl: '/url',
       });
     });
 
     it('renders the `enter-exporters-correspondence-address` template with data from exporter api', async () => {
-      mockExporterResponse.details.correspondenceAddress = { addressLine1: 'LINE1', addressLine2: 'LINE2' };
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.correspondenceAddress = { addressLine1: 'LINE1', addressLine2: 'LINE2' };
       await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
@@ -99,7 +91,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           addressLine1: 'LINE1',
           addressLine2: 'LINE2',
         },
-        applicationId: '123',
+        dealId: '123',
         backUrl: '/url',
       });
     });
@@ -122,7 +114,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
         addressForm: { addressLine1: '', postalCode: '' },
       }));
     });
@@ -135,7 +127,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
         errors: expect.any(Object),
-        applicationId: '123',
+        dealId: '123',
         addressForm: { addressLine1: 'Line1', postalCode: '' },
       }));
     });
@@ -147,14 +139,18 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
       const expectedBody = {
-        correspondenceAddress: {
-          ...mockRequest.body,
-          country: DEFAULT_COUNTRY,
+        exporter: {
+          correspondenceAddress: {
+            ...mockRequest.body,
+            country: DEFAULT_COUNTRY,
+          },
         },
       };
 
-      expect(api.updateExporter).toHaveBeenCalledWith(
-        mockApplicationResponse.exporterId,
+      console.log('---- expectedBody \n', expectedBody);
+
+      expect(api.updateApplication).toHaveBeenCalledWith(
+        mockApplicationResponse._id,
         expectedBody,
       );
     });

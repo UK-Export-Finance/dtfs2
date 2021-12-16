@@ -1,10 +1,10 @@
 const api = require('../../services/api');
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const providedFacility = async (req, res) => {
   const { params, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
@@ -17,7 +17,7 @@ const providedFacility = async (req, res) => {
       details: details.details || [],
       detailsOther: details.detailsOther,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
@@ -28,7 +28,7 @@ const providedFacility = async (req, res) => {
 
 const validateProvidedFacility = async (req, res) => {
   const { params, body, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;
   const providedFacilityErrors = [];
@@ -59,7 +59,7 @@ const validateProvidedFacility = async (req, res) => {
       facilityType,
       detailsOther,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
@@ -72,10 +72,10 @@ const validateProvidedFacility = async (req, res) => {
     });
 
     if (isTrueSet(saveAndReturn) || status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-currency`);
+    return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-currency`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

@@ -1,10 +1,10 @@
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 
 const facilityCurrency = async (req, res) => {
   const { params, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
@@ -16,7 +16,7 @@ const facilityCurrency = async (req, res) => {
       currency: details.currency,
       facilityType: facilityTypeConst,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
@@ -27,7 +27,7 @@ const facilityCurrency = async (req, res) => {
 
 const updateFacilityCurrency = async (req, res) => {
   const { params, body, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { currency, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
   const facilityTypeConst = FACILITY_TYPE[facilityType];
@@ -35,18 +35,18 @@ const updateFacilityCurrency = async (req, res) => {
   const facilityCurrencyErrors = [];
 
   if (isTrueSet(returnToApplication)) {
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(`/gef/application-details/${dealId}`);
   }
 
   if (isTrueSet(saveAndReturn)) {
     if (!currency) {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     await api.updateFacility(facilityId, {
       currency,
     });
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    return res.redirect(`/gef/application-details/${dealId}`);
   }
 
   if (!currency) {
@@ -61,7 +61,7 @@ const updateFacilityCurrency = async (req, res) => {
       errors: validationErrorHandler(facilityCurrencyErrors),
       currency,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
@@ -73,10 +73,10 @@ const updateFacilityCurrency = async (req, res) => {
     });
 
     if (status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-value?status=change`);
+      return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-value?status=change`);
     }
 
-    return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/facility-value`);
+    return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-value`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

@@ -1,47 +1,57 @@
 /* eslint-disable consistent-return */
 
-const { SME_TYPE, STATUS } = require('../../enums');
+const CONSTANTS = require('../../../../constants');
+const { SME_TYPE } = require('../../enums');
 
-const hasRequiredItems = (doc) => {
+const TOTAL_REQUIRED = 8;
+
+const unansweredFields = (answers) => {
   const required = [];
-  if (doc.companiesHouseRegistrationNumber === null) {
+
+  if (!answers.companiesHouseRegistrationNumber) {
     required.push('companiesHouseRegistrationNumber');
   }
-  if (doc.companyName === null) {
+  if (!answers.companyName) {
     required.push('companyName');
   }
-  if (doc.registeredAddress === null) {
+  if (!answers.registeredAddress) {
     required.push('registeredAddress');
   }
-  if (doc.selectedIndustry === null) {
+  if (!answers.selectedIndustry) {
     required.push('selectedIndustry');
   }
-  if (doc.industries === null) {
+  if (!answers.industries) {
     required.push('industries');
   }
-  if (doc.smeType === null) {
+  if (!answers.smeType) {
     required.push('smeType');
   }
-  if (doc.probabilityOfDefault === null) {
+  if (!answers.probabilityOfDefault) {
     required.push('probabilityOfDefault');
   }
-  if (doc.isFinanceIncreasing === null) {
+  if (answers.isFinanceIncreasing !== false && !answers.isFinanceIncreasing) {
     required.push('isFinanceIncreasing');
   }
+
   return required;
 };
 
-const exporterStatus = (doc) => {
-  const requiredCount = hasRequiredItems(doc).length;
-  if (!doc.updatedAt) {
-    return STATUS.NOT_STARTED;
+const exporterStatus = (answers) => {
+  const requiredCount = unansweredFields(answers).length;
+
+  if (requiredCount === TOTAL_REQUIRED) {
+    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
   }
+
   if (requiredCount > 0) {
-    return STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
   }
+
   if (requiredCount === 0) {
-    return STATUS.COMPLETED;
+    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
   }
+
+  return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
 };
 
 const exporterCheckEnums = (doc) => {
@@ -66,7 +76,8 @@ const exporterValidation = (doc) => ({
 });
 
 module.exports = {
-  exporterValidation,
-  exporterCheckEnums,
+  unansweredFields,
   exporterStatus,
+  exporterCheckEnums,
+  exporterValidation,
 };

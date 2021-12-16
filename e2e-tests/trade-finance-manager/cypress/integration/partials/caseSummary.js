@@ -1,6 +1,6 @@
 const partial = {
   ukefDealId: () => cy.get('[data-cy="ukef-deal-id"]'),
-  supplierName: () => cy.get('[data-cy="supplier-name"]'),
+  exporterName: () => cy.get('[data-cy="exporter-name"]'),
   contractValue: () => cy.get('[data-cy="contract-value"]'),
   contractValueInGBP: () => cy.get('[data-cy="contract-value-in-gbp"]'),
   ukefProduct: () => cy.get('[data-cy="ukef-product"]'),

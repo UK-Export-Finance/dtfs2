@@ -21,7 +21,7 @@
   {% if status !== 'change' %}
     {{ govukBackLink({
       text: "Back to previous page",
-      href: "/gef/application-details/" + applicationId + "/exporters-address",
+      href: "/gef/application-details/" + dealId + "/exporters-address",
       attributes: {
         'data-cy': 'back-link'
       }
@@ -42,7 +42,7 @@
       <form
         method="post"
         data-cy="form">
-        
+
         {% if industries.length <= 1 %}
           <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
           <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ selectedIndustry.name }}<br>{{ selectedIndustry.class.name }}</p>

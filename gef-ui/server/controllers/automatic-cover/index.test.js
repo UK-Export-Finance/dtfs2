@@ -1,6 +1,6 @@
 import { automaticCover, validateAutomaticCover } from './index';
 import api from '../../services/api';
-import { DEAL_SUBMISSION_TYPE } from '../../../constants';
+import { DEAL_SUBMISSION_TYPE } from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -8,7 +8,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.body = {};
   return req;
 };
@@ -120,7 +120,7 @@ describe('controllers/automatic-cover', () => {
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', {
           terms: expectedTerms,
-          applicationId: '123',
+          dealId: '123',
         });
     });
 
@@ -135,7 +135,7 @@ describe('controllers/automatic-cover', () => {
 
   describe('Validate Automatic Cover', () => {
     describe('when `save and return` is set to true', () => {
-      const mockApplicationId = '123';
+      const mockDealId = '123';
 
       beforeEach(async () => {
         mockRequest.query.saveAndReturn = 'true';
@@ -145,7 +145,7 @@ describe('controllers/automatic-cover', () => {
       });
 
       it('returns no validation errors', async () => {
-        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockApplicationId}`);
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}`);
       });
 
       it('calls api.updateApplication with undefined submissionType', () => {
@@ -153,7 +153,7 @@ describe('controllers/automatic-cover', () => {
           submissionType: undefined,
         };
 
-        expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
+        expect(mockUpdateApplication).toHaveBeenCalledWith(mockDealId, expected);
       });
     });
 
@@ -169,12 +169,12 @@ describe('controllers/automatic-cover', () => {
         .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
           errors: expect.any(Object),
           terms: expectedTerms,
-          applicationId: '123',
+          dealId: '123',
         }));
     });
 
     describe('when user selects at least 1 false answer', () => {
-      const mockApplicationId = '123';
+      const mockDealId = '123';
 
       beforeEach(async () => {
         mockRequest.body = {
@@ -192,13 +192,13 @@ describe('controllers/automatic-cover', () => {
 
       it('redirects user to `ineligible-automatic-cover` page', async () => {
         expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
+          `/gef/application-details/${mockDealId}/ineligible-automatic-cover`,
         );
 
         mockRequest.body = { 12: 'false', 13: 'true' };
         await validateAutomaticCover(mockRequest, mockResponse);
         expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockApplicationId}/ineligible-automatic-cover`,
+          `/gef/application-details/${mockDealId}/ineligible-automatic-cover`,
         );
       });
 
@@ -207,12 +207,12 @@ describe('controllers/automatic-cover', () => {
           submissionType: DEAL_SUBMISSION_TYPE.MIA,
         };
 
-        expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
+        expect(mockUpdateApplication).toHaveBeenCalledWith(mockDealId, expected);
       });
     });
 
     describe('when user selects all true values', () => {
-      const mockApplicationId = '123';
+      const mockDealId = '123';
 
       beforeEach(async () => {
         mockRequest.body = {
@@ -231,7 +231,7 @@ describe('controllers/automatic-cover', () => {
 
       it('redirects user to `application details` page', async () => {
         expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockApplicationId}/eligible-automatic-cover`,
+          `/gef/application-details/${mockDealId}/eligible-automatic-cover`,
         );
       });
 
@@ -240,7 +240,7 @@ describe('controllers/automatic-cover', () => {
           submissionType: DEAL_SUBMISSION_TYPE.AIN,
         };
 
-        expect(mockUpdateApplication).toHaveBeenCalledWith(mockApplicationId, expected);
+        expect(mockUpdateApplication).toHaveBeenCalledWith(mockDealId, expected);
       });
     });
 

@@ -1,5 +1,6 @@
 import { facilityGuarantee, updateFacilityGuarantee } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -22,7 +23,7 @@ const MockRequest = () => {
     },
     userToken: 'secret-token',
   };
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
 };
@@ -30,10 +31,10 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANK_ID';
   res.bankInternalRefName = 'My test';
-  res.status = 'DRAFT';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   return res;
 };
 
@@ -78,7 +79,7 @@ describe('controllers/facility-guarantee', () => {
         inAdvanceFrequency: 'Monthly',
         dayCountBasis: '365',
         feeType: 'in advance',
-        applicationId: '123',
+        dealId: '123',
         facilityId: 'xyz',
       }));
     });

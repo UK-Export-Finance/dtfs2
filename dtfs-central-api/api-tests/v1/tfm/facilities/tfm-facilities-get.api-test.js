@@ -10,7 +10,7 @@ const newDeal = {
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-  applicationId: 123,
+  dealId: 123,
 };
 
 describe('/v1/tfm/deals/:id/facilities', () => {
@@ -27,7 +27,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       const dealId = createdDeal._id;
 
       // create some facilities
-      newFacility.applicationId = dealId;
+      newFacility.dealId = dealId;
       await api.post(newFacility).to('/v1/portal/gef/facilities');
       await api.post(newFacility).to('/v1/portal/gef/facilities');
 

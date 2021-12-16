@@ -24,7 +24,7 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
       {{ govukBackLink({
         text: "Back to application",
-        href: "/gef/application-details/"+applicationId,
+        href: "/gef/application-details/"+dealId,
         classes: "govuk-!-margin-bottom-6",
         attributes: {"data-cy": "back-link"}
       }) }}
@@ -67,7 +67,7 @@
             },
             classes: "govuk-!-margin-right-6"
           }) }}
-          <a class="govuk-link" href="/gef/application-details/{{applicationId}}" data-cy="cancel-link">Cancel</a>
+          <a class="govuk-link" href="/gef/application-details/{{dealId}}" data-cy="cancel-link">Cancel</a>
         </p>
       </form>
     </div>

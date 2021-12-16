@@ -2,6 +2,7 @@ const { nowTimestamp } = require('../dates');
 
 module.exports = {
 	"mockId": 1,
+	"dealType": "BSS/EWCS",
 	"details" : {
 		"status" : "Draft",
 		"bankSupplyContractID" : "A1 Test",
@@ -624,5 +625,8 @@ module.exports = {
 			}
 		},
 		"security" : "TEST"
+	},
+	"exporter": {
+		"companyName": "Auto Test 1"
 	}
 }

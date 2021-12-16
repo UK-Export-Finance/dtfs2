@@ -1,19 +1,19 @@
 const api = require('../../services/api');
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
-const { DEFAULT_COUNTRY } = require('../../../constants');
+const { DEFAULT_COUNTRY } = require('../../constants');
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { address } = session;
   const parseAddress = address ? JSON.parse(address) : null;
   const { status } = query;
   const backUrl = req.get('Referrer');
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const { correspondenceAddress } = details;
+    const { exporter } = await api.getApplication(dealId);
+    const { correspondenceAddress } = exporter;
+
     let mappedAddress;
 
     if (parseAddress) {
@@ -27,9 +27,18 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       };
     }
 
+    let addressForm = {};
+    if (mappedAddress) {
+      addressForm = mappedAddress;
+    }
+
+    if (correspondenceAddress) {
+      addressForm = correspondenceAddress;
+    }
+
     return res.render('partials/enter-exporters-correspondence-address.njk', {
-      addressForm: mappedAddress || correspondenceAddress,
-      applicationId,
+      addressForm,
+      dealId,
       status,
       backUrl,
     });
@@ -42,7 +51,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   const { params, body, query } = req;
   const { saveAndReturn, status } = query;
-  const { applicationId } = params;
+  const { dealId } = params;
   const addressErrors = [];
 
   if (!isTrueSet(saveAndReturn)) {
@@ -64,7 +73,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
       return res.render('partials/enter-exporters-correspondence-address.njk', {
         errors: validationErrorHandler(addressErrors),
         addressForm: body,
-        applicationId,
+        dealId,
       });
     }
   }
@@ -74,13 +83,22 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   body.country = DEFAULT_COUNTRY;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    await api.updateExporter(exporterId, { correspondenceAddress: body });
+    const { exporter } = await api.getApplication(dealId);
+
+    const applicationExporterUpdate = {
+      exporter: {
+        ...exporter,
+        correspondenceAddress: body,
+      },
+    };
+
+    await api.updateApplication(dealId, applicationExporterUpdate);
+
     req.session.address = null;
     if (isTrueSet(saveAndReturn) || status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
-    return res.redirect(`/gef/application-details/${applicationId}/about-exporter`);
+    return res.redirect(`/gef/application-details/${dealId}/about-exporter`);
   } catch (err) {
     console.error(err);
     return res.render('partials/problem-with-service.njk');

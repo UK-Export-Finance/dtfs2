@@ -1,5 +1,6 @@
 import { acceptUkefDecision } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -15,7 +16,7 @@ const MockRequest = () => {
   req.params = {};
   req.body = { decision: true };
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.url = '/gef/application-details/1234/review-decision';
   req.session = {
     user: {
@@ -27,13 +28,8 @@ const MockRequest = () => {
   return req;
 };
 
-const mockExporter = {
-  status: 'NOT_STARTED',
-};
-const MockExporterResponse = () => mockExporter;
-
 const mockFacilities = {
-  status: 'NOT_STARTED',
+  status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
 };
 
 const MockFacilitiesResponse = () => mockFacilities;
@@ -41,7 +37,7 @@ const MockFacilitiesResponse = () => mockFacilities;
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankInternalRefName = 'My test';
   res.comments = [{
     role: 'maker',
@@ -51,7 +47,7 @@ const MockApplicationResponse = () => {
   }];
   res.bankId = 'BANKID';
   res.submissionType = 'Automatic Inclusion Notice';
-  res.status = 'UKEF_APPROVED_WITHOUT_CONDITIONS';
+  res.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
   return res;
 };
 
@@ -71,14 +67,12 @@ describe('controller/review-decision', () => {
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
 
-    const mockExporterResponse = MockExporterResponse();
     const mockFacilitiesResponse = MockFacilitiesResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
     api.updateApplication.mockResolvedValue(mockApplicationResponse);
     api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
   });
 

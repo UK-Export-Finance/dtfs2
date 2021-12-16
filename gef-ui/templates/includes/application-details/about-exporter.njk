@@ -19,8 +19,8 @@
   </div>
 </div>
 
-{% if exporter.status.code === 'NOT_STARTED' and not previewMode %}
-  <a class="govuk-link" href="/gef/application-details/{{applicationId}}/companies-house" data-cy="exporter-details-link">Enter details</a>
+{% if exporter.status.code === 'Not started' and not previewMode %}
+  <a class="govuk-link" href="/gef/application-details/{{dealId}}/companies-house" data-cy="exporter-details-link">Enter details</a>
 {% else %}
   {{ govukSummaryList({
     rows: exporter.rows,

@@ -183,7 +183,7 @@ const deleteCountry = async (country, token) => {
   return response.data;
 };
 
-const deleteDeal = async (deal, token) => {
+const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -191,7 +191,7 @@ const deleteDeal = async (deal, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/deals/${deal._id}`,
+    url: `${urlRoot}/v1/deals/${dealId}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;

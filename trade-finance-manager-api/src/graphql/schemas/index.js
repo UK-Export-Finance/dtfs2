@@ -100,6 +100,10 @@ type DealFiles {
   security: String
 }
 
+type DealExporter {
+  companyName: String
+}
+
 type DealEligibilityCriterion {
   id: Int
   text: String
@@ -140,7 +144,7 @@ type FacilityUkefExposure {
 
 type FacilitySnapshot {
   _id: String!
-  ukefFacilityID: String
+  ukefFacilityId: String
   associatedDealId: String!
   facilityProduct: FacilityProduct!
   facilityType: String
@@ -292,7 +296,7 @@ type PremiumScheduleData {
   id: Int
   facilityURN: String
   calculationDate: String
-  income: Float 
+  income: Float
   incomePerDay: Float
   exposure: Int
   period: Int
@@ -362,6 +366,7 @@ type DealSnapshot {
   isFinanceIncreasing: Boolean
   eligibility: DealEligibility
   dealFiles: DealFiles
+  exporter: DealExporter
   facilitiesUpdated: Float
 }
 

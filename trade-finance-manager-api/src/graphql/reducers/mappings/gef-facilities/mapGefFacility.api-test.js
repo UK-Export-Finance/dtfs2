@@ -39,10 +39,10 @@ describe('mapGefFacility', () => {
     const { facilitySnapshot } = mockFacility;
 
     const expected = {
-      _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
+      _id: mockFacility._id,
       facilitySnapshot: {
-        _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
-        associatedDealId: facilitySnapshot.applicationId,
+        _id: mockFacility._id,
+        associatedDealId: facilitySnapshot.dealId,
         bankFacilityReference: facilitySnapshot.name,
         banksInterestMargin: `${facilitySnapshot.interestPercentage}%`,
         coveredPercentage: `${facilitySnapshot.coverPercentage}%`,
@@ -58,7 +58,7 @@ describe('mapGefFacility', () => {
         guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee),
         dayCountBasis: facilitySnapshot.dayCountBasis,
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
-        ukefFacilityID: facilitySnapshot.ukefFacilityId,
+        ukefFacilityId: facilitySnapshot.ukefFacilityId,
         ukefExposure: `${facilitySnapshot.currency} ${facilitySnapshot.ukefExposure}`,
         providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),
         providedOnOther: facilitySnapshot.detailsOther,

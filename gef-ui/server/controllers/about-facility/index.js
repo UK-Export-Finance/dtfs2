@@ -2,13 +2,12 @@ const {
   add, format, isAfter, isBefore, set,
 } = require('date-fns');
 const api = require('../../services/api');
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE, DATE_FORMAT } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
-const CONSTANTS = require('../../../constants');
 
 const aboutFacility = async (req, res) => {
   const { params, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
@@ -32,7 +31,7 @@ const aboutFacility = async (req, res) => {
       coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
       coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
@@ -46,7 +45,7 @@ const validateAboutFacility = async (req, res) => {
   const { facilityType, hasBeenIssued } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const aboutFacilityErrors = [];
   const coverStartDateDay = body['cover-start-date-day'];
   const coverStartDateMonth = body['cover-start-date-month'];
@@ -236,7 +235,7 @@ const validateAboutFacility = async (req, res) => {
       coverEndDateYear,
       facilityType,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
@@ -247,15 +246,15 @@ const validateAboutFacility = async (req, res) => {
       name: body.facilityName,
       shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
       monthsOfCover: body.monthsOfCover || null,
-      coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-      coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+      coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
+      coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
     });
 
     if (isTrueSet(saveAndReturn) || status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    return res.redirect(`/gef/application-details/${applicationId}/facilities/${facilityId}/provided-facility`);
+    return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

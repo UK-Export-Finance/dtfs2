@@ -7,15 +7,19 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
-const baseUrl = '/v1/gef/application';
-const collectionName = 'gef-application';
+const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
+
+const CONSTANTS = require('../../../src/constants');
+
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
-
-const facilitiesUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
 const api = require('../../../src/v1/api');
+
+const baseUrl = '/v1/gef/application';
+const facilitiesUrl = '/v1/gef/facilities';
+const collectionName = 'deals';
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
   criteria.version === 1.5).terms;
@@ -69,7 +73,10 @@ describe(baseUrl, () => {
       const expected = {
         items: mockApplications.map((item) => ({
           ...expectMongoId(item),
-          exporterId: expect.any(String),
+          exporter: {
+            status: expect.any(String),
+            updatedAt: expect.any(Number),
+          },
           eligibility: {
             criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
               ...criterion,
@@ -77,7 +84,7 @@ describe(baseUrl, () => {
             })),
           },
           createdAt: expect.any(Number),
-          status: 'DRAFT',
+          status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
           dealType: 'GEF',
           submissionType: null,
           submissionCount: 0,
@@ -111,22 +118,25 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
         ...mockApplications[0],
-        exporterId: expect.any(String),
+        exporter: {
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+        },
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
-          status: 'NOT_STARTED',
+          status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         },
-        status: 'DRAFT',
+        status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
         supportingInformation: {
-          status: 'NOT_STARTED',
+          status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         },
         ukefDealId: null,
         checkerId: null,
@@ -156,7 +166,7 @@ describe(baseUrl, () => {
     it('returns a status', async () => {
       const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
-      expect(body).toEqual({ status: 'DRAFT' });
+      expect(body).toEqual({ status: CONSTANTS.DEAL.GEF_STATUS.DRAFT });
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
@@ -180,8 +190,8 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const expected = {
         ...mockApplications[0],
-        exporterId: expect.any(String),
-        status: 'DRAFT',
+        exporter: {},
+        status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
@@ -198,7 +208,13 @@ describe(baseUrl, () => {
           })),
         },
       };
-      expect(body).toEqual(expectMongoId(expected));
+      expect(body).toEqual({
+        ...expectMongoId(expected),
+        exporter: {
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+        },
+      });
     });
 
     it('it tells me the Bank Internal Ref Name is null', async () => {
@@ -252,17 +268,32 @@ describe(baseUrl, () => {
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(204);
     });
+
+    it('adds exporter.status and timestamp when exporter is passed', async () => {
+      const exporterUpdate = {
+        exporter: {
+          test: true,
+        },
+      };
+
+      const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      const { body } = await as(aMaker).put(updated).to(`${baseUrl}/${createdDeal._id}`);
+
+      const expected = exporterStatus(exporterUpdate.exporter);
+      expect(body.exporter.status).toEqual(expected);
+      expect(typeof body.exporter.updatedAt).toEqual('number');
+    });
   });
 
   describe(`PUT ${baseUrl}/status/:id`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put({ status: 'COMPLETED' }).to(`${baseUrl}/status/1`);
+      const { status } = await as().put({ status: CONSTANTS.DEAL.GEF_STATUS.COMPLETED }).to(`${baseUrl}/status/1`);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/${body._id}`);
+      const { status } = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.COMPLETED }).to(`${baseUrl}/status/${body._id}`);
       expect(status).toEqual(200);
     });
 
@@ -282,7 +313,7 @@ describe(baseUrl, () => {
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
         expect(body.ukefDealId).toBeNull();
 
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
         expect(putResponse.body.ukefDealId).toEqual(expect.any(String));
       });
@@ -291,7 +322,7 @@ describe(baseUrl, () => {
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
         expect(body.submissionCount).toEqual(0);
 
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
         expect(putResponse.body.submissionCount).toEqual(1);
       });
@@ -299,7 +330,7 @@ describe(baseUrl, () => {
       it('adds submissionDate', async () => {
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
 
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
         expect(putResponse.body.submissionDate).toEqual(expect.any(String));
       });
@@ -307,14 +338,14 @@ describe(baseUrl, () => {
       it('does NOT add submissionDate if already exists', async () => {
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
 
-        const firstPutResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const firstPutResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(firstPutResponse.status).toEqual(200);
 
         const initialSubmissionDate = firstPutResponse.body.submissionDate;
         expect(firstPutResponse.body.submissionDate).toEqual(expect.any(String));
 
         // submit again, check that the submissionDate has not changed.
-        const secondPutResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const secondPutResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(secondPutResponse.status).toEqual(200);
 
         expect(secondPutResponse.body.submissionDate).toEqual(initialSubmissionDate);
@@ -323,11 +354,11 @@ describe(baseUrl, () => {
       it('adds a ukefFacilityId to each issued facility associated with the application', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-        const applicationId = body._id;
+        const dealId = body._id;
 
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
-        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -336,7 +367,7 @@ describe(baseUrl, () => {
         expect(createFacilityResponse.body.details.ukefFacilityId).toEqual(null);
 
         // change deal status to submitted
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
 
         // check that the facility has updated ukefFacilityId
@@ -348,11 +379,11 @@ describe(baseUrl, () => {
       it('adds submittedAsIssuedDate to each issued facility associated with the application', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-        const applicationId = body._id;
+        const dealId = body._id;
 
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
-        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -361,7 +392,7 @@ describe(baseUrl, () => {
         expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
 
         // change deal status to submitted
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
 
         // check that the facility has updated submittedAsIssuedDate
@@ -373,11 +404,11 @@ describe(baseUrl, () => {
       it('adds coverStartDate if cover starts on submission (shouldCoverStartOnSubmission === true)', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-        const applicationId = body._id;
+        const dealId = body._id;
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.shouldCoverStartOnSubmission === true);
 
-        const createFacilityResponse = await as(aMaker).post({ applicationId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -391,7 +422,7 @@ describe(baseUrl, () => {
         expect(facilityWithDates.status).toEqual(200);
 
         // change deal status to submitted
-        const putResponse = await as(aMaker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${body._id}`);
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
         expect(putResponse.status).toEqual(200);
 
         // check that the facility has updated submittedAsIssuedDate and cover start date is set to todays date
@@ -412,9 +443,9 @@ describe(baseUrl, () => {
         const { body } = await as(aMaker).post(mockApplication).to(baseUrl);
         expect(body.submissionCount).toEqual(0);
 
-        const applicationId = body._id;
+        const dealId = body._id;
 
-        await as(aChecker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${applicationId}`);
+        await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
         const expectedChecker = {
           _id: expect.any(Object),
@@ -429,24 +460,24 @@ describe(baseUrl, () => {
           'user-status': 'active',
         };
 
-        expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(applicationId);
+        expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);
         expect(tfmDealSubmitSpy.mock.calls[0][1]).toEqual(mockApplication.dealType);
         expect(tfmDealSubmitSpy.mock.calls[0][2]).toEqual(expectedChecker);
       });
     });
 
     it('returns a 404 when application does not exist', async () => {
-      const { status } = await as(aMaker).put({ status: 'COMPLETED' }).to(`${baseUrl}/status/doesnotexist`);
+      const { status } = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.COMPLETED }).to(`${baseUrl}/status/doesnotexist`);
       expect(status).toEqual(404);
     });
 
     it('adds an submission object to portalActivities array', async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const applicationId = body._id;
+      const dealId = body._id;
 
       // adds required fields to the gef deal
-      await as(aChecker).put({ checkerId: aChecker._id, submissionType: 'Manual Inclusion Application' }).to(`${baseUrl}/${applicationId}`);
-      const putResponse = await as(aChecker).put({ status: 'SUBMITTED_TO_UKEF' }).to(`${baseUrl}/status/${applicationId}`);
+      await as(aChecker).put({ checkerId: aChecker._id, submissionType: 'Manual Inclusion Application' }).to(`${baseUrl}/${dealId}`);
+      const putResponse = await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
       const result = putResponse.body.portalActivities[0];
       expect(result.type).toEqual('NOTICE');

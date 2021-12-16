@@ -1,4 +1,5 @@
 const componentRenderer = require('../../../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-facilities/facility-pricing-risk-table.njk';
 
 const render = componentRenderer(component);
@@ -10,7 +11,7 @@ describe(component, () => {
     facility: {
       _id: '1',
       facilitySnapshot: {
-        ukefFacilityID: '100',
+        ukefFacilityId: '100',
         facilityType: 'loan',
       },
       tfm: {
@@ -24,7 +25,7 @@ describe(component, () => {
 
     wrapper.expectLink(`[data-cy="facility-${params.facility._id}-ukef-facility-id-link"]`).toLinkTo(
       `/case/${params.caseId}/facility/${params.facility._id}`,
-      params.facility.facilitySnapshot.ukefFacilityID,
+      params.facility.facilitySnapshot.ukefFacilityId,
     );
   });
 
@@ -65,9 +66,8 @@ describe(component, () => {
         const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
 
         wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`)
-          .toLinkTo(expectedLink,'Change');
+          .toLinkTo(expectedLink, 'Change');
       });
     });
   });
-
 });

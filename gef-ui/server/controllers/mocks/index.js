@@ -1,5 +1,7 @@
 const Chance = require('chance');
 
+const CONSTANTS = require('../../constants');
+
 const chance = new Chance();
 
 const MockResponse = () => ({
@@ -8,7 +10,7 @@ const MockResponse = () => ({
 });
 
 const MockRequest = () => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   session: {
     user: {
@@ -21,7 +23,7 @@ const MockRequest = () => ({
 });
 
 const MockRequestChecker = () => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   session: {
     user: {
@@ -34,7 +36,7 @@ const MockRequestChecker = () => ({
 });
 
 const MockRequestUrl = (url) => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   url,
   session: {
@@ -48,7 +50,7 @@ const MockRequestUrl = (url) => ({
 });
 
 const MockRequestUrlChecker = (url) => ({
-  params: { applicationId: '123' },
+  params: { dealId: '123' },
   query: {},
   url,
   session: {
@@ -63,14 +65,14 @@ const MockRequestUrlChecker = (url) => ({
 
 const MockApplicationResponseDraft = () => ({
   _id: '1234',
-  exporterId: '123',
+  exporter: {},
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
-  status: 'DRAFT',
+  status: CONSTANTS.DEAL_STATUS.DRAFT,
   userId: 'mock-user',
   supportingInformation: {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
   eligibility: {
     criteria: [
@@ -88,15 +90,15 @@ const MockApplicationResponseDraft = () => ({
 
 const MockApplicationResponseSubmitted = () => ({
   _id: '1234',
-  exporterId: '123',
+  exporter: {},
   bankId: 'BANKID',
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
-  status: 'UKEF_IN_PROGRESS',
+  status: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   userId: 'mock-user',
   checkerId: 1235,
   supportingInformation: {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
   eligibility: {
     criteria: [
@@ -139,16 +141,6 @@ const MockUserResponseChecker = () => ({
   timezone: 'Europe/London',
 });
 
-const MockExporterResponse = () => ({
-  details: {
-    companiesHouseRegistrationNumber: 'tedsi',
-    companyName: 'Test Company',
-  },
-  status: 'IN_PROGRESS',
-  validation: { required: [] },
-
-});
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
@@ -160,7 +152,7 @@ const MockEligibilityCriteriaResponse = () => ({
 });
 
 const MockFacilityResponse = () => ({
-  status: 'IN_PROGRESS',
+  status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   data: [],
   items: [{
     details: {
@@ -190,7 +182,6 @@ module.exports = {
   MockApplicationResponseSubmitted,
   MockUserResponse,
   MockUserResponseChecker,
-  MockExporterResponse,
   MockEligibilityCriteriaResponse,
   MockFacilityResponse,
 };

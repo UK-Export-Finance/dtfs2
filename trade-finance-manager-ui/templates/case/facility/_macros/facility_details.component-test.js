@@ -10,7 +10,7 @@ describe(component, () => {
   const params = {
     facility: {
       _id: '12345678',
-      ukefFacilityID: '0040004833',
+      ukefFacilityId: '0040004833',
       facilityType: 'Performance Bond',
       facilityStage: 'Commitment',
       facilityProduct: {

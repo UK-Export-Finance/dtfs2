@@ -1,7 +1,7 @@
 const db = require('../../../../drivers/db-client');
 
 const createDeal = async (deal) => {
-  const collection = await db.getCollection('gef-application');
+  const collection = await db.getCollection('deals');
 
   const response = await collection.insertOne(deal);
 

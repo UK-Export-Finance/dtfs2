@@ -6,7 +6,7 @@ import {
 import {
   getApplication, updateApplication, setApplicationStatus, getUserDetails,
 } from '../../services/api';
-import { PROGRESS } from '../../../constants';
+import { DEAL_STATUS } from '../../constants';
 
 jest.mock('../../services/api', () => ({
   __esModule: true,
@@ -32,8 +32,8 @@ describe('controllers/return-to-maker', () => {
 
     getApplication.mockResolvedValue({
       _id: '1234',
-      status: PROGRESS.BANK_CHECK,
-      exporterId: '123',
+      status: DEAL_STATUS.BANK_CHECK,
+      exporter: {},
       bankInternalRefName: 'My test',
     });
 
@@ -50,7 +50,7 @@ describe('controllers/return-to-maker', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: 'mock-id',
+          dealId: 'mock-id',
         },
         query: {},
         session: {
@@ -64,13 +64,13 @@ describe('controllers/return-to-maker', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
-        applicationId: 'mock-id',
+        dealId: 'mock-id',
         maxCommentLength: MAX_COMMENT_LENGTH,
       }));
     });
 
     it('redirects to dashboard if application is not in correct status', async () => {
-      getApplication.mockResolvedValue({ status: PROGRESS.DRAFT });
+      getApplication.mockResolvedValue({ status: DEAL_STATUS.DRAFT });
 
       await getReturnToMaker(mockRequest, mockResponse);
 
@@ -83,7 +83,7 @@ describe('controllers/return-to-maker', () => {
     beforeEach(() => {
       mockRequest = {
         params: {
-          applicationId: '1234',
+          dealId: '1234',
         },
         query: {},
         body: {
@@ -101,7 +101,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(updateApplication).toHaveBeenCalledWith('1234', expect.objectContaining({
         _id: '1234',
-        exporterId: '123',
+        exporter: {},
         bankInternalRefName: 'My test',
         comments: [
           {
@@ -112,7 +112,7 @@ describe('controllers/return-to-maker', () => {
           },
         ],
       }));
-      expect(setApplicationStatus).toHaveBeenCalledWith('1234', PROGRESS.CHANGES_REQUIRED);
+      expect(setApplicationStatus).toHaveBeenCalledWith('1234', DEAL_STATUS.CHANGES_REQUIRED);
       expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
@@ -124,7 +124,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
-        applicationId: '1234',
+        dealId: '1234',
         comment: longComment,
         maxCommentLength: MAX_COMMENT_LENGTH,
         errors: expect.any(Object),

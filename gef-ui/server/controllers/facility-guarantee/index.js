@@ -2,23 +2,23 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
-const { FACILITY_PAYMENT_TYPE } = require('../../../constants');
+const { FACILITY_PAYMENT_TYPE } = require('../../constants');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
   const { user, userToken } = session;
 
   try {
-    const facility = await Facility.find(applicationId, facilityId, status, user, userToken);
+    const facility = await Facility.find(dealId, facilityId, status, user, userToken);
     if (!facility) {
       // eslint-disable-next-line no-console
       console.log('Facility not found, or not authorised');
       return res.redirect('/');
     }
     return res.render('partials/facility-guarantee.njk', {
-      applicationId: facility.applicationId,
+      dealId: facility.dealId,
       facilityId: facility.facilityId,
       feeType: facility.feeType,
       inAdvanceFrequency: facility.feeType === 'in advance' ? facility.feeFrequency : '',
@@ -33,7 +33,7 @@ const facilityGuarantee = async (req, res) => {
 
 const updateFacilityGuarantee = async (req, res) => {
   const { params, body, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const {
     feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis,
   } = body;
@@ -68,7 +68,7 @@ const updateFacilityGuarantee = async (req, res) => {
         feeFrequency: feeTypeIsInAdvance ? inAdvanceFrequency : inArrearsFrequency,
         dayCountBasis,
       });
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     } catch (err) {
       return res.render('partials/problem-with-service.njk');
     }
@@ -82,7 +82,7 @@ const updateFacilityGuarantee = async (req, res) => {
       inArrearsFrequency,
       inAdvanceFrequency,
       dayCountBasis,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });

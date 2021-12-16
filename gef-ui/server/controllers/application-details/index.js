@@ -7,9 +7,9 @@ const
     isUkefReviewAvailable,
     isUkefReviewPositive,
     areUnissuedFacilitiesPresent,
-    getFacilitiesAsArray,
     getUnissuedFacilitiesAsArray,
     facilitiesChangedToIssuedAsArray,
+    getIssuedFacilitiesAsArray,
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
@@ -21,9 +21,9 @@ const getUserAuthorisationLevelsToApplication = require('../../utils/user-author
 const {
   FACILITY_TYPE,
   AUTHORISATION_LEVEL,
-  PROGRESS,
+  DEAL_STATUS,
   DEAL_SUBMISSION_TYPE,
-} = require('../../../constants');
+} = require('../../constants');
 const Application = require('../../models/application');
 
 let userSession;
@@ -32,7 +32,7 @@ function buildHeader(app) {
   const main = {
     ukefDealId: app.ukefDealId,
     submissionDate: app.submissionDate,
-    companyName: app.exporter.details.companyName,
+    companyName: app.exporter?.companyName,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
     timezone: app.maker.timezone || 'Europe/London',
@@ -58,15 +58,21 @@ function buildBody(app, previewMode, user) {
   const exporterUrl = `/gef/application-details/${app.id}`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
 
-  return {
+  const appBody = {
     application: app,
     status: app.status,
     isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
     exporter: {
       status: app.exporterStatus,
-      rows: mapSummaryList(app.exporter, exporterItems(exporterUrl, {
-        showIndustryChangeLink: app.exporter.details.industries && app.exporter.details.industries.length > 1,
-      }), app, user, previewMode),
+      rows: mapSummaryList(
+        { details: app.exporter }, // wrap in details because mapSummaryList relies this.
+        exporterItems(exporterUrl, {
+          showIndustryChangeLink: app.exporter?.industries?.length > 1,
+        }),
+        app,
+        user,
+        previewMode,
+      ),
     },
     eligibility: {
       status: app.eligibilityCriteriaStatus,
@@ -87,7 +93,7 @@ function buildBody(app, previewMode, user) {
     },
     bankInternalRefName: app.bankInternalRefName,
     additionalRefName: app.additionalRefName,
-    applicationId: app.id,
+    dealId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
@@ -101,14 +107,16 @@ function buildBody(app, previewMode, user) {
     previewMode,
     userRoles: app.userRoles,
   };
+
+  return appBody;
 }
 
 function buildActions(app) {
   return {
     submit: app.canSubmit,
     abandon: [
-      PROGRESS.DRAFT,
-      PROGRESS.CHANGES_REQUIRED].includes(app.status.toUpperCase()),
+      DEAL_STATUS.DRAFT,
+      DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
   };
 }
 
@@ -122,18 +130,18 @@ function buildView(app, previewMode, user) {
 const stateToPartial = (status, url) => {
   // Behaviour depending on application state
   const template = {
-    DRAFT: 'application-details',
-    CHANGES_REQUIRED: 'application-details',
-    BANK_CHECK: 'application-preview',
-    SUBMITTED_TO_UKEF: 'application-preview',
-    ABANDONED: 'application-preview',
-    UKEF_ACKNOWLEDGED: 'application-preview',
-    UKEF_IN_PROGRESS: 'application-details',
-    UKEF_APPROVED_WITHOUT_CONDITIONS: 'application-preview',
-    UKEF_APPROVED_WITH_CONDITIONS: 'application-preview',
-    UKEF_REFUSED: 'application-preview',
-    EXPIRED: '',
-    WITHDRAWN: '',
+    [DEAL_STATUS.DRAFT]: 'application-details',
+    [DEAL_STATUS.CHANGES_REQUIRED]: 'application-details',
+    [DEAL_STATUS.BANK_CHECK]: 'application-preview',
+    [DEAL_STATUS.SUBMITTED_TO_UKEF]: 'application-preview',
+    [DEAL_STATUS.ABANDONED]: 'application-preview',
+    [DEAL_STATUS.UKEF_ACKNOWLEDGED]: 'application-preview',
+    [DEAL_STATUS.UKEF_IN_PROGRESS]: 'application-details',
+    [DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS]: 'application-preview',
+    [DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS]: 'application-preview',
+    [DEAL_STATUS.UKEF_REFUSED]: 'application-preview',
+    [DEAL_STATUS.EXPIRED]: '',
+    [DEAL_STATUS.WITHDRAWN]: '',
   };
 
   const partials = {
@@ -150,7 +158,7 @@ const stateToPartial = (status, url) => {
 
 const applicationDetails = async (req, res, next) => {
   const {
-    params: { applicationId, facilityId },
+    params: { dealId, facilityId },
     session: { user, userToken },
   } = req;
   const facilitiesPartials = [
@@ -164,7 +172,7 @@ const applicationDetails = async (req, res, next) => {
   let url;
 
   try {
-    const application = await Application.findById(applicationId, user, userToken);
+    const application = await Application.findById(dealId, user, userToken);
 
     if (!application) {
       // 404 not found or unauthorised
@@ -190,11 +198,11 @@ const applicationDetails = async (req, res, next) => {
 
     if (facilitiesPartials.includes(url)) {
       if (url === 'cover-start-date') {
-        facility = getFacilitiesAsArray(await api.getFacilities(applicationId));
+        facility = getIssuedFacilitiesAsArray(await api.getFacilities(dealId));
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       } else if (url === 'unissued-facilities') {
-        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(applicationId), application.submissionDate);
+        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application.submissionDate);
       }
     }
 
@@ -226,8 +234,8 @@ const applicationDetails = async (req, res, next) => {
 
 const postApplicationDetails = (req, res) => {
   const { params } = req;
-  const { applicationId } = params;
-  return res.redirect(`/gef/application-details/${applicationId}/submit`);
+  const { dealId } = params;
+  return res.redirect(`/gef/application-details/${dealId}/submit`);
 };
 
 module.exports = {

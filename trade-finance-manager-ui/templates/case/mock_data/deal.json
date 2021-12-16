@@ -28,7 +28,7 @@
   "facilities": [
     {
       "_id": "1002028",
-      "ukefFacilityID": "0040005779",
+      "ukefFacilityId": "0040005779",
       "facilityProduct": { "code": "BSS", "__typename": "FacilityProduct" },
       "facilityType": "Advance payment guarantee",
       "ukefFacilityType": "bond",
@@ -45,7 +45,7 @@
     },
     {
       "_id": "1002029",
-      "ukefFacilityID": "0040005780",
+      "ukefFacilityId": "0040005780",
       "facilityProduct": { "code": "BSS", "__typename": "FacilityProduct" },
       "facilityType": "Bid bond",
       "ukefFacilityType": "bond",
@@ -62,7 +62,7 @@
     },
     {
       "_id": "1002030",
-      "ukefFacilityID": "0040005781",
+      "ukefFacilityId": "0040005781",
       "facilityProduct": { "code": "EWCS", "__typename": "FacilityProduct" },
       "facilityType": "Loan",
       "ukefFacilityType": "loan",
@@ -79,7 +79,7 @@
     },
     {
       "_id": "1002031",
-      "ukefFacilityID": "0040005778",
+      "ukefFacilityId": "0040005778",
       "facilityProduct": { "code": "EWCS", "__typename": "FacilityProduct" },
       "facilityType": "Loan",
       "ukefFacilityType": "loan",
@@ -151,6 +151,9 @@
     "supplierCorrespondenceAddressTown": "",
     "smeType": "Small",
     "__typename": "DealSubmissionDetails"
+  },
+  "exporter": {
+    "companyName": "test"
   },
   "__typename": "DealSnapshot"
 }

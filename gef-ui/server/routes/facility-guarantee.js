@@ -7,7 +7,7 @@ const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
-router.get('/application-details/:applicationId/facilities/:facilityId/facility-guarantee', validateToken, (req, res) => facilityGuarantee(req, res));
-router.post('/application-details/:applicationId/facilities/:facilityId/facility-guarantee', validateToken, (req, res) => updateFacilityGuarantee(req, res));
+router.get('/application-details/:dealId/facilities/:facilityId/facility-guarantee', validateToken, (req, res) => facilityGuarantee(req, res));
+router.post('/application-details/:dealId/facilities/:facilityId/facility-guarantee', validateToken, (req, res) => updateFacilityGuarantee(req, res));
 
 module.exports = router;

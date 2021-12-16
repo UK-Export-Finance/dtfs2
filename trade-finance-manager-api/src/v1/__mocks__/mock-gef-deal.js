@@ -1,9 +1,10 @@
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
+const CONSTANTS = require('../../constants');
 
 const MOCK_GEF_DEAL = {
   _id: 'MOCK_GEF_DEAL',
   dealType: 'GEF',
-  applicationId: 'MOCK_GEF_DEAL',
+  dealId: 'MOCK_GEF_DEAL',
   additionalRefName: 'Additional Reference 001',
   bankInternalRefName: 'Internal Reference 001',
   submissionDate: '1626169888809',
@@ -68,7 +69,7 @@ const MOCK_GEF_DEAL = {
     ],
   },
   mandatoryVersionId: null,
-  status: 'SUBMITTED_TO_UKEF',
+  status: CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.SUBMITTED_TO_UKEF,
   updatedAt: null,
   userId: '60e705d74cf03e0013d38395',
   checkerId: '60a705d74bf03d1300d96383',
@@ -81,7 +82,7 @@ const MOCK_GEF_DEAL = {
   ],
   facilities: MOCK_CASH_CONTINGENT_FACILITIES,
   eligibility: {
-    status: 'COMPLETED',
+    status: CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.COMPLETED,
     updatedAt: 1634835561860.0,
     criteria: [
       {

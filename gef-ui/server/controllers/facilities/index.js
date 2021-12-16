@@ -1,10 +1,10 @@
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilities = async (req, res) => {
   const { params, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
   let { facilityType } = query;
 
@@ -14,7 +14,7 @@ const facilities = async (req, res) => {
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
       facilityType: facilityTypeString,
-      applicationId,
+      dealId,
       status,
     });
   }
@@ -26,7 +26,7 @@ const facilities = async (req, res) => {
     return res.render('partials/facilities.njk', {
       facilityType: facilityTypeString,
       hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
-      applicationId,
+      dealId,
       status,
     });
   } catch (err) {
@@ -37,7 +37,7 @@ const facilities = async (req, res) => {
 
 const createFacility = async (req, res) => {
   const { body, params, query } = req;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
   const { status } = query;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
@@ -55,7 +55,7 @@ const createFacility = async (req, res) => {
 
       return res.render('partials/facilities.njk', {
         errors: validationErrorHandler(hasBeenIssuedErrors),
-        applicationId,
+        dealId,
         status,
       });
     }
@@ -64,7 +64,7 @@ const createFacility = async (req, res) => {
       facility = await api.createFacility({
         type: facilityType,
         hasBeenIssued: isTrueSet(body.hasBeenIssued),
-        applicationId,
+        dealId,
       });
     } else {
       facility = await api.updateFacility(facilityId, {
@@ -73,11 +73,11 @@ const createFacility = async (req, res) => {
     }
 
     if (status && status === 'change') {
-      return res.redirect(`/gef/application-details/${applicationId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     // eslint-disable-next-line no-underscore-dangle
-    return res.redirect(`/gef/application-details/${applicationId}/facilities/${facility.details._id}/about-facility`);
+    return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }

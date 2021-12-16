@@ -4,8 +4,9 @@ const gql = require('graphql-tag');
 const dealsQuery = `
 query {
   deals {
-    deals{
+    deals {
       _id
+      dealType
     }
   }
 }`;

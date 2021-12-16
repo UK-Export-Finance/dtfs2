@@ -7,7 +7,7 @@ const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
-router.get('/application-details/:applicationId/companies-house', validateToken, (req, res) => companiesHouse(req, res));
-router.post('/application-details/:applicationId/companies-house', validateToken, (req, res) => validateCompaniesHouse(req, res));
+router.get('/application-details/:dealId/companies-house', validateToken, (req, res) => companiesHouse(req, res));
+router.post('/application-details/:dealId/companies-house', validateToken, (req, res) => validateCompaniesHouse(req, res));
 
 module.exports = router;

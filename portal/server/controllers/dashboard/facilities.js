@@ -1,6 +1,6 @@
 const api = require('../../api');
 
-const { PRODUCT } = require('../../constants');
+const { PRODUCT, STATUS } = require('../../constants');
 
 const {
   getApiData,
@@ -17,7 +17,7 @@ exports.bssFacilities = async (req, res) => {
   const { user } = req.session;
   const facilityFilters = [];
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'details.status', value: "Ready for Checker's approval", operator: 'eq' });
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'details.status', value: STATUS.readyForApproval, operator: 'eq' });
 
   const filters = [...facilityFilters];
 
@@ -63,7 +63,7 @@ exports.gefFacilities = async (req, res) => {
   const { user } = req.session;
   const facilityFilters = [];
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: 'BANK_CHECK', operator: 'eq' });
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: STATUS.readyForApproval, operator: 'eq' });
 
   const filters = [...facilityFilters];
 
@@ -71,7 +71,7 @@ exports.gefFacilities = async (req, res) => {
 
   const facilities = rawFacilities.map((facility) => ({
     _id: facility._id,
-    dealId: facility.applicationId,
+    dealId: facility.dealId,
     bankId: facility.name || 'Not entered',
     ukefId: facility.ukefFacilityId,
     product: PRODUCT.GEF,
@@ -84,7 +84,7 @@ exports.gefFacilities = async (req, res) => {
     bankStage: facility.hasBeenIssued ? 'Issued' : 'Unissued',
     ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here
     date: facility.submittedAsIssuedDate,
-    url: `/gef/application-details/${facility.applicationId}/facilities/${facility._id}/`,
+    url: `/gef/application-details/${facility.dealId}/facilities/${facility._id}/`,
   }));
 
   const pages = {

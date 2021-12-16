@@ -1,4 +1,5 @@
 import getUserAuthorisationLevelsToApplication from './user-authorisation-level';
+import CONSTANTS from '../constants';
 
 const makerUser = {
   username: 'MAKER',
@@ -31,9 +32,9 @@ const combinedUser = {
 const draftApplication = {
   _id: '123456789',
   userId: '11112',
-  status: 'DRAFT',
+  status: CONSTANTS.DEAL_STATUS.DRAFT,
   bankId: '9',
-  exporterId: '60fa98b4f4464a001459a588',
+  exporter: {},
   bankInternalRefName: 'ref0001',
   mandatoryVersionId: null,
   createdAt: 1627035828247,
@@ -43,12 +44,12 @@ const draftApplication = {
 
 const inProgressApplication = {
   ...draftApplication,
-  status: 'IN_PROGRESS',
+  status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
 };
 
 const bankCheckApplication = {
   ...draftApplication,
-  status: 'BANK_CHECK',
+  status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
 };
 
 describe('user-authorisation-levels', () => {

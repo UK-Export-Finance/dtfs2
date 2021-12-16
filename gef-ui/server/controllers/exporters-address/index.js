@@ -4,15 +4,15 @@ const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/help
 const exportersAddress = async (req, res) => {
   try {
     const { params } = req;
-    const { applicationId } = params;
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const { registeredAddress } = details;
+    const { dealId } = params;
+
+    const { exporter } = await api.getApplication(dealId);
+    const { companyName, registeredAddress } = exporter;
 
     return res.render('partials/exporters-address.njk', {
-      companyName: details.companyName,
+      companyName,
       registeredAddress,
-      applicationId,
+      dealId,
     });
   } catch (err) {
     console.error(err);
@@ -24,10 +24,11 @@ const validateExportersAddress = async (req, res) => {
   try {
     const { params, body } = req;
     const { correspondence, postcode } = body;
-    const { applicationId } = params;
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const { registeredAddress } = details;
+    const { dealId } = params;
+
+    const { exporter } = await api.getApplication(dealId);
+    const { companyName = '' } = exporter;
+
     const correspondenceError = [];
     let addresses;
 
@@ -38,7 +39,7 @@ const validateExportersAddress = async (req, res) => {
       });
     }
 
-    // User has selected No so take them to about exporters page
+    // User has selected No, take them to about exporters page
     if (correspondence === 'false') {
       return res.redirect('about-exporter');
     }
@@ -72,11 +73,10 @@ const validateExportersAddress = async (req, res) => {
     if (correspondenceError.length > 0) {
       return res.render('partials/exporters-address.njk', {
         errors: validationErrorHandler(correspondenceError),
-        companyName: details.companyName,
+        companyName,
         postcode: postcode ? postcode.toUpperCase() : '',
-        registeredAddress,
         correspondence,
-        applicationId,
+        dealId,
       });
     }
 

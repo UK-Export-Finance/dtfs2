@@ -1,5 +1,6 @@
 import { processCoverStartDate } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 const Chance = require('chance');
 
@@ -24,7 +25,7 @@ const MockRequest = () => {
     year: 2021,
   };
   req.query = {};
-  req.params.applicationId = '1234';
+  req.params.dealId = '1234';
   req.params.facilityId = '4321';
   req.success = {
     message: 'Cover start date for 4321 confirmed',
@@ -43,20 +44,20 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'Internal refernce';
   res.additionalRefName = 'Additional reference';
-  res.status = 'DRAFT';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.userId = 'mock-user';
   res.supportingInformation = {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   };
   res.eligibility = {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
     ],
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   };
   res.editedBy = ['MAKER_CHECKER'];
   res.submissionType = 'Automatic Inclusion Application';
@@ -76,17 +77,6 @@ const MockUserResponse = () => ({
   timezone: 'Europe/London',
 });
 
-const MockExporterResponse = () => ({
-  status: 'IN_PROGRESS',
-  details: {
-    companiesHouseRegistrationNumber: 'tedsi',
-    companyName: 'Test Company',
-  },
-  validation: {
-    required: [],
-  },
-});
-
 const MockEligibilityCriteriaResponse = () => ({
   terms: [
     {
@@ -99,12 +89,12 @@ const MockEligibilityCriteriaResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
   res.items = [{
     details: {
       _id: '61a7714f2ae62b0013dae689',
-      applicationId: '61a7710b2ae62b0013dae687',
+      dealId: '61a7710b2ae62b0013dae687',
       type: 'CASH',
       hasBeenIssued: true,
       name: 'Facility one',
@@ -140,7 +130,6 @@ describe('controller/ukef-cover-start-date', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
-  let mockExporterResponse;
   let mockFacilityResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
@@ -149,13 +138,11 @@ describe('controller/ukef-cover-start-date', () => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockApplicationResponse = MockApplicationResponse();
-    mockExporterResponse = MockExporterResponse();
     mockFacilityResponse = MockFacilityResponse();
     mockUserResponse = MockUserResponse();
     mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(mockExporterResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);

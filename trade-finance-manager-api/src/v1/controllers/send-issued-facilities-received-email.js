@@ -6,10 +6,10 @@ const generateIssuedFacilitiesListString = (facilities) => {
   let result;
 
   facilities.forEach((facility, index) => {
-    const { facilityType, ukefFacilityID } = facility;
+    const { facilityType, ukefFacilityId } = facility;
 
     const fType = capitalizeFirstLetter(facilityType);
-    const listItem = `- ${fType} facility with UKEF facility reference: ${ukefFacilityID}`;
+    const listItem = `- ${fType} facility with UKEF facility reference: ${ukefFacilityId}`;
 
     if (index === 0) {
       result = listItem;

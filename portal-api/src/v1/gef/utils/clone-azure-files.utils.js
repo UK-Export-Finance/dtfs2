@@ -16,28 +16,28 @@ const shareClient = serviceClient.getShareClient(shareName);
 
 /**
  *
- * @param {string} currentApplicationId   | i.e. '1234'
- * @param {string} newApplicationId       | i.e. '1357'
+ * @param {string} currentDealId   | i.e. '1234'
+ * @param {string} newDealId       | i.e. '1357'
  */
 
-exports.cloneAzureFiles = async (currentApplicationId, newApplicationId) => {
+exports.cloneAzureFiles = async (currentDealId, newDealId) => {
   let copyFromURL = '';
   let newFileName = '';
 
-  let newDirectory = shareClient.getDirectoryClient(`${rootFolder}/${newApplicationId}`);
+  let newDirectory = shareClient.getDirectoryClient(`${rootFolder}/${newDealId}`);
   await newDirectory.createIfNotExists();
 
-  const existingFolder = serviceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${currentApplicationId}`);
+  const existingFolder = serviceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${currentDealId}`);
 
   try {
     const dirIter = existingFolder.listFilesAndDirectories();
     // eslint-disable-next-line no-restricted-syntax
     for await (const item of dirIter) {
       if (item.kind === 'directory') {
-        newDirectory = shareClient.getDirectoryClient(`${rootFolder}/${newApplicationId}/${item.name}`);
+        newDirectory = shareClient.getDirectoryClient(`${rootFolder}/${newDealId}/${item.name}`);
         await newDirectory.createIfNotExists();
 
-        const subFolders = serviceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${currentApplicationId}/${item.name}`);
+        const subFolders = serviceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${currentDealId}/${item.name}`);
         const listSubfolderItems = subFolders.listFilesAndDirectories();
 
         // eslint-disable-next-line no-restricted-syntax
@@ -46,9 +46,9 @@ exports.cloneAzureFiles = async (currentApplicationId, newApplicationId) => {
             newFileName = file.name;
 
             const newServiceClient = ShareServiceClient.fromConnectionString(connectionString);
-            const fileClient = newServiceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${newApplicationId}/${item.name}`).getFileClient(newFileName);
+            const fileClient = newServiceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${newDealId}/${item.name}`).getFileClient(newFileName);
 
-            copyFromURL = `https://${accountName}.file.core.windows.net/${shareName}/${rootFolder}/${currentApplicationId}/${item.name}/${newFileName}`;
+            copyFromURL = `https://${accountName}.file.core.windows.net/${shareName}/${rootFolder}/${currentDealId}/${item.name}/${newFileName}`;
 
             fileClient.startCopyFromURL(copyFromURL)
               .then(() => ({ status: 'Success', message: 'File uploaded successfully', newFileName }))

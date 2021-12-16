@@ -12,22 +12,21 @@ const mappedIndustries = (industries, selectedIndustry) => {
 
 const aboutExporter = async (req, res) => {
   const { params, query } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const { status } = query;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
-    const industries = mappedIndustries(details.industries, JSON.stringify(details.selectedIndustry));
-    const isFinanceIncreasing = JSON.stringify(details.isFinanceIncreasing);
-    const probabilityOfDefault = JSON.stringify(details.probabilityOfDefault);
+    const { exporter } = await api.getApplication(dealId);
+    const industries = mappedIndustries(exporter.industries, JSON.stringify(exporter.selectedIndustry));
+    const isFinanceIncreasing = JSON.stringify(exporter.isFinanceIncreasing);
+    const probabilityOfDefault = Number(exporter.probabilityOfDefault);
 
     return res.render('partials/about-exporter.njk', {
-      smeType: details.smeType,
-      probabilityOfDefault: probabilityOfDefault !== 'null' ? probabilityOfDefault : null,
-      isFinanceIncreasing: isFinanceIncreasing !== 'null' ? isFinanceIncreasing : null,
-      selectedIndustry: details.selectedIndustry,
-      applicationId,
+      dealId,
+      smeType: exporter?.smeType,
+      isFinanceIncreasing,
+      probabilityOfDefault,
+      selectedIndustry: exporter.selectedIndustry,
       industries,
       status,
     });
@@ -38,16 +37,15 @@ const aboutExporter = async (req, res) => {
 
 const validateAboutExporter = async (req, res) => {
   const { body, params, query } = req;
-  const { applicationId } = params;
+  const { dealId } = params;
   const aboutExporterErrors = [];
   const { saveAndReturn, status } = query;
 
   try {
-    const { exporterId } = await api.getApplication(applicationId);
-    const { details } = await api.getExporter(exporterId);
+    const { exporter } = await api.getApplication(dealId);
 
     // Only validate industries if it contains more than 1 SIC code
-    if (!saveAndReturn && !body.selectedIndustry && (details.industries && details.industries.length > 1)) {
+    if (!saveAndReturn && !body.selectedIndustry && exporter?.industries?.length > 1) {
       aboutExporterErrors.push({
         errRef: 'selectedIndustry',
         errMsg: 'Select most appropriate industry',
@@ -88,35 +86,41 @@ const validateAboutExporter = async (req, res) => {
       });
     }
 
-    const industries = mappedIndustries(details.industries, (body.selectedIndustry || details.selectedIndustry));
+    const industries = mappedIndustries(exporter.industries, (body.selectedIndustry || exporter.selectedIndustry));
 
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
         smeType: body.smeType,
-        probabilityOfDefault: body.probabilityOfDefault,
+        probabilityOfDefault: Number(body.probabilityOfDefault),
         isFinanceIncreasing: body.isFinanceIncreasing,
-        selectedIndustry: details.selectedIndustry,
-        applicationId,
+        selectedIndustry: exporter.selectedIndustry,
+        dealId,
         industries,
         status,
       });
     }
 
-    await api.updateExporter(exporterId, {
-      ...body,
-      selectedIndustry: body.selectedIndustry ? JSON.parse(body.selectedIndustry) : null,
-      probabilityOfDefault: body.probabilityOfDefault || null,
-      isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
-    });
+    const applicationExporterUpdate = {
+      exporter: {
+        ...exporter,
+        ...body,
+        selectedIndustry: body.selectedIndustry ? JSON.parse(body.selectedIndustry) : exporter.selectedIndustry,
+        probabilityOfDefault: body.probabilityOfDefault,
+        isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
+      },
+    };
 
-    return res.redirect(`/gef/application-details/${applicationId}`);
+    await api.updateApplication(dealId, applicationExporterUpdate);
+
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
 };
 
 module.exports = {
+  mappedIndustries,
   aboutExporter,
   validateAboutExporter,
 };

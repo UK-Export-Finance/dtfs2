@@ -168,8 +168,8 @@ module.exports.listGefApplications = (token) => cy.request({
   return resp.body.items;
 });
 
-module.exports.deleteGefApplication = (token, deal) => cy.request({
-  url: `${api()}/v1/gef/application/${deal._id}`,
+module.exports.deleteGefApplication = (token, dealId) => cy.request({
+  url: `${api()}/v1/gef/application/${dealId}`,
   method: 'DELETE',
   headers: {
     'Content-Type': 'application/json',
@@ -190,8 +190,8 @@ module.exports.insertGefApplication = (deal, token) => cy.request({
   return resp.body;
 });
 
-module.exports.setGefApplicationStatus = (applicationId, token, status) => cy.request({
-  url: `${api()}/v1/gef/application/status/${applicationId}`,
+module.exports.setGefApplicationStatus = (dealId, token, status) => cy.request({
+  url: `${api()}/v1/gef/application/status/${dealId}`,
   method: 'PUT',
   body: { status },
   headers: {
@@ -200,8 +200,8 @@ module.exports.setGefApplicationStatus = (applicationId, token, status) => cy.re
   },
 }).then((res) => res);
 
-module.exports.listGefFacilities = (token, applicationId) => cy.request({
-  url: `${api()}/v1/gef/facilities/?applicationId=${applicationId}`,
+module.exports.listGefFacilities = (token, dealId) => cy.request({
+  url: `${api()}/v1/gef/facilities/?dealId=${dealId}`,
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -231,18 +231,5 @@ module.exports.insertGefFacility = (deal, token) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(201);
-  return resp.body;
-});
-
-module.exports.updateExporter = async (deal, data, token) => cy.request({
-  url: `${api()}/v1/gef/exporter/${deal.exporterId}`,
-  method: 'PUT',
-  body: data,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  },
-}).then((resp) => {
-  expect(resp.status).to.equal(200);
   return resp.body;
 });

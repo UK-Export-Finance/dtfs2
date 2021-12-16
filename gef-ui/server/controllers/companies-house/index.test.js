@@ -7,7 +7,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.body = {};
   return req;
 };
@@ -20,16 +20,11 @@ const MockResponse = () => {
 };
 
 const MockApplicationResponse = () => {
-  const res = {};
+  const res = {
+    exporter: {},
+  };
   res.params = {};
-  res.params.exporterId = 'abc';
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.details.companiesHouseRegistrationNumber = '';
+  res.params.exporter = {};
   return res;
 };
 
@@ -42,15 +37,14 @@ const MockCHResponse = () => {
 describe('controllers/about-exporter', () => {
   let mockRequest;
   let mockResponse;
-  let mockExporterResponse;
+  let mockApplicationResponse;
 
   beforeEach(() => {
     mockRequest = MockRequest();
     mockResponse = MockResponse();
-    mockExporterResponse = MockExporterResponse();
+    mockApplicationResponse = MockApplicationResponse();
 
-    api.getApplication.mockResolvedValue(MockApplicationResponse());
-    api.getExporter.mockResolvedValue(mockExporterResponse);
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getCompaniesHouseDetails.mockResolvedValue(MockCHResponse());
   });
 
@@ -58,27 +52,25 @@ describe('controllers/about-exporter', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET Comapnies House', () => {
+  describe('GET Companies House', () => {
     it('renders the `companies-house` template with empty field', async () => {
-      mockExporterResponse.details.companiesHouseRegistrationNumber = '';
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = '';
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         regNumber: '',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       });
     });
 
     it('renders the `companies-house` template with pre-populated field', async () => {
-      mockExporterResponse.details.companiesHouseRegistrationNumber = 'xyz';
-      api.getExporter.mockResolvedValueOnce(mockExporterResponse);
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = 'xyz';
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         regNumber: 'xyz',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       });
     });
@@ -100,7 +92,7 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
         errors: expect.any(Object),
         regNumber: '',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       }));
     });
@@ -115,7 +107,7 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
         errors: expect.any(Object),
         regNumber: 'invalidregnumber',
-        applicationId: '123',
+        dealId: '123',
         status: undefined,
       }));
     });

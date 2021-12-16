@@ -3,6 +3,7 @@ import {
   abandonApplication,
 } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -17,7 +18,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
-  req.params.applicationId = '123';
+  req.params.dealId = '123';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -30,25 +31,15 @@ const MockRequest = () => {
 const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
-  res.exporterId = '123';
+  res.exporter = {};
   res.bankId = 'BANKID';
   res.bankInternalRefName = 'My test';
-  res.status = 'Draft';
+  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.eligibility = {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
     ],
   };
-  return res;
-};
-
-const MockExporterResponse = () => {
-  const res = {};
-  res.details = {};
-  res.status = 'IN_PROGRESS';
-  res.validation = {};
-  res.details.companiesHouseRegistrationNumber = 'tedsi';
-  res.validation.required = [];
   return res;
 };
 
@@ -64,7 +55,7 @@ const MockEligibilityCriteriaResponse = () => ({
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 'IN_PROGRESS';
+  res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
   return res;
 };
@@ -80,7 +71,6 @@ describe('controllers/application-abandon', () => {
     mockApplicationResponse = MockApplicationResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getExporter.mockResolvedValue(MockExporterResponse());
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.setApplicationStatus.mockResolvedValue({});
@@ -101,7 +91,7 @@ describe('controllers/application-abandon', () => {
     });
 
     it('redirects to the application details page if application is not abondonable', async () => {
-      mockApplicationResponse.status = 'SUBMITTED_TO_UKEF';
+      mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await confirmAbandonApplication(mockRequest, mockResponse);

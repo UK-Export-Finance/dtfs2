@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import ineligibleAutomaticCover from './pages/ineligible-automatic-cover';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationId;
+let dealId;
 
 context('Ineligible Automatic Cover Page', () => {
   before(() => {
@@ -13,14 +13,14 @@ context('Ineligible Automatic Cover Page', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applicationId = body.items[0]._id;
+        dealId = body.items[0]._id;
       });
     cy.login(CREDENTIALS.MAKER);
   });
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationId}/ineligible-automatic-cover`));
+    cy.visit(relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
   });
 
   describe('Visiting page', () => {
@@ -34,7 +34,7 @@ context('Ineligible Automatic Cover Page', () => {
   describe('Clicking on Continue button', () => {
     it('redirects user to Manual Application Page', () => {
       ineligibleAutomaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}/supporting-information/manual-inclusion-questionnaire`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
     });
   });
 });

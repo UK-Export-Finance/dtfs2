@@ -1,18 +1,19 @@
 import { cloneDealCreateApplication, cloneDealValidateMandatoryCriteria, cloneDealNameApplication } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
 const MockApplicationResponse = () => ({
   _id: '1234',
-  exporterId: '123',
+  exporter: {},
   bankId: 'BANKID',
   bankInternalRefName: 'Cloned deal',
   additionalRefName: 'additional',
-  status: 'DRAFT',
+  status: CONSTANTS.DEAL_STATUS.DRAFT,
   userId: 'mock-user',
   supportingInformation: {
-    status: 'NOT_STARTED',
+    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
 });
 
@@ -87,7 +88,7 @@ describe('clone-gef-deal/name-application', () => {
       _id: 'abc',
       bank: { id: 'mock-bank' },
     };
-    req.params = { id: '1234', applicationId: '1234' };
+    req.params = { id: '1234', dealId: '1234' };
     return req;
   };
   const MockRequestWithIdParam = () => {
@@ -141,7 +142,7 @@ describe('clone-gef-deal/name-application', () => {
     api.cloneApplication = jest.fn();
     api.cloneApplication.mockResolvedValueOnce({
       _id: '123456',
-      applicationId: '123456',
+      dealId: '123456',
       bankInternalRefName: 'Cloned deal',
     });
 

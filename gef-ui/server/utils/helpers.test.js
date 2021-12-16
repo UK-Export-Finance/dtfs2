@@ -16,7 +16,7 @@ import {
   pastDate,
   futureDateInRange,
   getFacilityCoverStartDate,
-  getFacilitiesAsArray,
+  getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
   makerCanReSubmit,
   hasChangedToIssued,
@@ -25,6 +25,7 @@ import {
   summaryItemsConditions,
   facilityIssueDeadline,
 } from './helpers';
+import CONSTANTS from '../constants';
 
 import {
   MOCK_AIN_APPLICATION,
@@ -669,25 +670,25 @@ describe('isNotice()', () => {
 
 describe('isUkefReviewAvailable()', () => {
   it('Should return TRUE for application with UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_REFUSED status', () => {
-    expect(isUkefReviewAvailable('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual(true);
+    expect(isUkefReviewAvailable(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS)).toEqual(true);
   });
 
   it('Should return FALSE for application with non UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_REFUSED status', () => {
-    expect(isUkefReviewAvailable('UKEF_ACKNOWLEDGED')).toEqual(false);
+    expect(isUkefReviewAvailable(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED)).toEqual(false);
   });
 });
 
 describe('isUkefReviewPositive()', () => {
   it('Should return TRUE for application with UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
-    expect(isUkefReviewPositive('UKEF_APPROVED_WITHOUT_CONDITIONS')).toEqual(true);
+    expect(isUkefReviewPositive(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS)).toEqual(true);
   });
 
   it('Should return TRUE for application with UKEF_APPROVED_WITH_CONDITIONS status', () => {
-    expect(isUkefReviewPositive('UKEF_APPROVED_WITH_CONDITIONS')).toEqual(true);
+    expect(isUkefReviewPositive(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS)).toEqual(true);
   });
 
   it('Should return FALSE for application with UKEF_REFUSED status', () => {
-    expect(isUkefReviewPositive('UKEF_REFUSED')).toEqual(false);
+    expect(isUkefReviewPositive(CONSTANTS.DEAL_STATUS.UKEF_REFUSED)).toEqual(false);
   });
 });
 
@@ -764,7 +765,7 @@ describe('futureDateInRange', () => {
   });
 });
 
-describe('getFacilitiesAsArray', () => {
+describe('getIssuedFacilitiesAsArray', () => {
   it('Should return the expected facilities object from mock facilities array where the facility date has not been confirmed by the bank', () => {
     const expected = [
       [
@@ -774,12 +775,19 @@ describe('getFacilitiesAsArray', () => {
         { html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>" },
       ],
     ];
-    expect(getFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
+    expect(getIssuedFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
+  });
+
+  it('Should return the empty array', () => {
+    const expected = [];
+    MOCK_FACILITY.items[0].details.hasBeenIssued = false;
+    expect(getIssuedFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
   });
 });
 
 describe('coverDatesConfirmed', () => {
   it('Should return FALSE as one of the facility\'s cover date has not been confirmed', () => {
+    MOCK_FACILITY.items[0].details.hasBeenIssued = true;
     expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(false);
   });
 });
@@ -789,7 +797,7 @@ describe('makerCanReSubmit', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
   });
   it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS', () => {
-    MOCK_DEAL.status = 'UKEF_APPROVED_WITH_CONDITIONS';
+    MOCK_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(true);
   });
   it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
@@ -1029,5 +1037,18 @@ describe('summaryItemsConditions()', () => {
       const { text } = summaryItemsConditions(summaryItemsObj)[0];
       expect(text).toEqual('Add');
     });
+  });
+
+  it('Should return FALSE as the Maker is from a different Bank', () => {
+    MOCK_REQUEST.bank.id = 10;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+  it('Should return FALSE as the user does not have `maker` role', () => {
+    MOCK_REQUEST.roles = ['checker'];
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+  it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
+    MOCK_DEAL.bankId = 1;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
   });
 });

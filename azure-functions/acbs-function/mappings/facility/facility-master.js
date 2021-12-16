@@ -52,9 +52,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   return {
     _id: deal._id,
     dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId
-      ? facility.facilitySnapshot.ukefFacilityId.padStart(10, 0)
-      : facility.facilitySnapshot.ukefFacilityID.padStart(10, 0),
+    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
@@ -90,10 +88,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
     agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorName:
-      deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-        ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
-        : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
+    obligorName: deal.dealSnapshot.exporter.companyName.substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   };
 };

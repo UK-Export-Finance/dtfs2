@@ -33,7 +33,7 @@ const GET_FACILITY = gql`
       _id,
       facilitySnapshot {
         _id
-        ukefFacilityID,
+        ukefFacilityId,
         associatedDealId,
         facilityProduct {
           code,

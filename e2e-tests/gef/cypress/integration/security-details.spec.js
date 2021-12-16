@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import securityDetails from './pages/security-details';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationId;
+let dealId;
 let token;
 
 context('Security Details Page', () => {
@@ -14,7 +14,7 @@ context('Security Details Page', () => {
       })
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
-        applicationId = body.items[2]._id;
+        dealId = body.items[2]._id;
       });
     cy.login(CREDENTIALS.MAKER);
   });
@@ -25,7 +25,7 @@ context('Security Details Page', () => {
 
   describe('Visiting page as cash facility', () => {
     it('displays the correct elements', () => {
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.mainHeading();
       securityDetails.form();
       securityDetails.exporterSecurity();
@@ -35,7 +35,7 @@ context('Security Details Page', () => {
     });
 
     it('shows error message when security details have been entered', () => {
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
@@ -45,7 +45,7 @@ context('Security Details Page', () => {
     it('shows error message when security details are too long', () => {
       const longString = new Array(402).join('t');
 
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(longString);
       securityDetails.applicationSecurity().type(longString);
       securityDetails.continueButton().click();
@@ -57,7 +57,7 @@ context('Security Details Page', () => {
     it('shows error message when security details are invalid format', () => {
       const invalidString = 'This text @ is not %()~# valid';
 
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(invalidString);
       securityDetails.applicationSecurity().type(invalidString);
       securityDetails.continueButton().click();
@@ -67,17 +67,17 @@ context('Security Details Page', () => {
     });
 
     it('takes you to `Application details` page when clicking on `Continue` button', () => {
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('Valid security details');
       securityDetails.applicationSecurity().type('Valid security details');
       securityDetails.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
     it('redirects user to application page when clicking on `Return to application` button', () => {
-      securityDetails.visit(applicationId);
+      securityDetails.visit(dealId);
       securityDetails.cancelButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });
 });

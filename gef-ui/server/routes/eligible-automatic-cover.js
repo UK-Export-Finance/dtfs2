@@ -4,6 +4,6 @@ const validateToken = require('../middleware/validateToken');
 
 const router = express.Router();
 
-router.get('/application-details/:applicationId/eligible-automatic-cover', validateToken, (req, res) => eligibleAutomaticCover(req, res));
+router.get('/application-details/:dealId/eligible-automatic-cover', validateToken, (req, res) => eligibleAutomaticCover(req, res));
 
 module.exports = router;

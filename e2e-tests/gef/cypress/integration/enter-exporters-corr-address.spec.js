@@ -4,7 +4,7 @@ import applicationDetails from './pages/application-details';
 import exportersAddress from './pages/exporters-address';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applicationIds = [];
+let dealIds = [];
 let token;
 
 context('Enter Exporters Correspondence Address Page', () => {
@@ -17,7 +17,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          applicationIds.push({ id: item._id, exporterId: item.exporterId });
+          dealIds.push({ id: item._id, exporterId: item.exporterId });
         });
         // exporterId = body.items[0].exporterId;
       });
@@ -26,7 +26,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`), { headers: { Referer: relative(`/gef/application-details/${applicationIds[0].id}`) } });
+    cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`), { headers: { Referer: relative(`/gef/application-details/${dealIds[0].id}`) } });
   });
 
   describe('Visiting page', () => {
@@ -44,47 +44,51 @@ context('Enter Exporters Correspondence Address Page', () => {
       enterExportersCorAddress.saveAndReturnButton();
     });
 
-    // Skipping test until cy Referer not being passed bug is fixed
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       enterExportersCorAddress.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
 
-    // Next test is a fudge while Referer cant be set in cy.visit({headers}) (test above) replace when possible
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type('1');
       exportersAddress.continueButton().click();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/exporters-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
     });
 
-    it('pre-populates form with address when coming from select exporters correspondence address', () => {
+    it('pre-populates form with address', () => {
       cy.apiLogin(CREDENTIALS.MAKER)
         .then((tok) => {
           token = tok;
         })
         .then(() => cy.apiFetchAllApplications(token))
         .then(({ body }) => {
-          applicationIds = [];
+          dealIds = [];
           body.items.forEach((item) => {
-            applicationIds.push({ id: item._id, exporterId: item.exporterId });
+            dealIds.push({ id: item._id, exporterId: item.exporterId });
           });
         })
         .then(() => {
-          cy.apiUpdateExporter(applicationIds[1].exporterId, token, {
-            addressLine1: 'Line 1',
-            addressLine2: 'Line 2',
-            addressLine3: 'Line 3',
-          });
+          const dealUpdate = {
+            exporter: {
+              correspondenceAddress: {
+                addressLine1: 'Line 1',
+                addressLine2: 'Line 2',
+                addressLine3: 'Line 3',
+              },
+            },
+          };
+
+          cy.apiUpdateApplication(dealIds[1].id, token, dealUpdate);
         });
       cy.login(CREDENTIALS.MAKER);
 
-      cy.visit(relative(`/gef/application-details/${applicationIds[1].id}/enter-exporters-correspondence-address`));
+      cy.visit(relative(`/gef/application-details/${dealIds[1].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.addressLine1().should('have.value', 'Line 1');
       enterExportersCorAddress.addressLine2().should('have.value', 'Line 2');
       enterExportersCorAddress.addressLine3().should('have.value', 'Line 3');
@@ -93,7 +97,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows error message if no address has been selected from dropdown', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.continueButton().click();
       enterExportersCorAddress.errorSummary();
       enterExportersCorAddress.addressLine1Error();
@@ -108,11 +112,11 @@ context('Enter Exporters Correspondence Address Page', () => {
         enterExportersCorAddress.locality().type('Locality');
         enterExportersCorAddress.postcode().type('Postcode');
         enterExportersCorAddress.continueButton().click();
-        cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}/about-exporter`));
+        cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/about-exporter`));
       });
 
       it('defaults and shows country as United Kingdom', () => {
-        cy.visit(`/gef/application-details/${applicationIds[0].id}`);
+        cy.visit(`/gef/application-details/${dealIds[0].id}`);
         applicationDetails.exporterSummaryList().should('contain', 'United Kingdom');
       });
     });
@@ -120,22 +124,22 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   describe('Clicking on Save and return button', () => {
     it('bypasses validation and takes user back to application details page', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.saveAndReturnButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
   });
 
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address?status=change`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
       enterExportersCorAddress.backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {
-      cy.visit(relative(`/gef/application-details/${applicationIds[0].id}/enter-exporters-correspondence-address?status=change`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
       enterExportersCorAddress.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applicationIds[0].id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
   });
 });

@@ -23,22 +23,10 @@ const fetchAllApplications = (token) => cy.request({
   },
 }).then((res) => res);
 
-const updateExporter = (exporterId, token, address) => cy.request({
-  url: `${BASE_URL}/gef/exporter/${exporterId}`,
-  method: 'PUT',
-  body: {
-    correspondenceAddress: address,
-  },
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  },
-}).then((res) => res);
-
-const fetchAllFacilities = (applicationId, token) => cy.request({
+const fetchAllFacilities = (dealId, token) => cy.request({
   url: `${BASE_URL}/gef/facilities`,
   qs: {
-    applicationId,
+    dealId,
   },
   method: 'GET',
   headers: {
@@ -47,8 +35,18 @@ const fetchAllFacilities = (applicationId, token) => cy.request({
   },
 }).then((res) => res);
 
-const setApplicationStatus = (applicationId, token, status) => cy.request({
-  url: `${BASE_URL}/gef/application/status/${applicationId}`,
+const updateApplication = (dealId, token, update) => cy.request({
+  url: `${BASE_URL}/gef/application/${dealId}`,
+  method: 'PUT',
+  body: update,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
+
+const setApplicationStatus = (dealId, token, status) => cy.request({
+  url: `${BASE_URL}/gef/application/status/${dealId}`,
   method: 'PUT',
   body: { status },
   headers: {
@@ -60,7 +58,7 @@ const setApplicationStatus = (applicationId, token, status) => cy.request({
 export {
   login,
   fetchAllApplications,
-  updateExporter,
   fetchAllFacilities,
+  updateApplication,
   setApplicationStatus,
 };
