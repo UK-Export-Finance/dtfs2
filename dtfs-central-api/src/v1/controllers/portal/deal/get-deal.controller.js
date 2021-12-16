@@ -183,7 +183,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         status: '$details.status',
         product: 'BSS/EWCS',
         type: '$details.submissionType',
-        exporter: '$submissionDetails.supplier-name',
+        exporter: '$exporter.companyName',
         lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
         userId: '$details.maker._id',
       },

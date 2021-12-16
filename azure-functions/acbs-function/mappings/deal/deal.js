@@ -36,9 +36,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
   dealValue: to2Decimals(getDealValue(deal)),
   guaranteeCommencementDate: getDealEffectiveDate(deal),
   obligorPartyIdentifier,
-  obligorName: deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-    ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
-    : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
+  obligorName: deal.dealSnapshot.exporter.companyName.substring(0, 35),
   obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   creditReviewRiskDate: formatTimestamp(getDealSubmissionDate(deal)),
 });

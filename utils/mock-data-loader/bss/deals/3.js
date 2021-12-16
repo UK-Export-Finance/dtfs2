@@ -627,5 +627,8 @@ module.exports = {
 			}
 		},
 		"security" : "Test"
+	},
+	"exporter": {
+		"companyName": "Manual Test 1"
 	}
 }

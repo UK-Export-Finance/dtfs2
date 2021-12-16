@@ -233,6 +233,9 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
       },
     ],
   },
+  exporter: {
+    companyName: 'test',
+  },
 };
 
 module.exports = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE;

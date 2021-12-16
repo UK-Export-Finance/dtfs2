@@ -88,10 +88,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
     agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorName:
-      deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-        ? deal.dealSnapshot.exporter.companyName.substring(0, 35)
-        : deal.dealSnapshot.submissionDetails['supplier-name'].substring(0, 35),
+    obligorName: deal.dealSnapshot.exporter.companyName.substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
   };
 };
