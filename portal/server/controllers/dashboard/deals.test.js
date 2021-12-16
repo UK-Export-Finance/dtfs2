@@ -2,6 +2,7 @@ import { bssDeals, gefDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
 import api from '../../api';
+const { PRODUCT, STATUS } = require('../../constants');
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
@@ -63,7 +64,7 @@ describe('controllers/dashboard', () => {
 
       expect(api.allDeals).toHaveBeenCalledWith(20, 20, [{
         field: 'status',
-        value: "Ready for Checker's approval",
+        value: STATUS.readyForApproval,
       }], 'mock-token');
     });
   });
@@ -93,13 +94,13 @@ describe('controllers/dashboard', () => {
           {
             _id: 'mockDeal2',
             exporter: 'mock company',
-            product: 'GEF',
+            product: PRODUCT.GEF,
             lastUpdate: 5678,
           },
           {
             _id: 'mockDeal',
             exporter: 'mock company',
-            product: 'GEF',
+            product: PRODUCT.GEF,
             lastUpdate: 1234,
           }],
         pages: {

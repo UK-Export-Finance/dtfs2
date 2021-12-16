@@ -82,7 +82,7 @@ const MOCK_GEF_DEAL = {
   ],
   facilities: MOCK_CASH_CONTINGENT_FACILITIES,
   eligibility: {
-    status: 'Completed',
+    status: CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.COMPLETED,
     updatedAt: 1634835561860.0,
     criteria: [
       {
