@@ -4,62 +4,52 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "moj/components/banner/macro.njk" import mojBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
 {% block pageTitle %}
-    Update unissued facilities
+  Update unissued facilities
 {% endblock %}
-
 {% block content %}
-
-    {% if errors %}
-        {{
-            govukErrorSummary({
+  {% if errors %}
+    {{ govukErrorSummary({
             titleText: "There is a problem",
             errorList: errors.errorSummary,
             attributes: {
                 'data-cy': 'error-summary'
                 }
-            })
-        }}
-    {% endif %}
-
-    {% set hideBack = true %}
-    {% include "includes/application-preview/summary.njk" %}
-
-    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
-        <div class="govuk-grid-column-full-from-desktop">
-            {{ govukBackLink({
+            }) }}
+  {% endif %}
+  {% set hideBack = true %}
+  {% include "includes/application-preview/summary.njk" %}
+  <div class="govuk-!-margin-bottom-6 govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      {{ govukBackLink({
                 text: "Back",
                 href: "/gef/application-details/" + applicationId,
                 attributes: {
                 'data-cy': 'back-link'
                 }
             }) }}
-        </div>
     </div>
-
-    {% if facility.length > 0 %}
-        {% if success %}
-            {{
-                mojBanner({
+  </div>
+  {% if facility.length > 0 %}
+    {% if success %}
+      {{ mojBanner({
                 type: 'success',
                 text: success.message,
-                iconFallbackText: 'Success'
-                })
-            }}
-        {% endif %}
+                iconFallbackText: 'Success',
+                'data-cy': 'success-banner'
+                }) }}
     {% endif %}
-
-
-   <div class="govuk-grid-row govuk-body">
-      <div class="govuk-grid-column-two-thirds">
-            {% if facility.length > 0 %}
-               {{ govukTable
+  {% endif %}
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-two-thirds">
+      {% if facility.length > 0 %}
+        {{ govukTable
                   ({
                         caption: "Update unissued facilities",
                         captionClasses: "govuk-table__caption--xl",
                         firstCellIsHeader: true,
                         classes: "govuk-table__vertical-align",
+                        'data-cy': 'unissued-facilities-table',
                         head: [
                            {
                            text: "Facility name"
@@ -77,28 +67,24 @@
                            }
                         ],
                         rows: facility
-                  })
-               }}
-               <a href="/gef/application-details/{{ applicationId }}" class="govuk-link">Update facility stage later</a>
-            {% else %}
-               {{
-                  mojBanner({
+                  }) }}
+        <a href="/gef/application-details/{{ applicationId }}" class="govuk-link" data-cy="update-later-link">Update facility
+          stage later</a>
+      {% else %}
+        {{ mojBanner({
                   type: 'success',
                   text: 'Facility Stages are now updated',
-                  iconFallbackText: 'Success'
-                  })
-               }}
-               <div class="govuk-button-group">
-                  {{
-                        govukButton({
+                  iconFallbackText: 'Success',
+                  'data-cy': 'all-unissued-updated-success-banner'
+                  }) }}
+        <div class="govuk-button-group">
+          {{ govukButton({
                         text: "Continue",
-                        href: "/gef/application-details/" + applicationId
-                        })
-                  }}
-               </div>
-            {% endif %}
-      </div>
-   </div>
-
-
+                        href: "/gef/application-details/" + applicationId,
+                        'data-cy': 'continue button'
+                        }) }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

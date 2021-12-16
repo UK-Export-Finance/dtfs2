@@ -27,7 +27,6 @@ const postApplicationSubmission = async (req, res, next) => {
   const { comment } = body;
   const application = await Application.findById(applicationId, user, userToken);
   const { submissionType } = application;
-
   const maker = await api.getUserDetails(application.userId, userToken);
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid

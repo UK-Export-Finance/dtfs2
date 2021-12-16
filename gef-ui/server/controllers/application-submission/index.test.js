@@ -93,6 +93,17 @@ const MockFacilityResponse = () => {
   const res = {};
   res.status = 'IN_PROGRESS';
   res.data = [];
+  res.items = [];
+  res.details = {
+    type: 'CASH',
+    name: 'Foundry4',
+    hasBeenIssued: true,
+    monthsOfCover: null,
+    coverStartDate: '2022-01-02T00:00:00.000+00:00',
+    shouldCoverStartOnSubmission: true,
+    changedToIssued: true,
+    coverEndDate: '2030-01-02T00:00:00.000+00:00',
+  };
   return res;
 };
 
@@ -122,11 +133,11 @@ describe('controllers/application-submission', () => {
   describe('GET Application Submission', () => {
     it('renders submission page as expected', async () => {
       await getApplicationSubmission(mockRequest, mockResponse);
-
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
         applicationId: expect.any(String),
         submissionType: expect.any(String),
         maxCommentLength: expect.any(Number),
+        isAutomaticCover: expect.any(String),
       }));
     });
   });
@@ -138,10 +149,10 @@ describe('controllers/application-submission', () => {
 
     it('renders confirmation if successfully submitted', async () => {
       await postApplicationSubmission(mockRequest, mockResponse);
-
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
         applicationId: expect.any(String),
         submissionType: expect.any(String),
+        unissuedToIssued: expect.any(Boolean),
       }));
     });
 

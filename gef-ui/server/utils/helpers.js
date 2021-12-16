@@ -88,10 +88,8 @@ const validationErrorHandler = (errs, href = '') => {
    Maps through facilities to check for changedToIssued to be true
    if true, adds to array and returns array
 */
-
 const facilitiesChangedToIssuedAsArray = (application) => {
   const hasChanged = [];
-
   application.facilities.items.map((facility) => {
     if (facility.details.changedToIssued === true) {
       const changed = {
@@ -115,9 +113,10 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
    application preview (once submitted to UKEF) - for facilities, certain rows are set to change add
    and given personalised href.
 */
-
 const summaryItemsConditions = (summaryItemsObj) => {
-  const { preview, item, details, app, user, data } = summaryItemsObj;
+  const {
+    preview, item, details, app, user, data,
+  } = summaryItemsObj;
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
@@ -135,15 +134,15 @@ const summaryItemsConditions = (summaryItemsObj) => {
     summaryItems = [
       ...(href
         ? [
-            {
-              href,
-              /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
+          {
+            href,
+            /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
            properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
            Object is empty or not. */
-              text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
-              visuallyHiddenText: item.label,
-            },
-          ]
+            text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
+            visuallyHiddenText: item.label,
+          },
+        ]
         : []),
     ];
   } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.changedToIssued === true) {
@@ -155,13 +154,13 @@ const summaryItemsConditions = (summaryItemsObj) => {
     summaryItems = [
       ...(unissuedHref
         ? [
-            {
-              href: unissuedHref,
-              /*  */
-              text: `${changedToIssueShow ? 'Change' : ''}`,
-              visuallyHiddenText: item.label,
-            },
-          ]
+          {
+            href: unissuedHref,
+            /*  */
+            text: `${changedToIssueShow ? 'Change' : ''}`,
+            visuallyHiddenText: item.label,
+          },
+        ]
         : []),
     ];
   } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
@@ -174,17 +173,16 @@ const summaryItemsConditions = (summaryItemsObj) => {
     summaryItems = [
       ...(unissuedHref
         ? [
-            {
-              href: unissuedHref,
-              /*  */
-              text: `${unissuedShow ? 'Add' : ''}`,
-              visuallyHiddenText: item.label,
-            },
-          ]
+          {
+            href: unissuedHref,
+            /*  */
+            text: `${unissuedShow ? 'Add' : ''}`,
+            visuallyHiddenText: item.label,
+          },
+        ]
         : []),
     ];
   }
-
   return summaryItems;
 };
 
@@ -242,7 +240,10 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
   };
 
   return itemsToShow.map((item) => {
-    const { label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission } = item;
+    const {
+      label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission,
+    } = item;
+
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
@@ -261,7 +262,6 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
       user,
       data,
     };
-
     const summaryItems = summaryItemsConditions(summaryItemsObj);
 
     return {
@@ -534,4 +534,6 @@ module.exports = {
   coverDatesConfirmed,
   makerCanReSubmit,
   hasChangedToIssued,
+  summaryItemsConditions,
+  facilityIssueDeadline,
 };

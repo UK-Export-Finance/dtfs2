@@ -1,0 +1,31 @@
+import validateToken from '../../middleware/validateToken';
+
+const getSpy = jest.fn();
+const postSpy = jest.fn();
+jest.doMock('express', () => ({
+  Router() {
+    return {
+      get: getSpy,
+      post: postSpy,
+    };
+  },
+}));
+
+describe('Routes', () => {
+  beforeEach(() => {
+    // eslint-disable-next-line global-require
+    require('../unissued-facilities');
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('Sets up all routes', () => {
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities-change/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities-change/:facilityId/about-facility', validateToken, expect.any(Function));
+  });
+});

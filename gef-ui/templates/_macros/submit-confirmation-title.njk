@@ -1,9 +1,9 @@
 {% macro render(params) %}
-
-   {% if params.unissuedToIssued %}
-      <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">Issued facilities {{ params.text }}</h1>
-   {% else %}
-      <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">{{ params.submissionType | capitalize }} {{ params.text }}</h1>
-   {% endif %}
-
+  {% if params.unissuedToIssued %}
+    <h1 class="govuk-panel__title" data-cy="submit-facilities-confirmation-title">Issued facilities
+    {{ params.text }}</h1>
+  {% else %}
+    <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">{{ params.submissionType | capitalize }}
+      {{ params.text }}</h1>
+  {% endif %}
 {% endmacro %}

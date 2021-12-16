@@ -137,6 +137,8 @@ describe('controllers/application-detaills', () => {
           ukefDecisionAccepted: expect.any(Boolean),
           coverDatesConfirmed: expect.any(Boolean),
           previewMode: expect.any(Boolean),
+          unissuedFacilitiesPresent: expect.any(Boolean),
+          facilitiesChangedToIssued: expect.any(Array),
 
           // actions
           submit: expect.any(Boolean),
@@ -278,6 +280,18 @@ describe('controllers/application-detaills', () => {
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `unissued-facilities` when page requested is `unissued facilities` ', async () => {
+        mockApplicationResponse.status = 'UKEF_ACKNOWLEDGED';
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mocks.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
           }));
       });

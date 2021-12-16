@@ -1,57 +1,49 @@
 {% from "moj/components/banner/macro.njk" import mojBanner %}
-
 {% if isUkefReviewAvailable or unissuedFacilitiesPresent or facilitiesChangedToIssued.length > 0 or comments.length > 0 %}
   <header data-cy="application-preview-page">
-
     {% set bannerHtml %}
-
-      {% if isUkefReviewAvailable and not coverDatesConfirmed %}
-        <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
-          <a href="/gef/application-details/{{ applicationId }}/review-decision" class="govuk-link">Review UKEF decision</a>
-        </div>
-      {% endif %}
-
-      {% if coverDatesConfirmed %}
-        {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
-            <strong>You are proceeding with UKEF cover</strong>
-        {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
-            <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
-            <p>{{ ukefDecision[0].text | safe }}</p>
-        {% endif %}
-      {% endif %}
-
-      {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 %}
-         <h2>Update facility stage for unissued facilities</h2>
-         <div class="govuk-!-margin-bottom-6" data-cy="unissued-facilities-link">
-          <a href="/gef/application-details/{{ applicationId }}/unissued-facilities" class="govuk-link">View unissued facilities</a>
-        </div>
-      {% endif %}
-
-      {% if facilitiesChangedToIssued.length > 0 %}
-      <h2>Review facility stage</h2>
-      <h3>The following facility stages have been updated to issued:</h3>
-        <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities">
-             {% for item in facilitiesChangedToIssued %}
-               <p>{{item.name}}</p>
-             {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-
-      <div data-cy="latest-comment">
-        {% for comment in comments %}
-          <strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
-          <p>{{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
-          <p>{{ comment.comment | safe }}</p>
-        {% endfor %}
+    {% if isUkefReviewAvailable and not coverDatesConfirmed %}
+      <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
+        <a href="/gef/application-details/{{ applicationId }}/review-decision" class="govuk-link">Review UKEF decision</a>
       </div>
-
-    {% endset %}
-
-    {{ mojBanner({
+    {% endif %}
+    {% if coverDatesConfirmed %}
+      {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
+        <strong>You are proceeding with UKEF cover</strong>
+      {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
+        <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
+        <p>{{ ukefDecision[0].text | safe }}</p>
+      {% endif %}
+    {% endif %}
+    {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 %}
+      <h2 data-cy="update-unissued-header">Update facility stage for unissued facilities</h2>
+      <div class="govuk-!-margin-bottom-6">
+        <a
+          href="/gef/application-details/{{ applicationId }}/unissued-facilities"
+          class="govuk-link"
+          data-cy="update-unissued-link">View unissued facilities</a>
+      </div>
+    {% endif %}
+    {% if facilitiesChangedToIssued.length > 0 %}
+      <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+      <h3 data-cy="changed-unissued-header">The following facility stages have been updated to issued:</h3>
+      <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities-list">
+        {% for item in facilitiesChangedToIssued %}
+          <p>{{ item.name }}</p>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  <div data-cy="latest-comment">
+    {% for comment in comments %}
+      <strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
+      <p>{{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
+      <p>{{ comment.comment | safe }}</p>
+    {% endfor %}
+  </div>
+  {% endset %}
+  {{ mojBanner({
       type: 'no-icon',
       html: bannerHtml
     }) }}
-
-  </header>
-{% endif %}
+</header>{% endif %}

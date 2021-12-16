@@ -61,6 +61,7 @@ describe(baseUrl, () => {
         feeType: null,
         feeFrequency: null,
         coverDateConfirmed: null,
+        changedToIssued: null,
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],

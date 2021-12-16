@@ -5,6 +5,13 @@ const applicationPreview = {
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
 
+  unissuedFacilitiesHeader: () => cy.get('[data-cy="update-unissued-header"]'),
+  unissuedFacilitiesReviewLink: () => cy.get('[data-cy="update-unissued-link"]'),
+
+  reviewFacilityStage: () => cy.get('[data-cy="update-unissued-stage"]'),
+  updatedUnissuedFacilitiesHeader: () => cy.get('[data-cy="changed-unissued-header"]'),
+  updatedUnissuedFacilitiesList: () => cy.get('[data-cy="unissued-to-issued-facilities-list"]'),
+
   applicationPreviewPage: () => cy.get('[data-cy="application-preview-page"]'),
   captionHeading: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),

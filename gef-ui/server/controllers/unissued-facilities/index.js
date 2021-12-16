@@ -59,7 +59,7 @@ const changeUnissuedAboutFacilityChange = async (req, res) => renderChangeFacili
  * validation for changing facilities
  * returns required parameters for post update facility
  */
-const validation = async (req, res) => {
+const facilityValidation = async (req, res) => {
   const { body, query, params } = req;
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
@@ -263,7 +263,7 @@ const validation = async (req, res) => {
 const postChangeUnissuedAboutFacility = async (req, res) => {
   const {
     coverStartDate, coverEndDate, body, facilityId, applicationId,
-  } = await validation(req, res);
+  } = await facilityValidation(req, res);
 
   try {
     await api.updateFacility(
@@ -298,7 +298,7 @@ const postChangeUnissuedAboutFacility = async (req, res) => {
 const postChangeUnissuedAboutFacilityChange = async (req, res) => {
   const {
     coverStartDate, coverEndDate, body, facilityId, applicationId,
-  } = await validation(req, res);
+  } = await facilityValidation(req, res);
 
   try {
     await api.updateFacility(
@@ -329,4 +329,5 @@ module.exports = {
   changeUnissuedAboutFacilityChange,
   postChangeUnissuedAboutFacility,
   postChangeUnissuedAboutFacilityChange,
+  facilityValidation,
 };
