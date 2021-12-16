@@ -76,7 +76,7 @@ describe(baseUrl, () => {
       monthsOfCover: 12,
       details: ['test', 'test'],
       detailsOther: null,
-      currency: 'GBP',
+      currency: { id: 'GBP' },
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
@@ -206,7 +206,7 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: false,
         name: 'Matt',
-        currency: 'GBP',
+        currency: { id: 'GBP' },
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -265,7 +265,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -311,7 +311,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -393,8 +393,6 @@ describe(baseUrl, () => {
       // create deal
       const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
-      // create and update facility
-      const { details } = newFacility;
       const facility = await as(aMaker).post({ dealId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const update = { hasBeenIssued: true };

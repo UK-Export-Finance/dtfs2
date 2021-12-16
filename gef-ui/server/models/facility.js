@@ -20,7 +20,7 @@ class Facility {
       const interestPercentage = JSON.stringify(details.interestPercentage);
 
       return {
-        currency: details.currency.id,
+        currency: details.currency?.id,
         value,
         facilityType: facilityTypeConst,
         coverPercentage: coverPercentage !== 'null' ? coverPercentage : null,

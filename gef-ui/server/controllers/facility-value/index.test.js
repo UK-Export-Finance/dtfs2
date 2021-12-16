@@ -225,7 +225,7 @@ describe('controllers/facility-value', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      mockRequest.body.currency.id = 'EUR';
+      mockRequest.body.currency = { id: 'EUR' };
       mockRequest.body.coverPercentage = '79';
       mockRequest.body.interestPercentage = '10';
       mockRequest.body.value = '1000';
@@ -381,7 +381,7 @@ describe('controllers/facility-value', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      mockRequest.body.currency.id = 'EUR';
+      mockRequest.body.currency = { id: 'EUR' };
       mockRequest.body.coverPercentage = '79';
       mockRequest.body.interestPercentage = '10';
       mockRequest.body.value = '1000';
