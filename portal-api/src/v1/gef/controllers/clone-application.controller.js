@@ -40,17 +40,18 @@ const cloneSupportingInformation = async (existingDealId, newDealId) => {
     const existingFiles = await filesCollection.aggregate([{ $match: { parentId: ObjectID(String(newDealId)) } }]).toArray();
 
     if (existingFiles.length) {
-      existingFiles.forEach(async (val) => {
+      existingFiles.forEach(async (v) => {
+        const value = v;
         // convert the ids to string format
-        val._id = (new ObjectID(val._id)).toHexString();
-        val.parentId = (new ObjectID(val.parentId)).toHexString();
+        value._id = (new ObjectID(value._id)).toHexString();
+        value.parentId = (new ObjectID(value.parentId)).toHexString();
         await applicationCollection.findOneAndUpdate(
           { _id: { $eq: ObjectID(newDealId) } },
           {
             // set the updatedAt property to the current time in EPOCH format
             $set: { updatedAt: Date.now() },
             // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
-            $push: { [`supportingInformation.${val.documentPath}`]: val }
+            $push: { [`supportingInformation.${value.documentPath}`]: value }
           }
         );
       });

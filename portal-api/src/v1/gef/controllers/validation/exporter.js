@@ -72,7 +72,7 @@ const exporterCheckEnums = (doc) => {
 };
 
 const exporterValidation = (doc) => ({
-  required: hasRequiredItems(doc),
+  required: unansweredFields(doc),
 });
 
 module.exports = {
