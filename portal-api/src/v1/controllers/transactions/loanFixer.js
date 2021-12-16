@@ -61,9 +61,9 @@ const constructor = (listOfFilters) => {
 
       if (keyFields.search) {
         const regex = new RegExp(`^${keyFields.search}`, 'i');
-        const ukefFacilityID = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
+        const ukefFacilityId = Array.isArray(loan.ukefFacilityId) ? loan.ukefFacilityId[0] : loan.ukefFacilityId;
 
-        const matchesUKEFId = ukefFacilityID && ukefFacilityID.match(regex);
+        const matchesUKEFId = ukefFacilityId && ukefFacilityId.match(regex);
         const matchesBankRefNum = loan.bankReferenceNumber && loan.bankReferenceNumber.match(regex);
         if (!matchesBankRefNum && !matchesUKEFId) return false;
       }
@@ -77,8 +77,8 @@ const constructor = (listOfFilters) => {
 
       if (keyFields.filterByUkefFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`, 'i');
-        const ukefFacilityID = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
-        if (ukefFacilityID && !ukefFacilityID.match(regex)) {
+        const ukefFacilityId = Array.isArray(loan.ukefFacilityId) ? loan.ukefFacilityId[0] : loan.ukefFacilityId;
+        if (ukefFacilityId && !ukefFacilityId.match(regex)) {
           return false;
         }
       }
@@ -103,7 +103,7 @@ const constructor = (listOfFilters) => {
       deal_submissionType: deal.details.submissionType,
       transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: loan.bankReferenceNumber,
-      ukefFacilityId: loan.ukefFacilityID,
+      ukefFacilityId: loan.ukefFacilityId,
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
       currency: loan.currency,

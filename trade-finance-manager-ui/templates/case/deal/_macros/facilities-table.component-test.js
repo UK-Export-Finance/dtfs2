@@ -13,7 +13,7 @@ describe(component, () => {
         _id: '123',
         facilitySnapshot: {
           _id: '123',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           facilityProduct: {
             code: 'BSS',
           },
@@ -38,7 +38,7 @@ describe(component, () => {
         _id: '456',
         facilitySnapshot: {
           _id: '456',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           facilityProduct: {
             code: 'EWCS',
           },
@@ -62,7 +62,7 @@ describe(component, () => {
         _id: '789',
         facilitySnapshot: {
           _id: '789',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           facilityProduct: {
             code: 'EWCS',
           },
@@ -86,7 +86,7 @@ describe(component, () => {
         _id: '112',
         facilitySnapshot: {
           _id: '112',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           facilityProduct: {
             code: '',
           },
@@ -155,15 +155,14 @@ describe(component, () => {
     });
   });
 
-
   describe('for each facility', () => {
-    it('should render ukefFacilityID link, linking to facility id', () => {
+    it('should render ukefFacilityId link, linking to facility id', () => {
       params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
 
         wrapper.expectLink(selector).toLinkTo(
           `/case/${params.caseId}/facility/${facility._id}`,
-          facility.ukefFacilityID,
+          facility.ukefFacilityId,
         );
       });
     });
@@ -216,7 +215,6 @@ describe(component, () => {
       });
     });
 
-
     it('should render coverEndDate table cell', () => {
       params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
@@ -248,7 +246,6 @@ describe(component, () => {
         wrapper.expectText(cellSelector).toRead('-');
       });
     });
-
 
     it('should render ukefExposure', () => {
       params.facilities.forEach((facility) => {

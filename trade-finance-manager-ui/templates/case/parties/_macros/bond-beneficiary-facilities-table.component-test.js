@@ -13,7 +13,7 @@ describe(component, () => {
         _id: '123',
         facilitySnapshot: {
           _id: '123',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           ukefFacilityType: 'bond',
           bondBeneficiary: 'test bond beneficiary',
         },
@@ -27,7 +27,7 @@ describe(component, () => {
           _id: '456',
 
           ukefFacilityType: 'bond',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
           bondBeneficiary: 'test bond beneficiary',
         },
         tfm: {
@@ -39,7 +39,7 @@ describe(component, () => {
         facilitySnapshot: {
           _id: '789',
           ukefFacilityType: 'bond',
-          ukefFacilityID: '0040004833',
+          ukefFacilityId: '0040004833',
         },
         tfm: {
           bondBeneficiaryPartyUrn: '1234-test',
@@ -47,7 +47,6 @@ describe(component, () => {
       },
     ],
   };
-
 
   beforeEach(() => {
     wrapper = render(params);
@@ -67,7 +66,7 @@ describe(component, () => {
     });
   });
 
-  it('should render ukefFacilityID link, linking to facility id', () => {
+  it('should render ukefFacilityId link, linking to facility id', () => {
     const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) =>
       f.ukefFacilityType === 'bond'
       && tfm.bondBeneficiaryPartyUrn);
@@ -77,7 +76,7 @@ describe(component, () => {
 
       wrapper.expectLink(selector).toLinkTo(
         `/case/${params.caseId}/facility/${facilitySnapshot._id}`,
-        facilitySnapshot.ukefFacilityID,
+        facilitySnapshot.ukefFacilityId,
       );
     });
   });

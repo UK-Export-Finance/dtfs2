@@ -20,9 +20,7 @@ const facilityInvestor = (deal, facility) => {
     : '';
 
   return {
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId
-      ? facility.facilitySnapshot.ukefFacilityId.padStart(10, 0)
-      : facility.facilitySnapshot.ukefFacilityID.padStart(10, 0),
+    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
     currency: facility.facilitySnapshot.currency.id

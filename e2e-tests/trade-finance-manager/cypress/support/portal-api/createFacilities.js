@@ -11,7 +11,7 @@ module.exports = (dealId, facilities, user) => {
       const ukefId = getIdFromNumberGenerator();
       const facilityWithId = {
         ...facilityToInsert,
-        ukefFacilityID: ukefId,
+        ukefFacilityId: ukefId,
       };
 
       facilitiesWithUkefIds.push(facilityWithId);

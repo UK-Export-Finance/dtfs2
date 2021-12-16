@@ -6,19 +6,19 @@ describe('send-issued-facilities-received-email - generateIssuedFacilitiesListSt
     const facilities = [
       {
         facilityType: 'bond',
-        ukefFacilityID: '1',
+        ukefFacilityId: '1',
       },
       {
         facilityType: 'loan',
-        ukefFacilityID: '2',
+        ukefFacilityId: '2',
       },
     ];
 
     const facility1Type = capitalizeFirstLetter(facilities[0].facilityType);
-    const facility1Id = facilities[0].ukefFacilityID;
+    const facility1Id = facilities[0].ukefFacilityId;
 
     const facility2Type = capitalizeFirstLetter(facilities[1].facilityType);
-    const facility2Id = facilities[1].ukefFacilityID;
+    const facility2Id = facilities[1].ukefFacilityId;
 
     const expected = `- ${facility1Type} facility with UKEF facility reference: ${facility1Id}\n- ${facility2Type} facility with UKEF facility reference: ${facility2Id}`;
 
