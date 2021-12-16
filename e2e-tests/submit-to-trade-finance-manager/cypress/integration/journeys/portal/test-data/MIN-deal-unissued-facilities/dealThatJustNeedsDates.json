@@ -1,9 +1,9 @@
 {
   "dealType": "BSS/EWCS",
+  "submissionType": "Manual Inclusion Notice",
   "details": {
     "bankSupplyContractID": "abc-1-def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
-    "submissionType": "Manual Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "956",

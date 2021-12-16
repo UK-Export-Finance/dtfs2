@@ -28,7 +28,7 @@ const abandonedDealEmails = async (baseEmailVariables, emailAddresses) => {
 const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
   const EMAIL_TEMPLATE_ID = '718beb52-474e-4f34-a8d7-ab0e48cdffce';
 
-  const { submissionType } = deal.details;
+  const { submissionType } = deal;
 
   const emailVariables = {
     ...baseEmailVariables,
@@ -39,12 +39,12 @@ const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
 };
 
 const send = async (deal, fromStatus, user) => {
+  const { submissionType, details } = deal;
   const {
     status: currentStatus,
     bankSupplyContractID,
-    submissionType,
     maker,
-  } = deal.details;
+  } = details;
 
   const {
     'supplier-name': supplierName,

@@ -6,10 +6,10 @@ const now = new Date().valueOf().toString();
 
 module.exports = [
   {
+    submissionType: 'Automatic Inclusion Notice',
     details: {
       bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
       owningBank: {
         id: '9',
@@ -27,10 +27,10 @@ module.exports = [
       status: 'Incomplete',
     },
   }, {
+    submissionType: 'Automatic Inclusion Notice',
     details: {
       bankSupplyContractID: 'abc-2-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
       owningBank: {
         id: '9',
@@ -45,10 +45,10 @@ module.exports = [
       status: 'Not started',
     },
   }, {
+    submissionType: 'Automatic Inclusion Notice',
     details: {
       bankSupplyContractID: 'abc-3-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
       submissionDate: now,
       owningBank: {
@@ -64,10 +64,10 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
+    submissionType: 'Manual Inclusion Notice',
     details: {
       bankSupplyContractID: 'abc-4-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      submissionType: 'Manual Inclusion Notice',
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
       submissionDate: now,
@@ -92,10 +92,10 @@ module.exports = [
       text: 'to me',
     }],
   }, {
+    submissionType: 'Manual Inclusion Application',
     details: {
       bankSupplyContractID: 'abc-5-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      submissionType: 'Manual Inclusion Application',
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
       submissionDate: now,

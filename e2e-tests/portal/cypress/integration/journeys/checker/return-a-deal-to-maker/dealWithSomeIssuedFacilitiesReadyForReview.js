@@ -5,6 +5,7 @@ const datePlusDay = nowPlusDays(1);
 const datePlusMonth = nowPlusMonths(1);
 
 const deal = {
+  submissionType: 'Automatic Inclusion Notice',
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'mock id',
@@ -12,7 +13,6 @@ const deal = {
     created: date.valueOf(),
     dateOfLastAction: '1596805840467',
     previousWorkflowStatus: 'confirmation_acknowledged',
-    submissionType: 'Automatic Inclusion Notice',
     submissionDate: date.valueOf(),
     previousStatus: 'Acknowledged by UKEF',
     owningBank: {

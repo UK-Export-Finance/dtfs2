@@ -112,11 +112,11 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
     dealSnapshot {
       _id,
       dealType
+      submissionType
       details {
         ukefDealId,
         status,
         submissionDate,
-        submissionType,
         owningBank {
           name,
           emails

@@ -76,11 +76,11 @@ const dealQuery = gql`
       dealSnapshot {
         _id,
         dealType
+        submissionType
         details {
           ukefDealId,
           status,
           submissionDate,
-          submissionType,
           owningBank {
             name,
             emails

@@ -1,6 +1,7 @@
 const now = new Date().valueOf();
 
 const deal = {
+  submissionType: 'Manual Inclusion Notice',
   details: {
     status: 'Acknowledged by UKEF',
     bankSupplyContractID: 'mock id',
@@ -8,7 +9,6 @@ const deal = {
     created: now,
     dateOfLastAction: '1596054999878',
     previousWorkflowStatus: 'Draft',
-    submissionType: 'Manual Inclusion Notice',
     submissionDate: now,
   },
   eligibility: {

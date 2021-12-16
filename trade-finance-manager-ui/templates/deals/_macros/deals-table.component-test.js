@@ -12,9 +12,9 @@ describe(component, () => {
       {
         _id: '123',
         dealSnapshot: {
+          submissionType: 'Automatic Inclusion Notice',
           details: {
             ukefDealId: '0040004833',
-            submissionType: 'Automatic Inclusion Notice',
             owningBank: {
               name: 'Bank name',
             },
@@ -33,9 +33,9 @@ describe(component, () => {
       {
         _id: '456',
         dealSnapshot: {
+          submissionType: 'Automatic Inclusion Notice',
           details: {
             ukefDealId: '0040004834',
-            submissionType: 'Automatic Inclusion Notice',
             owningBank: {
               name: 'Bank name',
             },
@@ -125,7 +125,7 @@ describe(component, () => {
       it('should render submissionType', () => {
         params.deals.forEach((deal) => {
           const cellSelector = `[data-cy="deal-${deal._id}-type"]`;
-          wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.details.submissionType);
+          wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.submissionType);
         });
       });
     });

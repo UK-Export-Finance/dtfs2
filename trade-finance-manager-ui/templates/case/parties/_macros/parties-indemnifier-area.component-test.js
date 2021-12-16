@@ -10,8 +10,8 @@ describe(page, () => {
     deal: {
       _id: '12345678',
       dealType: 'BSS/EWCS',
+      submissionType: 'Automatic Inclusion Notice',
       details: {
-        submissionType: 'Automatic Inclusion Notice',
         bankSupplyContractID: 'contract-1',
         bankSupplyContractName: 'FirstContract',
         owningBank: {

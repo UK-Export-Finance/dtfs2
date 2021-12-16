@@ -8,9 +8,7 @@ describe(page, () => {
 
   const params = {
     deal: {
-      details: {
-        submissionType: 'Automatic Inclusion Notice',
-      },
+      submissionType: 'Automatic Inclusion Notice',
     },
     user: {
       timezone: 'Europe/London',

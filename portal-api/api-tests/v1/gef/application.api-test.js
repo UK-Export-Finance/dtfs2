@@ -250,7 +250,7 @@ describe(baseUrl, () => {
     const updated = {
       ...mockApplications[0],
       bankInternalRefName: 'Updated Ref Name - Unit Test',
-      submissionType: 'Automatic Inclusion Notice',
+      submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
     };
 
     it('rejects requests that do not present a valid Authorization token', async () => {
@@ -476,7 +476,7 @@ describe(baseUrl, () => {
       const dealId = body._id;
 
       // adds required fields to the gef deal
-      await as(aChecker).put({ checkerId: aChecker._id, submissionType: 'Manual Inclusion Application' }).to(`${baseUrl}/${dealId}`);
+      await as(aChecker).put({ checkerId: aChecker._id, submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${baseUrl}/${dealId}`);
       const putResponse = await as(aChecker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
       const result = putResponse.body.portalActivities[0];

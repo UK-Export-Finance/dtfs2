@@ -42,7 +42,7 @@ const buildDashboardFilters = (params, user) => {
   if (SUBMISSION_TYPE[params.filterBySubmissionType]) {
     filters.push(
       {
-        field: 'details.submissionType',
+        field: 'submissionType',
         value: SUBMISSION_TYPE[params.filterBySubmissionType],
       },
     );

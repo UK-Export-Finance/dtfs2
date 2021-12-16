@@ -27,7 +27,7 @@ describe('send-deal-submit-emails - BSS', () => {
     mockDeal = {
       _id: mockDealMia._id,
       ukefDealId: mockDealMia.dealSnapshot.details.ukefDealId,
-      submissionType: mockDealMia.dealSnapshot.details.submissionType,
+      submissionType: mockDealMia.dealSnapshot.submissionType,
       bankReferenceNumber: mockDealMia.dealSnapshot.details.bankSupplyContractID,
       maker: mockDealMia.dealSnapshot.details.maker,
       exporter: {
@@ -66,7 +66,7 @@ describe('send-deal-submit-emails - BSS', () => {
           _id: mockDealMin._id,
           dealType: mockDealMin.dealSnapshot.dealType,
           ukefDealId: mockDealMin.dealSnapshot.details.ukefDealId,
-          submissionType: mockDealMin.dealSnapshot.details.submissionType,
+          submissionType: mockDealMin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealMin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealMin.dealSnapshot.details.maker,
           exporter: {
@@ -127,7 +127,7 @@ describe('send-deal-submit-emails - BSS', () => {
           _id: mockDealMin._id,
           dealType: mockDealMin.dealSnapshot.dealType,
           ukefDealId: mockDealMin.dealSnapshot.details.ukefDealId,
-          submissionType: mockDealMin.dealSnapshot.details.submissionType,
+          submissionType: mockDealMin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealMin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealMin.dealSnapshot.details.maker,
           exporter: {
@@ -185,7 +185,7 @@ describe('send-deal-submit-emails - BSS', () => {
           _id: mockDealAin._id,
           dealType: mockDealAin.dealSnapshot.dealType,
           ukefDealId: mockDealAin.dealSnapshot.details.ukefDealId,
-          submissionType: mockDealAin.dealSnapshot.details.submissionType,
+          submissionType: mockDealAin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealAin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealAin.dealSnapshot.details.maker,
           exporter: {
@@ -246,7 +246,7 @@ describe('send-deal-submit-emails - BSS', () => {
           _id: mockDealAin._id,
           dealType: mockDealAin.dealSnapshot.dealType,
           ukefDealId: mockDealAin.dealSnapshot.details.ukefDealId,
-          submissionType: mockDealAin.dealSnapshot.details.submissionType,
+          submissionType: mockDealAin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealAin.dealSnapshot.details.bankSupplyContractID,
           maker: mockDealAin.dealSnapshot.details.maker,
           exporter: {

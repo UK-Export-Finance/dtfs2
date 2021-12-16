@@ -4,6 +4,7 @@ const now = new Date().valueOf();
 const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
+  submissionType: 'Manual Inclusion Application',
   details: {
     status: 'Accepted by UKEF (with conditions)',
     bankSupplyContractID: 'test',
@@ -38,7 +39,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Manual Inclusion Application',
     previousStatus: "Ready for Checker's approval",
     checker: {
       bank: {
