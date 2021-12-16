@@ -25,9 +25,7 @@ exports.findOne = (req, res) => {
 const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
   const update = {
     submissionDetails,
-    details: {
-      dateOfLastAction: now(),
-    },
+    updatedAt: Date.now(),
   };
 
   /**

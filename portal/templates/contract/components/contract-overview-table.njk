@@ -59,8 +59,8 @@
         {% endif %}
         </td>
 
-        <td data-cy="dateOfLastAction" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+        <td data-cy="updatedAt" class="govuk-table__cell govuk-!-font-size-14">
+          {{ updatedAt | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
         </td>
 
       </tr>

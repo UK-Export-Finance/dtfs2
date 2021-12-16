@@ -5,9 +5,9 @@ const now = require('../../now');
 
 const updateName = async (dealId, to, user) => {
   const modifiedDeal = {
+    updatedAt: Date.now(),
     details: {
       bankSupplyContractName: to,
-      dateOfLastAction: now(),
     },
   };
 

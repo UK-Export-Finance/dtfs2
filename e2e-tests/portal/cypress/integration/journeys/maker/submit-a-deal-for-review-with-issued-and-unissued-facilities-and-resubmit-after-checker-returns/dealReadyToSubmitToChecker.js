@@ -5,12 +5,12 @@ const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     status: 'Draft',
     bankSupplyContractID: 'mock id',
     bankSupplyContractName: 'mock name',
     created: now,
-    dateOfLastAction: '1596805840467',
     owningBank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',

@@ -43,7 +43,7 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
     prop: 'created',
     label: 'Created',
   }, {
-    prop: 'dateOfLastAction',
+    prop: 'updatedAt',
     label: 'Changed',
   }, {
     prop: 'submissionDate',
@@ -79,7 +79,7 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
 
     // Format dates
     row.created = filterLocaliseTimestamp(row.created, timezone);
-    row.dateOfLastAction = filterLocaliseTimestamp(row.dateOfLastAction, timezone);
+    row.updatedAt = filterLocaliseTimestamp(row.updatedAt, timezone);
     row.submissionDate = filterLocaliseTimestamp(row.submissionDate, timezone);
 
     return rows.push(row);

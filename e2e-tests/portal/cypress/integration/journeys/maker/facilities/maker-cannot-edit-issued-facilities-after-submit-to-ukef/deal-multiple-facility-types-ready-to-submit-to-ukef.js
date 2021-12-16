@@ -4,12 +4,12 @@ const now = new Date().valueOf();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'test',
     created: '1598021253917',
-    dateOfLastAction: now,
     maker: {
       username: 'MAKER',
       roles: [

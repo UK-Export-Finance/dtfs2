@@ -3,12 +3,12 @@ const now = new Date().valueOf();
 const deal = {
   _id: '1000998',
   submissionType: 'Manual Inclusion Application',
+  updatedAt: Date.now(),
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'test-deal',
     bankSupplyContractName: 'test-deal',
     created: now,
-    dateOfLastAction: now,
     maker: {
       username: 'MAKER',
       roles: [

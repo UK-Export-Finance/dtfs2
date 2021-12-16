@@ -8,11 +8,11 @@ const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const newDeal = aDeal({
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: "Draft",
-    dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{
     username: 'bananaman',
@@ -92,7 +92,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
       expect(body.deal.details.bankSupplyContractName).toEqual('a new name');
     });
 
-    it('updates the deals details.dateOfLastAction field', async () => {
+    it('updates the deals updatedAt field', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
@@ -101,7 +101,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.details.dateOfLastAction).not.toEqual(newDeal.details.dateOfLastAction);
+      expect(body.deal.updatedAt).not.toEqual(newDeal.updatedAt);
     });
 
   });

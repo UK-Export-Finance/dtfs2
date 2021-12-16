@@ -37,7 +37,6 @@ type DealDetails {
   maker: Maker
   checker: Checker
   checkerMIN: Checker
-  dateOfLastAction: String
   submissionDate: String
   manualInclusionNoticeSubmissionDate: String
   approvalDate: String
@@ -359,6 +358,7 @@ type DealSnapshot {
   _id: String!
   dealType: String!
   submissionType: String
+  updatedAt: Float
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]

@@ -151,9 +151,9 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
   _id: '1',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
+  updatedAt: 1639580324306.0
   details: {
     submissionDate: '1606900616651',
-    dateOfLastAction: '1639589760162'
   },
   facilities: [ '1', '2' ],
   ...

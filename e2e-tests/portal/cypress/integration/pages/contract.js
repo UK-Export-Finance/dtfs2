@@ -17,7 +17,7 @@ const page = {
   checker: () => cy.get('[data-cy="checker"]'),
   submissionDateTableHeader: () => cy.get('[data-cy="submissionDateHeader"]'),
   submissionDate: () => cy.get('[data-cy="submissionDate"]'),
-  dateOfLastAction: () => cy.get('[data-cy="dateOfLastAction"]'),
+  updatedAt: () => cy.get('[data-cy="updatedAt"]'),
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
   addBondButton: () => cy.get('[data-cy="link-add-bond"]'),
   addLoanButton: () => cy.get('[data-cy="link-add-loan"]'),

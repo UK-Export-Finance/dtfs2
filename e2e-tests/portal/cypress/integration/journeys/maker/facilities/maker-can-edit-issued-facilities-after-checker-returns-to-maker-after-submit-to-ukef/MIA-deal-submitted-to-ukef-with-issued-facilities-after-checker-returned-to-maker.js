@@ -7,11 +7,11 @@ const nowPlusWeek = nowPlusDays(7).valueOf();
 const deal = {
   _id: '1001349',
   submissionType: 'Manual Inclusion Application',
+  updatedAt: Date.now(),
   details: {
     status: "Further Maker's input required",
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'testing',
-    dateOfLastAction: now.valueOf(),
     maker: {
       username: 'MAKER',
       roles: [

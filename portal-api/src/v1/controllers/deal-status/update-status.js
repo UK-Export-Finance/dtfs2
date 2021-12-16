@@ -3,9 +3,9 @@ const now = require('../../../now');
 
 const updateStatus = async (dealId, from, to) => {
   const modifiedDeal = {
+    updatedAt: Date.now(),
     details: {
       status: to,
-      dateOfLastAction: now(),
     },
   };
 
