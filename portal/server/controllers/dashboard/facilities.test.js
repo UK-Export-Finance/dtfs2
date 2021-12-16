@@ -1,7 +1,7 @@
 import { bssFacilities, gefFacilities } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
-const { PRODUCT, STATUS } = require('../../constants');
+import { PRODUCT, STATUS } from '../../constants';
 import api from '../../api';
 
 jest.mock('../../helpers', () => ({

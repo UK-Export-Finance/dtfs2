@@ -2,7 +2,7 @@ import { bssDeals, gefDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
 import api from '../../api';
-const { PRODUCT, STATUS } = require('../../constants');
+import { PRODUCT, STATUS } from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
