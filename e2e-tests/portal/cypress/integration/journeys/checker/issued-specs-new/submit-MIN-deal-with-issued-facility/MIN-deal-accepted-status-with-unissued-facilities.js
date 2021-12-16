@@ -1,5 +1,6 @@
 const deal = {
   _id: '1000324',
+  submissionType: 'Manual Inclusion Notice',
   details: {
     status: 'Accepted by UKEF (with conditions)',
     bankSupplyContractID: 'test',
@@ -34,7 +35,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Manual Inclusion Notice',
     previousStatus: 'Submitted',
     checker: {
       bank: {

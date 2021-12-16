@@ -343,7 +343,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   describe('when the MIA deal status changes to `Submitted`', () => {
     it('adds an MIA submissionDate to the deal', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-      submittedDeal.details.submissionType = 'Manual Inclusion Application';
+      submittedDeal.submissionType = 'Manual Inclusion Application';
 
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
@@ -379,9 +379,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     it('should add the makers details as MIN maker', async () => {
       const dealCreatedByMaker = {
         ...completedDeal,
+        submissionType: 'Manual Inclusion Application',
         details: {
           ...completedDeal.details,
-          submissionType: 'Manual Inclusion Application',
           previousWorkflowStatus: 'approved',
         },
       };
@@ -406,10 +406,10 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     it('should add MIN submissionDate and checkers details as MIN checker', async () => {
       const dealCreatedByMaker = JSON.parse(JSON.stringify({
         ...completedDeal,
+        submissionType: 'Manual Inclusion Application',
         details: {
           ...completedDeal.details,
           maker: aBarclaysMaker,
-          submissionType: 'Manual Inclusion Application',
           previousWorkflowStatus: 'approved',
         },
       }));

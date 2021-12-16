@@ -87,7 +87,7 @@ const processTypeB = async ({ filename, fileContents }) => {
   }
 
   const dealStatus = generateStatus(deal, workflowDeal);
-  const dealSubmissionType = deal.details.submissionType;
+  const dealSubmissionType = deal.submissionType;
   const checkIssueFacilities = shouldCheckIssuedFacilities(dealStatus, dealSubmissionType);
 
   const updatedDealInfo = {

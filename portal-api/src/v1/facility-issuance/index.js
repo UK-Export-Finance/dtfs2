@@ -3,11 +3,11 @@ const CONSTANTS = require('../../constants');
 const canIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes('maker');
 
+  const { submissionType, details } = deal;
   const {
     status,
-    submissionType,
     submissionDate,
-  } = deal.details;
+  } = details;
 
   const dealHasBeenSubmitted = submissionDate;
 

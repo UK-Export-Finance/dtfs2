@@ -19,9 +19,9 @@ context('User can view and filter multiple deals', () => {
   });
 
   const DEAL_WITH_TEST_MIN_SUBMISSION_TYPE = createMockDeal({
+    submissionType: 'Manual Inclusion Notice',
     details: {
       status: 'Submitted',
-      submissionType: 'Manual Inclusion Notice',
     },
   });
 
@@ -31,10 +31,10 @@ context('User can view and filter multiple deals', () => {
   });
 
   const DEAL_WITH_TEST_MIA_SUBMISSION_TYPE = createMockDeal({
+    submissionType: 'Manual Inclusion Application',
     details: {
       testId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
       status: 'Submitted',
-      submissionType: 'Manual Inclusion Application',
     },
   });
 
@@ -177,7 +177,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by submission type', () => {
-    const searchString = DEAL_WITH_TEST_MIN_SUBMISSION_TYPE.details.submissionType;
+    const searchString = DEAL_WITH_TEST_MIN_SUBMISSION_TYPE.submissionType;
 
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();

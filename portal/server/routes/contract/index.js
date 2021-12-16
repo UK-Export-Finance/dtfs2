@@ -70,7 +70,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     userCanSubmit: userCanSubmitDeal(deal, user),
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
-    allRequestedCoverStartDatesConfirmed: deal.details.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
+    allRequestedCoverStartDatesConfirmed: deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
   });
 });
 

@@ -3,6 +3,7 @@ const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 const now = new Date().valueOf();
 
 const deal = {
+  submissionType: 'Automatic Inclusion Notice',
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'test',
@@ -37,7 +38,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Automatic Inclusion Notice',
     previousStatus: 'Draft',
   },
   eligibility: {
