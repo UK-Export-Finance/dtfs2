@@ -1,10 +1,10 @@
 {
   "_id": "1001291",
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "ukefDealId": "0040005777",
     "status": "Submitted",
     "submissionDate": "1613557575317",
-    "submissionType": "Automatic Inclusion Notice",
     "owningBank": {
       "name": "UKEF test bank (Delegated)",
       "emails": ["checker@ukexportfinance.gov.uk"],

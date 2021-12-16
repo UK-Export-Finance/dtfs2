@@ -8,9 +8,9 @@ describe(page, () => {
   const params = {
     dealId: '100200',
     deal: {
+      submissionType: 'Automatic Inclusion Notice',
       details: {
         ukefDealId: '1234',
-        submissionType: 'Automatic Inclusion Notice',
       },
       submissionDetails: {
         supplierName: 'Supplier name',
