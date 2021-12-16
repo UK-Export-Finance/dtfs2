@@ -119,12 +119,5 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     hasError,
   ];
 };
-/*
-
-    submissionType: 'Manual Inclusion Application',
-
-  }
-  */
-
 
 module.exports = mapBondTransactions;

@@ -19,9 +19,9 @@ context('User can view and sort deals by stage', () => {
   });
 
   const DEAL_APPLICATION = createMockDeal({
+    submissionType: 'Manual Inclusion Application',
     details: {
       testId: 'DEAL_APPLICATION',
-      submissionType: 'Manual Inclusion Application',
     },
     mockFacilities: MOCK_DEAL_AIN.mockFacilities,
   });

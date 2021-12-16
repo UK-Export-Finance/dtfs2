@@ -1,6 +1,7 @@
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED',
   dealType: 'BSS/EWCS',
+  submissionType: 'Manual Inclusion Notice',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
@@ -18,7 +19,6 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Manual Inclusion Notice',
     submissionDate: '1606900616651',
     submissionCount: 2,
     owningBank: {

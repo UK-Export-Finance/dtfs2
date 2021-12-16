@@ -1,6 +1,7 @@
 const moment = require('moment');
 
 const deal = {
+  submissionType: 'Manual Inclusion Notice',
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
@@ -8,7 +9,6 @@ const deal = {
     previousStatus: 'Draft',
     dateOfLastAction: '1985/11/04 21:00:00:000',
     previousWorkflowStatus: 'Draft',
-    submissionType: 'Manual Inclusion Notice',
     checker: {
       username: 'test1',
     },

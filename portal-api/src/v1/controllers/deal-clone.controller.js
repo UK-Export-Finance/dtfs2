@@ -73,11 +73,11 @@ exports.clone = async (req, res) => {
 
     const modifiedDeal = {
       ...existingDealWithoutId,
+      submissionType: existingDeal.submissionType,
       details: {
         bankSupplyContractID,
         bankSupplyContractName,
         dateOfLastAction: existingDeal.details.dateOfLastAction,
-        submissionType: existingDeal.details.submissionType,
         maker: req.user,
         owningBank: existingDeal.details.owningBank,
       },
@@ -91,8 +91,8 @@ exports.clone = async (req, res) => {
       facilities: DEFAULTS.DEAL.facilities,
     };
 
-    if (modifiedDeal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
-      modifiedDeal.details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    if (modifiedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+      modifiedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     }
 
     const validationErrors = getCloneDealErrors(modifiedDeal, cloneTransactions);

@@ -136,21 +136,15 @@ describe('/v1/tfm/deals', () => {
 
       it('returns deals filtered by submissionType', async () => {
         const ainDeal = newDeal({
-          details: {
-            submissionType: 'Automatic Inclusion Notice',
-          },
+          submissionType: 'Automatic Inclusion Notice',
         });
 
         const miaDeal = newDeal({
-          details: {
-            submissionType: 'Manual Inclusion Application',
-          },
+          submissionType: 'Manual Inclusion Application',
         });
 
         const minDeal = newDeal({
-          details: {
-            submissionType: 'Manual Inclusion Notice',
-          },
+          submissionType: 'Manual Inclusion Notice',
         });
 
         const submittedDeals = await createAndSubmitDeals([
@@ -161,7 +155,7 @@ describe('/v1/tfm/deals', () => {
 
         const mockReqBody = {
           queryParams: {
-            searchString: ainDeal.details.submissionType,
+            searchString: ainDeal.submissionType,
           },
         };
 
@@ -170,7 +164,7 @@ describe('/v1/tfm/deals', () => {
         expect(status).toEqual(200);
 
         const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.details.submissionType === ainDeal.details.submissionType);
+          deal.dealSnapshot.submissionType === ainDeal.submissionType);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -224,10 +218,10 @@ describe('/v1/tfm/deals', () => {
         });
 
         const miaDealWithApplicationStage = newDeal({
+          submissionType: 'Manual Inclusion Application',
           details: {
             ukefDealId: 'DEAL-WITH-APPLICATION-STAGE',
             status: 'Submitted',
-            submissionType: 'Manual Inclusion Application',
           },
         });
 
@@ -258,9 +252,9 @@ describe('/v1/tfm/deals', () => {
         let submittedDeals;
 
         const dealWithBonds = newDeal({
+          submissionType: 'Automatic Inclusion Notice',
           details: {
             ukefDealId: 'DEAL-WITH-BONDS',
-            submissionType: 'Automatic Inclusion Notice',
           },
           bondTransactions: {
             items: [
@@ -270,9 +264,9 @@ describe('/v1/tfm/deals', () => {
         });
 
         const dealWithLoans = newDeal({
+          submissionType: 'Manual Inclusion Application',
           details: {
             ukefDealId: 'DEAL-WITH-LOANS',
-            submissionType: 'Manual Inclusion Application',
           },
           loanTransactions: {
             items: [
@@ -328,9 +322,9 @@ describe('/v1/tfm/deals', () => {
 
         it('returns deals filtered by bond and loan productCode', async () => {
           const dealWithBondsAndLoans = newDeal({
+            submissionType: 'Manual Inclusion Application',
             details: {
               ukefDealId: 'DEAL-WITH-BONDS-AND-LOANS',
-              submissionType: 'Manual Inclusion Application',
             },
             loanTransactions: {
               items: [

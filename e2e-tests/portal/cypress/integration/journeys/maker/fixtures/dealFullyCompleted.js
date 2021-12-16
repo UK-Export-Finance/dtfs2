@@ -5,6 +5,7 @@ const nowPlusMonth = nowPlusMonths(1);
 const nowMinusDay = nowPlusDays(-1);
 
 const deal = {
+  submissionType: 'Automatic Inclusion Notice',
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',

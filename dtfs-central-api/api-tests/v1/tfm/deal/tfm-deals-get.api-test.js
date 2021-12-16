@@ -14,6 +14,7 @@ const mockUser = {
 };
 
 const newDeal = (dealOverrides) => ({
+  ...dealOverrides,
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
@@ -87,21 +88,15 @@ describe('/v1/tfm/deals', () => {
   describe('GET /v1/tfm/deals', () => {
     it('returns all deals', async () => {
       const miaDeal = newDeal({
-        details: {
-          submissionType: 'Manual Inclusion Application',
-        },
+        submissionType: 'Manual Inclusion Application',
       });
 
       const minDeal = newDeal({
-        details: {
-          submissionType: 'Manual Inclusion Notice',
-        },
+        submissionType: 'Manual Inclusion Notice',
       });
 
       const ainDeal = newDeal({
-        details: {
-          submissionType: 'Automatic Inclusion Notice',
-        },
+        submissionType: 'Automatic Inclusion Notice',
       });
 
       await createAndSubmitDeals([

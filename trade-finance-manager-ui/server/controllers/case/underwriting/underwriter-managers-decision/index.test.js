@@ -22,9 +22,7 @@ const mockDeal = {
   _id: '1000023',
   dealSnapshot: {
     _id: '1000023',
-    details: {
-      submissionType: 'Manual Inclusion Application',
-    },
+    submissionType: 'Manual Inclusion Application',
   },
   tfm: {},
 };
@@ -34,7 +32,7 @@ const dealId = mockDeal._id;
 describe('GET underwriting - underwriting managers decision', () => {
   const userCanEdit = canUserEditManagersDecision(
     session.user,
-    mockDeal.dealSnapshot.details.submissionType,
+    mockDeal.dealSnapshot.submissionType,
     mockDeal.tfm,
   );
 
