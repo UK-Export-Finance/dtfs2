@@ -207,20 +207,20 @@ const selectDropdownAddresses = (addresses) => {
 };
 
 const status = ({
-  NOT_STARTED: {
-    text: 'Not started',
+  [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
+    text: CONSTANTS.DEAL_STATUS.NOT_STARTED,
     class: 'govuk-tag--grey',
-    code: 'NOT_STARTED',
+    code: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
-  IN_PROGRESS: {
-    text: 'In progress',
+  [CONSTANTS.DEAL_STATUS.IN_PROGRESS]: {
+    text: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     class: 'govuk-tag--blue',
-    code: 'IN_PROGRESS',
+    code: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   },
-  COMPLETED: {
-    text: 'Completed',
+  [CONSTANTS.DEAL_STATUS.COMPLETED]: {
+    text: CONSTANTS.DEAL_STATUS.COMPLETED,
     class: 'govuk-tag--green',
-    code: 'COMPLETED',
+    code: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
 });
 

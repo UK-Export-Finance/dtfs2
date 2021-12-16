@@ -4,6 +4,7 @@ const db = require('../../../drivers/db-client');
 const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
+const CONSTANTS = require('../../../constants');
 
 const cloneExporter = (currentExporter) => {
   const clonedExporter = currentExporter;
@@ -123,7 +124,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId,
   clonedDeal.updatedAt = Date.now();
   clonedDeal.facilitiesUpdated = Date.now();
   clonedDeal.eligibility.updatedAt = Date.now();
-  clonedDeal.status = 'DRAFT';
+  clonedDeal.status = CONSTANTS.DEAL.STATUS.DRAFT;
   clonedDeal.submissionCount = 0;
   clonedDeal.submissionDate = null;
   clonedDeal.bankInternalRefName = bankInternalRefName;

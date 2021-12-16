@@ -1,6 +1,5 @@
 const api = require('../../api');
-
-const { PRODUCT } = require('../../constants');
+const { PRODUCT, STATUS } = require('../../constants');
 
 const {
   getApiData,
@@ -46,7 +45,7 @@ exports.bssDeals = async (req, res) => {
   if (isChecker && !isMaker) {
     filters.push({
       field: 'status',
-      value: "Ready for Checker's approval",
+      value: STATUS.readyForApproval,
     });
   }
 
@@ -85,7 +84,7 @@ exports.gefDeals = async (req, res) => {
   if (isChecker && !isMaker) {
     filters.push({
       field: 'status',
-      value: 'BANK_CHECK',
+      value: STATUS.readyForApproval,
     });
   }
 

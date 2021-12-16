@@ -22,7 +22,7 @@ context('Return to Maker', () => {
     cy.apiLogin(CREDENTIALS.CHECKER)
       .then((token) => token)
       .then((token) => {
-        cy.apiSetApplicationStatus(dealIds[2], token, 'BANK_CHECK');
+        cy.apiSetApplicationStatus(dealIds[2], token, 'Ready for Checker\'s approval');
       });
 
     cy.login(CREDENTIALS.MAKER);

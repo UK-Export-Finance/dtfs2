@@ -25,7 +25,7 @@ context('View a deal with checker role', () => {
     cy.insertOneGefApplication(checkerDealData, MAKER_LOGIN)
       .then((insertedDeal) => {
         checkerDeal = insertedDeal;
-        cy.setGefApplicationStatus(checkerDeal._id, 'BANK_CHECK', MAKER_LOGIN);
+        cy.setGefApplicationStatus(checkerDeal._id, 'Ready for Checker\'s approval', MAKER_LOGIN);
       });
 
     cy.insertOneGefApplication(draftDealData, MAKER_LOGIN);

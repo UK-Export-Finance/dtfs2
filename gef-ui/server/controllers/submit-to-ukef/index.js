@@ -1,4 +1,4 @@
-const { PROGRESS } = require('../../constants');
+const CONSTANTS = require('../../constants');
 const { validationErrorHandler, isNotice } = require('../../utils/helpers');
 const api = require('../../services/api');
 
@@ -62,7 +62,7 @@ const createSubmissionToUkef = async (req, res) => {
     // Always update with the latest checkers details.
     application.checkerId = user._id;
     await api.updateApplication(dealId, application);
-    await api.setApplicationStatus(dealId, PROGRESS.SUBMITTED_TO_UKEF);
+    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType: application.submissionType,

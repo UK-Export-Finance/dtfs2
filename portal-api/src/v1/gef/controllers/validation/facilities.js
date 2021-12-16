@@ -1,4 +1,5 @@
-const { STATUS, PAYMENT_TYPE, FACILITY_TYPE } = require('../../enums');
+const CONSTANTS = require('../../../../constants');
+const { PAYMENT_TYPE, FACILITY_TYPE } = require('../../enums');
 
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
@@ -56,28 +57,28 @@ const hasRequiredItems = (doc) => {
 const facilitiesStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return STATUS.NOT_STARTED;
+    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
   }
   if (requiredCount > 0) {
-    return STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
-    return STATUS.COMPLETED;
+    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
   }
 };
 
 const facilitiesOverallStatus = (facilities) => {
-  let result = STATUS.NOT_STARTED;
+  let result = CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
   const allStatus = [];
   facilities.forEach((item) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
   if (uniqueStatus.length > 0) {
-    result = STATUS.IN_PROGRESS;
+    result = CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
   }
-  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === STATUS.COMPLETED) {
-    result = STATUS.COMPLETED;
+  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === CONSTANTS.DEAL.GEF_STATUS.COMPLETED) {
+    result = CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
   }
   return result;
 };

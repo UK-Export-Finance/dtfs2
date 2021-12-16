@@ -1,7 +1,7 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { PROGRESS } = require('../../constants');
 const Application = require('../../models/application');
+const CONSTANTS = require('../../constants');
 
 const maxCommentLength = 400;
 
@@ -52,7 +52,7 @@ const postApplicationSubmission = async (req, res, next) => {
     } else {
       await api.updateApplication(dealId, { editorId: user._id });
     }
-    await api.setApplicationStatus(dealId, PROGRESS.BANK_CHECK);
+    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.BANK_CHECK);
   } catch (err) {
     console.error(err);
     return next(err);

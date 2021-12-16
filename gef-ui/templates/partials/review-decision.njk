@@ -43,12 +43,12 @@
     <header>
         {% set bannerHtml %}
             <h2 data-cy="ukef-review-decision-heading">Review UKEF decision</h2>
-            {% if applicationStatus == 'UKEF_APPROVED_WITHOUT_CONDITIONS' %}
+            {% if applicationStatus == 'Accepted (without conditions)' %}
                 <p>UKEF has approved your application without conditions.</p>
-            {% elif applicationStatus == 'UKEF_APPROVED_WITH_CONDITIONS' %}
+            {% elif applicationStatus == 'Accepted (with conditions)' %}
                 <p>UKEF has approved your application with the following conditions:</p>
                 <p>{{ ukefDecision[0].text | safe }}</p>
-            {% elif applicationStatus == 'UKEF_REFUSED' %}
+            {% elif applicationStatus == 'Rejected by UKEF' %}
                 <p>The manual inclusion application was rejected for the following reasons:</p>
                 <p>{{ ukefDecision[0].text | safe }}</p>
             {% endif %}

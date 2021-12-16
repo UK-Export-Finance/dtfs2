@@ -5,7 +5,6 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
-const getStatusLabel = require('./filter-getStatusLabel');
 let mojFilters = require('../../node_modules/@ministryofjustice/frontend/moj/filters/all')();
 
 const configureNunjucks = (opts) => {
@@ -24,7 +23,6 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
-  nunjucksEnvironment.addFilter('getStatusLabel', getStatusLabel);
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {
     nunjucksEnvironment.addFilter(filterName, mojFilters[filterName]);

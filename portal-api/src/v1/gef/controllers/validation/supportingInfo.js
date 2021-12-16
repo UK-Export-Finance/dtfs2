@@ -1,4 +1,4 @@
-const { STATUS } = require('../../enums');
+const CONSTANTS = require('../../../../constants');
 
 const supportingInfoStatus = (supportingInfo) => {
   if (supportingInfo) {
@@ -11,16 +11,16 @@ const supportingInfoStatus = (supportingInfo) => {
     const answeredCount = Object.keys(supportingInfoAnswers).length;
 
     if (!answeredCount) {
-      return STATUS.NOT_STARTED;
+      return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
     }
 
     if (answeredCount === requiredCount) {
-      return STATUS.COMPLETED;
+      return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
     }
 
-    return STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
   }
-  return STATUS.NOT_STARTED;
+  return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
 };
 
 module.exports = {

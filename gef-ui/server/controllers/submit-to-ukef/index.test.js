@@ -1,5 +1,6 @@
 import { submitToUkef, createSubmissionToUkef } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 const { isNotice } = require('../../utils/helpers');
 
@@ -29,7 +30,7 @@ const MockRequest = () => {
 };
 
 const mockFacilities = {
-  status: 'NOT_STARTED',
+  status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
 };
 
 const MockFacilitiesResponse = () => mockFacilities;
