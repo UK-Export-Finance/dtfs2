@@ -1,6 +1,5 @@
 const {
   unansweredFields,
-  exporterValidation,
   exporterCheckEnums,
   exporterStatus,
 } = require('../../../../src/v1/gef/controllers/validation/exporter');
@@ -18,7 +17,7 @@ describe('GEF controllers validation - exporter', () => {
     probabilityOfDefault: true,
     isFinanceIncreasing: true,
   };
- 
+
   describe('unansweredFields', () => {
     it('should return an array of unanswered fields', () => {
       const mockAnswers = {

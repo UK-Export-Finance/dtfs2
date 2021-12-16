@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 const CONSTANTS = require('../../../../constants');
 const { SME_TYPE } = require('../../enums');
 
@@ -71,13 +69,8 @@ const exporterCheckEnums = (doc) => {
   return enumErrors.length === 0 ? null : enumErrors;
 };
 
-const exporterValidation = (doc) => ({
-  required: hasRequiredItems(doc),
-});
-
 module.exports = {
   unansweredFields,
   exporterStatus,
   exporterCheckEnums,
-  exporterValidation,
 };

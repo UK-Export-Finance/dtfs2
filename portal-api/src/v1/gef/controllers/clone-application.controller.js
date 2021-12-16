@@ -79,6 +79,8 @@ const cloneFacilities = async (currentDealId, newDealId) => {
       allFacilities[val].updatedAt = Date.now();
       // reset the ukefFacilityId
       allFacilities[val].ukefFacilityId = null;
+      // reset the coverDateConfirmed
+      allFacilities[val].coverDateConfirmed = null;
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
@@ -98,7 +100,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId,
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
   // any additional fields that are located at the root of the object and that need removing can be added here
-  const unusedProperties = ['_id', 'ukefDecision', 'comments', 'previousStatus'];
+  const unusedProperties = ['_id', 'ukefDecision', 'ukefDecisionAccepted', 'comments', 'previousStatus'];
   // removed unused properties inside the `supportingInformation` property
   const unusedSupportingInfo = ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'];
 
