@@ -1,5 +1,7 @@
 import relative from './relativeURL';
-import { MOCK_AIN_APPLICATION } from '../fixtures/MOCKS/MOCK_DEALS';
+import {
+  MOCK_AIN_APPLICATION, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
+} from '../fixtures/MOCKS/MOCK_DEALS';
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
@@ -12,30 +14,30 @@ import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 import statusBanner from './pages/application-status-banner';
 
 let applicationId;
+let tokenStore;
 
 context('Unissued Facilities AIN', () => {
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER)
-      .then((token) => token)
-      .then((token) => {
-        cy.apiFetchAllApplications(token);
-      })
-      .then(({ body }) => {
-        applicationId = body.items[2]._id;
-
-        cy.login(CREDENTIALS.MAKER);
+    console.log('here');
+    cy.apiLogin(CREDENTIALS.CHECKER)
+      .then((token) => { tokenStore = token; console.log('token', token); })
+      .then(() => {
+        cy.createApplication(CREDENTIALS.MAKER, tokenStore).then(({ body }) => {
+          applicationId = body.items[2]._id;
+          console.log(body);
+        });
       });
   });
 
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
-      cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${applicationId}`));
+    //   Cypress.Cookies.preserveOnce('connect.sid');
+    //   cy.login(CREDENTIALS.MAKER);
+    //   cy.visit(relative(`/gef/application-details/${applicationId}`));
     });
 
     it('task comment box exists with correct header and unissued facilities link', () => {
-      applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
+      // applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
     });
   });
 });

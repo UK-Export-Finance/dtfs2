@@ -144,7 +144,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
         ]
         : []),
     ];
-  } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.changedToIssued === true) {
+  } else if (app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker') && data.details.changedToIssued === true) {
     /**
      *  if submitted to UKEF && logged in as maker && facility changed to issued
      * can change name, coverStartDate and coverEndDate column
@@ -162,7 +162,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
         ]
         : []),
     ];
-  } else if (app.status === 'UKEF_ACKNOWLEDGED' && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
+  } else if (app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
     /**
      *  if submitted to UKEF && logged in as maker && facility still unissued
      * only shows if other facilities have been changed to issued
@@ -362,7 +362,7 @@ const isUkefReviewPositive = (applicationStatus) => {
  * */
 
 const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = ['UKEF_ACKNOWLEDGED'];
+  const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
   const accepableApplicationType = ['Automatic Inclusion Notice'];
 
   if (!accepableApplicationType.includes(application.submissionType)) {

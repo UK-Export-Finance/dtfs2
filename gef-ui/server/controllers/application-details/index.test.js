@@ -283,7 +283,7 @@ describe('controllers/application-detaills', () => {
       });
 
       it('renders `unissued-facilities` when page requested is `unissued facilities` ', async () => {
-        mockApplicationResponse.status = 'UKEF_ACKNOWLEDGED';
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mocks.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse);

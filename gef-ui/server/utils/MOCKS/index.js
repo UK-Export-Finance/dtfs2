@@ -1,26 +1,28 @@
+const CONSTANTS = require('../../constants');
+
 const MOCK_AIN_APPLICATION = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
-  status: 'UKEF_ACKNOWLEDGED',
+  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bankId: '9',
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
     updatedAt: 1638535562287,
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
   bankInternalRefName: 'abc',
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionType: 'Automatic Inclusion Notice',
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
   submissionCount: 1,
   submissionDate: '1638363716309',
   supportingInformation: {
     manualInclusion: [],
     securityDetails: {},
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     requiredFields: [],
   },
   ukefDealId: '0030113304',
@@ -29,16 +31,16 @@ const MOCK_AIN_APPLICATION = {
   additionalRefName: null,
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: 'UKEF_IN_PROGRESS',
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   ukefDecision: [],
   ukefDecisionAccepted: true,
   id: '61a7710b2ae62b0013dae687',
-  exporter: { status: 'COMPLETED', details: [], validation: [] },
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
   facilities: {
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
     items: [
       {
-        status: 'COMPLETED',
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
         details: {
           _id: '61a771cc2ae62b0013dae68a',
           applicationId: '61a7710b2ae62b0013dae687',
@@ -70,7 +72,7 @@ const MOCK_AIN_APPLICATION = {
         validation: { required: [] },
       },
       {
-        status: 'COMPLETED',
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
         details: {
           _id: '61a771cc2ae62b0013dae69a',
           applicationId: '61a7710b2ae62b0013dae687',
@@ -140,25 +142,25 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
-  status: 'UKEF_ACKNOWLEDGED',
+  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bankId: '9',
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
     updatedAt: 1638535562287,
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
   bankInternalRefName: 'abc',
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionType: 'Automatic Inclusion Notice',
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
   submissionCount: 1,
   submissionDate: '1638363716309',
   supportingInformation: {
     manualInclusion: [],
     securityDetails: {},
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     requiredFields: [],
   },
   ukefDealId: '0030113304',
@@ -167,16 +169,16 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   additionalRefName: null,
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: 'UKEF_IN_PROGRESS',
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   ukefDecision: [],
   ukefDecisionAccepted: true,
   id: '61a7710b2ae62b0013dae687',
-  exporter: { status: 'COMPLETED', details: [], validation: [] },
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
   facilities: {
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
     items: [
       {
-        status: 'COMPLETED',
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
         details: {
           _id: '61a771cc2ae62b0013dae68a',
           applicationId: '61a7710b2ae62b0013dae687',
@@ -246,25 +248,25 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
-  status: 'UKEF_ACKNOWLEDGED',
+  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bankId: '9',
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
     updatedAt: 1638535562287,
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
   bankInternalRefName: 'abc',
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionType: 'Automatic Inclusion Notice',
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
   submissionCount: 1,
   submissionDate: '1638363716309',
   supportingInformation: {
     manualInclusion: [],
     securityDetails: {},
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     requiredFields: [],
   },
   ukefDealId: '0030113304',
@@ -273,16 +275,16 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   additionalRefName: null,
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: 'UKEF_IN_PROGRESS',
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   ukefDecision: [],
   ukefDecisionAccepted: true,
   id: '61a7710b2ae62b0013dae687',
-  exporter: { status: 'COMPLETED', details: [], validation: [] },
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
   facilities: {
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
     items: [
       {
-        status: 'COMPLETED',
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
         details: {
           _id: '61a771cc2ae62b0013dae68a',
           applicationId: '61a7710b2ae62b0013dae687',
@@ -349,7 +351,7 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
 };
 
 const MOCK_UNISSUED_FACILITY = {
-  status: 'COMPLETED',
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
   details: {
     _id: '61a771cc2ae62b0013dae68a',
     applicationId: '61a7710b2ae62b0013dae687',
@@ -382,7 +384,7 @@ const MOCK_UNISSUED_FACILITY = {
 };
 
 const MOCK_ISSUED_FACILITY = {
-  status: 'COMPLETED',
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
   details: {
     _id: '61a771cc2ae62b0013dae68a',
     applicationId: '61a7710b2ae62b0013dae687',
@@ -416,7 +418,7 @@ const MOCK_ISSUED_FACILITY = {
 };
 
 const MOCK_ISSUED_FACILITY_UNCHANGED = {
-  status: 'COMPLETED',
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
   details: {
     _id: '61a771cc2ae62b0013dae68a',
     applicationId: '61a7710b2ae62b0013dae687',
@@ -476,25 +478,25 @@ const MOCK_DEAL = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
-  status: 'BANK_CHECK',
+  status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bankId: '9',
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
     updatedAt: 1638535562287,
-    status: 'COMPLETED',
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
   bankInternalRefName: 'abc',
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionType: 'Manual Inclusion Application',
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
   submissionCount: 1,
   submissionDate: '1638363716309',
   supportingInformation: {
     manualInclusion: [],
     securityDetails: {},
-    status: 'IN_PROGRESS',
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
     requiredFields: [],
   },
   ukefDealId: '0030113304',
@@ -503,12 +505,12 @@ const MOCK_DEAL = {
   additionalRefName: null,
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: 'UKEF_IN_PROGRESS',
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
   ukefDecision: [],
   ukefDecisionAccepted: true,
   id: '61a7710b2ae62b0013dae687',
-  exporter: { status: 'COMPLETED', details: [], validation: [] },
-  facilities: { status: 'COMPLETED', items: [] },
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
+  facilities: { status: CONSTANTS.DEAL_STATUS.COMPLETED, items: [] },
   exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
@@ -544,7 +546,7 @@ const MOCK_DEAL = {
 const MOCK_FACILITY = {
   items: [
     {
-      status: 'COMPLETED',
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
       details: {
         _id: '61a7714f2ae62b0013dae689',
         applicationId: '61a7710b2ae62b0013dae687',
@@ -576,7 +578,7 @@ const MOCK_FACILITY = {
       validation: { required: [] },
     },
     {
-      status: 'COMPLETED',
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
       details: {
         _id: '61a771cc2ae62b0013dae68a',
         applicationId: '61a7710b2ae62b0013dae687',

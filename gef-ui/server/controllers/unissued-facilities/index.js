@@ -2,9 +2,9 @@ const {
   add, format, isAfter, isBefore, set,
 } = require('date-fns');
 const api = require('../../services/api');
-const { FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
-const CONSTANTS = require('../../../constants');
+const CONSTANTS = require('../../constants');
 const { applicationDetails } = require('../application-details');
 
 /**
