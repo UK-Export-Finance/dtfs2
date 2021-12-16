@@ -50,7 +50,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   const dealResults = await collection.find(query);
   const count = await dealResults.count();
   const deals = await dealResults
-    .sort({ 'details.dateOfLastAction': -1 })
+    .sort({ 'updatedAt': -1 })
     .skip(start)
     .limit(pagesize)
     .toArray();
@@ -184,7 +184,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         product: 'BSS/EWCS',
         type: '$details.submissionType',
         exporter: '$exporter.companyName',
-        lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
+        lastUpdate: { $convert: { input: 'updatedAt', to: 'double' } },
         userId: '$details.maker._id',
       },
     },

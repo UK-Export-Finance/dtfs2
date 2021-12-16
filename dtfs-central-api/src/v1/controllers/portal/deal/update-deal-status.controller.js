@@ -1,7 +1,6 @@
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -17,11 +16,11 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
 
   const modifiedDeal = {
     ...existingDeal,
+    updatedAt: Date.now(),
     details: {
       ...existingDeal.details,
       status,
       previousStatus,
-      dateOfLastAction: now(),
     },
   };
 

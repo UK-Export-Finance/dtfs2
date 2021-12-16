@@ -15,11 +15,11 @@ const createDeal = async (deal, maker) => {
     _id: dealId,
     ...DEFAULTS.DEAL,
     ...deal,
+    updatedAt: Date.now(),
     details: {
       ...DEFAULTS.DEAL.details,
       ...details,
       created: time,
-      dateOfLastAction: time,
       maker,
       owningBank: maker && maker.bank,
     },

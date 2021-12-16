@@ -10,6 +10,12 @@
  *       dealType:
  *         type: string
  *         example: 'BSS/EWCS'
+ *       submissionType:
+ *         type: string
+ *         example: Automatic Inclusion Notice
+ *       updatedAt:
+ *         type: integer
+ *         example: 1639675204629.0
  *       details:
  *         type: object
  *         properties:
@@ -22,17 +28,11 @@
  *           bankSupplyContractName:
  *             type: string
  *             example: Test
- *           submissionType:
- *             type: string
- *             example: Automatic Inclusion Notice
  *           owningBank:
  *             $ref: '#/definitions/Bank'
  *           maker:
  *             $ref: '#/definitions/User'
  *           created:
- *             type: string
- *             example: '1632389070727'
- *           dateOfLastAction:
  *             type: string
  *             example: '1632389070727'
  *           previousStatus:
