@@ -43,7 +43,7 @@ const expectAddedFields = (obj) => {
 };
 
 const expectedEditedByObject = (user) => ({
-  date: expect.any(String),
+  date: expect.any(Number),
   username: user.username,
   roles: user.roles,
   bank: user.bank,
