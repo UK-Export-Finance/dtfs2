@@ -30,7 +30,7 @@ const hasRequiredItems = (doc) => {
   if (strippedDetails && strippedDetails.includes('OTHER') && !doc.detailsOther) {
     required.push('detailsOther');
   }
-  if (!doc.currency) {
+  if (!doc.currency.id) {
     required.push('currency');
   }
   if (!doc.value) {

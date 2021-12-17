@@ -47,7 +47,7 @@ describe(baseUrl, () => {
         monthsOfCover: null,
         details: null,
         detailsOther: null,
-        currency: null,
+        currency: { id: null },
         value: null,
         coverPercentage: null,
         interestPercentage: null,
@@ -76,7 +76,7 @@ describe(baseUrl, () => {
       monthsOfCover: 12,
       details: ['test', 'test'],
       detailsOther: null,
-      currency: { id: 'GBP' },
+      currency: 'GBP',
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
@@ -206,7 +206,7 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: false,
         name: 'Matt',
-        currency: { id: 'GBP' },
+        currency: 'GBP',
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -216,7 +216,9 @@ describe(baseUrl, () => {
         status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         details: {
           ...details,
-          ...update,
+          hasBeenIssued: false,
+          name: 'Matt',
+          currency: { id: 'GBP' },
           updatedAt: expect.any(Number),
         },
         validation: {
@@ -265,7 +267,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: { id: 'GBP' },
+        currency: 'GBP',
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -296,6 +298,8 @@ describe(baseUrl, () => {
         },
       };
 
+      expected.details.currency = { id: update.currency };
+
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
     });
@@ -311,7 +315,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: { id: 'GBP' },
+        currency: 'GBP',
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -337,6 +341,8 @@ describe(baseUrl, () => {
           required: ['name'],
         },
       };
+
+      expected.details.currency = { id: 'GBP' };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
@@ -384,6 +390,8 @@ describe(baseUrl, () => {
           required: [],
         },
       };
+
+      expected.details.currency = { id: 'GBP' };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
@@ -536,7 +544,7 @@ describe(baseUrl, () => {
         errMsg: 'No Application ID and/or facility type sent with request',
       }]);
     });
-    it('returns an mandator error when facilty type is missing', async () => {
+    it('returns an mandator error when facility type is missing', async () => {
       const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id }).to(baseUrl);
       expect(status).toEqual(422);
       expect(body).toEqual([{
