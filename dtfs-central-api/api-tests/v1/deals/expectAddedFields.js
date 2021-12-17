@@ -28,6 +28,7 @@ const expectAddedFields = (obj) => {
     },
     facilities: [],
     editedBy: [],
+    exporter: {},
   });
 
   return expectation;
