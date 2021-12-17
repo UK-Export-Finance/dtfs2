@@ -5,7 +5,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
-const deal = require('../../../src/v1/validation/deal');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -42,6 +41,7 @@ describe('/v1/deals/:id/bond', () => {
   };
 
   let aBarclaysMaker;
+  let deal;
   let dealId;
   let bondId;
 
@@ -64,6 +64,8 @@ describe('/v1/deals/:id/bond', () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
 
+    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    deal = dealResponse.body;
     dealId = deal._id;
 
     const bondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
