@@ -228,21 +228,27 @@ const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
 const isNotice = (type) => type.toLowerCase().includes('notice');
 
-const isUkefReviewAvailable = (applicationStatus) => {
-  const acceptable = [
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_REFUSED,
-  ];
-  return acceptable.includes(applicationStatus);
+const isUkefReviewAvailable = (applicationStatus, ukefDecision) => {
+  if (ukefDecision?.length > 0) {
+    const acceptable = [
+      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+      CONSTANTS.DEAL_STATUS.UKEF_REFUSED,
+    ];
+    return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
+  }
+  return false;
 };
 
-const isUkefReviewPositive = (applicationStatus) => {
-  const acceptable = [
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-  ];
-  return acceptable.includes(applicationStatus);
+const isUkefReviewPositive = (applicationStatus, ukefDecision) => {
+  if (ukefDecision?.length > 0) {
+    const acceptable = [
+      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    ];
+    return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
+  }
+  return false;
 };
 
 /**
