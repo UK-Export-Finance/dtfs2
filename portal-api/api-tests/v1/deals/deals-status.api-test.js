@@ -282,7 +282,7 @@ describe('/v1/deals/:id/status', () => {
 
       const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(body.deal.editedBy[body.deal.editedBy.length - 1]).toEqual({
-        date: expect.any(String),
+        date: expect.any(Number),
         username: anHSBCMaker.username,
         roles: anHSBCMaker.roles,
         bank: anHSBCMaker.bank,
