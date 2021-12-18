@@ -392,20 +392,20 @@ type DealsQuery {
 }
 
 type DealSnapshotFacilities {
-   applicationId: String!
+   dealId: String!
    facilityId: String!
    ukefFacilityId: String!
    dealType: String!
-   facilityType: String!
-   facilityValue: String!
+   facilityType: String
+   value: String
    coverEndDate: String
-   companyName: String!
-   hasBeenIssued: Boolean!
-   currency: String!
+   companyName: String
+   hasBeenIssued: Boolean
+   currency: String
 }
 
 type FacilitiesQuery {
-   tfmFacilities: [DealSnapshotFacilities]
+   tfmFacility: [DealSnapshotFacilities]
 }
 
 input TFMPartyInput {

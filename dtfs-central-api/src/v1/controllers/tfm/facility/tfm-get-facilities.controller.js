@@ -25,27 +25,117 @@ exports.getAllFacilities = async (req, res) => {
     {
       $project: {
         _id: 0,
-        tfmFacilities: {
+        tfmFacility: {
           $map: {
             input: '$dealSnapshot.facilities',
             as: 'facilities',
             in: {
-              applicationId: '$$facilities.applicationId',
+              dealId: '$$facilities.dealId',
               facilityId: '$$facilities._id',
               ukefFacilityId: '$$facilities.ukefFacilityId',
               dealType: '$dealSnapshot.dealType',
-              facilityType: '$$facilities.type',
-              facilityValue: '$$facilities.value',
-              coverEndDate: '$$facilities.coverEndDate',
+              facilityType: {
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $eq: [
+                          '$dealSnapshot.dealType',
+                          'GEF',
+                        ],
+                      },
+                      then: '$$facilities.type',
+                    },
+                    {
+                      case: {
+                        $eq: [
+                          '$dealSnapshot.dealType',
+                          'BSS/EWCS',
+                        ],
+                      },
+                      then: '$$facilities.facilityType',
+                    },
+                  ],
+                },
+              },
+              value: '$$facilities.value',
+              currency: '$$facilities.currency.id',
+              coverEndDate: {
+                $switch: {
+                  branches: [
+                    {
+                      case: { $eq: ['$dealSnapshot.dealType', 'GEF'] },
+                      then: '$$facilities.coverEndDate',
+                    },
+                    {
+                      case: { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
+                      then: { $concat: ['$$facilities.coverEndDate-day', '-', '$$facilities.coverEndDate-month', '-', '$$facilities.coverEndDate-year'] },
+                    },
+                  ],
+                },
+              },
               companyName: '$dealSnapshot.exporter.companyName',
-              hasBeenIssued: '$$facilities.hasBeenIssued',
-              currency: '$$facilities.currency',
+              hasBeenIssued: {
+                $switch: {
+                  branches: [
+                    {
+                      case: { $eq: ['$dealSnapshot.dealType', 'GEF'] },
+                      then: '$$facilities.hasBeenIssued',
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
+                          { $eq: ['$$facilities.facilityType', 'bond'] },
+                          { $eq: ['$$facilities.facilityStage', 'Issued'] },
+                        ],
+                      },
+                      then: true,
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
+                          { $eq: ['$$facilities.facilityType', 'bond'] },
+                          { $eq: ['$$facilities.facilityStage', 'Unissued'] },
+                        ],
+                      },
+                      then: false,
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
+                          { $eq: ['$$facilities.facilityType', 'loan'] },
+                          { $eq: ['$$facilities.facilityStage', 'Conditional'] },
+                        ],
+                      },
+                      then: false,
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
+                          { $eq: ['$$facilities.facilityType', 'loan'] },
+                          { $eq: ['$$facilities.facilityStage', 'Unconditional '] },
+                        ],
+                      },
+                      then: true,
+                    },
+
+                  ],
+                  default: false,
+                },
+              },
             },
           },
         },
       },
     },
+    { $unwind: '$tfmFacility' },
+    { $sort: { 'tfmFacility.ukefFacilityId': 1 } },
+
   ]).toArray();
 
-  res.status(200).send(facilities[0].tfmFacilities);
+  res.status(200).send(facilities);
 };

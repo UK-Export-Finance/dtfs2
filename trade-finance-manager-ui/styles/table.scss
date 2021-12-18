@@ -5,3 +5,10 @@
 .govuk-table__cell--border-top {
   border-top: solid 1px govuk-colour('mid-grey');
 }
+
+
+.tfm__facilities-table {
+   td[data-cy="facility__facilityType"] {
+      text-transform: capitalize;
+   }
+}

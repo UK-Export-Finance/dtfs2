@@ -44,9 +44,9 @@ const getFacilities = async (queryParams) => {
     console.error('TFM UI - GraphQL error querying deals ', response.errors);
   }
 
-  if (response?.data?.facilities?.tfmFacilities) {
+  if (response?.data?.facilities?.tfmFacility) {
     return {
-      facilities: response.data.facilities.tfmFacilities,
+      facilities: response.data.facilities.tfmFacility,
     };
   }
 

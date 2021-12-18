@@ -24,7 +24,7 @@
     {% set facilityLink %}
       <a
          class="govuk-link"
-         href="/case/{{ facility.applicationId }}/facility/{{ facility.facilityId }}"
+         href="/case/{{ facility.dealId }}/facility/{{ facility.facilityId }}"
          aria-label="View facility details"
          data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link">
          <span data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link-text">{{ facility.ukefFacilityId }}</span>
@@ -53,23 +53,23 @@
       },
       {
         text: facility.dealType or "-",
-        attributes: { "data-cy": "deal__product--" + facility.dealType, "data-sort-value": facility.ukefFacilityId}
+        attributes: { "data-cy": "facility__product--" + facility.dealType, "data-sort-value": facility.ukefFacilityId}
       },
       {
         text: facility.facilityType or "-",
-        attributes: { "data-cy": "deal__facilityType--" + facility.facilityType }
+        attributes: { "data-cy": "facility__facilityType" }
       },
       {
         text: facility.companyName or "-",
-        attributes: { "data-cy": "deal__companyName--" + facility.companyName }
+        attributes: { "data-cy": "facility__companyName--" + facility.companyName }
       },
       {
-        text: facility.facilityValue or "-",
-        attributes: { "data-cy": "deal__facilityValue--" + facility.facilityValue }
+        text: facility.value or "-",
+        attributes: { "data-cy": "facility__facilityValue--" + facility.value }
       },
       {
         html: coverEndDate,
-        attributes: { "data-cy": "deal__coverEndDate--" + facility.coverEndDate }
+        attributes: { "data-cy": "facility__coverEndDate--" + facility.coverEndDate }
       }
     ] %}
 
@@ -78,35 +78,32 @@
 
 
 {{ govukTable({
-      attributes: {
-      'data-module': 'moj-sortable-table'
-      },
-    head: [
+   attributes: { 'data-module': 'moj-sortable-table' },
+   classes: 'tfm__facilities-table',
+   head: [
       {
         text: "Facility ID",
-        attributes: { "data-cy": "deal__header--ukefFacilityId", "aria-sort": "ascending" }
+        attributes: { "data-cy": "facility__header--ukefFacilityId", "aria-sort": "ascending" }
       },
       {
         text: "Product",
-         attributes: {
-            "aria-sort": "ascending"
-         }
+         attributes: { "data-cy": "facility__header--product"}
       },
       {
         text: "Type",
-        attributes: { "data-cy": "deal__header--dataType" }
+        attributes: { "data-cy": "facility__header--dataType" }
       },
       {
         text: "Exporter",
-        attributes: { "data-cy": "deal__header--exporter" }
+        attributes: { "data-cy": "facility__header--exporter" }
       },
       {
         text: "Value (export currency)",
-        attributes: { "data-cy": "deal__header--value" }
+        attributes: { "data-cy": "facility__header--value" }
       },
       {
         text: "Cover end date",
-        attributes: { "data-cy": "deal__header--coverEndDate" }
+        attributes: { "data-cy": "facility__header--coverEndDate" }
       }
     ],
     rows: items

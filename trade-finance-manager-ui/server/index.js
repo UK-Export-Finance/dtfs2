@@ -2,7 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 
 const path = require('path');
 const routes = require('./routes');
@@ -14,12 +14,7 @@ const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
+app.use(helmet());
 
 const PORT = process.env.PORT || 5003;
 
