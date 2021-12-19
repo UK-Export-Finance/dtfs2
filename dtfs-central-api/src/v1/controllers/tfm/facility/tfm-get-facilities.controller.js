@@ -21,6 +21,8 @@ exports.findFacilitiesGet = async (req, res) => {
 
 exports.getAllFacilities = async (req, res) => {
   const collection = await db.getCollection('tfm-deals');
+  const searchString = req.body.searchString || '';
+
   const facilities = await collection.aggregate([
     {
       $project: {
@@ -133,6 +135,14 @@ exports.getAllFacilities = async (req, res) => {
       },
     },
     { $unwind: '$tfmFacility' },
+    {
+      $match: {
+        $or: [
+          { 'tfmFacility.ukefFacilityId': { $regex: searchString, $options: 'i' } },
+          { 'tfmFacility.companyName': { $regex: searchString, $options: 'i' } },
+        ],
+      },
+    },
     { $sort: { 'tfmFacility.ukefFacilityId': 1 } },
 
   ]).toArray();
