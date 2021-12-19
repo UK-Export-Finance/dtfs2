@@ -42,9 +42,9 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   facilitySnapshot.ukefFacilityType = facilityType;
 
   const result = {
-    _id: facility._id, // eslint-disable-line no-underscore-dangle
+    _id: facility._id,
     facilitySnapshot: {
-      _id: facility._id, // eslint-disable-line no-underscore-dangle
+      _id: facility._id,
       dealId,
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,

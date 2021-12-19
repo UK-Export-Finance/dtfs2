@@ -3,10 +3,10 @@ const axios = require('axios');
 exports.getExchangeRate = async (req, res) => {
   const { source, target } = req.params;
 
-  console.log(`Calling Exchange rate API - ${source.id} to ${target}`);
+  console.log(`Calling Exchange rate API - ${source} to ${target}`);
 
   // API does not support XYZ to GBP conversion so we have to reverse and calculate
-  let actualSource = source.id;
+  let actualSource = source;
   let actualTarget = target;
 
   if (source !== 'GBP' && target === 'GBP') {

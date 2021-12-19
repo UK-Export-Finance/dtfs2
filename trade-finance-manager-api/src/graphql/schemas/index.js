@@ -141,10 +141,6 @@ type FacilityUkefExposure {
   timestamp: String
 }
 
-type CurrencyFacilitySnapshot {
-   id: String
-}
-
 type FacilitySnapshot {
   _id: String!
   ukefFacilityId: String
@@ -155,7 +151,7 @@ type FacilitySnapshot {
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
-  currency: CurrencyFacilitySnapshot
+  currency: String
   coveredPercentage: String!
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
