@@ -45,14 +45,14 @@ const calculateGefFacilityFeeRecord = (facility) => {
     const {
       interestPercentage,
       dayCountBasis: dayBasis,
-      value: facilityValue,
+      value,
       coverPercentage,
       coverStartDate,
       coverEndDateTimestamp: coverEndDate,
     } = facility;
 
     const drawnAmount = calculateDrawnAmount(
-      facilityValue,
+      value,
       coverPercentage,
       interestPercentage,
     );

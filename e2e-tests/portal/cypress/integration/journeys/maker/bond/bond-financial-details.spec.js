@@ -99,19 +99,19 @@ context('Bond Financial Details', () => {
 
       pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
 
-      let facilityValue = '100';
+      let value = '100';
       const coveredPercentage = '10';
 
-      pages.bondFinancialDetails.facilityValueInput().type(facilityValue);
+      pages.bondFinancialDetails.facilityValueInput().type(value);
       pages.bondFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
       pages.bondFinancialDetails.facilityValueInput().clear();
 
-      facilityValue = '250';
-      pages.bondFinancialDetails.facilityValueInput().type(facilityValue).blur();
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
+      value = '250';
+      pages.bondFinancialDetails.facilityValueInput().type(value).blur();
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
 

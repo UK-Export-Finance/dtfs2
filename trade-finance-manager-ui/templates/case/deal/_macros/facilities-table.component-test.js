@@ -239,7 +239,7 @@ describe(component, () => {
         });
       });
 
-      it('should render a dash when facilityValue is empty', () => {
+      it('should render a dash when facility Value is empty', () => {
         const facility = params.facilities.find(({ facilitySnapshot: f }) => f.value === '');
 
         const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;

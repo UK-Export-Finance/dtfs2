@@ -48,7 +48,7 @@ describe(component, () => {
     wrapper.expectText('[data-cy="cover-end-date"]').toRead(expected);
   });
 
-  it('should render facilityValue', () => {
+  it('should render value', () => {
     wrapper.expectText('[data-cy="facility-value"]').toRead(loan.value);
   });
 

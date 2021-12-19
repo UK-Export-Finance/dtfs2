@@ -112,7 +112,7 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facility-value-export-currency"]').toRead(params.facility.facilityValueExportCurrency);
     });
 
-    it('should render facilityValue', () => {
+    it('should render value', () => {
       wrapper.expectText('[data-cy="facility-value-gbp"]').toRead(params.facility.value);
     });
 

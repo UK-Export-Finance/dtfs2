@@ -152,25 +152,25 @@ context('Loan Financial Details', () => {
     });
   });
 
-  describe('when changing the `facilityValue` or `coverePercentage` field', () => {
+  describe('when changing the `value` or `coverePercentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       goToPage(deal);
 
       pages.loanFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
 
-      let facilityValue = '100';
+      let value = '100';
       const coveredPercentage = '10';
 
-      pages.loanFinancialDetails.facilityValueInput().type(facilityValue);
+      pages.loanFinancialDetails.facilityValueInput().type(value);
       pages.loanFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
+      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
       pages.loanFinancialDetails.facilityValueInput().clear();
 
-      facilityValue = '250';
-      pages.loanFinancialDetails.facilityValueInput().type(facilityValue).blur();
-      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
+      value = '250';
+      pages.loanFinancialDetails.facilityValueInput().type(value).blur();
+      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
 
