@@ -29,7 +29,7 @@ context('View a deal', () => {
         name: 'abc-1-def',
         hasBeenIssued: true,
         value: '123.00',
-        currency: { id: 'GBP' },
+        currency: 'GBP',
         submittedAsIssuedDate: Date.parse('2020-09-01'),
       }, MAKER_LOGIN)
         .then((insertedFacility) => { facility = insertedFacility; });
