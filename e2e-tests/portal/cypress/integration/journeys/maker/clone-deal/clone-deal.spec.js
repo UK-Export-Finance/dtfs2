@@ -62,9 +62,9 @@ context('Clone a deal', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
       goToCloneDealPage(deal);
 
-      cy.title().should('eq', `Clone Deal - Copy of ${deal.bankSupplyContractName}${pages.defaults.pageTitleAppend}`);
-      pages.cloneDeal.bankSupplyContractIDInput().should('have.value', deal.bankSupplyContractID);
-      pages.cloneDeal.bankSupplyContractNameInput().should('have.value', `Copy of ${deal.bankSupplyContractName}`);
+      cy.title().should('eq', `Clone Deal - Copy of ${deal.additionalRefName}${pages.defaults.pageTitleAppend}`);
+      pages.cloneDeal.bankInternalRefNameInput().should('have.value', deal.bankInternalRefName);
+      pages.cloneDeal.additionalRefNameInput().should('have.value', `Copy of ${deal.additionalRefName}`);
     });
   });
 
@@ -72,8 +72,8 @@ context('Clone a deal', () => {
     it('should display validation errors', () => {
       goToCloneDealPage(deal);
 
-      pages.cloneDeal.bankSupplyContractIDInput().clear();
-      pages.cloneDeal.bankSupplyContractNameInput().clear();
+      pages.cloneDeal.bankInternalRefNameInput().clear();
+      pages.cloneDeal.additionalRefNameInput().clear();
 
       pages.cloneDeal.submit().click();
 
@@ -87,8 +87,8 @@ context('Clone a deal', () => {
     it('should progress to the dashboard page, display a success message, render correct cloned id/name and statuses for each facility', () => {
       goToCloneDealPage(deal);
 
-      pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
-      pages.cloneDeal.bankSupplyContractNameInput().type('-cloned');
+      pages.cloneDeal.bankInternalRefNameInput().type('-cloned');
+      pages.cloneDeal.additionalRefNameInput().type('-cloned');
       pages.cloneDeal.cloneTransactionsInput().click();
 
       pages.cloneDeal.submit().click();
@@ -104,13 +104,13 @@ context('Clone a deal', () => {
       cy.url().should('include', '/contract/');
 
       // confirm new supply contract ID
-      pages.contract.bankSupplyContractID().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${deal.bankSupplyContractID}-cloned`);
+      pages.contract.bankInternalRefName().invoke('text').then((text) => {
+        expect(text.trim()).equal(`${deal.bankInternalRefName}-cloned`);
       });
 
       // confirm new supply contract name
-      pages.contract.bankSupplyContractName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`Copy of ${deal.bankSupplyContractName}-cloned`);
+      pages.contract.additionalRefName().invoke('text').then((text) => {
+        expect(text.trim()).equal(`Copy of ${deal.additionalRefName}-cloned`);
       });
 
       // confirm About the Supply Contract is retained
@@ -141,8 +141,8 @@ context('Clone a deal', () => {
     it('user can view and edit the cloned bonds', () => {
       goToCloneDealPage(deal);
 
-      pages.cloneDeal.bankSupplyContractIDInput();
-      pages.cloneDeal.bankSupplyContractNameInput();
+      pages.cloneDeal.bankInternalRefNameInput();
+      pages.cloneDeal.additionalRefNameInput();
       pages.cloneDeal.cloneTransactionsInput().click();
 
       pages.cloneDeal.submit().click();
@@ -174,8 +174,8 @@ context('Clone a deal', () => {
     it('user can view and edit the cloned loans', () => {
       goToCloneDealPage(deal);
 
-      pages.cloneDeal.bankSupplyContractIDInput();
-      pages.cloneDeal.bankSupplyContractNameInput();
+      pages.cloneDeal.bankInternalRefNameInput();
+      pages.cloneDeal.additionalRefNameInput();
       pages.cloneDeal.cloneTransactionsInput().click();
 
       pages.cloneDeal.submit().click();
@@ -207,8 +207,8 @@ context('Clone a deal', () => {
     it('user can delete the cloned bonds and loans', () => {
       goToCloneDealPage(deal);
 
-      pages.cloneDeal.bankSupplyContractIDInput();
-      pages.cloneDeal.bankSupplyContractNameInput();
+      pages.cloneDeal.bankInternalRefNameInput();
+      pages.cloneDeal.additionalRefNameInput();
       pages.cloneDeal.cloneTransactionsInput().click();
 
       pages.cloneDeal.submit().click();

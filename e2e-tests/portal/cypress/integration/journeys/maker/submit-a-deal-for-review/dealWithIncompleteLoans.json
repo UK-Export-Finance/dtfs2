@@ -1,7 +1,7 @@
 {
   "submissionType": "Automatic Inclusion Notice",
-  "bankSupplyContractID": "abc-3-def",
-  "bankSupplyContractName": "Tibettan submarine acquisition scheme",
+  "bankInternalRefName": "abc-3-def",
+  "additionalRefName": "Tibettan submarine acquisition scheme",
   "details": {
     "status": "Draft",
     "owningBank": {

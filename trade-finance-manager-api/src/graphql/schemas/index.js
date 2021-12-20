@@ -356,8 +356,8 @@ type DealSnapshot {
   _id: String!
   dealType: String!
   submissionType: String
-  bankSupplyContractID: String
-  bankSupplyContractName: String
+  bankInternalRefName: String
+  additionalRefName: String
   updatedAt: Float
   details: DealDetails
   totals: DealTotals

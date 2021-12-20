@@ -14,8 +14,8 @@ context('View a deal with checker role', () => {
   const checkerDealData = {
     dealType: 'BSS/EWCS',
     submissionType: 'Manual Inclusion Notice',
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
@@ -23,8 +23,8 @@ context('View a deal with checker role', () => {
   };
   const draftDealData = {
     dealType: 'BSS/EWCS',
-    bankSupplyContractID: 'abc-2-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-2-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
   };
 
   before(() => {

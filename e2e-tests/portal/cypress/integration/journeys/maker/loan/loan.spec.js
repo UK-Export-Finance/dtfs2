@@ -8,8 +8,8 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
-  bankSupplyContractID: 'someDealId',
-  bankSupplyContractName: 'someDealName',
+  bankInternalRefName: 'someDealId',
+  additionalRefName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
       id: 'GBP',
@@ -30,8 +30,8 @@ context('Add a Loan to a Deal', () => {
     cy.createADeal({
       username: MAKER_LOGIN.username,
       password: MAKER_LOGIN.password,
-      bankDealId: MOCK_DEAL.bankSupplyContractID,
-      bankDealName: MOCK_DEAL.bankSupplyContractName,
+      bankDealId: MOCK_DEAL.bankInternalRefName,
+      bankDealName: MOCK_DEAL.additionalRefName,
     });
     cy.addLoanToDeal();
 

@@ -12,8 +12,8 @@ const { findOneCurrency } = require('../../../src/v1/controllers/currencies.cont
 
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     submissionDetails: {
       supplyContractCurrency: {
         id: 'GBP',

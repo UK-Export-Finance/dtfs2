@@ -12,8 +12,8 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     details: {
       status: 'Acknowledged by UKEF',
       submissionDate: moment(submissionDate).utc().valueOf(),

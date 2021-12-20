@@ -13,8 +13,8 @@ const { findOneCurrency } = require('../../../src/v1/controllers/currencies.cont
 describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     details: {
       submissionDate: moment().subtract(1, 'day').utc().valueOf(),
       status: 'Ready for Checker\'s approval',

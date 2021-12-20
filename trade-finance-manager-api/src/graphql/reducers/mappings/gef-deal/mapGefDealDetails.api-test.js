@@ -16,8 +16,8 @@ describe('mapGefDealDetails', () => {
 
     const expected = {
       ukefDealId: mockDeal.dealSnapshot.ukefDealId,
-      bankSupplyContractID: mockDeal.dealSnapshot.bankInternalRefName,
-      bankSupplyContractName: mockDeal.dealSnapshot.additionalRefName,
+      bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
+      additionalRefName: mockDeal.dealSnapshot.additionalRefName,
       owningBank: {
         name: mockDeal.dealSnapshot.bank.name,
         emails: mockDeal.dealSnapshot.bank.emails,

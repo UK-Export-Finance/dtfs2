@@ -8,8 +8,8 @@ const deal = {
   _id: '1001349',
   submissionType: 'Manual Inclusion Application',
   updatedAt: Date.now(),
-  bankSupplyContractID: 'test',
-  bankSupplyContractName: 'testing',
+  bankInternalRefName: 'test',
+  additionalRefName: 'testing',
   details: {
     status: "Further Maker's input required",
     maker: {

@@ -5,8 +5,8 @@ module.exports = {
 	"dealType": "BSS/EWCS",
 	"submissionType": "Automatic Inclusion Notice",
 	"updatedAt": Date.now(),
-	"bankSupplyContractID": "A1 Test",
-	"bankSupplyContractName": "Auto Test 1",
+	"bankInternalRefName": "A1 Test",
+	"additionalRefName": "Auto Test 1",
 	"details" : {
 		"status" : "Draft",
 		"maker" : {

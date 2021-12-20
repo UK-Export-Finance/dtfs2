@@ -16,13 +16,13 @@ context('Audit - Report', () => {
     cy.login(ADMIN_LOGIN);
     auditSupplyContracts.visit();
 
-    auditSupplyContracts.filterByBankSupplyContractId().type('{selectall}{backspace}');
+    auditSupplyContracts.filterBybankInternalRefName().type('{selectall}{backspace}');
     auditSupplyContracts.applyFilters().click();
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(6 items)');
     });
 
-    auditSupplyContracts.filterByBankSupplyContractId().type('{selectall}{backspace}adealwithone');
+    auditSupplyContracts.filterBybankInternalRefName().type('{selectall}{backspace}adealwithone');
     auditSupplyContracts.applyFilters().click();
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');

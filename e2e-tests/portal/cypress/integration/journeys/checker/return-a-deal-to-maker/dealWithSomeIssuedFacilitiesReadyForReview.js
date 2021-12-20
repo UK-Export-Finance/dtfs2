@@ -7,8 +7,8 @@ const datePlusMonth = nowPlusMonths(1);
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
-  bankSupplyContractID: 'mock id',
-  bankSupplyContractName: 'mock name',
+  bankInternalRefName: 'mock id',
+  additionalRefName: 'mock name',
   details: {
     status: "Ready for Checker's approval",
     created: date.valueOf(),

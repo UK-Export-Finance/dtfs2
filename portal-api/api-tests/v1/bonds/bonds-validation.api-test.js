@@ -9,8 +9,8 @@ const deal = require('../../../src/v1/validation/deal');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     submissionDetails: {
       supplyContractCurrency: {
         id: 'GBP',

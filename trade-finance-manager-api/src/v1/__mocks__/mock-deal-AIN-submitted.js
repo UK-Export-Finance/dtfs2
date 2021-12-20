@@ -2,8 +2,8 @@ const MOCK_DEAL_AIN_SUBMITTED = {
   _id: 'AIN_DEAL_SUBMITTED',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
-  bankSupplyContractID: 'Mock supply contract ID',
-  bankSupplyContractName: 'Mock supply contract name',
+  bankInternalRefName: 'Mock supply contract ID',
+  additionalRefName: 'Mock supply contract name',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',

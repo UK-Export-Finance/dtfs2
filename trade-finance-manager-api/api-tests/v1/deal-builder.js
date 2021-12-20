@@ -1,5 +1,5 @@
 module.exports = (overrides) => ({
-  bankSupplyContractName: 'mock name',
-  bankSupplyContractID: 'mock id',
+  additionalRefName: 'mock name',
+  bankInternalRefName: 'mock id',
   ...overrides,
 });

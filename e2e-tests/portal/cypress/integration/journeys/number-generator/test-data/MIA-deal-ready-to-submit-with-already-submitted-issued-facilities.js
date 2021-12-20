@@ -4,8 +4,8 @@ const deal = {
   _id: '1000998',
   submissionType: 'Manual Inclusion Application',
   updatedAt: Date.now(),
-  bankSupplyContractID: 'test-deal',
-  bankSupplyContractName: 'test-deal',
+  bankInternalRefName: 'test-deal',
+  additionalRefName: 'test-deal',
   details: {
     status: "Ready for Checker's approval",
     created: now,

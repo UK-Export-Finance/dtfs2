@@ -16,13 +16,13 @@ context('Audit - Transactions Report', () => {
     cy.login(MAKER_LOGIN);
     auditTransactionsReport.visit();
 
-    auditTransactionsReport.filterByBankSupplyContractId().type('{selectall}{backspace}');
+    auditTransactionsReport.filterBybankInternalRefName().type('{selectall}{backspace}');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(44 items)');
     });
 
-    auditTransactionsReport.filterByBankSupplyContractId().type('{selectall}{backspace}adealwithone');
+    auditTransactionsReport.filterBybankInternalRefName().type('{selectall}{backspace}adealwithone');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(4 items)');

@@ -48,8 +48,8 @@ describe(page, () => {
       }
     });
 
-    it('displays bankSupplyContractName', () => wrappers.forEach((wrapper) => wrapper.expectText('[data-cy="bankSupplyContractName"]')
-      .toRead(deal.bankSupplyContractName)));
+    it('displays additionalRefName', () => wrappers.forEach((wrapper) => wrapper.expectText('[data-cy="additionalRefName"]')
+      .toRead(deal.additionalRefName)));
 
     it('should render contract overview table', () => wrappers.forEach((wrapper) =>
       wrapper.expectElement('[data-cy="contract-overview-table"]').toExist()));

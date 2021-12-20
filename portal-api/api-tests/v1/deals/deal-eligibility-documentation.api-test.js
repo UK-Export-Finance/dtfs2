@@ -10,7 +10,7 @@ const {
   updatedECCompleted,
 } = require('./mocks');
 
-const newDeal = aDeal({ id: 'dealApiTest', bankSupplyContractName: 'Original Value' });
+const newDeal = aDeal({ id: 'dealApiTest', additionalRefName: 'Original Value' });
 
 describe('/v1/deals/:id/eligibility-documentation', () => {
   let noRoles;

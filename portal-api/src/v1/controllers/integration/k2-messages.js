@@ -63,8 +63,8 @@ const generateTypeA = async (deal, fromStatus) => {
     .message_type('A')
     .revision_id(deal._id) // eslint-disable-line no-underscore-dangle
     .portal_deal_id(deal._id) // eslint-disable-line no-underscore-dangle
-    .Deal_name(deal.bankSupplyContractName)
-    .Bank_deal_id(deal.bankSupplyContractID)
+    .Deal_name(deal.additionalRefName)
+    .Bank_deal_id(deal.bankInternalRefName)
 
     .Application_route(deal.eligibility)
     .Application_owner(`${deal.details.maker.firstname} ${deal.details.maker.surname}`)

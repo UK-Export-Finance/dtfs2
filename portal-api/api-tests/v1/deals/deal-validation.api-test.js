@@ -23,58 +23,58 @@ describe('/v1/deals', () => {
       expect(body.validationErrors.count).toEqual(2);
     });
 
-    describe('bankSupplyContractID', () => {
+    describe('bankInternalRefName', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const deal = {
-            bankSupplyContractID: '',
-            bankSupplyContractName: 'test name',
+            bankInternalRefName: '',
+            additionalRefName: 'test name',
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
 
-          expect(body.validationErrors.errorList.bankSupplyContractID.text).toEqual('Enter the Bank deal ID');
+          expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Enter the Bank deal ID');
         });
       });
 
       describe('when more than 30 characters', () => {
         it('should return validationError', async () => {
           const deal = {
-            bankSupplyContractID: 'a'.repeat(31),
-            bankSupplyContractName: 'test name',
+            bankInternalRefName: 'a'.repeat(31),
+            additionalRefName: 'test name',
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
 
-          expect(body.validationErrors.errorList.bankSupplyContractID.text).toEqual('Bank deal ID must be 30 characters or fewer');
+          expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Bank deal ID must be 30 characters or fewer');
         });
       });
     });
 
-    describe('bankSupplyContractName', () => {
+    describe('additionalRefName', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const deal = {
-            bankSupplyContractID: 'test id',
-            bankSupplyContractName: '',
+            bankInternalRefName: 'test id',
+            additionalRefName: '',
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
 
-          expect(body.validationErrors.errorList.bankSupplyContractName.text).toEqual('Enter the Bank deal name');
+          expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Enter the Bank deal name');
         });
       });
 
       describe('when more than 100 characters', () => {
         it('should return validationError', async () => {
           const deal = {
-            bankSupplyContractID: 'test id',
-            bankSupplyContractName: 'a'.repeat(101),
+            bankInternalRefName: 'test id',
+            additionalRefName: 'a'.repeat(101),
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
 
-          expect(body.validationErrors.errorList.bankSupplyContractName.text).toEqual('Bank deal name must be 100 characters or fewer');
+          expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Bank deal name must be 100 characters or fewer');
         });
       });
     });

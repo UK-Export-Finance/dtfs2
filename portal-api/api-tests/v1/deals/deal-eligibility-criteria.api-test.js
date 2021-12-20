@@ -16,7 +16,7 @@ const {
   criteria11ExtraInfoEmpty,
 } = require('./mocks');
 
-const newDeal = aDeal({ bankSupplyContractName: 'Original Value' });
+const newDeal = aDeal({ additionalRefName: 'Original Value' });
 
 describe('/v1/deals/:id/eligibility-criteria', () => {
   let noRoles;

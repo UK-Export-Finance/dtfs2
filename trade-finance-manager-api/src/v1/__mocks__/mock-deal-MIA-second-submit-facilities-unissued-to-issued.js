@@ -2,8 +2,8 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
   dealType: 'BSS/EWCS',
   submissionType: 'Manual Inclusion Application',
-  bankSupplyContractID: 'Mock supply contract ID',
-  bankSupplyContractName: 'Mock supply contract name',
+  bankInternalRefName: 'Mock supply contract ID',
+  additionalRefName: 'Mock supply contract name',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',

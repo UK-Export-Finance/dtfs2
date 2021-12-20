@@ -2,7 +2,7 @@ const { isSuperUser } = require('../../users/checks');
 const bondFixer = require('./bondFixer');
 const loanFixer = require('./loanFixer');
 
-const BANKSUPPLYCONTRACTID = 'bankSupplyContractID';
+const bankInternalRefName = 'bankInternalRefName';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
 const TRANSACTION_DEAL_CREATED = 'details.created';
 const DEAL_ID = '_id';
@@ -85,8 +85,8 @@ const constructor = (user, filters) => {
 
         return listSoFar.concat([dealwithStatus]);
       }
-      if (BANKSUPPLYCONTRACTID === filterField) {
-        const dealwithSupplyID = { bankSupplyContractID: { $regex: filter[filterField], $options: 'i' } };
+      if (bankInternalRefName === filterField) {
+        const dealwithSupplyID = { bankInternalRefName: { $regex: filter[filterField], $options: 'i' } };
         return listSoFar.concat([dealwithSupplyID]);
       }
       if (SUBMISSION_SUPPLIER_NAME === filterField) {

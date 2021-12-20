@@ -1,7 +1,7 @@
 const mapGefDealDetails = (dealSnapshot) => ({
   ukefDealId: dealSnapshot.ukefDealId,
-  bankSupplyContractID: dealSnapshot.bankInternalRefName,
-  bankSupplyContractName: dealSnapshot.additionalRefName,
+  bankInternalRefName: dealSnapshot.bankInternalRefName,
+  additionalRefName: dealSnapshot.additionalRefName,
   owningBank: {
     name: dealSnapshot.bank.name,
     emails: dealSnapshot.bank.emails,

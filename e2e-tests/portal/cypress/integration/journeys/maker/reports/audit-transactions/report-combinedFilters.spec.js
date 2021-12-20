@@ -35,7 +35,7 @@ context('The Transactions dashboard', () => {
     });
 
     // filter by bank supply contract id
-    auditTransactionsReport.filterByBankSupplyContractId().type('{selectall}{backspace}adealwithtenl');
+    auditTransactionsReport.filterBybankInternalRefName().type('{selectall}{backspace}adealwithtenl');
     auditTransactionsReport.applyFilters().click();
     auditTransactionsReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(15 items)');

@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Change name - {{ contract.bankSupplyContractName }}{% endblock %}
+{% block pageTitle %}Change name - {{ contract.additionalRefName }}{% endblock %}
 
 {% block content %}
 
@@ -18,11 +18,11 @@
           label: {
             text: "Supply Contract name"
           },
-          id: "bankSupplyContractName",
-          name: "bankSupplyContractName",
-          value: contract.bankSupplyContractName,
+          id: "additionalRefName",
+          name: "additionalRefName",
+          value: contract.additionalRefName,
           attributes: {
-            "data-cy": "bankSupplyContractName"
+            "data-cy": "additionalRefName"
           },
           errorMessage: validationErrors.errorList.comments
         }) }}

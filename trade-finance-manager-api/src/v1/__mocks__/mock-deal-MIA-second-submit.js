@@ -2,8 +2,8 @@ const MOCK_DEAL = {
   _id: 'MOCK_MIA_SECOND_SUBMIT',
   dealType: 'BSS/EWCS',
   submissionType: 'Manual Inclusion Application',
-  bankSupplyContractID: 'Mock supply contract ID',
-  bankSupplyContractName: 'Mock supply contract name',
+  bankInternalRefName: 'Mock supply contract ID',
+  additionalRefName: 'Mock supply contract name',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',

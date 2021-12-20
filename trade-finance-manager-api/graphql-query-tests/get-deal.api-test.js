@@ -113,8 +113,8 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
       _id,
       dealType
       submissionType
-      bankSupplyContractID
-      bankSupplyContractName
+      bankInternalRefName
+      additionalRefName
       details {
         ukefDealId,
         status,

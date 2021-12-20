@@ -77,8 +77,8 @@ const dealQuery = gql`
         _id,
         dealType
         submissionType
-        bankSupplyContractID
-        bankSupplyContractName
+        bankInternalRefName
+        additionalRefName
         details {
           ukefDealId
           status

@@ -70,10 +70,10 @@ const buildReportFilters = (params, user) => {
     );
   }
 
-  if (params.bankSupplyContractID) {
+  if (params.bankInternalRefName) {
     filters.push({
-      field: 'bankSupplyContractID',
-      value: params.bankSupplyContractID,
+      field: 'bankInternalRefName',
+      value: params.bankInternalRefName,
     });
   }
 

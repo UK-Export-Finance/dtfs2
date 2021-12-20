@@ -8,8 +8,8 @@ const deal = {
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
   details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     status: 'Ready for Checker\'s approval',
     previousStatus: 'Draft',
   },

@@ -49,8 +49,8 @@ type Deal {
   _id: String!
   dealType: String
   submissionType: String
-  bankSupplyContractID: String
-  bankSupplyContractName: String
+  bankInternalRefName: String
+  additionalRefName: String
   updatedAt: Float
   details: DealDetails
 }
@@ -99,7 +99,7 @@ type Transaction {
   deal_id: String
   deal_status: String
   deal_supplierName: String
-  deal_bankSupplyContractID: String
+  deal_bankInternalRefName: String
   deal_ukefDealId: String
   deal_owningBank: String
   deal_created: String

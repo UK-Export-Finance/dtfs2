@@ -7,8 +7,8 @@ const now = new Date().valueOf().toString();
 module.exports = [
   {
     submissionType: 'Automatic Inclusion Notice',
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Draft',
       owningBank: {
@@ -28,8 +28,8 @@ module.exports = [
     },
   }, {
     submissionType: 'Automatic Inclusion Notice',
-    bankSupplyContractID: 'abc-2-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-2-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Draft',
       owningBank: {
@@ -46,8 +46,8 @@ module.exports = [
     },
   }, {
     submissionType: 'Automatic Inclusion Notice',
-    bankSupplyContractID: 'abc-3-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-3-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Draft',
       submissionDate: now,
@@ -65,8 +65,8 @@ module.exports = [
     },
   }, {
     submissionType: 'Manual Inclusion Notice',
-    bankSupplyContractID: 'abc-4-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-4-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
@@ -93,8 +93,8 @@ module.exports = [
     }],
   }, {
     submissionType: 'Manual Inclusion Application',
-    bankSupplyContractID: 'abc-5-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-5-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
@@ -120,8 +120,8 @@ module.exports = [
       text: 'to me',
     }],
   }, {
-    bankSupplyContractID: 'abc-6-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-6-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Abandoned',
       previousStatus: 'Draft',
@@ -139,8 +139,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-7-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-7-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Submitted',
       previousStatus: "Ready for Checker's approval",
@@ -165,8 +165,8 @@ module.exports = [
       text: 'to me',
     }],
   }, {
-    bankSupplyContractID: 'abc-8-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-8-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Submitted',
       previousStatus: "Ready for Checker's approval",
@@ -191,8 +191,8 @@ module.exports = [
       text: 'to me',
     }],
   }, {
-    bankSupplyContractID: 'abc-9-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-9-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
@@ -217,8 +217,8 @@ module.exports = [
       text: 'to me',
     }],
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Acknowledged by UKEF',
       previousStatus: 'Submitted',
@@ -235,8 +235,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Draft',
       owningBank: {
@@ -252,8 +252,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Draft',
       owningBank: {
@@ -269,8 +269,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Draft',
       owningBank: {
@@ -286,8 +286,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Acknowledged by UKEF',
       previousStatus: 'Submitted',
@@ -304,8 +304,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Accepted by UKEF (without conditions)',
       previousStatus: 'Submitted',
@@ -322,8 +322,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Rejected by UKEF',
       previousStatus: 'Submitted',
@@ -340,8 +340,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Rejected by UKEF',
       previousStatus: 'Submitted',
@@ -358,8 +358,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
@@ -376,8 +376,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc-1-def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Accepted by UKEF (without conditions)',
       previousStatus: 'Submitted',
@@ -394,8 +394,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc 2 def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc 2 def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Accepted by UKEF (with conditions)',
       previousStatus: 'Submitted',
@@ -412,8 +412,8 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
   }, {
-    bankSupplyContractID: 'abc 2 def',
-    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    bankInternalRefName: 'abc 2 def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
     details: {
       status: 'Abandoned',
       previousStatus: 'Draft',

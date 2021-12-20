@@ -102,8 +102,8 @@ describe('/v1/deals/:id/clone', () => {
 
       it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
@@ -113,8 +113,8 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
-        expect(cloned.deal.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
-        expect(cloned.deal.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
+        expect(cloned.deal.bankInternalRefName).toEqual(clonePostBody.bankInternalRefName);
+        expect(cloned.deal.additionalRefName).toEqual(clonePostBody.additionalRefName);
         expect(cloned.deal.updatedAt).toBeDefined();
         expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
 
@@ -135,8 +135,8 @@ describe('/v1/deals/:id/clone', () => {
 
       it('should clone eligibility', async () => {
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'false',
         };
 
@@ -166,8 +166,8 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'false',
         };
 
@@ -191,8 +191,8 @@ describe('/v1/deals/:id/clone', () => {
 
       it('should clone submissionDetails', async () => {
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
@@ -205,8 +205,8 @@ describe('/v1/deals/:id/clone', () => {
 
       it('should clone summary.totalValue', async () => {
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
@@ -220,8 +220,8 @@ describe('/v1/deals/:id/clone', () => {
       describe('when deal submissionType is MIN', () => {
         it('should change deal submissionType to MIA', async () => {
           const clonePostBody = {
-            bankSupplyContractID: 'new-bank-deal-id',
-            bankSupplyContractName: 'new-bank-deal-name',
+            bankInternalRefName: 'new-bank-deal-id',
+            additionalRefName: 'new-bank-deal-name',
             cloneTransactions: 'true',
           };
 
@@ -239,8 +239,8 @@ describe('/v1/deals/:id/clone', () => {
 
       it('clones a deal with only specific bondTransactions fields', async () => {
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
@@ -296,8 +296,8 @@ describe('/v1/deals/:id/clone', () => {
 
       it('clones a deal with only specific loanTransactions fields', async () => {
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
@@ -362,8 +362,8 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = body;
 
         const clonePostBody = {
-          bankSupplyContractID: 'new-bank-deal-id',
-          bankSupplyContractName: 'new-bank-deal-name',
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
@@ -383,8 +383,8 @@ describe('/v1/deals/:id/clone', () => {
       describe('when req.body has cloneTransactions set to false', () => {
         it('clones a deal with empty transactions', async () => {
           const clonePostBody = {
-            bankSupplyContractID: 'new-bank-deal-id',
-            bankSupplyContractName: 'new-bank-deal-name',
+            bankInternalRefName: 'new-bank-deal-id',
+            additionalRefName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
           const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
@@ -404,15 +404,15 @@ describe('/v1/deals/:id/clone', () => {
       describe('when required fields are missing', () => {
         it('returns validation errors', async () => {
           const clonePostBody = {
-            bankSupplyContractID: '',
-            bankSupplyContractName: '',
+            bankInternalRefName: '',
+            additionalRefName: '',
             cloneTransactions: '',
           };
           const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
           expect(body.validationErrors.count).toEqual(3);
-          expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
-          expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
+          expect(body.validationErrors.errorList.bankInternalRefName).toBeDefined();
+          expect(body.validationErrors.errorList.additionalRefName).toBeDefined();
           expect(body.validationErrors.errorList.cloneTransactions).toBeDefined();
         });
       });

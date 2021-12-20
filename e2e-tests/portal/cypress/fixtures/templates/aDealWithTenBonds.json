@@ -1,7 +1,7 @@
 {
   "submissionType": "Automatic Inclusion Notice",
-  "bankSupplyContractID": "aDealWithTenBonds",
-  "bankSupplyContractName": "aDealWithTenBonds",
+  "bankInternalRefName": "aDealWithTenBonds",
+  "additionalRefName": "aDealWithTenBonds",
   "details": {
     "ukefDealId": "ukef:aDealWithTenBonds",
     "status": "Draft",

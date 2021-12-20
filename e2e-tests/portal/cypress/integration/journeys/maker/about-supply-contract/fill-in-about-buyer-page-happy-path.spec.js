@@ -26,7 +26,7 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.title().should('eq', `Buyer information - ${deal.bankSupplyContractName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Buyer information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     contractAboutBuyer.buyerName().type('Huggy Bear');

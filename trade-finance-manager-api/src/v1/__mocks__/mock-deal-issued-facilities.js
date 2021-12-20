@@ -2,8 +2,8 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
   _id: 'MOCK_DEAL_ISSUED_FACILITIES',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
-  bankSupplyContractID: 'Mock supply contract ID',
-  bankSupplyContractName: 'Mock supply contract name',
+  bankInternalRefName: 'Mock supply contract ID',
+  additionalRefName: 'Mock supply contract name',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',

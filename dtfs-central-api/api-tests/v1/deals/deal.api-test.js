@@ -22,8 +22,8 @@ const mockUserNoBank = {
 };
 
 const newDeal = aDeal({
-  bankSupplyContractName: 'mock name',
-  bankSupplyContractID: 'mock id',
+  additionalRefName: 'mock name',
+  bankInternalRefName: 'mock id',
   editedBy: [],
   eligibility: {
     status: 'Not started',
@@ -67,8 +67,8 @@ describe('/v1/portal/deals', () => {
     describe('when user is invalid', () => {
       it('missing user returns 404', async () => {
         const postBody = {
-          bankSupplyContractID: '',
-          bankSupplyContractName: '',
+          bankInternalRefName: '',
+          additionalRefName: '',
         };
 
         const { status } = await api.post({ deal: postBody }).to('/v1/portal/deals');
@@ -78,8 +78,8 @@ describe('/v1/portal/deals', () => {
 
       it('user with no bank returns validation errors', async () => {
         const postBody = {
-          bankSupplyContractID: '1234',
-          bankSupplyContractName: 'name',
+          bankInternalRefName: '1234',
+          additionalRefName: 'name',
         };
 
         const { body, status } = await api.post({ deal: postBody, user: mockUserNoBank }).to('/v1/portal/deals');
@@ -95,8 +95,8 @@ describe('/v1/portal/deals', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          bankSupplyContractID: '',
-          bankSupplyContractName: '',
+          bankInternalRefName: '',
+          additionalRefName: '',
         };
 
         const { body, status } = await api.post({ deal: postBody, user: mockUser }).to('/v1/portal/deals');
@@ -104,19 +104,19 @@ describe('/v1/portal/deals', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
 
-        expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
-        expect(body.validationErrors.errorList.bankSupplyContractID.text).toEqual('Enter the Bank deal ID');
+        expect(body.validationErrors.errorList.bankInternalRefName).toBeDefined();
+        expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Enter the Bank deal ID');
 
-        expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
-        expect(body.validationErrors.errorList.bankSupplyContractName.text).toEqual('Enter the Bank deal name');
+        expect(body.validationErrors.errorList.additionalRefName).toBeDefined();
+        expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Enter the Bank deal name');
       });
     });
 
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          bankSupplyContractID: 'a'.repeat(31),
-          bankSupplyContractName: 'b'.repeat(101),
+          bankInternalRefName: 'a'.repeat(31),
+          additionalRefName: 'b'.repeat(101),
         };
         const invalidMaker = {
           _id: '12345678',
@@ -127,11 +127,11 @@ describe('/v1/portal/deals', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(3);
 
-        expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
-        expect(body.validationErrors.errorList.bankSupplyContractID.text).toEqual('Bank deal ID must be 30 characters or fewer');
+        expect(body.validationErrors.errorList.bankInternalRefName).toBeDefined();
+        expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Bank deal ID must be 30 characters or fewer');
 
-        expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
-        expect(body.validationErrors.errorList.bankSupplyContractName.text).toEqual('Bank deal name must be 100 characters or fewer');
+        expect(body.validationErrors.errorList.additionalRefName).toBeDefined();
+        expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Bank deal name must be 100 characters or fewer');
 
         expect(body.validationErrors.errorList.makerObject).toBeDefined();
         expect(body.validationErrors.errorList.makerObject.text).toEqual('deal.details.maker object with bank is required');
@@ -269,7 +269,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
-        bankSupplyContractName: 'change this field',
+        additionalRefName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
           mockNewField: true,
@@ -288,7 +288,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
 
       const partialUpdate = {
-        bankSupplyContractName: 'change this field',
+        additionalRefName: 'change this field',
         eligibility: {
           mockNewField: true,
         },
@@ -296,7 +296,7 @@ describe('/v1/portal/deals', () => {
 
       const expectedDataIncludingUpdate = {
         ...createdDeal,
-        bankSupplyContractName: 'change this field',
+        additionalRefName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
           mockNewField: true,
@@ -318,7 +318,7 @@ describe('/v1/portal/deals', () => {
 
       const updatedDeal = {
         ...createdDeal,
-        bankSupplyContractName: 'change this field',
+        additionalRefName: 'change this field',
       };
 
       await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -335,7 +335,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
       const firstUpdate = {
         ...createdDeal,
-        bankSupplyContractName: 'change this field',
+        additionalRefName: 'change this field',
       };
 
       await api.put({ dealUpdate: firstUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -344,7 +344,7 @@ describe('/v1/portal/deals', () => {
 
       const secondUpdate = {
         ...dealAfterFirstUpdate.body.deal,
-        bankSupplyContractName: 'change this field again',
+        additionalRefName: 'change this field again',
       };
 
       await api.put({ dealUpdate: secondUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);

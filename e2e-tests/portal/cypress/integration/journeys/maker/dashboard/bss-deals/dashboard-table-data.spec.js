@@ -12,8 +12,8 @@ context('View a deal', () => {
   context('no checker', () => {
     let deal;
     const dummyDeal = {
-      bankSupplyContractID: 'abc-1-def',
-      bankSupplyContractName: 'Tibetan submarine acquisition scheme',
+      bankInternalRefName: 'abc-1-def',
+      additionalRefName: 'Tibetan submarine acquisition scheme',
     };
 
     beforeEach(() => {

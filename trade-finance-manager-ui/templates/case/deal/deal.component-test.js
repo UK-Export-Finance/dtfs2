@@ -12,8 +12,8 @@ const params = {
     _id: chance.integer(),
     dealType: 'BSS/EWCS',
     submissionType: 'Automatic Inclusion Notice',
-    bankSupplyContractID: chance.string({ length: 5 }),
-    bankSupplyContractName: chance.word(),
+    bankInternalRefName: chance.string({ length: 5 }),
+    additionalRefName: chance.word(),
     details: {
       owningBank: {
         name: chance.name(),
@@ -60,11 +60,11 @@ describe(`${page} when deal is BSS`, () => {
   });
 
   it('should render bank reference', () => {
-    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.bankSupplyContractID);
+    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.bankInternalRefName);
   });
 
   it('should render bank additional reference', () => {
-    wrapper.expectText('[data-cy="bank-additional-reference"]').toRead(params.deal.bankSupplyContractName);
+    wrapper.expectText('[data-cy="bank-additional-reference"]').toRead(params.deal.additionalRefName);
   });
 
   it('should render eligibility criteria answers', () => {
@@ -107,11 +107,11 @@ describe(`${page} when deal is GEF`, () => {
   });
 
   it('should render bank reference', () => {
-    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.bankSupplyContractID);
+    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.bankInternalRefName);
   });
 
   it('should render bank additional reference', () => {
-    wrapper.expectText('[data-cy="bank-additional-reference"]').toRead(params.deal.bankSupplyContractName);
+    wrapper.expectText('[data-cy="bank-additional-reference"]').toRead(params.deal.additionalRefName);
   });
 
   it('should render eligibility criteria answers', () => {

@@ -5,8 +5,8 @@ module.exports = {
 	"dealType": "BSS/EWCS",
 	"submissionType": "Manual Inclusion Application",
 	"updatedAt": Date.now(),
-	"bankSupplyContractID": "Manual Test 4",
-	"bankSupplyContractName": "Manual Test 4",
+	"bankInternalRefName": "Manual Test 4",
+	"additionalRefName": "Manual Test 4",
 	"details" : {
 		"status" : "Draft",
 		"maker" : {

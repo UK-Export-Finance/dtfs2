@@ -13,10 +13,10 @@
  *       updatedAt:
  *         type: integer
  *         example: 1639675204629.0
- *       bankSupplyContractID:
+ *       bankInternalRefName:
  *         type: string
  *         example: a1
- *       bankSupplyContractName:
+ *       additionalRefName:
  *         type: string
  *         example: Test
  *       details:
