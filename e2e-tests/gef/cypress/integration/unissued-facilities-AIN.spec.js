@@ -13,7 +13,7 @@ import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 import statusBanner from './pages/application-status-banner';
 
-let applicationId;
+let dealId;
 let tokenStore;
 
 context('Unissued Facilities AIN', () => {
@@ -23,7 +23,7 @@ context('Unissued Facilities AIN', () => {
       .then((token) => { tokenStore = token; console.log('token', token); })
       .then(() => {
         cy.createApplication(CREDENTIALS.MAKER, tokenStore).then(({ body }) => {
-          applicationId = body.items[2]._id;
+          dealId = body.items[2]._id;
           console.log(body);
         });
       });
@@ -33,7 +33,7 @@ context('Unissued Facilities AIN', () => {
     beforeEach(() => {
     //   Cypress.Cookies.preserveOnce('connect.sid');
     //   cy.login(CREDENTIALS.MAKER);
-    //   cy.visit(relative(`/gef/application-details/${applicationId}`));
+    //   cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('task comment box exists with correct header and unissued facilities link', () => {

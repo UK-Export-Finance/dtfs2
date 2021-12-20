@@ -22,10 +22,10 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities/:facilityId/about-facility', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities-change/:facilityId/about-facility', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities/:facilityId/about-facility', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:applicationId/unissued-facilities-change/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities-change/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/about-facility', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities-change/:facilityId/about-facility', validateToken, expect.any(Function));
   });
 });

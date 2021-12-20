@@ -63,6 +63,7 @@ describe(baseUrl, () => {
         feeFrequency: null,
         coverDateConfirmed: null,
         changedToIssued: null,
+        issueDate: null,
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
@@ -87,6 +88,7 @@ describe(baseUrl, () => {
       feeFrequency: 'Monthly',
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
+      issueDate: null,
     };
   });
 

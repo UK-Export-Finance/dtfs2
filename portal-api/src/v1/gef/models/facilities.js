@@ -49,6 +49,7 @@ class Facility {
       this.shouldCoverStartOnSubmission = null;
       this.coverStartDate = null;
       this.coverEndDate = null;
+      this.issueDate = null;
       this.monthsOfCover = null;
       this.details = null;
       this.detailsOther = null;
@@ -91,6 +92,10 @@ class Facility {
 
       if (req.coverEndDate != null) {
         this.coverEndDate = new Date(req.coverEndDate);
+      }
+
+      if (req.issueDate != null) {
+        this.issueDate = new Date(req.issueDate);
       }
 
       if (req.monthsOfCover === null) {
@@ -155,7 +160,6 @@ class Facility {
         this.submittedAsIssuedDate = req.submittedAsIssuedDate;
       }
 
-      // set time to midnight (today) - actual time is irrelevant - only need the date
       if (req.shouldCoverStartOnSubmission === true) {
         this.coverStartDate = null;
       }

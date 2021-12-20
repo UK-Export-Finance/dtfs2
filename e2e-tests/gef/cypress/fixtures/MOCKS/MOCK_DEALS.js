@@ -76,7 +76,7 @@ const MOCK_FACILITY_ONE = {
   status: 'COMPLETED',
   details: {
     _id: '61a771cc2ae62b0013dae68a',
-    applicationId: '61a7710b2ae62b0013dae687',
+    dealId: '61a7710b2ae62b0013dae687',
     type: 'CASH',
     hasBeenIssued: false,
     name: 'Facility one',
@@ -111,7 +111,7 @@ const MOCK_FACILITY_TWO = {
   status: 'COMPLETED',
   details: {
     _id: '61a771cc2ae62b0013dae69a',
-    applicationId: '61a7710b2ae62b0013dae687',
+    dealId: '61a7710b2ae62b0013dae687',
     type: 'CASH',
     hasBeenIssued: true,
     name: 'Facility two',
@@ -145,7 +145,7 @@ const MOCK_FACILITY_THREE = {
   status: 'COMPLETED',
   details: {
     _id: '61a771cc2ae62b0013dae68a',
-    applicationId: '61a7710b2ae62b0013dae687',
+    dealId: '61a7710b2ae62b0013dae687',
     type: 'CASH',
     hasBeenIssued: false,
     name: 'Facility three',
@@ -179,7 +179,7 @@ const MOCK_FACILITY_FOUR = {
   status: 'COMPLETED',
   details: {
     _id: '61a771cc2ae62b0013dae69a',
-    applicationId: '61a7710b2ae62b0013dae687',
+    dealId: '61a7710b2ae62b0013dae687',
     type: 'CASH',
     hasBeenIssued: false,
     name: 'Facility four',

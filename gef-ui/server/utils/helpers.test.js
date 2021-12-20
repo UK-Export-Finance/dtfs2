@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import moment from 'moment';
 import {
   userToken,
   isObject,
@@ -421,6 +422,52 @@ describe('mapSummaryList()', () => {
     mockedData.details.reverse = 'abcd';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toEqual('dcba');
+  });
+
+  it('coverStartDate should display as date when !startOnSubmission', () => {
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
+
+    mockedDisplayItems[0].id = 'coverStartDate';
+    mockedDisplayItems[0].method = (callback) => moment(callback)
+      .format('D MMMM YYYY');
+
+    mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    expect(text).toEqual('20 December 2021');
+  });
+
+  it('coverStartDate should display as text when startOnSubmission and !issueDate', () => {
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
+
+    mockedDisplayItems[0].id = 'coverStartDate';
+    mockedDisplayItems[0].method = (callback) => moment(callback)
+      .format('D MMMM YYYY');
+    mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
+    mockedDisplayItems[0].issueDate = null;
+
+    mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    expect(text).toEqual('Date you submit the notice');
+  });
+
+  it('coverStartDate should display as date when startOnSubmission and issueDate', () => {
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
+
+    mockedDisplayItems[0].id = 'coverStartDate';
+    mockedDisplayItems[0].method = (callback) => moment(callback)
+      .format('D MMMM YYYY');
+    mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
+    mockedDisplayItems[0].issueDate = '2021-12-25T00:00:00.000+00:00';
+
+    mockedData.details.coverStartDate = null;
+    mockedData.details.shouldCoverStartOnSubmission = true;
+    mockedData.details.issueDate = '2021-12-25T00:00:00.000+00:00';
+
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    expect(text).toEqual('25 December 2021');
   });
 
   /**

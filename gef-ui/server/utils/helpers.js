@@ -120,7 +120,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
   // column keys to display change if facility has been changed to issued
-  const changedToIssueShow = id === 'name' || id === 'coverStartDate' || id === 'coverEndDate';
+  const changedToIssueShow = id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate';
   // column key to display add if facility not yet issued
   const unissuedShow = id === 'hasBeenIssued';
   // personalised href for facility to change to issued (once submitted to UKEF)
@@ -195,8 +195,13 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
     if (isRequired && val === null) {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
-
+    /* returns text for if cover starts on submission selected
+       if changing unissued to issued, should display date rather than message
+    */
     if (options.shouldCoverStartOnSubmission) {
+      if (options.issueDate) {
+        return { text: format(new Date(options.issueDate), 'dd MMMM yyyy') };
+      }
       return { text: 'Date you submit the notice' };
     }
 
@@ -239,7 +244,7 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
 
   return itemsToShow.map((item) => {
     const {
-      label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission,
+      label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission, issueDate,
     } = item;
 
     // If value is a number, convert to String as 0 can also become falsey
@@ -275,6 +280,7 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
         isIndustry,
         isDetails,
         shouldCoverStartOnSubmission,
+        issueDate,
       }),
       actions: {
         items: summaryItems,
@@ -410,7 +416,7 @@ const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
       { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
       { text: facilityIssueDeadline(submissionDate) },
       {
-        html: `<a href = '/gef/application-details/${details.applicationId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
+        html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
       },
     ]);
 

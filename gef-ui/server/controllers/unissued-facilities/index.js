@@ -8,38 +8,90 @@ const CONSTANTS = require('../../constants');
 const { applicationDetails } = require('../application-details');
 
 /**
- * renders the change facility dates template for unissued facilities
- * if change set to true, changes cancel button href back to application preview
+ * creates body/parameters for the template for unissued facilities
+ * if change set to true, changes cancel and back button href back to application preview
  * else renders back to unissued facilities list
  */
-const renderChangeFacilityPartial = async (req, res, change) => {
-  console.log('req', req.params);
-  const { params, query } = req;
-  const { applicationId, facilityId } = params;
+const renderChangeFacilityPartial = async (params, query, change) => {
+  const { dealId, facilityId } = params;
   const { status } = query;
-  console.log('change', change);
+
+  const { details } = await api.getFacility(facilityId);
+  const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
+  const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
+  const issueDate = details.issueDate ? new Date(details.issueDate) : null;
+  const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
+  const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
+  const monthsOfCover = JSON.stringify(details.monthsOfCover);
+
+  const body = {
+    facilityType: FACILITY_TYPE[details.type],
+    facilityName: details.name,
+    hasBeenIssued: details.hasBeenIssued,
+    monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,
+    shouldCoverStartOnSubmission: shouldCoverStartOnSubmission !== 'null' ? shouldCoverStartOnSubmission : null,
+    issueDateDay: issueDate ? format(issueDate, 'd') : null,
+    issueDateMonth: issueDate ? format(issueDate, 'M') : null,
+    issueDateYear: issueDate ? format(issueDate, 'yyyy') : null,
+    coverStartDateDay: coverStartDate ? format(coverStartDate, 'd') : null,
+    coverStartDateMonth: coverStartDate ? format(coverStartDate, 'M') : null,
+    coverStartDateYear: coverStartDate ? format(coverStartDate, 'yyyy') : null,
+    coverEndDateDay: coverEndDate ? format(coverEndDate, 'd') : null,
+    coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
+    coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
+    facilityTypeString,
+    dealId,
+    facilityId,
+    status,
+    change,
+  };
+
+  return body;
+};
+
+// when changing unissued facility from unissued facility list
+const changeUnissuedAboutFacility = async (req, res) => {
+  const { params, query } = req;
+
   try {
-    const { details } = await api.getFacility(facilityId);
-    const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
-    const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
-    const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
-    const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
-    const monthsOfCover = JSON.stringify(details.monthsOfCover);
-    console.log('RENDER');
-    return res.render('partials/unissued-change-about-facility.njk', {
-      facilityType: FACILITY_TYPE[details.type],
-      facilityName: details.name,
-      hasBeenIssued: details.hasBeenIssued,
-      monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,
-      shouldCoverStartOnSubmission: shouldCoverStartOnSubmission !== 'null' ? shouldCoverStartOnSubmission : null,
-      coverStartDateDay: coverStartDate ? format(coverStartDate, 'd') : null,
-      coverStartDateMonth: coverStartDate ? format(coverStartDate, 'M') : null,
-      coverStartDateYear: coverStartDate ? format(coverStartDate, 'yyyy') : null,
-      coverEndDateDay: coverEndDate ? format(coverEndDate, 'd') : null,
-      coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
-      coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
+    const {
+      facilityType,
+      facilityName,
+      hasBeenIssued,
+      monthsOfCover,
+      shouldCoverStartOnSubmission,
+      issueDateDay,
+      issueDateMonth,
+      issueDateYear,
+      coverStartDateDay,
+      coverStartDateMonth,
+      coverStartDateYear,
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
       facilityTypeString,
-      applicationId,
+      dealId,
+      facilityId,
+      status,
+      change,
+    } = await renderChangeFacilityPartial(params, query, false);
+    return res.render('partials/unissued-change-about-facility.njk', {
+      facilityType,
+      facilityName,
+      hasBeenIssued,
+      monthsOfCover,
+      shouldCoverStartOnSubmission,
+      issueDateDay,
+      issueDateMonth,
+      issueDateYear,
+      coverStartDateDay,
+      coverStartDateMonth,
+      coverStartDateYear,
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
+      facilityTypeString,
+      dealId,
       facilityId,
       status,
       change,
@@ -49,11 +101,57 @@ const renderChangeFacilityPartial = async (req, res, change) => {
   }
 };
 
-// when changing unissued facility from unissued facility list
-const changeUnissuedAboutFacility = async (req, res) => renderChangeFacilityPartial(req, res, false);
-
 // when changing unissued facility from application preview page
-const changeUnissuedAboutFacilityChange = async (req, res) => renderChangeFacilityPartial(req, res, true);
+const changeUnissuedAboutFacilityChange = async (req, res) => {
+  const { params, query } = req;
+
+  try {
+    const {
+      facilityType,
+      facilityName,
+      hasBeenIssued,
+      monthsOfCover,
+      shouldCoverStartOnSubmission,
+      issueDateDay,
+      issueDateMonth,
+      issueDateYear,
+      coverStartDateDay,
+      coverStartDateMonth,
+      coverStartDateYear,
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
+      facilityTypeString,
+      dealId,
+      facilityId,
+      status,
+      change,
+    } = await renderChangeFacilityPartial(params, query, true);
+    return res.render('partials/unissued-change-about-facility.njk', {
+      facilityType,
+      facilityName,
+      hasBeenIssued,
+      monthsOfCover,
+      shouldCoverStartOnSubmission,
+      issueDateDay,
+      issueDateMonth,
+      issueDateYear,
+      coverStartDateDay,
+      coverStartDateMonth,
+      coverStartDateYear,
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
+      facilityTypeString,
+      dealId,
+      facilityId,
+      status,
+      change,
+    });
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
+  }
+};
 
 /**
  * validation for changing facilities
@@ -64,8 +162,15 @@ const facilityValidation = async (req, res) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
-  const { applicationId, facilityId } = params;
+  const { dealId, facilityId } = params;
+  const application = await api.getApplication(dealId);
   const aboutFacilityErrors = [];
+  const issueDateDay = body['issue-date-day'];
+  const issueDateMonth = body['issue-date-month'];
+  const issueDateYear = body['issue-date-year'];
+  const issueDateIsFullyComplete = issueDateDay && issueDateMonth && issueDateYear;
+  const issueDateIsPartiallyComplete = !issueDateIsFullyComplete && (issueDateDay || issueDateMonth || issueDateYear);
+  const issueDateIsBlank = !issueDateDay && !issueDateMonth && !issueDateYear;
   const coverStartDateDay = body['cover-start-date-day'];
   const coverStartDateMonth = body['cover-start-date-month'];
   const coverStartDateYear = body['cover-start-date-year'];
@@ -79,6 +184,7 @@ const facilityValidation = async (req, res) => {
   const coverEndDateIsPartiallyComplete = !coverEndDateIsFullyComplete && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
   const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
 
+  let issueDate = null;
   let coverStartDate = null;
   let coverEndDate = null;
 
@@ -88,6 +194,54 @@ const facilityValidation = async (req, res) => {
       errRef: 'facilityName',
       errMsg: `Enter a name for this ${facilityTypeString} facility`,
     });
+  }
+
+  if (issueDateIsBlank) {
+    if (!saveAndReturn) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'Enter the date you issued the facility to the exporter',
+      });
+    }
+  } else if (issueDateIsPartiallyComplete) {
+    let msg = 'Issued date must include a ';
+    const dateFieldsInError = [];
+    if (!issueDateDay) {
+      msg += 'day ';
+      dateFieldsInError.push('issueDate-day');
+    }
+    if (!issueDateMonth) {
+      msg += !issueDateDay ? ' and month ' : 'month ';
+      dateFieldsInError.push('issueDate-month');
+    }
+    if (!issueDateYear) {
+      msg += !issueDateDay || !issueDateMonth ? 'and year' : 'year';
+      dateFieldsInError.push('issueDate-year');
+    }
+
+    aboutFacilityErrors.push({
+      errRef: 'issueDate',
+      errMsg: msg,
+      subFieldErrorRefs: dateFieldsInError,
+    });
+  } else if (issueDateIsFullyComplete) {
+    const submissionDate = new Date(+application.submissionDate);
+    const threeMonthsFromSubmission = add(submissionDate, { months: 3 });
+    const issueDateSet = set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay });
+
+    if (isBefore(issueDateSet, submissionDate)) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The issue date must not be before the date of the inclusion notice submission date',
+      });
+    }
+
+    if (isAfter(issueDateSet, threeMonthsFromSubmission)) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The issue date must be within 3 months of the inclusion notice submission date',
+      });
+    }
   }
 
   if (!body.shouldCoverStartOnSubmission && !saveAndReturn) {
@@ -127,21 +281,21 @@ const facilityValidation = async (req, res) => {
         subFieldErrorRefs: dateFieldsInError,
       });
     } else if (coverStartDateIsFullyComplete) {
-      const now = new Date();
-      const threeMonthsFromNow = add(now, { months: 3 });
+      const submissionDate = new Date(+application.submissionDate);
+      const threeMonthsFromSubmission = add(submissionDate, { months: 3 });
       const startDate = set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
 
-      if (isBefore(startDate, now)) {
+      if (isBefore(startDate, submissionDate)) {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
-          errMsg: 'Cover start date cannot be before today',
+          errMsg: 'The cover start date must not be before the date of the inclusion notice submission date',
         });
       }
 
-      if (isAfter(startDate, threeMonthsFromNow)) {
+      if (isAfter(startDate, threeMonthsFromSubmission)) {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
-          errMsg: 'Cover start date cannot be more than 3 months from now',
+          errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
         });
       }
     }
@@ -191,6 +345,10 @@ const facilityValidation = async (req, res) => {
     });
   }
 
+  if (issueDateIsFullyComplete) {
+    issueDate = set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay });
+  }
+
   if (coverStartDateIsFullyComplete) {
     coverStartDate = set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
   }
@@ -204,6 +362,24 @@ const facilityValidation = async (req, res) => {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
+      });
+    }
+  }
+
+  if (issueDateIsFullyComplete && coverEndDateIsFullyComplete) {
+    if (coverEndDate < issueDate) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before the issue date',
+      });
+    }
+  }
+
+  if (issueDateIsFullyComplete && coverStartDateIsFullyComplete) {
+    if (coverStartDate < issueDate) {
+      aboutFacilityErrors.push({
+        errRef: 'coverStartDate',
+        errMsg: 'Cover start date cannot be before the issue date',
       });
     }
   }
@@ -226,12 +402,15 @@ const facilityValidation = async (req, res) => {
   }
 
   if (aboutFacilityErrors.length > 0) {
-    return res.render('partials/about-facility.njk', {
+    return res.render('partials/unissued-change-about-facility.njk', {
       errors: validationErrorHandler(aboutFacilityErrors),
       facilityName: body.facilityName,
       shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
       monthsOfCover: body.monthsOfCover,
       hasBeenIssued: true,
+      issueDateDay,
+      issueDateMonth,
+      issueDateYear,
       coverStartDateDay,
       coverStartDateMonth,
       coverStartDateYear,
@@ -240,18 +419,19 @@ const facilityValidation = async (req, res) => {
       coverEndDateYear,
       facilityType,
       facilityTypeString,
-      applicationId,
+      dealId,
       facilityId,
       status,
     });
   }
 
   return {
+    issueDate,
     coverStartDate,
     coverEndDate,
     body,
     facilityId,
-    applicationId,
+    dealId,
   };
 };
 
@@ -262,7 +442,7 @@ const facilityValidation = async (req, res) => {
  */
 const postChangeUnissuedAboutFacility = async (req, res) => {
   const {
-    coverStartDate, coverEndDate, body, facilityId, applicationId,
+    issueDate, coverStartDate, coverEndDate, body, facilityId, dealId,
   } = await facilityValidation(req, res);
 
   try {
@@ -272,6 +452,7 @@ const postChangeUnissuedAboutFacility = async (req, res) => {
         name: body.facilityName,
         shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
         monthsOfCover: body.monthsOfCover || null,
+        issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         hasBeenIssued: true,
@@ -281,7 +462,7 @@ const postChangeUnissuedAboutFacility = async (req, res) => {
       (req.success = {
         message: `${body.facilityName} is updated`,
       }),
-      (req.url = `/gef/application-details/${applicationId}/unissued-facilities`),
+      (req.url = `/gef/application-details/${dealId}/unissued-facilities`),
     );
 
     return applicationDetails(req, res);
@@ -297,7 +478,7 @@ const postChangeUnissuedAboutFacility = async (req, res) => {
  */
 const postChangeUnissuedAboutFacilityChange = async (req, res) => {
   const {
-    coverStartDate, coverEndDate, body, facilityId, applicationId,
+    issueDate, coverStartDate, coverEndDate, body, facilityId, dealId,
   } = await facilityValidation(req, res);
 
   try {
@@ -307,13 +488,14 @@ const postChangeUnissuedAboutFacilityChange = async (req, res) => {
         name: body.facilityName,
         shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
         monthsOfCover: body.monthsOfCover || null,
+        issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         hasBeenIssued: true,
         changedToIssued: true,
         coverDateConfirmed: true,
       },
-      (req.url = `/gef/application-details/${applicationId}`),
+      (req.url = `/gef/application-details/${dealId}`),
     );
 
     return applicationDetails(req, res);
