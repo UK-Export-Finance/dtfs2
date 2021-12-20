@@ -9,7 +9,6 @@ const expectAddedFields = (obj) => {
 
   const expectation = expectMongoId({
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
-    updatedAt: expect.any(Number),
     eligibility: {
       status: 'Not started',
       criteria: expect.any(Array),
@@ -37,6 +36,7 @@ const expectAddedFields = (obj) => {
     },
     editedBy: [],
     exporter: {},
+    updatedAt: expect.any(Number),
   });
 
   return expectation;
