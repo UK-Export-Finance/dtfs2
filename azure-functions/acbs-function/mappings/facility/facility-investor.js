@@ -23,9 +23,7 @@ const facilityInvestor = (deal, facility) => {
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
-    currency: facility.facilitySnapshot.currency.id
-      ? facility.facilitySnapshot.currency.id
-      : facility.facilitySnapshot.currency,
+    currency: facility.facilitySnapshot.currency.id,
     guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,

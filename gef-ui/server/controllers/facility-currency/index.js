@@ -13,7 +13,7 @@ const facilityCurrency = async (req, res) => {
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
     return res.render('partials/facility-currency.njk', {
-      currency: details.currency,
+      currency: details.currency.id,
       facilityType: facilityTypeConst,
       facilityTypeString,
       dealId,

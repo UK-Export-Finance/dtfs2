@@ -42,9 +42,9 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   facilitySnapshot.ukefFacilityType = facilityType;
 
   const result = {
-    _id: facility._id, // eslint-disable-line no-underscore-dangle
+    _id: facility._id,
     facilitySnapshot: {
-      _id: facility._id, // eslint-disable-line no-underscore-dangle
+      _id: facility._id,
       dealId,
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,
@@ -53,9 +53,9 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       facilityProduct: facilitySnapshot.facilityProduct,
       facilityStage: facilitySnapshot.facilityStage,
       facilityType: mapFacilityType(facilitySnapshot),
-      currency,
-      facilityValueExportCurrency: `${currency} ${formattedFacilityValue}`,
-      facilityValue: mapFacilityValue(currency, formattedFacilityValue, facilityTfm),
+      currency: currency.id,
+      facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
+      facilityValue: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
       feeType: mapGefFacilityFeeType(paymentType),
       feeFrequency,
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
@@ -64,7 +64,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(facilityType),
       ukefFacilityId,
-      ukefExposure: `${currency} ${ukefExposure}`,
+      ukefExposure: `${currency.id} ${ukefExposure}`,
       providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),
       providedOnOther: facilitySnapshot.detailsOther,
     },

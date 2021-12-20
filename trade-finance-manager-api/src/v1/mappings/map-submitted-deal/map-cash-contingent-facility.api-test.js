@@ -93,7 +93,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         _id,
         ukefFacilityId: Number(ukefFacilityId),
         facilityType: type,
-        currencyCode: currency,
+        currencyCode: currency.id,
         value,
         coverPercentage,
         hasBeenIssued,
