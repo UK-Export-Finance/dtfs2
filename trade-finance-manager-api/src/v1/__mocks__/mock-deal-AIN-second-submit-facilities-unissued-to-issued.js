@@ -1,3 +1,5 @@
+const { MOCK_FACILITIES } = require('./mock-facilities');
+
 const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
   dealType: 'BSS/EWCS',
@@ -164,7 +166,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
-  facilities: ['12345678', '23456789'],
+  facilities: [MOCK_FACILITIES[0], MOCK_FACILITIES[1]],
   bondTransactions: {
     items: [
       {

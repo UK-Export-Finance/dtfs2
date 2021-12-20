@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import pricingAndRiskController from '..';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
@@ -51,7 +50,8 @@ describe('GET underwriting - pricing and risk', () => {
       };
 
       await pricingAndRiskController.getUnderWritingPricingAndRisk(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/pricing-and-risk.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/underwriting/pricing-and-risk/pricing-and-risk.njk',
         {
           userCanEditGeneral: userCanEditGeneral(session.user),
           activePrimaryNavigation: 'manage work',
@@ -61,7 +61,8 @@ describe('GET underwriting - pricing and risk', () => {
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
-        });
+        },
+      );
     });
   });
 
@@ -99,7 +100,8 @@ describe('GET underwriting - pricing and risk edit', () => {
       };
 
       await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
@@ -108,7 +110,8 @@ describe('GET underwriting - pricing and risk edit', () => {
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
-        });
+        },
+      );
     });
   });
 
@@ -208,7 +211,8 @@ describe('POST underwriting - pricing and risk edit', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -221,7 +225,8 @@ describe('POST underwriting - pricing and risk edit', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
@@ -255,7 +260,8 @@ describe('POST underwriting - pricing and risk edit', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -268,7 +274,8 @@ describe('POST underwriting - pricing and risk edit', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
@@ -302,7 +309,8 @@ describe('POST underwriting - pricing and risk edit', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -315,7 +323,8 @@ describe('POST underwriting - pricing and risk edit', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
