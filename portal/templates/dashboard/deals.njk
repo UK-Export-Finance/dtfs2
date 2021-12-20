@@ -96,15 +96,15 @@
         attributes: { "data-cy": "deal__product--" + deal._id }
       },
       {
-        text: deal.type or "-",
-        attributes: { "data-cy": "deal__type--" + deal._id }
+        text: deal.submissionType or "-",
+        attributes: { "data-cy": "deal__submissionType--" + deal._id }
       },
       {
         text: deal.status,
         attributes: { "data-cy": "deal__status--" + deal._id }
       },
       {
-        text: deal.lastUpdate | localiseTimestamp("D MMM YYYY", user.timezone),
+        text: deal.updatedAt | localiseTimestamp("D MMM YYYY", user.timezone),
         attributes: {
         'data-cy': 'deal__updated--' + deal._id }
       }

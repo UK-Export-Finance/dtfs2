@@ -35,7 +35,6 @@ const mapBssEwcsDeal = (deal) => {
     bankReferenceNumber: bankSupplyContractID,
     bankAdditionalReferenceName: bankSupplyContractName,
     submissionCount,
-    submissionType,
     submissionDate,
     status,
     ukefDealId,

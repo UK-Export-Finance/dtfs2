@@ -19,8 +19,8 @@ query {
       bankRef
       exporter
       product
-      type
-      lastUpdate
+      submissionType
+      updatedAt
     }
   }
 }`;
@@ -38,8 +38,8 @@ query {
       bankRef
       exporter
       product
-      type
-      lastUpdate
+      submissionType
+      updatedAt
     }
   }
 }`;
@@ -58,8 +58,8 @@ query {
       bankRef
       exporter
       product
-      type
-      lastUpdate
+      submissionType
+      updatedAt
     }
   }
 }`;

@@ -74,10 +74,10 @@ exports.clone = async (req, res) => {
     const modifiedDeal = {
       ...existingDealWithoutId,
       submissionType: existingDeal.submissionType,
+      updatedAt: existingDeal.updatedAt,
       details: {
         bankSupplyContractID,
         bankSupplyContractName,
-        dateOfLastAction: existingDeal.details.dateOfLastAction,
         maker: req.user,
         owningBank: existingDeal.details.owningBank,
       },

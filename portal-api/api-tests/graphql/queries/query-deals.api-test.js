@@ -12,12 +12,12 @@ query {
     status {
       code
     }
-    deals{
+    deals {
       _id
+      updatedAt
       details {
         bankSupplyContractName
         bankSupplyContractID
-        dateOfLastAction
       }
     }
   }
@@ -30,12 +30,12 @@ query {
       code
     }
     count
-    deals{
+    deals {
       _id
+      updatedAt
       details {
         bankSupplyContractName
         bankSupplyContractID
-        dateOfLastAction
       }
     }
   }
@@ -49,12 +49,12 @@ query {
       code
     }
     count
-    deals{
+    deals {
       _id
+      updatedAt
       details {
         bankSupplyContractName
         bankSupplyContractID
-        dateOfLastAction
       }
     }
   }
@@ -67,13 +67,13 @@ query {
       code
     }
     count
-    deals{
+    deals {
       _id
+      updatedAt
       details {
         status
         bankSupplyContractName
         bankSupplyContractID
-        dateOfLastAction
       }
     }
   }
@@ -86,13 +86,13 @@ query {
       code
     }
     count
-    deals{
+    deals {
       _id
+      updatedAt
       details {
         status
         bankSupplyContractName
         bankSupplyContractID
-        dateOfLastAction
       }
     }
   }
@@ -105,13 +105,13 @@ query {
       code
     }
     count
-    deals{
+    deals {
       _id
+      updatedAt
       details {
         status
         bankSupplyContractName
         bankSupplyContractID
-        dateOfLastAction
       }
     }
   }

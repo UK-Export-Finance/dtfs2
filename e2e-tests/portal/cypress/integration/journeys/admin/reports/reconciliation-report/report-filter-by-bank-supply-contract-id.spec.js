@@ -94,12 +94,6 @@ context('reconciliation report', () => {
     cy.login(ADMIN_LOGIN);
     reconciliationReport.visit();
 
-    reconciliationReport.filterByBankSupplyContractId().type('{selectall}{backspace}');
-    reconciliationReport.applyFilters().click();
-    reconciliationReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(6 items)');
-    });
-
     reconciliationReport.filterByBankSupplyContractId().type('{selectall}{backspace}adealwithone');
     reconciliationReport.applyFilters().click();
     reconciliationReport.totalItems().invoke('text').then((text) => {

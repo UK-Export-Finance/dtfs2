@@ -7,6 +7,7 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
     deals {
       _id
       submissionType
+      updatedAt
       details {
         status
         bankSupplyContractID
@@ -27,7 +28,6 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
           firstname
           surname
         }
-        dateOfLastAction
         submissionDate
         approvalDate
         created

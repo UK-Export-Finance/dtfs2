@@ -4,11 +4,11 @@ const now = moment();
 
 const deal = {
   _id: 123456,
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: 'Ready for Checker\'s approval',
-    dateOfLastAction: '02/02/2020 12:12',
     previousStatus: 'Draft',
     maker: { username: 'some.user@client.com' },
     submissionDate: 1594296776916.0,

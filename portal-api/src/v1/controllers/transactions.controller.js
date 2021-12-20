@@ -12,7 +12,7 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
   const query = transactionFix.transactionsQuery();
   // console.log(`query :: \n${JSON.stringify(query)}`);
   // get the deals that might contain transactions we care about
-  //   ordered by deal.details.dateOfLastAction
+  //   ordered by deal.updatedAt
   const { deals } = await api.queryDeals(query);
 
   // use Array.reduce to loop over our list of deals,

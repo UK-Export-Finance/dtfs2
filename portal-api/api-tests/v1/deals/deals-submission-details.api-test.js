@@ -8,11 +8,11 @@ const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const newDeal = aDeal({
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: 'Draft',
-    dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{
     username: 'bananaman',
@@ -271,7 +271,7 @@ describe('/v1/deals/:id/submission-details', () => {
       expect(body.deal.submissionDetails).toEqual(expectedResponse);
     });
 
-    it('updates the deals details.dateOfLastAction field', async () => {
+    it('updates the deals updatedAt field', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
@@ -287,7 +287,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
       expect(status).toEqual(200);
 
-      expect(body.deal.details.dateOfLastAction).not.toEqual(dealInOriginalShape.deal.details.dateOfLastAction);
+      expect(body.deal.updatedAt).not.toEqual(dealInOriginalShape.deal.updatedAt);
     });
 
     it('updates deal.exporter.companyName with the provided `supplier-name` field', async () => {
