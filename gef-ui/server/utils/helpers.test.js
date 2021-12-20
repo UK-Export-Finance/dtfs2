@@ -128,7 +128,7 @@ const MOCK_FACILITY = {
         monthsOfCover: null,
         details: [],
         detailsOther: '',
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: 1000,
         coverPercentage: 80,
         interestPercentage: 1,
@@ -160,7 +160,7 @@ const MOCK_FACILITY = {
         monthsOfCover: null,
         details: [],
         detailsOther: '',
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: 2000,
         coverPercentage: 80,
         interestPercentage: 1,
@@ -374,6 +374,7 @@ describe('mapSummaryList()', () => {
   const MockedData = () => ({
     details: {
       id: '123456',
+      currency: { id: 'GBP' },
     },
     validation: {
       required: [],
@@ -519,7 +520,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].isCurrency = true;
 
     mockedData.details.price = 200;
-    mockedData.details.currency = 'GBP';
+    mockedData.details.currency = { id: 'GBP' };
 
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(text).toEqual('200 GBP');

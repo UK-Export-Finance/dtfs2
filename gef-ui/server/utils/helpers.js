@@ -127,7 +127,7 @@ const mapSummaryList = (data, itemsToShow, preview = false) => {
 
     if (options.isCurrency) {
       return {
-        text: `${commaNumber(val)} ${currency}`,
+        text: `${commaNumber(val)} ${currency.id}`,
       };
     }
 
@@ -263,7 +263,7 @@ const getIssuedFacilitiesAsArray = (facilities) => facilities.items.filter(({ de
     [
       { text: details.name },
       { text: details.ukefFacilityId },
-      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+      { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
       { html: `<a href = '/gef/application-details/${details.dealId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
     ]);
 

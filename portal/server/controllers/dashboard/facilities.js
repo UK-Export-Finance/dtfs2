@@ -79,7 +79,7 @@ exports.gefFacilities = async (req, res) => {
     noticeType: facility.deal.submissionType,
     value: {
       amount: facility.value || 0,
-      currency: facility.currency || '',
+      currency: facility.currency.id || '',
     },
     bankStage: facility.hasBeenIssued ? 'Issued' : 'Unissued',
     ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here

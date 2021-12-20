@@ -66,7 +66,7 @@ describe('controllers/facility-value', () => {
   describe('GET Facility Value', () => {
     it('renders the `Facility Value` template', async () => {
       mockRequest.query.status = 'change';
-      mockFacilityValueResponse.details.currency = 'EUR';
+      mockFacilityValueResponse.details.currency = { id: 'EUR' };
       mockFacilityValueResponse.details.type = 'CASH';
       mockFacilityValueResponse.details.value = 2000;
       mockFacilityValueResponse.details.coverPercentage = 20;
@@ -225,7 +225,7 @@ describe('controllers/facility-value', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      mockRequest.body.currency = 'EUR';
+      mockRequest.body.currency = { id: 'EUR' };
       mockRequest.body.coverPercentage = '79';
       mockRequest.body.interestPercentage = '10';
       mockRequest.body.value = '1000';
@@ -381,7 +381,7 @@ describe('controllers/facility-value', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      mockRequest.body.currency = 'EUR';
+      mockRequest.body.currency = { id: 'EUR' };
       mockRequest.body.coverPercentage = '79';
       mockRequest.body.interestPercentage = '10';
       mockRequest.body.value = '1000';

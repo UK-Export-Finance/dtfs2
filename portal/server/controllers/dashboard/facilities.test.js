@@ -138,12 +138,14 @@ describe('controllers/facilities', () => {
             type: 'mock-type',
             hasBeenIssued: true,
             deal: { _id: 'mock-deal-1' },
+            currency: { id: 'JPY' },
           },
           {
             _id: 'mockFacility2',
             dealId: 'mock-deal-1',
             type: 'mock-type',
             deal: { _id: 'mock-deal-1' },
+            currency: { id: 'JPY' },
           },
         ],
       });
@@ -179,7 +181,7 @@ describe('controllers/facilities', () => {
             product: PRODUCT.GEF,
             ukefStage: '-',
             url: '/gef/application-details/mock-deal-1/facilities/mockFacility1/',
-            value: { amount: 0, currency: '' },
+            value: { amount: 0, currency: 'JPY' },
           },
           {
             _id: 'mockFacility2',
@@ -190,7 +192,7 @@ describe('controllers/facilities', () => {
             product: PRODUCT.GEF,
             ukefStage: '-',
             url: '/gef/application-details/mock-deal-1/facilities/mockFacility2/',
-            value: { amount: 0, currency: '' },
+            value: { amount: 0, currency: 'JPY' },
           },
         ],
         pages: {

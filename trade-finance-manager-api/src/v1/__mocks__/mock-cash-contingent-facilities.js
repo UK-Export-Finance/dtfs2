@@ -4,7 +4,7 @@ const MOCK_CASH_FACILITY = {
   coverStartDate: '2021-10-08T00:00:00.000Z',
   coverPercentage: 12,
   createdAt: 1628693855675.0,
-  currency: 'EUR',
+  currency: { id: 'GBP' },
   details: [
     'RESOLVING',
   ],
@@ -30,7 +30,7 @@ const MOCK_CONTINGENT_FACILITY = {
   coverStartDate: '2021-12-08T00:00:00.000Z',
   coverPercentage: 12,
   createdAt: 1628693855675.0,
-  currency: 'EUR',
+  currency: { id: 'GBP' },
   details: [
     'RESOLVING',
   ],

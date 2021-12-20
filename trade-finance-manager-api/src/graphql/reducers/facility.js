@@ -11,7 +11,7 @@ const facilityReducer = (facility, dealSnapshot, dealTfm) => {
   }
 
   const result = {
-    _id: facility._id, // eslint-disable-line no-underscore-dangle
+    _id: facility._id,
     facilitySnapshot: mapFacility(
       facilitySnapshot,
       facility.tfm,
