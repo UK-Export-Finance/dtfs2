@@ -24,7 +24,7 @@ const dealsQuery = (user, filter) => {
       const { freetextSearch } = clause;
       return {
         $or: [
-          { 'bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
+          { bankSupplyContractID: { $regex: freetextSearch, $options: 'i' } },
           { 'details.ukefDealId': { $regex: freetextSearch, $options: 'i' } },
           { 'bondTransactions.items.uniqueIdentificationNumber': { $regex: freetextSearch, $options: 'i' } },
           { 'submissionDetails.supplier-name': { $regex: freetextSearch, $options: 'i' } },
@@ -42,11 +42,12 @@ const dealsQuery = (user, filter) => {
       return { $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] };
     }
 
-    if (clause['bankSupplyContractID']) {
-      const bankSupplyContractID = clause['bankSupplyContractID'];
+    if (clause.bankSupplyContractID) {
+      const { bankSupplyContractID } = clause;
+
       return {
         $or: [
-          { 'bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } },
+          { bankSupplyContractID: { $regex: bankSupplyContractID, $options: 'i' } },
         ],
       };
     }
@@ -102,7 +103,7 @@ const findDeals = async (requestingUser, filter) => {
 
 exports.findDeals = findDeals;
 
-const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filter) => {
+const findPaginatedDeals = async (requestingUser, filter, start = 0, pagesize = 20) => {
   const query = dealsQuery(requestingUser, filter);
   return api.queryDeals(query, start, pagesize);
 };
@@ -114,7 +115,7 @@ const findAllDeals = async (requestingUser, filters, sort) => {
 };
 exports.findAllDeals = findAllDeals;
 
-const findAllPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filters, sort) => {
+const findAllPaginatedDeals = async (requestingUser, filters, sort, start = 0, pagesize = 20) => {
   const sanitisedFilters = allDealsFilters(requestingUser, filters);
   return api.queryAllDeals(sanitisedFilters, sort, start, pagesize);
 };

@@ -317,8 +317,10 @@ const generateTypeA = async (deal, fromStatus) => {
   const typeAxmlStr = builder.build();
 
   // Validate XML against XSD schema
-  const typeAxsd = fs.readFileSync(path.resolve(__dirname, './type-a-defs/type-a.xsd'),
-    { encoding: 'utf8', flag: 'r' });
+  const typeAxsd = fs.readFileSync(
+    path.resolve(__dirname, './type-a-defs/type-a.xsd'),
+    { encoding: 'utf8', flag: 'r' },
+  );
 
   const parsedXml = libxml.parseXml(typeAxmlStr);
   const parsedXsd = libxml.parseXml(typeAxsd);

@@ -3,7 +3,7 @@ const transactionFixer = require('./transactions/transactionFixer');
 const api = require('../api');
 
 // To return all transactions, use start=0, pagesize<=0
-exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
+exports.findTransactions = async (requestingUser, filter, start = 0, pagesize = 20) => {
   // try to hide all the horrible logic for filtering in here:
   const transactionFix = transactionFixer(requestingUser, filter);
 

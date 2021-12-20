@@ -86,7 +86,7 @@ const constructor = (user, filters) => {
         return listSoFar.concat([dealwithStatus]);
       }
       if (BANKSUPPLYCONTRACTID === filterField) {
-        const dealwithSupplyID = { 'bankSupplyContractID': { $regex: filter[filterField], $options: 'i' } };
+        const dealwithSupplyID = { bankSupplyContractID: { $regex: filter[filterField], $options: 'i' } };
         return listSoFar.concat([dealwithSupplyID]);
       }
       if (SUBMISSION_SUPPLIER_NAME === filterField) {
@@ -95,7 +95,7 @@ const constructor = (user, filters) => {
         return listSoFar.concat([dealwithSupplyID]);
       }
       if (DEAL_SUBMISSION_TYPE === filterField) {
-        const deal = { 'submissionType': filter[filterField] };
+        const deal = { submissionType: filter[filterField] };
 
         return listSoFar.concat([deal]);
       }
