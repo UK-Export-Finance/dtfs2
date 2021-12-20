@@ -11,7 +11,6 @@ const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    status: "Draft",
     status: 'Draft',
   },
   comments: [{
