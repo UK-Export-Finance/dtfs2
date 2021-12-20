@@ -1,4 +1,5 @@
 module.exports = {
+  dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'abc-1-def',
   additionalRefName: 'Tibettan submarine acquisition scheme',
