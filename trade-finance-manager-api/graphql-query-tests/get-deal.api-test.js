@@ -150,7 +150,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
           ukefFacilityType,
           facilityStage,
           facilityValueExportCurrency,
-          facilityValue,
+          value,
           coveredPercentage,
           bondIssuer,
           bondBeneficiary,

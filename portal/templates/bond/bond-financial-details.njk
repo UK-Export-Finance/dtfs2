@@ -37,8 +37,8 @@
             text: "Bond value"
           },
           id: "facilityValue",
-          name: "facilityValue",
-          value: bond.facilityValue,
+          name: "value",
+          value: bond.value,
           pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
           attributes: {
             size: "60",
@@ -47,8 +47,8 @@
             'data-cy': 'facility-value',
             "data-mask": "currency"
           },
-          errorMessage: validationErrors.errorList.facilityValue and {
-            text: validationErrors.errorList.facilityValue.text,
+          errorMessage: validationErrors.errorList.value and {
+            text: validationErrors.errorList.value.text,
             attributes: {
               'data-cy': 'facility-value-error-message'
             }

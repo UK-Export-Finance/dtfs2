@@ -24,7 +24,7 @@ module.exports = [
     "bondBeneficiary": "",
     "requestedCoverStartDate": twoMonthsTimestamp,
     "lastEdited": nowTimestamp,
-    "facilityValue": "500000.00",
+    "value": "500000.00",
     "currencySameAsSupplyContractCurrency": "true",
     "currency": {
       "text": "GBP - UK Sterling",

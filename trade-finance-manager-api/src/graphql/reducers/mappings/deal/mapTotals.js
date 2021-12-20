@@ -13,15 +13,11 @@ const mapTotals = (facilities) => {
 
     // NOTE:
     // Facilities passed into this function are in their raw form (unmapped).
-    // If we pass in mapped facilities, facilityValue would contain currency code. Therefore:
-    // - Bond and Loan facility total is `facilityValue`
+    // If we pass in mapped facilities, value would contain currency code. Therefore:
+    // - Bond and Loan facility total is `value`
     // - Cash and Contingent facility total is `value`
 
-    if (facilitySnapshot.value) {
-      return Number(facilitySnapshot.value);
-    }
-
-    return Number(facilitySnapshot.facilityValue);
+    return Number(facilitySnapshot.value);
   });
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));

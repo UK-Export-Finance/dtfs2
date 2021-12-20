@@ -113,13 +113,13 @@
 
     <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-      {% if bond.facilityValue %}
+      {% if bond.value %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Bond value
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-value" data-mask="currency">
-            {{ bond.facilityValue }}
+            {{ bond.value }}
           </dd>
         </div>
       {% endif %}
@@ -165,7 +165,7 @@
         {% if bond['conversionRateDate-day'] and bond['conversionRateDate-month'] and bond['conversionRateDate-year'] %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-body-s">
-              Conversion rate date 
+              Conversion rate date
             </dt>
             <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
               {{ bond['conversionRateDate-day'] }}/{{ bond['conversionRateDate-month'] }}/{{ bond['conversionRateDate-year'] }}
@@ -232,7 +232,7 @@
       {% endif %}
 
     </dl>
-    
+
 
     <h2 class="govuk-heading-m">Fee details</h2>
 

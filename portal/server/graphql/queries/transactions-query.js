@@ -18,7 +18,7 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       bankFacilityId,
       ukefFacilityId,
       transactionType,
-      facilityValue,
+      value,
       currency{
         text,
         id,

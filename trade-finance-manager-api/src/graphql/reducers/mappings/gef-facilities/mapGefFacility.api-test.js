@@ -52,7 +52,7 @@ describe('mapGefFacility', () => {
         facilityType: mapFacilityType(facilitySnapshot),
         currency: facilitySnapshot.currency.id,
         facilityValueExportCurrency: `${facilitySnapshot.currency.id} ${formattedFacilityValue}`,
-        facilityValue: mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility.tfm),
+        value: mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility.tfm),
         feeType: mapGefFacilityFeeType(facilitySnapshot.paymentType),
         feeFrequency: facilitySnapshot.feeFrequency,
         guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee),

@@ -102,7 +102,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan1",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -114,7 +114,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan2",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -126,7 +126,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan3",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -138,7 +138,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan4",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -150,7 +150,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan5",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -163,7 +163,7 @@
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan6",
         "ukefFacilityId": "ukef:aDealWithTenLoans-loan6",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -175,7 +175,7 @@
       {
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan7",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -187,7 +187,7 @@
       {
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan8",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -199,7 +199,7 @@
       {
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan9",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
@@ -211,7 +211,7 @@
       {
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "aDealWithTenLoans-loan10",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",

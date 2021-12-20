@@ -5,7 +5,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
-const deal = require('../../../src/v1/validation/deal');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -32,7 +31,7 @@ describe('/v1/deals/:id/bond', () => {
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
-    facilityValue: '123',
+    value: '123',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '1',
     coveredPercentage: '2',
@@ -42,7 +41,6 @@ describe('/v1/deals/:id/bond', () => {
   };
 
   let aBarclaysMaker;
-  let anEditor;
   let deal;
   let dealId;
   let bondId;
@@ -60,7 +58,6 @@ describe('/v1/deals/:id/bond', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
@@ -69,7 +66,7 @@ describe('/v1/deals/:id/bond', () => {
 
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
-    dealId = deal._id; // eslint-disable-line no-underscore-dangle
+    dealId = deal._id;
 
     const bondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = bondResponse.body;
@@ -109,18 +106,18 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('facilityValue', () => {
+    describe('value', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            facilityValue: '',
+            value: '',
           };
 
           const body = await updateBondInDeal(dealId, bond);
 
-          expect(body.validationErrors.errorList.facilityValue).toBeDefined();
-          expect(body.validationErrors.errorList.facilityValue.text).toEqual('Enter the Bond value');
+          expect(body.validationErrors.errorList.value).toBeDefined();
+          expect(body.validationErrors.errorList.value.text).toEqual('Enter the Bond value');
         });
       });
 
@@ -128,61 +125,61 @@ describe('/v1/deals/:id/bond', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            facilityValue: 'test',
+            value: 'test',
           };
 
           const body = await updateBondInDeal(dealId, bond);
 
-          expect(body.validationErrors.errorList.facilityValue).toBeDefined();
-          expect(body.validationErrors.errorList.facilityValue.text).toEqual('Bond value must be a currency format, like 1,345 or 1345.54');
+          expect(body.validationErrors.errorList.value).toBeDefined();
+          expect(body.validationErrors.errorList.value.text).toEqual('Bond value must be a currency format, like 1,345 or 1345.54');
         });
       });
 
       describe('when less than 0.01', () => {
         it('should return validationError', async () => {
           const bond = {
-            facilityValue: '0',
+            value: '0',
           };
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Bond value must be 0.01 or more');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Bond value must be 0.01 or more');
         });
       });
 
       describe('with more than 2 decimal points', () => {
         it('should return validationError', async () => {
           const bond = {
-            facilityValue: '0.123',
+            value: '0.123',
           };
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Bond value must have less than 3 decimals, like 12 or 12.10');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Bond value must have less than 3 decimals, like 12 or 12.10');
         });
       });
 
       describe('with more than 14 digits and no decimal points', () => {
         it('should return validationError', async () => {
           const bond = {
-            facilityValue: '123456789112345',
+            value: '123456789112345',
           };
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Bond value must be 14 numbers or fewer');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Bond value must be 14 numbers or fewer');
         });
       });
 
       describe('with more than 14 digits and decimal points', () => {
         it('should return validationError', async () => {
           const bond = {
-            facilityValue: '123456789112345.12',
+            value: '123456789112345.12',
           };
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Bond value must be 14 numbers or fewer');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Bond value must be 14 numbers or fewer');
         });
       });
     });

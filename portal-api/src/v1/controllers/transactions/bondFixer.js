@@ -93,7 +93,7 @@ const constructor = (listOfFilters) => {
     }).map((bond) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
 
-      deal_id: deal._id, // eslint-disable-line no-underscore-dangle
+      deal_id: deal._id,
       deal_status: deal.details.status,
       deal_supplierName: deal.submissionDetails['supplier-name'],
       deal_bankSupplyContractID: deal.details.bankSupplyContractID,
@@ -102,11 +102,11 @@ const constructor = (listOfFilters) => {
       deal_created: deal.details.created,
       deal_submissionDate: deal.details.submissionDate,
       deal_submissionType: deal.submissionType,
-      transaction_id: bond._id, // eslint-disable-line no-underscore-dangle
+      transaction_id: bond._id,
       bankFacilityId: bond.uniqueIdentificationNumber,
       ukefFacilityId: bond.ukefFacilityId,
       transactionType: 'bond',
-      facilityValue: bond.facilityValue,
+      value: bond.value,
       currency: bond.currency,
       transactionStage: bond.facilityStage,
       createdDate: bond.createdDate,

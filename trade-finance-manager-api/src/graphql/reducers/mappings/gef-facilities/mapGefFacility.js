@@ -55,7 +55,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       facilityType: mapFacilityType(facilitySnapshot),
       currency: currency.id,
       facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
-      facilityValue: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
+      value: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
       feeType: mapGefFacilityFeeType(paymentType),
       feeFrequency,
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),

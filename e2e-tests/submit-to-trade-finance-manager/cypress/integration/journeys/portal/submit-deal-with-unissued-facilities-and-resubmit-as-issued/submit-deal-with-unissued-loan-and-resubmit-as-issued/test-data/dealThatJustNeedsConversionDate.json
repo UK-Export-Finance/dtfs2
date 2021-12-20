@@ -117,7 +117,7 @@
       "ukefGuaranteeInMonths": "12",
       "bankReferenceNumber": "",
       "guaranteeFeePayableByBank": "10.8000",
-      "facilityValue": "123123.00",
+      "value": "123123.00",
       "currencySameAsSupplyContractCurrency": "true",
       "interestMarginFee": "12",
       "coveredPercentage": "20",

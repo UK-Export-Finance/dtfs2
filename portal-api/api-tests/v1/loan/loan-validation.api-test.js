@@ -65,7 +65,7 @@ describe('/v1/deals/:id/loan', () => {
 
       expect(body.validationErrors.count).toEqual(7);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
-      expect(body.validationErrors.errorList.facilityValue).toBeDefined();
+      expect(body.validationErrors.errorList.value).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
       expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
@@ -78,7 +78,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(400);
       expect(body.validationErrors.count).toEqual(7);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
-      expect(body.validationErrors.errorList.facilityValue).toBeDefined();
+      expect(body.validationErrors.errorList.value).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
       expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
@@ -272,12 +272,12 @@ describe('/v1/deals/:id/loan', () => {
             ...deal,
             eligibility: {
               criteria: [
-                { id: 15,  answer: false }
+                { id: 15, answer: false }
               ],
             },
           };
 
-          const { body } = await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+          await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
           const nowDate = moment();
           const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
@@ -487,92 +487,92 @@ describe('/v1/deals/:id/loan', () => {
           });
         });
 
-        describe('when more than facilityValue', () => {
+        describe('when more than facility value', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
-              facilityValue: '9',
+              value: '9',
               disbursementAmount: '9.10',
             };
 
             const body = await updateLoanInDeal(dealId, loan);
             expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(`Disbursement amount must be less than the Loan facility value (${loan.facilityValue})`);
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(`Disbursement amount must be less than the Loan facility value (${loan.value})`);
           });
         });
       });
     });
 
-    describe('facilityValue', () => {
+    describe('facility value', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const loan = {
-            facilityValue: '',
+            value: '',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Enter the Loan facility value');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Enter the Loan facility value');
         });
       });
 
       describe('when not a number', () => {
         it('should return validationError', async () => {
           const loan = {
-            facilityValue: 'test',
+            value: 'test',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be a currency format, like 1,345 or 1345.54');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must be a currency format, like 1,345 or 1345.54');
         });
       });
 
       describe('when less than 0.01', () => {
         it('should return validationError', async () => {
           const loan = {
-            facilityValue: '0',
+            value: '0',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be 0.01 or more');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must be 0.01 or more');
         });
       });
 
       describe('with more than 2 decimal points', () => {
         it('should return validationError', async () => {
           const loan = {
-            facilityValue: '0.123',
+            value: '0.123',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must have less than 3 decimals, like 12 or 12.10');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must have less than 3 decimals, like 12 or 12.10');
         });
       });
 
       describe('with more than 14 digits and no decimal points', () => {
         it('should return validationError', async () => {
           const loan = {
-            facilityValue: '123456789112345',
+            value: '123456789112345',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be 14 numbers or fewer');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must be 14 numbers or fewer');
         });
       });
 
       describe('with more than 14 digits and decimal points', () => {
         it('should return validationError', async () => {
           const loan = {
-            facilityValue: '123456789112345.12',
+            value: '123456789112345.12',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
-          expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be 14 numbers or fewer');
+          expect(validationErrors.errorList.value).toBeDefined();
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must be 14 numbers or fewer');
         });
       });
     });
