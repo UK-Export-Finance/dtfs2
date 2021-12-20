@@ -473,7 +473,7 @@ jobs:
         inlineScript: |
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals --shard "_id" \
-            --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
+            --idx '[{"key": {"keys": ["updatedAt"]}}, {"key": {"keys": ["_id"]}}]'
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name facilities || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name facilities --shard "_id"

@@ -10,8 +10,8 @@ query allDeals($start: Int, $pagesize: Int, $filters: [DashboardFilters]){
       bankRef
       exporter
       product
-      type
-      lastUpdate
+      submissionType
+      updatedAt
     }
   }
 }`;

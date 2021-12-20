@@ -1,12 +1,12 @@
 const deal = {
   _id: '1000324',
   submissionType: 'Manual Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     status: 'Accepted by UKEF (with conditions)',
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'testing',
     created: new Date().valueOf(),
-    dateOfLastAction: new Date().valueOf(),
     maker: {
       username: 'MAKER',
       roles: [

@@ -10,11 +10,11 @@ const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const newDeal = aDeal({
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: 'Draft',
-    dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{
     username: 'bananaman',

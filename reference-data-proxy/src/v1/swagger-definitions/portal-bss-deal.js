@@ -10,6 +10,9 @@
  *       dealType:
  *         type: string
  *         example: 'BSS/EWCS'
+ *       updatedAt:
+ *         type: integer
+ *         example: 1639675204629.0
  *       details:
  *         type: object
  *         properties:
@@ -32,9 +35,7 @@
  *           created:
  *             type: string
  *             example: '1632389070727'
- *           dateOfLastAction:
- *             type: string
- *             example: '1632389070727'
+
  *           previousStatus:
  *             type: string
  *             example: Ready for Checker's approval

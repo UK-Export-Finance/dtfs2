@@ -6,11 +6,11 @@ const nowMinusDay = nowPlusDays(-1);
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: 'Ready for Checker\'s approval',
-    dateOfLastAction: '1985/11/04 21:00:00:000',
     previousStatus: 'Draft',
   },
   comments: [{

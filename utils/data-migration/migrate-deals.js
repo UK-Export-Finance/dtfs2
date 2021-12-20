@@ -16,7 +16,7 @@ const { initUsers } = require('./helpers/users');
 const { initCountries } = require('./helpers/countries');
 const { initCurrencies } = require('./helpers/currencies');
 const { initIndustrySectors } = require('./helpers/industry-sectors');
-
+const { convertV1Date } = require('./helpers/date-helpers');
 const consoleLogColor = require('./helpers/console-log-colour');
 
 const log = require('./helpers/log');
@@ -84,6 +84,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
       v1_ID: portalDealId,
     },
     _id: portalDealId,
+    updatedAt: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     details,
     eligibility,

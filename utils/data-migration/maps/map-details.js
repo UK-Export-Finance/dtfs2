@@ -29,7 +29,6 @@ const mapDetails = (portalDealId, v1Deal) => {
     previousStatus: findPortalValue(previousStatus, 'Deal_previous_status', 'DEAL', 'STATUS', logError),
     previousWorkflowStatus: v1Deal.Deal_information.Extra_fields.Deal_status,
     owningBank: getBankByName(v1Deal.Application_bank),
-    dateOfLastAction: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
     created: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_created),
   };
 

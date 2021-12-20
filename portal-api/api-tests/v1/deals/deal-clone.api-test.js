@@ -115,7 +115,7 @@ describe('/v1/deals/:id/clone', () => {
 
         expect(cloned.deal.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
         expect(cloned.deal.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
-        expect(cloned.deal.details.dateOfLastAction).toBeDefined();
+        expect(cloned.deal.updatedAt).toBeDefined();
         expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
 
         expect(cloned.deal.details.maker.username).toEqual(aBarclaysMaker.username);

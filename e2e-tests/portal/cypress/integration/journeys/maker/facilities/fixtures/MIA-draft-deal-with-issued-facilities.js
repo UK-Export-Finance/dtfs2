@@ -5,12 +5,12 @@ const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
+  updatedAt: Date.now(),
   details: {
     status: 'Draft',
     bankSupplyContractID: 'TEST-DEAL',
     bankSupplyContractName: 'TEST-DEAL',
     created: now,
-    dateOfLastAction: now,
     maker: {
       username: 'MAKER',
       roles: [

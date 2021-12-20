@@ -169,7 +169,7 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.details.status).toEqual('Abandoned');
     });
 
-    it('updates the deals details.dateOfLastAction field', async () => {
+    it('updates the deals updatedAt field', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
@@ -182,7 +182,7 @@ describe('/v1/deals/:id/status', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.details.dateOfLastAction).not.toEqual(completedDeal.details.dateOfLastAction);
+      expect(body.deal.updatedAt).not.toEqual(completedDeal.updatedAt);
     });
 
     it('updates the deals.details.previousStatus field', async () => {
@@ -282,7 +282,7 @@ describe('/v1/deals/:id/status', () => {
 
       const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(body.deal.editedBy[body.deal.editedBy.length - 1]).toEqual({
-        date: expect.any(String),
+        date: expect.any(Number),
         username: anHSBCMaker.username,
         roles: anHSBCMaker.roles,
         bank: anHSBCMaker.bank,

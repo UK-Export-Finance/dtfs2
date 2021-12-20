@@ -40,7 +40,6 @@ type DealDetails {
   maker: Maker
   checker: Checker
   checkerMIN: Checker
-  dateOfLastAction: String
   submissionDate: String
   approvalDate: String
   created: String
@@ -52,6 +51,7 @@ type Deal {
   _id: String!
   dealType: String
   submissionType: String
+  updatedAt: Float
   details: DealDetails
 }
 
@@ -61,8 +61,8 @@ type AllDeal {
   bankRef: String
   exporter: String
   product: String
-  type: String
-  lastUpdate: Float
+  submissionType: String
+  updatedAt: Float
 }
 
 type DealsQuery {

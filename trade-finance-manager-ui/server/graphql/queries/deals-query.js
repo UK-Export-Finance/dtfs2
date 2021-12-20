@@ -13,6 +13,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
       dealSnapshot {
         dealType
         submissionType
+        updatedAt
         details {
           status
           ukefDealId
@@ -26,7 +27,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
             firstname
             surname
           }
-          dateOfLastAction
           submissionDate
           manualInclusionNoticeSubmissionDate
           approvalDate

@@ -119,7 +119,7 @@ describe('/v1/portal/facilities', () => {
       expect(body.deal.editedBy[1].bank).toEqual(updatedFacility.user.bank);
       expect(body.deal.editedBy[1].roles).toEqual(updatedFacility.user.roles);
       expect(body.deal.editedBy[1].username).toEqual(updatedFacility.user.username);
-      expect(typeof body.deal.editedBy[1].date).toEqual('string');
+      expect(typeof body.deal.editedBy[1].date).toEqual('number');
     });
 
     it('updates the facility when no req.body.user is provided', async () => {

@@ -30,20 +30,20 @@ const expectAddedFields = (obj) => {
     details: {
       ...obj.details,
       created: expect.any(String),
-      dateOfLastAction: expect.any(String),
       maker: expect.any(Object),
       owningBank: expect.any(Object),
       status: 'Draft',
     },
     editedBy: [],
     exporter: {},
+    updatedAt: expect.any(Number),
   });
 
   return expectation;
 };
 
 const expectedEditedByObject = (user) => ({
-  date: expect.any(String),
+  date: expect.any(Number),
   username: user.username,
   roles: user.roles,
   bank: user.bank,
