@@ -43,8 +43,8 @@
 
       {% for contract in contracts %}
         <tr data-cy="deal_{{contract._id}}" class="govuk-table__row">
-          <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ contract._id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ contract.details.bankSupplyContractID }}</a>
+          <td data-cy="bankInternalRefName" class="govuk-table__cell govuk-!-font-size-14">
+            <a href="/contract/{{ contract._id }}" class="govuk-link" data-cy="bankInternalRefNameLink">{{ contract.bankInternalRefName }}</a>
           </td>
 
           <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
@@ -78,7 +78,7 @@
           </td>
 
           <td data-cy="transactions" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/reports/audit-supply-contracts/{{ contract._id }}/transactions/0" class="govuk-link" data-cy="bankSupplyContractIDLink">
+            <a href="/reports/audit-supply-contracts/{{ contract._id }}/transactions/0" class="govuk-link" data-cy="bankInternalRefNameLink">
               link {{ contract.bondTransactions.items}}
             </a>
           </td>

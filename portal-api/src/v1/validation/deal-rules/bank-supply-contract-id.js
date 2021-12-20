@@ -5,18 +5,18 @@ const MAX_CHARACTERS = 30;
 
 module.exports = (deal, errorList) => {
   const newErrorList = { ...errorList };
-  const { bankSupplyContractID } = deal.details;
+  const { bankInternalRefName } = deal;
 
-  if (!hasValue(bankSupplyContractID)) {
-    newErrorList.bankSupplyContractID = {
+  if (!hasValue(bankInternalRefName)) {
+    newErrorList.bankInternalRefName = {
       order: orderNumber(newErrorList),
       text: 'Enter the Bank deal ID',
     };
   }
 
-  if (hasValue(bankSupplyContractID)) {
-    if (bankSupplyContractID.length > MAX_CHARACTERS) {
-      newErrorList.bankSupplyContractID = {
+  if (hasValue(bankInternalRefName)) {
+    if (bankInternalRefName.length > MAX_CHARACTERS) {
+      newErrorList.bankInternalRefName = {
         order: orderNumber(newErrorList),
         text: `Bank deal ID must be ${MAX_CHARACTERS} characters or fewer`,
       };

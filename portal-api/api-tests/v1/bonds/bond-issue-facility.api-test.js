@@ -8,9 +8,9 @@ const { as } = require('../../api')(app);
 describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     details: {
-      bankSupplyContractName: 'mock name',
-      bankSupplyContractID: 'mock id',
       submissionDate: moment().subtract(1, 'day').utc().valueOf(),
       status: 'Ready for Checker\'s approval',
     },

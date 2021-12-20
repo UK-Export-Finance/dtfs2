@@ -77,21 +77,21 @@ const dealQuery = gql`
         _id,
         dealType
         submissionType
+        bankInternalRefName
+        additionalRefName
         details {
-          ukefDealId,
-          status,
-          submissionDate,
+          ukefDealId
+          status
+          submissionDate
           owningBank {
-            name,
+            name
             emails
           },
           maker {
-            firstname,
-            surname,
-            email,
-          },
-          bankSupplyContractID,
-          bankSupplyContractName,
+            firstname
+            surname
+            email
+          }
         }
         dealFiles {
           security

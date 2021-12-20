@@ -12,7 +12,7 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
   }));
 
   const deals = pagesize
-    ? await findAllPaginatedDeals(ctx.user, start, pagesize, dbFilters, sort)
+    ? await findAllPaginatedDeals(ctx.user, dbFilters, sort, start, pagesize)
     : await findAllDeals(ctx.user, dbFilters, sort);
 
   if (!deals.length) {

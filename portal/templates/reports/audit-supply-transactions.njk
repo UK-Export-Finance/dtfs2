@@ -8,13 +8,13 @@
 {% block content %}
 
 {% set firstItem = transactions | first %}
-{% set bankSupplyContractID = firstItem.deal_bankSupplyContractID %}
+{% set bankInternalRefName = firstItem.deal_bankInternalRefName %}
 {% set contractID = firstItem.deal_id %}
 
   <h1 class="govuk-heading-l">Audit - Transactions Report:</h1>
   <h2 class="govuk-heading-m">
-     <a href="/contract/{{ contractID }}" class="govuk-link" data-cy="bankSupplyContractIDLink">
-     {{ bankSupplyContractID }}
+     <a href="/contract/{{ contractID }}" class="govuk-link" data-cy="bankInternalRefNameLink">
+     {{ bankInternalRefName }}
      </a>
   </h2>
 

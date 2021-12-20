@@ -32,7 +32,7 @@ function downloadTransactions(transactions, timezone, res) {
     prop: 'deal_owningBank',
     label: 'Bank',
   }, {
-    prop: 'deal_bankSupplyContractID',
+    prop: 'deal_bankInternalRefName',
     label: 'Bank Supply contract ID',
   }, {
     prop: 'deal_status',

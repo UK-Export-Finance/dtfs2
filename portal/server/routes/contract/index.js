@@ -191,9 +191,9 @@ router.get('/contract/:_id/edit-name', provide([DEAL]), async (req, res) => {
 
 router.post('/contract/:_id/edit-name', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const { bankSupplyContractName } = req.body;
+  const { additionalRefName } = req.body;
 
-  const { data } = await api.updateDealName(_id, bankSupplyContractName, userToken);
+  const { data } = await api.updateDealName(_id, additionalRefName, userToken);
 
   const validationErrors = {
     count: data.count,
@@ -202,13 +202,13 @@ router.post('/contract/:_id/edit-name', async (req, res) => {
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-edit-name.njk', {
       contract: { _id },
-      bankSupplyContractName,
+      additionalRefName,
       validationErrors,
     });
   }
 
   req.flash('successMessage', {
-    text: `Supply Contract renamed: ${bankSupplyContractName}`,
+    text: `Supply Contract renamed: ${additionalRefName}`,
     href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
     hrefText: 'View Supply Contract',
   });
@@ -319,13 +319,13 @@ router.get('/contract/:_id/clone', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
 
   const {
-    bankSupplyContractID,
-    bankSupplyContractName,
-  } = deal.details;
+    bankInternalRefName,
+    additionalRefName,
+  } = deal;
 
   return res.render('contract/contract-clone.njk', {
-    bankSupplyContractID,
-    bankSupplyContractName: `Copy of ${bankSupplyContractName}`,
+    bankInternalRefName,
+    additionalRefName: `Copy of ${additionalRefName}`,
     user: req.session.user,
   });
 });
@@ -341,14 +341,14 @@ router.post('/contract/:_id/clone', async (req, res) => {
   const { validationErrors } = apiResponse;
 
   const {
-    bankSupplyContractID,
-    bankSupplyContractName,
+    bankInternalRefName,
+    additionalRefName,
   } = req.body;
 
   if (validationErrors) {
     return res.status(400).render('contract/contract-clone.njk', {
-      bankSupplyContractID,
-      bankSupplyContractName,
+      bankInternalRefName,
+      additionalRefName,
       validationErrors,
     });
   }

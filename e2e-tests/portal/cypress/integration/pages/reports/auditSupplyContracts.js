@@ -4,7 +4,7 @@ const page = {
   filterByBank: () => cy.get('[data-cy="filterByBank"]'),
   filterByStatus: () => cy.get('[data-cy="filterByStatus"]'),
   filterBySupplierName: () => cy.get('[data-cy="filterBySupplierName"]'),
-  filterByBankSupplyContractId: () => cy.get('[data-cy="filterByBankSupplyContractId"]'),
+  filterBybankInternalRefName: () => cy.get('[data-cy="filterBybankInternalRefName"]'),
   filterByUKEFSupplyContractId: () => cy.get('[data-cy="filterByUKEFSupplyContractId"]'),
   // filterByTransactionType: () => cy.get('[data-cy="filterByTransactionType"]'),
   // search: () => cy.get('[data-cy="search"]'),

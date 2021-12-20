@@ -16,18 +16,18 @@
  *       updatedAt:
  *         type: integer
  *         example: 1639675204629.0
+ *       bankInternalRefName:
+ *         type: string
+ *         example: a1
+ *       additionalRefName:
+ *         type: string
+ *         example: Test
  *       details:
  *         type: object
  *         properties:
  *           status:
  *             type: string
  *             example: Submitted
- *           bankSupplyContractID:
- *             type: string
- *             example: a1
- *           bankSupplyContractName:
- *             type: string
- *             example: Test
  *           owningBank:
  *             $ref: '#/definitions/Bank'
  *           maker:

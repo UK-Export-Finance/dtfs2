@@ -1,8 +1,9 @@
 {
+  "dealType": "BSS/EWCS",
   "submissionType": "Automatic Inclusion Notice",
+  "bankInternalRefName": "aDealWithOneLoanAndOneBond",
+  "additionalRefName": "aDealWithOneLoanAndOneBond",
   "details": {
-    "bankSupplyContractID": "aDealWithOneLoanAndOneBond",
-    "bankSupplyContractName": "aDealWithOneLoanAndOneBond",
     "ukefDealId": "ukef:aDealWithOneLoanAndOneBond",
     "status": "Draft",
     "owningBank": {

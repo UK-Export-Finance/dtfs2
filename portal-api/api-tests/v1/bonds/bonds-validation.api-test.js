@@ -8,10 +8,8 @@ const { dateValidationText } = require('../../../src/v1/validation/fields/date')
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
-    details: {
-      bankSupplyContractName: 'mock name',
-      bankSupplyContractID: 'mock id',
-    },
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
     submissionDetails: {
       supplyContractCurrency: {
         id: 'GBP',

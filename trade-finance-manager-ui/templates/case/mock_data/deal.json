@@ -1,6 +1,8 @@
 {
   "_id": "1001291",
   "submissionType": "Automatic Inclusion Notice",
+  "bankInternalRefName": "Smoke test 17/02/21",
+  "additionalRefName": "Smoke test 17/02/21",
   "details": {
     "ukefDealId": "0040005777",
     "status": "Submitted",
@@ -16,8 +18,6 @@
       "email": "maker1@ukexportfinance.gov.uk",
       "__typename": "Maker"
     },
-    "bankSupplyContractID": "Smoke test 17/02/21",
-    "bankSupplyContractName": "Smoke test 17/02/21",
     "__typename": "DealDetails"
   },
   "totals": {

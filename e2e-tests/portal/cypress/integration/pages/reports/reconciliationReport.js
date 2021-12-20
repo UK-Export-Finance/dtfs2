@@ -2,7 +2,7 @@ const page = {
   visit: () => cy.visit('/reports/reconciliation-report'),
 
   filterByBank: () => cy.get('[data-cy="filterByBank"]'),
-  filterByBankSupplyContractId: () => cy.get('[data-cy="filterByBankSupplyContractId"]'),
+  filterBybankInternalRefName: () => cy.get('[data-cy="filterBybankInternalRefName"]'),
   filterByUKEFSupplyContractId: () => cy.get('[data-cy="filterByUKEFSupplyContractId"]'),
   filterByStartDate: {
     day: () => cy.get('[data-cy="submittedFrom-day"]'),

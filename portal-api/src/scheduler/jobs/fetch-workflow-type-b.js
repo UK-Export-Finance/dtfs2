@@ -7,7 +7,7 @@ const {
 } = require('../../drivers/fileshare');
 const { processTypeB } = require('../../v1/controllers/integration/type-b.controller');
 
-const task = async (fileshare = 'workflow', overwriteFolder) => {
+const task = async (overwriteFolder, fileshare = 'workflow') => {
   const { IMPORT_FOLDER } = getConfig(fileshare);
 
   const lockFile = {
@@ -132,7 +132,7 @@ const fetchWorkflowTypeB = {
   init: () => ({
     schedule,
     message: 'Fetch workflow type B as configured by FETCH_WORKFLOW_TYPE_B_SCHEDULE',
-    task: async (fileshare = 'workflow', overwriteFolder) => {
+    task: async (overwriteFolder, fileshare = 'workflow') => {
       const { IMPORT_FOLDER } = getConfig(fileshare);
 
       const lockFile = {

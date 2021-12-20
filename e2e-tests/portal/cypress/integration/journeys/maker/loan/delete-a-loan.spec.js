@@ -9,9 +9,9 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 const now = new Date().valueOf();
 
 const MOCK_DEAL = {
+  bankInternalRefName: 'someDealId',
+  additionalRefName: 'someDealName',
   details: {
-    bankSupplyContractID: 'someDealId',
-    bankSupplyContractName: 'someDealName',
     status: 'Draft',
   },
   submissionDetails: {

@@ -4,7 +4,7 @@ const page = {
   filterByBank: () => cy.get('[data-cy="filterByBank"]'),
   filterByFacilityStage: () => cy.get('[data-cy="filterByFacilityStage"]'),
   filterBySupplierName: () => cy.get('[data-cy="filterBySupplierName"]'),
-  filterByBankSupplyContractId: () => cy.get('[data-cy="filterByBankSupplyContractId"]'),
+  filterBybankInternalRefName: () => cy.get('[data-cy="filterBybankInternalRefName"]'),
   filterByUKEFSupplyContractId: () => cy.get('[data-cy="filterByUKEFSupplyContractId"]'),
   // filterByTransactionType: () => cy.get('[data-cy="filterByTransactionType"]'),
   // search: () => cy.get('[data-cy="search"]'),
@@ -22,7 +22,7 @@ const page = {
   facilityStage: () => cy.get('[data-cy="facilityStage"]'),
   // type: () => cy.get('[data-cy="type"]'),
   // ukefId: () => cy.get('[data-cy="ukefId"]'),
-  // bankId: () => cy.get('[data-cy="bankSupplyContractID"]'),
+  // bankId: () => cy.get('[data-cy="bankInternalRefName"]'),
 
   results: () => cy.get('[data-cy="results"]'),
   first: () => cy.get('[data-cy="First"]'),
