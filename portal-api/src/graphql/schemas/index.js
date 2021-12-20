@@ -37,11 +37,9 @@ type DealDetails {
   bankSupplyContractID: String
   bankSupplyContractName: String
   ukefDealId: String
-  submissionType: String
   maker: Maker
   checker: Checker
   checkerMIN: Checker
-  dateOfLastAction: String
   submissionDate: String
   approvalDate: String
   created: String
@@ -52,6 +50,8 @@ type DealDetails {
 type Deal {
   _id: String!
   dealType: String
+  submissionType: String
+  updatedAt: Float
   details: DealDetails
 }
 
@@ -61,8 +61,8 @@ type AllDeal {
   bankRef: String
   exporter: String
   product: String
-  type: String
-  lastUpdate: Float
+  submissionType: String
+  updatedAt: Float
 }
 
 type DealsQuery {
@@ -109,7 +109,7 @@ type Transaction {
   bankFacilityId: String
   ukefFacilityId: String
   transactionType: String
-  facilityValue: String
+  value: String
   transactionStage: String
   createdDate: String
   lastEdited: String
@@ -194,6 +194,10 @@ type GefDealsQuery {
   deals: [GefDeal]
 }
 
+type GefCurrency {
+   id: String
+}
+
 type GefFacility {
   _id: String
   dealId: String
@@ -206,7 +210,7 @@ type GefFacility {
   monthsOfCover: Int
   details: String
   detailsOther: String
-  currency: String
+  currency: GefCurrency
   value: Float
   coverPercentage: Float
   interestPercentage: Float

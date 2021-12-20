@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
 
     const facilityBody = {
       facilityType: 'bond',
-      associatedDealId: req.params.id,
+      dealId: req.params.id,
       ...req.body,
     };
 
@@ -136,14 +136,14 @@ exports.updateBond = async (req, res) => {
 
       modifiedBond = feeTypeFields(modifiedBond);
 
-      const { facilityValue, coveredPercentage, riskMarginFee } = modifiedBond;
-      const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
+      const { value, coveredPercentage, riskMarginFee } = modifiedBond;
+      const sanitizedFacilityValue = sanitizeCurrency(value);
 
       modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
 
       if (sanitizedFacilityValue.sanitizedValue) {
         modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-        modifiedBond.facilityValue = sanitizedFacilityValue.sanitizedValue;
+        modifiedBond.value = sanitizedFacilityValue.sanitizedValue;
       }
 
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {

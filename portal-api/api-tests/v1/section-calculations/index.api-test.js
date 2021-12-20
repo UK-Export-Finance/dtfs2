@@ -25,11 +25,11 @@ describe('section-calculations', () => {
 
   describe('calculateUkefExposure', () => {
     it('should return correct, formatted calculation', () => {
-      const facilityValue = '12,34567891011';
+      const value = '12,34567891011';
       const coveredPercentage = '40';
-      const result = calculateUkefExposure(facilityValue, coveredPercentage);
+      const result = calculateUkefExposure(value, coveredPercentage);
 
-      const facilityValueWithoutCommas = facilityValue.replace(/,/g, '');
+      const facilityValueWithoutCommas = value.replace(/,/g, '');
       const calculation = facilityValueWithoutCommas * (coveredPercentage / 100);
 
       const expected = formattedNumber(calculation, 2);
@@ -38,11 +38,11 @@ describe('section-calculations', () => {
 
     describe('when the calculation result has more than 2 decimal points', () => {
       it('should round up', () => {
-        const facilityValue = '1234567891011.2345';
+        const value = '1234567891011.2345';
         const coveredPercentage = '40';
-        const result = calculateUkefExposure(facilityValue, coveredPercentage);
+        const result = calculateUkefExposure(value, coveredPercentage);
 
-        const calculation = facilityValue * (coveredPercentage / 100);
+        const calculation = value * (coveredPercentage / 100);
 
         const roundedUp = roundNumber(calculation, 2);
         const expected = formattedNumber(roundedUp, 2);

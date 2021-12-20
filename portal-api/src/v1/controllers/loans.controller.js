@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
 
     const facilityBody = {
       facilityType: 'loan',
-      associatedDealId: req.params.id,
+      dealId: req.params.id,
       ...req.body,
     };
 
@@ -135,13 +135,13 @@ exports.updateLoan = async (req, res) => {
 
       modifiedLoan = premiumTypeFields(modifiedLoan);
 
-      const { facilityValue, coveredPercentage, interestMarginFee } = modifiedLoan;
-      const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
+      const { value, coveredPercentage, interestMarginFee } = modifiedLoan;
+      const sanitizedFacilityValue = sanitizeCurrency(value);
 
       modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
       if (sanitizedFacilityValue.sanitizedValue) {
         modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-        modifiedLoan.facilityValue = sanitizedFacilityValue.sanitizedValue;
+        modifiedLoan.value = sanitizedFacilityValue.sanitizedValue;
       }
 
       if (modifiedLoan.disbursementAmount) {

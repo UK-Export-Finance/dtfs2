@@ -3,6 +3,8 @@ const { nowTimestamp } = require('../dates');
 module.exports = {
 	"mockId": 9,
 	"dealType": "BSS/EWCS",
+	"submissionType": "Manual Inclusion Application",
+	"updatedAt": Date.now(),
 	"details" : {
 		"status" : "Draft",
 		"bankSupplyContractID" : "Manual Test 7",
@@ -35,8 +37,7 @@ module.exports = {
 				"checker@ukexportfinance.gov.uk"
 			]
 		},
-		"created": nowTimestamp,
-		"dateOfLastAction": nowTimestamp,
+		"created": nowTimestamp
 	},
 	"eligibility" : {
 		"status" : "Incomplete",

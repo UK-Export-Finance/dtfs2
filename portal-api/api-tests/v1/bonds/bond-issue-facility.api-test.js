@@ -4,20 +4,15 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../../../src/v1/section-calculations');
-const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
 
 describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   const newDeal = aDeal({
+    submissionType: 'Manual Inclusion Notice',
     details: {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
       submissionDate: moment().subtract(1, 'day').utc().valueOf(),
       status: 'Ready for Checker\'s approval',
-      submissionType: 'Manual Inclusion Notice',
     },
     submissionDetails: {
       supplyContractCurrency: {
@@ -31,15 +26,11 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     },
   });
 
-  const nowDate = moment();
-  const createCoverDateFields = (prefix, value) => {
-
-    return {
-      [`${prefix}-day`]: moment(value).format('DD'),
-      [`${prefix}-month`]: moment(value).format('MM'),
-      [`${prefix}-year`]: moment(value).format('YYYY'),
-    };
-  };
+  const createCoverDateFields = (prefix, value) => ({
+    [`${prefix}-day`]: moment(value).format('DD'),
+    [`${prefix}-month`]: moment(value).format('MM'),
+    [`${prefix}-year`]: moment(value).format('YYYY'),
+  });
 
   const allBondFields = {
     bondIssuer: 'issuer',
@@ -48,7 +39,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     previousFacilityStage: 'Unissued',
     ukefGuaranteeInMonths: '24',
     bondBeneficiary: 'test',
-    facilityValue: '123456.55',
+    value: '123456.55',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '9.09',
     coveredPercentage: '2',
@@ -65,11 +56,9 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     uniqueIdentificationNumber: '1234',
   };
 
-  let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
-  let anEditor;
   let dealId;
   let bondId;
 
@@ -84,14 +73,13 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     expect(status).toEqual(200);
   };
 
-  const putIssueFacility = async (dealId, bondId, body) => {
-    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/bond/${bondId}/issue-facility`);
+  const putIssueFacility = async (issueDealId, issueBondId, body) => {
+    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${issueDealId}/bond/${issueBondId}/issue-facility`);
     return response;
   };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -148,8 +136,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
         issueFacilityDetailsSubmitted: false,
       };
 
-      const { status } = await as(aBarclaysMaker).put(bondWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/bond/${bondId}`);
-
+      await as(aBarclaysMaker).put(bondWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
@@ -193,7 +180,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           await putIssueFacility(dealId, bondId, issueFacilityBody);
 
           const incompleteDate = {
-            'requestedCoverStartDate-day' : moment().format('DD'),
+            'requestedCoverStartDate-day': moment().format('DD'),
             'requestedCoverStartDate-month': moment().format('MM'),
             'requestedCoverStartDate-year': '',
           };
@@ -220,4 +207,3 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     });
   });
 });
-    

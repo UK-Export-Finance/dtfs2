@@ -20,8 +20,9 @@ module.exports = (
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = submittedValues;
 
+  const { submissionType: dealSubmissionType } = deal;
+
   const {
-    submissionType: dealSubmissionType,
     submissionDate: dealSubmissionDateTimestamp,
     manualInclusionNoticeSubmissionDate: manualInclusionNoticeSubmissionDateTimestamp,
   } = deal.details;

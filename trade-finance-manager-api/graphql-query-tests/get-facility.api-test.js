@@ -34,7 +34,7 @@ const GET_FACILITY = gql`
       facilitySnapshot {
         _id
         ukefFacilityId,
-        associatedDealId,
+        dealId,
         facilityProduct {
           code,
           name
@@ -43,7 +43,7 @@ const GET_FACILITY = gql`
         ukefFacilityType,
         facilityStage,
         facilityValueExportCurrency,
-        facilityValue,
+        value,
         currency,
         ukefExposure,
         coveredPercentage,

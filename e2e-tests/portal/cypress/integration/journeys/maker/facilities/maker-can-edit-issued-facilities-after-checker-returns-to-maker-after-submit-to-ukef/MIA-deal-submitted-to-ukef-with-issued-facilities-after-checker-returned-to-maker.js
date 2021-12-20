@@ -6,12 +6,12 @@ const nowPlusWeek = nowPlusDays(7).valueOf();
 
 const deal = {
   _id: '1001349',
+  submissionType: 'Manual Inclusion Application',
+  updatedAt: Date.now(),
   details: {
     status: "Further Maker's input required",
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'testing',
-    dateOfLastAction: now.valueOf(),
-    submissionType: 'Manual Inclusion Application',
     maker: {
       username: 'MAKER',
       roles: [
@@ -196,7 +196,7 @@ const deal = {
       facilityType: 'bond',
       facilityStage: 'Issued',
       ukefGuaranteeInMonths: '12',
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       createdDate: 1599048722968.0,
       bondIssuer: '',
@@ -243,7 +243,7 @@ const deal = {
       bankReferenceNumber: '5678',
       guaranteeFeePayableByBank: '18.0000',
       lastEdited: 1599048722968.0,
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
       coveredPercentage: '40',

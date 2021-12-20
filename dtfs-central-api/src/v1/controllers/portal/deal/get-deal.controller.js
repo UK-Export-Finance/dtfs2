@@ -32,6 +32,7 @@ const extendDealWithFacilities = async (deal) => {
       }
     }
   });
+
   if (facilityIds && facilityIds.length > 0) {
     mappedDeal.bondTransactions = {
       items: mappedBonds,
@@ -50,20 +51,21 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   const dealResults = await collection.find(query);
   const count = await dealResults.count();
   const deals = await dealResults
-    .sort({ 'details.dateOfLastAction': -1 })
+    .sort({ updatedAt: -1 })
     .skip(start)
     .limit(pagesize)
     .toArray();
 
-  const extendedDeals = [];
-  for await (const deal of deals) {
+  const extendedDeals = deals;
+
+  extendedDeals.map(async (deal) => {
     if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const extendedDeal = await extendDealWithFacilities(deal);
-      extendedDeals.push(extendedDeal);
-    } else {
-      extendedDeals.push(deal);
+      return extendedDeal;
     }
-  }
+
+    return deal;
+  });
 
   return {
     count,
@@ -182,9 +184,9 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         bankRef: '$details.bankSupplyContractName',
         status: '$details.status',
         product: 'BSS/EWCS',
-        type: '$details.submissionType',
+        submissionType: '$submissionType',
         exporter: '$exporter.companyName',
-        lastUpdate: { $convert: { input: '$details.dateOfLastAction', to: 'double' } },
+        updatedAt: '$updatedAt',
         userId: '$details.maker._id',
       },
     },
@@ -226,7 +228,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     // { $unwind: '$union' },
     // { $replaceRoot: { newRoot: '$union' } },
     { $match: filters },
-    { $sort: { ...sort, lastUpdate: -1 } },
+    { $sort: { ...sort, updatedAt: -1 } },
     {
       $facet: {
         count: [{ $count: 'total' }],

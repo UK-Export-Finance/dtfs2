@@ -1,6 +1,7 @@
 const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
   dealType: 'BSS/EWCS',
+  submissionType: 'Automatic Inclusion Notice',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
@@ -19,7 +20,6 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionType: 'Automatic Inclusion Notice',
     submissionDate: '1606900616651',
     submissionCount: 2,
     owningBank: {
@@ -169,7 +169,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     items: [
       {
         _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
-        associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+        dealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         facilityType: 'bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
@@ -178,7 +178,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         ukefGuaranteeInMonths: '10',
         bondBeneficiary: 'test',
         guaranteeFeePayableByBank: '9.0000',
-        facilityValue: '12345.00',
+        value: '12345.00',
         currencySameAsSupplyContractCurrency: 'true',
         riskMarginFee: '10',
         coveredPercentage: '20',
@@ -203,7 +203,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     items: [
       {
         _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
-        associatedDealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
+        dealId: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         facilityType: 'loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Unconditional',
@@ -212,7 +212,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         bankReferenceNumber: '5678',
         guaranteeFeePayableByBank: '27.0000',
         lastEdited: 1610369832226.0,
-        facilityValue: '1234.00',
+        value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '30',
         coveredPercentage: '20',

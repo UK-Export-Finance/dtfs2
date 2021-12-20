@@ -1,9 +1,9 @@
 const facilityType = require('./facility-type');
-const associatedDealId = require('./associated-deal-id');
+const dealId = require('./associated-deal-id');
 
 const rules = [
   facilityType,
-  associatedDealId,
+  dealId,
 ];
 
 module.exports = (facility) => {

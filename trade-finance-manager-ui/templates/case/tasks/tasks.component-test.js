@@ -8,9 +8,7 @@ describe(page, () => {
   describe('with tasks', () => {
     const params = {
       deal: {
-        details: {
-          submissionType: 'Automatic Inclusion Notice',
-        },
+        submissionType: 'Automatic Inclusion Notice',
       },
       tasks: [
         {
@@ -34,7 +32,7 @@ describe(page, () => {
     });
 
     it('should render deal submission type', () => {
-      wrapper.expectText('[data-cy="tasks-deal-submission-type"]').toRead(params.deal.details.submissionType);
+      wrapper.expectText('[data-cy="tasks-deal-submission-type"]').toRead(params.deal.submissionType);
     });
 
     it('should render tasks table', () => {
@@ -52,9 +50,7 @@ describe(page, () => {
 
     const params = {
       deal: {
-        details: {
-          submissionType: 'Automatic Inclusion Notice',
-        },
+        submissionType: 'Automatic Inclusion Notice',
       },
       tasks: [],
       selectedTaskFilter: 'all',

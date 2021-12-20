@@ -84,8 +84,8 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const dealId = createDealBody._id;
 
     // create facilities
-    const newFacility1 = { ...newFacility, associatedDealId: dealId };
-    const newFacility2 = { ...newFacility, associatedDealId: dealId };
+    const newFacility1 = { ...newFacility, dealId };
+    const newFacility2 = { ...newFacility, dealId };
 
     const { body: facility1Body } = await api.post({
       facility: newFacility1,

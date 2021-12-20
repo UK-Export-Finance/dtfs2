@@ -7,7 +7,7 @@
  *       _id:
  *         type: string
  *         example: 123abc
- *       associatedDealId:
+ *       dealId:
  *         type: string
  *         example: 456abc
  *       facilityType:
@@ -81,9 +81,9 @@
  *       currencySameAsSupplyContractCurrency:
  *         type: string
  *         example: true
- *       facilityValue:
+ *       value:
  *         type: string
- *         eaxmple: '2400.00'
+ *         example: '2400.00'
  *       currency:
  *         type: object
  *         properties:

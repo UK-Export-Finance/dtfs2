@@ -16,7 +16,7 @@ module.exports = [
 		"bankReferenceNumber" : "Test Loan",
 		"requestedCoverStartDate" : null,
 		"disbursementAmount" : null,
-		"facilityValue" : "100000.00",
+		"value" : "100000.00",
 		"currencySameAsSupplyContractCurrency" : "true",
 		"currency" : {
 			"text" : "GBP - UK Sterling",
@@ -55,7 +55,7 @@ module.exports = [
 		"coverEndDate-year": threeMonths.year,
 		"uniqueIdentificationNumber": "Test Bond",
 		"requestedCoverStartDate": twoMonthsTimestamp,
-		"facilityValue": "600000.00",
+		"value": "600000.00",
 		"currencySameAsSupplyContractCurrency": "true",
 		"currency": {
 			"text": "GBP - UK Sterling",

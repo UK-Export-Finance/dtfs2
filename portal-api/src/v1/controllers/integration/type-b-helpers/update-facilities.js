@@ -106,10 +106,10 @@ const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueF
     ukefFacilityId: Array.isArray(workflowBond.BSS_ukef_facility_id)
       ? workflowBond.BSS_ukef_facility_id[0]
       : workflowBond.BSS_ukef_facility_id,
-    // fail safe to make sure we have associatedDealId.
+    // fail safe to make sure we have dealId.
     // this should already exist in the data,
     // but some legacy deals might not have this.
-    associatedDealId: dealId,
+    dealId,
   };
 
   if (checkIssueFacilities) {
@@ -145,10 +145,10 @@ const updateLoan = async (loan, dealId, workflowDeal, interfaceUser, checkIssueF
       ? workflowLoan.EWCS_ukef_facility_id[0]
       : workflowLoan.EWCS_ukef_facility_id,
 
-    // fail safe to make sure we have associatedDealId.
+    // fail safe to make sure we have dealId.
     // this should already exist in the data,
     // but some legacy deals might not have this.
-    associatedDealId: dealId,
+    dealId,
   };
 
   if (checkIssueFacilities) {

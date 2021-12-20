@@ -17,7 +17,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
   const {
     facilityType,
-    facilityValue,
+    value,
     facilityStage,
     guaranteeFeePayableByBank,
     currency,
@@ -29,13 +29,13 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
 
   facility.facilityType = mapFacilityType(facility);
 
-  const formattedFacilityValue = formattedNumber(facilityValue);
+  const formattedFacilityValue = formattedNumber(value);
 
   facility.facilityStage = mapFacilityStage(facilityStage);
 
   const mapped = {
-    _id: facility._id, // eslint-disable-line no-underscore-dangle
-    associatedDealId: facility.associatedDealId,
+    _id: facility._id,
+    dealId: facility.dealId,
     ukefFacilityId: facility.ukefFacilityId,
 
     // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
@@ -45,7 +45,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     facilityStage: facility.facilityStage,
     coveredPercentage: `${facility.coveredPercentage}%`,
     facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
-    facilityValue: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
+    value: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
     currency: currency.id,
     ukefExposure: `${facility.currency.id} ${facility.ukefExposure}`,
     bankFacilityReference: mapBankFacilityReference(facility),

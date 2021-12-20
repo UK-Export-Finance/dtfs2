@@ -10,9 +10,9 @@ const chance = new Chance();
 const params = {
   deal: {
     _id: chance.integer(),
-    dealType: 'BSS',
+    dealType: 'BSS/EWCS',
+    submissionType: 'Automatic Inclusion Notice',
     details: {
-      submissionType: 'Automatic Inclusion Notice',
       bankSupplyContractID: chance.string({ length: 5 }),
       bankSupplyContractName: chance.word(),
       owningBank: {

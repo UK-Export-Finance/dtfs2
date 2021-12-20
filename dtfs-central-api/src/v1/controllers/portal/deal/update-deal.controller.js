@@ -1,7 +1,6 @@
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 
 const withoutId = (obj) => {
@@ -26,7 +25,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     } = user;
 
     const newEditedBy = {
-      date: now(),
+      date: Date.now(),
       username,
       roles,
       bank,
@@ -106,10 +105,10 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
 
   const update = {
     ...dealChanges,
+    updatedAt: Date.now(),
     details: {
       ...originalDealDetails,
       ...dealChangesDetails,
-      dateOfLastAction: now(),
     },
     eligibility: {
       ...originalDealEligibility,

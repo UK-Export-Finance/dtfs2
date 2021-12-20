@@ -1,9 +1,9 @@
 {
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "aDealWithOneBond",
     "bankSupplyContractName": "aDealWithOneBond",
     "ukefDealId": "ukef:aDealWithOneBond",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "9",
@@ -104,7 +104,7 @@
           "ukefGuaranteeInMonths" : "12",
           "bondBeneficiary" : "",
           "guaranteeFeePayableByBank" : "18.0000",
-          "facilityValue" : "21313.00",
+          "value" : "21313.00",
           "currencySameAsSupplyContractCurrency" : "true",
           "riskMarginFee" : "20",
           "coveredPercentage" : "30",
@@ -145,7 +145,6 @@
               "bank" : {
                   "id" : "9",
                   "name" : "UKEF test bank (Delegated)"
-
               },
               "firstname" : "Emilio",
               "surname" : "Largo"

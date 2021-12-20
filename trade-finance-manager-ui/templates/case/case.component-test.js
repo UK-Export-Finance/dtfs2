@@ -7,9 +7,7 @@ describe(page, () => {
   const params = {
     deal: {
       _id: '12345678',
-      details: {
-        submissionType: 'Automatic Inclusion Notice',
-      },
+      submissionType: 'Automatic Inclusion Notice',
       submissionDetails: {
         supplierName: 'The Supplier name',
         buyerName: 'The Buyer name',

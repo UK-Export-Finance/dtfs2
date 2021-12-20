@@ -5,28 +5,28 @@ const {
 } = require('../../../src/utils/number');
 
 describe('deal-summary', () => {
-  const calculateUkefExposure = (facilityValue, coveredPercentage) =>
-    String(Number(facilityValue) * (Number(coveredPercentage) / 100));
+  const calculateUkefExposure = (value, coveredPercentage) =>
+    String(Number(value) * (Number(coveredPercentage) / 100));
 
   const mockCompletedBonds = [
     {
       status: 'Completed',
-      facilityValue: '123456.45',
+      value: '123456.45',
       conversionRate: '80',
       currency: { id: 'EUR', text: 'Euros' },
       coveredPercentage: '40',
       get ukefExposure() {
-        return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+        return calculateUkefExposure(this.value, this.coveredPercentage);
       },
     },
     {
       status: 'Completed',
-      facilityValue: '1000.24',
+      value: '1000.24',
       conversionRate: '40',
       currency: { id: 'EUR', text: 'Euros' },
       coveredPercentage: '30',
       get ukefExposure() {
-        return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+        return calculateUkefExposure(this.value, this.coveredPercentage);
       },
     },
   ];
@@ -34,22 +34,22 @@ describe('deal-summary', () => {
   const mockCompletedLoans = [
     {
       status: 'Completed',
-      facilityValue: '5000.10',
+      value: '5000.10',
       conversionRate: '90',
       currency: { id: 'EUR', text: 'Euros' },
       coveredPercentage: '70',
       get ukefExposure() {
-        return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+        return calculateUkefExposure(this.value, this.coveredPercentage);
       },
     },
     {
       status: 'Completed',
-      facilityValue: '10500.67',
+      value: '10500.67',
       conversionRate: '40',
       currency: { id: 'EUR', text: 'Euros' },
       coveredPercentage: '10',
       get ukefExposure() {
-        return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+        return calculateUkefExposure(this.value, this.coveredPercentage);
       },
     },
   ];
@@ -158,7 +158,6 @@ describe('deal-summary', () => {
         };
         expect(calculateDealSummary(mockDeal).totalValue).toBeDefined();
         expect(calculateDealSummary(mockDeal).totalUkefExposure).toBeDefined();
-
       });
     });
 
@@ -180,10 +179,8 @@ describe('deal-summary', () => {
         };
         expect(calculateDealSummary(mockDeal).totalValue).toBeDefined();
         expect(calculateDealSummary(mockDeal).totalUkefExposure).toBeDefined();
-
       });
     });
-
 
     describe('with completed bonds or loans', () => {
       let result;
@@ -208,9 +205,9 @@ describe('deal-summary', () => {
           let total = 0;
           bondTransactions.items.forEach((bond) => {
             if (bond.conversionRate) {
-              total += Number(bond.facilityValue) / Number(bond.conversionRate);
+              total += Number(bond.value) / Number(bond.conversionRate);
             } else {
-              total += Number(bond.facilityValue);
+              total += Number(bond.value);
             }
           });
           return total;
@@ -220,9 +217,9 @@ describe('deal-summary', () => {
           let total = 0;
           loanTransactions.items.forEach((loan) => {
             if (loan.conversionRate) {
-              total += Number(loan.facilityValue) / Number(loan.conversionRate);
+              total += Number(loan.value) / Number(loan.conversionRate);
             } else {
-              total += Number(loan.facilityValue);
+              total += Number(loan.value);
             }
           });
           return total;
@@ -302,12 +299,12 @@ describe('deal-summary', () => {
             items: [
               {
                 status: 'Completed',
-                facilityValue: '123456.45',
+                value: '123456.45',
                 currency: { id: 'GBP', text: 'UK Sterling' },
               },
               {
                 status: 'Completed',
-                facilityValue: '1000.24',
+                value: '1000.24',
                 currency: { id: 'EUR', text: 'Euros' },
                 conversionRate: '40',
               },

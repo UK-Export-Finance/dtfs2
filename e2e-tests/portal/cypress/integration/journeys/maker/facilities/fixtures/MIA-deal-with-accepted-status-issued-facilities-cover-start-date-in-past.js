@@ -6,12 +6,13 @@ const nowMinusDay = () => {
 };
 
 const deal = {
+  submissionType: 'Manual Inclusion Application',
+  updatedAt: Date.now(),
   details: {
     status: 'Accepted by UKEF (with conditions)',
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'testing',
     createdDate: now,
-    dateOfLastAction: now,
     maker: {
       username: 'MAKER',
       roles: [
@@ -40,7 +41,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Manual Inclusion Application',
     previousStatus: "Ready for Checker's approval",
     checker: {
       bank: {
@@ -199,7 +199,7 @@ const deal = {
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
       lastEdited: now,
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '20',
       coveredPercentage: '40',
@@ -238,7 +238,7 @@ const deal = {
       bankReferenceNumber: '5678',
       guaranteeFeePayableByBank: '27.0000',
       lastEdited: now,
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '30',
       coveredPercentage: '20',

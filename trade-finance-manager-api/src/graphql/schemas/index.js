@@ -34,11 +34,9 @@ type DealDetails {
   bankSupplyContractID: String
   bankSupplyContractName: String
   ukefDealId: String
-  submissionType: String
   maker: Maker
   checker: Checker
   checkerMIN: Checker
-  dateOfLastAction: String
   submissionDate: String
   manualInclusionNoticeSubmissionDate: String
   approvalDate: String
@@ -145,13 +143,13 @@ type FacilityUkefExposure {
 type FacilitySnapshot {
   _id: String!
   ukefFacilityId: String
-  associatedDealId: String!
+  dealId: String!
   facilityProduct: FacilityProduct!
   facilityType: String
   ukefFacilityType: String!
   facilityStage: String!
   facilityValueExportCurrency: String!
-  facilityValue: String
+  value: String
   currency: String
   coveredPercentage: String!
   bankFacilityReference: String
@@ -359,6 +357,8 @@ input DealsInput {
 type DealSnapshot {
   _id: String!
   dealType: String!
+  submissionType: String
+  updatedAt: Float
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]

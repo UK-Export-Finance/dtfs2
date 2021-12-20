@@ -5,7 +5,7 @@ const {
 } = require('./map-bss-ewcs-facility');
 const isIssued = require('../../helpers/is-issued');
 const { stripCommas } = require('../../../utils/string');
-const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
+const MOCK_FACILITIES = require('../../__mocks__/mock-facilities');
 
 describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
   describe('hasCoverEndDate', () => {
@@ -31,7 +31,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
   describe('mapBssEwcsFacility', () => {
     it('should return mapped facility', () => {
       const mockFacility = {
-        ...MOCK_FACILIIES[1],
+        ...MOCK_FACILITIES[1],
         tfm: {},
       };
 
@@ -41,7 +41,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         _id,
         ukefFacilityId,
         facilityType,
-        facilityValue,
+        value,
         currency,
         coveredPercentage,
         ukefExposure,
@@ -63,7 +63,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         ukefFacilityId: Number(ukefFacilityId),
         facilityType,
         currencyCode: currency.id,
-        value: Number(facilityValue.replace(/,/g, '')),
+        value: Number(value.replace(/,/g, '')),
         coverPercentage: Number(coveredPercentage),
         ukefExposure: Number(ukefExposure.split('.')[0].replace(/,/g, '')),
         ukefGuaranteeInMonths,
@@ -87,7 +87,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
     describe('when there is no feeType', () => {
       it('should use premiumType for feeType', () => {
         const mockFacility = {
-          ...MOCK_FACILIIES[0],
+          ...MOCK_FACILITIES[0],
           feeType: null,
           tfm: {},
         };
@@ -101,7 +101,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
     describe('when there is no feeFrequency', () => {
       it('should use premiumFrequency for feeFrequency', () => {
         const mockFacility = {
-          ...MOCK_FACILIIES[0],
+          ...MOCK_FACILITIES[0],
           feeFrequency: null,
           tfm: {},
         };

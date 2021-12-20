@@ -11,7 +11,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityBody, associatedDealId, user, routePath) => {
+const updateFacility = async (facilityId, facilityBody, dealId, user, routePath) => {
   const collection = await db.getCollection('facilities');
 
   const update = {
@@ -31,7 +31,7 @@ const updateFacility = async (facilityId, facilityBody, associatedDealId, user, 
     // update the deal so that the user that has edited this facility,
     // is also marked as editing the associated deal
 
-    await updateDealEditedByPortal(associatedDealId, user);
+    await updateDealEditedByPortal(dealId, user);
   }
 
   return updatedFacility;
@@ -56,12 +56,12 @@ exports.updateFacilityPut = async (req, res) => {
   const facility = await findOneFacility(facilityId);
 
   if (facility) {
-    const { associatedDealId } = facility;
+    const { dealId } = facility;
 
     const updatedFacility = await updateFacility(
       facilityId,
       facilityUpdate,
-      associatedDealId,
+      dealId,
       user,
       req.routePath,
     );

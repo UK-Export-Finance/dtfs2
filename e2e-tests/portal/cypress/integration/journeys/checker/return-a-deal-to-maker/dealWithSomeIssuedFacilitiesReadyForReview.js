@@ -5,14 +5,14 @@ const datePlusDay = nowPlusDays(1);
 const datePlusMonth = nowPlusMonths(1);
 
 const deal = {
+  submissionType: 'Automatic Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'mock id',
     bankSupplyContractName: 'mock name',
     created: date.valueOf(),
-    dateOfLastAction: '1596805840467',
     previousWorkflowStatus: 'confirmation_acknowledged',
-    submissionType: 'Automatic Inclusion Notice',
     submissionDate: date.valueOf(),
     previousStatus: 'Acknowledged by UKEF',
     owningBank: {
@@ -180,7 +180,7 @@ const deal = {
       ukefGuaranteeInMonths: '12',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
-      facilityValue: '21313.00',
+      value: '21313.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '20',
       coveredPercentage: '30',
@@ -218,7 +218,7 @@ const deal = {
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
       lastEdited: '1597082524602',
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '20',
       coveredPercentage: '30',
@@ -233,7 +233,7 @@ const deal = {
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       guaranteeFeePayableByBank: '10.8000',
-      facilityValue: '123123.00',
+      value: '123123.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '12',
       coveredPercentage: '20',
@@ -271,7 +271,7 @@ const deal = {
       bankReferenceNumber: '12345678',
       guaranteeFeePayableByBank: '45.0000',
       lastEdited: '1597082596884',
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       disbursementAmount: '200.00',
       interestMarginFee: '50',

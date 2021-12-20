@@ -95,13 +95,13 @@ describe('controllers/dashboard', () => {
             _id: 'mockDeal2',
             exporter: 'mock company',
             product: PRODUCT.GEF,
-            lastUpdate: 5678,
+            updatedAt: 5678,
           },
           {
             _id: 'mockDeal',
             exporter: 'mock company',
             product: PRODUCT.GEF,
-            lastUpdate: 1234,
+            updatedAt: 1234,
           }],
         pages: {
           totalPages: 1,

@@ -1,9 +1,9 @@
 {
   "dealType": "BSS/EWCS",
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "abc-1-def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "956",
@@ -119,7 +119,7 @@
         "ukefGuaranteeInMonths": "24",
         "uniqueIdentificationNumber": "1234",
         "bondBeneficiary": "test",
-        "facilityValue": "123",
+        "value": "123",
         "currencySameAsSupplyContractCurrency": "false",
         "currency": {
           "id": "USD",
@@ -140,7 +140,7 @@
       "facilityType": "loan",
       "facilityStage": "Unconditional",
       "bankReferenceNumber": "123",
-      "facilityValue": "123",
+      "value": "123",
       "disbursementAmount": "12",
       "ukefGuaranteeInMonths": "12",
       "currencySameAsSupplyContractCurrency": "false",

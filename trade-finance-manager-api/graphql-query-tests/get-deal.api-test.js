@@ -112,11 +112,11 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
     dealSnapshot {
       _id,
       dealType
+      submissionType
       details {
         ukefDealId,
         status,
         submissionDate,
-        submissionType,
         owningBank {
           name,
           emails
@@ -142,7 +142,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         facilitySnapshot {
           _id,
           ukefFacilityId,
-          associatedDealId,
+          dealId,
           facilityProduct {
             code
           },
@@ -150,7 +150,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
           ukefFacilityType,
           facilityStage,
           facilityValueExportCurrency,
-          facilityValue,
+          value,
           coveredPercentage,
           bondIssuer,
           bondBeneficiary,

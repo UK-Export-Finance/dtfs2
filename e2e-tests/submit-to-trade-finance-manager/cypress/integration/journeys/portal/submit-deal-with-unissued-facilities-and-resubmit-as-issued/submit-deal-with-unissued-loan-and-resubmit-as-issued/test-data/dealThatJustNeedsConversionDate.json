@@ -1,9 +1,9 @@
 {
   "dealType": "BSS/EWCS",
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "abc-1-def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "956",
@@ -117,7 +117,7 @@
       "ukefGuaranteeInMonths": "12",
       "bankReferenceNumber": "",
       "guaranteeFeePayableByBank": "10.8000",
-      "facilityValue": "123123.00",
+      "value": "123123.00",
       "currencySameAsSupplyContractCurrency": "true",
       "interestMarginFee": "12",
       "coveredPercentage": "20",

@@ -1,16 +1,13 @@
-const moment = require('moment');
 const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
-const incompleteDeal = require('../../fixtures/deal-with-incomplete-about-section.json');
 const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -22,7 +19,6 @@ jest.mock('../../../src/v1/controllers/deal-status/send-status-update-emails');
 describe('/v1/deals/:id/status', () => {
   let noRoles;
   let aBarclaysMaker;
-  let anotherBarclaysMaker;
   let anHSBCMaker;
   let aBarclaysChecker;
   let aBarclaysMakerChecker;
@@ -32,8 +28,7 @@ describe('/v1/deals/:id/status', () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
-    anotherBarclaysMaker = barclaysMakers[1];
+    [aBarclaysMaker] = barclaysMakers;
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
 
@@ -174,7 +169,7 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.details.status).toEqual('Abandoned');
     });
 
-    it('updates the deals details.dateOfLastAction field', async () => {
+    it('updates the deals updatedAt field', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
@@ -187,7 +182,7 @@ describe('/v1/deals/:id/status', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.details.dateOfLastAction).not.toEqual(completedDeal.details.dateOfLastAction);
+      expect(body.deal.updatedAt).not.toEqual(completedDeal.updatedAt);
     });
 
     it('updates the deals.details.previousStatus field', async () => {
@@ -219,7 +214,7 @@ describe('/v1/deals/:id/status', () => {
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(body.deal.details.previousWorkflowStatus).toEqual('Draft');
     });
@@ -239,7 +234,7 @@ describe('/v1/deals/:id/status', () => {
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${dealId}`);
+      const { body } = await as(anHSBCMaker).get(`/v1/deals/${dealId}`);
 
       expect(body.deal.details.previousStatus).toEqual(expectedPreviousStatus);
       expect(body.deal.details.status).toEqual(completedDeal.details.status);
@@ -255,7 +250,7 @@ describe('/v1/deals/:id/status', () => {
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(body.deal.comments[0]).toEqual({
         text: 'Flee!',
@@ -285,9 +280,9 @@ describe('/v1/deals/:id/status', () => {
 
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(body.deal.editedBy[body.deal.editedBy.length - 1]).toEqual({
-        date: expect.any(String),
+        date: expect.any(Number),
         username: anHSBCMaker.username,
         roles: anHSBCMaker.roles,
         bank: anHSBCMaker.bank,
@@ -318,7 +313,7 @@ describe('/v1/deals/:id/status', () => {
         status: completedDeal.details.status,
       };
 
-      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(sendStatusUpdateEmails).not.toHaveBeenCalled();
     });
@@ -333,7 +328,7 @@ describe('/v1/deals/:id/status', () => {
 
       await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(body.deal.editedBy.length).toEqual(0);
     });
 
@@ -347,7 +342,7 @@ describe('/v1/deals/:id/status', () => {
 
       await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(body.deal.editedBy.length).toEqual(0);
     });
 
@@ -358,7 +353,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(body).toEqual({
         success: false,
@@ -387,7 +382,7 @@ describe('/v1/deals/:id/status', () => {
         status: "Ready for Checker's approval",
       };
 
-      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(body).toEqual({
         success: false,
@@ -408,7 +403,7 @@ describe('/v1/deals/:id/status', () => {
         status: "Further Maker's input required",
       };
 
-      const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(body).toEqual({
         success: false,
@@ -429,7 +424,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Submitted',
       };
 
-      const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(body).toEqual({
         success: false,
@@ -458,7 +453,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Submitted',
       };
 
-      const { status, body } = await as(aBarclaysMakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { status } = await as(aBarclaysMakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(401);
     });
@@ -480,7 +475,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Submitted',
       };
 
-      const { status, body } = await as(aBarclaysMakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { status } = await as(aBarclaysMakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(401);
     });

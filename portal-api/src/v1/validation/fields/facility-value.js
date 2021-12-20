@@ -76,11 +76,11 @@ const validationText = (str, fieldTitle) => {
 module.exports = (facility, fieldTitle, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!isValid(facility.facilityValue)) {
-    newErrorList.facilityValue = {
+  if (!isValid(facility.value)) {
+    newErrorList.value = {
       order: orderNumber(newErrorList),
       text: validationText(
-        facility.facilityValue,
+        facility.value,
         fieldTitle,
       ),
     };

@@ -186,7 +186,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
         .BSS_stage(k2Map.FACILITIES.STAGE_BOND[bond.facilityStage])
         .BSS_beneficiary(bond.bondBeneficiary)
-        .BSS_value(convertCurrencyFormat(bond.facilityValue))
+        .BSS_value(convertCurrencyFormat(bond.value))
         .BSS_currency_code(
           await convertCurrencyCodeToId(bondCurrencyId), // eslint-disable-line no-await-in-loop
         )
@@ -212,7 +212,7 @@ const generateTypeA = async (deal, fromStatus) => {
 
       const conversionRate = bond.currencySameAsSupplyContractCurrency === 'true' ? 1 : bond.conversionRate;
 
-      totalBondValueContractCurrency += convertCurrencyFormat(bond.facilityValue) / conversionRate;
+      totalBondValueContractCurrency += convertCurrencyFormat(bond.value) / conversionRate;
       const bondExposure = convertCurrencyFormat(bond.ukefExposure) / conversionRate;
       totalBondExposure += bondExposure;
       totalBondPremium += bondExposure * (bond.coveredPercentage / 100);
@@ -241,11 +241,11 @@ const generateTypeA = async (deal, fromStatus) => {
         }
 
         const ewcs = builder.createEWCS()
-          .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
+          .EWCS_portal_facility_id(loan._id)
           .UKEF_EWCS_facility_id(loanUkefFacilityId)
           .EWCS_bank_id(loan.bankReferenceNumber)
           .EWCS_stage(k2Map.FACILITIES.STAGE_LOAN[loan.facilityStage])
-          .EWCS_value(convertCurrencyFormat(loan.facilityValue))
+          .EWCS_value(convertCurrencyFormat(loan.value))
           .EWCS_currency_code(
             await convertCurrencyCodeToId(loanCurrencyId), // eslint-disable-line no-await-in-loop
           )
@@ -272,7 +272,7 @@ const generateTypeA = async (deal, fromStatus) => {
         builder.addEWCS(ewcs);
 
         const conversionRate = loan.currencySameAsSupplyContractCurrency === 'true' ? 1 : loan.conversionRate;
-        totalLoanValueContractCurrency += convertCurrencyFormat(loan.facilityValue) / conversionRate;
+        totalLoanValueContractCurrency += convertCurrencyFormat(loan.value) / conversionRate;
 
         const loanExposure = convertCurrencyFormat(loan.ukefExposure) / conversionRate;
         totalLoanExposure += loanExposure;

@@ -1,9 +1,9 @@
 {
   "dealType": "BSS/EWCS",
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "abc-1-def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "956",
@@ -133,7 +133,7 @@
       },
       "currencySameAsSupplyContractCurrency": "false",
       "disbursementAmount": "100.00",
-      "facilityValue": "1234.00",
+      "value": "1234.00",
       "guaranteeFeePayableByBank": "21.6000",
       "interestMarginFee": "24",
       "minimumQuarterlyFee": "",
@@ -167,7 +167,7 @@
         "text": "EUR - Euros"
       },
       "currencySameAsSupplyContractCurrency": "false",
-      "facilityValue": "2400.00",
+      "value": "2400.00",
       "guaranteeFeePayableByBank": "10.8000",
       "minimumRiskMarginFee": "",
       "riskMarginFee": "12",

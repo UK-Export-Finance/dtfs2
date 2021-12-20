@@ -4,11 +4,11 @@ const now = moment();
 
 const deal = {
   _id: 123456,
+  updatedAt: Date.now(),
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
     status: 'Ready for Checker\'s approval',
-    dateOfLastAction: '02/02/2020 12:12',
     previousStatus: 'Draft',
     maker: { username: 'some.user@client.com' },
     submissionDate: 1594296776916.0,
@@ -39,7 +39,7 @@ const deal = {
         uniqueIdentificationNumber: '1234567890',
         bondBeneficiary: 'test',
         status: 'Completed',
-        facilityValue: '1234',
+        value: '1234',
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
@@ -73,7 +73,7 @@ const deal = {
         uniqueIdentificationNumber: '1234567890',
         bondBeneficiary: 'test',
         status: 'Completed',
-        facilityValue: '5678',
+        value: '5678',
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
@@ -108,7 +108,7 @@ const deal = {
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '12345678',
         guaranteeFeePayableByBank: '10.8000',
-        facilityValue: '12345678.00',
+        value: '12345678.00',
         currencySameAsSupplyContractCurrency: 'false',
         currency: {
           text: 'AUD - Australian Dollars',
@@ -140,7 +140,7 @@ const deal = {
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '12345678',
         guaranteeFeePayableByBank: '10.8000',
-        facilityValue: '12345678.00',
+        value: '12345678.00',
         currencySameAsSupplyContractCurrency: 'false',
         currency: {
           text: 'AUD - Australian Dollars',

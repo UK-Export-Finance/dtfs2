@@ -1,8 +1,8 @@
 {
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "abc-1-def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "9",
@@ -118,7 +118,7 @@
         "ukefGuaranteeInMonths": "24",
         "uniqueIdentificationNumber": "1234",
         "bondBeneficiary": "test",
-        "facilityValue": "123",
+        "value": "123",
         "currencySameAsSupplyContractCurrency": "true",
         "riskMarginFee": "1",
         "coveredPercentage": "2",
@@ -130,7 +130,7 @@
       "facilityType": "loan",
       "facilityStage": "Unconditional",
       "bankReferenceNumber": "123",
-      "facilityValue": "123",
+      "value": "123",
       "disbursementAmount": "12",
       "ukefGuaranteeInMonths": "12",
       "currencySameAsSupplyContractCurrency": "true",

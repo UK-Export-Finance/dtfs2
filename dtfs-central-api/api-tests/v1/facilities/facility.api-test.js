@@ -15,7 +15,7 @@ const mockUser = {
 
 const newFacility = {
   facilityType: 'bond',
-  associatedDealId: '123123456',
+  dealId: '123123456',
 };
 
 const newDeal = aDeal({
@@ -43,9 +43,9 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/facilities', () => {
-    it('returns 404 when associatedDeal/associatedDealId is not found', async () => {
+    it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
-        associatedDealId: '1234',
+        dealId: '1234',
         facilityType: 'bond',
       };
 
@@ -56,7 +56,7 @@ describe('/v1/portal/facilities', () => {
 
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
-        associatedDealId: '1234',
+        dealId: '1234',
         facilityType: 'bond',
       };
 
@@ -67,7 +67,7 @@ describe('/v1/portal/facilities', () => {
 
     it('creates a facility', async () => {
       const { _id } = await createDeal();
-      newFacility.associatedDealId = _id;
+      newFacility.dealId = _id;
 
       const { body, status } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
@@ -86,7 +86,7 @@ describe('/v1/portal/facilities', () => {
 
     it('creates incremental integer facility IDs', async () => {
       const { _id } = await createDeal();
-      newFacility.associatedDealId = _id;
+      newFacility.dealId = _id;
 
       const facility1 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
@@ -99,7 +99,7 @@ describe('/v1/portal/facilities', () => {
 
     it('adds the facility id to the associated deal', async () => {
       const { _id } = await createDeal();
-      newFacility.associatedDealId = _id;
+      newFacility.dealId = _id;
 
       const {
         status: createdFacilityStatus,
@@ -108,7 +108,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(createdFacilityStatus).toEqual(200);
 
-      const { status, body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const { status, body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(status).toEqual(200);
 
@@ -122,11 +122,11 @@ describe('/v1/portal/facilities', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const { _id } = await createDeal();
-        newFacility.associatedDealId = _id;
+        newFacility.dealId = _id;
 
         const postBody = {
           facilityType: '',
-          associatedDealId: '',
+          dealId: '',
         };
 
         const { body, status } = await api.post({ facility: postBody, user: mockUser }).to('/v1/portal/facilities');
@@ -137,19 +137,19 @@ describe('/v1/portal/facilities', () => {
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
         expect(body.validationErrors.errorList.facilityType.text).toEqual('Enter the Facility type');
 
-        expect(body.validationErrors.errorList.associatedDealId).toBeDefined();
-        expect(body.validationErrors.errorList.associatedDealId.text).toEqual('Enter the Associated deal id');
+        expect(body.validationErrors.errorList.dealId).toBeDefined();
+        expect(body.validationErrors.errorList.dealId.text).toEqual('Enter the Associated deal id');
       });
     });
 
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
         const { _id } = await createDeal();
-        newFacility.associatedDealId = _id;
+        newFacility.dealId = _id;
 
         const postBody = {
           facilityType: 'invalid-facility',
-          associatedDealId: '123123456',
+          dealId: '123123456',
           user: {},
         };
 
@@ -167,7 +167,7 @@ describe('/v1/portal/facilities', () => {
   describe('GET /v1/portal/facilities/:id', () => {
     it('returns the requested resource', async () => {
       const { _id } = await createDeal();
-      newFacility.associatedDealId = _id;
+      newFacility.dealId = _id;
 
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
@@ -189,26 +189,26 @@ describe('/v1/portal/facilities', () => {
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('doesn\'t update `editedBy` in the associated deal', async () => {
       const { _id } = await createDeal();
-      newFacility.associatedDealId = _id;
+      newFacility.dealId = _id;
 
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities');
 
-      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(0);
 
       const updatedFacility = {
         ...createdFacilityResponse.body,
-        facilityValue: 123456,
+        value: 123456,
         user: mockUser,
       };
 
       await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}`);
 
-      const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+      const { body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(body.deal.editedBy.length).toEqual(0);
     });

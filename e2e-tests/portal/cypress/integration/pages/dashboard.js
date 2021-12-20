@@ -12,7 +12,7 @@ const page = {
     link: (id) => cy.get(`[data-cy="deal__link--${id}"]`),
     product: (id) => cy.get(`[data-cy="deal__product--${id}"]`),
     status: (id) => cy.get(`[data-cy="deal__status--${id}"]`),
-    type: (id) => cy.get(`[data-cy="deal__type--${id}"]`),
+    type: (id) => cy.get(`[data-cy="deal__submissionType--${id}"]`),
     updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
   },
   confirmDealsPresent: (deals) => {

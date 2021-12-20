@@ -10,6 +10,7 @@ describe(component, () => {
   const now = moment();
 
   const deal = {
+    updatedAt: Date.now(),
     details: {
       bankSupplyContractID: 'bankSupplyContractID',
       ukefDealId: 'ukefDealId',
@@ -24,15 +25,14 @@ describe(component, () => {
         surname: 'Burns',
       },
       submissionDate: now.valueOf(),
-      dateOfLastAction: now.valueOf(),
     },
   };
 
   const dealWithManualInclusionApplicationSubmissionDate = {
     ...deal,
+    submissionType: 'Manual Inclusion Notice',
     details: {
       ...deal.details,
-      submissionType: 'Manual Inclusion Notice',
       manualInclusionApplicationSubmissionDate: now.valueOf(),
     },
   };
@@ -82,9 +82,9 @@ describe(component, () => {
                                       .format('DD/MM/YYYY'));
     });
 
-    it("displays deal.details.dateOfLastAction", () =>{
-      return wrapper.expectText('[data-cy="dateOfLastAction"]')
-                    .toRead(moment(deal.details.dateOfLastAction)
+    it("displays deal.updatedAt", () =>{
+      return wrapper.expectText('[data-cy="updatedAt"]')
+                    .toRead(moment(deal.updatedAt)
                                       .tz('Europe/London')
                                       .format('DD/MM/YYYY HH:mm'));
     });
@@ -118,6 +118,7 @@ describe(component, () => {
     const now = moment();
 
     const deal = {
+      updatedAt: null,
       details: {
         bankSupplyContractID: '',
         ukefDealId: ' ',
@@ -126,7 +127,6 @@ describe(component, () => {
         maker: {},
         checker: {},
         submissionDate: '',
-        dateOfLastAction: '',
       }
     };
 
@@ -160,8 +160,8 @@ describe(component, () => {
                     .toRead("-");
     });
 
-    it("displays deal.details.dateOfLastAction", () =>{
-      return wrapper.expectText('[data-cy="dateOfLastAction"]')
+    it("displays deal.updatedAt", () =>{
+      return wrapper.expectText('[data-cy="updatedAt"]')
                     .toRead("-");
     });
 

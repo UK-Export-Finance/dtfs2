@@ -42,7 +42,7 @@ const calculateFacilitiesTotalInDealCurrency = (facilities) => {
   if (facilities.length > 0) {
     facilities.forEach((facility) => {
       const {
-        facilityValue,
+        value,
         conversionRate,
         ukefExposure,
       } = facility;
@@ -50,10 +50,10 @@ const calculateFacilitiesTotalInDealCurrency = (facilities) => {
       const sanitizedUkefExposure = sanitizeCurrency(ukefExposure).sanitizedValue;
 
       if (hasValue(conversionRate)) {
-        totalValueInDealCurrency += (Number(facilityValue) / Number(conversionRate));
+        totalValueInDealCurrency += (Number(value) / Number(conversionRate));
         totalUkefExposureInDealCurrency += (Number(sanitizedUkefExposure) / Number(conversionRate));
       } else {
-        totalValueInDealCurrency += Number(facilityValue);
+        totalValueInDealCurrency += Number(value);
         totalUkefExposureInDealCurrency += Number(sanitizedUkefExposure);
       }
     });

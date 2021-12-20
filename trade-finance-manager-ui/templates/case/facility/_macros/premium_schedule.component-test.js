@@ -26,7 +26,7 @@ describe(page, () => {
       coverEndDate: '1 Feb 2021',
       coveredPercentage: '10%',
       facilityValueExportCurrency: 'GBP 12,345.00',
-      facilityValue: 'GBP 12,345.00',
+      value: 'GBP 12,345.00',
       ukefExposure: 'GBP 1,234.00',
       bankFacilityReference: '123456',
       guaranteeFeePayableToUkef: '10%',
@@ -180,7 +180,7 @@ describe(page, () => {
 
       describe('premium schedule table', () => {
         it('should render', () => {
-          wrapper.expectElement('[data-cy="faciliy-premium-schedule-table"]').toExist();
+          wrapper.expectElement('[data-cy="facility-premium-schedule-table"]').toExist();
         });
 
         it('should render correct number of premium schedule rows', () => {
@@ -225,7 +225,7 @@ describe(page, () => {
       });
 
       it('should NOT render premium schedule table', () => {
-        wrapper.expectElement('[data-cy="faciliy-premium-schedule-table"]').notToExist();
+        wrapper.expectElement('[data-cy="facility-premium-schedule-table"]').notToExist();
       });
     });
   });

@@ -6,14 +6,14 @@ const facilityQuery = gql`
       _id,
       facilitySnapshot {
         ukefFacilityId,
-        associatedDealId,
+        dealId,
         facilityProduct {
           name
         },
         facilityType,
         facilityStage,
         facilityValueExportCurrency,
-        facilityValue,
+        value,
         coveredPercentage,
         bankFacilityReference,
         guaranteeFeePayableToUkef,

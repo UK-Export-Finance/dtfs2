@@ -47,7 +47,7 @@ describe(baseUrl, () => {
         monthsOfCover: null,
         details: null,
         detailsOther: null,
-        currency: null,
+        currency: { id: null },
         value: null,
         coverPercentage: null,
         interestPercentage: null,
@@ -219,7 +219,9 @@ describe(baseUrl, () => {
         status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
         details: {
           ...details,
-          ...update,
+          hasBeenIssued: false,
+          name: 'Matt',
+          currency: { id: 'GBP' },
           updatedAt: expect.any(Number),
         },
         validation: {
@@ -299,6 +301,8 @@ describe(baseUrl, () => {
         },
       };
 
+      expected.details.currency = { id: update.currency };
+
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
     });
@@ -340,6 +344,8 @@ describe(baseUrl, () => {
           required: ['name'],
         },
       };
+
+      expected.details.currency = { id: 'GBP' };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
@@ -388,6 +394,8 @@ describe(baseUrl, () => {
         },
       };
 
+      expected.details.currency = { id: 'GBP' };
+
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
     });
@@ -396,8 +404,6 @@ describe(baseUrl, () => {
       // create deal
       const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
-      // create and update facility
-      const { details } = newFacility;
       const facility = await as(aMaker).post({ dealId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const update = { hasBeenIssued: true };
@@ -541,7 +547,7 @@ describe(baseUrl, () => {
         errMsg: 'No Application ID and/or facility type sent with request',
       }]);
     });
-    it('returns an mandator error when facilty type is missing', async () => {
+    it('returns an mandator error when facility type is missing', async () => {
       const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id }).to(baseUrl);
       expect(status).toEqual(422);
       expect(body).toEqual([{

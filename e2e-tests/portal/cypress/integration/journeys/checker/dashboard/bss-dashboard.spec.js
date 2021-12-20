@@ -13,10 +13,10 @@ context('View a deal with checker role', () => {
 
   const checkerDealData = {
     dealType: 'BSS/EWCS',
+    submissionType: 'Manual Inclusion Notice',
     details: {
       bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      submissionType: 'Manual Inclusion Notice',
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
     },

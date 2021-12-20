@@ -6,8 +6,6 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
-const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 
@@ -15,15 +13,9 @@ const api = require('../../../src/v1/api');
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
 
-// jest.unmock('@azure/storage-file-share');
-
 describe('/v1/deals/:id/status - facilities', () => {
-  let noRoles;
   let aBarclaysMaker;
-  let anotherBarclaysMaker;
-  let anHSBCMaker;
   let aBarclaysChecker;
-  let aBarclaysMakerChecker;
   let aSuperuser;
   const originalFacilities = completedDeal.mockFacilities;
 
@@ -42,15 +34,10 @@ describe('/v1/deals/:id/status - facilities', () => {
     await wipeDB.wipe(['facilities']);
 
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
-    anotherBarclaysMaker = barclaysMakers[1];
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    [aBarclaysMaker] = barclaysMakers;
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
 
-    const barclaysMakerChecker = testUsers().withMultipleRoles('maker', 'checker').withBankName('Barclays Bank').one();
-    aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -133,7 +120,6 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
             l.facilityStage === 'Conditional'
             && l.issueFacilityDetailsProvided === true
@@ -154,7 +140,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         beforeEach(async () => {
           ainDeal = completedDeal;
-          ainDeal.details.submissionType = 'Automatic Inclusion Notice';
+          ainDeal.submissionType = 'Automatic Inclusion Notice';
 
           const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDeal))).to('/v1/deals');
 
@@ -266,7 +252,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         beforeEach(async () => {
           completedDeal.status = 'Accepted by UKEF (without conditions)';
-          completedDeal.details.submissionType = 'Manual Inclusion Application';
+          completedDeal.submissionType = 'Manual Inclusion Application';
           completedDeal.details.approvalDate = moment().utc().valueOf().toString();
 
           const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -339,6 +325,7 @@ describe('/v1/deals/:id/status - facilities', () => {
     describe('when the status changes to `Further Maker\'s input required`', () => {
       let createdDeal;
       let updatedDeal;
+      let dealId;
 
       beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -421,6 +408,7 @@ describe('/v1/deals/:id/status - facilities', () => {
     describe('when the deal status changes from `Draft` to `Ready for Checker\'s approval`', () => {
       let createdDeal;
       let updatedDeal;
+      let dealId;
 
       const statusUpdate = {
         comments: 'Ready to go!',
@@ -438,7 +426,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         bondIssuer: 'issuer',
         bondType: 'bond type',
         bondBeneficiary: 'test',
-        facilityValue: '123',
+        value: '123',
         currencySameAsSupplyContractCurrency: 'true',
         riskMarginFee: '1',
         coveredPercentage: '2',
@@ -474,7 +462,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         facilityType: 'loan',
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
-        facilityValue: '100',
+        value: '100',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '10',
         coveredPercentage: '40',
@@ -486,7 +474,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       const unconditionalLoan = () => ({
         facilityType: 'loan',
         facilityStage: 'Unconditional',
-        facilityValue: '100',
+        value: '100',
         bankReferenceNumber: '1234',
         ...coverEndDate(),
         disbursementAmount: '5',
@@ -542,7 +530,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             createdDate: expect.any(String),
             requestedCoverStartDate: expect.any(String),
             _id: expect.any(String),
-            associatedDealId: dealId,
+            dealId,
           });
 
           expect(body.deal.bondTransactions.items[1]).toEqual({
@@ -555,7 +543,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-month': expect.any(Number),
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
-            associatedDealId: dealId,
+            dealId,
           });
 
           expect(body.deal.bondTransactions.items[2]).toEqual({
@@ -568,7 +556,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-month': expect.any(Number),
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
-            associatedDealId: dealId,
+            dealId,
           });
         });
       });
@@ -590,7 +578,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-month': expect.any(Number),
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
-            associatedDealId: dealId,
+            dealId,
           });
 
           expect(body.deal.loanTransactions.items[2]).toEqual({
@@ -603,7 +591,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-month': expect.any(Number),
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
-            associatedDealId: dealId,
+            dealId,
           });
         });
       });
@@ -625,7 +613,6 @@ describe('/v1/deals/:id/status - facilities', () => {
         dealId = createdDeal._id;
 
         api.tfmDealSubmit = () => Promise.resolve();
-
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 

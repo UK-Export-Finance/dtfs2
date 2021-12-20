@@ -1,14 +1,14 @@
 const now = new Date().valueOf();
 
 const deal = {
+  submissionType: 'Manual Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     status: 'Acknowledged by UKEF',
     bankSupplyContractID: 'mock id',
     bankSupplyContractName: 'mock name',
     created: now,
-    dateOfLastAction: '1596054999878',
     previousWorkflowStatus: 'Draft',
-    submissionType: 'Manual Inclusion Notice',
     submissionDate: now,
   },
   eligibility: {
@@ -169,7 +169,7 @@ const deal = {
       ukefGuaranteeInMonths: '12',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
-      facilityValue: '21313.00',
+      value: '21313.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '20',
       coveredPercentage: '30',
@@ -189,7 +189,7 @@ const deal = {
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '',
       guaranteeFeePayableByBank: '10.8000',
-      facilityValue: '123123.00',
+      value: '123123.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '12',
       coveredPercentage: '20',

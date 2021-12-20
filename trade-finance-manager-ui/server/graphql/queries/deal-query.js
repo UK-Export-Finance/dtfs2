@@ -76,11 +76,11 @@ const dealQuery = gql`
       dealSnapshot {
         _id,
         dealType
+        submissionType
         details {
           ukefDealId,
           status,
           submissionDate,
-          submissionType,
           owningBank {
             name,
             emails
@@ -106,7 +106,7 @@ const dealQuery = gql`
           facilitySnapshot {
             _id,
             ukefFacilityId,
-            associatedDealId,
+            dealId,
             facilityProduct {
               code
             },
@@ -114,7 +114,7 @@ const dealQuery = gql`
             ukefFacilityType,
             facilityStage,
             facilityValueExportCurrency,
-            facilityValue,
+            value,
             coveredPercentage,
             bondIssuer,
             bondBeneficiary,

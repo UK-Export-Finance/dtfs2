@@ -1,9 +1,9 @@
 {
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "aDealWithOneLoanAndOneBond",
     "bankSupplyContractName": "aDealWithOneLoanAndOneBond",
     "ukefDealId": "ukef:aDealWithOneLoanAndOneBond",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "9",
@@ -104,7 +104,7 @@
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithOneLoanAndOneBond-bond1",
           "bondBeneficiary": "test",
-          "facilityValue": "123",
+          "value": "123",
           "currencySameAsSupplyContractCurrency": "true",
           "riskMarginFee": "1",
           "coveredPercentage": "2",
@@ -132,7 +132,7 @@
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithOneLoanAndOneBond-loan1",
         "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-loan1",
-        "facilityValue": "456",
+        "value": "456",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",

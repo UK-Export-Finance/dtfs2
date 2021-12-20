@@ -5,7 +5,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields } = require('./expectAddedFields');
 
 const {
   updatedECPartial,
@@ -253,7 +252,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const { status, body } = await as(aBarclaysMaker).put(updatedECPartial).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.details.submissionType).toEqual('');
+      expect(body.submissionType).toEqual('');
     });
 
     it('updates the submissionType to AIN if all true answers', async () => {
@@ -263,7 +262,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const { status, body } = await as(aBarclaysMaker).put(updatedECCompletedAllTrue).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.details.submissionType).toEqual('Automatic Inclusion Notice');
+      expect(body.submissionType).toEqual('Automatic Inclusion Notice');
     });
 
     it('updates the submissionType to MIA if all true answers', async () => {
@@ -273,7 +272,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const { status, body } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.details.submissionType).toEqual('Manual Inclusion Application');
+      expect(body.submissionType).toEqual('Manual Inclusion Application');
     });
 
     it('updates the lastUpdated timestamp on each update', async () => {
@@ -284,7 +283,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       const firstUpdateTimeStamp = firstUpdate.eligibility.lastUpdated;
 
-      const { body: secondUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`)
+      const { body: secondUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`);
 
       expect(typeof secondUpdate.eligibility.lastUpdated).toEqual('number');
       expect(typeof secondUpdate.eligibility.lastUpdated).not.toEqual(firstUpdateTimeStamp);

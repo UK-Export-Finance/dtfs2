@@ -92,7 +92,7 @@ const constructor = (listOfFilters) => {
       return true; // all the filters should remove anything that needs removing so if we reach here -> true.
     }).map((loan) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
-      deal_id: deal._id, // eslint-disable-line no-underscore-dangle
+      deal_id: deal._id,
       deal_status: deal.details.status,
       deal_supplierName: deal.submissionDetails['supplier-name'],
       deal_bankSupplyContractID: deal.details.bankSupplyContractID,
@@ -100,12 +100,12 @@ const constructor = (listOfFilters) => {
       deal_owningBank: deal.details.owningBank.name,
       deal_created: deal.details.created,
       deal_submissionDate: deal.details.submissionDate,
-      deal_submissionType: deal.details.submissionType,
-      transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
+      deal_submissionType: deal.submissionType,
+      transaction_id: loan._id,
       bankFacilityId: loan.bankReferenceNumber,
       ukefFacilityId: loan.ukefFacilityId,
       transactionType: 'loan',
-      facilityValue: loan.facilityValue,
+      value: loan.value,
       currency: loan.currency,
       transactionStage: loan.facilityStage,
       issuedDate: loan.issuedDate,

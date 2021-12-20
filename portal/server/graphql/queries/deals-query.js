@@ -4,14 +4,15 @@ const dealsQuery = gql`
 query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
   deals(params: {start: $start, pagesize: $pagesize, filters: $filters}) {
     count
-    deals{
+    deals {
       _id
-      details{
+      submissionType
+      updatedAt
+      details {
         status
         bankSupplyContractID
         bankSupplyContractName
         ukefDealId
-        submissionType
         maker {
           username
           firstname
@@ -27,7 +28,6 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
           firstname
           surname
         }
-        dateOfLastAction
         submissionDate
         approvalDate
         created

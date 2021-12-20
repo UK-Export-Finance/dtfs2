@@ -3,12 +3,13 @@ const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 const now = new Date().valueOf();
 
 const deal = {
+  submissionType: 'Automatic Inclusion Notice',
+  updatedAt: Date.now(),
   details: {
     status: "Ready for Checker's approval",
     bankSupplyContractID: 'test',
     bankSupplyContractName: 'test',
     created: '1598021253917',
-    dateOfLastAction: now,
     maker: {
       username: 'MAKER',
       roles: [
@@ -37,7 +38,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Automatic Inclusion Notice',
     previousStatus: 'Draft',
   },
   eligibility: {
@@ -207,7 +207,7 @@ const deal = {
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '18.0000',
         lastEdited: now,
-        facilityValue: '1234.00',
+        value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         riskMarginFee: '20',
         coveredPercentage: '30',
@@ -238,7 +238,7 @@ const deal = {
         bankReferenceNumber: '12345678',
         guaranteeFeePayableByBank: '10.8000',
         lastEdited: now,
-        facilityValue: '1234.00',
+        value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         disbursementAmount: '123.00',
         interestMarginFee: '12',

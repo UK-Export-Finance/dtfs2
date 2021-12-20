@@ -105,11 +105,11 @@ exports.update = async (req, res) => {
     });
 
     const { validationErrors, validationUploadErrors } = getDocumentationErrors(
-      deal.details.submissionType, dealFiles, uploadErrors,
+      deal.submissionType, dealFiles, uploadErrors,
     );
 
     const status = getEligibilityStatus({
-      criteriaComplete: Boolean(deal.details.submissionType),
+      criteriaComplete: Boolean(deal.submissionType),
       ecErrorCount: deal.eligibility.validationErrors && deal.eligibility.validationErrors.count,
       dealFilesErrorCount: validationErrors.count,
     });

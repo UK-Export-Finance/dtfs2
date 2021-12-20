@@ -158,8 +158,8 @@ describe('/v1/portal/deals', () => {
 
       // create some facilities
       const mockFacility = {
-        associatedDealId: createdDeal1._id,
-        facilityValue: 123456,
+        dealId: createdDeal1._id,
+        value: 123456,
         user: mockUser,
       };
 
@@ -226,8 +226,8 @@ describe('/v1/portal/deals', () => {
 
         // create some facilities
         const mockFacility = {
-          associatedDealId: dealId,
-          facilityValue: 123456,
+          dealId,
+          value: 123456,
           user: mockUser,
         };
 
@@ -412,7 +412,7 @@ describe('/v1/portal/deals', () => {
 
       expect(body.details.status).toEqual('Acknowledged by UKEF');
       expect(body.details.previousStatus).toEqual('Submitted');
-      expect(typeof body.details.dateOfLastAction).toEqual('string');
+      expect(typeof body.updatedAt).toEqual('number');
     });
   });
 

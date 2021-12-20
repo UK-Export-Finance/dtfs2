@@ -29,7 +29,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       ukefFacilityId: formatUkefId(loan.UKEF_EWCS_facility_id),
       bankReferenceNumber: loan.EWCS_Guarantee_details.EWCS_bank_id,
       facilityStage,
-      facilityValue: loan.EWCS_Financial_details.EWCS_value,
+      value: loan.EWCS_Financial_details.EWCS_value,
       currency: getCurrencyById(loan.EWCS_Financial_details.EWCS_currency_code),
       currencySameAsSupplyContractCurrency: (loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
       conversionRate: loan.EWCS_Financial_details.EWCS_conversion_rate_deal,
@@ -117,12 +117,5 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     hasError,
   ];
 };
-/*
-
-    submissionType: 'Manual Inclusion Application',
-
-  }
-  */
-
 
 module.exports = mapLoanTransactions;

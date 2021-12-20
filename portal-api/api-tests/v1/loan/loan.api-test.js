@@ -53,7 +53,6 @@ describe('/v1/deals/:id/loan', () => {
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
-  let anEditor;
 
   const createLoan = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
@@ -81,7 +80,6 @@ describe('/v1/deals/:id/loan', () => {
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
-    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
@@ -152,7 +150,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     describe('when a loan has all required fields', () => {
-      it('retuns a loan with dealId and `Completed` status', async () => {
+      it('returns a loan with dealId and `Completed` status', async () => {
         const { dealId, loanId } = await createLoan();
 
         const loan = {
@@ -161,7 +159,7 @@ describe('/v1/deals/:id/loan', () => {
           ...requestedCoverStartDate(),
           ...coverEndDate(),
           disbursementAmount: '5',
-          facilityValue: '100',
+          value: '100',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '10',
           coveredPercentage: '40',
@@ -231,7 +229,7 @@ describe('/v1/deals/:id/loan', () => {
       const conditionalLoan = {
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
-        facilityValue: '100',
+        value: '100',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '10',
         coveredPercentage: '40',
@@ -248,7 +246,7 @@ describe('/v1/deals/:id/loan', () => {
       const { dealId, loanId } = await createLoan();
 
       const loan = {
-        facilityValue: '100',
+        value: '100',
         coveredPercentage: '40',
         interestMarginFee: '10',
       };
@@ -256,7 +254,7 @@ describe('/v1/deals/:id/loan', () => {
       const { body } = await updateLoan(dealId, loanId, loan);
 
       const expectedGuaranteeFee = calculateGuaranteeFee(loan.interestMarginFee);
-      const expectedUkefExposure = calculateUkefExposure(loan.facilityValue, loan.coveredPercentage);
+      const expectedUkefExposure = calculateUkefExposure(loan.value, loan.coveredPercentage);
 
       expect(body.loan.guaranteeFeePayableByBank).toEqual(expectedGuaranteeFee);
       expect(body.loan.ukefExposure).toEqual(expectedUkefExposure);
@@ -283,7 +281,7 @@ describe('/v1/deals/:id/loan', () => {
         const conditionalLoan = {
           facilityStage: 'Conditional',
           ukefGuaranteeInMonths: '12',
-          facilityValue: '100',
+          value: '100',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '10',
           coveredPercentage: '40',
@@ -316,7 +314,7 @@ describe('/v1/deals/:id/loan', () => {
         const unconditionalLoan = {
           facilityStage: 'Unconditional',
           bankReferenceNumber: '1234',
-          facilityValue: '100',
+          value: '100',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '10',
           coveredPercentage: '40',
@@ -355,7 +353,7 @@ describe('/v1/deals/:id/loan', () => {
       const loan = {
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
-        facilityValue: '100',
+        value: '100',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '10',
         coveredPercentage: '40',
@@ -381,7 +379,7 @@ describe('/v1/deals/:id/loan', () => {
         const loan = {
           facilityStage: 'Conditional',
           ukefGuaranteeInMonths: '12',
-          facilityValue: '100',
+          value: '100',
           currencySameAsSupplyContractCurrency: 'false',
           interestMarginFee: '10',
           coveredPercentage: '40',
@@ -449,7 +447,7 @@ describe('/v1/deals/:id/loan', () => {
         ...requestedCoverStartDate(),
         ...coverEndDate(),
         disbursementAmount: '5',
-        facilityValue: '100',
+        value: '100',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '10',
         coveredPercentage: '40',
@@ -560,7 +558,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const newLoan = {
         facilityType: 'loan',
-        associatedDealId: dealId,
+        dealId,
       };
 
       await as(aBarclaysMaker).put(newLoan).to(`/v1/deals/${dealId}/loan/create`);

@@ -13,7 +13,7 @@ module.exports = [
 		"bankReferenceNumber" : "Test Loan",
 		"requestedCoverStartDate" : null,
 		"disbursementAmount" : null,
-		"facilityValue" : "100000.00",
+		"value" : "100000.00",
 		"currencySameAsSupplyContractCurrency" : "true",
 		"currency" : {
 			"text" : "GBP - UK Sterling",
@@ -25,7 +25,7 @@ module.exports = [
 		"conversionRateDate-month" : null,
 		"conversionRateDate-year" : null,
 		"createdDate": nowTimestamp,
-	
+
 		"facilityStage" : "Conditional",
 		"requestedCoverStartDate-day" : null,
 		"requestedCoverStartDate-month" : null,

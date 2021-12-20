@@ -20,7 +20,7 @@ describe(component, () => {
           ukefExposure: 'GBP 1,234.00',
           coveredPercentage: '20%',
           facilityType: 'Performance Bond',
-          facilityValue: 'GBP 1,234',
+          value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Commitment',
           dates: {
@@ -44,7 +44,7 @@ describe(component, () => {
           },
           ukefExposure: 'GBP 2,469.00',
           coveredPercentage: '20%',
-          facilityValue: 'GBP 1,234',
+          value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Issued',
           dates: {
@@ -68,7 +68,7 @@ describe(component, () => {
           },
           ukefExposure: 'GBP 2,469.00',
           coveredPercentage: '20%',
-          facilityValue: '',
+          value: '',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Commitment',
           dates: {
@@ -92,7 +92,7 @@ describe(component, () => {
           },
           ukefExposure: 'GBP 2,469.00',
           coveredPercentage: '20%',
-          facilityValue: 'GBP 1,234',
+          value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Issued',
           dates: {
@@ -231,16 +231,16 @@ describe(component, () => {
 
     describe('`facilityValue in GBP` table cell', () => {
       it('should render', () => {
-        const facilities = params.facilities.filter(({ facilitySnapshot: f }) => f.facilityValue !== '');
+        const facilities = params.facilities.filter(({ facilitySnapshot: f }) => f.value !== '');
 
         facilities.forEach(({ facilitySnapshot: facility }) => {
           const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
-          wrapper.expectText(cellSelector).toRead(facility.facilityValue);
+          wrapper.expectText(cellSelector).toRead(facility.value);
         });
       });
 
-      it('should render a dash when facilityValue is empty', () => {
-        const facility = params.facilities.find(({ facilitySnapshot: f }) => f.facilityValue === '');
+      it('should render a dash when facility Value is empty', () => {
+        const facility = params.facilities.find(({ facilitySnapshot: f }) => f.value === '');
 
         const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
         wrapper.expectText(cellSelector).toRead('-');

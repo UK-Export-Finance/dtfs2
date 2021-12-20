@@ -16,8 +16,8 @@ const mapGefDeal = (deal) => {
     bankRef: deal.additionalRefName,
     exporter: (exporter && exporter.companyName) ? exporter.companyName : '',
     product: dealType,
-    type: submissionType,
-    lastUpdate: updatedAt,
+    submissionType,
+    updatedAt,
   };
 };
 

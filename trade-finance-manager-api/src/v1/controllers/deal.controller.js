@@ -187,19 +187,19 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
     submissionType,
   } = mappedDeal;
 
-  const newPortalStatus = mapTfmDealStageToPortalStatus(dealType, decision);
+  const mappedPortalStatus = mapTfmDealStageToPortalStatus(dealType, decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     await api.updatePortalBssDealStatus(
       dealId,
-      newPortalStatus,
+      mappedPortalStatus,
     );
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     await api.updatePortalGefDealStatus(
       dealId,
-      newPortalStatus,
+      mappedPortalStatus,
     );
   }
 
@@ -216,11 +216,15 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
     api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
-  // if it's a GEF deal, update the deal in deals collection to include the ukefDecision
+  /**
+   * If it's a GEF deal, update the deal in deals collection to include the ukefDecision.
+   * decision - Refers to mappedPortalStatus due to difference in Approved and Accepted wording
+   * for GEF and BSS/EWCS deals
+   */
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     const portalCommentObj = {
       text: comments,
-      decision,
+      decision: mappedPortalStatus,
     };
 
     // set the comment type to 'ukefDecision'

@@ -21,8 +21,8 @@ describe('/graphql mappings - map-gef-deal', () => {
       bankRef: mockDeal.additionalRefName,
       exporter: '',
       product: mockDeal.dealType,
-      type: mockDeal.submissionType,
-      lastUpdate: mockDeal.updatedAt,
+      submissionType: mockDeal.submissionType,
+      updatedAt: mockDeal.updatedAt,
     };
 
     expect(result).toEqual(expected);

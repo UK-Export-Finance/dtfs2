@@ -1,5 +1,4 @@
 const wipeDB = require('../../wipeDB');
-const aDeal = require('./deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
@@ -8,7 +7,7 @@ const createFacilities = require('../../createFacilities');
 
 const dealToClone = completedDeal;
 
-dealToClone.details.submissionType = 'Automatic Inclusion Notice';
+dealToClone.submissionType = 'Automatic Inclusion Notice';
 dealToClone.eligibility = {
   status: 'Incomplete',
   criteria: completedDeal.eligibility.criteria,
@@ -55,6 +54,7 @@ dealToClone.specialConditions = [
 describe('/v1/deals/:id/clone', () => {
   let noRoles;
   let anHSBCMaker;
+  let aBarclaysMaker;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -115,8 +115,8 @@ describe('/v1/deals/:id/clone', () => {
 
         expect(cloned.deal.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
         expect(cloned.deal.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
-        expect(cloned.deal.details.dateOfLastAction).toBeDefined();
-        expect(cloned.deal.details.submissionType).toEqual(originalDeal.details.submissionType);
+        expect(cloned.deal.updatedAt).toBeDefined();
+        expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
 
         expect(cloned.deal.details.maker.username).toEqual(aBarclaysMaker.username);
         expect(cloned.deal.details.maker.roles).toEqual(aBarclaysMaker.roles);
@@ -226,14 +226,14 @@ describe('/v1/deals/:id/clone', () => {
           };
 
           const minDeal = originalDeal;
-          minDeal.details.submissionType = 'Manual Inclusion Notice';
+          minDeal.submissionType = 'Manual Inclusion Notice';
 
           const { body: minDealBody } = await as(anHSBCMaker).put(minDeal).to(`/v1/deals/${minDeal._id}`);
 
           const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
 
           const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
-          expect(cloned.deal.details.submissionType).toEqual('Manual Inclusion Application');
+          expect(cloned.deal.submissionType).toEqual('Manual Inclusion Application');
         });
       });
 
@@ -262,7 +262,7 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
           'coverEndDate-month': firstOriginalBond['coverEndDate-month'],
           'coverEndDate-year': firstOriginalBond['coverEndDate-year'],
-          facilityValue: firstOriginalBond.facilityValue,
+          value: firstOriginalBond.value,
           currencySameAsSupplyContractCurrency: firstOriginalBond.currencySameAsSupplyContractCurrency,
           currency: firstOriginalBond.currency,
           conversionRate: firstOriginalBond.conversionRate,
@@ -280,7 +280,7 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
           'coverEndDate-month': secondOriginalBond['coverEndDate-month'],
           'coverEndDate-year': secondOriginalBond['coverEndDate-year'],
-          facilityValue: secondOriginalBond.facilityValue,
+          value: secondOriginalBond.value,
           currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
           currency: secondOriginalBond.currency,
           uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
@@ -315,7 +315,7 @@ describe('/v1/deals/:id/clone', () => {
         const expectedFirstLoanTransaction = {
           facilityType: 'loan',
           bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
-          facilityValue: firstOriginalLoan.facilityValue,
+          value: firstOriginalLoan.value,
           currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
           currency: firstOriginalLoan.currency,
           ukefGuaranteeInMonths: firstOriginalLoan.ukefGuaranteeInMonths,
@@ -333,7 +333,7 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],
           'coverEndDate-year': secondOriginalLoan['coverEndDate-year'],
           bankReferenceNumber: secondOriginalLoan.bankReferenceNumber,
-          facilityValue: secondOriginalLoan.facilityValue,
+          value: secondOriginalLoan.value,
           currencySameAsSupplyContractCurrency: secondOriginalLoan.currencySameAsSupplyContractCurrency,
           currency: secondOriginalLoan.currency,
           conversionRate: secondOriginalLoan.conversionRate,

@@ -12,7 +12,7 @@ const CLONE_BOND_FIELDS = [
   'coverEndDate-day',
   'coverEndDate-month',
   'coverEndDate-year',
-  'facilityValue',
+  'value',
   'currencySameAsSupplyContractCurrency',
   'currency',
   'conversionRate',
@@ -26,7 +26,7 @@ const CLONE_BOND_FIELDS = [
 const CLONE_LOAN_FIELDS = [
   'facilityType',
   'bankReferenceNumber',
-  'facilityValue',
+  'value',
   'currency',
   'currencySameAsSupplyContractCurrency',
   'conversionRate',
@@ -73,11 +73,11 @@ exports.clone = async (req, res) => {
 
     const modifiedDeal = {
       ...existingDealWithoutId,
+      submissionType: existingDeal.submissionType,
+      updatedAt: existingDeal.updatedAt,
       details: {
         bankSupplyContractID,
         bankSupplyContractName,
-        dateOfLastAction: existingDeal.details.dateOfLastAction,
-        submissionType: existingDeal.details.submissionType,
         maker: req.user,
         owningBank: existingDeal.details.owningBank,
       },
@@ -91,8 +91,8 @@ exports.clone = async (req, res) => {
       facilities: DEFAULTS.DEAL.facilities,
     };
 
-    if (modifiedDeal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
-      modifiedDeal.details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    if (modifiedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+      modifiedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     }
 
     const validationErrors = getCloneDealErrors(modifiedDeal, cloneTransactions);

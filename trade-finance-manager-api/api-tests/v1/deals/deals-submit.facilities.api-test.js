@@ -260,7 +260,6 @@ describe('/v1/deals', () => {
           expect(issuedFacility.tfm.feeRecord).toBeUndefined();
         });
 
-
         describe('when facility/dealType is BSS', () => {
           it('does NOT add fee record to any unissued facilities', async () => {
             const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));

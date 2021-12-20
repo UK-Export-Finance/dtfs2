@@ -12,10 +12,11 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
       _id
       dealSnapshot {
         dealType
+        submissionType
+        updatedAt
         details {
           status
           ukefDealId
-          submissionType
           submissionDate
           maker {
             firstname
@@ -26,7 +27,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
             firstname
             surname
           }
-          dateOfLastAction
           submissionDate
           manualInclusionNoticeSubmissionDate
           approvalDate
@@ -101,7 +101,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
             _id,
             ukefFacilityId
             bankFacilityReference
-            facilityValue
+            value
             facilityStage
             bondIssuer
             facilityProduct {

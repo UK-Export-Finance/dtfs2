@@ -6,7 +6,6 @@ module.exports = () => {
 
   const deal = { ...dealThatJustNeedsDates };
 
-  deal.dealType = 'BSS/EWCS';
   deal.submissionDetails['supplyContractConversionDate-day'] = now.getDate();
   deal.submissionDetails['supplyContractConversionDate-month'] = now.getMonth() + 1;
   deal.submissionDetails['supplyContractConversionDate-year'] = now.getFullYear();

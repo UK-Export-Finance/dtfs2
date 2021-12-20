@@ -14,6 +14,7 @@ const DEFAULTS = {
     comments: [],
     editedBy: [],
     facilities: [],
+    exporter: {},
   },
   DEAL_TFM: {
     history: {

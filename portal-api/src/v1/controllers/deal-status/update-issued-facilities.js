@@ -78,8 +78,8 @@ const updateIssuedFacilities = async (
   const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.STATUS.APPROVED
                                       || fromStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
 
-  const isMIAdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-  const isMINdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+  const isMIAdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+  const isMINdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
   const dealHasBeenApproved = deal.details.approvalDate;
 
   let shouldUpdateCount = 0;

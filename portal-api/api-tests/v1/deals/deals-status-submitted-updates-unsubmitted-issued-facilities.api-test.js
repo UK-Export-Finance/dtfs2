@@ -1,13 +1,10 @@
 const moment = require('moment');
-const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
-const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/reference-data/api');
@@ -21,12 +18,11 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
   let aBarclaysChecker;
   let aSuperuser;
   let updatedDeal;
-  let completedDealWithFacilities;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
-    aBarclaysMaker = barclaysMakers[0];
+    [aBarclaysMaker] = barclaysMakers;
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     aSuperuser = testUsers().superuser().one();
   });
@@ -42,7 +38,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       bankReferenceNumber: '123456',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '2,469,135.60',
-      facilityValue: '12345678',
+      value: '12345678',
       currencySameAsSupplyContractCurrency: 'false',
       interestMarginFee: '12',
       coveredPercentage: '20',
@@ -81,7 +77,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       ukefGuaranteeInMonths: '24',
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: 'test',
-      facilityValue: '123456.55',
+      value: '123456.55',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '9.09',
       coveredPercentage: '2',

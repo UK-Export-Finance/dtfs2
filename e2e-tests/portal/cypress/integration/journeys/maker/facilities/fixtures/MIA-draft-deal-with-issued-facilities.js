@@ -4,12 +4,13 @@ const now = new Date().valueOf();
 const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
+  submissionType: 'Manual Inclusion Application',
+  updatedAt: Date.now(),
   details: {
     status: 'Draft',
     bankSupplyContractID: 'TEST-DEAL',
     bankSupplyContractName: 'TEST-DEAL',
     created: now,
-    dateOfLastAction: now,
     maker: {
       username: 'MAKER',
       roles: [
@@ -38,7 +39,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    submissionType: 'Manual Inclusion Application',
   },
   eligibility: {
     status: 'Completed',
@@ -195,7 +195,7 @@ const deal = {
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
       lastEdited: now,
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '12',
       coveredPercentage: '24',
@@ -221,7 +221,7 @@ const deal = {
       bankReferenceNumber: '1234',
       guaranteeFeePayableByBank: '21.6000',
       lastEdited: now,
-      facilityValue: '1234.00',
+      value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       disbursementAmount: '12.00',
       interestMarginFee: '24',

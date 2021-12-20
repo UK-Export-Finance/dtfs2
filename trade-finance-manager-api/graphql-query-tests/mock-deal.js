@@ -1,7 +1,7 @@
 const MOCK_DEAL = {
   _id: '1234567',
   dealSnapshot: {
-
+    submissionType: 'Automatic Inclusion Notice',
     details: {
       status: 'Acknowledged by UKEF',
       bank: 'Mock bank',
@@ -19,7 +19,6 @@ const MOCK_DEAL = {
         firstname: 'Emilio',
         surname: 'Largo',
       },
-      submissionType: 'Automatic Inclusion Notice',
       submissionDate: '1606900616651',
       owningBank: {
         id: '123',
@@ -175,7 +174,7 @@ const MOCK_DEAL = {
           ukefGuaranteeInMonths: '10',
           bondBeneficiary: 'test',
           guaranteeFeePayableByBank: '9.0000',
-          facilityValue: '12345.00',
+          value: '12345.00',
           currencySameAsSupplyContractCurrency: 'true',
           riskMarginFee: '10',
           coveredPercentage: '20',
@@ -205,7 +204,7 @@ const MOCK_DEAL = {
           bankReferenceNumber: '5678',
           guaranteeFeePayableByBank: '27.0000',
           lastEdited: 1610369832226.0,
-          facilityValue: '1234.00',
+          value: '1234.00',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '30',
           coveredPercentage: '20',

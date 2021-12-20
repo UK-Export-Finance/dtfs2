@@ -257,7 +257,7 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
+      expect(body).toMatchObject(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
     });
 
     it('handles partial updates', async () => {
@@ -286,7 +286,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
+      expect(body.deal).toMatchObject(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
     });
 
     it('updates the deal', async () => {
@@ -307,7 +307,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
+      expect(body.deal).toMatchObject(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
     });
 
     it('adds updates and retains `editedBy` array with req.user data', async () => {

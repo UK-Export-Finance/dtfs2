@@ -1,9 +1,9 @@
 {
+  "submissionType": "Automatic Inclusion Notice",
   "details": {
     "bankSupplyContractID": "aDealWithOneLoan",
     "bankSupplyContractName": "aDealWithOneLoan",
     "ukefDealId": "ukef:aDealWithOneLoan",
-    "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
       "id": "9",
@@ -102,7 +102,7 @@
       {
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithOneLoan-loan1",
-        "facilityValue": "123",
+        "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
