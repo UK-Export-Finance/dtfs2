@@ -62,9 +62,9 @@ context('Clone a deal', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
       goToCloneDealPage(deal);
 
-      cy.title().should('eq', `Clone Deal - Copy of ${deal.details.bankSupplyContractName}${pages.defaults.pageTitleAppend}`);
-      pages.cloneDeal.bankSupplyContractIDInput().should('have.value', deal.details.bankSupplyContractID);
-      pages.cloneDeal.bankSupplyContractNameInput().should('have.value', `Copy of ${deal.details.bankSupplyContractName}`);
+      cy.title().should('eq', `Clone Deal - Copy of ${deal.bankSupplyContractName}${pages.defaults.pageTitleAppend}`);
+      pages.cloneDeal.bankSupplyContractIDInput().should('have.value', deal.bankSupplyContractID);
+      pages.cloneDeal.bankSupplyContractNameInput().should('have.value', `Copy of ${deal.bankSupplyContractName}`);
     });
   });
 
@@ -105,12 +105,12 @@ context('Clone a deal', () => {
 
       // confirm new supply contract ID
       pages.contract.bankSupplyContractID().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${deal.details.bankSupplyContractID}-cloned`);
+        expect(text.trim()).equal(`${deal.bankSupplyContractID}-cloned`);
       });
 
       // confirm new supply contract name
       pages.contract.bankSupplyContractName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`Copy of ${deal.details.bankSupplyContractName}-cloned`);
+        expect(text.trim()).equal(`Copy of ${deal.bankSupplyContractName}-cloned`);
       });
 
       // confirm About the Supply Contract is retained

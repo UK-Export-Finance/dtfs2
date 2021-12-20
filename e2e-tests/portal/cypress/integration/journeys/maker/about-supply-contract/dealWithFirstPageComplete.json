@@ -1,10 +1,10 @@
 {
     "submissionType": "Automatic Inclusion Notice",
     "updatedAt": 1639675204629,
+    "bankSupplyContractID": "abc-1-def",
+    "bankSupplyContractName": "Tibettan submarine acquisition scheme",
     "details" : {
         "status" : "Draft",
-        "bankSupplyContractID" : "abc-1-def",
-        "bankSupplyContractName" : "Tibettan submarine acquisition scheme",
         "maker" : {
             "username" : "MAKER",
             "roles" : [

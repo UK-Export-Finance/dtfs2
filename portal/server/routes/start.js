@@ -72,9 +72,7 @@ router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async 
   const { userToken } = requestParams(req);
 
   const newDeal = {
-    details: {
-      ...req.body,
-    },
+    ...req.body,
     mandatoryCriteria: req.apiData[MANDATORY_CRITERIA],
   };
 

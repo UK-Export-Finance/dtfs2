@@ -2,11 +2,11 @@ const MOCK_DEAL = {
   _id: 'MOCK_MIA_NOT_SUBMITTED',
   dealType: 'BSS/EWCS',
   submissionType: 'Manual Inclusion Application',
+  bankSupplyContractID: 'Mock supply contract ID',
+  bankSupplyContractName: 'Mock supply contract name',
   details: {
     status: 'Ready for Checker\'s approval',
     bank: 'Mock bank',
-    bankSupplyContractID: 'Mock supply contract ID',
-    bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
     previousStatus: 'Draft',
     maker: {

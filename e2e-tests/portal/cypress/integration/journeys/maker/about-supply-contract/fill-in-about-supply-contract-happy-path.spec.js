@@ -43,7 +43,7 @@ context('about-supply-contract', () => {
     });
     contract.aboutSupplierDetailsLink().click();
 
-    cy.title().should('eq', `Supplier information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Supplier information - ${deal.bankSupplyContractName}${defaults.pageTitleAppend}`);
 
     //---
     // check initial page state..

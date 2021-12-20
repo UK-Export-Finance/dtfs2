@@ -6,10 +6,10 @@ const nowPlusMonth = nowPlusMonths(1);
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
+  bankSupplyContractID: 'mock id',
+  bankSupplyContractName: 'mock name',
   details: {
     status: 'Draft',
-    bankSupplyContractID: 'mock id',
-    bankSupplyContractName: 'mock name',
     created: now,
     owningBank: {
       id: '9',

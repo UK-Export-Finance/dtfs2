@@ -41,6 +41,6 @@ exports.update = (req, res) => {
       bankSupplyContractName,
       req.user,
     );
-    return res.status(200).send(dealAfterAllUpdates.details.bankSupplyContractName);
+    return res.status(200).send(dealAfterAllUpdates.bankSupplyContractName);
   });
 };

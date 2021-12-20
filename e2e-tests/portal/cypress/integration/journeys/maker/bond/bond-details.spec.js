@@ -8,10 +8,8 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
-  details: {
-    bankSupplyContractID: 'someDealId',
-    bankSupplyContractName: 'someDealName',
-  },
+  bankSupplyContractID: 'someDealId',
+  bankSupplyContractName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
       id: 'GBP',

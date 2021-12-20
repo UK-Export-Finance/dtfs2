@@ -34,8 +34,6 @@ type ErrorListItem {
 
 type DealDetails {
   status: String
-  bankSupplyContractID: String
-  bankSupplyContractName: String
   ukefDealId: String
   maker: Maker
   checker: Checker
@@ -51,6 +49,8 @@ type Deal {
   _id: String!
   dealType: String
   submissionType: String
+  bankSupplyContractID: String
+  bankSupplyContractName: String
   updatedAt: Float
   details: DealDetails
 }

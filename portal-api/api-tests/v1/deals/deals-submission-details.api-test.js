@@ -9,9 +9,9 @@ const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
+  bankSupplyContractName: 'mock name',
+  bankSupplyContractID: 'mock id',
   details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
     status: 'Draft',
   },
   comments: [{

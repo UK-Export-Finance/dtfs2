@@ -27,10 +27,8 @@ describe('/v1/deals', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const deal = {
-            details: {
-              bankSupplyContractID: '',
-              bankSupplyContractName: 'test name',
-            },
+            bankSupplyContractID: '',
+            bankSupplyContractName: 'test name',
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -42,10 +40,8 @@ describe('/v1/deals', () => {
       describe('when more than 30 characters', () => {
         it('should return validationError', async () => {
           const deal = {
-            details: {
-              bankSupplyContractID: 'a'.repeat(31),
-              bankSupplyContractName: 'test name',
-            },
+            bankSupplyContractID: 'a'.repeat(31),
+            bankSupplyContractName: 'test name',
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -59,10 +55,8 @@ describe('/v1/deals', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const deal = {
-            details: {
-              bankSupplyContractID: 'test id',
-              bankSupplyContractName: '',
-            },
+            bankSupplyContractID: 'test id',
+            bankSupplyContractName: '',
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -74,10 +68,8 @@ describe('/v1/deals', () => {
       describe('when more than 100 characters', () => {
         it('should return validationError', async () => {
           const deal = {
-            details: {
-              bankSupplyContractID: 'test id',
-              bankSupplyContractName: 'a'.repeat(101),
-            },
+            bankSupplyContractID: 'test id',
+            bankSupplyContractName: 'a'.repeat(101),
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');

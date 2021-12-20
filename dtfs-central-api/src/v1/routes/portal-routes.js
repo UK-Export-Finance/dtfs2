@@ -106,9 +106,9 @@ portalRouter.route('/deals').get(
  *                   details:
  *                     type: object
  *           example:
+ *             bankSupplyContractID: 'a1'
+ *             bankSupplyContractName: 'test'
  *             details:
- *               bankSupplyContractID: 'a1'
- *               bankSupplyContractName: 'test'
  *               maker: { _id: '123abc' }
  *               owningBank: { id: '9' }
  *     responses:

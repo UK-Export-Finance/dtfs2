@@ -321,7 +321,7 @@ router.get('/contract/:_id/clone', provide([DEAL]), async (req, res) => {
   const {
     bankSupplyContractID,
     bankSupplyContractName,
-  } = deal.details;
+  } = deal;
 
   return res.render('contract/contract-clone.njk', {
     bankSupplyContractID,

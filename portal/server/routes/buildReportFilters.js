@@ -72,7 +72,7 @@ const buildReportFilters = (params, user) => {
 
   if (params.bankSupplyContractID) {
     filters.push({
-      field: 'details.bankSupplyContractID',
+      field: 'bankSupplyContractID',
       value: params.bankSupplyContractID,
     });
   }

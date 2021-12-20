@@ -75,9 +75,9 @@ exports.clone = async (req, res) => {
       ...existingDealWithoutId,
       submissionType: existingDeal.submissionType,
       updatedAt: existingDeal.updatedAt,
+      bankSupplyContractID,
+      bankSupplyContractName,
       details: {
-        bankSupplyContractID,
-        bankSupplyContractName,
         maker: req.user,
         owningBank: existingDeal.details.owningBank,
       },

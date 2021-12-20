@@ -15,9 +15,9 @@ const mockUser = {
 
 const newDeal = (dealOverrides) => ({
   ...dealOverrides,
+  bankSupplyContractName: 'mock name',
+  bankSupplyContractID: 'mock id',
   details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
     ...dealOverrides.details,
     maker: {
       ...mockUser,

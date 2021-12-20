@@ -10,10 +10,8 @@ const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAd
 const calculateDealSummary = require('../../../src/v1/deal-summary');
 
 const newDeal = aDeal({
-  details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
-  },
+  bankSupplyContractName: 'mock name',
+  bankSupplyContractID: 'mock id',
   comments: [{
     username: 'bananaman',
     timestamp: '1984/12/25 00:00:00:001',
@@ -175,10 +173,8 @@ describe('/v1/deals', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          details: {
-            bankSupplyContractID: '',
-            bankSupplyContractName: '',
-          },
+          bankSupplyContractID: '',
+          bankSupplyContractName: '',
         };
 
         const { body: dealPost, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');

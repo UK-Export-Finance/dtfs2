@@ -8,10 +8,8 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
-  details: {
-    bankSupplyContractID: 'someDealId',
-    bankSupplyContractName: 'someDealName',
-  },
+  bankSupplyContractID: 'someDealId',
+  bankSupplyContractName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
       id: 'GBP',
@@ -32,8 +30,8 @@ context('Add a Bond to a Deal', () => {
     cy.createADeal({
       username: MAKER_LOGIN.username,
       password: MAKER_LOGIN.password,
-      bankDealId: MOCK_DEAL.details.bankSupplyContractID,
-      bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+      bankDealId: MOCK_DEAL.bankSupplyContractID,
+      bankDealName: MOCK_DEAL.bankSupplyContractName,
     });
 
     cy.url().should('include', '/contract/');
@@ -50,8 +48,8 @@ context('Add a Bond to a Deal', () => {
       cy.createADeal({
         username: MAKER_LOGIN.username,
         password: MAKER_LOGIN.password,
-        bankDealId: MOCK_DEAL.details.bankSupplyContractID,
-        bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+        bankDealId: MOCK_DEAL.bankSupplyContractID,
+        bankDealName: MOCK_DEAL.bankSupplyContractName,
       });
       pages.contract.addBondButton().click();
       pages.bondDetails.submit().click();
@@ -97,8 +95,8 @@ context('Add a Bond to a Deal', () => {
         cy.createADeal({
           username: MAKER_LOGIN.username,
           password: MAKER_LOGIN.password,
-          bankDealId: MOCK_DEAL.details.bankSupplyContractID,
-          bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+          bankDealId: MOCK_DEAL.bankSupplyContractID,
+          bankDealName: MOCK_DEAL.bankSupplyContractName,
         });
         pages.contract.addBondButton().click();
         pages.bondDetails.submit().click();
@@ -132,8 +130,8 @@ context('Add a Bond to a Deal', () => {
       cy.createADeal({
         username: MAKER_LOGIN.username,
         password: MAKER_LOGIN.password,
-        bankDealId: MOCK_DEAL.details.bankSupplyContractID,
-        bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+        bankDealId: MOCK_DEAL.bankSupplyContractID,
+        bankDealName: MOCK_DEAL.bankSupplyContractName,
       });
 
       cy.addBondToDeal();

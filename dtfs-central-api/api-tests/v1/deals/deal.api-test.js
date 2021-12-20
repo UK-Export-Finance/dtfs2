@@ -22,10 +22,8 @@ const mockUserNoBank = {
 };
 
 const newDeal = aDeal({
-  details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
-  },
+  bankSupplyContractName: 'mock name',
+  bankSupplyContractID: 'mock id',
   editedBy: [],
   eligibility: {
     status: 'Not started',
@@ -69,10 +67,8 @@ describe('/v1/portal/deals', () => {
     describe('when user is invalid', () => {
       it('missing user returns 404', async () => {
         const postBody = {
-          details: {
-            bankSupplyContractID: '',
-            bankSupplyContractName: '',
-          },
+          bankSupplyContractID: '',
+          bankSupplyContractName: '',
         };
 
         const { status } = await api.post({ deal: postBody }).to('/v1/portal/deals');
@@ -82,10 +78,8 @@ describe('/v1/portal/deals', () => {
 
       it('user with no bank returns validation errors', async () => {
         const postBody = {
-          details: {
-            bankSupplyContractID: '1234',
-            bankSupplyContractName: 'name',
-          },
+          bankSupplyContractID: '1234',
+          bankSupplyContractName: 'name',
         };
 
         const { body, status } = await api.post({ deal: postBody, user: mockUserNoBank }).to('/v1/portal/deals');
@@ -101,10 +95,8 @@ describe('/v1/portal/deals', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          details: {
-            bankSupplyContractID: '',
-            bankSupplyContractName: '',
-          },
+          bankSupplyContractID: '',
+          bankSupplyContractName: '',
         };
 
         const { body, status } = await api.post({ deal: postBody, user: mockUser }).to('/v1/portal/deals');
@@ -123,10 +115,8 @@ describe('/v1/portal/deals', () => {
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          details: {
-            bankSupplyContractID: 'a'.repeat(31),
-            bankSupplyContractName: 'b'.repeat(101),
-          },
+          bankSupplyContractID: 'a'.repeat(31),
+          bankSupplyContractName: 'b'.repeat(101),
         };
         const invalidMaker = {
           _id: '12345678',
@@ -279,10 +269,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
-        details: {
-          ...newDeal.details,
-          bankSupplyContractName: 'change this field',
-        },
+        bankSupplyContractName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
           mockNewField: true,
@@ -301,9 +288,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
 
       const partialUpdate = {
-        details: {
-          bankSupplyContractName: 'change this field',
-        },
+        bankSupplyContractName: 'change this field',
         eligibility: {
           mockNewField: true,
         },
@@ -311,10 +296,7 @@ describe('/v1/portal/deals', () => {
 
       const expectedDataIncludingUpdate = {
         ...createdDeal,
-        details: {
-          ...newDeal.details,
-          bankSupplyContractName: 'change this field',
-        },
+        bankSupplyContractName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
           mockNewField: true,
@@ -336,10 +318,7 @@ describe('/v1/portal/deals', () => {
 
       const updatedDeal = {
         ...createdDeal,
-        details: {
-          ...newDeal.details,
-          bankSupplyContractName: 'change this field',
-        },
+        bankSupplyContractName: 'change this field',
       };
 
       await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -356,10 +335,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
       const firstUpdate = {
         ...createdDeal,
-        details: {
-          ...newDeal.details,
-          bankSupplyContractName: 'change this field',
-        },
+        bankSupplyContractName: 'change this field',
       };
 
       await api.put({ dealUpdate: firstUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -368,10 +344,7 @@ describe('/v1/portal/deals', () => {
 
       const secondUpdate = {
         ...dealAfterFirstUpdate.body.deal,
-        details: {
-          ...dealAfterFirstUpdate.body.deal.details,
-          bankSupplyContractName: 'change this field again',
-        },
+        bankSupplyContractName: 'change this field again',
       };
 
       await api.put({ dealUpdate: secondUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -396,7 +369,6 @@ describe('/v1/portal/deals', () => {
       const dealWithSubmittedStatus = {
         ...newDeal,
         details: {
-          ...newDeal.details,
           status: 'Submitted',
           previousStatus: 'Checker\'s approval',
         },

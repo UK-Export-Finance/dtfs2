@@ -8,9 +8,9 @@ const { as } = require('../../api')(app);
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
+  bankSupplyContractName: 'mock name',
+  bankSupplyContractID: 'mock id',
   details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
     status: 'Draft',
   },
   comments: [{
@@ -87,7 +87,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.details.bankSupplyContractName).toEqual('a new name');
+      expect(body.deal.bankSupplyContractName).toEqual('a new name');
     });
 
     it('updates the deals updatedAt field', async () => {

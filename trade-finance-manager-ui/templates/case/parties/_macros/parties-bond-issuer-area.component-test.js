@@ -9,9 +9,9 @@ describe(page, () => {
     deal: {
       _id: '12345678',
       submissionType: 'Automatic Inclusion Notice',
+      bankSupplyContractID: 'contract-1',
+      bankSupplyContractName: 'FirstContract',
       details: {
-        bankSupplyContractID: 'contract-1',
-        bankSupplyContractName: 'FirstContract',
         owningBank: {
           name: 'Lloyds',
           emails: ['xxx@yyy.com'],

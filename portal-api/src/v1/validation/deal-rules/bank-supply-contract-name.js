@@ -5,7 +5,7 @@ const MAX_CHARACTERS = 100;
 
 module.exports = (deal, errorList) => {
   const newErrorList = { ...errorList };
-  const { bankSupplyContractName } = deal.details;
+  const { bankSupplyContractName } = deal;
 
   if (!hasValue(bankSupplyContractName)) {
     newErrorList.bankSupplyContractName = {

@@ -5,10 +5,10 @@ module.exports = {
 	"dealType": "BSS/EWCS",
 	"submissionType": "Automatic Inclusion Notice",
 	"updatedAt": Date.now(),
+	"bankSupplyContractID": "A1 Test",
+	"bankSupplyContractName": "Auto Test 1",
 	"details" : {
 		"status" : "Draft",
-		"bankSupplyContractID" : "A1 Test",
-		"bankSupplyContractName" : "Auto Test 1",
 		"maker" : {
 			"_id" : "60f7d72654f99900074c0a6d",
 			"username" : "maker1@ukexportfinance.gov.uk",

@@ -2,11 +2,11 @@ const MOCK_DEAL_NO_PARTY_DB = {
   _id: 'NO_PARTY_DB',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
+  bankSupplyContractID: 'Mock supply contract ID',
+  bankSupplyContractName: 'Mock supply contract name',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
-    bankSupplyContractID: 'Mock supply contract ID',
-    bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
     previousStatus: 'Submitted',
     maker: {

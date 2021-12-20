@@ -8,10 +8,10 @@ const nowMinusDay = () => {
 const deal = {
   submissionType: 'Manual Inclusion Application',
   updatedAt: Date.now(),
+  bankSupplyContractID: 'test',
+  bankSupplyContractName: 'testing',
   details: {
     status: 'Accepted by UKEF (with conditions)',
-    bankSupplyContractID: 'test',
-    bankSupplyContractName: 'testing',
     createdDate: now,
     maker: {
       username: 'MAKER',

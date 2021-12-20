@@ -15,7 +15,7 @@ const dealsQuery = (user, filter) => {
     filter.push({ 'details.owningBank.id': { $eq: user.bank.id } });
   }
 
-  // swap out the 'details.bankSupplyContractID' for an equivalent regex
+  // swap out the 'bankSupplyContractID' for an equivalent regex
   //  [dw] rushing a bit, but my instinct is that if we have to do this,
   //       we likely should be fixing this in the portal so we send a
   //       $regex query in the first instance, but i could be wrong.
@@ -24,7 +24,7 @@ const dealsQuery = (user, filter) => {
       const { freetextSearch } = clause;
       return {
         $or: [
-          { 'details.bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
+          { 'bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
           { 'details.ukefDealId': { $regex: freetextSearch, $options: 'i' } },
           { 'bondTransactions.items.uniqueIdentificationNumber': { $regex: freetextSearch, $options: 'i' } },
           { 'submissionDetails.supplier-name': { $regex: freetextSearch, $options: 'i' } },
@@ -42,11 +42,11 @@ const dealsQuery = (user, filter) => {
       return { $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] };
     }
 
-    if (clause['details.bankSupplyContractID']) {
-      const bankSupplyContractID = clause['details.bankSupplyContractID'];
+    if (clause['bankSupplyContractID']) {
+      const bankSupplyContractID = clause['bankSupplyContractID'];
       return {
         $or: [
-          { 'details.bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } },
+          { 'bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } },
         ],
       };
     }

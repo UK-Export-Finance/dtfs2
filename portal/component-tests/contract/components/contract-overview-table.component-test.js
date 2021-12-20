@@ -11,8 +11,8 @@ describe(component, () => {
 
   const deal = {
     updatedAt: Date.now(),
+    bankSupplyContractID: 'bankSupplyContractID',
     details: {
-      bankSupplyContractID: 'bankSupplyContractID',
       ukefDealId: 'ukefDealId',
       status: 'status',
       previousStatus: 'previousStatus',
@@ -45,9 +45,9 @@ describe(component, () => {
       wrapper = render({deal, user});
     })
 
-    it("displays deal.details.bankSupplyContractID", () =>{
+    it("displays deal.bankSupplyContractID", () =>{
       return wrapper.expectText('[data-cy="bankSupplyContractID"]')
-                    .toRead(deal.details.bankSupplyContractID);
+                    .toRead(deal.bankSupplyContractID);
     });
 
     it("displays deal.details.ukefDealId", () =>{
@@ -135,7 +135,7 @@ describe(component, () => {
       wrapper = render({deal, user});
     })
 
-    it("displays deal.details.bankSupplyContractID", () =>{
+    it("displays deal.bankSupplyContractID", () =>{
       return wrapper.expectText('[data-cy="bankSupplyContractID"]')
                     .toRead("-");
     });

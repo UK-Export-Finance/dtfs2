@@ -8,10 +8,10 @@ describe(page, () => {
   const params = {
     deal: {
       _id: '12345678',
+      bankSupplyContractID: 'contract-1',
+      bankSupplyContractName: 'FirstContract',
       details: {
         submissionType: 'Automatic Inclusion Notice',
-        bankSupplyContractID: 'contract-1',
-        bankSupplyContractName: 'FirstContract',
         owningBank: {
           name: 'Lloyds',
           emails: ['xxx@yyy.com'],

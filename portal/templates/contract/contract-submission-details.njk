@@ -10,13 +10,13 @@
 {% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
 {% import './components/ukef-comments.njk' as ukefComments %}
 
-{% block pageTitle %}Check deal details - {{ deal.details.bankSupplyContractName }}
+{% block pageTitle %}Check deal details - {{ deal.bankSupplyContractName }}
 {% endblock %}
 
 {% block content %}
   {% set componentData = {user: user, deal: deal, editable: editable, selected: 'submission-details'} %}
 
-  <h1 data-cy="heading" class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span></h1>
+  <h1 data-cy="heading" class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.bankSupplyContractName }}</span></h1>
 
   {{ contractTabs.render(componentData) }}
 

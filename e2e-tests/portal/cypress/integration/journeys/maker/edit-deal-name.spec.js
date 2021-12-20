@@ -8,10 +8,8 @@ context('Edit deal name', () => {
   let deal;
 
   const dummyDeal = {
-    details: {
-      bankSupplyContractID: 'abc-1-def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-    },
+    bankSupplyContractID: 'abc-1-def',
+    bankSupplyContractName: 'Tibettan submarine acquisition scheme',
   };
 
   before(() => {
@@ -25,8 +23,8 @@ context('Edit deal name', () => {
     contract.visit(deal);
     contract.editDealName().click();
 
-    cy.title().should('eq', `Change name - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
-    editDealName.bankSupplyContractName().should('have.value', deal.details.bankSupplyContractName);
+    cy.title().should('eq', `Change name - ${deal.bankSupplyContractName}${defaults.pageTitleAppend}`);
+    editDealName.bankSupplyContractName().should('have.value', deal.bankSupplyContractName);
     editDealName.bankSupplyContractName().type('{selectall}{backspace}');
     editDealName.submit().click();
 
@@ -35,7 +33,7 @@ context('Edit deal name', () => {
     editDealName.expectError('A value is required.');
   });
 
-  it('updates deal.details.bankSupplyContractName', () => {
+  it('updates deal.bankSupplyContractName', () => {
     cy.login(MAKER_LOGIN);
     contract.visit(deal);
     contract.editDealName().click();

@@ -19,10 +19,8 @@ const mockFacility = {
 };
 
 const newDeal = aDeal({
-  details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
-  },
+  bankSupplyContractName: 'mock name',
+  bankSupplyContractID: 'mock id',
   editedBy: [],
   eligibility: {
     status: 'Not started',

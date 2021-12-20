@@ -39,10 +39,14 @@ const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
 };
 
 const send = async (deal, fromStatus, user) => {
-  const { submissionType, details } = deal;
+  const {
+    submissionType,
+    bankSupplyContractID,
+    details,
+  } = deal;
+
   const {
     status: currentStatus,
-    bankSupplyContractID,
     maker,
   } = details;
 

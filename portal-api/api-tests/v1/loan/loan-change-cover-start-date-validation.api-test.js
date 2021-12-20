@@ -10,9 +10,9 @@ const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp
 describe('/v1/deals/:id/loan/:loanId', () => {
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
+    bankSupplyContractName: 'mock name',
+    bankSupplyContractID: 'mock id',
     details: {
-      bankSupplyContractName: 'mock name',
-      bankSupplyContractID: 'mock id',
       status: 'Acknowledged by UKEF',
       submissionDate: moment().utc().valueOf(),
     },

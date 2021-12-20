@@ -2,10 +2,10 @@ const deal = {
   _id: '1000908',
   submissionType: 'Manual Inclusion Notice',
   updatedAt: Date.now(),
+  bankSupplyContractID: 'DTFS2-2815 MIN - pre submit',
+  bankSupplyContractName: 'DTFS2-2815 MIN - pre submit',
   details: {
     status: "Ready for Checker's approval",
-    bankSupplyContractID: 'DTFS2-2815 MIN - pre submit',
-    bankSupplyContractName: 'DTFS2-2815 MIN - pre submit',
     maker: {
       _id: '5f3ab3f705e6630007dcfb25',
       username: 'maker1@ukexportfinance.gov.uk',

@@ -15,6 +15,8 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       _id,
       dealType,
       submissionType,
+      bankSupplyContractID,
+      bankSupplyContractName,
       details,
       submissionDetails,
       bondTransactions,
@@ -24,8 +26,6 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
     } = mockDeal.dealSnapshot;
 
     const {
-      bankSupplyContractID,
-      bankSupplyContractName,
       submissionCount,
       submissionDate,
       status,

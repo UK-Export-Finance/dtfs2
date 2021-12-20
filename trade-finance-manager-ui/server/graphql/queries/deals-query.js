@@ -14,6 +14,8 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         dealType
         submissionType
         updatedAt
+        bankSupplyContractID
+        bankSupplyContractName
         details {
           status
           ukefDealId
@@ -36,8 +38,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
             emails
             partyUrn
           }
-          bankSupplyContractID
-          bankSupplyContractName
         }
         submissionDetails {
           supplierType

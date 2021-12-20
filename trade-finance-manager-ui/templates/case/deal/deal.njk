@@ -42,11 +42,11 @@
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank reference</div>
-          <div class="ukef-body-s" data-cy="bank-reference">{{ deal.details.bankSupplyContractID | dashIfEmpty }}</div>
+          <div class="ukef-body-s" data-cy="bank-reference">{{ deal.bankSupplyContractID | dashIfEmpty }}</div>
         </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank's additional reference</div>
-          <div class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.details.bankSupplyContractName | dashIfEmpty }}</div>
+          <div class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.bankSupplyContractName | dashIfEmpty }}</div>
         </div>
       </div>
 

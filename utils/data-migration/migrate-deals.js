@@ -85,6 +85,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     },
     _id: portalDealId,
     updatedAt: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
+    bankSupplyContractID: v1Deal.General_information.Bank_deal_id,
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     details,
     eligibility,

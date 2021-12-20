@@ -20,7 +20,7 @@ describe(page, () => {
   });
 
   it('should render page heading with bankSupplyContractName', () => {
-    const expected = `Supply Contract name: ${deal.details.bankSupplyContractName}`;
+    const expected = `Supply Contract name: ${deal.bankSupplyContractName}`;
     wrapper.expectText('[data-cy="heading"]').toRead(expected);
   });
 

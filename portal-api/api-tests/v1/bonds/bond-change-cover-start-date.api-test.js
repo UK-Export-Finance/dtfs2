@@ -8,10 +8,8 @@ const { as } = require('../../api')(app);
 describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   const newDeal = aDeal({
     submissionType: 'Automatic Inclusion Notice',
-    details: {
-      bankSupplyContractName: 'mock name',
-      bankSupplyContractID: 'mock id',
-    },
+    bankSupplyContractName: 'mock name',
+    bankSupplyContractID: 'mock id',
     submissionDetails: {
       supplyContractCurrency: {
         id: 'GBP',

@@ -113,8 +113,8 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
-        expect(cloned.deal.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
-        expect(cloned.deal.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
+        expect(cloned.deal.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
+        expect(cloned.deal.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
         expect(cloned.deal.updatedAt).toBeDefined();
         expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
 

@@ -85,7 +85,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
       ),
       eligibility: deal.eligibility,
       validationErrors: criteriaValidationErrors,
-      bankSupplyContractName: deal.details.bankSupplyContractName,
+      bankSupplyContractName: deal.bankSupplyContractName,
       user: req.session.user,
       taskListItems: eligibilityTaskList(completedForms),
     });
@@ -146,7 +146,7 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
       dealFiles,
       eligibility,
       validationErrors: documentationValidationErrors,
-      bankSupplyContractName: deal.details.bankSupplyContractName,
+      bankSupplyContractName: deal.bankSupplyContractName,
       user: req.session.user,
       taskListItems: eligibilityTaskList(completedForms),
     });
@@ -187,7 +187,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
     eligibility,
     dealFiles,
     validationErrors: documentationValidationErrors,
-    bankSupplyContractName: updatedDeal.details.bankSupplyContractName,
+    bankSupplyContractName: updatedDeal.bankSupplyContractName,
     user: req.session.user,
     taskListItems: eligibilityTaskList(completedForms),
   });
@@ -222,7 +222,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
         eligibility,
         dealFiles,
         validationErrors: documentationValidationErrors,
-        bankSupplyContractName: deal.details.bankSupplyContractName,
+        bankSupplyContractName: deal.bankSupplyContractName,
         taskListItems: eligibilityTaskList(completedForms),
       });
     }

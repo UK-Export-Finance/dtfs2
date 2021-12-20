@@ -1,11 +1,11 @@
 const MOCK_DEAL = {
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
+  bankSupplyContractID: 'Mock supply contract ID',
+  bankSupplyContractName: 'Mock supply contract name',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
-    bankSupplyContractID: 'Mock supply contract ID',
-    bankSupplyContractName: 'Mock supply contract name',
     previousStatus: 'Submitted',
     maker: {
       username: 'JOE',

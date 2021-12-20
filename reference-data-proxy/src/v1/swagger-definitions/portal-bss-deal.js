@@ -13,18 +13,18 @@
  *       updatedAt:
  *         type: integer
  *         example: 1639675204629.0
+ *       bankSupplyContractID:
+ *         type: string
+ *         example: a1
+ *       bankSupplyContractName:
+ *         type: string
+ *         example: Test
  *       details:
  *         type: object
  *         properties:
  *           status:
  *             type: string
  *             example: Submitted
- *           bankSupplyContractID:
- *             type: string
- *             example: a1
- *           bankSupplyContractName:
- *             type: string
- *             example: Test
  *           submissionType:
  *             type: string
  *             example: Automatic Inclusion Notice

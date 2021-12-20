@@ -2,11 +2,11 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
+  bankSupplyContractID: 'Mock supply contract ID',
+  bankSupplyContractName: 'Mock supply contract name',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
-    bankSupplyContractID: 'Mock supply contract ID',
-    bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
     previousStatus: 'Ready for Checker\'s approval',
     maker: {
