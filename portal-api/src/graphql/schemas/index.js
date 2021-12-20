@@ -194,6 +194,10 @@ type GefDealsQuery {
   deals: [GefDeal]
 }
 
+type GefCurrency {
+   id: String
+}
+
 type GefFacility {
   _id: String
   dealId: String
@@ -206,7 +210,7 @@ type GefFacility {
   monthsOfCover: Int
   details: String
   detailsOther: String
-  currency: String
+  currency: GefCurrency
   value: Float
   coverPercentage: Float
   interestPercentage: Float

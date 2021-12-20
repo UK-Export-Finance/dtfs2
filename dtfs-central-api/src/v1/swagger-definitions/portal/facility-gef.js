@@ -40,8 +40,8 @@
  *         type: string
  *         example: Test extra information
  *       currency:
- *         type: string
- *         example: JPY
+ *         type: object
+*         example: { id: 'JPY' }
  *       value:
  *         type: integer
  *         example: 300000

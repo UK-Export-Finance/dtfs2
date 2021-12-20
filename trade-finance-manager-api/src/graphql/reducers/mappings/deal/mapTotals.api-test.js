@@ -47,7 +47,7 @@ describe('mapTotals', () => {
       facilitySnapshot: {
         type: 'cash',
         value: '1234.56',
-        currency: 'GBP',
+        currency: { id: 'GBP' },
       },
       tfm: {},
     },
@@ -55,7 +55,7 @@ describe('mapTotals', () => {
       facilitySnapshot: {
         type: 'contingent',
         value: '1234.56',
-        currency: 'GBP',
+        currency: { id: 'GBP' },
       },
       tfm: {},
     },
@@ -63,7 +63,7 @@ describe('mapTotals', () => {
       facilitySnapshot: {
         type: 'contingent',
         value: '1234.56',
-        currency: 'USD',
+        currency: { id: 'USD' },
       },
       tfm: {
         facilityValueInGBP: 3200.567,

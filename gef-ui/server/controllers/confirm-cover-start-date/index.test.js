@@ -104,7 +104,7 @@ const MockFacilityResponse = () => {
       monthsOfCover: null,
       details: [],
       detailsOther: '',
-      currency: 'GBP',
+      currency: { id: 'GBP' },
       value: 1000,
       coverPercentage: 80,
       interestPercentage: 1,

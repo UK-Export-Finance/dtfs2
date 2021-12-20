@@ -20,7 +20,7 @@ class Facility {
       const interestPercentage = JSON.stringify(details.interestPercentage);
 
       return {
-        currency: details.currency,
+        currency: details.currency?.id,
         value,
         facilityType: facilityTypeConst,
         coverPercentage: coverPercentage !== 'null' ? coverPercentage : null,
@@ -34,7 +34,6 @@ class Facility {
         feeType: details.feeType,
       };
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.log(err);
       throw err;
     }
