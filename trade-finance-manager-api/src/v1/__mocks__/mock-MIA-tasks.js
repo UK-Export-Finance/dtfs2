@@ -35,6 +35,12 @@ const MOCK_MIA_TASKS = [
         title: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER,
         team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,
       },
+      {
+        id: '6',
+        groupId: 1,
+        title: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
+        team: CONSTANTS.TEAMS.UNDERWRITERS,
+      },
     ],
   },
   {
