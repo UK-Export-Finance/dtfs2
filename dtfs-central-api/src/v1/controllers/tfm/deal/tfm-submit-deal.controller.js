@@ -47,8 +47,6 @@ const createDealSnapshot = async (deal) => {
     dealObj.dealSnapshot.facilities = dealFacilities;
   }
 
-  console.log(dealObj);
-
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: String(deal._id) },
     $.flatten(withoutId(dealObj)),

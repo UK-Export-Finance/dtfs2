@@ -88,7 +88,7 @@ describe('/v1/tfm/deals', () => {
       it('returns deals filtered by dealSnapshot.eligibility.lastUpdated', async () => {
         const today = new Date();
         const todayTimestamp = getTime(today);
-        const todayFormatted = format(new Date(), 'dd-MM-yyyy')
+        const todayFormatted = format(new Date(), 'dd-MM-yyyy');
 
         const miaDeal = newDeal({
           eligibility: {
@@ -98,13 +98,7 @@ describe('/v1/tfm/deals', () => {
 
         const minDeal = newDeal({});
 
-        const [
-          submittedMIADeal,
-          submittedMINDeal,
-        ] = await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-        ]);
+        const [submittedMIADeal] = await createAndSubmitDeals([miaDeal, minDeal]);
 
         const mockReqBody = {
           queryParams: {

@@ -16,6 +16,7 @@ const mockUser = {
 };
 
 const newDeal = aDeal({
+   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],
@@ -82,11 +83,6 @@ describe('/v1/tfm/deal/:id', () => {
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
         dealId,
       }).to('/v1/tfm/deals/submit');
-
-      const badDealUpdate = {
-        noDealSnapshot: true,
-        noTfmObject: true,
-      };
 
       const { status } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
