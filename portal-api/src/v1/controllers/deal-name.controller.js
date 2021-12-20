@@ -5,9 +5,7 @@ const validateNameChange = require('../validation/deal-name');
 const updateName = async (dealId, to, user) => {
   const modifiedDeal = {
     updatedAt: Date.now(),
-    details: {
-      additionalRefName: to,
-    },
+    additionalRefName: to,
   };
 
   const updatedDeal = await updateDeal(
@@ -41,6 +39,7 @@ exports.update = (req, res) => {
       additionalRefName,
       req.user,
     );
+
     return res.status(200).send(dealAfterAllUpdates.additionalRefName);
   });
 };

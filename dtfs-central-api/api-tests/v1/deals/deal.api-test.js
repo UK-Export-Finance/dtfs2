@@ -22,8 +22,6 @@ const mockUserNoBank = {
 };
 
 const newDeal = aDeal({
-  additionalRefName: 'mock name',
-  bankInternalRefName: 'mock id',
   editedBy: [],
   eligibility: {
     status: 'Not started',
@@ -268,7 +266,8 @@ describe('/v1/portal/deals', () => {
       const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
-        ...createdDeal,
+        ...newDeal,
+        _id: createdDeal._id,
         additionalRefName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
@@ -295,7 +294,8 @@ describe('/v1/portal/deals', () => {
       };
 
       const expectedDataIncludingUpdate = {
-        ...createdDeal,
+        ...newDeal,
+        _id: createdDeal._id,
         additionalRefName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
@@ -317,7 +317,8 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
 
       const updatedDeal = {
-        ...createdDeal,
+        ...newDeal,
+        _id: createdDeal._id,
         additionalRefName: 'change this field',
       };
 

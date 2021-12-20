@@ -241,8 +241,8 @@ describe('/graphql query deals', () => {
 
       // expect deals in reverse order; most recent first..
 
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[3].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[2].details);
+      expect(body.data.deals.deals[0]).toMatchObject(deals[3]);
+      expect(body.data.deals.deals[1]).toMatchObject(deals[2]);
 
       expect(body.data.deals.count).toEqual(6);
     });
@@ -275,9 +275,9 @@ describe('/graphql query deals', () => {
       expect(body.data.deals.status.code).toEqual(200);
 
       // expect deals in reverse order - when we slice the last 3 deals we should get 2/1/0
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[2].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[1].details);
-      expect(body.data.deals.deals[2].details).toMatchObject(deals[0].details);
+      expect(body.data.deals.deals[0]).toMatchObject(deals[2]);
+      expect(body.data.deals.deals[1]).toMatchObject(deals[1]);
+      expect(body.data.deals.deals[2]).toMatchObject(deals[0]);
 
 
       expect(body.data.deals.count).toEqual(8);
@@ -312,11 +312,11 @@ describe('/graphql query deals', () => {
       expect(body.data.deals.status.code).toEqual(200);
 
       // expect deals in reverse order; most recent first..
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[5].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[3].details);
-      expect(body.data.deals.deals[2].details).toMatchObject(deals[2].details);
-      expect(body.data.deals.deals[3].details).toMatchObject(deals[1].details);
-      expect(body.data.deals.deals[4].details).toMatchObject(deals[0].details);
+      expect(body.data.deals.deals[0]).toMatchObject(deals[5]);
+      expect(body.data.deals.deals[1]).toMatchObject(deals[3]);
+      expect(body.data.deals.deals[2]).toMatchObject(deals[2]);
+      expect(body.data.deals.deals[3]).toMatchObject(deals[1]);
+      expect(body.data.deals.deals[4]).toMatchObject(deals[0]);
 
       expect(body.data.deals.count).toEqual(5);
     });
@@ -380,9 +380,9 @@ describe('/graphql query deals', () => {
       expect(body.data.deals.status.code).toEqual(200);
 
       // expect deals in reverse order; most recent first..
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[7].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[6].details);
-      expect(body.data.deals.deals[2].details).toMatchObject(deals[4].details);
+      expect(body.data.deals.deals[0]).toMatchObject(deals[7]);
+      expect(body.data.deals.deals[1]).toMatchObject(deals[6]);
+      expect(body.data.deals.deals[2]).toMatchObject(deals[4]);
 
       expect(body.data.deals.count).toEqual(3);
     });
