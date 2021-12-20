@@ -118,7 +118,7 @@
         "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "24",
         "bondBeneficiary": "test",
-        "facilityValue": "100000.00",
+        "value": "100000.00",
         "currencySameAsSupplyContractCurrency": "true",
         "currency": {
           "id": "GBP",

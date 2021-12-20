@@ -68,7 +68,7 @@ context('Add a Loan to a Deal', () => {
       });
 
       row.facilityValue().invoke('text').then((text) => {
-        const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
+        const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`;
 
         expect(text.trim()).equal(expectedValue);
       });

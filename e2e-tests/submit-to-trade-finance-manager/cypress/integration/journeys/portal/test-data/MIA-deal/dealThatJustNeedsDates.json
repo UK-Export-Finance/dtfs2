@@ -132,7 +132,7 @@
       },
       "currencySameAsSupplyContractCurrency": "true",
       "disbursementAmount": "100.00",
-      "facilityValue": "1234.00",
+      "value": "1234.00",
       "guaranteeFeePayableByBank": "21.6000",
       "interestMarginFee": "24",
       "minimumQuarterlyFee": "",
@@ -166,7 +166,7 @@
         "text": "USD - US Dollars"
       },
       "currencySameAsSupplyContractCurrency": "true",
-      "facilityValue": "2400.00",
+      "value": "2400.00",
       "guaranteeFeePayableByBank": "10.8000",
       "minimumRiskMarginFee": "",
       "riskMarginFee": "12",

@@ -202,7 +202,7 @@ describe('/v1/portal/facilities', () => {
 
       const updatedFacility = {
         ...createdFacilityResponse.body,
-        facilityValue: 123456,
+        value: 123456,
         user: mockUser,
       };
 

@@ -191,7 +191,7 @@ context('Add a Bond to a Deal', () => {
         });
 
         row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
+          const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
           expect(text.trim()).equal(expectedValue);
         });
 
@@ -210,7 +210,7 @@ context('Add a Bond to a Deal', () => {
           expect(text.trim()).equal(expectedDate);
         });
 
-        // assert that clicking the `unique number` link progesses to the Bond Details page
+        // assert that clicking the `unique number` link progresses to the Bond Details page
         row.uniqueNumberLink().click();
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');

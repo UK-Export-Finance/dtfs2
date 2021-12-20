@@ -114,7 +114,7 @@ const dealQuery = gql`
             ukefFacilityType,
             facilityStage,
             facilityValueExportCurrency,
-            facilityValue,
+            value,
             coveredPercentage,
             bondIssuer,
             bondBeneficiary,

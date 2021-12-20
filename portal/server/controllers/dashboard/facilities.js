@@ -32,7 +32,7 @@ exports.bssFacilities = async (req, res) => {
     facilityType: facility.transactionType,
     noticeType: facility.deal_submissionType,
     value: {
-      amount: facility.facilityValue,
+      amount: facility.value,
       currency: facility.currency && facility.currency.id,
     },
     bankStage: facility.transactionStage,

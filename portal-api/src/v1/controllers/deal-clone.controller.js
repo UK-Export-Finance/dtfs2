@@ -12,7 +12,7 @@ const CLONE_BOND_FIELDS = [
   'coverEndDate-day',
   'coverEndDate-month',
   'coverEndDate-year',
-  'facilityValue',
+  'value',
   'currencySameAsSupplyContractCurrency',
   'currency',
   'conversionRate',
@@ -26,7 +26,7 @@ const CLONE_BOND_FIELDS = [
 const CLONE_LOAN_FIELDS = [
   'facilityType',
   'bankReferenceNumber',
-  'facilityValue',
+  'value',
   'currency',
   'currencySameAsSupplyContractCurrency',
   'conversionRate',

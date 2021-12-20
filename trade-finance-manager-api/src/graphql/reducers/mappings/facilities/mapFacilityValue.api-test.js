@@ -3,19 +3,19 @@ const { formattedNumber } = require('../../../../utils/number');
 
 describe('mapFacilityValue', () => {
   describe('when facility currency is GBP', () => {
-    it('should return currency id and facilityValue', () => {
+    it('should return currency id and value', () => {
       const mockFacility = {
         currency: { id: 'GBP' },
-        facilityValue: '1,234',
+        value: '1,234',
       };
 
       const result = mapFacilityValue(
         mockFacility.currency.id,
-        mockFacility.facilityValue,
+        mockFacility.value,
         {},
       );
 
-      const expected = `GBP ${mockFacility.facilityValue}`;
+      const expected = `GBP ${mockFacility.value}`;
       expect(result).toEqual(expected);
     });
   });
@@ -24,7 +24,7 @@ describe('mapFacilityValue', () => {
     it('should return formatted facilityValueInGBP', () => {
       const mockFacility = {
         currency: { id: 'USD' },
-        facilityValue: '42000',
+        value: '42000',
       };
 
       const mockTfmFacility = {
@@ -33,7 +33,7 @@ describe('mapFacilityValue', () => {
 
       const result = mapFacilityValue(
         mockFacility.currency.id,
-        mockFacility.facilityValue,
+        mockFacility.value,
         mockTfmFacility,
       );
 

@@ -36,9 +36,9 @@
     var ukefExposureInput = document.getElementById('ukefExposure');
 
     function calculateUkefExposure() {
-      var facilityValue = facilityValueInput.value.replace(/,/g, ''); // remove commas
+      var value = facilityValueInput.value.replace(/,/g, ''); // remove commas
 
-      var calculation = facilityValue * (coveredPercentageInput.value / 100);
+      var calculation = value * (coveredPercentageInput.value / 100);
 
       if (DTFS.main.isNumeric(calculation)) {
         var result;
@@ -63,5 +63,5 @@
       });
     }
   </script>
-    
+
 {% endmacro %}

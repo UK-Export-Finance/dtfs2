@@ -37,7 +37,7 @@ const deal = {
       'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234567890',
       bondBeneficiary: 'test',
-      facilityValue: '1234',
+      value: '1234',
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         text: 'GBP - UK Sterling',
@@ -70,7 +70,7 @@ const deal = {
       'coverEndDate-year': nowPlusMonth.getFullYear(),
       uniqueIdentificationNumber: '1234567890',
       bondBeneficiary: 'test',
-      facilityValue: '5678',
+      value: '5678',
       currencySameAsSupplyContractCurrency: 'true',
       currency: {
         text: 'CAD - Canadian Dollars',
@@ -92,7 +92,7 @@ const deal = {
       bankReferenceNumber: '123456',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '2,469,135.60',
-      facilityValue: '12345678',
+      value: '12345678',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '12',
       coveredPercentage: '20',
@@ -117,7 +117,7 @@ const deal = {
       bankReferenceNumber: '12345678',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '3,703,703.40',
-      facilityValue: '12345678',
+      value: '12345678',
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         text: 'AUD - Australian Dollars',

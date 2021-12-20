@@ -149,7 +149,7 @@ type FacilitySnapshot {
   ukefFacilityType: String!
   facilityStage: String!
   facilityValueExportCurrency: String!
-  facilityValue: String
+  value: String
   currency: String
   coveredPercentage: String!
   bankFacilityReference: String

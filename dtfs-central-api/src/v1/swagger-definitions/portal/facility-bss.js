@@ -81,9 +81,9 @@
  *       currencySameAsSupplyContractCurrency:
  *         type: string
  *         example: true
- *       facilityValue:
+ *       value:
  *         type: string
- *         eaxmple: '2400.00'
+ *         example: '2400.00'
  *       currency:
  *         type: object
  *         properties:

@@ -66,7 +66,7 @@ describe('/v1/portal/facilities', () => {
 
       const updatedFacility = {
         ...createdFacility,
-        facilityValue: 123456,
+        value: 123456,
         user: mockUser,
       };
 
@@ -74,7 +74,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(status).toEqual(200);
       expect(typeof body.lastEdited).toEqual('string');
-      expect(body.facilityValue).toEqual(updatedFacility.facilityValue);
+      expect(body.value).toEqual(updatedFacility.value);
     });
 
     it('updates the facility', async () => {
@@ -83,7 +83,7 @@ describe('/v1/portal/facilities', () => {
 
       const updatedFacility = {
         ...createdFacility,
-        facilityValue: 123456,
+        value: 123456,
         user: mockUser,
       };
 
@@ -92,7 +92,7 @@ describe('/v1/portal/facilities', () => {
       const { body } = await api.get(`/v1/portal/facilities/${createdFacility._id}`);
 
       expect(typeof body.lastEdited).toEqual('string');
-      expect(body.facilityValue).toEqual(updatedFacility.facilityValue);
+      expect(body.value).toEqual(updatedFacility.value);
     });
 
     it('updates `editedBy` in the associated deal', async () => {
@@ -107,7 +107,7 @@ describe('/v1/portal/facilities', () => {
 
       const updatedFacility = {
         ...createdFacilityResponse.body,
-        facilityValue: 123456,
+        value: 123456,
         user: mockUser,
       };
 
@@ -128,14 +128,14 @@ describe('/v1/portal/facilities', () => {
 
       const updatedFacility = {
         ...createdFacility,
-        facilityValue: 123456,
+        value: 123456,
       };
 
       await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
 
       const { body } = await api.get(`/v1/portal/facilities/${createdFacility._id}`);
 
-      expect(body.facilityValue).toEqual(updatedFacility.facilityValue);
+      expect(body.value).toEqual(updatedFacility.value);
     });
   });
 
@@ -157,7 +157,7 @@ describe('/v1/portal/facilities', () => {
 
       const updatedFacility = {
         ...createdFacilityResponse.body,
-        facilityValue: 123456,
+        value: 123456,
         user: mockUser,
       };
 

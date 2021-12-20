@@ -13,7 +13,7 @@ const facilityQuery = gql`
         facilityType,
         facilityStage,
         facilityValueExportCurrency,
-        facilityValue,
+        value,
         coveredPercentage,
         bankFacilityReference,
         guaranteeFeePayableToUkef,

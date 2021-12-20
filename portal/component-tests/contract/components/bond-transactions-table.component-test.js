@@ -19,7 +19,7 @@ describe(component, () => {
           _id: '1',
           ukefFacilityId: '5678',
           status: 'Incomplete',
-          facilityValue: '100',
+          value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           requestedCoverStartDate: moment().utc().valueOf(),
@@ -30,7 +30,7 @@ describe(component, () => {
           _id: '2',
           ukefFacilityId: '5678',
           status: 'Incomplete',
-          facilityValue: '100',
+          value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           requestedCoverStartDate: moment().utc().valueOf(),
@@ -71,7 +71,7 @@ describe(component, () => {
 
         wrapper.expectText(`${facilityIdSelector} [data-cy="bond-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
 
-        wrapper.expectText(`${facilityIdSelector} [data-cy="bond-facility-value"]`).toRead(`${facility.currency.id} ${facility.facilityValue}`);
+        wrapper.expectText(`${facilityIdSelector} [data-cy="bond-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
 
         wrapper.expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
 
