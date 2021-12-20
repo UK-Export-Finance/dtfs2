@@ -8,10 +8,8 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 context('Admin dashboard', () => {
   let deal;
   const dummyDeal = {
-    details: {
-      bankSupplyContractID: 'abc-1-def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-    },
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
   };
 
   beforeEach(() => {

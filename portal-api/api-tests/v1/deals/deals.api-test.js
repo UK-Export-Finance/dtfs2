@@ -10,10 +10,8 @@ const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAd
 const calculateDealSummary = require('../../../src/v1/deal-summary');
 
 const newDeal = aDeal({
-  details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
-  },
+  additionalRefName: 'mock name',
+  bankInternalRefName: 'mock id',
   comments: [{
     username: 'bananaman',
     timestamp: '1984/12/25 00:00:00:001',
@@ -175,10 +173,8 @@ describe('/v1/deals', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          details: {
-            bankSupplyContractID: '',
-            bankSupplyContractName: '',
-          },
+          bankInternalRefName: '',
+          additionalRefName: '',
         };
 
         const { body: dealPost, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
@@ -186,8 +182,8 @@ describe('/v1/deals', () => {
         expect(status).toEqual(400);
 
         expect(dealPost.validationErrors.count).toEqual(2);
-        expect(dealPost.validationErrors.errorList.bankSupplyContractID).toBeDefined();
-        expect(dealPost.validationErrors.errorList.bankSupplyContractName).toBeDefined();
+        expect(dealPost.validationErrors.errorList.bankInternalRefName).toBeDefined();
+        expect(dealPost.validationErrors.errorList.additionalRefName).toBeDefined();
       });
     });
   });
@@ -210,7 +206,7 @@ describe('/v1/deals', () => {
 
       const updatedDeal = {
         ...body,
-        bankSupplyContractName: 'change this field',
+        additionalRefName: 'change this field',
       };
 
       const { status } = await as(aBarclaysMaker).put(updatedDeal).to(`/v1/deals/${body._id}`);
@@ -231,7 +227,7 @@ describe('/v1/deals', () => {
         ...createdDeal,
         details: {
           ...createdDeal.details,
-          bankSupplyContractName: 'change this field',
+          additionalRefName: 'change this field',
         },
       };
 
@@ -249,7 +245,7 @@ describe('/v1/deals', () => {
         ...createdDeal,
         details: {
           ...createdDeal.details,
-          bankSupplyContractName: 'change this field',
+          additionalRefName: 'change this field',
         },
       };
 
@@ -268,7 +264,7 @@ describe('/v1/deals', () => {
 
       const partialUpdate = {
         details: {
-          bankSupplyContractName: 'change this field',
+          additionalRefName: 'change this field',
         },
       };
 
@@ -276,7 +272,7 @@ describe('/v1/deals', () => {
         ...createdDeal,
         details: {
           ...createdDeal.details,
-          bankSupplyContractName: 'change this field',
+          additionalRefName: 'change this field',
         },
       };
 
@@ -299,7 +295,7 @@ describe('/v1/deals', () => {
         ...createdDeal,
         details: {
           ...createdDeal.details,
-          bankSupplyContractName: 'change this field',
+          additionalRefName: 'change this field',
         },
       };
       await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
@@ -317,7 +313,7 @@ describe('/v1/deals', () => {
         ...createdDeal,
         details: {
           ...createdDeal.details,
-          bankSupplyContractName: 'change this field',
+          additionalRefName: 'change this field',
         },
       };
 
@@ -329,7 +325,7 @@ describe('/v1/deals', () => {
         ...dealAfterFirstUpdate.body.deal,
         details: {
           ...dealAfterFirstUpdate.body.deal.details,
-          bankSupplyContractName: 'change this field again',
+          additionalRefName: 'change this field again',
         },
       };
 

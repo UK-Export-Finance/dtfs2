@@ -6,9 +6,9 @@ const DEFAULTS = require('../../../../src/v1/defaults');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  bankInternalRefName: 'Test',
+  additionalRefName: 'Test',
   details: {
-    bankSupplyContractID: 'Test',
-    bankSupplyContractName: 'Test',
     submissionCount: 1,
   },
 };

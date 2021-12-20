@@ -8,9 +8,9 @@ const { as } = require('../../api')(app);
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
+  additionalRefName: 'mock name',
+  bankInternalRefName: 'mock id',
   details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
     status: 'Draft',
   },
   comments: [{
@@ -24,7 +24,7 @@ const newDeal = aDeal({
   }],
 });
 
-describe('/v1/deals/:id/bankSupplyContractName', () => {
+describe('/v1/deals/:id/additionalRefName', () => {
   let noRoles;
   let aBarclaysMaker;
   let anotherBarclaysMaker;
@@ -41,21 +41,21 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     await wipeDB.wipe(['facilities']);
   });
 
-  describe('PUT /v1/deals/:id/bankSupplyContractName', () => {
+  describe('PUT /v1/deals/:id/additionalRefName', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put({ bankSupplyContractName: 'a new name' }).to('/v1/deals/123456789012/bankSupplyContractName');
+      const { status } = await as().put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put({ bankSupplyContractName: 'a new name' }).to('/v1/deals/123456789012/bankSupplyContractName');
+      const { status } = await as(noRoles).put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await as(aBarclaysMaker).put({ bankSupplyContractName: 'a new name' }).to('/v1/deals/123456789012/bankSupplyContractName');
+      const { status } = await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
 
       expect(status).toEqual(404);
     });
@@ -63,16 +63,16 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     it('401s requests if <user> != <resource>/details.maker', async () => {
       const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(anotherBarclaysMaker).put({ bankSupplyContractName: 'a new name' }).to(`/v1/deals/${body._id}/bankSupplyContractName`);
+      const { status } = await as(anotherBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${body._id}/additionalRefName`);
 
       expect(status).toEqual(401);
     });
 
-    it('returns the updated bankSupplyContractName', async () => {
+    it('returns the updated additionalRefName', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const { status, text } = await as(aBarclaysMaker).put({ bankSupplyContractName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
+      const { status, text } = await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       expect(status).toEqual(200);
       expect(text).toEqual('a new name');
@@ -82,19 +82,19 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await as(aBarclaysMaker).put({ bankSupplyContractName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
+      await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.details.bankSupplyContractName).toEqual('a new name');
+      expect(body.deal.additionalRefName).toEqual('a new name');
     });
 
     it('updates the deals updatedAt field', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await as(aBarclaysMaker).put({ bankSupplyContractName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
+      await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 

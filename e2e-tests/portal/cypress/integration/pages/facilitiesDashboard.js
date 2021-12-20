@@ -4,7 +4,7 @@ const page = {
   stage: () => cy.get('[data-cy="stage"]'),
   type: () => cy.get('[data-cy="type"]'),
   ukefId: () => cy.get('[data-cy="ukefId"]'),
-  bankId: () => cy.get('[data-cy="bankSupplyContractID"]'),
+  bankId: () => cy.get('[data-cy="bankInternalRefName"]'),
 
   results: () => cy.get('.govuk-table__body'),
   bankFacilityId: (id) => cy.get(`[data-cy="facility__bankId--${id}"]`),

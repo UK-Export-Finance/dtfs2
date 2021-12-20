@@ -31,8 +31,8 @@
 
       {% for transaction in transactions %}
         <tr data-cy="transaction_{{transaction.deal_id}}" class="govuk-table__row">
-          <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal.details.bankSupplyContractID }}</a>
+          <td data-cy="bankInternalRefName" class="govuk-table__cell govuk-!-font-size-14">
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankInternalRefNameLink">{{ transaction.deal.bankInternalRefName }}</a>
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">

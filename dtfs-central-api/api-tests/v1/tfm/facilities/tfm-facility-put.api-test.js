@@ -21,9 +21,9 @@ const newFacility = {
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  additionalRefName: 'mock name',
+  bankInternalRefName: 'mock id',
   details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
     submissionCount: 0,
   },
   editedBy: [],

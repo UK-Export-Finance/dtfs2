@@ -106,9 +106,9 @@ portalRouter.route('/deals').get(
  *                   details:
  *                     type: object
  *           example:
+ *             bankInternalRefName: 'a1'
+ *             additionalRefName: 'test'
  *             details:
- *               bankSupplyContractID: 'a1'
- *               bankSupplyContractName: 'test'
  *               maker: { _id: '123abc' }
  *               owningBank: { id: '9' }
  *     responses:
@@ -130,10 +130,10 @@ portalRouter.route('/deals').get(
  *               validationErrors:
  *                 count: 2
  *                 errorList:
- *                   bankSupplyContractID:
+ *                   bankInternalRefName:
  *                     order: '1'
  *                     text: 'Enter the Bank deal ID'
- *                   bankSupplyContractName:
+ *                   additionalRefName:
  *                     order: '2'
  *                     text: 'Enter the Bank deal name'
  */

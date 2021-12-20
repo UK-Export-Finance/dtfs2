@@ -63,8 +63,8 @@ const generateTypeA = async (deal, fromStatus) => {
     .message_type('A')
     .revision_id(deal._id) // eslint-disable-line no-underscore-dangle
     .portal_deal_id(deal._id) // eslint-disable-line no-underscore-dangle
-    .Deal_name(deal.details.bankSupplyContractName)
-    .Bank_deal_id(deal.details.bankSupplyContractID)
+    .Deal_name(deal.additionalRefName)
+    .Bank_deal_id(deal.bankInternalRefName)
 
     .Application_route(deal.eligibility)
     .Application_owner(`${deal.details.maker.firstname} ${deal.details.maker.surname}`)
@@ -317,8 +317,10 @@ const generateTypeA = async (deal, fromStatus) => {
   const typeAxmlStr = builder.build();
 
   // Validate XML against XSD schema
-  const typeAxsd = fs.readFileSync(path.resolve(__dirname, './type-a-defs/type-a.xsd'),
-    { encoding: 'utf8', flag: 'r' });
+  const typeAxsd = fs.readFileSync(
+    path.resolve(__dirname, './type-a-defs/type-a.xsd'),
+    { encoding: 'utf8', flag: 'r' },
+  );
 
   const parsedXml = libxml.parseXml(typeAxmlStr);
   const parsedXsd = libxml.parseXml(typeAxsd);

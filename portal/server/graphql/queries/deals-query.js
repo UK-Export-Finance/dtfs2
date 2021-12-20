@@ -8,10 +8,10 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
       _id
       submissionType
       updatedAt
+      bankInternalRefName
+      additionalRefName
       details {
         status
-        bankSupplyContractID
-        bankSupplyContractName
         ukefDealId
         maker {
           username

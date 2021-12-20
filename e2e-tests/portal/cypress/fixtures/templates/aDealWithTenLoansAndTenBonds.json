@@ -1,8 +1,9 @@
 {
+  "dealType": "BSS/EWCS",
   "submissionType": "Automatic Inclusion Notice",
+  "bankInternalRefName": "aDealWithTenLoansAndTenBonds",
+  "additionalRefName": "aDealWithTenLoansAndTenBonds",
   "details": {
-    "bankSupplyContractID": "aDealWithTenLoansAndTenBonds",
-    "bankSupplyContractName": "aDealWithTenLoansAndTenBonds",
     "ukefDealId": "ukef:aDealWithTenLoansAndTenBonds",
     "status": "Draft",
     "owningBank": {

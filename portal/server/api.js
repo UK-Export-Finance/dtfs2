@@ -118,12 +118,12 @@ const updateDeal = async (deal, token) => {
 const updateDealName = async (id, newName, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${id}/bankSupplyContractName`,
+    url: `${urlRoot}/v1/deals/${id}/additionalRefName`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    data: { bankSupplyContractName: newName },
+    data: { additionalRefName: newName },
   });
 
   return {

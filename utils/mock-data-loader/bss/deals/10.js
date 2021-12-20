@@ -5,10 +5,10 @@ module.exports = {
 	"dealType": "BSS/EWCS",
 	"submissionType": "Manual Inclusion Application",
 	"updatedAt": Date.now(),
+	"bankInternalRefName": "Manual Test 8",
+	"additionalRefName": "Manual Test 8",
 	"details" : {
 		"status" : "Draft",
-		"bankSupplyContractID" : "Manual Test 8",
-		"bankSupplyContractName" : "Manual Test 8",
 		"maker" : {
 			"_id" : "60f7d72654f99900074c0a6d",
 			"username" : "maker1@ukexportfinance.gov.uk",

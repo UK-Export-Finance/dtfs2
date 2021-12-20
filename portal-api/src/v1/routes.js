@@ -78,7 +78,7 @@ authRouter.route('/deals/:id/submission-details')
     dealSubmissionDetails.update,
   );
 
-authRouter.route('/deals/:id/bankSupplyContractName')
+authRouter.route('/deals/:id/additionalRefName')
   .put(
     validate({ role: ['maker'] }),
     dealName.update,

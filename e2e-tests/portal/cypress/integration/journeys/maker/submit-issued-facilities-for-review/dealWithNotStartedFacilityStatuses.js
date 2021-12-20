@@ -3,10 +3,10 @@ const now = new Date().valueOf();
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
+  bankInternalRefName: 'mock id',
+  additionalRefName: 'mock name',
   details: {
     status: 'Acknowledged by UKEF',
-    bankSupplyContractID: 'mock id',
-    bankSupplyContractName: 'mock name',
     created: now,
     previousWorkflowStatus: 'Draft',
     submissionDate: now,

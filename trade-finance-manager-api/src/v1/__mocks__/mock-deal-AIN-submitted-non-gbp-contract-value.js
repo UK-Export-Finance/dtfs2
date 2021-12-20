@@ -2,11 +2,11 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   _id: 'AIN_DEAL_SUBMITTED_NON_GBP_CONTRACT_VALUE',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
+  bankInternalRefName: 'Mock supply contract ID',
+  additionalRefName: 'Mock supply contract name',
   details: {
     status: 'Submitted',
     bank: 'Mock bank',
-    bankSupplyContractID: 'Mock supply contract ID',
-    bankSupplyContractName: 'Mock supply contract name',
     ukefDealId: '20010739',
     previousStatus: 'Ready for Checker\'s approval',
     maker: {

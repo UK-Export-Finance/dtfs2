@@ -9,7 +9,7 @@ const queryTransactions = async (_, { params = {} }, ctx) => {
     [f.field]: f.operator ? dbHelpers.createDbQuery(f.operator, f.value) : f.value,
   }));
 
-  const deals = await findTransactions(ctx.user, start, pagesize, dbFilters);
+  const deals = await findTransactions(ctx.user, dbFilters, start, pagesize);
 
   return deals;
 };
