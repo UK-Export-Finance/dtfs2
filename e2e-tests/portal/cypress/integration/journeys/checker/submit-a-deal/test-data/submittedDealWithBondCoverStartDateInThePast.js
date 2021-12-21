@@ -12,9 +12,9 @@ module.exports = () => {
 
   deal.bondTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
 
-  deal.bondTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.getDate();
-  deal.bondTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
-  deal.bondTransactions.items[0]['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
+  deal.bondTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  deal.bondTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  deal.bondTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   deal.bondTransactions.items[0].facilityStage = 'Issued';
   deal.bondTransactions.items[0].uniqueIdentificationNumber = '1234';
 

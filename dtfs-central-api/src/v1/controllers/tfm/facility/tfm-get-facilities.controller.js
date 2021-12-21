@@ -40,21 +40,11 @@ exports.getAllFacilities = async (req, res) => {
                 $switch: {
                   branches: [
                     {
-                      case: {
-                        $eq: [
-                          '$dealSnapshot.dealType',
-                          'GEF',
-                        ],
-                      },
+                      case: { $eq: ['$dealSnapshot.dealType', 'GEF'] },
                       then: '$$facilities.type',
                     },
                     {
-                      case: {
-                        $eq: [
-                          '$dealSnapshot.dealType',
-                          'BSS/EWCS',
-                        ],
-                      },
+                      case: { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
                       then: '$$facilities.facilityType',
                     },
                   ],
