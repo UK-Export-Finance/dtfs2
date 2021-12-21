@@ -50,9 +50,17 @@ context('User can view and filter multiple deals', () => {
 
   const yesterday = nowPlusDays(-1);
 
+  // NOTE: searching by date queries multiple fields.
+  // Therefore we need to set all of these fields to yesterday.
   const DEAL_SUBMITTED_YESTERDAY = createMockDeal({
     testId: 'DEAL_SUBMITTED_YESTERDAY',
-    submissionDate: yesterday.valueOf().toString(),
+    details: {
+      submissionDate: yesterday.valueOf().toString(),
+    },
+    eligibility: {
+      lastUpdated: yesterday.valueOf().toString(),
+    },
+    facilitiesUpdated: yesterday.valueOf().toString(),
   });
 
   const MOCK_DEALS = [
