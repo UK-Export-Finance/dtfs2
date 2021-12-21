@@ -42,6 +42,7 @@ const createDealSnapshot = async (deal) => {
     dealSnapshot: deal,
     ...tfmInit,
   };
+
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const dealFacilities = await findAllFacilitiesByDealId(dealId);
     dealObj.dealSnapshot.facilities = dealFacilities;
