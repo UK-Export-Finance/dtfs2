@@ -102,7 +102,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
     it('clicking on update should take you to the update facility page with correct url', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about-facility?status=change`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about-facility`));
     });
 
     it('update facility page should have correct titles and text (only name should be prepopulated', () => {
@@ -296,7 +296,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationPreview.facilitySummaryListRowValue(3, 3).contains(coverStart);
       applicationPreview.facilitySummaryListRowAction(3, 0).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities-change/${facilityOneId}/about-facility?status=change`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities-change/${facilityOneId}/about-facility`));
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_ONE.name}name`);
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
@@ -371,7 +371,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     it('clicking on update should take you to the update facility page with correct url', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about-facility?status=change`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about-facility`));
     });
 
     it('update facility page should have correct titles and text (only name should be prepopulated', () => {

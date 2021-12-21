@@ -124,7 +124,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // column key to display add if facility not yet issued
   const unissuedShow = id === 'hasBeenIssued';
   // personalised href for facility to change to issued (once submitted to UKEF)
-  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities-change/${data.details._id}/about-facility?status=change`;
+  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities-change/${data.details._id}/about-facility`;
   // array of facilities which have been changed to issued
   const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
 
