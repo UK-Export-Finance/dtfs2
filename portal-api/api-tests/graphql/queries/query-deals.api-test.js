@@ -66,9 +66,7 @@ query {
       updatedAt
       additionalRefName
       bankInternalRefName
-      details {
-        status
-      }
+      status
     }
   }
 }`;
@@ -85,9 +83,7 @@ query {
       updatedAt
       additionalRefName
       bankInternalRefName
-      details {
-        status
-      }
+      status
     }
   }
 }`;
@@ -104,9 +100,7 @@ query {
       updatedAt
       additionalRefName
       bankInternalRefName
-      details {
-        status
-      }
+      status
     }
   }
 }`;
@@ -348,8 +342,8 @@ describe('/graphql query deals', () => {
       expect(body.data.deals.status.code).toEqual(200);
 
       // expect deals of 2nd page in reverse order; most recent first..
-      expect(body.data.deals.deals[0].details).toMatchObject(deals[3].details);
-      expect(body.data.deals.deals[1].details).toMatchObject(deals[2].details);
+      expect(body.data.deals.deals[0]).toMatchObject(deals[3]);
+      expect(body.data.deals.deals[1]).toMatchObject(deals[2]);
 
       expect(body.data.deals.count).toEqual(5);
     });

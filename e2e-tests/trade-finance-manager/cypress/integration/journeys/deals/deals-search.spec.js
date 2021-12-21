@@ -14,25 +14,24 @@ context('User can view and filter multiple deals', () => {
   let ALL_FACILITIES = [];
 
   const DEAL_WITH_TEST_SUPPLIER_NAME = createMockDeal({
-    'Submitted',
+    status: 'Submitted',
     submissionDetails: { 'supplier-name': 'MY-SUPPLIER' },
   });
 
   const DEAL_WITH_TEST_MIN_SUBMISSION_TYPE = createMockDeal({
     submissionType: 'Manual Inclusion Notice',
     status: 'Submitted',
-    },
   });
 
   const DEAL_WITH_TEST_BUYER_NAME = createMockDeal({
-    'Submitted',
+    status: 'Submitted',
     submissionDetails: { 'buyer-name': 'MY-BUYER' },
   });
 
   const DEAL_WITH_TEST_MIA_SUBMISSION_TYPE = createMockDeal({
+    status: 'Submitted',
     submissionType: 'Manual Inclusion Application',
     testId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
-    status: 'Submitted',
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
