@@ -196,7 +196,7 @@ describe('/v1/deals/:id/submission-details', () => {
         };
 
         const updatedSubmissionDetails = await as(anHSBCMaker).put(body).to(`/v1/deals/${createdDeal._id}/submission-details`);
-        expect(updatedsubmissionDetails.status).toEqual(200);
+        expect(updatedSubmissionDetails.status).toEqual(200);
 
         const expectedCountryObj = { name: 'Canada', code: 'CAN' };
 
