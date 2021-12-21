@@ -31,8 +31,6 @@ type Checker {
 
 type DealDetails {
   status: String
-  bankSupplyContractID: String
-  bankSupplyContractName: String
   ukefDealId: String
   maker: Maker
   checker: Checker
@@ -358,6 +356,8 @@ type DealSnapshot {
   _id: String!
   dealType: String!
   submissionType: String
+  bankInternalRefName: String
+  additionalRefName: String
   updatedAt: Float
   details: DealDetails
   totals: DealTotals

@@ -5,9 +5,7 @@ const validateNameChange = require('../validation/deal-name');
 const updateName = async (dealId, to, user) => {
   const modifiedDeal = {
     updatedAt: Date.now(),
-    details: {
-      bankSupplyContractName: to,
-    },
+    additionalRefName: to,
   };
 
   const updatedDeal = await updateDeal(
@@ -21,13 +19,13 @@ const updateName = async (dealId, to, user) => {
 
 exports.update = (req, res) => {
   const { user } = req;
-  const { bankSupplyContractName } = req.body;
+  const { additionalRefName } = req.body;
 
   findOneDeal(req.params.id, async (deal) => {
     if (!deal) return res.status(404).send();
     if (!userOwns(user, deal)) return res.status(401).send();
 
-    const validationErrors = validateNameChange(deal, bankSupplyContractName);
+    const validationErrors = validateNameChange(deal, additionalRefName);
 
     if (validationErrors) {
       return res.status(200).send({
@@ -38,9 +36,10 @@ exports.update = (req, res) => {
 
     const dealAfterAllUpdates = await updateName(
       deal._id, // eslint-disable-line no-underscore-dangle
-      bankSupplyContractName,
+      additionalRefName,
       req.user,
     );
-    return res.status(200).send(dealAfterAllUpdates.details.bankSupplyContractName);
+
+    return res.status(200).send(dealAfterAllUpdates.additionalRefName);
   });
 };

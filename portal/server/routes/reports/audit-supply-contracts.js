@@ -25,7 +25,7 @@ function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
 
 function downloadSupplyContracts(supplyContracts, timezone, res) {
   const columns = [{
-    prop: 'bankSupplyContractID',
+    prop: 'bankInternalRefName',
     label: 'Supply Contract ID',
   }, {
     prop: 'maker_username',

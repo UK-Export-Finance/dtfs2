@@ -1,9 +1,9 @@
-const bankSupplyContractID = require('./bank-supply-contract-id');
-const bankSupplyContractName = require('./bank-supply-contract-name');
+const bankInternalRefName = require('./bank-supply-contract-id');
+const additionalRefName = require('./bank-supply-contract-name');
 
 const rules = [
-  bankSupplyContractID,
-  bankSupplyContractName,
+  bankInternalRefName,
+  additionalRefName,
 ];
 
 module.exports = (deal) => {

@@ -206,7 +206,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       contract.visit(deal);
       contract.proceedToReview().click();
 
-      cy.title().should('eq', `Ready for review - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
+      cy.title().should('eq', `Ready for review - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
 
       // submit without a comment
       contractReadyForReview.comments().should('have.value', '');

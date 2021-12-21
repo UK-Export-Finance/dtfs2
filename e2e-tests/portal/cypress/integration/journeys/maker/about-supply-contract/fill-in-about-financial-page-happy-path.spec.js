@@ -30,7 +30,7 @@ context('about-supply-contract', () => {
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
 
-    cy.title().should('eq', `Financial information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Financial information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
 
     // prove the exchange-rate fields start hidden..
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');

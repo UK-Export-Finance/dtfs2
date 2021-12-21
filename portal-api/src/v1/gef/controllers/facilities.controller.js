@@ -108,7 +108,9 @@ const update = async (id, updateBody) => {
   });
 
   const updatedFacility = await collection.findOneAndUpdate(
-    { _id: { $eq: facilityId } }, { $set: facilityUpdate }, { returnOriginal: false },
+    { _id: { $eq: facilityId } },
+    { $set: facilityUpdate },
+    { returnOriginal: false },
   );
 
   if (existingFacility) {

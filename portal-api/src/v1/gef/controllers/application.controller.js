@@ -227,7 +227,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
       surname,
       submissionType: existingApplication.submissionType || '',
       supplierName: companyName,
-      bankSupplyContractID: bankInternalRefName,
+      bankInternalRefName,
       currentStatus: GEF_STATUS[status],
       previousStatus: GEF_STATUS[previousStatus],
       updatedByName: `${user.firstname} ${user.surname}`,

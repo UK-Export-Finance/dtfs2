@@ -19,8 +19,8 @@ describe(page, () => {
     });
   });
 
-  it('should render page heading with bankSupplyContractName', () => {
-    const expected = `Supply Contract name: ${deal.details.bankSupplyContractName}`;
+  it('should render page heading with additionalRefName', () => {
+    const expected = `Supply Contract name: ${deal.additionalRefName}`;
     wrapper.expectText('[data-cy="heading"]').toRead(expected);
   });
 

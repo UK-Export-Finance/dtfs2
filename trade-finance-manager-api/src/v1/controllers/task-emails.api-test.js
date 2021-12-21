@@ -122,6 +122,29 @@ describe('task emails functions', () => {
       );
     });
 
+    it('should send an email for MIA - COMPLETE_AGENT_CHECK task', async () => {
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const businessSupportTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK),
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
+    });
+
     it('should send an email for MIA - COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
       const mockTask = MOCK_MIA_TASKS[1].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,

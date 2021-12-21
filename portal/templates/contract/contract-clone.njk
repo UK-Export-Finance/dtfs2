@@ -2,7 +2,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% block pageTitle %}Clone Deal - {{ bankSupplyContractName }}{% endblock %}
+{% block pageTitle %}Clone Deal - {{ additionalRefName }}{% endblock %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
   {% endif %}
 
 
-  <h1 class="govuk-heading-l">Clone Deal {{ bankSupplyContractName }}</h1>
+  <h1 class="govuk-heading-l">Clone Deal {{ additionalRefName }}</h1>
 
   <form method="POST" autocomplete="off">
 
@@ -25,7 +25,7 @@
       <div class="govuk-grid-column-one-half">
 
         <div
-          {% if validationErrors.errorList.bankSupplyContractID %}
+          {% if validationErrors.errorList.bankInternalRefName %}
             class="govuk-form-group govuk-form-group--error"
           {% else %}
             class="govuk-form-group"
@@ -33,31 +33,31 @@
         >
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
             <div class="govuk-form-group">
-              <label class="govuk-label" for="bankSupplyContractID">
+              <label class="govuk-label" for="bankInternalRefName">
                 Bank deal ID
               </label>
 
-              <span id="bankSupplyContractID-hint" class="govuk-hint">
+              <span id="bankInternalRefName-hint" class="govuk-hint">
                 It's not possible to change this later. 
               </span>
 
-              {% if validationErrors.errorList.bankSupplyContractID %}
-                <span id="bankSupplyContractID-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankSupplyContractID.text }}
+              {% if validationErrors.errorList.bankInternalRefName %}
+                <span id="bankInternalRefName-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankInternalRefName.text }}
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankSupplyContractID" name="bankSupplyContractID" type="text" maxlength="30" aria-describedby="bankSupplyContractID-info bankSupplyContractID-hint bankSupplyContractID-error" value="{{ bankSupplyContractID }}" data-cy="bank-supply-contract-id">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankInternalRefName" name="bankInternalRefName" type="text" maxlength="30" aria-describedby="bankInternalRefName-info bankInternalRefName-hint bankInternalRefName-error" value="{{ bankInternalRefName }}" data-cy="bank-supply-contract-id">
             </div>
 
-            <span id="bankSupplyContractID-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+            <span id="bankInternalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
               You can enter up to 30 characters
             </span>
           </div>
         </div>
 
         <div
-          {% if validationErrors.errorList.bankSupplyContractName %}
+          {% if validationErrors.errorList.additionalRefName %}
             class="govuk-form-group govuk-form-group--error"
           {% else %}
             class="govuk-form-group"
@@ -66,20 +66,20 @@
 
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
             <div class="govuk-form-group">
-              <label class="govuk-label" for="bankSupplyContractName">
+              <label class="govuk-label" for="additionalRefName">
                 Bank deal name
               </label>
 
-              {% if validationErrors.errorList.bankSupplyContractName %}
-                <span id="bankSupplyContractName-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankSupplyContractName.text }}
+              {% if validationErrors.errorList.additionalRefName %}
+                <span id="additionalRefName-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.additionalRefName.text }}
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankSupplyContractName" name="bankSupplyContractName" type="text" maxlength="100" aria-describedby="bankSupplyContractName-info bankSupplyContractName-error" value="{{ bankSupplyContractName }}" data-cy="bank-supply-contract-name">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="additionalRefName" name="additionalRefName" type="text" maxlength="100" aria-describedby="additionalRefName-info additionalRefName-error" value="{{ additionalRefName }}" data-cy="bank-supply-contract-name">
             </div>
 
-            <span id="bankSupplyContractName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+            <span id="additionalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
               You can enter up to 100 characters
             </span>
           </div>

@@ -7,6 +7,8 @@ const mapBssEwcsDeal = (deal) => {
     _id,
     dealType,
     submissionType,
+    bankInternalRefName,
+    additionalRefName,
     details,
     submissionDetails,
     bondTransactions,
@@ -16,8 +18,6 @@ const mapBssEwcsDeal = (deal) => {
   } = dealSnapshot;
 
   const {
-    bankSupplyContractID,
-    bankSupplyContractName,
     submissionCount,
     submissionDate,
     status,
@@ -32,8 +32,8 @@ const mapBssEwcsDeal = (deal) => {
     _id,
     dealType,
     submissionType,
-    bankReferenceNumber: bankSupplyContractID,
-    bankAdditionalReferenceName: bankSupplyContractName,
+    bankReferenceNumber: bankInternalRefName,
+    bankAdditionalReferenceName: additionalRefName,
     submissionCount,
     submissionDate,
     status,

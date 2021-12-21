@@ -11,9 +11,9 @@ describe(page, () => {
       _id: '12345678',
       dealType: 'BSS/EWCS',
       submissionType: 'Automatic Inclusion Notice',
+      bankInternalRefName: 'contract-1',
+      additionalRefName: 'FirstContract',
       details: {
-        bankSupplyContractID: 'contract-1',
-        bankSupplyContractName: 'FirstContract',
         owningBank: {
           name: 'Lloyds',
           emails: ['xxx@yyy.com'],

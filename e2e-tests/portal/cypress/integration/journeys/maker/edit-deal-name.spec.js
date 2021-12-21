@@ -8,10 +8,8 @@ context('Edit deal name', () => {
   let deal;
 
   const dummyDeal = {
-    details: {
-      bankSupplyContractID: 'abc-1-def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-    },
+    bankInternalRefName: 'abc-1-def',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
   };
 
   before(() => {
@@ -25,9 +23,9 @@ context('Edit deal name', () => {
     contract.visit(deal);
     contract.editDealName().click();
 
-    cy.title().should('eq', `Change name - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
-    editDealName.bankSupplyContractName().should('have.value', deal.details.bankSupplyContractName);
-    editDealName.bankSupplyContractName().type('{selectall}{backspace}');
+    cy.title().should('eq', `Change name - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
+    editDealName.additionalRefName().should('have.value', deal.additionalRefName);
+    editDealName.additionalRefName().type('{selectall}{backspace}');
     editDealName.submit().click();
 
     cy.url().should('eq', relative(`/contract/${deal._id}/edit-name`));
@@ -35,16 +33,16 @@ context('Edit deal name', () => {
     editDealName.expectError('A value is required.');
   });
 
-  it('updates deal.details.bankSupplyContractName', () => {
+  it('updates deal.additionalRefName', () => {
     cy.login(MAKER_LOGIN);
     contract.visit(deal);
     contract.editDealName().click();
 
 
-    editDealName.bankSupplyContractName().type('{selectall}{backspace}asdfasfasf');
+    editDealName.additionalRefName().type('{selectall}{backspace}asdfasfasf');
     editDealName.submit().click();
 
-    contract.bankSupplyContractName().invoke('text').then((text) => {
+    contract.additionalRefName().invoke('text').then((text) => {
       expect(text.trim()).equal('asdfasfasf');
     });
   });

@@ -72,9 +72,7 @@ router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async 
   const { userToken } = requestParams(req);
 
   const newDeal = {
-    details: {
-      ...req.body,
-    },
+    ...req.body,
     mandatoryCriteria: req.apiData[MANDATORY_CRITERIA],
   };
 
@@ -87,13 +85,13 @@ router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async 
 
   if (validationErrors) {
     const {
-      bankSupplyContractID,
-      bankSupplyContractName,
+      bankInternalRefName,
+      additionalRefName,
     } = req.body;
 
     return res.status(400).render('before-you-start/before-you-start-bank-deal.njk', {
-      bankSupplyContractID,
-      bankSupplyContractName,
+      bankInternalRefName,
+      additionalRefName,
       validationErrors,
       user: req.session.user,
     });
