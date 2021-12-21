@@ -11,7 +11,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
   let deal;
 
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.details.status)[0];
+    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)

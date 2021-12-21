@@ -3,9 +3,9 @@
   "submissionType": "Automatic Inclusion Notice",
   "bankInternalRefName": "Smoke test 17/02/21",
   "additionalRefName": "Smoke test 17/02/21",
+  "status": "Submitted",
   "details": {
     "ukefDealId": "0040005777",
-    "status": "Submitted",
     "submissionDate": "1613557575317",
     "owningBank": {
       "name": "UKEF test bank (Delegated)",

@@ -94,7 +94,7 @@ const constructor = (listOfFilters) => {
       // map whatever's still left into the generic schema that graphQL is expecting..
 
       deal_id: deal._id,
-      deal_status: deal.details.status,
+      deal_status: deal.status,
       deal_supplierName: deal.submissionDetails['supplier-name'],
       deal_bankInternalRefName: deal.bankInternalRefName,
       deal_ukefDealId: deal.details.ukefDealId,

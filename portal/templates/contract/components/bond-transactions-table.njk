@@ -8,8 +8,8 @@
 {% macro render(params) %}
   {% if params.deal.bondTransactions.items %}
     <div class="govuk-grid-column-full">
-      {% set dealStatus = params.deal.details.status %}
-      {% set dealPreviousStatus = params.deal.details.previousStatus %}
+      {% set dealStatus = params.deal.status %}
+      {% set dealPreviousStatus = params.deal.previousStatus %}
       {% set bonds = params.deal.bondTransactions.items %}
 
         <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="bond-transactions-table">

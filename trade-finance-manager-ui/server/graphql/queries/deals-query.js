@@ -16,8 +16,8 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         updatedAt
         bankInternalRefName
         additionalRefName
+        status
         details {
-          status
           ukefDealId
           submissionDate
           maker {

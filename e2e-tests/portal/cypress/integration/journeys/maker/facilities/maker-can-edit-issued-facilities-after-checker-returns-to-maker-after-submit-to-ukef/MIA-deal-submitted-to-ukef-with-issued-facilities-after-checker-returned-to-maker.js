@@ -10,8 +10,9 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'test',
   additionalRefName: 'testing',
+  status: 'Further Maker\'s input required',
+  previousStatus: 'Ready for Checker\'s approval',
   details: {
-    status: "Further Maker's input required",
     maker: {
       username: 'MAKER',
       roles: [
@@ -41,7 +42,6 @@ const deal = {
       ],
     },
     created: '1599048723110',
-    previousStatus: "Ready for Checker's approval",
     checker: {
       bank: {
         id: '9',

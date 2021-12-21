@@ -82,7 +82,7 @@ describe('controllers/facilities', () => {
     it('passes the expected filter for checker', async () => {
       await bssFacilities(checkerReq, res);
 
-      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'details.status', operator: 'eq', value: STATUS.readyForApproval }], 'mock-token');
+      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'status', operator: 'eq', value: STATUS.readyForApproval }], 'mock-token');
     });
 
     it('renders the correct template', async () => {

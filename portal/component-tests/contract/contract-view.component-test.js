@@ -8,10 +8,7 @@ const deal = require('../fixtures/deal-fully-completed');
 
 const aDealInStatus = (status) => ({
   ...deal,
-  details: {
-    ...deal.details,
-    status,
-  },
+  status,
 });
 
 const oneDealInEachStatus = () => [

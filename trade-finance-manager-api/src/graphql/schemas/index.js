@@ -30,7 +30,6 @@ type Checker {
 }
 
 type DealDetails {
-  status: String
   ukefDealId: String
   maker: Maker
   checker: Checker
@@ -359,6 +358,7 @@ type DealSnapshot {
   bankInternalRefName: String
   additionalRefName: String
   updatedAt: Float
+  status: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]

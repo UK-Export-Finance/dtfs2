@@ -10,9 +10,9 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
+    status: 'Ready for Checker\'s approval',
     details: {
       submissionDate: moment().subtract(1, 'day').utc().valueOf(),
-      status: 'Ready for Checker\'s approval',
     },
     submissionDetails: {
       supplyContractCurrency: {

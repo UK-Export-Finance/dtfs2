@@ -10,9 +10,7 @@ describe(component, () => {
 
   const deal = {
     submissionType: 'Manual Inclusion Application',
-    details: {
-      status: 'Ready for Checker\'s approval',
-    },
+    status: 'Ready for Checker\'s approval',
     bondTransactions: {
       items: [
         {
@@ -86,7 +84,7 @@ describe(component, () => {
     describe('when a bond Cover Date can be modified', () => {
       it('should render `change start date` link and NOT `issue facility link', () => {
         const dealWithBondsThatCanChangeCoverDate = deal;
-        dealWithBondsThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+        dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
@@ -113,7 +111,7 @@ describe(component, () => {
 
         it('should render `change start date` link', () => {
           const dealWithBondsThatCanChangeCoverDate = deal;
-          dealWithBondsThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+          dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
           dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
           dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
 

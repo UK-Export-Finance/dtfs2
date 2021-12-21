@@ -9,8 +9,8 @@ describe(component, () => {
     it("should display when deal status=Draft and status=Further Maker's input required and canFullyCalculateDealSummary flag is false", () => {
       const user = { roles: ['maker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
-        { _id: 2, details: { status: "Further Maker's input required" } },
+        { _id: 1, status: 'Draft' },
+        { _id: 2, status: "Further Maker's input required" },
       ];
 
       const canFullyCalculateDealSummary = false;

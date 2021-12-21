@@ -18,9 +18,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneBond, BANK1_MAKER)
       .then((inserted) => {
         cy.updateDeal(inserted._id, {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-01'),
-            status: 'Submitted',
           },
         }, BANK1_MAKER)
           .then((updated) => { aDealWithOneBond = updated; });
@@ -29,9 +29,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneLoan, BANK1_MAKER)
       .then((inserted) => {
         cy.updateDeal(inserted._id, {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-03'),
-            status: 'Submitted',
           },
         }, BANK1_MAKER)
           .then((updated) => { aDealWithOneLoan = updated; });
@@ -40,9 +40,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneLoanAndOneBond, BANK1_MAKER)
       .then((inserted) => {
         cy.updateDeal(inserted._id, {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-05'),
-            status: 'Submitted',
           },
         }, BANK1_MAKER)
           .then((updated) => { aDealWithOneLoanAndOneBond = updated; });

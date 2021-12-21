@@ -638,9 +638,9 @@ portalRouter.route('/gef/deals/:id')
  *                 - type: object
  *                   properties:
  *                     previousStatus:
- *                       example: SUBMITTED_TO_UKEF
+ *                       example: Submitted
  *                     status:
- *                       example: UKEF_ACKNOWLEDGED
+ *                       example: Acknowledged by UKEF
  *       404:
  *         description: Not found
  */

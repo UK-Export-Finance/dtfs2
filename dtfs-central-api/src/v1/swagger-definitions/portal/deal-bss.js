@@ -22,12 +22,15 @@
  *       additionalRefName:
  *         type: string
  *         example: Test
+ *       status:
+ *         type: string
+ *         example: Submitted
+ *       previousStatus:
+ *         type: string
+ *         example: Ready for Checker's approval
  *       details:
  *         type: object
  *         properties:
- *           status:
- *             type: string
- *             example: Submitted
  *           owningBank:
  *             $ref: '#/definitions/Bank'
  *           maker:
@@ -35,9 +38,6 @@
  *           created:
  *             type: string
  *             example: '1632389070727'
- *           previousStatus:
- *             type: string
- *             example: Ready for Checker's approval
  *           submissionCount:
  *             type: integer
  *             emample: 1

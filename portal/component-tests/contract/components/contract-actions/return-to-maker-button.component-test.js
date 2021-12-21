@@ -9,7 +9,7 @@ describe(component, () => {
     it("should be enabled for deals in status=Ready for Checker's approval", () =>{
       const user = {roles: ['checker']};
       const deals = [
-        {_id: 1, details:{status:"Ready for Checker's approval"}},
+        {_id: 1, status: "Ready for Checker's approval" },
       ];
       const userCanSubmit = true;
 
@@ -23,8 +23,8 @@ describe(component, () => {
     it("should not render at all for deals in status=Submitted and status=Rejected by UKEF", () =>{
       const user = {roles: ['checker']};
       const deals = [
-        {_id: 1, details:{status:"Submitted"}},
-        {_id: 2, details:{status:"Rejected by UKEF"}},
+        {_id: 1, status: "Submitted" },
+        {_id: 2, status: "Rejected by UKEF" },
       ];
       const userCanSubmit = true;
 
@@ -38,12 +38,12 @@ describe(component, () => {
     it("should be disabled for deals in all other states", () =>{
       const user = {roles: ['checker']};
       const deals = [
-        {_id: 1, details:{status:"Draft"}},
-        {_id: 2, details:{status:"Abandoned"}},
-        {_id: 3, details:{status:"Acknowledged by UKEF"}},
-        {_id: 4, details:{status:"Accepted by UKEF (without conditions)"}},
-        {_id: 5, details:{status:"Accepted by UKEF (with conditions)"}},
-        {_id: 6, details:{status:"In progress by UKEF"}},
+        {_id: 1, status: "Draft" },
+        {_id: 2, status: "Abandoned" },
+        {_id: 3, status: "Acknowledged by UKEF" },
+        {_id: 4, status: "Accepted by UKEF (without conditions)" },
+        {_id: 5, status: "Accepted by UKEF (with conditions)" },
+        {_id: 6, status: "In progress by UKEF" },
       ];
       const userCanSubmit = true;
 
@@ -59,8 +59,8 @@ describe(component, () => {
     it('should be enabled', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Submitted' } },
-        { _id: 2, details: { status: 'Rejected by UKEF' } },
+        { _id: 1, status: 'Submitted' },
+        { _id: 2, status: 'Rejected by UKEF' },
       ];
       const userCanSubmit = true;
 
@@ -74,7 +74,7 @@ describe(component, () => {
     it('should NOT render when deal status is `Draft`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Draft' } },
+        { _id: 1, status: 'Draft' },
       ];
       const userCanSubmit = true;
 
@@ -87,7 +87,7 @@ describe(component, () => {
     it('should NOT render when deal status is `Further Maker\'s input required`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Further Maker\'s input required' } },
+        { _id: 1, status: 'Further Maker\'s input required' },
       ];
       const userCanSubmit = true;
 
@@ -100,7 +100,7 @@ describe(component, () => {
     it('should NOT render when deal status is `Acknowledged by UKEF`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Further Maker\'s input required' } },
+        { _id: 1, status: 'Further Maker\'s input required' },
       ];
       const userCanSubmit = true;
 
@@ -113,7 +113,7 @@ describe(component, () => {
     it('should NOT render when deal status is `In progress by UKEF`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'In progress by UKEF' } },
+        { _id: 1, status: 'In progress by UKEF' },
       ];
       const userCanSubmit = true;
 
@@ -126,7 +126,7 @@ describe(component, () => {
     it('should NOT render when deal status is `Accepted by UKEF (without conditions)`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Accepted by UKEF (without conditions)' } },
+        { _id: 1, status: 'Accepted by UKEF (without conditions)' },
       ];
       const userCanSubmit = true;
 
@@ -139,7 +139,7 @@ describe(component, () => {
     it('should NOT render when deal status is `Accepted by UKEF (out conditions)`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Accepted by UKEF (with conditions)' } },
+        { _id: 1, status: 'Accepted by UKEF (with conditions)' },
       ];
       const userCanSubmit = true;
 
@@ -155,15 +155,15 @@ describe(component, () => {
     it('should not render at all', () => {
       const user = { roles: ['checker'] };
       const deals = [
-        { _id: 1, details: { status: 'Ready for Checker\'s approval' } },
-        { _id: 2, details: { status: 'Submitted' } },
-        { _id: 3, details: { status: 'Rejected by UKEF' } },
-        { _id: 4, details: { status: 'Draft' } },
-        { _id: 5, details: { status: 'Further Maker\'s input required' } },
-        { _id: 6, details: { status: 'Abandoned' } },
-        { _id: 7, details: { status: 'Acknowledged by UKEF' } },
-        { _id: 8, details: { status: 'Accepted by UKEF (without conditions)' } },
-        { _id: 9, details: { status: 'Accepted by UKEF (with conditions)' } },
+        { _id: 1, status: 'Ready for Checker\'s approval' },
+        { _id: 2, status: 'Submitted' },
+        { _id: 3, status: 'Rejected by UKEF' },
+        { _id: 4, status: 'Draft' },
+        { _id: 5, status: 'Further Maker\'s input required' },
+        { _id: 6, status: 'Abandoned' },
+        { _id: 7, status: 'Acknowledged by UKEF' },
+        { _id: 8, status: 'Accepted by UKEF (without conditions)' },
+        { _id: 9, status: 'Accepted by UKEF (with conditions)' },
       ];
       const userCanSubmit = false;
 
@@ -178,15 +178,15 @@ describe(component, () => {
     it("should not render at all", () =>{
       const user = {roles: ['maker']};
       const deals = [
-        {_id: 1, details:{status:"Submitted"}},
-        {_id: 2, details:{status:"Rejected by UKEF"}},
-        {_id: 3, details:{status:"Abandoned"}},
-        {_id: 4, details:{status:"Acknowledged by UKEF"}},
-        {_id: 5, details:{status:"Accepted by UKEF (without conditions)"}},
-        {_id: 6, details:{status:"Accepted by UKEF (with conditions)"}},
-        {_id: 7, details:{status:"Ready for Checker's approval"}},
-        {_id: 8, details:{status:"Submitted"}},
-        {_id: 9, details:{status:"Rejected by UKEF"}},
+        {_id: 1, status: "Submitted" },
+        {_id: 2, status: "Rejected by UKEF" },
+        {_id: 3, status: "Abandoned" },
+        {_id: 4, status: "Acknowledged by UKEF" },
+        {_id: 5, status: "Accepted by UKEF (without conditions)" },
+        {_id: 6, status: "Accepted by UKEF (with conditions)" },
+        {_id: 7, status: "Ready for Checker's approval" },
+        {_id: 8, status: "Submitted" },
+        {_id: 9, status: "Rejected by UKEF" },
       ];
 
       for (const deal of deals) {

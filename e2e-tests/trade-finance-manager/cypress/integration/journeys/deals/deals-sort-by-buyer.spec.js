@@ -11,18 +11,14 @@ context('User can view and sort deals by buyer', () => {
   let dealBuyerB;
 
   const DEAL_BUYER_A = createMockDeal({
-    details: {
-      testId: 'DEAL_BUYER_A',
-    },
+    testId: 'DEAL_BUYER_A',
     submissionDetails: {
       'buyer-name': 'BUYER A',
     },
   });
 
   const DEAL_BUYER_B = createMockDeal({
-    details: {
-      testId: 'DEAL_BUYER_B',
-    },
+    testId: 'DEAL_BUYER_B',
     submissionDetails: {
       'buyer-name': 'BUYER B',
     },
@@ -56,10 +52,10 @@ context('User can view and sort deals by buyer', () => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
           dealBuyerA = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_BUYER_A.details.testId);
+            deal.dealSnapshot.testId === DEAL_BUYER_A.testId);
 
           dealBuyerB = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_BUYER_B.details.testId);
+            deal.dealSnapshot.testId === DEAL_BUYER_B.testId);
         });
       });
   });
