@@ -369,10 +369,8 @@ describe('/v1/portal/deals', () => {
     it('returns the updated deal with updated statuses', async () => {
       const dealWithSubmittedStatus = {
         ...newDeal,
-        details: {
-          status: 'Submitted',
-          previousStatus: 'Checker\'s approval',
-        },
+        status: 'Submitted',
+        previousStatus: 'Checker\'s approval',
       };
 
       const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
@@ -383,8 +381,8 @@ describe('/v1/portal/deals', () => {
 
       expect(status).toEqual(200);
 
-      expect(body.details.status).toEqual('Acknowledged by UKEF');
-      expect(body.details.previousStatus).toEqual('Submitted');
+      expect(body.status).toEqual('Acknowledged by UKEF');
+      expect(body.previousStatus).toEqual('Submitted');
       expect(typeof body.updatedAt).toEqual('number');
     });
   });

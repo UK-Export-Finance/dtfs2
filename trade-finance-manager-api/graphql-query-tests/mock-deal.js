@@ -4,11 +4,11 @@ const MOCK_DEAL = {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'Mock supply contract ID',
     additionalRefName: 'Mock supply contract name',
+    status: 'Acknowledged by UKEF',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Acknowledged by UKEF',
       bank: 'Mock bank',
       ukefDealId: '20010739',
-      previousStatus: 'Submitted',
       maker: {
         username: 'JOE',
         firstname: 'Joe',

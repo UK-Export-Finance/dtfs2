@@ -4,8 +4,8 @@ const { aboutSupplyContractStatus } = require('./about');
 
 exports.dealSectionStatuses = (deal) => ({
   ...deal,
-  bondTransactions: addAccurateStatusesToBonds(deal.details.status, deal.submissionType, deal.bondTransactions),
-  loanTransactions: addAccurateStatusesToLoans(deal.details.status, deal.submissionType, deal.loanTransactions),
+  bondTransactions: addAccurateStatusesToBonds(deal.status, deal.submissionType, deal.bondTransactions),
+  loanTransactions: addAccurateStatusesToLoans(deal.status, deal.submissionType, deal.loanTransactions),
   submissionDetails: {
     ...deal.submissionDetails,
     status: aboutSupplyContractStatus(deal.submissionDetails),

@@ -27,7 +27,7 @@ const hasIncompleteLoans = (deal) => {
 const hasAtLeastOneLoanOrBond = (deal) => deal.loanTransactions.items.length > 0
                                        || deal.bondTransactions.items.length > 0;
 
-const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionDetails.status === 'Completed';
+const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionstatus === 'Completed';
 
 const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.status === 'Completed';
 

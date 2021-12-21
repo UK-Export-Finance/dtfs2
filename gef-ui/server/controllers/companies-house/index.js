@@ -43,7 +43,7 @@ const validateCompaniesHouse = async (req, res) => {
       companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber);
     }
 
-    if (companiesHouseDetails && companiesHouseDetails.status === 422) {
+    if (companiesHouseDetails && companiesHousestatus === 422) {
       companiesHouseDetails.data.forEach((error) => {
         companiesHouseErrors.push(error);
       });

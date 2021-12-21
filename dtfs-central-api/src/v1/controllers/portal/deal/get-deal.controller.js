@@ -182,7 +182,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         _id: 1,
         bankId: '$details.owningBank.id',
         bankRef: '$additionalRefName',
-        status: '$details.status',
+        status: '$status',
         product: 'BSS/EWCS',
         submissionType: '$submissionType',
         exporter: '$exporter.companyName',

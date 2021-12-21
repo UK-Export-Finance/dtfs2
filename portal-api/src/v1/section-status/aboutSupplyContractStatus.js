@@ -1,7 +1,7 @@
 module.exports = (submissionDetails, validationErrors) => {
   // some of the validation is time-sensitive so we have to be able to
   // recalculate this stuff on the fly.
-  if (submissionDetails.status === 'Not started') {
+  if (submissionDetails === 'Not started') {
     return 'Not started';
   }
 

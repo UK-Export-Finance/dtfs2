@@ -48,7 +48,7 @@ const buildReportFilters = (params, user) => {
   if (STATUS[params.filterByStatus]) {
     filters.push(
       {
-        field: 'details.status',
+        field: 'status',
         value: STATUS[params.filterByStatus],
       },
     );

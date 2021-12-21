@@ -211,17 +211,17 @@ describe('/v1/tfm/deals', () => {
         // NOTE: tfm.stage is generated on deal submission.
 
         const ainDealWithConfirmedStage = newDeal({
+          status: 'Submitted',
           details: {
             ukefDealId: 'DEAL-WITH-CONFIRMED-STAGE',
-            status: 'Submitted',
           },
         });
 
         const miaDealWithApplicationStage = newDeal({
           submissionType: 'Manual Inclusion Application',
+          status: 'Submitted',
           details: {
             ukefDealId: 'DEAL-WITH-APPLICATION-STAGE',
-            status: 'Submitted',
           },
         });
 
@@ -364,17 +364,17 @@ describe('/v1/tfm/deals', () => {
         const yesterday = sub(today, { days: 1 });
 
         const dealSubmittedYesterday = newDeal({
+          status: 'Submitted',
           details: {
             ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
-            status: 'Submitted',
             submissionDate: yesterday,
           },
         });
 
         const dealSubmittedToday = newDeal({
+          status: 'Submitted',
           details: {
             ukefDealId: 'DEAL-SUBMITTED-TODAY',
-            status: 'Submitted',
             submissionDate: todayTimestamp,
           },
         });
@@ -436,17 +436,17 @@ describe('/v1/tfm/deals', () => {
         const yesterdayTimestamp = sub(today, { days: 1 }).valueOf().toString();
 
         const dealSubmittedYesterday = newDeal({
+          status: 'Submitted',
           details: {
             ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
-            status: 'Submitted',
             submissionDate: yesterdayTimestamp,
           },
         });
 
         const dealSubmittedToday = newDeal({
+          status: 'Submitted',
           details: {
             ukefDealId: 'DEAL-SUBMITTED-TODAY',
-            status: 'Submitted',
             submissionDate: todayTimestamp,
           },
         });

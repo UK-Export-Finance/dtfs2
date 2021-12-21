@@ -23,12 +23,12 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       loanTransactions,
       eligibility,
       exporter,
+      status,
     } = mockDeal.dealSnapshot;
 
     const {
       submissionCount,
       submissionDate,
-      status,
       ukefDealId,
       maker,
     } = details;

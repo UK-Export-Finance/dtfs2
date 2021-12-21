@@ -56,7 +56,7 @@ query {
 
 const dealsFilterStatusQuery = `
 query {
-  deals(params: { filters: [{ field: "details.status", value: "Draft"}]}) {
+  deals(params: { filters: [{ field: "status", value: "Draft"}]}) {
     status {
       code
     }
@@ -75,7 +75,7 @@ query {
 
 const dealsFilterStatusPaginatedQuery = `
 query {
-  deals(params: {  start:1, pagesize: 2, filters: [{ field: "details.status", value: "Draft"}]}) {
+  deals(params: {  start:1, pagesize: 2, filters: [{ field: "status", value: "Draft"}]}) {
     status {
       code
     }
@@ -94,7 +94,7 @@ query {
 
 const dealsFilterNotStatusQuery = `
 query {
-  deals(params: { filters: [{ field: "details.status", value: "Draft", operator: "ne"}]}) {
+  deals(params: { filters: [{ field: "status", value: "Draft", operator: "ne"}]}) {
     status {
       code
     }

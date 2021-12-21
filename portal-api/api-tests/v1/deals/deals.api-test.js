@@ -106,24 +106,24 @@ describe('/v1/deals', () => {
       expect(body.deal).toEqual(expectAddedFields(newDeal));
     });
 
-    it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
+    it('calculates deal.submissionstatus = Incomplete if there are validation failures', async () => {
       const postResult = await as(anHSBCMaker).post(dealWithAboutIncomplete).to('/v1/deals');
       const newId = postResult.body._id;
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.submissionDetails.status).toEqual('Incomplete');
+      expect(body.deal.submissionstatus).toEqual('Incomplete');
     });
 
-    it('calculates deal.submissionDetails.status = Completed if there are no validation failures', async () => {
+    it('calculates deal.submissionstatus = Completed if there are no validation failures', async () => {
       const postResult = await as(anHSBCMaker).post(dealWithAboutComplete).to('/v1/deals');
       const newId = postResult.body._id;
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.submissionDetails.status).toEqual('Completed');
+      expect(body.deal.submissionstatus).toEqual('Completed');
     });
 
     it('returns a deal with calculated summary/totals object', async () => {
