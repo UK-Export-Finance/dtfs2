@@ -28,8 +28,6 @@ const findOneDeal = async (_id, callback) => {
           },
         }).toArray();
 
-        //   console.log(facilityIds);
-
         facilityIds.forEach((id) => {
           const { facilitySnapshot } = facilities.find((f) => f._id === id);
 

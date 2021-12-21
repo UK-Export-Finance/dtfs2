@@ -50,10 +50,7 @@ const getFacilities = async (queryParams) => {
     };
   }
 
-  return {
-    deals: [],
-    count: 0,
-  };
+  return { facilities: [] };
 };
 
 const getDeals = async (queryParams) => {
