@@ -166,7 +166,7 @@ describe(component, () => {
   describe('when viewed by a maker checker', () => {
     it('should not render at all for deals in status=Ready for Checker\'s approval with dealFormsCompleted flag set to true', () => {
       const user = { roles: ['maker', 'checker'] };
-      const deal = { _id: 4, status: "Ready for Checker's approval" },
+      const deal = { _id: 4, status: "Ready for Checker's approval" };
       const dealFormsCompleted = true;
 
       const wrapper = render({ user, deal, dealFormsCompleted });

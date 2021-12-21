@@ -7,6 +7,7 @@ describe('isDealEditable', () => {
     it('should return false', () => {
       const mockDeal = {
         status: 'Further Maker\'s input required',
+        details: {},
       };
 
       const checkerUser = { roles: ['checker'] };
@@ -20,6 +21,7 @@ describe('isDealEditable', () => {
     it('should return false', () => {
       const mockAcceptedDeal = {
         status: 'Accepted by UKEF (with conditions)',
+        details: {},
       };
 
       const result = isDealEditable(mockAcceptedDeal, mockMakerUser);
@@ -45,6 +47,7 @@ describe('isDealEditable', () => {
     it('should return true', () => {
       const mockDeal = {
         status: 'Draft',
+        details: {},
       };
 
       const result = isDealEditable(mockDeal, mockMakerUser);
@@ -56,6 +59,7 @@ describe('isDealEditable', () => {
     it('should return true', () => {
       const mockDeal = {
         status: 'Further Maker\'s input required',
+        details: {},
       };
 
       const result = isDealEditable(mockDeal, mockMakerUser);

@@ -313,6 +313,7 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
         status: 'Acknowledged by UKEF',
+        details: {},
       };
 
       const mockBond = {
@@ -368,6 +369,7 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
         status: 'Acknowledged by UKEF',
+        details: {},
       };
 
       const mockLoan = {
