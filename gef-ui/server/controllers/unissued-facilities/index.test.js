@@ -494,9 +494,9 @@ describe('validation()', () => {
     mockRequest.body.facilityName = 'Foundry4';
     mockRequest.query.saveAndReturn = 'true';
 
-    mockRequest.body['cover-start-date-day'] = '';
-    mockRequest.body['cover-start-date-month'] = '';
-    mockRequest.body['cover-start-date-year'] = '';
+    mockRequest.body['issue-date-day'] = '';
+    mockRequest.body['issue-date-month'] = '';
+    mockRequest.body['issue-date-year'] = '';
 
     mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
