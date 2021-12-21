@@ -11,7 +11,7 @@ const deal = {
   bankInternalRefName: 'test',
   additionalRefName: 'testing',
   status: 'Further Maker\'s input required',
-  previousStatus: 'Ready for Checker's approval',
+  previousStatus: 'Ready for Checker\'s approval',
   details: {
     maker: {
       username: 'MAKER',

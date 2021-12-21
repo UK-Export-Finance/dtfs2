@@ -84,7 +84,7 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return false when a deal\'s submissionstatus is NOT `Completed`', () => {
+  it('should return false when a deal\'s submissionDetails.status is NOT `Completed`', () => {
     const deal = {
       submissionDetails: incompleteSubmissionDetails,
       bondTransactions: completeBonds,

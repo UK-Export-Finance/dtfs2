@@ -196,7 +196,7 @@ describe('/v1/deals/:id/submission-details', () => {
         };
 
         const updatedSubmissionDetails = await as(anHSBCMaker).put(body).to(`/v1/deals/${createdDeal._id}/submission-details`);
-        expect(updatedSubmissionstatus).toEqual(200);
+        expect(updatedsubmissionDetails.status).toEqual(200);
 
         const expectedCountryObj = { name: 'Canada', code: 'CAN' };
 
@@ -230,7 +230,7 @@ describe('/v1/deals/:id/submission-details', () => {
         };
 
         const updatedSubmissionDetails = await as(anHSBCMaker).put(updateBody).to(`/v1/deals/${createdDeal._id}/submission-details`);
-        expect(updatedSubmissionstatus).toEqual(200);
+        expect(updatedsubmissionDetails.status).toEqual(200);
 
         const expectedCurrencyObj = { currencyId: 5, id: 'CAD', text: 'CAD - Canadian Dollars' };
 
