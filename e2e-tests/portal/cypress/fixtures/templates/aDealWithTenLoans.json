@@ -3,9 +3,9 @@
   "submissionType": "Automatic Inclusion Notice",
   "bankInternalRefName": "aDealWithTenLoans",
   "additionalRefName": "aDealWithTenLoans",
+  "status": "Draft",
   "details": {
     "ukefDealId": "ukef:aDealWithTenLoans",
-    "status": "Draft",
     "owningBank": {
       "id": "9",
       "name": "UKEF test bank (Delegated)",

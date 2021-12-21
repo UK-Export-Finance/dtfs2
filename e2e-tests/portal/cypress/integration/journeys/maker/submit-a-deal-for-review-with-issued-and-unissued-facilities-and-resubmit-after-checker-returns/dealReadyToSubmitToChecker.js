@@ -8,8 +8,8 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
+  status: 'Draft',
   details: {
-    status: 'Draft',
     created: now,
     owningBank: {
       id: '9',

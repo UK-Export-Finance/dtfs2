@@ -8,8 +8,22 @@ describe(component, () => {
     it("should be enabled for deals in status=Draft and status=Further Maker's input required", () =>{
       const user = {_id: 123, roles: ['maker']};
       const deals = [
-        {_id: 1, details:{status:"Draft", maker:{_id:123}}},
-        {_id: 2, details:{status:"Further Maker's input required", maker:{_id:123}}},
+        {
+          _id: 1,
+          status: "Draft",
+          details: {
+            maker: {
+              _id:123,
+            },
+          },
+        },
+        {
+          _id: 2,
+          status: "Further Maker's input required",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
       ];
 
       for (const deal of deals) {
@@ -22,8 +36,20 @@ describe(component, () => {
     it("should not render at all for deals in status=Submitted and status=Rejected by UKEF", () =>{
       const user = {_id: 123, roles: ['maker']};
       const deals = [
-        {_id: 1, details:{status:"Submitted", maker:{_id:123}}},
-        {_id: 2, details:{status:"Rejected by UKEF", maker:{_id:123}}},
+        {
+          _id: 1,
+          status: "Submitted",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
+        {
+          _id: 2,
+          status:"Rejected by UKEF",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
       ];
 
       for (const deal of deals) {
@@ -36,11 +62,41 @@ describe(component, () => {
     it("should be disabled for deals in all other states", () =>{
       const user = {_id: 123, roles: ['maker']};
       const deals = [
-        {_id: 1, details:{status:"Abandoned", maker:{_id:123}}},
-        {_id: 2, details:{status:"Acknowledged by UKEF", maker:{_id:123}}},
-        {_id: 3, details:{status:"Accepted by UKEF (without conditions)", maker:{_id:123}}},
-        {_id: 4, details:{status:"Accepted by UKEF (with conditions)", maker:{_id:123}}},
-        {_id: 5, details:{status:"Ready for Checker's approval", maker:{_id:123}}},
+        {
+          _id: 1,
+          status:"Abandoned",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
+        {
+          _id: 2,
+          status: "Acknowledged by UKEF",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
+        {
+          _id: 3,
+          status: "Accepted by UKEF (without conditions)",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
+        {
+          _id: 4,
+          status: "Accepted by UKEF (with conditions)",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
+        {
+          _id: 5,
+          status: "Ready for Checker's approval",
+          details: {
+            maker: { _id: 123 },
+          },
+        },
       ];
 
       for (const deal of deals) {
@@ -56,8 +112,8 @@ describe(component, () => {
     it("should not render at all", () => {
       const user = { _id: 123, roles: ['checker'] };
       const deals = [
-        { _id: 1, details: { status: "Draft", maker: { _id: 123 } } },
-        { _id: 2, details: { status: "Further Maker's input required", maker: { _id: 123 } } },
+        { _id: 1, status: "Draft", details: { maker: { _id: 123 } } },
+        { _id: 2, status: "Further Maker's input required", details: { maker: { _id: 123 } } },
       ];
 
       for (const deal of deals) {
@@ -72,8 +128,8 @@ describe(component, () => {
     it("should render", () => {
       const user = { _id: 123, roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: "Draft", maker: { _id: 123 } } },
-        { _id: 2, details: { status: "Further Maker's input required", maker: { _id: 123 } } },
+        { _id: 1, status: "Draft", details: { maker: { _id: 123 } } },
+        { _id: 2, status: "Further Maker's input required", details: { maker: { _id: 123 } } },
       ];
 
       for (const deal of deals) {

@@ -3,8 +3,9 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'test',
   additionalRefName: 'testing',
+  status: "Ready for Checker's approval",
+  previousStatus: 'Draft',
   details: {
-    status: "Ready for Checker's approval",
     maker: {
       username: 'MAKER',
       roles: [
@@ -34,7 +35,6 @@ const deal = {
       ],
     },
     created: new Date().valueOf(),
-    previousStatus: 'Draft',
   },
   eligibility: {
     status: 'Completed',

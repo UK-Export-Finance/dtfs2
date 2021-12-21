@@ -119,10 +119,10 @@ describe(component, () => {
 
     const deal = {
       updatedAt: null,
+      status: '',
       details: {
         bankInternalRefName: '',
         ukefDealId: ' ',
-        status: '   ',
         previousStatus: '',
         maker: {},
         checker: {},

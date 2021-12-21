@@ -10,9 +10,7 @@ describe(component, () => {
 
   const deal = {
     submissionType: 'Manual Inclusion Application',
-    details: {
-      status: 'Ready for Checker\'s approval',
-    },
+    status: 'Ready for Checker\'s approval',
     loanTransactions: {
       items: [
         {

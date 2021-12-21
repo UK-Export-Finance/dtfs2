@@ -287,14 +287,14 @@ describe('/graphql query deals', () => {
   describe('/graphql list deals filters', () => {
     it('returns a list of deals, ordered by "updated", filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-2', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-3', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Submitted' }, additionalRefName: 'bank1-4', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-5', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Acknowledged by UKEF' }, additionalRefName: 'bank2-0', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Acknowledged by UKEF' }, additionalRefName: 'bank2-1', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-2', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-3', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Submitted', additionalRefName: 'bank1-4', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-5', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Acknowledged by UKEF', additionalRefName: 'bank2-0', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Acknowledged by UKEF', additionalRefName: 'bank2-1', bankInternalRefName: 'mockSupplyContractId' }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -323,14 +323,14 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated and filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-2', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-3', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Submitted' }, additionalRefName: 'bank1-4', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-5', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Acknowledged by UKEF' }, additionalRefName: 'bank2-0', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Acknowledged by UKEF' }, additionalRefName: 'bank2-1', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-2', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-3', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Submitted', additionalRefName: 'bank1-4', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-5', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Acknowledged by UKEF', additionalRefName: 'bank2-0', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Acknowledged by UKEF', additionalRefName: 'bank2-1', bankInternalRefName: 'mockSupplyContractId' }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -356,14 +356,14 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", filtered by not equal filter', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-2', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-3', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Submitted' }, additionalRefName: 'bank1-4', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Draft' }, additionalRefName: 'bank1-5', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Acknowledged by UKEF' }, additionalRefName: 'bank2-0', bankInternalRefName: 'mockSupplyContractId' }),
-        aDeal({ details: { status: 'Acknowledged by UKEF' }, additionalRefName: 'bank2-1', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-2', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-3', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Submitted', additionalRefName: 'bank1-4', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Draft', additionalRefName: 'bank1-5', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Acknowledged by UKEF', additionalRefName: 'bank2-0', bankInternalRefName: 'mockSupplyContractId' }),
+        aDeal({ status: 'Acknowledged by UKEF', additionalRefName: 'bank2-1', bankInternalRefName: 'mockSupplyContractId' }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');

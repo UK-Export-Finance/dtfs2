@@ -8,10 +8,7 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const dealInDraft = {
   ...fullyCompletedDeal,
-  details: {
-    ...fullyCompletedDeal.details,
-    status: 'Draft',
-  },
+  status: 'Draft',
 };
 
 context('Check deal details', () => {

@@ -5,9 +5,9 @@ const deal = {
   updatedAt: Date.now(),
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
+  status: 'Ready for Checker\'s approval',
+  previousStatus: 'Draft',
   details: {
-    status: "Ready for Checker's approval",
-    previousStatus: 'Draft',
     previousWorkflowStatus: 'Draft',
     checker: {
       username: 'test1',

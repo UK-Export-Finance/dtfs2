@@ -16,11 +16,8 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
   const modifiedDeal = {
     ...existingDeal,
     updatedAt: Date.now(),
-    details: {
-      ...existingDeal.details,
-      status,
-      previousStatus,
-    },
+    status,
+    previousStatus,
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(

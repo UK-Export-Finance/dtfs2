@@ -11,9 +11,8 @@ const now = new Date().valueOf();
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
   additionalRefName: 'someDealName',
-  details: {
-    status: 'Draft',
-  },
+  status: 'Draft',
+  details: {},
   submissionDetails: {
     supplyContractCurrency: {
       id: 'GBP',

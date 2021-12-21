@@ -14,43 +14,36 @@ context('User can view and filter multiple deals', () => {
   let ALL_FACILITIES = [];
 
   const DEAL_WITH_TEST_SUPPLIER_NAME = createMockDeal({
-    details: { status: 'Submitted' },
+    'Submitted',
     submissionDetails: { 'supplier-name': 'MY-SUPPLIER' },
   });
 
   const DEAL_WITH_TEST_MIN_SUBMISSION_TYPE = createMockDeal({
     submissionType: 'Manual Inclusion Notice',
-    details: {
-      status: 'Submitted',
+    status: 'Submitted',
     },
   });
 
   const DEAL_WITH_TEST_BUYER_NAME = createMockDeal({
-    details: { status: 'Submitted' },
+    'Submitted',
     submissionDetails: { 'buyer-name': 'MY-BUYER' },
   });
 
   const DEAL_WITH_TEST_MIA_SUBMISSION_TYPE = createMockDeal({
     submissionType: 'Manual Inclusion Application',
-    details: {
-      testId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
-      status: 'Submitted',
-    },
+    testId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
+    status: 'Submitted',
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
-    details: {
-      testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
-    },
+    testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'bond'),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
-    details: {
-      testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
-    },
+    testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'loan'),
     ],
@@ -59,10 +52,8 @@ context('User can view and filter multiple deals', () => {
   const yesterday = nowPlusDays(-1);
 
   const DEAL_SUBMITTED_YESTERDAY = createMockDeal({
-    details: {
-      testId: 'DEAL_SUBMITTED_YESTERDAY',
-      submissionDate: yesterday.valueOf().toString(),
-    },
+    testId: 'DEAL_SUBMITTED_YESTERDAY',
+    submissionDate: yesterday.valueOf().toString(),
   });
 
   const MOCK_DEALS = [
@@ -207,7 +198,7 @@ context('User can view and filter multiple deals', () => {
     // all other deals used in this e2e spec are either AIN or MIN deals.
 
     const submittedMiaDeal = ALL_SUBMITTED_DEALS.find((deal) =>
-      deal.dealSnapshot.details.testId === 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE'
+      deal.dealSnapshot.testId === 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE'
       && deal.tfm.stage === 'Application');
 
     const searchString = submittedMiaDeal.tfm.stage;
@@ -264,7 +255,7 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = todayFormatted;
 
-    const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) => deal.details.testId !== 'DEAL_SUBMITTED_YESTERDAY');
+    const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) => deal.testId !== 'DEAL_SUBMITTED_YESTERDAY');
 
     const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
 
@@ -284,7 +275,7 @@ context('User can view and filter multiple deals', () => {
     const searchString = todayFormatted;
 
     const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) =>
-      deal.details.testId !== 'DEAL_SUBMITTED_YESTERDAY');
+      deal.testId !== 'DEAL_SUBMITTED_YESTERDAY');
 
     const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
 

@@ -370,10 +370,7 @@ describe('/v1/deals/:id/status', () => {
     it("rejects 'Ready for Checker's approval' updates if no comment provided.", async () => {
       const draftDeal = {
         ...completedDeal,
-        details: {
-          ...completedDeal.details,
-          status: 'Draft',
-        },
+        status: 'Draft',
       };
 
       const postResult = await as(anHSBCMaker).post(draftDeal).to('/v1/deals');
