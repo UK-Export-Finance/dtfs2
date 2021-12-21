@@ -679,7 +679,7 @@ describe('mapSummaryList()', () => {
 
     const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
     // should be allowed to change so should display change
-    expect(text).toEqual('Add');
+    expect(text).toEqual('Change');
   });
 });
 
@@ -1114,7 +1114,7 @@ describe('summaryItemsConditions()', () => {
       };
 
       const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('Add');
+      expect(text).toEqual('Change');
     });
   });
 

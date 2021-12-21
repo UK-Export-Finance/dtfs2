@@ -38,7 +38,7 @@ const fetchAllFacilities = (dealId, token) => cy.request({
 const createApplication = (user, token) => cy.request({
   url: `${BASE_URL}/gef/application`,
   method: 'POST',
-  body: { user },
+  body: user,
   headers: {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -55,10 +55,10 @@ const updateApplication = (dealId, token, update) => cy.request({
   },
 }).then((res) => res);
 
-const createFacility = (dealId, token) => cy.request({
+const createFacility = (dealId, type, token) => cy.request({
   url: `${BASE_URL}/gef/facilities`,
   method: 'POST',
-  body: { dealId },
+  body: { dealId, type },
   headers: {
     'Content-Type': 'application/json',
     Authorization: token,

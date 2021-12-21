@@ -247,7 +247,7 @@ const facilityValidation = async (req, res) => {
   if (!body.shouldCoverStartOnSubmission && !saveAndReturn) {
     aboutFacilityErrors.push({
       errRef: 'shouldCoverStartOnSubmission',
-      errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
+      errMsg: 'Select if you want UKEF cover to start on the day you issue the facility',
     });
   }
 
@@ -464,7 +464,8 @@ const postChangeUnissuedAboutFacility = async (req, res) => {
       }),
       (req.url = `/gef/application-details/${dealId}/unissued-facilities`),
     );
-
+    // TODO: redirect where it changes the link away from /gef/application-details/${dealId}/unissued-facilities/facilityid
+    //  ... to /gef/application-details/${dealId}/unissued-facilities
     return applicationDetails(req, res);
   } catch (err) {
     console.log(err);
@@ -498,7 +499,7 @@ const postChangeUnissuedAboutFacilityChange = async (req, res) => {
       (req.url = `/gef/application-details/${dealId}`),
     );
 
-    return applicationDetails(req, res);
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.log(err);
     return res.render('partials/problem-with-service.njk');

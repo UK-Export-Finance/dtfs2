@@ -175,7 +175,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
           {
             href: unissuedHref,
             /*  */
-            text: `${unissuedShow ? 'Add' : ''}`,
+            text: `${unissuedShow ? 'Change' : ''}`,
             visuallyHiddenText: item.label,
           },
         ]
@@ -419,13 +419,13 @@ const facilityIssueDeadline = (submissionDate) => {
 const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
   facilities.items
     .filter(({ details }) => !details.hasBeenIssued)
-    .map(({ details }) => [
+    .map(({ details }, index) => [
       { text: details.name },
       { text: details.ukefFacilityId },
-      { text: `${details.currency} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+      { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
       { text: facilityIssueDeadline(submissionDate) },
       {
-        html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about-facility?status=change' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>`,
+        html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about-facility' class='govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-facility-button-${index}'>Update</a>`,
       },
     ]);
 

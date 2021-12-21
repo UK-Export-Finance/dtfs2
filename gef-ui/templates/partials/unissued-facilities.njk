@@ -36,53 +36,61 @@
                 type: 'success',
                 text: success.message,
                 iconFallbackText: 'Success',
-                'data-cy': 'success-banner'
+                attributes: {
+                  'data-cy': 'success-banner'
+                }
                 }) }}
     {% endif %}
   {% endif %}
   <div class="govuk-grid-row govuk-body">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column">
       {% if facility.length > 0 %}
         {{ govukTable
-                  ({
-                        caption: "Update unissued facilities",
-                        captionClasses: "govuk-table__caption--xl",
-                        firstCellIsHeader: true,
-                        classes: "govuk-table__vertical-align",
-                        'data-cy': 'unissued-facilities-table',
-                        head: [
-                           {
-                           text: "Facility name"
-                           },
-                           {
-                           text: "UKEF Facility ID"
-                           },
-                           {
-                           text: "Value"
-                           },
-                           {
-                           text: "Deadline for issuing"
-                           },
-                           {
-                           }
-                        ],
-                        rows: facility
-                  }) }}
-        <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="update-later-link">Update facility
-          stage later</a>
+          ({
+            caption: "Update unissued facilities",
+            captionClasses: "govuk-table__caption--xl",
+            firstCellIsHeader: true,
+            classes: "govuk-table__vertical-align",
+            attributes: {
+              'data-cy': 'unissued-facilities-table'
+            },
+            head: [
+                {
+                text: "Facility name"
+                },
+                {
+                text: "UKEF Facility ID"
+                },
+                {
+                text: "Value"
+                },
+                {
+                text: "Deadline for issuing"
+                },
+                {
+                }
+            ],
+            rows: facility
+          }) }}
+        <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="update-later-link">Update facility stage
+          later</a>
       {% else %}
         {{ mojBanner({
-                  type: 'success',
-                  text: 'Facility Stages are now updated',
-                  iconFallbackText: 'Success',
-                  'data-cy': 'all-unissued-updated-success-banner'
-                  }) }}
+            type: 'success',
+            text: 'Facility Stages are now updated',
+            iconFallbackText: 'Success',
+            attributes: {
+                'data-cy': 'all-unissued-updated-success-banner'
+            }
+            }) }}
         <div class="govuk-button-group">
           {{ govukButton({
-                        text: "Continue",
-                        href: "/gef/application-details/" + dealId,
-                        'data-cy': 'continue button'
-                        }) }}
+              text: "Continue",
+              href: "/gef/application-details/" + dealId,
+                attributes: {
+                'data-cy': 'continue-button'
+              }
+              }) }}
         </div>
       {% endif %}
     </div>

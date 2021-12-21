@@ -24,9 +24,16 @@ const applicationPreview = {
 
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
+  facilitySummaryListRowKey: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
+    .find('.govuk-summary-list__key'),
+  facilitySummaryListRowValue: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
+    .find('.govuk-summary-list__value'),
+  facilitySummaryListRowAction: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
+    .find('.govuk-summary-list__actions'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
+  submitButtonPostApproval: () => cy.get('[data-cy="submit-ukef-approved-application-to-checker"]'),
   returnButton: () => cy.get('[data-cy="return-button"]'),
 };
 
