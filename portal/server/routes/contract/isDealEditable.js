@@ -8,7 +8,7 @@ const isDealEditable = (deal, user) => {
   const { submissionDate } = deal.details;
   const dealHasBeenSubmitted = submissionDate;
 
-  if (![STATUS.draft, STATUS.inputRequired].includes(deal.details.status)
+  if (![STATUS.draft, STATUS.inputRequired].includes(deal.status)
       || dealHasBeenSubmitted) {
     return false;
   }

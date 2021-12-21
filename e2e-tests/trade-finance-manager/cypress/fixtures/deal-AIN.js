@@ -3,10 +3,10 @@ const MOCK_DEAL = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
+  status: 'Submitted',
+  previousStatus: 'Submitted',
   details: {
-    status: 'Submitted',
     bank: 'Mock bank',
-    previousStatus: 'Submitted',
     maker: {
       username: 'JOE',
       firstname: 'Joe',

@@ -4,9 +4,7 @@ describe('userCanSubmitDeal', () => {
   describe('when deal has `Submitted` status', () => {
     it('should return false', () => {
       const deal = {
-        details: {
-          status: 'Submitted',
-        },
+        status: 'Submitted',
       };
 
       const result = userCanSubmitDeal(deal);
@@ -17,9 +15,7 @@ describe('userCanSubmitDeal', () => {
   describe('when deal has `Rejected by UKEF` status', () => {
     it('should return false', () => {
       const deal = {
-        details: {
-          status: 'Rejected by UKEF',
-        },
+        status: 'Rejected by UKEF',
       };
 
       const result = userCanSubmitDeal(deal);

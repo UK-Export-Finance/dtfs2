@@ -115,9 +115,9 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
       submissionType
       bankInternalRefName
       additionalRefName
+      status,
       details {
         ukefDealId,
-        status,
         submissionDate,
         owningBank {
           name,

@@ -50,8 +50,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions;
-  const miaWithConditions = applications.deals.filter((deal) => (deal.details.status === 'Accepted by UKEF (with conditions)'));
-  const miaWithOutConditions = applications.deals.filter((deal) => (deal.details.status === 'Accepted by UKEF (without conditions)'));
+  const miaWithConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (with conditions)'));
+  const miaWithOutConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (without conditions)'));
 
   const status90Days = getRAGstatus(incompleteFacilities, 90, false);
   const status20Days = getRAGstatus(miaWithConditions, 28, true);

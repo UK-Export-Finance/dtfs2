@@ -119,7 +119,7 @@ const getMIAData = async (req, res, filterByDealStatus) => {
   let deals = [];
   let count = 0;
   if (applications.deals) {
-    miaWithConditions = applications.deals.filter((deal) => (deal.details.status === filterByDealStatus));
+    miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
     tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
     // once we have the deals and expiry dates, filter the display
     console.log(`tempDeals: ${util.inspect(tempDeals)}`);

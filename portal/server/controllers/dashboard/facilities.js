@@ -17,7 +17,7 @@ exports.bssFacilities = async (req, res) => {
   const { user } = req.session;
   const facilityFilters = [];
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'details.status', value: STATUS.readyForApproval, operator: 'eq' });
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'status', value: STATUS.readyForApproval, operator: 'eq' });
 
   const filters = [...facilityFilters];
 

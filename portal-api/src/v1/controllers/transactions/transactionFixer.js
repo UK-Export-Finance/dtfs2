@@ -6,7 +6,7 @@ const bankInternalRefName = 'bankInternalRefName';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
 const TRANSACTION_DEAL_CREATED = 'details.created';
 const DEAL_ID = '_id';
-const DEAL_STATUS = 'details.status';
+const DEAL_STATUS = 'status';
 const DEAL_PREVIOUS_STATUS = 'details.previousStatus';
 const TRANSACTION_PREVIOUS_COVER_START_DATE = 'transaction.previousCoverStartDate';
 const DEAL_BANK = 'details.owningBank.id';
@@ -66,12 +66,12 @@ const constructor = (user, filters) => {
         return listSoFar.concat([deal]);
       }
       if (DEAL_STATUS === filterField) {
-        const dealwithStatus = { 'details.status': filter[filterField] };
+        const dealwithStatus = { status: filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
       }
       if (DEAL_PREVIOUS_STATUS === filterField) {
-        const dealwithStatus = { 'details.previousStatus': filter[filterField] };
+        const dealwithStatus = { previousStatus: filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
       }

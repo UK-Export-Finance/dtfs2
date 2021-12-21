@@ -1,8 +1,7 @@
 const DEFAULTS = {
   DEAL: {
-    details: {
-      status: 'Draft',
-    },
+    status: 'Draft',
+    details: {},
     eligibility: {
       status: 'Not started',
       criteria: [],

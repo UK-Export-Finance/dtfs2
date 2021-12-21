@@ -14,7 +14,7 @@ context('A checker selects to return a deal to maker from the view-contract page
   let deal;
 
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.details.status)[0];
+    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), MAKER_LOGIN)

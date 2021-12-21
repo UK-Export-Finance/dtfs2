@@ -3,10 +3,10 @@ const MOCK_DEAL = {
   submissionType: 'Manual Inclusion Application',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
+  status: 'Submitted',
+  previousStatus: 'Ready for Checker\'s Approval',
   details: {
-    status: 'Submitted',
     bank: 'Mock bank',
-    previousStatus: 'Ready for Checker\'s Approval',
     maker: {
       username: 'JOE',
       firstname: 'Joe',
