@@ -34,18 +34,32 @@ const generateId = async ({
   user,
 });
 
-const generateUkefDealId = async (application) => application.ukefDealId || generateId({
-  entityId: application._id,
-  entityType: 'deal',
-  dealId: application._id,
-  user: application.checkerId,
-});
+const generateUkefDealId = async (application) => {
+  if (application.ukefDealId) {
+    return {
+      ukefId: application.ukefDealId,
+    };
+  }
+  return generateId({
+    entityId: application._id,
+    entityType: 'deal',
+    dealId: application._id,
+    user: application.checkerId,
+  });
+};
 
-const generateUkefFacilityId = async (facility) => facility.ukefDealId || generateId({
-  entityId: facility._id,
-  entityType: 'facility',
-  dealId: facility.dealId,
-});
+const generateUkefFacilityId = async (facility) => {
+  if (facility.ukefFacilityId) {
+    return {
+      ukefId: facility.ukefFacilityId,
+    };
+  }
+  return generateId({
+    entityId: facility._id,
+    entityType: 'facility',
+    dealId: facility.dealId,
+  });
+};
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);

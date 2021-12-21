@@ -1,5 +1,8 @@
 const CONSTANTS = require('../../constants');
-const { validationErrorHandler, isNotice } = require('../../utils/helpers');
+const {
+  validationErrorHandler,
+  isNotice,
+} = require('../../utils/helpers');
 const api = require('../../services/api');
 
 const MAX_COMMENT_LENGTH = 400;
@@ -25,6 +28,7 @@ const createSubmissionToUkef = async (req, res) => {
   const { comment } = body;
   console.log('GEF Application is being submitted to UKEF--TFM');
   const application = await api.getApplication(dealId);
+  const { ukefDecisionAccepted } = application;
 
   let checker;
   try {
@@ -59,6 +63,15 @@ const createSubmissionToUkef = async (req, res) => {
       comments.push(commentObj);
       application.comments = comments;
     }
+    /**
+     * DTFS2 - 4149 : If the application has been accepted by the maker
+     * then change the following application attributes:
+     * 1. Submission Type : MIA -> MIN
+     */
+    if (ukefDecisionAccepted) {
+      application.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
+    }
+
     // Always update with the latest checkers details.
     application.checkerId = user._id;
     await api.updateApplication(dealId, application);
@@ -67,6 +80,7 @@ const createSubmissionToUkef = async (req, res) => {
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType: application.submissionType,
       isNotice: isNotice(application.submissionType),
+      ukefDecisionAccepted,
     });
   } catch (err) {
     console.error('Unable to post submit to UKEF', { err });
