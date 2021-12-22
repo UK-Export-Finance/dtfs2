@@ -22,6 +22,8 @@ const dealsPage = {
       cy.get(`[data-cy="deal-${dealId}"]`).as('row');
       return {
         dealLink: () => cy.get('@row').get(`[data-cy="deal-${dealId}-ukef-deal-id-link"]`),
+        submissionType: () => cy.get('@row').get(`[data-cy="deal-${dealId}-type"]`),
+        exporterName: () => cy.get('@row').get(`[data-cy="deal-${dealId}-exporterName"]`),
       };
     },
   },
