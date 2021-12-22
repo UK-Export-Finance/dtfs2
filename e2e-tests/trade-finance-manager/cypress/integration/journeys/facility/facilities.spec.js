@@ -38,7 +38,6 @@ context('Facility page', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
 
-    //  cy.get('[data-cy="dashboard-link"]').
     cy.get('[data-cy="facility__header--ukefFacilityId"]').invoke('attr', 'aria-sort').should('contain', 'ascending');
     cy.get('[data-cy="facility__header--product"]').should('contain', 'Product');
     cy.get('[data-cy="facility__header--dataType"]').should('contain', 'Type');

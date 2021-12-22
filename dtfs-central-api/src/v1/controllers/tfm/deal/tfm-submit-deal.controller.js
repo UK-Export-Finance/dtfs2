@@ -83,7 +83,7 @@ const createFacilitiesSnapshot = async (deal) => {
     : null;
 
   if (dealFacilities) {
-    const updatedFacilites = Promise.all(
+    const updatedFacilities = Promise.all(
       dealFacilities.map(async (facility) => collection.findOneAndUpdate(
         { _id: String(facility._id) },
         $.flatten({ facilitySnapshot: facility, ...tfmInit }),
@@ -91,7 +91,7 @@ const createFacilitiesSnapshot = async (deal) => {
       )),
     );
 
-    return updatedFacilites;
+    return updatedFacilities;
   }
 
   return dealFacilities;
