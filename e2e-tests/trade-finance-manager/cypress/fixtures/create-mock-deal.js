@@ -10,7 +10,7 @@ const createMockDeal = (overrides) => {
     facilities = overrides.mockFacilities;
   }
 
-  if (overrides.details.submissionDate) {
+  if (overrides?.details?.submissionDate) {
     submissionDate = overrides.details.submissionDate;
   }
 

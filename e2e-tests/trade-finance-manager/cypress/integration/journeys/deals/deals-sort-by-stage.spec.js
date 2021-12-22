@@ -12,17 +12,13 @@ context('User can view and sort deals by stage', () => {
   let dealApplication;
 
   const DEAL_CONFIRMED = createMockDeal({
-    details: {
-      testId: 'DEAL_CONFIRMED',
-    },
+    testId: 'DEAL_CONFIRMED',
     mockFacilities: MOCK_DEAL_AIN.mockFacilities,
   });
 
   const DEAL_APPLICATION = createMockDeal({
     submissionType: 'Manual Inclusion Application',
-    details: {
-      testId: 'DEAL_APPLICATION',
-    },
+    testId: 'DEAL_APPLICATION',
     mockFacilities: MOCK_DEAL_AIN.mockFacilities,
   });
 
@@ -54,10 +50,10 @@ context('User can view and sort deals by stage', () => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
           dealConfirmed = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_CONFIRMED.details.testId);
+            deal.dealSnapshot.testId === DEAL_CONFIRMED.testId);
 
           dealApplication = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_APPLICATION.details.testId);
+            deal.dealSnapshot.testId === DEAL_APPLICATION.testId);
         });
       });
   });

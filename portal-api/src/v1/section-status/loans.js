@@ -49,7 +49,7 @@ const addAccurateStatusesToLoans = (
   const {
     status: dealStatus,
     previousStatus: previousDealStatus,
-  } = deal.details;
+  } = deal;
 
   if (deal.loanTransactions.items.length) {
     deal.loanTransactions.items.forEach((l) => {

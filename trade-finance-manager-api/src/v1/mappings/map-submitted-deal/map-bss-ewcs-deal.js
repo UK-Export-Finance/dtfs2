@@ -15,12 +15,12 @@ const mapBssEwcsDeal = (deal) => {
     loanTransactions,
     eligibility,
     exporter,
+    status,
   } = dealSnapshot;
 
   const {
     submissionCount,
     submissionDate,
-    status,
     ukefDealId,
     maker,
   } = details;

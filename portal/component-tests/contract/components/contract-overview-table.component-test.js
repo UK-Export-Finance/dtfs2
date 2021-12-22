@@ -12,10 +12,10 @@ describe(component, () => {
   const deal = {
     updatedAt: Date.now(),
     bankInternalRefName: 'bankInternalRefName',
+    status: 'status',
+    previousStatus: 'previousStatus',
     details: {
       ukefDealId: 'ukefDealId',
-      status: 'status',
-      previousStatus: 'previousStatus',
       maker: {
         firstname: 'Robert',
         surname: 'Bruce',
@@ -55,14 +55,14 @@ describe(component, () => {
                     .toRead(deal.details.ukefDealId);
     });
 
-    it("displays deal.details.status", () =>{
+    it("displays deal.status", () =>{
       return wrapper.expectText('[data-cy="status"]')
-                    .toRead(deal.details.status);
+                    .toRead(deal.status);
     });
 
-    it("displays deal.details.previousStatus", () =>{
+    it("displays deal.previousStatus", () =>{
       return wrapper.expectText('[data-cy="previousStatus"]')
-                    .toRead(deal.details.previousStatus);
+                    .toRead(deal.previousStatus);
     });
 
     it("displays deal.details.maker.username", () =>{
@@ -119,10 +119,10 @@ describe(component, () => {
 
     const deal = {
       updatedAt: null,
+      status: '',
       details: {
         bankInternalRefName: '',
         ukefDealId: ' ',
-        status: '   ',
         previousStatus: '',
         maker: {},
         checker: {},
@@ -145,12 +145,12 @@ describe(component, () => {
                     .toRead("-");
     });
 
-    it("displays deal.details.status", () =>{
+    it("displays deal.status", () =>{
       return wrapper.expectText('[data-cy="status"]')
                     .toRead("-");
     });
 
-    it("displays deal.details.previousStatus", () =>{
+    it("displays deal.previousStatus", () =>{
       return wrapper.expectText('[data-cy="previousStatus"]')
                     .toRead("-");
     });

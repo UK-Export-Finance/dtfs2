@@ -45,7 +45,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     beforeEach(async () => {
       const minDeal = completedDeal;
       minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
-      minDeal.details.status = 'Accepted by UKEF (without conditions)';
+      minDeal.status = 'Accepted by UKEF (without conditions)';
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
 
@@ -122,7 +122,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     beforeEach(async () => {
       const minDeal = completedDeal;
       minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
-      minDeal.details.status = 'Accepted by UKEF (with conditions)';
+      minDeal.status = 'Accepted by UKEF (with conditions)';
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
 

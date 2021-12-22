@@ -1,10 +1,13 @@
 const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes('maker');
 
-  const { submissionType, details } = deal;
+  const {
+    submissionType,
+    status: dealStatus,
+    details,
+  } = deal;
 
   const {
-    status: dealStatus,
     submissionDate,
   } = details;
 

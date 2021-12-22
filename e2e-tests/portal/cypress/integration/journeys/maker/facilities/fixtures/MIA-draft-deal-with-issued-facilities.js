@@ -8,8 +8,8 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'TEST-DEAL',
   additionalRefName: 'TEST-DEAL',
+  status: 'Draft',
   details: {
-    status: 'Draft',
     created: now,
     maker: {
       username: 'MAKER',

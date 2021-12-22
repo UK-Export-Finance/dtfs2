@@ -7,9 +7,9 @@ const deal = {
   updatedAt: Date.now(),
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
+  status: 'Ready for Checker\'s approval',
+  previousStatus: 'Draft',
   details: {
-    status: 'Ready for Checker\'s approval',
-    previousStatus: 'Draft',
     maker: { username: 'some.user@client.com' },
     submissionDate: 1594296776916.0,
   },

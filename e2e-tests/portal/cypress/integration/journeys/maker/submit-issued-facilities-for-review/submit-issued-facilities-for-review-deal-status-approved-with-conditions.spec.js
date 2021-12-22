@@ -9,10 +9,7 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 
 const dealWithStatus = {
   ...dealWithNotStartedFacilityStatuses,
-  details: {
-    ...dealWithNotStartedFacilityStatuses.details,
-    status: 'Accepted by UKEF (with conditions)',
-  },
+  status: 'Accepted by UKEF (with conditions)',
 };
 
 context('A maker can issue and submit issued bond & loan facilities with a deal in `Accepted by UKEF (with conditions)` status', () => {

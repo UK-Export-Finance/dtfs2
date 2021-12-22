@@ -14,8 +14,8 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
+    status: 'Acknowledged by UKEF',
     details: {
-      status: 'Acknowledged by UKEF',
       submissionDate: moment(submissionDate).utc().valueOf(),
     },
     submissionDetails: {
@@ -268,11 +268,11 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           updatedDeal = {
             ...newDeal,
             submissionType: 'Manual Inclusion Application',
+            status: 'Accepted by UKEF (without conditions)',
             details: {
               ...newDeal.details,
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
-              status: 'Accepted by UKEF (without conditions)',
             },
           };
 
@@ -357,11 +357,11 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           updatedDeal = {
             ...newDeal,
             submissionType: 'Manual Inclusion Notice',
+            status: 'Accepted by UKEF (without conditions)',
             details: {
               ...newDeal.details,
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
-              status: 'Accepted by UKEF (without conditions)',
             },
           };
 

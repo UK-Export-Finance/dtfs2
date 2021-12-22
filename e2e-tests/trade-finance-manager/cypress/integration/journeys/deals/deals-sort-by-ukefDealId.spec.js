@@ -18,15 +18,11 @@ context('User can view and sort deals by ukefDealId', () => {
   const yesterday = nowPlusDays(-1);
 
   const DEAL_1 = createMockDeal({
-    details: {
-      submissionDate: twoDaysAgo.valueOf().toString(),
-    },
+    submissionDate: twoDaysAgo.valueOf().toString(),
   });
 
   const DEAL_2 = createMockDeal({
-    details: {
-      submissionDate: yesterday.valueOf().toString(),
-    },
+    submissionDate: yesterday.valueOf().toString(),
   });
 
   const MOCK_DEALS = [

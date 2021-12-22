@@ -38,7 +38,7 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
 
   filters.push(
     {
-      field: 'details.status',
+      field: 'status',
       value: 'Submitted',
     },
   );

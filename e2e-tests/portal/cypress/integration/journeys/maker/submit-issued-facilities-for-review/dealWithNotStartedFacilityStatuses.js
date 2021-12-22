@@ -5,8 +5,8 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
+  status: 'Acknowledged by UKEF',
   details: {
-    status: 'Acknowledged by UKEF',
     created: now,
     previousWorkflowStatus: 'Draft',
     submissionDate: now,

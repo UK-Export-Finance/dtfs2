@@ -3,7 +3,7 @@
   {% set userIsChecker = params.user.roles.includes('checker')%}
 
   {% set dealId = params.deal._id %}
-  {% set dealStatus = params.deal.details.status %}
+  {% set dealStatus = params.deal.status %}
   {% set dealSubmissionDate = params.deal.details.submissionDate %}
   {% set dealIsEditable = params.editable %}
 

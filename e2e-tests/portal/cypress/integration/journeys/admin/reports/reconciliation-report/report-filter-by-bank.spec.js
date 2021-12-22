@@ -25,9 +25,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneBond, BANK1_MAKER)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-01'),
-            status: 'Submitted',
           },
         };
         cy.updateDeal(inserted._id, update, BANK1_MAKER);
@@ -36,9 +36,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneLoan, BANK1_MAKER)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-03'),
-            status: 'Submitted',
           },
         };
 
@@ -48,9 +48,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneLoanAndOneBond, BANK1_MAKER)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-05'),
-            status: 'Submitted',
           },
         };
 
@@ -60,9 +60,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithTenBonds, BANK2_MAKER)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-07'),
-            status: 'Submitted',
           },
         };
 
@@ -72,9 +72,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithTenLoans, BANK2_MAKER)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-09'),
-            status: 'Submitted',
           },
         };
 
@@ -84,9 +84,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithTenLoansAndTenBonds, BANK2_MAKER)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: toBigNumber('2020-01-11'),
-            status: 'Submitted',
           },
         };
 

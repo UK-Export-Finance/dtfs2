@@ -1,6 +1,6 @@
 const gql = require('graphql-tag');
 
-//   deals(params: {start:0, pagesize: $pagesize, filter: [{field: "details.status", value: "Draft"}]}) {
+//   deals(params: {start:0, pagesize: $pagesize, filter: [{field: "status", value: "Draft"}]}) {
 const dealsQuery = `
 query {
   deals {
