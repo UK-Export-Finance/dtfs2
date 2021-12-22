@@ -93,6 +93,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       /**
        * Current requirement only allows AIN & MIN deals to be send to ACBS
+       * This calls CREATES Deal & Facility ACBS records
        */
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
@@ -111,10 +112,12 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
 
-    // Update facility stage code to Issued
-    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    ) {
+    /**
+     * Current requirement only allows AIN & MIN deals to be send to ACBS
+     * This calls UPDATES facility record by updating their stage from
+     * Unissued (06) to Issued (07)
+     */
+    if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
@@ -129,7 +132,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
       updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
 
-      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
+        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      }
 
       await sendAinMinAcknowledgement(updatedDeal);
     }
@@ -144,14 +149,33 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
+const dealHasAllUkefId = async (dealId) => {
+  const deal = await findOneTfmDeal(dealId);
+
+  if (deal && deal.dealSnapshot && deal.dealSnapshot.facilities) {
+    const dealHasId = !!deal.dealSnapshot.ukefDealId;
+    const facilitiesHaveIds = deal.dealSnapshot.facilities.filter((f) => !f.facilitySnapshot.ukefFacilityId).length === 0;
+    return dealHasId && facilitiesHaveIds;
+  }
+
+  return false;
+};
+
+exports.dealHasAllUkefId = dealHasAllUkefId;
+
 const submitDealPUT = async (req, res) => {
   const {
     dealId,
     dealType,
     checker,
   } = req.body;
+  let deal;
 
-  const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+  if (await dealHasAllUkefId(dealId)) {
+    deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+  } else {
+    deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+  }
 
   if (!deal) {
     return res.status(404).send();
