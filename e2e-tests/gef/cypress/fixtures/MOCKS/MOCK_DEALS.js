@@ -6,9 +6,7 @@ const threeDaysAgo = sub(today, { days: 3 });
 const threeDaysAgoUnix = getUnixTime(threeDaysAgo).toString();
 
 const MOCK_AIN_APPLICATION = {
-  // _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  // userId: '619bae3467cc7c002069fc1e',
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bankId: '9',
   exporterId: '61a7710b2ae62b0013dae686',
@@ -197,7 +195,6 @@ const MOCK_USER_MAKER = {
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: ['maker'],
-  // userId: '619bae3467cc7c002069fc1e',
   bankId: '9',
   bank: {
     id: '9',
