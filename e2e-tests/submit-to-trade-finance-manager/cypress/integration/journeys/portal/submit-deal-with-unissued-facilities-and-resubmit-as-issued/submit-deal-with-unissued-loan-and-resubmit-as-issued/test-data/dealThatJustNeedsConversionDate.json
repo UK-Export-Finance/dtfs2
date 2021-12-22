@@ -3,8 +3,8 @@
   "submissionType": "Automatic Inclusion Notice",
   "bankInternalRefName": "abc-1-def",
   "additionalRefName": "Tibettan submarine acquisition scheme",
+  "status": "Draft",
   "details": {
-    "status": "Draft",
     "owningBank": {
       "id": "956",
       "name": "Barclays Bank",

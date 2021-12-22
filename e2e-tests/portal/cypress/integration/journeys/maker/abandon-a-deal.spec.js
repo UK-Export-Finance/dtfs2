@@ -12,7 +12,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
   let deal;
 
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.details.status)[0];
+    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)

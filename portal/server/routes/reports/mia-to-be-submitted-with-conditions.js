@@ -49,7 +49,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
   let deals = [];
   let count = 0;
   if (applications.deals) {
-    miaWithConditions = applications.deals.filter((deal) => (deal.details.status === filterByDealStatus));
+    miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
     tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
     // once we have the deals and expiry dates, filter the display
     if (fromDays > 0) {

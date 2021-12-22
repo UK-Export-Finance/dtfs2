@@ -4,8 +4,9 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'test',
   additionalRefName: 'testing',
+  status: 'Accepted by UKEF (with conditions)',
+  previousStatus: 'Submitted',
   details: {
-    status: 'Accepted by UKEF (with conditions)',
     created: new Date().valueOf(),
     maker: {
       username: 'MAKER',
@@ -35,7 +36,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    previousStatus: 'Submitted',
     checker: {
       bank: {
         id: '9',

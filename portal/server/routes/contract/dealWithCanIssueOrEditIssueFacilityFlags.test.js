@@ -6,8 +6,8 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
 
   const mockDeal = {
     submissionType: 'Automatic Inclusion Notice',
+    status: 'Further Maker\'s input required',
     details: {
-      status: 'Further Maker\'s input required',
       submissionDate: 12345678,
     },
     bondTransactions: {

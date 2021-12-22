@@ -118,10 +118,8 @@ describe('section-status - loan', () => {
         ];
 
         const mockDeal = (submissionType)  => ({
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType,
-          },
+          status: 'Further Maker\'s input required',
+          submissionType,
           loanTransactions: {
             items: mockLoans,
           },

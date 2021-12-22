@@ -9,8 +9,8 @@ module.exports = [
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Draft',
     details: {
-      status: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -30,8 +30,8 @@ module.exports = [
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-2-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Draft',
     details: {
-      status: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -48,8 +48,8 @@ module.exports = [
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-3-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Draft',
     details: {
-      status: 'Draft',
       submissionDate: now,
       owningBank: {
         id: '9',
@@ -67,9 +67,9 @@ module.exports = [
     submissionType: 'Manual Inclusion Notice',
     bankInternalRefName: 'abc-4-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: "Ready for Checker's approval",
+    previousStatus: 'Draft',
     details: {
-      status: "Ready for Checker's approval",
-      previousStatus: 'Draft',
       submissionDate: now,
       owningBank: {
         id: '9',
@@ -95,9 +95,9 @@ module.exports = [
     submissionType: 'Manual Inclusion Application',
     bankInternalRefName: 'abc-5-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: "Further Maker's input required",
+    previousStatus: "Ready for Checker's approval",
     details: {
-      status: "Further Maker's input required",
-      previousStatus: "Ready for Checker's approval",
       submissionDate: now,
       owningBank: {
         id: '9',
@@ -122,9 +122,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-6-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Abandoned',
+    previousStatus: 'Draft',
     details: {
-      status: 'Abandoned',
-      previousStatus: 'Draft',
       submissionDate: now,
       owningBank: {
         id: '9',
@@ -141,9 +141,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-7-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Submitted',
+    previousStatus: "Ready for Checker's approval",
     details: {
-      status: 'Submitted',
-      previousStatus: "Ready for Checker's approval",
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -167,9 +167,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-8-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Submitted',
+    previousStatus: "Ready for Checker's approval",
     details: {
-      status: 'Submitted',
-      previousStatus: "Ready for Checker's approval",
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -193,9 +193,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-9-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: "Ready for Checker's approval",
+    previousStatus: 'Draft',
     details: {
-      status: "Ready for Checker's approval",
-      previousStatus: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -219,9 +219,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Acknowledged by UKEF',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Acknowledged by UKEF',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -237,8 +237,8 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Draft',
     details: {
-      status: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -254,8 +254,8 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Draft',
     details: {
-      status: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -271,8 +271,8 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Draft',
     details: {
-      status: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -288,9 +288,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Acknowledged by UKEF',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Acknowledged by UKEF',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -306,9 +306,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Accepted by UKEF (without conditions)',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Accepted by UKEF (without conditions)',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -324,9 +324,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Rejected by UKEF',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Rejected by UKEF',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -342,9 +342,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Rejected by UKEF',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Rejected by UKEF',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -360,9 +360,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: "Further Maker's input required",
+    previousStatus: "Ready for Checker's approval",
     details: {
-      status: "Further Maker's input required",
-      previousStatus: "Ready for Checker's approval",
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -378,9 +378,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Accepted by UKEF (without conditions)',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Accepted by UKEF (without conditions)',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -396,9 +396,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc 2 def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Accepted by UKEF (with conditions)',
+    previousStatus: 'Submitted',
     details: {
-      status: 'Accepted by UKEF (with conditions)',
-      previousStatus: 'Submitted',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -414,9 +414,9 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc 2 def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: 'Abandoned',
+    previousStatus: 'Draft',
     details: {
-      status: 'Abandoned',
-      previousStatus: 'Draft',
       owningBank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',

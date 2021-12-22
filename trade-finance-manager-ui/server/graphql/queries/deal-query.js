@@ -79,9 +79,9 @@ const dealQuery = gql`
         submissionType
         bankInternalRefName
         additionalRefName
+        status
         details {
           ukefDealId
-          status
           submissionDate
           owningBank {
             name

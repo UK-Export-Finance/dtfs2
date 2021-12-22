@@ -143,11 +143,8 @@ module.exports = {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     const updatedDeal = {
       ...deal,
-      details: {
-        ...deal.details,
-        status: statusUpdate,
-        previousStatus: deal.details.previousStatus,
-      },
+      status: statusUpdate,
+      previousStatus: deal.previousStatus,
     };
     return Promise.resolve(updatedDeal);
   },

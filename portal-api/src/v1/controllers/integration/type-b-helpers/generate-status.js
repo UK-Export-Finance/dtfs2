@@ -4,7 +4,7 @@ const generateStatus = (portalDeal, workflowDeal) => {
   let workflowStatus = workflowDeal.Deal_status[0];
   const actionCode = workflowDeal.$.Action_Code;
 
-  const portalStatus = portalDeal.details.status;
+  const portalStatus = portalDeal.status;
 
   if (workflowStatus && portalStatus !== workflowStatus && actionCode === '004') {
     workflowStatus = 'in_progress_by_ukef';

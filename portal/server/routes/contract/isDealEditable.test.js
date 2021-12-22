@@ -6,9 +6,8 @@ describe('isDealEditable', () => {
   describe('when user is NOT maker', () => {
     it('should return false', () => {
       const mockDeal = {
-        details: {
-          status: 'Further Maker\'s input required',
-        },
+        status: 'Further Maker\'s input required',
+        details: {},
       };
 
       const checkerUser = { roles: ['checker'] };
@@ -21,9 +20,8 @@ describe('isDealEditable', () => {
   describe('when deal status is NOT `Draft` or `Further Maker\'s input required`', () => {
     it('should return false', () => {
       const mockAcceptedDeal = {
-        details: {
-          status: 'Accepted by UKEF (with conditions)',
-        },
+        status: 'Accepted by UKEF (with conditions)',
+        details: {},
       };
 
       const result = isDealEditable(mockAcceptedDeal, mockMakerUser);
@@ -34,8 +32,8 @@ describe('isDealEditable', () => {
   describe('when deal has been submitted', () => {
     it('should return false', () => {
       const mockDeal = {
+        status: 'Draft',
         details: {
-          status: 'Draft',
           submissionDate: 12345678,
         },
       };
@@ -48,9 +46,8 @@ describe('isDealEditable', () => {
   describe('when user is maker, deal status `Draft`, deal not submitted', () => {
     it('should return true', () => {
       const mockDeal = {
-        details: {
-          status: 'Draft',
-        },
+        status: 'Draft',
+        details: {},
       };
 
       const result = isDealEditable(mockDeal, mockMakerUser);
@@ -61,9 +58,8 @@ describe('isDealEditable', () => {
   describe('when user is maker, deal status `Further Maker\'s input required`, deal not submitted', () => {
     it('should return true', () => {
       const mockDeal = {
-        details: {
-          status: 'Further Maker\'s input required',
-        },
+        status: 'Further Maker\'s input required',
+        details: {},
       };
 
       const result = isDealEditable(mockDeal, mockMakerUser);

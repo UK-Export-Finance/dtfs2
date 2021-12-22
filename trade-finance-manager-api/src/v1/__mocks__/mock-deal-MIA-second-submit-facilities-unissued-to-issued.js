@@ -4,11 +4,11 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   submissionType: 'Manual Inclusion Application',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
+  status: 'Submitted',
+  previousStatus: 'Ready for Checker\'s approval',
   details: {
-    status: 'Submitted',
     bank: 'Mock bank',
     ukefDealId: '20010739',
-    previousStatus: 'Ready for Checker\'s approval',
     maker: {
       username: 'JOE',
       firstname: 'Joe',

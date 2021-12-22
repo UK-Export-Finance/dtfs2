@@ -73,6 +73,7 @@ exports.clone = async (req, res) => {
 
     const modifiedDeal = {
       ...existingDealWithoutId,
+      status: DEFAULTS.DEAL.status,
       submissionType: existingDeal.submissionType,
       updatedAt: existingDeal.updatedAt,
       bankInternalRefName,

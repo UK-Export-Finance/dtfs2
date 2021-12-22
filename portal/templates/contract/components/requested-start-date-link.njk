@@ -1,9 +1,9 @@
 {% macro render(params) %}
 
   {% set dealId = params.deal._id %}
-  {% set dealStatus = params.deal.details.status %}
+  {% set dealStatus = params.deal.status %}
   {% set dealSubmissionType = params.deal.submissionType %}
-  {% set dealPreviousStatus = params.deal.details.previousStatus %}
+  {% set dealPreviousStatus = params.deal.previousStatus %}
 
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}

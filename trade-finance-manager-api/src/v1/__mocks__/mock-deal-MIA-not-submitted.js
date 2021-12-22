@@ -4,11 +4,11 @@ const MOCK_DEAL = {
   submissionType: 'Manual Inclusion Application',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
+  status: 'Ready for Checker\'s approval',
+  previousStatus: 'Draft',
   details: {
-    status: 'Ready for Checker\'s approval',
     bank: 'Mock bank',
     ukefDealId: '20010739',
-    previousStatus: 'Draft',
     maker: {
       username: 'JOE',
       firstname: 'Joe',

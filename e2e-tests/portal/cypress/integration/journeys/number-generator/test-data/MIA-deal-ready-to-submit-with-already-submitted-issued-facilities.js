@@ -6,8 +6,9 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'test-deal',
   additionalRefName: 'test-deal',
+  status: 'Ready for Checker\'s approval',
+  previousStatus: 'Draft',
   details: {
-    status: "Ready for Checker's approval",
     created: now,
     maker: {
       username: 'MAKER',
@@ -37,7 +38,6 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
-    previousStatus: 'Draft',
   },
   eligibility: {
     status: 'Completed',

@@ -50,7 +50,7 @@ const addAccurateStatusesToBonds = (
   const {
     status: dealStatus,
     previousStatus: previousDealStatus,
-  } = deal.details;
+  } = deal;
 
   if (deal.bondTransactions.items.length) {
     deal.bondTransactions.items.forEach((b) => {

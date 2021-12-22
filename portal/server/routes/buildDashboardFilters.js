@@ -52,7 +52,7 @@ const buildDashboardFilters = (params, user) => {
     isUsingAdvancedFilter = true;
     filters.push(
       {
-        field: 'details.status',
+        field: 'status',
         value: STATUS[params.filterByStatus],
       },
     );
@@ -60,7 +60,7 @@ const buildDashboardFilters = (params, user) => {
 
   if (params.filterByShowAbandonedDeals === false || params.filterByShowAbandonedDeals === 'false') {
     filters.push({
-      field: 'details.status',
+      field: 'status',
       value: STATUS.abandoned,
       operator: 'ne',
     });
