@@ -4,7 +4,9 @@ import tfmPages from '../../../../../../trade-finance-manager/cypress/integratio
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
-import MOCK_MIADEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
+import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
+
+const mockDeal = MOCK_MIA_DEAL_READY_TO_SUBMIT();
 
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
@@ -16,7 +18,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_MIADEAL_READY_TO_SUBMIT(),
+      mockDeal,
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         [deal] = insertedDeals;
@@ -30,7 +32,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal MIA deal is submitted to UKEF, `Application` deal stage and product is added to the deal in TFM', () => {
+  it('Portal MIA deal is submitted to UKEF, `Application` deal stage and product is added to the deal in TFM. Exporter and submission type should display', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -68,12 +70,31 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
+
+    //---------------------------------------------------------------
+    // exporter and submission type should be displayed in the deals table
+    //---------------------------------------------------------------
+    cy.url().should('include', '/deals');
+    const row = tfmPages.dealsPage.dealsTable.row(mockDeal._id);
+
+    row.submissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(mockDeal.submissionType);
+    });
+
+    row.exporterName().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(mockDeal.exporter.companyName);
+    });
+
+
+    //---------------------------------------------------------------
+    // user vists the case/deal page
+    //---------------------------------------------------------------
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
 
     //---------------------------------------------------------------
-    // deal stage and product type is populated
+    // deal stage and product type should be  populated in the Case Summary
     //---------------------------------------------------------------
     tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Application');
@@ -82,5 +103,18 @@ context('Portal to TFM deal submission', () => {
     tfmPartials.caseSummary.ukefProduct().invoke('text').then((text) => {
       expect(text.trim()).to.contain('BSS & EWCS');
     });
+
+    //---------------------------------------------------------------
+    // submission type and exporter should be displayed in the Case Summary
+    //---------------------------------------------------------------
+    tfmPartials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(mockDeal.submissionType);
+    });
+
+    tfmPartials.caseSummary.exporterName().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(mockDeal.exporter.companyName);
+    });
+
+    // todo test in AIN spec as well
   });
 });

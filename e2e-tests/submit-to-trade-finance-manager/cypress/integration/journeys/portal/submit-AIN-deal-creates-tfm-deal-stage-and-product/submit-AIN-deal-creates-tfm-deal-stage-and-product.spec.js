@@ -6,6 +6,8 @@ import tfmPartials from '../../../../../../trade-finance-manager/cypress/integra
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_AIN_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
 
+const mockDeal = MOCK_AIN_DEAL_READY_TO_SUBMIT();
+
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
@@ -30,7 +32,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage and product is added to the deal in TFM', () => {
+  it('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage and product is added to the deal in TFM. Exporter and submission type should display', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -68,12 +70,26 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
+
+    //---------------------------------------------------------------
+    // user vists the case/deal page
+    //---------------------------------------------------------------
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
+    //---------------------------------------------------------------
+    // deal stage and product type should be  populated in the Case Summary
+    //---------------------------------------------------------------
+    tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Application');
+    });
+
+    tfmPartials.caseSummary.ukefProduct().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('BSS & EWCS');
+    });
 
     //---------------------------------------------------------------
-    // deal stage and product type is populated
+    // submission type and exporter should be displayed in the Case Summary
     //---------------------------------------------------------------
     tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Confirmed');
