@@ -22,9 +22,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneBond, MAKER_LOGIN)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: nowMinus(100),
-            status: 'Submitted',
           },
         };
         cy.updateDeal(inserted._id, update, MAKER_LOGIN);
@@ -33,9 +33,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneLoan, MAKER_LOGIN)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: nowMinus(118),
-            status: 'Submitted',
           },
         };
 
@@ -45,9 +45,9 @@ context('reconciliation report', () => {
     cy.insertOneDeal(aDealWithOneLoanAndOneBond, MAKER_LOGIN)
       .then((inserted) => {
         const update = {
+          status: 'Submitted',
           details: {
             submissionDate: nowMinus(121),
-            status: 'Submitted',
           },
         };
 

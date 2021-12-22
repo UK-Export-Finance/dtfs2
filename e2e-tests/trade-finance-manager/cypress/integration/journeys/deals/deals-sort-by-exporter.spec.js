@@ -14,15 +14,11 @@ context('User can view and sort deals by exporter', () => {
 
   // Exporter (called supplier-name in a BSS deal), is generated automatically with mock data and deal ID.
   const DEAL_A_SUPPLIER = createMockDeal({
-    details: {
-      testId: 'DEAL_A_SUPPLIER',
-    },
+    testId: 'DEAL_A_SUPPLIER',
   });
 
   const DEAL_B_SUPPLIER = createMockDeal({
-    details: {
-      testId: 'DEAL_B_SUPPLIER',
-    },
+    testId: 'DEAL_B_SUPPLIER',
   });
 
   const MOCK_DEALS = [

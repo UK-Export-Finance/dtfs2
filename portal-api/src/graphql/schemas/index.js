@@ -33,7 +33,6 @@ type ErrorListItem {
 }
 
 type DealDetails {
-  status: String
   ukefDealId: String
   maker: Maker
   checker: Checker
@@ -52,6 +51,7 @@ type Deal {
   bankInternalRefName: String
   additionalRefName: String
   updatedAt: Float
+  status: String
   details: DealDetails
 }
 

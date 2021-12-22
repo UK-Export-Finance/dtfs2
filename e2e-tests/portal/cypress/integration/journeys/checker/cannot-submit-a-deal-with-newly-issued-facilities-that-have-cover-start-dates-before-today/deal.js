@@ -4,8 +4,9 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'DTFS2-2815 MIN - pre submit',
   additionalRefName: 'DTFS2-2815 MIN - pre submit',
+  status: "Ready for Checker's approval",
+  previousStatus: 'Acknowledged by UKEF',
   details: {
-    status: "Ready for Checker's approval",
     maker: {
       _id: '5f3ab3f705e6630007dcfb25',
       username: 'maker1@ukexportfinance.gov.uk',
@@ -36,7 +37,6 @@ const deal = {
       ],
     },
     created: '1606900241023',
-    previousStatus: 'Acknowledged by UKEF',
     submissionDate: '1606900616651',
     checker: {
       _id: '5f3ab3f705e6630007dcfb29',

@@ -16,10 +16,8 @@ context('View a deal with checker role', () => {
     submissionType: 'Manual Inclusion Notice',
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
-    details: {
-      status: "Ready for Checker's approval",
-      previousStatus: 'Draft',
-    },
+    status: "Ready for Checker's approval",
+    previousStatus: 'Draft',
   };
   const draftDealData = {
     dealType: 'BSS/EWCS',

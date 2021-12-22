@@ -32,7 +32,7 @@ exports.findOne = (req, res) => {
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      res.status(200).send(deal.details.status);
+      res.status(200).send(deal.status);
     }
   });
 };
@@ -44,7 +44,7 @@ exports.update = (req, res) => {
     if (!deal) return res.status(404).send();
     if (!userHasAccessTo(req.user, deal)) return res.status(401).send();
 
-    const fromStatus = deal.details.status;
+    const fromStatus = deal.status;
     const toStatus = req.body.status;
 
     if (toStatus !== 'Ready for Checker\'s approval'
@@ -65,7 +65,7 @@ exports.update = (req, res) => {
 
     const updatedDeal = await updateStatus(req.params.id, fromStatus, toStatus, user);
 
-    const updatedDealStatus = updatedDeal.details.status;
+    const updatedDealStatus = updatedDeal.status;
 
     const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
 

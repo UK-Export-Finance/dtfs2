@@ -10,9 +10,7 @@ describe(component, () => {
 
   const deal = {
     submissionType: 'Manual Inclusion Application',
-    details: {
-      status: 'Ready for Checker\'s approval',
-    },
+    status: 'Ready for Checker\'s approval',
     loanTransactions: {
       items: [
         {
@@ -86,7 +84,7 @@ describe(component, () => {
     describe('when a loan Cover Date can be modified', () => {
       it('should render `change start date` link and NOT `issue facility link', () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
-        dealWithLoansThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+        dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
@@ -114,7 +112,7 @@ describe(component, () => {
 
       it('should render `change start date` link', () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
-        dealWithLoansThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+        dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
 

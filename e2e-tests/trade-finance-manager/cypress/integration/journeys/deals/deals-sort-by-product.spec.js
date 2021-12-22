@@ -13,27 +13,21 @@ context('User can view and sort deals by product', () => {
   let dealWith1LoanAndBondFacilities;
 
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
-    details: {
-      testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
-    },
+    testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'bond'),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
-    details: {
-      testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
-    },
+    testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
       MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'loan'),
     ],
   });
 
   const DEAL_WITH_1_LOAN_AND_BOND_FACILITIES = createMockDeal({
-    details: {
-      testId: 'DEAL_WITH_1_LOAN_AND_BOND_FACILITIES',
-    },
+    testId: 'DEAL_WITH_1_LOAN_AND_BOND_FACILITIES',
     mockFacilities: MOCK_DEAL_AIN.mockFacilities,
   });
 
@@ -66,13 +60,13 @@ context('User can view and sort deals by product', () => {
           ALL_SUBMITTED_DEALS = submittedDeals;
 
           dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.details.testId);
+            deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.testId);
 
           dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.details.testId);
+            deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.testId);
 
           dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find((deal) =>
-            deal.dealSnapshot.details.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.details.testId);
+            deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.testId);
         });
       });
   });

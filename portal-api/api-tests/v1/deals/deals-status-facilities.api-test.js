@@ -49,7 +49,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let createdFacilities;
 
       beforeEach(async () => {
-        completedDeal.details.status = 'Further Maker\'s input required';
+        completedDeal.status = 'Further Maker\'s input required';
         completedDeal.details.submissionDate = moment().utc().valueOf();
 
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -499,7 +499,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       beforeEach(async () => {
         const dealInDraftStatus = completedDeal;
-        dealInDraftStatus.details.status = 'Draft';
+        dealInDraftStatus.status = 'Draft';
 
         const deal = JSON.parse(JSON.stringify(dealInDraftStatus));
 

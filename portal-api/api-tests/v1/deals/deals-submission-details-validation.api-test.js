@@ -13,9 +13,7 @@ const newDeal = aDeal({
   updatedAt: Date.now(),
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
-  details: {
-    status: 'Draft',
-  },
+  status: 'Draft',
   comments: [{
     username: 'bananaman',
     timestamp: '1984/12/25 00:00:00:001',

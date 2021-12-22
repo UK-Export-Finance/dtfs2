@@ -9,12 +9,12 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
+  status: "Ready for Checker's approval",
+  previousStatus: 'Acknowledged by UKEF',
   details: {
-    status: "Ready for Checker's approval",
     created: date.valueOf(),
     previousWorkflowStatus: 'confirmation_acknowledged',
     submissionDate: date.valueOf(),
-    previousStatus: 'Acknowledged by UKEF',
     owningBank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',

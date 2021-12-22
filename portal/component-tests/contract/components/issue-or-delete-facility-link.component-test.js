@@ -42,7 +42,7 @@ describe(component, () => {
         const facilityName = 'loan';
 
         const deals = [
-          { _id: '1', details: { status: 'Ready for Checker\'s approval' }},
+          { _id: '1', status: 'Ready for Checker\'s approval' },
         ];
 
         deals.forEach((deal) => {
@@ -75,8 +75,8 @@ describe(component, () => {
         const facilityTableIndex = 1;
 
         const deals = [
-          { _id: '1', details: { status: 'Draft' } },
-          { _id: '2', details: { status: 'Further Maker\'s input required' } },
+          { _id: '1', status: 'Draft' },
+          { _id: '2', status: 'Further Maker\'s input required' },
         ];
 
         deals.forEach((deal) => {
