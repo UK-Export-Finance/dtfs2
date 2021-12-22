@@ -63,14 +63,6 @@ const createSubmissionToUkef = async (req, res) => {
       comments.push(commentObj);
       application.comments = comments;
     }
-    /**
-     * DTFS2 - 4149 : If the application has been accepted by the maker
-     * then change the following application attributes:
-     * 1. Submission Type : MIA -> MIN
-     */
-    if (ukefDecisionAccepted) {
-      application.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
-    }
 
     // Always update with the latest checkers details.
     application.checkerId = user._id;
