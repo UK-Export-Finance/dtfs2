@@ -63,7 +63,7 @@ const createFacilitiesSnapshot = async (deal) => {
     _id: dealId,
   } = deal;
 
-  let dealFacilities;
+  let dealFacilities = [];
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealFacilities = await findAllFacilitiesByDealId(dealId);
   }

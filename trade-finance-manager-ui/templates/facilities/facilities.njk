@@ -33,14 +33,12 @@
 
     {% set coverEndDate %}
       {% if facility.coverEndDate %}
-         <span>
          {{ facility.coverEndDate | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
          {% if facility.hasBeenIssued %}
             (issued)
          {% else %}
             (unissued)
          {% endif %}
-         </span>
       {% else %}
          -
       {% endif %}
@@ -49,11 +47,11 @@
     {% set item = [
       {
         html: facilityLink,
-        attributes: { "data-sort-value": facility.ukefFacilityId  }
+        attributes: { "data-cy": "facility__ukefFacilityId", "data-sort-value": facility.ukefFacilityId  }
       },
       {
         text: facility.dealType or "-",
-        attributes: { "data-cy": "facility__product--" + facility.dealType, "data-sort-value": facility.ukefFacilityId}
+        attributes: { "data-cy": "facility__product", "data-sort-value": facility.ukefFacilityId}
       },
       {
         text: facility.facilityType or "-",
@@ -61,15 +59,15 @@
       },
       {
         text: facility.companyName or "-",
-        attributes: { "data-cy": "facility__companyName--" + facility.companyName }
+        attributes: { "data-cy": "facility__companyName" }
       },
       {
         text: facility.value or "-",
-        attributes: { "data-cy": "facility__facilityValue--" + facility.value }
+        attributes: { "data-cy": "facility__facilityValue" }
       },
       {
         html: coverEndDate,
-        attributes: { "data-cy": "facility__coverEndDate--" + facility.coverEndDate }
+        attributes: { "data-cy": "facility__coverEndDate" }
       }
     ] %}
 
@@ -78,7 +76,7 @@
 
 
 {{ govukTable({
-   attributes: { 'data-module': 'moj-sortable-table' },
+   attributes: { 'data-module': 'moj-sortable-table', 'data-cy': 'tfm-facilities-table' },
    classes: 'tfm__facilities-table',
    head: [
       {
