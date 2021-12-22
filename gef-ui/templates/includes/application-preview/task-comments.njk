@@ -1,5 +1,5 @@
 {% from "moj/components/banner/macro.njk" import mojBanner %}
-{% if isUkefReviewAvailable or unissuedFacilitiesPresent or facilitiesChangedToIssued.length > 0 or comments.length > 0 %}
+{% if displayComments %}
   <header data-cy="application-preview-page">
     {% set bannerHtml %}
     {% if renderReviewDecisionLink %}
@@ -48,4 +48,6 @@
   {{ mojBanner({
       type: 'no-icon',
       html: bannerHtml
-    }) }}</header>{% endif %}
+    }) }}
+  </header>
+{% endif %}

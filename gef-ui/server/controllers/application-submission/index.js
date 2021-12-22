@@ -16,7 +16,6 @@ const getApplicationSubmission = async (req, res) => {
     dealId,
     submissionType,
     maxCommentLength,
-    isAutomaticCover: application.submissionType,
     unissuedToIssued: hasChangedToIssued(application),
   });
 };

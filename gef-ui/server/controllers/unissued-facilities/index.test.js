@@ -1,67 +1,23 @@
-import { add, sub, format } from 'date-fns';
+import { add, format } from 'date-fns';
 import {
   renderChangeFacilityPartial,
-  changeUnissuedAboutFacility,
-  changeUnissuedAboutFacilityChange,
-  postChangeUnissuedAboutFacility,
-  postChangeUnissuedAboutFacilityChange,
-  facilityValidation,
+  changeUnissuedFacility,
+  changeUnissuedFacilityPreview,
+  postChangeUnissuedFacility,
+  postChangeUnissuedFacilityPreview,
 } from './index';
 import api from '../../services/api';
+import MOCKS from '../mocks/index';
 
 jest.mock('../../services/api');
-
-const MockResponse = () => {
-  const res = {};
-  res.redirect = jest.fn();
-  res.render = jest.fn();
-  return res;
-};
-
-const MockRequest = () => {
-  const req = {};
-  req.params = {};
-  req.query = {};
-  req.body = {};
-  req.params.dealId = '123';
-  req.params.facilityId = 'xyz';
-  req.params.facilityName = 'Foundry4';
-  req.session = {
-    user: {
-      bank: { id: 'BANKID' },
-      roles: ['MAKER'],
-    },
-    userToken: 'TEST',
-  };
-  req.success = {
-    message: 'Foundry4 is updated',
-  };
-  req.url = '/gef/application-details/123/unissued-facilities';
-  return req;
-};
-
-const MockFacilityResponse = () => {
-  const res = {};
-  res.details = {
-    type: 'CASH',
-    name: 'Foundry4',
-    hasBeenIssued: true,
-    monthsOfCover: null,
-    issueDate: '2022-01-05T00:00:00.000+00:00',
-    coverStartDate: '2022-01-02T00:00:00.000+00:00',
-    shouldCoverStartOnSubmission: true,
-    coverEndDate: '2030-01-02T00:00:00.000+00:00',
-  };
-  return res;
-};
 
 describe('renderChangeFacilityPartial()', () => {
   let mockRequest;
   let mockFacilityResponse;
 
   beforeEach(() => {
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
+    mockRequest = MOCKS.MockRequestUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
     api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
@@ -72,7 +28,7 @@ describe('renderChangeFacilityPartial()', () => {
     jest.resetAllMocks();
   });
 
-  it('returns an object with expected parameters for changeUnissuedAboutFacility', async () => {
+  it('returns an object with expected parameters for changeUnissuedFacility', async () => {
     mockRequest.query.status = 'change';
 
     const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, true);
@@ -102,7 +58,7 @@ describe('renderChangeFacilityPartial()', () => {
     expect(result).toEqual(expected);
   });
 
-  it('returns an object with expected parameters for changeUnissuedAboutFacilityChange', async () => {
+  it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
     mockRequest.query.status = 'change';
     const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, false);
 
@@ -132,15 +88,15 @@ describe('renderChangeFacilityPartial()', () => {
   });
 });
 
-describe('changeUnissuedAboutFacility()', () => {
+describe('changeUnissuedFacility()', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
   beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
+    mockResponse = MOCKS.MockResponseUnissued();
+    mockRequest = MOCKS.MockRequestUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
     api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
@@ -151,20 +107,20 @@ describe('changeUnissuedAboutFacility()', () => {
     jest.resetAllMocks();
   });
 
-  it('changeUnissuedAboutFacility should call renderChangeFacilityPartial with false', async () => {
+  it('changeUnissuedFacility should call renderChangeFacilityPartial with false', async () => {
     mockRequest.query.status = 'change';
 
-    await changeUnissuedAboutFacility(mockRequest, mockResponse);
+    await changeUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
       change: false,
     }));
   });
 
-  it('changeUnissuedAboutFacility should not call renderChangeFacilityPartial with true', async () => {
+  it('changeUnissuedFacility should not call renderChangeFacilityPartial with true', async () => {
     mockRequest.query.status = 'change';
 
-    await changeUnissuedAboutFacility(mockRequest, mockResponse);
+    await changeUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).not.toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
       change: true,
@@ -173,20 +129,20 @@ describe('changeUnissuedAboutFacility()', () => {
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     api.getFacility.mockRejectedValueOnce();
-    await changeUnissuedAboutFacility(mockRequest, mockResponse);
+    await changeUnissuedFacility(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
-describe('changeUnissuedAboutFacilityChange()', () => {
+describe('changeUnissuedFacilityPreview()', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
   beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
+    mockResponse = MOCKS.MockResponseUnissued();
+    mockRequest = MOCKS.MockRequestUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
     api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
@@ -197,20 +153,20 @@ describe('changeUnissuedAboutFacilityChange()', () => {
     jest.resetAllMocks();
   });
 
-  it('changeUnissuedAboutFacilityChange should call renderChangeFacilityPartial with true', async () => {
+  it('changeUnissuedFacilityPreview should call renderChangeFacilityPartial with true', async () => {
     mockRequest.query.status = 'change';
 
-    await changeUnissuedAboutFacilityChange(mockRequest, mockResponse);
+    await changeUnissuedFacilityPreview(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
       change: true,
     }));
   });
 
-  it('changeUnissuedAboutFacilityChange should not call renderChangeFacilityPartial with false', async () => {
+  it('changeUnissuedFacilityPreview should not call renderChangeFacilityPartial with false', async () => {
     mockRequest.query.status = 'change';
 
-    await changeUnissuedAboutFacilityChange(mockRequest, mockResponse);
+    await changeUnissuedFacilityPreview(mockRequest, mockResponse);
 
     expect(mockResponse.render).not.toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
       change: false,
@@ -219,20 +175,20 @@ describe('changeUnissuedAboutFacilityChange()', () => {
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     api.getFacility.mockRejectedValueOnce();
-    await changeUnissuedAboutFacilityChange(mockRequest, mockResponse);
+    await changeUnissuedFacilityPreview(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
-describe('postChangeUnissuedAboutFacility()', () => {
+describe('postChangeUnissuedFacility()', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
   beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
+    mockResponse = MOCKS.MockResponseUnissued();
+    mockRequest = MOCKS.MockRequestUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
     api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
@@ -264,7 +220,7 @@ describe('postChangeUnissuedAboutFacility()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    await postChangeUnissuedAboutFacility(mockRequest, mockResponse);
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
 
     expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
@@ -298,7 +254,7 @@ describe('postChangeUnissuedAboutFacility()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    await postChangeUnissuedAboutFacility(mockRequest, mockResponse);
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
@@ -320,20 +276,20 @@ describe('postChangeUnissuedAboutFacility()', () => {
     mockRequest.body.facilityType = 'CASH';
 
     api.updateFacility.mockRejectedValueOnce();
-    await postChangeUnissuedAboutFacility(mockRequest, mockResponse);
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
-describe('postChangeUnissuedAboutFacilityChange()', () => {
+describe('postChangeUnissuedFacilityPreview()', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
   beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
+    mockResponse = MOCKS.MockResponseUnissued();
+    mockRequest = MOCKS.MockRequestUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
     api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
@@ -366,7 +322,7 @@ describe('postChangeUnissuedAboutFacilityChange()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    await postChangeUnissuedAboutFacilityChange(mockRequest, mockResponse);
+    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
     expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
@@ -399,7 +355,7 @@ describe('postChangeUnissuedAboutFacilityChange()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    await postChangeUnissuedAboutFacility(mockRequest, mockResponse);
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
@@ -421,202 +377,7 @@ describe('postChangeUnissuedAboutFacilityChange()', () => {
     mockRequest.body.facilityType = 'CASH';
 
     api.updateFacility.mockRejectedValueOnce();
-    await postChangeUnissuedAboutFacilityChange(mockRequest, mockResponse);
+    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
-});
-
-describe('validation()', () => {
-  let mockResponse;
-  let mockRequest;
-  let mockFacilityResponse;
-
-  beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
-
-    api.getApplication.mockResolvedValue({});
-    api.getFacility.mockResolvedValue(mockFacilityResponse);
-    api.updateFacility.mockResolvedValue({});
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  const now = new Date();
-  const tomorrow = add(now, { days: 1 });
-  const yesterday = sub(now, { days: 1 });
-  const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
-
-  it('returns correct object with no errors on correct facility update', async () => {
-    mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    const result = await facilityValidation(mockRequest, mockResponse);
-
-    const expected = {
-      coverStartDate: now,
-      coverEndDate: tomorrow,
-      body: mockRequest.body,
-      facilityId: 'xyz',
-      dealId: '123',
-    };
-    // formatted to remove the millisecond mismatch (lag)
-    const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
-    const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
-    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
-    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
-
-    // have to compare each part individually as compared to whole object
-    // account for time mismatch due to difference in calls being 6ms
-    expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
-    expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
-    expect(result.body).toEqual(expected.body);
-    expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('123');
-
-    // does not render page with errors
-    expect(mockResponse.render).not.toHaveBeenCalledWith('partials/about-facility.njk');
-  });
-
-  it('should render template with errors if end date before start date', async () => {
-    mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
-    mockRequest.query.saveAndReturn = 'true';
-
-    mockRequest.body['issue-date-day'] = '';
-    mockRequest.body['issue-date-month'] = '';
-    mockRequest.body['issue-date-year'] = '';
-
-    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
-    mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
-    mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
-
-    const result = await facilityValidation(mockRequest, mockResponse);
-
-    // expected error object format
-    const expectedErrors = {
-      errorSummary: [{
-        href: '#coverEndDate',
-        text: 'Cover end date cannot be before cover start date',
-      }],
-      fieldErrors: {
-        coverEndDate: {
-          text: 'Cover end date cannot be before cover start date',
-        },
-      },
-    };
-    // undefined as will be empty as errors
-    expect(result).toEqual(undefined);
-
-    // check ids and that errors is as expected
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      dealId: '123',
-      facilityId: 'xyz',
-      errors: expectedErrors,
-    }));
-  });
-
-  it('should render template with errors if start date before issue date', async () => {
-    mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
-    mockRequest.query.saveAndReturn = 'true';
-
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
-
-    const result = await facilityValidation(mockRequest, mockResponse);
-
-    // expected error object format
-    const expectedErrors = {
-      errorSummary: [{
-        href: '#coverStartDate',
-        text: 'Cover start date cannot be before the issue date',
-      }],
-      fieldErrors: {
-        coverStartDate: {
-          text: 'Cover start date cannot be before the issue date',
-        },
-      },
-    };
-    // undefined as will be empty as errors
-    expect(result).toEqual(undefined);
-
-    // check ids and that errors is as expected
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      dealId: '123',
-      facilityId: 'xyz',
-      errors: expectedErrors,
-    }));
-  });
-
-  it('should render template with errors if end date before issue date', async () => {
-    mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
-    mockRequest.query.saveAndReturn = 'true';
-
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
-    mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
-    mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
-
-    const result = await facilityValidation(mockRequest, mockResponse);
-
-    // expected error object format
-    const expectedErrors = {
-      errorSummary: [
-        {
-          href: '#coverEndDate',
-          text: 'Cover end date cannot be before cover start date',
-        },
-        {
-          href: '#coverEndDate',
-          text: 'Cover end date cannot be before the issue date',
-        }],
-      fieldErrors: {
-        coverEndDate: {
-          text: 'Cover end date cannot be before the issue date',
-        },
-      },
-    };
-    // undefined as will be empty as errors
-    expect(result).toEqual(undefined);
-
-    // check ids and that errors is as expected
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      dealId: '123',
-      facilityId: 'xyz',
-      errors: expectedErrors,
-    }));
   });
 });

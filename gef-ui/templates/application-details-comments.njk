@@ -33,9 +33,7 @@
         </p>
       {% else %}
         <p class="govuk-body govuk-!-margin-bottom-6" data-cy="application-submission-text">
-          Someone at your bank must check your
-          {% if isAutomaticCover %}automatic inclusion notice{% else %}manual inclusion application{% endif %}
-          before they can submit it to UKEF.
+          Someone at your bank must check your {{ submissionType | capitalize }} before they can submit it to UKEF.
         </p>
       {% endif %}
     </div>

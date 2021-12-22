@@ -1,10 +1,10 @@
 const express = require('express');
 const { applicationDetails } = require('../controllers/application-details');
 const {
-  changeUnissuedAboutFacility,
-  changeUnissuedAboutFacilityChange,
-  postChangeUnissuedAboutFacility,
-  postChangeUnissuedAboutFacilityChange,
+  changeUnissuedFacility,
+  changeUnissuedFacilityPreview,
+  postChangeUnissuedFacility,
+  postChangeUnissuedFacilityPreview,
 } = require('../controllers/unissued-facilities');
 const validateToken = require('../middleware/validateToken');
 
@@ -12,17 +12,21 @@ const router = express.Router();
 
 // unissued facility list
 router.get('/application-details/:dealId/unissued-facilities', validateToken, (req, res) => applicationDetails(req, res));
+
 // get change unissued facility from facility list
 router.get('/application-details/:dealId/unissued-facilities/:facilityId/about-facility', validateToken, (req, res) =>
-  changeUnissuedAboutFacility(req, res));
+  changeUnissuedFacility(req, res));
+
 // get change unissued facility from application preview
 router.get('/application-details/:dealId/unissued-facilities-change/:facilityId/about-facility', validateToken, (req, res) =>
-  changeUnissuedAboutFacilityChange(req, res));
+  changeUnissuedFacilityPreview(req, res));
+
 // post change unissued facility to issued from facility list
 router.post('/application-details/:dealId/unissued-facilities/:facilityId/about-facility', validateToken, (req, res) =>
-  postChangeUnissuedAboutFacility(req, res));
+  postChangeUnissuedFacility(req, res));
+
 // post change unissued facilities to issued from application preview
 router.post('/application-details/:dealId/unissued-facilities-change/:facilityId/about-facility', validateToken, (req, res) =>
-  postChangeUnissuedAboutFacilityChange(req, res));
+  postChangeUnissuedFacilityPreview(req, res));
 
 module.exports = router;

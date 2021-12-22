@@ -13,6 +13,7 @@ const
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
+    displayTaskComments,
   } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -110,6 +111,7 @@ function buildBody(app, previewMode, user) {
     renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
     previewMode,
     userRoles: app.userRoles,
+    displayComments: displayTaskComments(app),
   };
 
   return appBody;

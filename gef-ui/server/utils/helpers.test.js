@@ -25,6 +25,7 @@ import {
   areUnissuedFacilitiesPresent,
   summaryItemsConditions,
   facilityIssueDeadline,
+  displayTaskComments,
 } from './helpers';
 import CONSTANTS from '../constants';
 
@@ -38,6 +39,7 @@ import {
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_ISSUED_FACILITY_UNCHANGED,
+  MOCK_AIN_APPLICATION_FALSE_COMMENTS,
 } from './MOCKS';
 
 describe('userToken()', () => {
@@ -1129,5 +1131,19 @@ describe('summaryItemsConditions()', () => {
   it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
     MOCK_DEAL.bankId = 1;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+});
+
+describe('displayTaskComments()', () => {
+  it('should return true if any conditions are true', () => {
+    const result = displayTaskComments(MOCK_AIN_APPLICATION);
+
+    expect(result).toEqual(true);
+  });
+
+  it('should return false if all conditions are false', () => {
+    const result = displayTaskComments(MOCK_AIN_APPLICATION_FALSE_COMMENTS);
+
+    expect(result).toEqual(false);
   });
 });

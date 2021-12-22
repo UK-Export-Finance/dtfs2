@@ -90,7 +90,7 @@ const validationErrorHandler = (errs, href = '') => {
 const facilitiesChangedToIssuedAsArray = (application) => {
   const hasChanged = [];
   application.facilities.items.map((facility) => {
-    if (facility.details.changedToIssued === true) {
+    if (facility.details.changedToIssued) {
       const changed = {
         name: facility.details.name,
         id: facility.details._id,
@@ -106,6 +106,14 @@ const facilitiesChangedToIssuedAsArray = (application) => {
   properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
+
+const summaryIssuedChangedToIssued = (app, user, data) =>
+  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
+   && data.details.changedToIssued === true;
+
+const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
+  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
+    && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
 
 /* summaryItemsConditions runs through the the table rows and decides if change/add should be added
    on end of row.  On application details, all relevant rows are set to change/add if required.  On
@@ -144,7 +152,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
         ]
         : []),
     ];
-  } else if (app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker') && data.details.changedToIssued === true) {
+  } else if (summaryIssuedChangedToIssued(app, user, data)) {
     /**
      *  if submitted to UKEF && logged in as maker && facility changed to issued
      * can change name, coverStartDate and coverEndDate column
@@ -162,7 +170,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
         ]
         : []),
     ];
-  } else if (app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0) {
+  } else if (summaryIssuedUnchanged(app, user, data, facilitiesChanged)) {
     /**
      *  if submitted to UKEF && logged in as maker && facility still unissued
      * only shows if other facilities have been changed to issued
@@ -251,7 +259,6 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
     const isRequired = validation?.required?.includes(item.id);
-    // const isCoverStartOnSubmission = (id === 'coverStartDate' && shouldCoverStartOnSubmission);
 
     // Don't show row if value is undefined
     if (value === undefined || isHidden) {
@@ -489,15 +496,9 @@ const coverDatesConfirmed = (facilities) =>
    of facilities that have changed to issued from unissued
 */
 const hasChangedToIssued = (application) => {
-  let changed = false;
-
   const changedToIssued = facilitiesChangedToIssuedAsArray(application);
 
-  if (changedToIssued.length > 0) {
-    changed = true;
-  }
-
-  return changed;
+  return changedToIssued.length > 0;
 };
 
 const makerCanReSubmit = (maker, application) => {
@@ -516,6 +517,35 @@ const makerCanReSubmit = (maker, application) => {
   const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bankId);
 
   return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
+};
+
+/**
+ * checks if any comments present
+ * has extra clause for if app.comments as some e2e tests do not contain this element
+ * stops crashing
+ * */
+
+const commentsPresent = (app) => {
+  if (app.comments) {
+    return app.comments.length > 0;
+  }
+
+  return false;
+};
+
+const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app) > 0;
+
+/*
+  checks if taskComments should be shown on top of application
+  if any of the below conditions are present
+*/
+const displayTaskComments = (app) => {
+  const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
+  const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
+  const facilitiesChanged = facilitiesChangedPresent(app);
+  const appCommentsPresent = commentsPresent(app);
+
+  return (ukefReviewAvailable || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent);
 };
 
 module.exports = {
@@ -547,4 +577,5 @@ module.exports = {
   hasChangedToIssued,
   summaryItemsConditions,
   facilityIssueDeadline,
+  displayTaskComments,
 };

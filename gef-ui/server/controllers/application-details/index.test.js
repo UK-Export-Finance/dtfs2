@@ -138,6 +138,7 @@ describe('controllers/application-detaills', () => {
           previewMode: expect.any(Boolean),
           unissuedFacilitiesPresent: expect.any(Boolean),
           facilitiesChangedToIssued: expect.any(Array),
+          displayComments: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),
@@ -292,6 +293,8 @@ describe('controllers/application-detaills', () => {
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
+            unissuedFacilitiesPresent: false,
+            facilitiesChangedToIssued: [],
           }));
       });
     });

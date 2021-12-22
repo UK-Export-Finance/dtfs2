@@ -4,98 +4,9 @@ import {
 } from './index';
 import api from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
+import MOCKS from '../mocks/index';
 
 jest.mock('../../services/api');
-
-const MockResponse = () => {
-  const res = {};
-  res.redirect = jest.fn();
-  res.render = jest.fn();
-  return res;
-};
-
-const MockRequest = () => {
-  const req = {};
-  req.params = {};
-  req.query = {};
-  req.params.dealId = '1234';
-  req.session = {
-    user: {
-      bank: { id: 'BANKID' },
-      roles: ['MAKER'],
-    },
-  };
-  return req;
-};
-
-const MockSubmissionRequest = () => ({
-  params: {
-    dealId: '1234',
-  },
-  query: {},
-  body: {
-    comment: 'Some comments here',
-  },
-  session: {
-    userToken: '',
-    user: {
-      bank: { id: 'BANKID' },
-      roles: ['MAKER'],
-      _id: 1235,
-    },
-  },
-});
-
-const MockApplicationResponse = () => {
-  const res = {};
-  res._id = '1234';
-  res.exporter = {};
-  res.bankId = 'BANKID';
-  res.bankInternalRefName = 'My test';
-  res.eligibility = {
-    isAutomaticCover: true,
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
-  };
-  res.submissionType = 'Automatic Inclusion Notice';
-  res.editorId = 1235;
-
-  return res;
-};
-
-const MockUserResponse = () => ({
-  username: 'maker',
-  bank: { id: 'BANKID' },
-});
-
-const MockEligibilityCriteriaResponse = () => ({
-  terms: [
-    {
-      id: 12,
-      text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibility',
-    },
-  ],
-});
-
-const MockFacilityResponse = () => {
-  const res = {};
-  res.status = 'IN_DEAL_STATUS';
-  res.data = [];
-  res.items = [];
-  res.details = {
-    type: 'CASH',
-    name: 'Foundry4',
-    hasBeenIssued: true,
-    monthsOfCover: null,
-    coverStartDate: '2022-01-02T00:00:00.000+00:00',
-    shouldCoverStartOnSubmission: true,
-    changedToIssued: true,
-    coverEndDate: '2030-01-02T00:00:00.000+00:00',
-  };
-  return res;
-};
 
 describe('controllers/application-submission', () => {
   let mockResponse;
@@ -103,14 +14,14 @@ describe('controllers/application-submission', () => {
   let mockApplicationResponse;
 
   beforeEach(() => {
-    mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockApplicationResponse = MockApplicationResponse();
+    mockResponse = MOCKS.MockResponse();
+    mockRequest = MOCKS.MockRequest();
+    mockApplicationResponse = MOCKS.MockApplicationResponseSubmission();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
-    api.getFacilities.mockResolvedValue(MockFacilityResponse());
-    api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
-    api.getUserDetails.mockResolvedValue(MockUserResponse());
+    api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponse());
+    api.getEligibilityCriteria.mockResolvedValue(MOCKS.MockEligibilityCriteriaResponse());
+    api.getUserDetails.mockResolvedValue(MOCKS.MockUserResponse());
     api.updateApplication.mockResolvedValue({});
     api.setApplicationStatus.mockResolvedValue({});
   });
@@ -126,14 +37,14 @@ describe('controllers/application-submission', () => {
         dealId: expect.any(String),
         submissionType: expect.any(String),
         maxCommentLength: expect.any(Number),
-        isAutomaticCover: expect.any(String),
+        unissuedToIssued: expect.any(Boolean),
       }));
     });
   });
 
   describe('POST Application Submission', () => {
     beforeEach(() => {
-      mockRequest = MockSubmissionRequest();
+      mockRequest = MOCKS.MockSubmissionRequest();
     });
 
     it('renders confirmation if successfully submitted', async () => {
