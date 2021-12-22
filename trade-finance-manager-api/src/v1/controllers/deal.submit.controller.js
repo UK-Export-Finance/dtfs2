@@ -114,7 +114,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
-     * This calls UPDATES facility record by updating their stage from
+     * This call UPDATES facility record by updating their stage from
      * Unissued (06) to Issued (07)
      */
     if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
@@ -174,7 +174,7 @@ const submitDealPUT = async (req, res) => {
   if (await dealHasAllUkefId(dealId)) {
     deal = await submitDealAfterUkefIds(dealId, dealType, checker);
   } else {
-    deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+    deal = await submitDealBeforeUkefIds(dealId, dealType);
   }
 
   if (!deal) {
