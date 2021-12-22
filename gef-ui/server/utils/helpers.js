@@ -533,7 +533,7 @@ const commentsPresent = (app) => {
   return false;
 };
 
-const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app) > 0;
+const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app).length > 0;
 
 /*
   checks if taskComments should be shown on top of application
@@ -544,7 +544,6 @@ const displayTaskComments = (app) => {
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
   const facilitiesChanged = facilitiesChangedPresent(app);
   const appCommentsPresent = commentsPresent(app);
-
   return (ukefReviewAvailable || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent);
 };
 
