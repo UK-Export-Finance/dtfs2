@@ -51,17 +51,27 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
-    const { _id, hasBeenIssued, shouldCoverStartOnSubmission } = facility;
+    const {
+      _id, hasBeenIssued, changedToIssued, shouldCoverStartOnSubmission, issueDate
+    } = facility;
 
     if (hasBeenIssued) {
       const update = {
         submittedAsIssuedDate: now(),
       };
 
-      // sets coverstartdate to ukef submission date if starts on submission
-      // sets hour, min, seconds to midnight of the same day
+      /**
+       * if changedToIssued and shouldCoverStartOnSubmission is true
+       * sets coverStartDate to issueDate
+       * else if not changedToIssued then set on submission to UKEF date
+       * sets hour, min, seconds to midnight of the same day
+       */
       if (shouldCoverStartOnSubmission) {
-        update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
+        if (changedToIssued) {
+          update.coverStartDate = (new Date(issueDate)).setHours(0, 0, 0, 0);
+        } else {
+          update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
+        }
       }
 
       await updateFacility(_id, update);
@@ -163,5 +173,9 @@ const addSubmissionData = async (dealId, existingApplication) => {
 };
 
 module.exports = {
-  addSubmissionData, submissionPortalActivity, submissionTypeToConstant, getUserInfo,
+  addSubmissionData,
+  submissionPortalActivity,
+  submissionTypeToConstant,
+  getUserInfo,
+  addSubmissionDateToIssuedFacilities,
 };

@@ -63,6 +63,7 @@ const facilityItems = (facilityUrl, {
   shouldCoverStartOnSubmission,
   ukefFacilityId,
   feeType,
+  issueDate,
 }) => {
   const AT_MATURITY = 'At maturity';
   return [
@@ -84,6 +85,13 @@ const facilityItems = (facilityUrl, {
       method: (callback) => (isTrueSet(callback) ? STAGE.ISSUED : STAGE.UNISSUED),
     },
     {
+      label: 'Date issued to exporter',
+      id: 'issueDate',
+      method: (callback) => moment(callback)
+        .format('D MMMM YYYY'),
+      isHidden: !issueDate,
+    },
+    {
       label: 'Cover start date',
       id: 'coverStartDate',
       href: `${facilityUrl}/about-facility?status=change`,
@@ -91,6 +99,7 @@ const facilityItems = (facilityUrl, {
         .format('D MMMM YYYY'),
       isHidden: !hasBeenIssued,
       shouldCoverStartOnSubmission,
+      issueDate,
     },
     {
       label: 'Cover end date',

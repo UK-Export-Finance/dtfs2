@@ -155,10 +155,122 @@ const MockFacilityResponse = () => ({
   status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   data: [],
   items: [{
-    details: { type: 'CASH' },
+    details: {
+      type: 'CASH',
+      name: 'Foundry4',
+      hasBeenIssued: false,
+      monthsOfCover: null,
+      coverStartDate: '2022-01-02T00:00:00.000+00:00',
+      shouldCoverStartOnSubmission: true,
+      coverEndDate: '2030-01-02T00:00:00.000+00:00',
+      currency: 'JPY',
+      value: 3000000,
+      ukefFacilityId: '12345',
+    },
     validation: { required: [] },
     createdAt: 20,
   }],
+});
+
+const MockApplicationResponseSubmission = () => {
+  const res = {};
+  res._id = '1234';
+  res.exporter = {};
+  res.bankId = 'BANKID';
+  res.bankInternalRefName = 'My test';
+  res.eligibility = {
+    criteria: [
+      { id: 12, answer: null, text: 'Test' },
+    ],
+  };
+  res.submissionType = 'Automatic Inclusion Notice';
+  res.editorId = 1235;
+
+  return res;
+};
+
+const MockSubmissionRequest = () => ({
+  params: {
+    dealId: '1234',
+  },
+  query: {},
+  body: {
+    comment: 'Some comments here',
+  },
+  session: {
+    userToken: '',
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+      _id: 1235,
+    },
+  },
+});
+
+const MockResponseUnissued = () => {
+  const res = {};
+  res.redirect = jest.fn();
+  res.render = jest.fn();
+  return res;
+};
+
+const MockRequestUnissued = () => {
+  const req = {};
+  req.params = {};
+  req.query = {};
+  req.body = {};
+  req.params.dealId = '123';
+  req.params.facilityId = 'xyz';
+  req.params.facilityName = 'Foundry4';
+  req.session = {
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+    },
+    userToken: 'TEST',
+  };
+  req.success = {
+    message: 'Foundry4 is updated',
+  };
+  req.url = '/gef/application-details/123/unissued-facilities';
+  return req;
+};
+
+const MockFacilityResponseUnissued = () => {
+  const res = {};
+  res.details = {
+    type: 'CASH',
+    name: 'Foundry4',
+    hasBeenIssued: true,
+    monthsOfCover: null,
+    issueDate: '2022-01-05T00:00:00.000+00:00',
+    coverStartDate: '2022-01-02T00:00:00.000+00:00',
+    shouldCoverStartOnSubmission: true,
+    coverEndDate: '2030-01-02T00:00:00.000+00:00',
+  };
+  return res;
+};
+
+const MockExpectedFacilityRenderChange = (change) => ({
+  facilityType: 'CASH',
+  facilityName: 'Foundry4',
+  hasBeenIssued: true,
+  monthsOfCover: null,
+  shouldCoverStartOnSubmission: 'true',
+  issueDateDay: '5',
+  issueDateMonth: '1',
+  issueDateYear: '2022',
+  coverStartDateDay: '2',
+  coverStartDateMonth: '1',
+  coverStartDateYear: '2022',
+  coverEndDateDay: '2',
+  coverEndDateMonth: '1',
+  coverEndDateYear: '2030',
+  facilityTypeString: 'cash',
+  dealId: '123',
+  facilityId: 'xyz',
+  status: 'change',
+  change,
 });
 
 module.exports = {
@@ -173,4 +285,10 @@ module.exports = {
   MockUserResponseChecker,
   MockEligibilityCriteriaResponse,
   MockFacilityResponse,
+  MockApplicationResponseSubmission,
+  MockSubmissionRequest,
+  MockResponseUnissued,
+  MockRequestUnissued,
+  MockFacilityResponseUnissued,
+  MockExpectedFacilityRenderChange,
 };

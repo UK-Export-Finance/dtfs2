@@ -106,6 +106,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(dealsCollectionName);
+
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
   });
