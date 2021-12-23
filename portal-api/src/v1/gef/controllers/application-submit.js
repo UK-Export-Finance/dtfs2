@@ -173,5 +173,9 @@ const addSubmissionData = async (dealId, existingApplication) => {
 };
 
 module.exports = {
-  addSubmissionData, submissionPortalActivity, submissionTypeToConstant, getUserInfo, addSubmissionDateToIssuedFacilities,
+  addSubmissionData,
+  submissionPortalActivity,
+  submissionTypeToConstant,
+  getUserInfo,
+  addSubmissionDateToIssuedFacilities,
 };
