@@ -2,7 +2,7 @@ import { allDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
 import api from '../../api';
-import { PRODUCT, STATUS } from '../../constants';
+import { PRODUCT } from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
