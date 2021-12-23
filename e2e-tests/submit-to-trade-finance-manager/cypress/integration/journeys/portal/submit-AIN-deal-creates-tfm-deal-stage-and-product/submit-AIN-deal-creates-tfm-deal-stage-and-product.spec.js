@@ -6,6 +6,8 @@ import tfmPartials from '../../../../../../trade-finance-manager/cypress/integra
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
 import MOCK_AIN_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
 
+const mockDeal = MOCK_AIN_DEAL_READY_TO_SUBMIT();
+
 const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
@@ -16,7 +18,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_AIN_DEAL_READY_TO_SUBMIT(),
+      mockDeal,
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         [deal] = insertedDeals;
@@ -70,7 +72,6 @@ context('Portal to TFM deal submission', () => {
 
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
-
 
     //---------------------------------------------------------------
     // deal stage and product type is populated

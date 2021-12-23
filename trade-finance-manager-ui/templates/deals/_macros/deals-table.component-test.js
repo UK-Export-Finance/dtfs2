@@ -23,6 +23,9 @@ describe(component, () => {
             supplierName: 'Supplier name',
             buyerName: 'Buyer name',
           },
+          exporter: {
+            companyName: 'test',
+          },
         },
         tfm: {
           dateReceived: '13-07-2021',
@@ -43,6 +46,9 @@ describe(component, () => {
           submissionDetails: {
             supplierName: 'Supplier name',
             buyerName: 'Buyer name',
+          },
+          exporter: {
+            companyName: 'test',
           },
         },
         tfm: {
@@ -133,7 +139,7 @@ describe(component, () => {
     it('should render exporter name table cell', () => {
       params.deals.forEach((deal) => {
         const cellSelector = `[data-cy="deal-${deal._id}-exporterName"]`;
-        wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.submissionDetails.supplierName);
+        wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.exporter.companyName);
       });
     });
 
