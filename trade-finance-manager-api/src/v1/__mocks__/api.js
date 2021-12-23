@@ -265,7 +265,7 @@ module.exports = {
     };
   },
   findFacilitesByDealId: (dealId) => {
-    const facilities = ALL_MOCK_FACILITIES.filter((f) => f.applicationid === dealId);
+    const facilities = ALL_MOCK_FACILITIES.filter((f) => f.dealId === dealId);
 
     const mapped = facilities.map((facility) => ({
       _id: facility._id,

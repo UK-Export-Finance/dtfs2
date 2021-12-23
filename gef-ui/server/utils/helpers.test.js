@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+import moment from 'moment';
 import {
   userToken,
   isObject,
@@ -18,168 +20,27 @@ import {
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
   makerCanReSubmit,
+  hasChangedToIssued,
+  facilitiesChangedToIssuedAsArray,
+  areUnissuedFacilitiesPresent,
+  summaryItemsConditions,
+  facilityIssueDeadline,
+  displayTaskComments,
 } from './helpers';
 import CONSTANTS from '../constants';
 
-const MOCK_REQUEST = {
-  username: 'BANK1_MAKER1',
-  firstname: 'ABC',
-  surname: 'DEF',
-  email: 'test',
-  roles: ['maker'],
-  bank: {
-    id: '9',
-    name: 'UKEF test bank (Delegated)',
-    mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
-    companiesHouseNo: 'UKEF0001',
-    partyUrn: '00318345',
-  },
-  timezone: 'Europe/London',
-  lastLogin: '1638791497263',
-  'user-status': 'active',
-  _id: '619bae3467cc7c002069fc1e',
-};
-
-const MOCK_DEAL = {
-  _id: '61a7710b2ae62b0013dae687',
-  dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
-  status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
-  bankId: '9',
-  eligibility: {
-    criteria: [],
-    updatedAt: 1638535562287,
-    status: CONSTANTS.DEAL_STATUS.COMPLETED,
-  },
-  bankInternalRefName: 'abc',
-  mandatoryVersionId: null,
-  createdAt: 1638363403942,
-  updatedAt: 1638983294975,
-  submissionType: 'Manual Inclusion Application',
-  submissionCount: 1,
-  submissionDate: '1638363716309',
-  supportingInformation: {
-    manualInclusion: [],
-    securityDetails: {},
-    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
-    requiredFields: [],
-  },
-  ukefDealId: '0030113304',
-  checkerId: '619bae3467cc7c002069fc21',
-  editedBy: ['619bae3467cc7c002069fc1e'],
-  additionalRefName: null,
-  facilitiesUpdated: 1638542220497,
-  comments: [],
-  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
-  ukefDecision: [],
-  ukefDecisionAccepted: true,
-  id: '61a7710b2ae62b0013dae687',
-  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
-  facilities: { status: CONSTANTS.DEAL_STATUS.COMPLETED, items: [] },
-  exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  canSubmit: false,
-  checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: 'ABC',
-    surname: 'DEF',
-    email: 'test',
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: 'DEF',
-    surname: 'GHJ',
-    email: 'test2',
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
-};
-
-const MOCK_FACILITY = {
-  items: [
-    {
-      status: CONSTANTS.DEAL_STATUS.COMPLETED,
-      details: {
-        _id: '61a7714f2ae62b0013dae689',
-        dealId: '61a7710b2ae62b0013dae687',
-        type: 'CASH',
-        hasBeenIssued: true,
-        name: 'Facility one',
-        shouldCoverStartOnSubmission: false,
-        coverStartDate: '2021-12-03T00:00:00.000Z',
-        coverEndDate: '2040-01-01T00:00:00.000Z',
-        monthsOfCover: null,
-        details: [],
-        detailsOther: '',
-        currency: { id: 'GBP' },
-        value: 1000,
-        coverPercentage: 80,
-        interestPercentage: 1,
-        paymentType: 'IN_ADVANCE_MONTHLY',
-        createdAt: 1638363471661,
-        updatedAt: 1638446928711,
-        ukefExposure: 800,
-        guaranteeFee: 0.9,
-        submittedAsIssuedDate: '1638363717231',
-        ukefFacilityId: '0030113306',
-        feeType: 'in advance',
-        feeFrequency: 'Monthly',
-        dayCountBasis: 360,
-        coverDateConfirmed: null,
-      },
-      validation: { required: [] },
-    },
-    {
-      status: CONSTANTS.DEAL_STATUS.COMPLETED,
-      details: {
-        _id: '61a771cc2ae62b0013dae68a',
-        dealId: '61a7710b2ae62b0013dae687',
-        type: 'CASH',
-        hasBeenIssued: true,
-        name: 'Facility two',
-        shouldCoverStartOnSubmission: true,
-        coverStartDate: 1638403200000,
-        coverEndDate: '2030-01-01T00:00:00.000Z',
-        monthsOfCover: null,
-        details: [],
-        detailsOther: '',
-        currency: { id: 'GBP' },
-        value: 2000,
-        coverPercentage: 80,
-        interestPercentage: 1,
-        paymentType: 'IN_ADVANCE_MONTHLY',
-        createdAt: 1638363596947,
-        updatedAt: 1638442632540,
-        ukefExposure: 1600,
-        guaranteeFee: 0.9,
-        submittedAsIssuedDate: '1638363717231',
-        ukefFacilityId: '0030113305',
-        feeType: 'in advance',
-        feeFrequency: 'Monthly',
-        dayCountBasis: 365,
-        coverDateConfirmed: true,
-      },
-      validation: { required: [] },
-    },
-  ],
-};
+import {
+  MOCK_AIN_APPLICATION,
+  MOCK_UNISSUED_FACILITY,
+  MOCK_ISSUED_FACILITY,
+  MOCK_FACILITY,
+  MOCK_DEAL,
+  MOCK_REQUEST,
+  MOCK_AIN_APPLICATION_UNISSUED_ONLY,
+  MOCK_AIN_APPLICATION_ISSUED_ONLY,
+  MOCK_ISSUED_FACILITY_UNCHANGED,
+  MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+} from './MOCKS';
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {
@@ -398,14 +259,14 @@ describe('mapSummaryList()', () => {
     const mockedData = MockedData();
     const mockedDisplayItems = MockedDisplayItems();
 
-    expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
+    expect(mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
   });
 
   it('returns populated items array if href property is required', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
-    const { items } = mapSummaryList(mockedData, mockedDisplayItems)[0].actions;
+    const { items } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].actions;
     expect(items.length).toEqual(1);
   });
 
@@ -413,10 +274,10 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
-    const item = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
+    const item = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].actions.items[0];
     expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
     mockedData.details.id = null;
-    const item2 = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
+    const item2 = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].actions.items[0];
     expect(item2.text).toEqual('Add');
   });
 
@@ -426,7 +287,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.id = null;
     mockedData.validation.required = ['id'];
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(html).toMatch('required');
   });
 
@@ -435,7 +296,7 @@ describe('mapSummaryList()', () => {
     const mockedData = MockedData();
 
     mockedData.details.id = null;
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toMatch('—');
   });
 
@@ -449,7 +310,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems.slice(1);
     mockedDisplayItems[0].label = 'Address';
     mockedDisplayItems[0].id = 'address';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toMatch('—');
   });
 
@@ -464,7 +325,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].label = 'Address';
     mockedDisplayItems[0].id = 'address';
 
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
   });
 
@@ -478,7 +339,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].label = 'Provided on';
     mockedDisplayItems[0].id = 'details';
 
-    const other = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const other = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(other.html).toEqual('<ul class="is-unstyled"><li>Other - Other text</li></ul>');
   });
 
@@ -497,7 +358,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].isIndustry = true;
     mockedDisplayItems[0].id = 'selectedIndustry';
 
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(html).toEqual('Arts, entertainment and recreation<br>Artistic creation');
   });
 
@@ -508,7 +369,7 @@ describe('mapSummaryList()', () => {
     mockedData.details.id = '123';
     mockedDisplayItems[0].id = 'abc';
 
-    const response = mapSummaryList(mockedData, mockedDisplayItems)[0];
+    const response = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0];
     expect(response).toEqual(null);
   });
 
@@ -522,7 +383,7 @@ describe('mapSummaryList()', () => {
     mockedData.details.price = 200;
     mockedData.details.currency = { id: 'GBP' };
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toEqual('200 GBP');
   });
 
@@ -535,7 +396,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.price = 200;
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toEqual('£200');
   });
 
@@ -548,7 +409,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.percentage = 15;
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toEqual('15%');
   });
 
@@ -562,8 +423,265 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].method = (callback) => reverseFunction(callback);
 
     mockedData.details.reverse = 'abcd';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
     expect(text).toEqual('dcba');
+  });
+
+  it('coverStartDate should display as date when !startOnSubmission', () => {
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
+
+    mockedDisplayItems[0].id = 'coverStartDate';
+    mockedDisplayItems[0].method = (callback) => moment(callback)
+      .format('D MMMM YYYY');
+
+    mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    expect(text).toEqual('20 December 2021');
+  });
+
+  it('coverStartDate should display as text when startOnSubmission and !issueDate', () => {
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
+
+    mockedDisplayItems[0].id = 'coverStartDate';
+    mockedDisplayItems[0].method = (callback) => moment(callback)
+      .format('D MMMM YYYY');
+    mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
+    mockedDisplayItems[0].issueDate = null;
+
+    mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    expect(text).toEqual('Date you submit the notice');
+  });
+
+  it('coverStartDate should display as date when startOnSubmission and issueDate', () => {
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
+
+    mockedDisplayItems[0].id = 'coverStartDate';
+    mockedDisplayItems[0].method = (callback) => moment(callback)
+      .format('D MMMM YYYY');
+    mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
+    mockedDisplayItems[0].issueDate = '2021-12-25T00:00:00.000+00:00';
+
+    mockedData.details.coverStartDate = null;
+    mockedData.details.shouldCoverStartOnSubmission = true;
+    mockedData.details.issueDate = '2021-12-25T00:00:00.000+00:00';
+
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    expect(text).toEqual('25 December 2021');
+  });
+
+  /**
+   * This mapping returns back the rows on the facilities table.
+   * Testing when changing facility from unissued to issued with AIN
+   * ensures that value and issued field cannot be editted on preview page
+  */
+  describe('should not be able to change certain fields on facility which has changed to issued', () => {
+    it('cannot change value row', () => {
+    // 'key' for value row
+      const MockedDisplayItemsIssued = () => [
+        {
+          label: 'Facility value',
+          id: 'value',
+        },
+      ];
+      const mockedDisplayItems = MockedDisplayItemsIssued();
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be blank so cannot change
+      expect(text).toEqual('');
+    });
+    it('cannot change issued (back to unissued)', () => {
+      // 'key' for value row
+      const MockedDisplayItemsIssued = () => [
+        {
+          label: 'Stage',
+          id: 'hasBeenIssued',
+        },
+      ];
+      const mockedDisplayItems = MockedDisplayItemsIssued();
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be blank so cannot change
+      expect(text).toEqual('');
+    });
+  });
+
+  /**
+   * This mapping returns back the rows on the facilities table.
+   * Testing when changing already changed facility to issued with AIN
+   * ensures that name, coverStartDate and coverEndDate fields can be editted on preview page
+  */
+  describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
+    it('name', () => {
+    // 'key' for value row
+      const MockedDisplayItemsName = () => [
+        {
+          label: 'Name',
+          id: 'name',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsName();
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+    it('coverStartDate', () => {
+      const MockedDisplayItemsStartDate = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+    it('coverEndDate', () => {
+      const MockedDisplayItemsStartEnd = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+  });
+
+  /**
+   * This mapping returns back the rows on the facilities table.
+   * Testing when changing facility from unissued to issued with AIN
+   * ensures that name, coverStartDate and coverEndDate fields cannot be editted yet on preview page
+  */
+  describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
+    it('name', () => {
+      // 'key' for value row
+      const MockedDisplayItemsName = () => [
+        {
+          label: 'Name',
+          id: 'name',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsName();
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('');
+    });
+    it('coverStartDate', () => {
+      const MockedDisplayItemsStartDate = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('');
+    });
+    it('coverEndDate', () => {
+      const MockedDisplayItemsStartEnd = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('');
+    });
+  });
+
+  /**
+   * This mapping returns back the rows on the facilities table.
+   * Testing when facility already issued with AIN
+   * ensures that name, coverStartDate and coverEndDate hasBeenIssued fields cannot be editted on preview page
+  */
+  describe('facility has already been issued (and not changed)', () => {
+    it('name', () => {
+      // 'key' for value row
+      const MockedDisplayItemsName = () => [
+        {
+          label: 'Name',
+          id: 'name',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsName();
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const response = [];
+      expect(result).toEqual(response);
+    });
+
+    it('coverStartDate', () => {
+      const MockedDisplayItemsStartDate = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const response = [];
+      expect(result).toEqual(response);
+    });
+
+    it('coverEndDate', () => {
+      const MockedDisplayItemsStartEnd = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const response = [];
+      expect(result).toEqual(response);
+    });
+
+    it('hasBeenIssued', () => {
+      const MockedDisplayItemsIssued = () => [
+        {
+          label: 'Stage',
+          id: 'hasBeenIssued',
+        },
+      ];
+      const mockedDisplayItemsIssued = MockedDisplayItemsIssued();
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const response = [];
+      expect(result).toEqual(response);
+    });
+  });
+
+  it('Stage row should show Add', () => {
+    // 'key' for value row
+    const MockedDisplayItemsStage = () => [
+      {
+        label: 'Stage',
+        id: 'hasBeenIssued',
+      },
+    ];
+    const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+    // should be allowed to change so should display change
+    expect(text).toEqual('Change');
   });
 });
 
@@ -763,6 +881,245 @@ describe('makerCanReSubmit', () => {
     MOCK_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(true);
   });
+  it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION)).toEqual(true);
+  });
+  it('Should return FALSE as the deal does not have changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
+  });
+});
+
+describe('hasChangedToIssued()', () => {
+  it('should return true when there are facilities changed to issued', () => {
+    expect(hasChangedToIssued(MOCK_AIN_APPLICATION)).toEqual(true);
+  });
+  it('should return false when there are no facilities changed to issued', () => {
+    expect(hasChangedToIssued(MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
+  });
+});
+
+describe('facilitiesChangedToIssuedAsArray()', () => {
+  it('should return an array when there are facilities changed to issued', () => {
+    const result = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
+
+    const expected = [
+      {
+        name: MOCK_AIN_APPLICATION.facilities.items[1].details.name,
+        id: MOCK_AIN_APPLICATION.facilities.items[1].details._id,
+      },
+    ];
+    expect(result).toEqual(expected);
+  });
+  it('should return an empty array when there are no facilities changed to issued', () => {
+    const result = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION_UNISSUED_ONLY);
+
+    const expected = [];
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('areUnissuedFacilitiesPresent', () => {
+  it('should return false if no unissued facilities', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_ISSUED_ONLY)).toEqual(false);
+  });
+  it('should return true if only unissued facilities', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(true);
+  });
+  it('should return true if only unissued and issued facilities', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION)).toEqual(true);
+  });
+});
+
+describe('facilityIssueDeadline()', () => {
+  const timestamp = 1639586124100;
+
+  it('should return a correct timestamp 3 months in advance in the right format', () => {
+    const result = facilityIssueDeadline(timestamp);
+
+    const expected = '15 Mar 2022';
+
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('summaryItemsConditions()', () => {
+  it('should return an empty array for name', () => {
+    const item = {
+      label: 'Name',
+      id: 'name',
+    };
+
+    const summaryItemsObj = {
+      preview: true,
+      item,
+      details: MOCK_ISSUED_FACILITY_UNCHANGED,
+      app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+      user: MOCK_REQUEST,
+      data: MOCK_AIN_APPLICATION_ISSUED_ONLY.facilities.items[0],
+    };
+    const result = summaryItemsConditions(summaryItemsObj);
+
+    const expected = [];
+
+    expect(result).toEqual(expected);
+  });
+
+  describe('if changed to issued', () => {
+    it('Should be able to change name', () => {
+      const item = {
+        label: 'Name',
+        id: 'name',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('Change');
+    });
+
+    it('Should be able to change coverStartDate', () => {
+      const item = {
+        label: 'Cover start date',
+        id: 'coverStartDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('Change');
+    });
+
+    it('Should be able to change coverEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'coverEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('Change');
+    });
+
+    it('Should not be able to change issued', () => {
+      const item = {
+        label: 'Stage',
+        id: 'hasBeenIssued',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('');
+    });
+  });
+
+  describe('if not changed and unissued', () => {
+    it('Should not be able to change name', () => {
+      const item = {
+        label: 'Name',
+        id: 'name',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('');
+    });
+
+    it('Should be able to change coverStartDate', () => {
+      const item = {
+        label: 'Cover start date',
+        id: 'coverStartDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('');
+    });
+
+    it('Should be able to change coverEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'coverEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('');
+    });
+
+    it('Should not be able to change issued', () => {
+      const item = {
+        label: 'Stage',
+        id: 'hasBeenIssued',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('Change');
+    });
+  });
+
   it('Should return FALSE as the Maker is from a different Bank', () => {
     MOCK_REQUEST.bank.id = 10;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
@@ -774,5 +1131,19 @@ describe('makerCanReSubmit', () => {
   it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
     MOCK_DEAL.bankId = 1;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+  });
+});
+
+describe('displayTaskComments()', () => {
+  it('should return true if any conditions are true', () => {
+    const result = displayTaskComments(MOCK_AIN_APPLICATION);
+
+    expect(result).toEqual(true);
+  });
+
+  it('should return false if all conditions are false', () => {
+    const result = displayTaskComments(MOCK_AIN_APPLICATION_FALSE_COMMENTS);
+
+    expect(result).toEqual(false);
   });
 });

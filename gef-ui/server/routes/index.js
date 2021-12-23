@@ -30,6 +30,7 @@ const coverStartDate = require('./cover-start-date');
 const confirmCoverStartDate = require('./confirm-cover-start-date');
 const portalActivities = require('./application-activities');
 const cloneGefDeal = require('./clone-gef-deal');
+const unissuedFacilities = require('./unissued-facilities');
 
 const router = express.Router();
 
@@ -65,5 +66,6 @@ router.use(reviewUkefDecision);
 router.use(confirmCoverStartDate);
 router.use(coverStartDate);
 router.use(portalActivities);
+router.use(unissuedFacilities);
 
 module.exports = router;
