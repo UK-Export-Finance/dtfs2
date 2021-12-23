@@ -21,6 +21,7 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
 
 const getDeal = async (dealId, dealType) => {
   let deal;
@@ -149,20 +150,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
-const dealHasAllUkefId = async (dealId) => {
-  const deal = await findOneTfmDeal(dealId);
-
-  if (deal && deal.dealSnapshot && deal.dealSnapshot.facilities) {
-    const dealHasId = !!deal.dealSnapshot.ukefDealId;
-    const facilitiesHaveIds = deal.dealSnapshot.facilities.filter((f) => !f.facilitySnapshot.ukefFacilityId).length === 0;
-    return dealHasId && facilitiesHaveIds;
-  }
-
-  return false;
-};
-
-exports.dealHasAllUkefId = dealHasAllUkefId;
-
 const submitDealPUT = async (req, res) => {
   const {
     dealId,
@@ -171,7 +158,9 @@ const submitDealPUT = async (req, res) => {
   } = req.body;
   let deal;
 
-  if (await dealHasAllUkefId(dealId)) {
+  const canSubmitDealAfterUkefIds = await dealHasAllUkefIds(dealId);
+
+  if (canSubmitDealAfterUkefIds) {
     deal = await submitDealAfterUkefIds(dealId, dealType, checker);
   } else {
     deal = await submitDealBeforeUkefIds(dealId, dealType);
