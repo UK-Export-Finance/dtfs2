@@ -110,12 +110,49 @@ context('User can view and filter multiple deals', () => {
     cy.deleteTfmDeals();
   });
 
-  it('should render all deals by default', () => {
+  it.only('should render all deals by default with correct fields in table', () => {
     const TOTAL_DEALS = ALL_SUBMITTED_DEALS.length;
     pages.dealsPage.dealsTableRows().should('have.length', TOTAL_DEALS);
 
     pages.dealsPage.heading().invoke('text').then((text) => {
       expect(text.trim()).to.equal('All deals');
+    });
+    
+    // test that one deal has correct fields displayed
+    const firstDeal = ALL_SUBMITTED_DEALS[0];
+    const row = pages.dealsPage.dealsTable.row(firstDeal._id);
+
+    row.dealLinkText().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.dealSnapshot.details.ukefDealId);
+    });
+
+    row.product().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.tfm.product);
+    });
+
+    row.submissionType().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.dealSnapshot.submissionType);
+    });
+
+    row.exporterName().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.dealSnapshot.exporter.companyName);
+    });
+
+    row.buyerName().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.dealSnapshot.submissionDetails['buyer-name']);
+    });
+
+    row.bank().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.dealSnapshot.details.owningBank.name);
+    });
+
+    row.stage().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(firstDeal.tfm.stage);
+    });
+
+    const todayFormatted = format(new Date(), 'd MMM yyyy');
+    row.dateReceived().invoke('text').then((text) => {
+      expect(text.trim()).to.contain(todayFormatted);
     });
   });
 
