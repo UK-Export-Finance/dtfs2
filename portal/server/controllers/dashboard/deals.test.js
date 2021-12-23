@@ -45,11 +45,13 @@ describe('controllers/dashboard', () => {
           {
             _id: 'mockDeal',
             exporter: { companyName: 'mock company' },
+            product: PRODUCT.BSS_EWCS,
             createdAt: 1234,
           },
           {
             _id: 'mockDeal2',
             exporter: { companyName: 'mock company' },
+            product: PRODUCT.GEF,
             createdAt: 5678,
           },
         ],

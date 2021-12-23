@@ -1,5 +1,5 @@
 const api = require('../../api');
-const { PRODUCT, STATUS } = require('../../constants');
+const { STATUS } = require('../../constants');
 
 const {
   getApiData,
@@ -20,6 +20,7 @@ const getRoles = (roles) => {
   };
 };
 
+/*
 const dashboardFilters = (filter, userId) => {
   const allFilters = [];
 
@@ -33,13 +34,14 @@ const dashboardFilters = (filter, userId) => {
   }
   return allFilters;
 };
+*/
 
 exports.allDeals = async (req, res) => {
   const tab = 'deals';
   const { userToken } = requestParams(req);
   const { isMaker, isChecker } = getRoles(req.session.user.roles);
 
-  let filters = [];
+  const filters = [];
   // TODO: need to align GEF and BSS: details.maker._id
   // filters = dashboardFilters(req.body, req.session.user._id);
 
