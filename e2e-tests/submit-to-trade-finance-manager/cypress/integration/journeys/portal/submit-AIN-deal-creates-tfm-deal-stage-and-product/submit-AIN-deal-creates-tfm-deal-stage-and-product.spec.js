@@ -18,7 +18,7 @@ context('Portal to TFM deal submission', () => {
 
   before(() => {
     cy.insertManyDeals([
-      MOCK_AIN_DEAL_READY_TO_SUBMIT(),
+      mockDeal,
     ], MAKER_LOGIN)
       .then((insertedDeals) => {
         [deal] = insertedDeals;
@@ -32,7 +32,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  t('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage and product is added to the deal in TFM', () => {
+  it('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage and product is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -70,12 +70,11 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
 
-
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
     //---------------------------------------------------------------
-    // // deal stage and product type is populated
+    // deal stage and product type is populated
     //---------------------------------------------------------------
     tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Confirmed');

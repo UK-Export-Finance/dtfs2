@@ -45,7 +45,7 @@ context('User can view a case deal', () => {
     pages.caseDealPage.mgaVersion().should('exist');
   });
 
-  it.only('should render case summary fields', () => {
+  it('should render case summary fields', () => {
     partials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
       expect(text.trim()).to.contain(MOCK_DEAL_AIN.submissionType);
     });

@@ -110,7 +110,7 @@ context('User can view and filter multiple deals', () => {
     cy.deleteTfmDeals();
   });
 
-  it.only('should render all deals by default with correct fields in table', () => {
+  it('should render all deals by default with correct fields in table', () => {
     const TOTAL_DEALS = ALL_SUBMITTED_DEALS.length;
     pages.dealsPage.dealsTableRows().should('have.length', TOTAL_DEALS);
 
