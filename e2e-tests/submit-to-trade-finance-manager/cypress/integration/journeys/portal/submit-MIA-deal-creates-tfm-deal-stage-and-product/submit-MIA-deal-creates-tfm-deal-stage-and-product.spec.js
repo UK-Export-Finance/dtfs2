@@ -32,7 +32,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal MIA deal is submitted to UKEF, `Application` deal stage and product is added to the deal in TFM. Exporter and submission type should display', () => {
+  it('Portal MIA deal is submitted to UKEF, `Application` deal stage and product is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -69,32 +69,12 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
     tfmPages.landingPage.submitButton().click();
-
-
-    //---------------------------------------------------------------
-    // exporter and submission type should be displayed in the deals table
-    //---------------------------------------------------------------
-    cy.url().should('include', '/deals');
-    const row = tfmPages.dealsPage.dealsTable.row(mockDeal._id);
-
-    row.submissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(mockDeal.submissionType);
-    });
-
-    row.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(mockDeal.exporter.companyName);
-    });
-
-
-    //---------------------------------------------------------------
-    // user vists the case/deal page
-    //---------------------------------------------------------------
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
 
     //---------------------------------------------------------------
-    // deal stage and product type should be  populated in the Case Summary
+    // deal stage and product type is populated
     //---------------------------------------------------------------
     tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Application');
@@ -103,18 +83,5 @@ context('Portal to TFM deal submission', () => {
     tfmPartials.caseSummary.ukefProduct().invoke('text').then((text) => {
       expect(text.trim()).to.contain('BSS & EWCS');
     });
-
-    //---------------------------------------------------------------
-    // submission type and exporter should be displayed in the Case Summary
-    //---------------------------------------------------------------
-    tfmPartials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(mockDeal.submissionType);
-    });
-
-    tfmPartials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(mockDeal.exporter.companyName);
-    });
-
-    // todo test in AIN spec as well
   });
 });

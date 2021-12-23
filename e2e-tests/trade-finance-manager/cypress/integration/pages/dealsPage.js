@@ -22,8 +22,14 @@ const dealsPage = {
       cy.get(`[data-cy="deal-${dealId}"]`).as('row');
       return {
         dealLink: () => cy.get('@row').get(`[data-cy="deal-${dealId}-ukef-deal-id-link"]`),
+        dealLinkText: () => cy.get('@row').get(`[data-cy="deal-${dealId}-ukef-deal-id-link-text"]`),
+        product: () => cy.get('@row').get(`[data-cy="deal-${dealId}-product"]`),
         submissionType: () => cy.get('@row').get(`[data-cy="deal-${dealId}-type"]`),
         exporterName: () => cy.get('@row').get(`[data-cy="deal-${dealId}-exporterName"]`),
+        buyerName: () => cy.get('@row').get(`[data-cy="deal-${dealId}-buyerName"]`),
+        bank: () => cy.get('@row').get(`[data-cy="deal-${dealId}-bank"]`),
+        stage: () => cy.get('@row').get(`[data-cy="deal-${dealId}-stage"]`),
+        dateReceived: () => cy.get('@row').get(`[data-cy="deal-${dealId}-date-received"]`),
       };
     },
   },

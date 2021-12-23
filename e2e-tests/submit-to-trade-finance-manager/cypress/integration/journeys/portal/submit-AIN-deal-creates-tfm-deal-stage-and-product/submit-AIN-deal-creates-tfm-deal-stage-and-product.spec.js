@@ -32,7 +32,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage and product is added to the deal in TFM. Exporter and submission type should display', () => {
+  t('Portal AIN deal is submitted to UKEF, `Confirmed` deal stage and product is added to the deal in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -71,25 +71,11 @@ context('Portal to TFM deal submission', () => {
     tfmPages.landingPage.submitButton().click();
 
 
-    //---------------------------------------------------------------
-    // user vists the case/deal page
-    //---------------------------------------------------------------
     const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
     //---------------------------------------------------------------
-    // deal stage and product type should be  populated in the Case Summary
-    //---------------------------------------------------------------
-    tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Application');
-    });
-
-    tfmPartials.caseSummary.ukefProduct().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('BSS & EWCS');
-    });
-
-    //---------------------------------------------------------------
-    // submission type and exporter should be displayed in the Case Summary
+    // // deal stage and product type is populated
     //---------------------------------------------------------------
     tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Confirmed');
