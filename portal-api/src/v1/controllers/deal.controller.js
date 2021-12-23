@@ -80,9 +80,10 @@ const allDealsFilters = (user, filters = []) => {
   const sanitisedFilters = [...filters];
 
   // add the bank clause if we're not a superuser
-  if (!isSuperUser(user)) {
-    sanitisedFilters.push({ bankId: user.bank && user.bank.id });
-  }
+  // TODO: need to align GEF and BSS.
+  // if (!isSuperUser(user)) {
+  //   sanitisedFilters.push({ bankId: user.bank && user.bank.id });
+  // }
 
   let result = {};
   if (sanitisedFilters.length === 1) {

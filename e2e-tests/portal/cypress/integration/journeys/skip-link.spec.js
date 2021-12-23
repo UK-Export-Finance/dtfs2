@@ -7,7 +7,7 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Skip link should take user to the main content of a page', () => {
   it('When a user keyboard tabs from the html body, skip link should be focused and take the user to the page\'s #main-content', () => {
     cy.login(MAKER_LOGIN);
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // note:
     // unfortunately, cypress currently does not natively support keyboard tabbing.
@@ -23,6 +23,6 @@ context('Skip link should take user to the main content of a page', () => {
 
     partials.skipLink.link().click();
 
-    cy.url().should('eq', relative('/dashboard/0#main-content'));
+    cy.url().should('eq', relative('/dashboard/deals/0#main-content'));
   });
 });

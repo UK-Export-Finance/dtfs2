@@ -3,22 +3,16 @@
 {% macro subnav(selected) %}
   {% set items = [
     {
-      id: 'gefDeals',
-      href: '/dashboard',
-      text: 'GEF Deal view',
-      active: 'gefDeals' === selected
+      id: 'deals',
+      href: '/dashboard/deals',
+      text: 'Deals',
+      active: 'deals' === selected
     },
     {
       id: 'gefFacilities',
       href: '/dashboard/facilities/gef',
       text: 'GEF Facilities',
       active: 'gefFacilities' === selected
-    },
-    {
-      id: 'bssDeals',
-      href: '/dashboard/bss',
-      text: 'BSS / EWCS Deal view',
-      active: 'bssDeals' === selected
     },
     {
       id: 'bssFacilities',

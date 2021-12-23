@@ -1,4 +1,4 @@
-import { bssDeals, gefDeals } from '.';
+import { allDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getApiData } from '../../helpers';
 import api from '../../api';
@@ -6,8 +6,8 @@ import { PRODUCT, STATUS } from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
-  gefDeals: jest.fn(),
 }));
+
 jest.mock('../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
@@ -37,39 +37,7 @@ describe('controllers/dashboard', () => {
     res = mockResponse();
   });
 
-  describe('bssDeals', () => {
-    it('renders the correct template', async () => {
-      await bssDeals(req, res);
-
-      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-        deals: ['mock deal 1', 'mock deal 2'],
-        pages: {
-          totalPages: 1,
-          currentPage: 1,
-          totalItems: 2,
-        },
-        primaryNav: 'home',
-        tab: 'bssDeals',
-        user: {
-          id: 'mock-user',
-          roles: ['maker', 'checker'],
-        },
-      });
-    });
-
-    it('adds filter if user is a checker', async () => {
-      req.session.user.roles = ['checker'];
-
-      await bssDeals(req, res);
-
-      expect(api.allDeals).toHaveBeenCalledWith(20, 20, [{
-        field: 'status',
-        value: STATUS.readyForApproval,
-      }], 'mock-token');
-    });
-  });
-
-  describe('gefDeals', () => {
+  describe('allDeals', () => {
     it('renders the correct template', async () => {
       getApiData.mockResolvedValue({
         count: 2,
@@ -87,14 +55,14 @@ describe('controllers/dashboard', () => {
         ],
       });
 
-      await gefDeals(req, res);
+      await allDeals(req, res);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
         deals: [
           {
             _id: 'mockDeal2',
             exporter: 'mock company',
-            product: PRODUCT.GEF,
+            product: PRODUCT.BSS_EWCS,
             updatedAt: 5678,
           },
           {
@@ -109,7 +77,7 @@ describe('controllers/dashboard', () => {
           totalItems: 2,
         },
         primaryNav: 'home',
-        tab: 'gefDeals',
+        tab: 'deals',
         user: {
           id: 'mock-user',
           roles: ['maker', 'checker'],
@@ -120,9 +88,9 @@ describe('controllers/dashboard', () => {
     it('adds filter if user is a checker', async () => {
       req.session.user.roles = ['checker'];
 
-      await gefDeals(req, res);
+      await allDeals(req, res);
 
-      expect(api.gefDeals).toHaveBeenCalledWith(20, 20, [{
+      expect(api.allDeals).toHaveBeenCalledWith(20, 20, [{
         field: 'status',
         value: 'Ready for Checker\'s approval',
       }], 'mock-token');

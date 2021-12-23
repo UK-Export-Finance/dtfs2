@@ -58,7 +58,7 @@ context('Mandatory Criteria Page', () => {
   describe('Clicking on Abandon', () => {
     it('takes the user back to the dashboard', () => {
       mandatoryCriteria.cancelButton().click();
-      cy.url().should('eq', relative('/dashboard/0'));
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });
 });

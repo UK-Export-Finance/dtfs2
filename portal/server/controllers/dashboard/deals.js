@@ -34,13 +34,14 @@ const dashboardFilters = (filter, userId) => {
   return allFilters;
 };
 
-exports.bssDeals = async (req, res) => {
-  const tab = 'bssDeals';
+exports.allDeals = async (req, res) => {
+  const tab = 'deals';
   const { userToken } = requestParams(req);
   const { isMaker, isChecker } = getRoles(req.session.user.roles);
 
   let filters = [];
-  filters = dashboardFilters(req.body, req.session.user._id);
+  // TODO: need to align GEF and BSS: details.maker._id
+  // filters = dashboardFilters(req.body, req.session.user._id);
 
   if (isChecker && !isMaker) {
     filters.push({
@@ -62,60 +63,6 @@ exports.bssDeals = async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('dashboard/deals.njk', {
-    deals,
-    pages,
-    successMessage: getFlashSuccessMessage(req),
-    primaryNav,
-    tab,
-    user: req.session.user,
-    createdByYou: req.body.createdByYou,
-  });
-};
-
-exports.gefDeals = async (req, res) => {
-  const tab = 'gefDeals';
-  const { userToken } = requestParams(req);
-  const { isMaker, isChecker } = getRoles(req.session.user.roles);
-
-  let filters = [];
-  filters = dashboardFilters(req.body, req.session.user._id);
-
-  if (isChecker && !isMaker) {
-    filters.push({
-      field: 'status',
-      value: STATUS.readyForApproval,
-    });
-  }
-
-  const { count, deals: rawDeals } = await getApiData(
-    api.gefDeals(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
-  const deals = rawDeals.map((deal) => {
-    let exporter = '';
-
-    if (deal.exporter && deal.exporter.companyName) {
-      exporter = deal.exporter.companyName;
-    }
-
-    return {
-      _id: deal._id,
-      status: deal.status,
-      bankRef: deal.bankInternalRefName,
-      exporter,
-      product: PRODUCT.GEF,
-      submissionType: deal.submissionType,
-      updatedAt: deal.updatedAt || deal.createdAt,
-    };
-  })
-    .sort((a, b) => b.updatedAt - a.updatedAt);
-
-  const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
-  };
   return res.render('dashboard/deals.njk', {
     deals,
     pages,

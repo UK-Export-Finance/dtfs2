@@ -25,7 +25,7 @@ context('Select a scheme', () => {
   it('the Cancel option links back to the home page', () => {
     pages.selectScheme.cancel().click();
 
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('should start BSS/EWC journey if option selected', () => {

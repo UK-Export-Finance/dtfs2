@@ -118,6 +118,6 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     // expect to land on the dashboard after successful submit
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });

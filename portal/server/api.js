@@ -84,6 +84,10 @@ const allDeals = async (start, pagesize, filters, token, sort) => {
 
   const response = await apollo('GET', allDealsQuery, params, token);
 
+  if (response.errors) {
+    console.error('Portal UI - GraphQL error querying all deals ', response.errors);
+  }
+
   return response.data.allDeals;
 };
 

@@ -58,7 +58,7 @@ type Deal {
 type AllDeal {
   _id: String!
   status: String
-  bankRef: String
+  bankInternalRefName: String
   exporter: String
   product: String
   submissionType: String
@@ -189,10 +189,6 @@ type GefDeal {
   eligibility: Eligibility
 }
 
-type GefDealsQuery {
-  count: Int
-  deals: [GefDeal]
-}
 
 type GefCurrency {
    id: String
@@ -232,7 +228,6 @@ type Query {
   currencies: [Currency]
   allDeals(params: DealsInput): AllDealsQuery
   deals(params: DealsInput): DealsQuery
-  gefDeals(params: DealsInput): GefDealsQuery
   transactions(params: TransactionInput): TransactionQuery
   gefFacilities(params: TransactionInput): GefFacilitiesQuery
 }
