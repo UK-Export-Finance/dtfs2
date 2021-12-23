@@ -34,32 +34,18 @@ const generateId = async ({
   user,
 });
 
-const generateUkefDealId = async (application) => {
-  if (application.ukefDealId) {
-    return {
-      ukefId: application.ukefDealId,
-    };
-  }
-  return generateId({
-    entityId: application._id,
-    entityType: 'deal',
-    dealId: application._id,
-    user: application.checkerId,
-  });
-};
+const generateUkefDealId = async (application) => generateId({
+  entityId: application._id,
+  entityType: 'deal',
+  dealId: application._id,
+  user: application.checkerId,
+});
 
-const generateUkefFacilityId = async (facility) => {
-  if (facility.ukefFacilityId) {
-    return {
-      ukefId: facility.ukefFacilityId,
-    };
-  }
-  return generateId({
-    entityId: facility._id,
-    entityType: 'facility',
-    dealId: facility.dealId,
-  });
-};
+const generateUkefFacilityId = async (facility) => generateId({
+  entityId: facility._id,
+  entityType: 'facility',
+  dealId: facility.dealId,
+});
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
@@ -89,7 +75,9 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(facilities.map(async (facility) => {
-    const { ukefId } = await generateUkefFacilityId(facility);
+    const { ukefId } = !facility.ukefFacilityId
+      ? await generateUkefFacilityId(facility)
+      : facility.ukefFacilityId;
 
     if (ukefId !== facility.ukefFacilityId) {
       const update = {
@@ -162,18 +150,23 @@ const submissionPortalActivity = async (application) => {
 
 const addSubmissionData = async (dealId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
-  const { ukefId } = await generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
-  return {
+  const submissionData = {
     submissionCount: count,
     submissionDate: date,
-    ukefDealId: ukefId,
     portalActivities: updatedPortalActivity,
   };
+
+  if (!existingApplication.ukefId) {
+    const { ukefId } = await generateUkefDealId(existingApplication);
+    submissionData.ukefId = ukefId;
+  }
+
+  return submissionData;
 };
 
 module.exports = {

@@ -37,7 +37,7 @@ const updatedIssuedFacilities = async (deal) => {
       // update portal facility status
       const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
 
-      // Add `hasBeenAcknowledged` flag to non-GEF facility
+      // Add `hasBeenAcknowledged` flag to BSS/EWCS facility
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
         await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
@@ -83,6 +83,10 @@ const updatedIssuedFacilities = async (deal) => {
         facilityGuaranteeDates,
       };
 
+      /**
+       * Add the updated properties to the returned facility
+       * to retain flat, generic facility mapping used in deal submission calls.
+       * */
       const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
       facility.tfm = updateFacilityResponse.tfm;
 

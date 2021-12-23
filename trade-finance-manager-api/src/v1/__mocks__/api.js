@@ -1,4 +1,5 @@
 const MOCK_DEAL = require('./mock-deal');
+const MOCK_DEAL_NO_UKEF_ID = require('./mock-deal-no-ukef-id');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
@@ -29,6 +30,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-faciliti
 
 const ALL_MOCK_DEALS = [
   MOCK_DEAL,
+  MOCK_DEAL_NO_UKEF_ID,
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
   MOCK_DEAL_FACILITIES_USD_CURRENCY,
