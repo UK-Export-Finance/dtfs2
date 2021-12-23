@@ -33,8 +33,10 @@ describe('reducer - deals', () => {
       const expected = {
         _id: mockBssDeal._id,
         dealSnapshot: {
+          submissionType: mockBssDeal.dealSnapshot.submissionType,
           details: mockBssDeal.dealSnapshot.details,
           submissionDetails: mapSubmissionDetails(mockBssDeal.dealSnapshot.submissionDetails),
+          exporter: mockBssDeal.dealSnapshot.exporter,
         },
         tfm: mapDealTfm(mockBssDeal),
       };
@@ -49,8 +51,10 @@ describe('reducer - deals', () => {
       const expected = {
         _id: mockGefDeal._id,
         dealSnapshot: {
+          submissionType: mockGefDeal.dealSnapshot.submissionType,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
+          exporter: mockGefDeal.dealSnapshot.exporter,
         },
         tfm: mapDealTfm(mockGefDeal),
       };

@@ -11,7 +11,9 @@ const mapBssDeal = (deal) => {
     _id,
     dealSnapshot: {
       details: dealSnapshot.details,
+      submissionType: dealSnapshot.submissionType,
       submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
+      exporter: dealSnapshot.exporter,
     },
     tfm: mapDealTfm(deal),
   };
@@ -26,7 +28,9 @@ const mapGefDeal = (deal) => {
     _id,
     dealSnapshot: {
       details: mapGefDealDetails(dealSnapshot),
+      submissionType: dealSnapshot.submissionType,
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
+      exporter: dealSnapshot.exporter,
     },
     tfm: mapDealTfm(deal),
   };
