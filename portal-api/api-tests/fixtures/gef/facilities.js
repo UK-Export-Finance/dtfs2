@@ -30,6 +30,7 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
+    changedToIssued: null,
   }, {
     type: 'CASH',
     hasBeenIssued: false,
@@ -60,7 +61,24 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
-  },
+  }, {
+    type: 'CONTINGENT',
+    hasBeenIssued: true,
+    name: null,
+    shouldCoverStartOnSubmission: true,
+    coverStartDate: null,
+    coverEndDate: null,
+    monthsOfCover: null,
+    details: null,
+    detailsOther: null,
+    currency: null,
+    value: null,
+    coverPercentage: null,
+    interestPercentage: null,
+    paymentType: null,
+    changedToIssued: true,
+    issueDate: '2021-12-01T12:32:00.000+00:00',
+  }
 ];
 
 module.exports = FACILITIES;

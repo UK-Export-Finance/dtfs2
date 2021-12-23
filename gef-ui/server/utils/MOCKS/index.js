@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../constants');
 
+// TODO: DTFS2-5228 split file up
 const MOCK_AIN_APPLICATION = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',

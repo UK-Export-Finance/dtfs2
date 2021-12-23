@@ -251,6 +251,28 @@ const MockFacilityResponseUnissued = () => {
   return res;
 };
 
+const MockExpectedFacilityRenderChange = (change) => ({
+  facilityType: 'CASH',
+  facilityName: 'Foundry4',
+  hasBeenIssued: true,
+  monthsOfCover: null,
+  shouldCoverStartOnSubmission: 'true',
+  issueDateDay: '5',
+  issueDateMonth: '1',
+  issueDateYear: '2022',
+  coverStartDateDay: '2',
+  coverStartDateMonth: '1',
+  coverStartDateYear: '2022',
+  coverEndDateDay: '2',
+  coverEndDateMonth: '1',
+  coverEndDateYear: '2030',
+  facilityTypeString: 'cash',
+  dealId: '123',
+  facilityId: 'xyz',
+  status: 'change',
+  change,
+});
+
 module.exports = {
   MockResponse,
   MockRequest,
@@ -268,4 +290,5 @@ module.exports = {
   MockResponseUnissued,
   MockRequestUnissued,
   MockFacilityResponseUnissued,
+  MockExpectedFacilityRenderChange,
 };

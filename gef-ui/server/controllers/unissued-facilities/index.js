@@ -8,9 +8,11 @@ const { facilityValidation } = require('./validation');
 
 /**
  * creates body/parameters for the template for unissued facilities
- * if change set to true, changes cancel and back button href back to application preview
+ * if change true, changes 'cancel' + 'back' button href back to application preview
  * else renders back to unissued facilities list
- */
+ * @param {req} params, @param {req} query, @param {Boolean} change
+ * @returns {Object} body
+*/
 const renderChangeFacilityPartial = async (params, query, change) => {
   const { dealId, facilityId } = params;
   const { status } = query;
@@ -48,6 +50,7 @@ const renderChangeFacilityPartial = async (params, query, change) => {
   return body;
 };
 
+// returns body to render for template
 const renderBody = (body) => ({
   facilityType: body.facilityType,
   facilityName: body.facilityName,
@@ -71,6 +74,7 @@ const renderBody = (body) => ({
 });
 
 // when changing unissued facility from unissued facility list
+// renders about-facility change page for unissued facilities
 const changeUnissuedFacility = async (req, res) => {
   const { params, query } = req;
 
@@ -84,6 +88,7 @@ const changeUnissuedFacility = async (req, res) => {
 };
 
 // when changing unissued facility from application preview page
+// renders about-facility change page for unissued facilities
 const changeUnissuedFacilityPreview = async (req, res) => {
   const { params, query } = req;
 
@@ -97,13 +102,20 @@ const changeUnissuedFacilityPreview = async (req, res) => {
 };
 
 /**
- * post for changing unissued facilities to issued from unissued facilities list
- * validates first and gets parameters from validation
+ * post function for changing unissued facilities to issued from unissued facilities list
+ * validates first and gets parameters {Object} from validation function
  * displays success message and redirects to unissued facilities list
+ * @param {req}
+ * @returns {res}
  */
 const postChangeUnissuedFacility = async (req, res) => {
   const {
-    issueDate, coverStartDate, coverEndDate, body, facilityId, dealId,
+    issueDate,
+    coverStartDate,
+    coverEndDate,
+    body,
+    facilityId,
+    dealId,
   } = await facilityValidation(req, res);
 
   try {
@@ -128,7 +140,7 @@ const postChangeUnissuedFacility = async (req, res) => {
     // TODO: DTFS2-5227 change redirect
     return applicationDetails(req, res);
   } catch (err) {
-    console.log(err);
+    console.error('Cannot update unissued facility', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -136,10 +148,17 @@ const postChangeUnissuedFacility = async (req, res) => {
 /**
  * post for changing unissued facilities from application preview
  * redirects to application preview once changed
+ * @param {req}
+ * @returns {res}
  */
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const {
-    issueDate, coverStartDate, coverEndDate, body, facilityId, dealId,
+    issueDate,
+    coverStartDate,
+    coverEndDate,
+    body,
+    facilityId,
+    dealId,
   } = await facilityValidation(req, res);
 
   try {
@@ -161,7 +180,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
-    console.log(err);
+    console.error('Cannot update unissued facility from application preview', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };

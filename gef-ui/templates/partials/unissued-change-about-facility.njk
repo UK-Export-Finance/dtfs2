@@ -5,8 +5,11 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
 {% block pageTitle %}About this {{ facilityTypeString }} facility{% endblock %}
+
 {% block content %}
+
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
@@ -16,6 +19,7 @@
       }
     }) }}
   {% endif %}
+
   {% if change === false %}
     {{ govukBackLink({
       text: "Back",
@@ -24,6 +28,7 @@
         'data-cy': 'back-link'
       }
     }) }}
+
   {% else %}
     {{ govukBackLink({
       text: "Back",
@@ -33,6 +38,7 @@
       }
     }) }}
   {% endif %}
+
   <header data-cy="application-details-page">
     <h1 class="govuk-heading-xl" data-cy="main-heading">
       Tell us you've issued this facility
@@ -43,6 +49,7 @@
       <form method="post" data-cy="form">
         <input class="govuk-visually-hidden" id="facilityType" name="facilityType" hidden="true" value="{{ facilityType }}">
           <input class="govuk-visually-hidden" id="hasBeenIssued" name="hasBeenIssued" hidden="true" value="{{ hasBeenIssued }}">
+
             {{ govukInput({
             label: {
               text: "Name for this " + facilityTypeString + " facility",
@@ -64,6 +71,7 @@
                 }
               }
             }) }}
+
             {{ govukDateInput({
               id: "issueDate",
               namePrefix: "issue-date",
@@ -115,7 +123,9 @@
                 }
               ]
             }) }}
+
             {% set coverStartHtml %}
+
             {{ govukDateInput({
                 id: "coverStartDate",
                 namePrefix: "cover-start-date",
@@ -168,6 +178,7 @@
                 ]
               }) }}
             {% endset -%}
+
             {{ govukRadios({
               idPrefix: "shouldCoverStartOnSubmission",
               name: "shouldCoverStartOnSubmission",
@@ -205,6 +216,7 @@
                 }
               ]
             }) }}
+
             {{ govukDateInput({
               id: "coverEndDate",
               namePrefix: "cover-end-date",
@@ -253,19 +265,23 @@
                 }
               ]
             }) }}
+
             <div class="govuk-button-group">
+
               {{ govukButton({
                 text: "Continue",
                 attributes: {
                   'data-cy': 'continue-button'
                 }
               }) }}
+
               {% if change === false %}
                 <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="cancel-link">
                   Cancel</a>
               {% else %}
                 <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="cancel-link">Cancel</a>
               {% endif %}
+
             </div>
       </form>
     </div>

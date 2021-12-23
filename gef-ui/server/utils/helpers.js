@@ -132,7 +132,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // column key to display add if facility not yet issued
   const unissuedShow = id === 'hasBeenIssued';
   // personalised href for facility to change to issued (once submitted to UKEF)
-  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities-change/${data.details._id}/about-facility`;
+  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
   // array of facilities which have been changed to issued
   const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
 
@@ -432,7 +432,7 @@ const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
       { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
       { text: facilityIssueDeadline(submissionDate) },
       {
-        html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about-facility' class='govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-facility-button-${index}'>Update</a>`,
+        html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about' class='govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-facility-button-${index}'>Update</a>`,
       },
     ]);
 
@@ -518,12 +518,6 @@ const makerCanReSubmit = (maker, application) => {
 
   return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
-
-/**
- * checks if any comments present
- * has extra clause for if app.comments as some e2e tests do not contain this element
- * stops crashing
- * */
 
 const commentsPresent = (app) => {
   if (app.comments) {

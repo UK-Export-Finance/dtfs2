@@ -6,7 +6,11 @@ const { validationErrorHandler } = require('../../utils/helpers');
 
 /**
  * validation for changing facilities
+ * checks issue date, coverStartDate and coverEndDate dates
  * returns required parameters for post update facility
+ * @param {req}
+ * @returns {res} if validation errors
+ * @returns {Object} if no validation errors
  */
 const facilityValidation = async (req, res) => {
   const { body, query, params } = req;

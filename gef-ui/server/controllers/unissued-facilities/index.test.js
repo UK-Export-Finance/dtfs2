@@ -33,27 +33,7 @@ describe('renderChangeFacilityPartial()', () => {
 
     const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, true);
 
-    const expected = {
-      facilityType: 'CASH',
-      facilityName: 'Foundry4',
-      hasBeenIssued: true,
-      monthsOfCover: null,
-      shouldCoverStartOnSubmission: 'true',
-      issueDateDay: '5',
-      issueDateMonth: '1',
-      issueDateYear: '2022',
-      coverStartDateDay: '2',
-      coverStartDateMonth: '1',
-      coverStartDateYear: '2022',
-      coverEndDateDay: '2',
-      coverEndDateMonth: '1',
-      coverEndDateYear: '2030',
-      facilityTypeString: 'cash',
-      dealId: '123',
-      facilityId: 'xyz',
-      status: 'change',
-      change: true,
-    };
+    const expected = MOCKS.MockExpectedFacilityRenderChange(true);
 
     expect(result).toEqual(expected);
   });
@@ -62,27 +42,7 @@ describe('renderChangeFacilityPartial()', () => {
     mockRequest.query.status = 'change';
     const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, false);
 
-    const expected = {
-      facilityType: 'CASH',
-      facilityName: 'Foundry4',
-      hasBeenIssued: true,
-      monthsOfCover: null,
-      shouldCoverStartOnSubmission: 'true',
-      issueDateDay: '5',
-      issueDateMonth: '1',
-      issueDateYear: '2022',
-      coverStartDateDay: '2',
-      coverStartDateMonth: '1',
-      coverStartDateYear: '2022',
-      coverEndDateDay: '2',
-      coverEndDateMonth: '1',
-      coverEndDateYear: '2030',
-      facilityTypeString: 'cash',
-      dealId: '123',
-      facilityId: 'xyz',
-      status: 'change',
-      change: false,
-    };
+    const expected = MOCKS.MockExpectedFacilityRenderChange(false);
 
     expect(result).toEqual(expected);
   });
@@ -256,7 +216,7 @@ describe('postChangeUnissuedFacility()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith('xyz', {
+    expect(api.updateFacility).not.toHaveBeenCalledWith(MOCKS.MockRequestUnissued.facilityId, {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
       coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
       issueDate: format(tomorrow, 'MMMM d, yyyy'),

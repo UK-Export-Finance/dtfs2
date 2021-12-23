@@ -50,6 +50,8 @@ const validateApplicationReferences = (body = {}) => {
 
 const validatorStatusCheckEnums = (doc) => {
   const enumErrors = [];
+
+  // statuses received from TFM - shouldnt be updating to UKEF_ACKNOWLEDGED on its own
   switch (doc.status) {
     case CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED:
     case CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS:
@@ -58,8 +60,6 @@ const validatorStatusCheckEnums = (doc) => {
     case CONSTANTS.DEAL.GEF_STATUS.BANK_CHECK:
     case CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF:
     case CONSTANTS.DEAL.GEF_STATUS.ABANDONED:
-    // statuses received from TFM - shouldnt be updating to UKEF_ACKNOWLEDGED on its own
-    // eslint-disable-next-line no-fallthrough
     case CONSTANTS.DEAL.GEF_STATUS.UKEF_ACKNOWLEDGED:
     case null:
     case undefined:

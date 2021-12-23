@@ -38,6 +38,10 @@ const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
 const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'M');
 const threeMonthsOneDayYear = format(threeMonthsOneDay, 'yyyy');
 
+/*
+  for changing facilities to issued from preview page.
+  To unlock functionality, need to first issue one facility from unissued-facility table
+*/
 context('Unissued Facilities AIN - change to issued from preview page', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
@@ -77,20 +81,10 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
-    it('clicking unissued facilities link takes you to unissued facility list page', () => {
-      applicationPreview.unissuedFacilitiesReviewLink().click();
-
-      unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
-
-      unissuedFacilityTable.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
-    });
-
     it('clicking on update should take you to the update facility page with correct url', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about-facility`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
     });
 
     it('update facility page should have correct titles and text (only name should be prepopulated', () => {
@@ -112,7 +106,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
     });
 
-    it('update facilities later link should take you back to application preview', () => {
+    it('should be able to update facility and then go back to application preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -133,6 +127,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
       unissuedFacilityTable.continueButton().should('not.exist');
+      // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
 
@@ -141,12 +136,31 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
 
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
+      // should not be able to go back to unissued-facilities table once updated at least one facility
       applicationPreview.unissuedFacilitiesReviewLink().should('not.exist');
+      // should be able to submit to checker since facility issued
       applicationPreview.submitButtonPostApproval().should('exist');
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      // not be able to change 1 name, but can change to issued
+      const issuedDate = format(oneMonth, 'd MMMM yyyy');
+      const coverStart = format(twoMonths, 'd MMMM yyyy');
+      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+
+      // can change facility one name and issue dates etc since changed to issued
+      applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
+      applicationPreview.facilitySummaryListRowAction(3, 0).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(3, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowValue(3, 1).contains('Issued');
+      applicationPreview.facilitySummaryListRowAction(3, 2).contains('Change');
+      applicationPreview.facilitySummaryListRowValue(3, 2).contains(issuedDate);
+      applicationPreview.facilitySummaryListRowAction(3, 3).contains('Change');
+      applicationPreview.facilitySummaryListRowValue(3, 3).contains(coverStart);
+      applicationPreview.facilitySummaryListRowAction(3, 4).contains('Change');
+      applicationPreview.facilitySummaryListRowValue(3, 4).contains(coverEnd);
+      applicationPreview.facilitySummaryListRowAction(3, 4).contains('Change');
+
+      // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_FOUR.name);
       applicationPreview.facilitySummaryListRowAction(0, 0).should('have.value', '');
 
@@ -158,7 +172,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListRowKey(0, 3).should('not.have.value', 'Cover start date');
       applicationPreview.facilitySummaryListRowKey(0, 4).should('not.have.value', 'Cover end date');
 
-      // should not be able to change number 3 has previously issued
+      // should not be able to change facility two has previously issued
       applicationPreview.facilitySummaryListRowValue(2, 0).contains(MOCK_FACILITY_TWO.name);
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
 
@@ -172,6 +186,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('change unissued to issued from application preview page', () => {
+      // to change to issued from preview page by clicking change on issued row
       applicationPreview.facilitySummaryListRowAction(0, 2).click();
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_FOUR.name}name`);
@@ -191,29 +206,6 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       aboutFacilityUnissued.continueButton().click();
     });
 
-    it('review facility stage should show updated facility on list', () => {
-      const issuedDate = format(oneMonth, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
-
-      applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
-      applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
-      applicationPreview.updatedUnissuedFacilitiesList().contains(`${unissuedFacilitiesArray[2].name}name`);
-
-      applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_FOUR.name);
-      applicationPreview.facilitySummaryListRowAction(0, 0).contains('Change');
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('have.value', '');
-      applicationPreview.facilitySummaryListRowValue(0, 2).contains('Issued');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('have.value', '');
-      applicationPreview.facilitySummaryListRowValue(0, 3).contains(issuedDate);
-      applicationPreview.facilitySummaryListRowAction(0, 3).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStart);
-      applicationPreview.facilitySummaryListRowAction(0, 4).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(0, 5).contains(coverEnd);
-      applicationPreview.facilitySummaryListRowAction(0, 5).contains('Change');
-    });
-
     it('change links should appear for facility four and three should be unissued still', () => {
       const issuedDate = format(oneMonth, 'd MMMM yyyy');
       const coverStart = format(twoMonths, 'd MMMM yyyy');
@@ -222,8 +214,10 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
+      // should show new facility four name
       applicationPreview.updatedUnissuedFacilitiesList().contains(`${unissuedFacilitiesArray[2].name}name`);
 
+      // check correct change links are shown for rows of issued facility
       applicationPreview.facilitySummaryListRowValue(0, 0).contains(`${unissuedFacilitiesArray[2].name}name`);
       applicationPreview.facilitySummaryListRowAction(0, 0).contains('Change');
       applicationPreview.facilitySummaryListRowAction(0, 1).should('have.value', '');
@@ -236,6 +230,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListRowValue(0, 5).contains(coverEnd);
       applicationPreview.facilitySummaryListRowAction(0, 5).contains('Change');
 
+      // facility three still unissued
       applicationPreview.facilitySummaryListRowValue(1, 0).contains(MOCK_FACILITY_THREE.name);
       applicationPreview.facilitySummaryListRowAction(1, 0).should('have.value', '');
       applicationPreview.facilitySummaryListRowAction(1, 1).should('have.value', '');
@@ -247,6 +242,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
+      // ensures that can submit even with 1 unissued left still
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
       applicationSubmission.submitButton().click();
