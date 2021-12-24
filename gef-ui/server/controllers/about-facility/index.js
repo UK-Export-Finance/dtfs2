@@ -2,7 +2,7 @@ const {
   add, format, isAfter, isBefore, set,
 } = require('date-fns');
 const api = require('../../services/api');
-const { FACILITY_TYPE, DATE_FORMAT } = require('../../constants');
+const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const aboutFacility = async (req, res) => {
@@ -248,6 +248,7 @@ const validateAboutFacility = async (req, res) => {
       monthsOfCover: body.monthsOfCover || null,
       coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
       coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
+      coverDateConfirmed: DEAL_SUBMISSION_TYPE.AIN ? true : null,
     });
 
     if (isTrueSet(saveAndReturn) || status === 'change') {
