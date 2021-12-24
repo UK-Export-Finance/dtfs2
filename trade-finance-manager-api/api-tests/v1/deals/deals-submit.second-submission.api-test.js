@@ -170,7 +170,7 @@ describe('/v1/deals', () => {
 
           const updatedBond = body.facilities.find((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-          expect(updatedBond.tfm.hasBeenAcknowledged).toEqual(true);
+          expect(updatedBond.hasBeenAcknowledged).toEqual(true);
         });
       });
 
@@ -257,7 +257,7 @@ describe('/v1/deals', () => {
 
           const updatedLoan = body.facilities.find((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-          expect(updatedLoan.tfm.hasBeenAcknowledged).toEqual(true);
+          expect(updatedLoan.hasBeenAcknowledged).toEqual(true);
         });
       });
 
@@ -301,7 +301,7 @@ describe('/v1/deals', () => {
     });
 
     describe('MIA deal - on second submission', () => {
-      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot', async () => {
+      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot and NOT call submitACBSIfAllPartiesHaveUrn', async () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.submissionType).toEqual('Manual Inclusion Application');
 
@@ -315,7 +315,7 @@ describe('/v1/deals', () => {
         expect(body.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
         expect(body.checkerMIN).toEqual(mockChecker);
-        expect(dealController.submitACBSIfAllPartiesHaveUrn).toHaveBeenCalled();
+        expect(dealController.submitACBSIfAllPartiesHaveUrn).not.toHaveBeenCalled();
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
