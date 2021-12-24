@@ -431,10 +431,50 @@ describe(baseUrl, () => {
         expect(getFacilityResponse.status).toEqual(200);
         expect(getFacilityResponse.body.details.submittedAsIssuedDate).toEqual(expect.any(String));
         expect(getFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(true);
+
         // in date format to avoid mismatch in times
         const receivedDate = format(new Date(getFacilityResponse.body.details.coverStartDate), 'dd-MMMM-yyyy');
         const expected = format(new Date(), 'dd-MMMM-yyyy');
         expect(receivedDate).toEqual(expected);
+      });
+
+      it('coverStartDate is issueDate if (shouldCoverStartOnSubmission === true) && changedToIssued === true', async () => {
+        // create deal
+        const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+        const dealId = body._id;
+        // create issued facility that's associated with the deal
+        const issuedFacility = mockFacilities.find((f) => f.changedToIssued === true);
+
+        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
+        expect(createFacilityResponse.status).toEqual(201);
+
+        const facilityId = createFacilityResponse.body.details._id;
+        // adds a submittedAsIssuedDate
+        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
+        // ensures that should shouldCoverStartOnSubmission is null
+        expect(createFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(null);
+
+        // update facility so that shouldCoverStartOnSubmission and coverStartDate are added to the facility
+        const facilityWithDates = await as(aMaker).put(issuedFacility).to(`${facilitiesUrl}/${facilityId}`);
+        expect(facilityWithDates.status).toEqual(200);
+
+        // change deal status to submitted
+        const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.GEF_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
+        expect(putResponse.status).toEqual(200);
+
+        // check that the facility has updated submittedAsIssuedDate and cover start date is set to todays date
+        const getFacilityResponse = await as(aMaker).get(`${facilitiesUrl}/${facilityId}`);
+
+        expect(getFacilityResponse.status).toEqual(200);
+        expect(getFacilityResponse.body.details.submittedAsIssuedDate).toEqual(expect.any(String));
+        expect(getFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(true);
+
+        // formats date into correct format
+        const receivedDate = new Date(getFacilityResponse.body.details.coverStartDate);
+        const receivedDateFormatted = new Date(receivedDate);
+        const expected = (new Date(getFacilityResponse.body.details.issueDate)).setHours(0, 0, 0, 0);
+        const expectedFormatted = new Date(expected);
+        expect(receivedDateFormatted).toEqual(expectedFormatted);
       });
 
       it('calls api.tfmDealSubmit', async () => {

@@ -1,5 +1,5 @@
 const api = require('../../services/api');
-const { validationErrorHandler } = require('../../utils/helpers');
+const { validationErrorHandler, hasChangedToIssued } = require('../../utils/helpers');
 const Application = require('../../models/application');
 const CONSTANTS = require('../../constants');
 
@@ -16,6 +16,7 @@ const getApplicationSubmission = async (req, res) => {
     dealId,
     submissionType,
     maxCommentLength,
+    unissuedToIssued: hasChangedToIssued(application),
   });
 };
 
@@ -26,7 +27,6 @@ const postApplicationSubmission = async (req, res, next) => {
   const { comment } = body;
   const application = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
-
   const maker = await api.getUserDetails(application.userId, userToken);
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
@@ -61,6 +61,7 @@ const postApplicationSubmission = async (req, res, next) => {
   return res.render('application-details-submitted.njk', {
     dealId,
     submissionType,
+    unissuedToIssued: hasChangedToIssued(application),
   });
 };
 

@@ -28,6 +28,7 @@ import supportingInformation from '../supporting-information';
 import portalActivities from '../application-activities';
 import downloadFiles from '../downloadFile';
 import cloneGefDeal from '../clone-gef-deal';
+import unissuedFacilities from '../unissued-facilities';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -79,5 +80,6 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(portalActivities);
     expect(useSpy).toHaveBeenCalledWith(downloadFiles);
     expect(useSpy).toHaveBeenCalledWith(cloneGefDeal);
+    expect(useSpy).toHaveBeenCalledWith(unissuedFacilities);
   });
 });

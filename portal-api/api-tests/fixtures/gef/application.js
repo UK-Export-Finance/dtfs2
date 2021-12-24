@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../../src/constants');
+
 const APPLICATION = [{
   dealType: 'GEF',
   userId: null,
