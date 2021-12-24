@@ -5,7 +5,7 @@ const CONSTANTS = require('../../constants');
 
 /**
  * Verified whether the deal and all its facilities have a UKEF ID
- * @param {Integer} dealId UKEF deal ID
+ * @param {String} dealId UKEF deal ID
  * @returns {Boolean}  Boolean value
  */
 const dealHasAllUkefIds = async (dealId) => {
