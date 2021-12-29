@@ -13,6 +13,7 @@ describe('controllers/application-detaills', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
+  let mockFacilityResponse;
   let mockFacilitiesResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
@@ -21,6 +22,7 @@ describe('controllers/application-detaills', () => {
     mockResponse = MOCKS.MockResponse();
     mockRequest = MOCKS.MockRequest();
     mockApplicationResponse = MOCKS.MockApplicationResponseDraft();
+    mockFacilityResponse = MOCKS.MockFacilityResponse();
     mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
     mockUserResponse = MOCKS.MockUserResponse();
     mockEligibilityCriteriaResponse = MOCKS.MockEligibilityCriteriaResponse();
