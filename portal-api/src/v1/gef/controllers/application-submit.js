@@ -171,9 +171,9 @@ const addSubmissionData = async (dealId, existingApplication) => {
     portalActivities: updatedPortalActivity,
   };
 
-  if (!existingApplication.ukefId) {
+  if (!existingApplication.ukefDealId) {
     const { ukefId } = await generateUkefDealId(existingApplication);
-    submissionData.ukefId = ukefId;
+    submissionData.ukefDealId = ukefId;
   }
 
   return submissionData;
