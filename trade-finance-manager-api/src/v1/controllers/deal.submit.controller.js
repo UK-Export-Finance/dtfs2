@@ -123,15 +123,20 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     }
 
     if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
-      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, checker);
+      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
 
       // NOTE: this is the one and only time that TFM updates a snapshot.
       // Without this, it would involve additional API calls going around in circles.
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
       updatedDeal.submissionType = dealSnapshot.submissionType;
-      updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
-      updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
+        updatedDeal.checkerMIN = dealSnapshot.checkerMIN;
+      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+        updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
+      }
 
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
