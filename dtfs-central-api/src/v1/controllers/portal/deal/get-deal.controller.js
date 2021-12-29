@@ -169,7 +169,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   const deals = await collection.aggregate([
     {
       $project: {
-        _id: 1,
+        _id: 0,
         bankInternalRefName: '$bankInternalRefName',
         status: '$status',
         product: '$dealType',
@@ -184,13 +184,20 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     {
       $facet: {
         count: [{ $count: 'total' }],
-        deals: [{ $skip: start }, ...pagesize ? [{ $limit: pagesize }] : []],
+        deals: [
+          { $skip: start },
+          ...(pagesize ? [{ $limit: pagesize }] : []),
+        ],
       },
     },
     { $unwind: '$count' },
-    { $project: { count: '$count.total', deals: 1 } },
-  ])
-    .toArray();
+    {
+      $project: {
+        count: '$count.total',
+        deals: 1,
+      }
+    },
+  ]).toArray();
 
   return deals;
 };

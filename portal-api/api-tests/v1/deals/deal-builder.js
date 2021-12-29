@@ -3,6 +3,9 @@ module.exports = (overrides) => {
   return {
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
+    exporter: {
+      companyName: 'mock company',
+    },
     ...overrides,
   };
 };
