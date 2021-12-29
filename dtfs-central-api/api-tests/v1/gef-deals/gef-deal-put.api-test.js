@@ -14,12 +14,6 @@ describe('/v1/portal/gef/deals/:id', () => {
     status: 'Draft',
   };
 
-  const mockDeal = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-    status: 'Draft',
-    updatedAt: 1234.0,
-  };
-
   const mockUser = {
     _id: '123456789',
     username: 'temp',

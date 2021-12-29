@@ -85,13 +85,10 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(facilities.map(async (facility) => {
-    const { ukefId } = !facility.ukefFacilityId
-      ? await generateUkefFacilityId(facility)
-      : facility.ukefFacilityId;
-
-    if (ukefId !== facility.ukefFacilityId) {
+    if (!facility.ukefFacilityId) {
+      const ukefFacilityId = await generateUkefFacilityId(facility);
       const update = {
-        ukefFacilityId: ukefId,
+        ukefFacilityId
       };
       await updateFacility(facility._id, update);
     }
