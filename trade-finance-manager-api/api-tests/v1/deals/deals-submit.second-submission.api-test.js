@@ -17,6 +17,7 @@ const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const submitDeal = require('../utils/submitDeal');
+const { now } = require('moment');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -569,6 +570,14 @@ describe('/v1/deals', () => {
           facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+      });
+
+      it('Should update the application from MIA to MIN', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
+
+        expect(status).toEqual(200);
+        expect(body.submissionType).toEqual(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
+        expect(body.manualInclusionNoticeSubmissionDate).toEqual(now());
       });
     });
   });
