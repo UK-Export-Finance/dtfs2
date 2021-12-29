@@ -169,7 +169,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   const deals = await collection.aggregate([
     {
       $project: {
-        _id: 0,
+        _id: 1,
         bankInternalRefName: '$bankInternalRefName',
         status: '$status',
         product: '$dealType',
