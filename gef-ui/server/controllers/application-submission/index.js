@@ -1,5 +1,6 @@
 const api = require('../../services/api');
-const { validationErrorHandler, hasChangedToIssued } = require('../../utils/helpers');
+const { validationErrorHandler } = require('../../utils/helpers');
+const { hasChangedToIssued } = require('../../utils/facility-helpers');
 const Application = require('../../models/application');
 const CONSTANTS = require('../../constants');
 

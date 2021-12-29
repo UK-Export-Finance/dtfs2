@@ -1,0 +1,57 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% macro render(issueDateDay, issueDateMonth, issueDateYear, errors) %}
+
+  {{ govukDateInput({
+      id: "issueDate",
+      namePrefix: "issue-date",
+      fieldset: {
+        legend: {
+          text: "Date you issued it to the exporter",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      hint: {
+        text: "For example, 12 03 2021."
+      },
+      attributes: {
+          'data-cy': "issue-date"
+      },
+      errorMessage: errors and errors.fieldErrors.issueDate and {
+        text: errors.fieldErrors.issueDate.text,
+        attributes: {
+          'data-cy': 'issue-date-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: errors.fieldErrors.issueDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: issueDateDay,
+          attributes: {
+            'data-cy': "issue-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: errors.fieldErrors.issueDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: issueDateMonth,
+          attributes: {
+            'data-cy': "issue-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: errors.fieldErrors.issueDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: issueDateYear,
+          attributes: {
+            'data-cy': "issue-date-year"
+          }
+        }
+      ]
+  }) }}
+
+{% endmacro %}

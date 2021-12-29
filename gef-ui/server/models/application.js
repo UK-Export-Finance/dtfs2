@@ -3,7 +3,7 @@ const {
   getFacilities,
   getUserDetails,
 } = require('../services/api');
-const { status } = require('../utils/helpers');
+const { status } = require('../utils/deal-helpers');
 const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
 
 const termToSupportDocuments = {

@@ -1,0 +1,48 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro render(params) %}
+  {% set shouldCoverStartOnSubmission = params.shouldCoverStartOnSubmission %}
+  {% set coverStartHtml = params.coverStartHtml %}
+  {% set errors = params.errors %}
+  {% set text = params.text %}
+
+  {{ govukRadios({
+      idPrefix: "shouldCoverStartOnSubmission",
+      name: "shouldCoverStartOnSubmission",
+      fieldset: {
+        legend: {
+          text: text,
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.shouldCoverStartOnSubmission and {
+        text: errors.fieldErrors.shouldCoverStartOnSubmission.text,
+        attributes: {
+          'data-cy': 'should-cover-start-on-submission-error'
+        }
+      },
+      items: [
+        {
+          value: 'true',
+          text: "Yes",
+          checked: shouldCoverStartOnSubmission === 'true',
+          attributes: {
+            'data-cy': "should-cover-start-on-submission-yes"
+          }
+        },
+        {
+          value: 'false',
+          text: "No",
+          checked: shouldCoverStartOnSubmission === 'false',
+          conditional: {
+            html: coverStartHtml
+          },
+          attributes: {
+            'data-cy': "should-cover-start-on-submission-no"
+          }
+        }
+      ]
+  }) }}
+
+
+{% endmacro %}

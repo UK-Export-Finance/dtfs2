@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../constants');
-const { validationErrorHandler, isNotice } = require('../../utils/helpers');
+const { validationErrorHandler } = require('../../utils/helpers');
+const { isNotice } = require('../../utils/deal-helpers');
 const api = require('../../services/api');
 
 const MAX_COMMENT_LENGTH = 400;
