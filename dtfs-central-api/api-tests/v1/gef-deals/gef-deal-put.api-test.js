@@ -42,9 +42,9 @@ describe('/v1/portal/gef/deals/:id', () => {
     it('Return and update the GEF deal', async () => {
       const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
       const createdDeal = postResult.body;
+      const dealId = createdDeal._id;
       const updatedDeal = {
         ...newDeal,
-        _id: createdDeal._id,
         additionalRefName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,
@@ -52,10 +52,11 @@ describe('/v1/portal/gef/deals/:id', () => {
         },
       };
 
-      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/gef/deals/${createdDeal._id}`);
+      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/gef/deals/${dealId}`);
 
       expect(status).toEqual(200);
 
+      expect(body.additionalRefName).toEqual('change this field');
       expect(body.eligibility.mockNewField).toEqual(true);
     });
   });
