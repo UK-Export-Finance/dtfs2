@@ -4,6 +4,7 @@ import {
 import Application from '../../../models/application';
 import validateFile from '../../../utils/validateFile';
 import { uploadAndSaveToDeal, removeFileFromDeal } from '../../../utils/fileUtils';
+import MOCKS from '../../mocks/index';
 
 jest.mock('../../../models/application');
 jest.mock('../../../utils/validateFile', () => jest.fn(() => [true, null]));
@@ -22,15 +23,11 @@ const MockResponse = () => {
 
 const mockNext = jest.fn();
 
-const MockApplication = () => ({
-  _id: 'mock-id',
-  supportingInformation: {},
-});
 
 describe('controllers/supporting-documents', () => {
   const mockResponse = MockResponse();
   let mockRequest;
-  Application.findById.mockResolvedValue(MockApplication());
+  Application.findById.mockResolvedValue(MOCKS.MockApplicationResponseDraft());
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -60,6 +57,7 @@ describe('controllers/supporting-documents', () => {
 
     it('renders the manual inclusion questionnaire page as expected', async () => {
       Application.findById.mockResolvedValueOnce({
+        ...MOCKS.MockApplicationResponseDraft(),
         supportingInformation: {
           manualInclusion: [{
             _id: 'mockFileId',
@@ -192,6 +190,7 @@ describe('controllers/supporting-documents', () => {
 
       it('returns error if error thrown when deleting', async () => {
         Application.findById.mockResolvedValueOnce({
+          ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
             manualInclusion: [{
               _id: 'mockFileId',
@@ -217,6 +216,7 @@ describe('controllers/supporting-documents', () => {
 
       it('deletes a file from application if ID passed', async () => {
         Application.findById.mockResolvedValueOnce({
+          ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
             manualInclusion: [{
               _id: 'mockFileId',
@@ -260,6 +260,7 @@ describe('controllers/supporting-documents', () => {
 
       it('returns error if there are more than 20 files', async () => {
         Application.findById.mockResolvedValueOnce({
+          ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
             manualInclusion: new Array(21).fill({}).map((_, i) => ({
               _id: `mockFileId${i}`,
@@ -283,6 +284,7 @@ describe('controllers/supporting-documents', () => {
 
       it('redirects to application details if there is between 1 and 20 files', async () => {
         Application.findById.mockResolvedValueOnce({
+          ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
             manualInclusion: [{
               _id: 'mockFileId',

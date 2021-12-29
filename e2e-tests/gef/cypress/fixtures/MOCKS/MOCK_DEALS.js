@@ -8,7 +8,7 @@ const threeDaysAgoUnix = getUnixTime(threeDaysAgo).toString();
 const MOCK_AIN_APPLICATION = {
   dealType: 'GEF',
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-  bankId: '9',
+  bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
@@ -195,7 +195,7 @@ const MOCK_USER_MAKER = {
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: ['maker'],
-  bankId: '9',
+  bank: { id: '9' },
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',

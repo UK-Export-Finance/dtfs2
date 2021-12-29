@@ -39,7 +39,7 @@ describe(baseUrl, () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
         userId: aMaker._id,
-        bankId: aMaker.bank.id,
+        bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
@@ -60,7 +60,7 @@ describe(baseUrl, () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
         userId: aMaker._id,
-        bankId: aMaker.bank.id,
+        bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
@@ -80,7 +80,7 @@ describe(baseUrl, () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
         userId: aMaker._id,
-        bankId: aMaker.bank.id,
+        bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
@@ -101,7 +101,7 @@ describe(baseUrl, () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
         userId: aMaker._id,
-        bankId: aMaker.bank.id,
+        bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},

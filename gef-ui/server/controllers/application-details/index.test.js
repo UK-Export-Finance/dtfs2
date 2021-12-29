@@ -4,7 +4,7 @@ import {
 } from '.';
 import api from '../../services/api';
 
-import mocks from '../mocks';
+import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
@@ -14,16 +14,18 @@ describe('controllers/application-detaills', () => {
   let mockRequest;
   let mockApplicationResponse;
   let mockFacilityResponse;
+  let mockFacilitiesResponse;
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
-    mockResponse = mocks.MockResponse();
-    mockRequest = mocks.MockRequest();
-    mockApplicationResponse = mocks.MockApplicationResponseDraft();
-    mockFacilityResponse = mocks.MockFacilityResponse();
-    mockUserResponse = mocks.MockUserResponse();
-    mockEligibilityCriteriaResponse = mocks.MockEligibilityCriteriaResponse();
+    mockResponse = MOCKS.MockResponse();
+    mockRequest = MOCKS.MockRequest();
+    mockApplicationResponse = MOCKS.MockApplicationResponseDraft();
+    mockFacilityResponse = MOCKS.MockFacilityResponse();
+    mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
+    mockUserResponse = MOCKS.MockUserResponse();
+    mockEligibilityCriteriaResponse = MOCKS.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
@@ -37,7 +39,7 @@ describe('controllers/application-detaills', () => {
 
   describe('GET Application Details', () => {
     it('redirects to dashboard if user is not authorised', async () => {
-      mockApplicationResponse.bankId = 'ANOTHER_BANK';
+      mockApplicationResponse.bank = { id: 'ANOTHER_BANK' };
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await applicationDetails(mockRequest, mockResponse);
@@ -276,7 +278,7 @@ describe('controllers/application-detaills', () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-        await applicationDetails(mocks.MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);
+        await applicationDetails(MOCKS.MockRequestUrl('/gef/appliction/123/review-decision'), mockResponse);
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({
@@ -288,7 +290,7 @@ describe('controllers/application-detaills', () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
-        await applicationDetails(mocks.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse);
+        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse);
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({

@@ -6,7 +6,7 @@ const MOCK_AIN_APPLICATION = {
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-  bankId: '9',
+  bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
@@ -144,7 +144,7 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-  bankId: '9',
+  bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
@@ -250,7 +250,7 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-  bankId: '9',
+  bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
@@ -480,7 +480,7 @@ const MOCK_DEAL = {
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
   status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
-  bankId: '9',
+  bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],
@@ -618,7 +618,7 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
   status: CONSTANTS.DEAL_STATUS.DRAFT,
-  bankId: '9',
+  bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
     criteria: [],

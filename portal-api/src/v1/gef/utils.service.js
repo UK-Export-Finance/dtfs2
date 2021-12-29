@@ -20,9 +20,9 @@ exports.userHasAccess = (user, deal, roles = []) => {
   if (!user?.bank?.id) return false;
 
   // if the deal has no bank ID for some reason
-  if (!deal?.bankId) return false;
+  if (!deal?.bank?.id) return false;
 
   const hasRole = roles.some((role) => user.roles.includes(role));
 
-  return user.bank.id === deal.bankId && (!roles.length || hasRole);
+  return user.bank.id === deal.bank.id && (!roles.length || hasRole);
 };

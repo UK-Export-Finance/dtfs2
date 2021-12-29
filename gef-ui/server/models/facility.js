@@ -8,8 +8,8 @@ class Facility {
   static async find(dealId, facilityId, status, user) {
     try {
       const { details } = await getFacility(facilityId);
-      const { bankId } = await getApplication(dealId);
-      if (bankId !== user.bank.id) {
+      const { bank } = await getApplication(dealId);
+      if (bank.id !== user.bank.id) {
         return null;
       }
       const facilityTypeConst = FACILITY_TYPE[details.type];

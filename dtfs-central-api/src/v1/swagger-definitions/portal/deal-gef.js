@@ -16,9 +16,8 @@
  *       status:
  *         type: string
  *         example: DRAFT
- *       bankId:
- *         type: string
- *         example: '9'
+ *       owningBank:
+ *         $ref: '#/definitions/Bank'
  *       exporter:
  *         type: object
  *         example: {}
