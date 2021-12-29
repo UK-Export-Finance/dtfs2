@@ -26,6 +26,7 @@ import {
   summaryItemsConditions,
   facilityIssueDeadline,
   displayTaskComments,
+  isDealNotice,
 } from './helpers';
 import CONSTANTS from '../constants';
 
@@ -715,6 +716,24 @@ describe('isNotice()', () => {
 
   it('Should return FALSE for any `Application` submission type i.e. MIA with mixed case', () => {
     expect(isNotice('manUAL InClUsIoN APPLICATION')).toEqual(false);
+  });
+});
+
+describe('isDealNotice()', () => {
+  it('Should return TRUE for any `Notice` submission type i.e. MIN or AIN with UKEF decision not reviewed', () => {
+    expect(isDealNotice(false, 'Manual inclusion notice')).toEqual(true);
+  });
+
+  it('Should return FALSE for any `Application` submission type i.e. MIA with UKEF Decision not yet reviewed', () => {
+    expect(isDealNotice(false, 'Manual inclusion application')).toEqual(false);
+  });
+
+  it('Should return TRUE for application with UKEF Decision accepted and application is still an MIA', () => {
+    expect(isDealNotice(true, 'Manual inclusion application')).toEqual(true);
+  });
+
+  it('Should return TRUE for application with UKEF Decision accepted and application is MIN', () => {
+    expect(isDealNotice(true, 'Manual inclusion notice')).toEqual(true);
   });
 });
 

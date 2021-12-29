@@ -92,7 +92,7 @@ context('Submit to UKEF', () => {
         statusBanner.bannerStatus().contains('Submitted');
         statusBanner.bannerUkefDealId();
 
-        const todayFormatted = format(new Date(), 'dd MMM yyyy')
+        const todayFormatted = format(new Date(), 'dd MMM yyyy');
         statusBanner.bannerDateCreated().contains(todayFormatted);
       });
     });

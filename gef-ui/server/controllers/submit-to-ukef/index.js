@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 const {
   validationErrorHandler,
-  isNotice,
+  isDealNotice,
 } = require('../../utils/helpers');
 const api = require('../../services/api');
 
@@ -64,13 +64,6 @@ const createSubmissionToUkef = async (req, res) => {
       application.comments = comments;
     }
 
-    /**
-     * Change the application submission type to MIN from MIA,
-     * upon second submission. This is to ensure correct confirmation
-     * message is shown on the NJK template else isNotice() will return false
-     */
-    const isDealNotice = application.ukefDecisionAccepted ? true : isNotice(application.submissionType);
-
     // Always update with the latest checkers details.
     application.checkerId = user._id;
     await api.updateApplication(dealId, application);
@@ -78,7 +71,7 @@ const createSubmissionToUkef = async (req, res) => {
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType: application.submissionType,
-      isNotice: isDealNotice,
+      isNotice: isDealNotice(application.ukefDecisionAccepted, application.submissionType),
       ukefDecisionAccepted,
     });
   } catch (err) {
