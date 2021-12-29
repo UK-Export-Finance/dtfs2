@@ -23,7 +23,6 @@ const MockResponse = () => {
 
 const mockNext = jest.fn();
 
-
 describe('controllers/supporting-documents', () => {
   const mockResponse = MockResponse();
   let mockRequest;
