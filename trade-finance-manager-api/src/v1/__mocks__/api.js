@@ -25,6 +25,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('./mock-premium-schedule-response
 
 const MOCK_GEF_DEAL = require('./mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('./mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('./mock-gef-deal-second-submit-MIA');
 const MOCK_GEF_DEAL_MIN = require('./mock-gef-deal-MIN');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 
@@ -44,6 +45,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
   MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
   MOCK_MIA_SUBMITTED,
+  MOCK_GEF_DEAL_SECOND_SUBMIT_MIA,
   MOCK_MIA_SECOND_SUBMIT,
   MOCK_GEF_DEAL,
   MOCK_GEF_DEAL_MIA,
@@ -109,6 +111,16 @@ module.exports = {
       }
     }
 
+    if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA') {
+      if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.submissionCount === 2) {
+        deal.tfm.underwriterManagersDecision = {
+          decision: 'Approved (without conditions)',
+        };
+
+        deal.tfm.tasks = MOCK_MIA_TASKS;
+      }
+    }
+
     if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SUBMITTED') {
       if (deal.tfm && !deal.tfm.tasks) {
         deal.tfm.tasks = MOCK_MIA_TASKS;
@@ -132,6 +144,16 @@ module.exports = {
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   updatePortalDeal: (dealId, update) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+
+    const updatedDeal = {
+      ...deal,
+      ...update,
+    };
+
+    return Promise.resolve(updatedDeal);
+  },
+  updatePortalGefDeal: (dealId, update) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
     const updatedDeal = {
@@ -252,6 +274,7 @@ module.exports = {
       facilitySnapshot: {
         ...facility,
         _id: facilityId,
+        ukefFacilityId: '123',
       },
       tfm: {
         ukefExposure: '1,234.00',

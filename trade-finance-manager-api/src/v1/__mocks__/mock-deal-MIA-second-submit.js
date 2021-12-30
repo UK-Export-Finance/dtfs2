@@ -184,6 +184,7 @@ const MOCK_DEAL = {
         ukefExposure: '2,469.00',
         feeType: 'At maturity',
         dayCountBasis: '365',
+        ukefFacilityId: '123',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',
