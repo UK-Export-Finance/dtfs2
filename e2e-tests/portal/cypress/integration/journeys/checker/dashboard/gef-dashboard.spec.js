@@ -12,11 +12,11 @@ context('View a deal with checker role', () => {
   let checkerDeal;
 
   const checkerDealData = {
-    bankId: MAKER_LOGIN.bank.id,
+    bank: { id: MAKER_LOGIN.bank.id },
     bankInternalRefName: 'abc-123-def',
   };
   const draftDealData = {
-    bankId: MAKER_LOGIN.bank.id,
+    bank: { id: MAKER_LOGIN.bank.id },
     bankInternalRefName: 'abc-456-def',
   };
 

@@ -142,4 +142,10 @@ describe('facilityIssueDeadline()', () => {
 
     expect(result).toEqual(expected);
   });
+
+  it('should return null when there is no submissionDate', () => {
+    const result = facilityIssueDeadline();
+
+    expect(result).toEqual(null);
+  });
 });

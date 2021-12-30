@@ -46,7 +46,7 @@ const MockApplicationResponse = () => {
     createdAt: '1625482095783',
     comment: 'The client needs this asap.',
   }];
-  res.bankId = 'BANKID';
+  res.bank = { id: 'BANKID' };
   res.submissionType = 'Automatic Inclusion Notice';
   return res;
 };

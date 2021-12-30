@@ -60,7 +60,7 @@ class Application {
   static async findById(id, user, userToken) {
     try {
       const application = await getApplication(id);
-      if (application.bankId !== user.bank.id) {
+      if (application.bank.id !== user.bank.id) {
         return null;
       }
 

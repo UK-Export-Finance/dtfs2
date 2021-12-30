@@ -66,11 +66,15 @@ const areUnissuedFacilitiesPresent = (application) => {
    from date of submission
 */
 const facilityIssueDeadline = (submissionDate) => {
+  if (submissionDate) {
   // converts to timestamp from epoch - '+' to convert from str to int
-  const date = new Date(+submissionDate);
-  const deadlineDate = add(new Date(date), { months: 3 });
+    const date = new Date(+submissionDate);
+    const deadlineDate = add(new Date(date), { months: 3 });
 
-  return format(deadlineDate, 'dd MMM yyyy');
+    return format(deadlineDate, 'dd MMM yyyy');
+  }
+
+  return null;
 };
 
 /* govukTable mapping function to return array of facilities which are

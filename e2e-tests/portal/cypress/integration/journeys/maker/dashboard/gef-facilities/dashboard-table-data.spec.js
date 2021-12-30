@@ -9,7 +9,7 @@ const MAKER_LOGIN = mockUsers.find(
 );
 
 const dummyDeal = {
-  bankId: MAKER_LOGIN.bank.id,
+  bank: { id: MAKER_LOGIN.bank.id },
   bankInternalRefName: 'Mock GEF exporter',
 };
 

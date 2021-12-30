@@ -19,7 +19,7 @@ describe('renderChangeFacilityPartial()', () => {
     mockRequest = MOCKS.MockRequestUnissued();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
-    api.getApplication.mockResolvedValue({});
+    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
   });
@@ -58,7 +58,7 @@ describe('changeUnissuedFacility()', () => {
     mockRequest = MOCKS.MockRequestUnissued();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
-    api.getApplication.mockResolvedValue({});
+    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
   });
@@ -104,7 +104,7 @@ describe('changeUnissuedFacilityPreview()', () => {
     mockRequest = MOCKS.MockRequestUnissued();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
-    api.getApplication.mockResolvedValue({});
+    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
   });
@@ -143,15 +143,23 @@ describe('changeUnissuedFacilityPreview()', () => {
 describe('postChangeUnissuedFacility()', () => {
   let mockResponse;
   let mockRequest;
+  let mockApplicationResponse;
+  let mockUserResponse;
   let mockFacilityResponse;
+  let mockFacilitiesResponse;
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponseUnissued();
     mockRequest = MOCKS.MockRequestUnissued();
+    mockApplicationResponse = MOCKS.MockApplicationResponseSubmitted();
+    mockUserResponse = MOCKS.MockUserResponse();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
+    mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
 
-    api.getApplication.mockResolvedValue({});
+    api.getApplication.mockResolvedValue(mockApplicationResponse);
+    api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
   });
 
@@ -261,14 +269,20 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
+  let mockFacilitiesResponse;
+  let mockUserResponse;
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponseUnissued();
     mockRequest = MOCKS.MockRequestUnissued();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
+    mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
+    mockUserResponse = MOCKS.MockUserResponse();
 
-    api.getApplication.mockResolvedValue({});
+    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
+    api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
   });
 
