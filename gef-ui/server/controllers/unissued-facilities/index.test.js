@@ -210,7 +210,6 @@ describe('postChangeUnissuedFacility()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    // console.log(mockResponse.render);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
       errors: {
         errorSummary: [

@@ -13,7 +13,6 @@ import {
   getEpoch,
   summaryItemsConditions,
   displayTaskComments,
-  isDealNotice,
 } from './helpers';
 
 import { makerCanReSubmit } from './deal-helpers';
