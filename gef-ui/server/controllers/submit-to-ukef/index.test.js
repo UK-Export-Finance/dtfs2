@@ -88,6 +88,7 @@ describe('controllers/submit-to-ukef', () => {
         .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
           submissionType: mockApplicationResponse.submissionType,
           isNotice: isNotice(mockApplicationResponse.submissionType),
+          ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
         });
     });
 

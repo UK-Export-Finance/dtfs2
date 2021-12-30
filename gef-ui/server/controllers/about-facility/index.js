@@ -242,13 +242,16 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
+    const deal = await api.getApplication(dealId);
     await api.updateFacility(facilityId, {
       name: body.facilityName,
       shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
       monthsOfCover: body.monthsOfCover || null,
       coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
       coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
-      coverDateConfirmed: DEAL_SUBMISSION_TYPE.AIN ? true : null,
+      coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN
+        ? true
+        : null,
     });
 
     if (isTrueSet(saveAndReturn) || status === 'change') {

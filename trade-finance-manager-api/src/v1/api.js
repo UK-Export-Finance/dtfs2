@@ -583,6 +583,27 @@ const updatePortalGefDealStatus = async (dealId, status) => {
   }
 };
 
+const updatePortalGefDeal = async (dealId, update) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        dealUpdate: update,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error(`TFM API - error updating GEF deal ${dealId}`, { err });
+
+    return false;
+  }
+};
+
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
@@ -632,5 +653,6 @@ module.exports = {
   sendEmail,
   findOneGefDeal,
   updatePortalGefDealStatus,
+  updatePortalGefDeal,
   addUnderwriterCommentToGefDeal,
 };
