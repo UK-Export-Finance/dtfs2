@@ -79,11 +79,6 @@ const dealsQuery = (user, filter) => {
 const allDealsFilters = (user, filters = []) => {
   const sanitisedFilters = [...filters];
 
-  // add the bank clause if we're not a superuser
-  if (!isSuperUser(user)) {
-    sanitisedFilters.push({ 'bank.id': user.bank.id });
-  }
-
   let result = {};
   if (sanitisedFilters.length === 1) {
     [result] = sanitisedFilters;
