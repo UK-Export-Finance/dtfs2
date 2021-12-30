@@ -294,6 +294,15 @@ module.exports = {
       },
     };
   },
+  updatePortalBssDealStatus: (dealId, statusUpdate) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const updatedDeal = {
+      ...deal,
+      status: statusUpdate,
+      previousStatus: deal.previousStatus,
+    };
+    return Promise.resolve(updatedDeal);
+  },
   getFacilityExposurePeriod: jest.fn(() => (
     {
       exposurePeriodInMonths: 12,
