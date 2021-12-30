@@ -14,9 +14,9 @@ import {
   MOCK_AIN_APPLICATION,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
-} from './MOCKS/MOCK_APPLICATIONS';
+} from './MOCKS/mock_applications';
 
-import { MOCK_FACILITY } from './MOCKS/MOCK_FACILITIES';
+import { MOCK_FACILITY } from './MOCKS/mock_facilities';
 
 describe('pastDate', () => {
   it('Should return TRUE for the specified date', () => {

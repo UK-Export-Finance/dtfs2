@@ -11,9 +11,9 @@ import {
   MOCK_AIN_APPLICATION,
   MOCK_DEAL,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
-} from './MOCKS/MOCK_APPLICATIONS';
+} from './MOCKS/mock_applications';
 
-import { MOCK_REQUEST } from './MOCKS/MOCK_REQUESTS';
+import { MOCK_REQUEST } from './MOCKS/mock_requests';
 
 describe('isNotice()', () => {
   it('Should return TRUE for any `Notice` submission type i.e. MIN or AIN', () => {
