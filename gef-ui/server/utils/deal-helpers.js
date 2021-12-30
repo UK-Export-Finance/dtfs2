@@ -60,7 +60,7 @@ const makerCanReSubmit = (maker, application) => {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bankId);
+  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
 
   return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };

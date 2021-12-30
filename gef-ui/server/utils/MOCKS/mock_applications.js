@@ -366,7 +366,7 @@ const MOCK_DEAL = {
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
   submissionCount: 1,
   submissionDate: '1638363716309',
   supportingInformation: {
