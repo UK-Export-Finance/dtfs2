@@ -3,7 +3,7 @@ const api = require('../../services/api');
 
 exports.cloneDealCreateApplication = async (req, res, next) => {
   const { body, session } = req;
-  const { _id: userId, bank: { id: bankId } } = session.user;
+  const { _id: userId, bank } = session.user;
   const { dealId } = req.params;
 
   try {
@@ -11,7 +11,7 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
       dealId,
       ...body,
       userId,
-      bankId,
+      bank,
     });
 
     // Validation errors

@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../src/constants');
 const APPLICATION = [{
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 1',
   additionalRefName: 'Team 1',
   exporter: {},
@@ -17,7 +17,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 2',
   additionalRefName: 'Team 2',
   exporter: {},
@@ -31,7 +31,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 3',
   additionalRefName: 'Team 3',
   exporter: {},
@@ -45,7 +45,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 4',
   additionalRefName: 'Team 4',
   exporter: {},
@@ -59,7 +59,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 5',
   additionalRefName: 'Team 5',
   exporter: {},
@@ -73,7 +73,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 6',
   additionalRefName: 'Team 6',
   exporter: {},
@@ -87,7 +87,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 7',
   additionalRefName: 'Team 7',
   exporter: {},
@@ -101,7 +101,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 8',
   additionalRefName: 'Team 8',
   exporter: {},
@@ -115,7 +115,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 9',
   additionalRefName: 'Team 9',
   exporter: {},
@@ -129,7 +129,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 10',
   additionalRefName: 'Team 10',
   exporter: {},
@@ -143,7 +143,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 11',
   additionalRefName: 'Team 11',
   exporter: {},
@@ -157,7 +157,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 12',
   additionalRefName: 'Team 12',
   exporter: {},
@@ -171,7 +171,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 13',
   additionalRefName: 'Team 13',
   exporter: {},
@@ -185,7 +185,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 14',
   additionalRefName: 'Team 14',
   exporter: {},
@@ -199,7 +199,7 @@ const APPLICATION = [{
 }, {
   dealType: 'GEF',
   userId: null,
-  bankId: null,
+  bank: {},
   bankInternalRefName: 'Bank 15',
   additionalRefName: 'Team 15',
   exporter: {},

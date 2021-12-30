@@ -5,7 +5,7 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const dummyDeal = {
-  bankId: MAKER_LOGIN.bank.id,
+  bank: { id: MAKER_LOGIN.bank.id },
   bankInternalRefName: 'Mock GEF exporter',
 };
 

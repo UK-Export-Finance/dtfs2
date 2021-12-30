@@ -31,6 +31,7 @@ const facilityValidation = async (req, res) => {
   } = body;
 
   const application = await api.getApplication(dealId);
+
   const aboutFacilityErrors = [];
 
   const issueDateIsFullyComplete = issueDateDay && issueDateMonth && issueDateYear;

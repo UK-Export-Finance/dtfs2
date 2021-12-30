@@ -94,7 +94,7 @@ const cloneFacilities = async (currentDealId, newDealId) => {
   }
 };
 
-const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId, bankId) => {
+const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId, bank) => {
   const applicationCollection = 'deals';
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
@@ -131,7 +131,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId,
   clonedDeal.bankInternalRefName = bankInternalRefName;
   clonedDeal.additionalRefName = additionalRefName;
   clonedDeal.userId = userId;
-  clonedDeal.bankId = bankId;
+  clonedDeal.bank = bank;
   clonedDeal.ukefDealId = null;
   clonedDeal.checkerId = null;
   clonedDeal.editedBy = [userId];
@@ -149,7 +149,11 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId,
 exports.clone = async (req, res) => {
   const {
     body: {
-      dealId: existingDealId, bankInternalRefName, additionalRefName, userId, bankId,
+      dealId: existingDealId,
+      bankInternalRefName,
+      additionalRefName,
+      userId,
+      bank,
     },
   } = req;
 
@@ -159,7 +163,7 @@ exports.clone = async (req, res) => {
     res.status(422).send(validateErrs);
   } else {
     // clone GEF deal
-    const { newDealId } = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, userId, bankId);
+    const { newDealId } = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, userId, bank);
 
     // clone the corresponding facilities
     await cloneFacilities(existingDealId, newDealId);

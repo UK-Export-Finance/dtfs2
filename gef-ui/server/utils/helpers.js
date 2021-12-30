@@ -422,11 +422,15 @@ const areUnissuedFacilitiesPresent = (application) => {
    from date of submission
 */
 const facilityIssueDeadline = (submissionDate) => {
-  // converts to timestamp from epoch - '+' to convert from str to int
-  const date = new Date(+submissionDate);
-  const deadlineDate = add(new Date(date), { months: 3 });
+  if (submissionDate) {
+    // converts to timestamp from epoch - '+' to convert from str to int
+    const date = new Date(+submissionDate);
+    const deadlineDate = add(new Date(date), { months: 3 });
 
-  return format(deadlineDate, 'dd MMM yyyy');
+    return format(deadlineDate, 'dd MMM yyyy');
+  }
+
+  return null;
 };
 
 /* govukTable mapping function to return array of facilities which are
@@ -523,7 +527,7 @@ const makerCanReSubmit = (maker, application) => {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
   const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bankId);
+  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
 
   return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
