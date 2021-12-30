@@ -85,6 +85,7 @@ describe('reducer - deals', () => {
           dealType: mockGefDeal.dealSnapshot.dealType,
           facilitiesUpdated: mockGefDeal.dealSnapshot.facilitiesUpdated,
           eligibility: mockGefDeal.dealSnapshot.eligibility,
+          bank: mockGefDeal.dealSnapshot.bank,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
           facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
