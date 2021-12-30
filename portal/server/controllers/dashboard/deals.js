@@ -48,7 +48,6 @@ const dashboardFilters = (filter, user, dealType) => {
 
   return allFilters;
 };
-*/
 
 exports.allDeals = async (req, res) => {
   const tab = 'deals';
