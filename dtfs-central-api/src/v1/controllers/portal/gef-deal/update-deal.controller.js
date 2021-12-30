@@ -2,14 +2,15 @@ const { ObjectID } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
 
-const updateDealStatus = async (dealId, previousStatus, newStatus) => {
+const updateDeal = async (dealId, update) => {
   const collection = await db.getCollection('deals');
+  const originalDeal = await findOneDeal(dealId);
 
-  console.log(`Updating Portal GEF deal status to ${newStatus}`);
+  console.log('Updating Portal GEF deal.');
 
   const dealUpdate = {
-    previousStatus,
-    status: newStatus,
+    ...originalDeal,
+    ...update,
     updatedAt: Date.now(),
   };
 
@@ -21,27 +22,22 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
     { returnOriginal: false },
   );
 
-  console.log(`Updated Portal GEF deal status from ${previousStatus} to ${newStatus}`);
+  console.log('Updated Portal GEF deal');
 
   return findAndUpdateResponse.value;
 };
-exports.updateDealStatus = updateDealStatus;
+exports.updateDeal = updateDeal;
 
-exports.updateDealStatusPut = async (req, res) => {
+exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
-  const { status: newStatus } = req.body;
+  const { dealUpdate } = req.body;
 
   await findOneDeal(dealId, async (existingDeal) => {
     if (existingDeal) {
-      if (existingDeal.status === newStatus) {
-        return res.status(400).send();
-      }
-
-      const updatedDeal = await updateDealStatus(
+      const updatedDeal = await updateDeal(
         dealId,
-        existingDeal.status,
-        newStatus,
+        dealUpdate,
       );
       return res.status(200).json(updatedDeal);
     }

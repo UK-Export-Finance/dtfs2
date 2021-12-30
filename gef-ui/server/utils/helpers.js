@@ -353,6 +353,15 @@ const stringToBoolean = (str) => (str === 'false' ? false : !!str);
 
 const isNotice = (type) => type.toLowerCase().includes('notice');
 
+/**
+ * If the UKEF Decision has been accepted by the maker then return true
+ * else evaluate whether the application is a Notice
+ * @param {Boolean} ukefDecisionAccepted application.ukefDecisionAccepted
+ * @param {String} submissionType application.submissionType
+ * @returns Boolean Boolean value
+ */
+const isDealNotice = (ukefDecisionAccepted, submissionType) => (ukefDecisionAccepted ? true : isNotice(submissionType));
+
 const isUkefReviewAvailable = (applicationStatus, ukefDecision) => {
   if (ukefDecision?.length > 0) {
     const acceptable = [
@@ -558,6 +567,7 @@ module.exports = {
   validationErrorHandler,
   stringToBoolean,
   isNotice,
+  isDealNotice,
   isUkefReviewAvailable,
   isUkefReviewPositive,
   areUnissuedFacilitiesPresent,
