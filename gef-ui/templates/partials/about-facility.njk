@@ -6,6 +6,12 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
+{% import '../_macros/about-facility/facility-name.njk' as facilityNameSection %}
+{% import '../_macros/about-facility/issue-date.njk' as issueDateSection %}
+{% import '../_macros/about-facility/cover-start-date.njk' as coverStartDateSection %}
+{% import '../_macros/about-facility/cover-end-date.njk' as coverEndDateSection %}
+{% import '../_macros/about-facility/cover-start-submission.njk' as coverStartSubmissionSection %}
+
 {% block pageTitle %}About this {{ facilityTypeString }} facility{% endblock %}
 
 {% block content %}
@@ -57,170 +63,41 @@
           hidden="true"
           value="{{hasBeenIssued}}">
 
-        {{ govukInput({
-          label: {
-            text: "Enter a name for this " + facilityTypeString + " facility" if hasBeenIssued else "Enter a name for this " + facilityTypeString + " facility (optional)",
-            classes: "govuk-label--m",
-            attributes: {
-              'data-cy': 'facility-name-label'
-            }
-          },
-          id: "facilityName",
-          name: "facilityName",
-          value: facilityName,
-          attributes: {
-            'data-cy': 'facility-name'
-          },
-          errorMessage: errors and errors.fieldErrors.facilityName and {
-            text: errors.fieldErrors.facilityName.text,
-            attributes: {
-              'data-cy': 'facility-name-error'
-            }
-          }
-        }) }}
+        {% set facilityNameParams = {
+                facilityName: facilityName,
+                errors: errors,
+                text: "Enter a name for this " + facilityTypeString + " facility" if hasBeenIssued else "Enter a name for this " + facilityTypeString + " facility (optional)"
+        } %}
+
+        {{ facilityNameSection.render(facilityNameParams)}}
 
         {% if hasBeenIssued %}
           {# Elements to Show if Issued #}
           {% set coverStartHtml %}
-            {{ govukDateInput({
-              id: "coverStartDate",
-              namePrefix: "cover-start-date",
-              fieldset: {
-                legend: {
-                  text: "Enter a cover start date",
-                  classes: "govuk-fieldset__legend--s"
-                }
-              },
-              hint: {
-                html: "<p class='govuk-!-margin-0'>This must be within three calendar months after the date you submit the notice to UKEF. It cannot be earlier than the date it's submitted.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF.</p>"
-              },
-              attributes: {
-                'data-cy': "cover-start-date"
-              },
-              errorMessage: errors and errors.fieldErrors.coverStartDate and {
-                text: errors.fieldErrors.coverStartDate.text,
-                attributes: {
-                  'data-cy': 'cover-start-date-error'
-                }
-              },
-              items: [
-                {
-                  label: "Day",
-                  classes: errors and errors.fieldErrors['coverStartDate-day'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
-                  name: "day",
-                  value: coverStartDateDay,
-                  attributes: {
-                    'data-cy': "cover-start-date-day"
-                  }
-                },
-                {
-                  label: "Month",
-                  classes: errors and errors.fieldErrors['coverStartDate-month'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
-                  name: "month",
-                  value: coverStartDateMonth,
-                  attributes: {
-                    'data-cy': "cover-start-date-month"
-                  }
-                },
-                {
-                  label: "Year",
-                  classes: errors and errors.fieldErrors['coverStartDate-year'] and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
-                  name: "year",
-                  value: coverStartDateYear,
-                  attributes: {
-                    'data-cy': "cover-start-date-year"
-                  }
-                }
-              ]
-            }) }}
+
+            {% set coverStartDateParams = {
+                coverStartDateDay: coverStartDateDay,
+                coverStartDateMonth: coverStartDateMonth,
+                coverStartDateYear: coverStartDateYear,
+                errors: errors,
+                hint: "This must be within three calendar months after the date you submit the notice to UKEF. It cannot be earlier than the date it's submitted.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF."
+            } %}
+
+            {{coverStartDateSection.render(coverStartDateParams)}}
+
           {% endset -%}
 
-          {{ govukRadios({
-            idPrefix: "shouldCoverStartOnSubmission",
-            name: "shouldCoverStartOnSubmission",
-            fieldset: {
-              legend: {
-                text: "Do you want UKEF cover to start on the day you submit the automatic inclusion notice?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
-            errorMessage: errors and errors.fieldErrors.shouldCoverStartOnSubmission and {
-              text: errors.fieldErrors.shouldCoverStartOnSubmission.text,
-              attributes: {
-                'data-cy': 'should-cover-start-on-submission-error'
-              }
-            },
-            items: [
-              {
-                value: 'true',
-                text: "Yes",
-                checked: shouldCoverStartOnSubmission === 'true',
-                attributes: {
-                  'data-cy': "should-cover-start-on-submission-yes"
-                }
-              },
-              {
-                value: 'false',
-                text: "No",
-                checked: shouldCoverStartOnSubmission === 'false',
-                conditional: {
-                  html: coverStartHtml
-                },
-                attributes: {
-                  'data-cy': "should-cover-start-on-submission-no"
-                }
-              }
-            ]
-          }) }}
+          {% set coverStartSubmissionParams = {
+            shouldCoverStartOnSubmission: shouldCoverStartOnSubmission,
+            coverStartHtml: coverStartHtml,
+            errors: errors,
+            text: "Do you want UKEF cover to start on the day you submit the automatic inclusion notice?"
+          } %}
 
-          {{ govukDateInput({
-            id: "coverEndDate",
-            namePrefix: "cover-end-date",
-            fieldset: {
-              legend: {
-                text: "When do you want the UKEF cover to end?",
-                classes: "govuk-fieldset__legend--s"
-              }
-            },
-            hint: {
-              text: "For example, 12 03 2021."
-            },
-            errorMessage: errors and errors.fieldErrors.coverEndDate and {
-              text: errors.fieldErrors.coverEndDate.text,
-              attributes: {
-                'data-cy': 'cover-end-date-error'
-              }
-            },
-            items: [
-              {
-                label: "Day",
-                classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
-                name: "day",
-                value: coverEndDateDay,
-                attributes: {
-                  'data-cy': "cover-end-date-day"
-                }
-              },
-              {
-                label: "Month",
-                classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
-                name: "month",
-                value: coverEndDateMonth,
-                attributes: {
-                  'data-cy': "cover-end-date-month"
-                }
-              },
-              {
-                label: "Year",
-                classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
-                name: "year",
-                value: coverEndDateYear,
-                attributes: {
-                  'data-cy': "cover-end-date-year"
-                }
-              }
-            ]
-          }) }}
+          {{coverStartSubmissionSection.render(coverStartSubmissionParams)}}
+
+          {{ coverEndDateSection.render(coverEndDateDay, coverEndDateMonth, coverEndDateYear, errors) }}
+
         {% else %}
           {# Elements to Show if Unissued #}
           {{ govukInput({

@@ -12,8 +12,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * @returns {res} if validation errors
  * @returns {Object} if no validation errors
  */
-const facilityValidation = async (req, res) => {
-  const { body, query, params } = req;
+const facilityValidation = async (body, query, params) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
@@ -261,37 +260,36 @@ const facilityValidation = async (req, res) => {
     }
   }
 
-  if (aboutFacilityErrors.length > 0) {
-    return res.render('partials/unissued-change-about-facility.njk', {
-      errors: validationErrorHandler(aboutFacilityErrors),
-      facilityName: body.facilityName,
-      shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
-      monthsOfCover: body.monthsOfCover,
-      hasBeenIssued: true,
-      issueDateDay,
-      issueDateMonth,
-      issueDateYear,
-      coverStartDateDay,
-      coverStartDateMonth,
-      coverStartDateYear,
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-      facilityType,
-      facilityTypeString,
-      dealId,
-      facilityId,
-      status,
-    });
-  }
+  const errorsObject = {
+    errors: validationErrorHandler(aboutFacilityErrors),
+    facilityName: body.facilityName,
+    shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
+    monthsOfCover: body.monthsOfCover,
+    hasBeenIssued: true,
+    issueDateDay,
+    issueDateMonth,
+    issueDateYear,
+    coverStartDateDay,
+    coverStartDateMonth,
+    coverStartDateYear,
+    coverEndDateDay,
+    coverEndDateMonth,
+    coverEndDateYear,
+    facilityType,
+    facilityTypeString,
+    dealId,
+    facilityId,
+    status,
+  };
 
   return {
     issueDate,
     coverStartDate,
     coverEndDate,
-    body,
+    aboutFacilityErrors,
     facilityId,
     dealId,
+    errorsObject,
   };
 };
 

@@ -169,7 +169,6 @@ describe('postChangeUnissuedFacility()', () => {
 
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
-  const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   it('posts and returns correct message and url', async () => {
@@ -205,24 +204,40 @@ describe('postChangeUnissuedFacility()', () => {
     '/gef/application-details/123/unissued-facilities');
   });
 
-  it('should not update facility if incorrect start and end dates', async () => {
+  it('should not update facility if no name or dates', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
-    mockRequest.query.saveAndReturn = 'true';
-
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
+    mockRequest.body.facilityId = 'xyz';
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
+      errors: {
+        errorSummary: [
+          {
+            text: 'Enter a name for this cash facility',
+            href: '#facilityName',
+          },
+          {
+            text: 'Enter the date you issued the facility to the exporter',
+            href: '#issueDate',
+          },
+          {
+            text: 'Select if you want UKEF cover to start on the day you issue the facility',
+            href: '#shouldCoverStartOnSubmission',
+          },
+          { text: 'Enter a cover end date', href: '#coverEndDate' },
+        ],
+        fieldErrors: {
+          facilityName: { text: 'Enter a name for this cash facility' },
+          issueDate: { text: 'Enter the date you issued the facility to the exporter' },
+          shouldCoverStartOnSubmission: {
+            text: 'Select if you want UKEF cover to start on the day you issue the facility',
+          },
+          coverEndDate: { text: 'Enter a cover end date' },
+        },
+      },
+    }));
+
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalledWith(MOCKS.MockRequestUnissued.facilityId, {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
@@ -276,7 +291,6 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
-  const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   it('posts and returns correct url', async () => {
@@ -312,24 +326,38 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     '/gef/application-details/123');
   });
 
-  it('should not update facility if incorrect start and end dates', async () => {
+  it('should not update facility if no name or dates', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
-    mockRequest.query.saveAndReturn = 'true';
-
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
+      errors: {
+        errorSummary: [
+          {
+            text: 'Enter a name for this cash facility',
+            href: '#facilityName',
+          },
+          {
+            text: 'Enter the date you issued the facility to the exporter',
+            href: '#issueDate',
+          },
+          {
+            text: 'Select if you want UKEF cover to start on the day you issue the facility',
+            href: '#shouldCoverStartOnSubmission',
+          },
+          { text: 'Enter a cover end date', href: '#coverEndDate' },
+        ],
+        fieldErrors: {
+          facilityName: { text: 'Enter a name for this cash facility' },
+          issueDate: { text: 'Enter the date you issued the facility to the exporter' },
+          shouldCoverStartOnSubmission: {
+            text: 'Select if you want UKEF cover to start on the day you issue the facility',
+          },
+          coverEndDate: { text: 'Enter a cover end date' },
+        },
+      },
+    }));
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
