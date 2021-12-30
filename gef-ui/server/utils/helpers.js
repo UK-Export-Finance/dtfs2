@@ -4,6 +4,7 @@ const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
 const { format } = require('date-fns');
 const CONSTANTS = require('../constants');
+
 const {
   facilitiesChangedToIssuedAsArray,
   summaryIssuedChangedToIssued,
