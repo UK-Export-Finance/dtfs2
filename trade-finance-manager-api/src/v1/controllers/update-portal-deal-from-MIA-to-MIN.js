@@ -2,21 +2,36 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 const now = require('../../now');
 
-const updatePortalDealFromMIAtoMIN = async (dealId, checker) => {
+const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
   console.log('Updating Portal deal from MIA to MIN');
+  let update;
+  let dealUpdate;
 
-  const dealUpdate = {
-    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-    details: {
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    dealUpdate = {
+      submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
       checkerMIN: checker,
       manualInclusionNoticeSubmissionDate: now(),
-    },
-  };
+    };
 
-  const update = await api.updatePortalDeal(
-    dealId,
-    dealUpdate,
-  );
+    update = await api.updatePortalGefDeal(
+      dealId,
+      dealUpdate,
+    );
+  } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    dealUpdate = {
+      submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+      details: {
+        checkerMIN: checker,
+        manualInclusionNoticeSubmissionDate: now(),
+      },
+    };
+
+    update = await api.updatePortalDeal(
+      dealId,
+      dealUpdate,
+    );
+  }
 
   return update;
 };

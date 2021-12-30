@@ -366,6 +366,27 @@ describe('/v1/portal/deals', () => {
       expect(status).toEqual(404);
     });
 
+    it('Should return 400 bad request status code when the new status is same and existing application status', async () => {
+      // Create a new BSS deal
+      const dealWithSubmittedStatus = {
+        ...newDeal,
+        status: 'Submitted',
+        previousStatus: 'Checker\'s approval',
+      };
+      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
+      const createdDeal = postResult.body;
+
+      // First status update - 200
+      let statusUpdate = 'Acknowledged by UKEF';
+      const { status } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      expect(status).toEqual(200);
+
+      // Second status update - 400
+      statusUpdate = 'Acknowledged by UKEF';
+      const { status: secondStatus } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      expect(secondStatus).toEqual(400);
+    });
+
     it('returns the updated deal with updated statuses', async () => {
       const dealWithSubmittedStatus = {
         ...newDeal,

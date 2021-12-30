@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { isNotice } = require('../../utils/deal-helpers');
+const { isDealNotice } = require('../../utils/deal-helpers');
 const api = require('../../services/api');
 
 const MAX_COMMENT_LENGTH = 400;
@@ -26,6 +26,7 @@ const createSubmissionToUkef = async (req, res) => {
   const { comment } = body;
   console.log('GEF Application is being submitted to UKEF--TFM');
   const application = await api.getApplication(dealId);
+  const { ukefDecisionAccepted } = application;
 
   let checker;
   try {
@@ -60,6 +61,7 @@ const createSubmissionToUkef = async (req, res) => {
       comments.push(commentObj);
       application.comments = comments;
     }
+
     // Always update with the latest checkers details.
     application.checkerId = user._id;
     await api.updateApplication(dealId, application);
@@ -67,7 +69,8 @@ const createSubmissionToUkef = async (req, res) => {
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType: application.submissionType,
-      isNotice: isNotice(application.submissionType),
+      isNotice: isDealNotice(application.ukefDecisionAccepted, application.submissionType),
+      ukefDecisionAccepted,
     });
   } catch (err) {
     console.error('Unable to post submit to UKEF', { err });

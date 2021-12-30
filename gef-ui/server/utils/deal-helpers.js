@@ -75,6 +75,15 @@ const getApplicationType = (isAutomaticCover) => {
   return 'Unknown';
 };
 
+/**
+ * If the UKEF Decision has been accepted by the maker then return true
+ * else evaluate whether the application is a Notice
+ * @param {Boolean} ukefDecisionAccepted application.ukefDecisionAccepted
+ * @param {String} submissionType application.submissionType
+ * @returns Boolean Boolean value
+ */
+const isDealNotice = (ukefDecisionAccepted, submissionType) => (ukefDecisionAccepted ? true : isNotice(submissionType));
+
 module.exports = {
   status,
   isNotice,
@@ -82,4 +91,5 @@ module.exports = {
   isUkefReviewPositive,
   makerCanReSubmit,
   getApplicationType,
+  isDealNotice,
 };

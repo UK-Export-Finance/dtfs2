@@ -5,6 +5,7 @@ import {
   isUkefReviewAvailable,
   isUkefReviewPositive,
   makerCanReSubmit,
+  isDealNotice,
 } from './deal-helpers';
 
 import {
@@ -97,5 +98,23 @@ describe('makerCanReSubmit', () => {
   });
   it('Should return FALSE as the deal does not have changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
+  });
+});
+
+describe('isDealNotice()', () => {
+  it('Should return TRUE for any `Notice` submission type i.e. MIN or AIN with UKEF decision not reviewed', () => {
+    expect(isDealNotice(false, 'Manual inclusion notice')).toEqual(true);
+  });
+
+  it('Should return FALSE for any `Application` submission type i.e. MIA with UKEF Decision not yet reviewed', () => {
+    expect(isDealNotice(false, 'Manual inclusion application')).toEqual(false);
+  });
+
+  it('Should return TRUE for application with UKEF Decision accepted and application is still an MIA', () => {
+    expect(isDealNotice(true, 'Manual inclusion application')).toEqual(true);
+  });
+
+  it('Should return TRUE for application with UKEF Decision accepted and application is MIN', () => {
+    expect(isDealNotice(true, 'Manual inclusion notice')).toEqual(true);
   });
 });
