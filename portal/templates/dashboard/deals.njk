@@ -160,6 +160,6 @@
     rows: items
   }) }}
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' if tab === 'bssDeals' else '/dashboard' ) }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' ) }}
 
 {% endblock %}
