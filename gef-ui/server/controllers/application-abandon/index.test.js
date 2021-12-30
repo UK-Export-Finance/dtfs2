@@ -32,7 +32,7 @@ const MockApplicationResponse = () => {
   const res = {};
   res._id = '1234';
   res.exporter = {};
-  res.bankId = 'BANKID';
+  res.bank = { id: 'BANKID' };
   res.bankInternalRefName = 'My test';
   res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.eligibility = {

@@ -6,10 +6,14 @@ const
     mapSummaryList,
     isUkefReviewAvailable,
     isUkefReviewPositive,
+    areUnissuedFacilitiesPresent,
+    getUnissuedFacilitiesAsArray,
+    facilitiesChangedToIssuedAsArray,
     getIssuedFacilitiesAsArray,
     getFacilityCoverStartDate,
     coverDatesConfirmed,
     makerCanReSubmit,
+    displayTaskComments,
   } = require('../../utils/helpers');
 const {
   exporterItems, facilityItems,
@@ -51,7 +55,7 @@ function buildHeader(app) {
   return { ...main, ...checker };
 }
 
-function buildBody(app, previewMode) {
+function buildBody(app, previewMode, user) {
   const exporterUrl = `/gef/application-details/${app.id}`;
   const facilityUrl = `/gef/application-details/${app.id}/facilities`;
   const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
@@ -69,6 +73,8 @@ function buildBody(app, previewMode) {
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
         }),
+        app,
+        user,
         previewMode,
       ),
     },
@@ -79,7 +85,7 @@ function buildBody(app, previewMode) {
       status: app.facilitiesStatus,
       data: app.facilities.items.map((item) => ({
         heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
-        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), previewMode),
+        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), app, user, previewMode),
         createdAt: item.details.createdAt,
         facilityId: item.details._id,
       }))
@@ -96,6 +102,8 @@ function buildBody(app, previewMode) {
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
+    unissuedFacilitiesPresent: areUnissuedFacilitiesPresent(app),
+    facilitiesChangedToIssued: facilitiesChangedToIssuedAsArray(app),
     isUkefReviewAvailable: ukefReviewAvailable,
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
@@ -103,6 +111,7 @@ function buildBody(app, previewMode) {
     renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
     previewMode,
     userRoles: app.userRoles,
+    displayComments: displayTaskComments(app),
   };
 
   return appBody;
@@ -117,9 +126,9 @@ function buildActions(app) {
   };
 }
 
-function buildView(app, previewMode) {
+function buildView(app, previewMode, user) {
   const header = buildHeader(app);
-  const body = buildBody(app, previewMode);
+  const body = buildBody(app, previewMode, user);
   const actions = buildActions(app);
   return { ...header, ...body, ...actions };
 }
@@ -145,6 +154,7 @@ const stateToPartial = (status, url) => {
     'review-decision': 'review-decision',
     'cover-start-date': 'cover-start-date',
     'confirm-cover-start-date': 'confirm-cover-start-date',
+    'unissued-facilities': 'unissued-facilities',
   };
 
   return url in partials
@@ -160,6 +170,7 @@ const applicationDetails = async (req, res, next) => {
   const facilitiesPartials = [
     'cover-start-date',
     'confirm-cover-start-date',
+    'unissued-facilities',
   ];
   userSession = user;
 
@@ -168,7 +179,6 @@ const applicationDetails = async (req, res, next) => {
 
   try {
     const application = await Application.findById(dealId, user, userToken);
-
     if (!application) {
       // 404 not found or unauthorised
       return res.redirect('/dashboard');
@@ -196,6 +206,8 @@ const applicationDetails = async (req, res, next) => {
         facility = getIssuedFacilitiesAsArray(await api.getFacilities(dealId));
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
+      } else if (url === 'unissued-facilities') {
+        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application.submissionDate);
       }
     }
 
@@ -203,7 +215,7 @@ const applicationDetails = async (req, res, next) => {
 
     const params = {
       user,
-      ...buildView(applicationWithMaker, previewMode),
+      ...buildView(applicationWithMaker, previewMode, user),
     };
 
     if (facility) {

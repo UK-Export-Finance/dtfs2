@@ -18,7 +18,9 @@ query gefFacilities($start: Int, $pagesize: Int, $filters: [TransactionFilters])
       submittedAsIssuedDate
       deal {
         _id
-        bankId
+        bank {
+          id
+        }
         submissionType,
         status
       }

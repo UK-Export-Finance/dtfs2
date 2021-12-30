@@ -11,8 +11,10 @@ type Currency {
   id: String
 }
 
-type OwningBank {
+type Bank {
+  id: String
   name: String
+  emails: [String]
 }
 
 type Maker {
@@ -41,7 +43,7 @@ type DealDetails {
   approvalDate: String
   created: String
   workflowStatus: String
-  owningBank: OwningBank
+  owningBank: Bank
 }
 
 type Deal {
@@ -174,7 +176,7 @@ type GefDeal {
   _id: String
   userId: String
   status: String
-  bankId: String
+  bank: Bank
   bankInternalRefName: String
   mandatoryVersionId: String
   additionalRefName: String

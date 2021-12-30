@@ -106,6 +106,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(dealsCollectionName);
+
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
   });
@@ -334,7 +335,7 @@ const dealsFilters = (user, filters = []) => {
 
   // add the bank clause if we're not a superuser
   if (!isSuperUser(user)) {
-    amendedFilters.push({ bankId: { $eq: user.bank.id } });
+    amendedFilters.push({ 'bank.id': { $eq: user.bank.id } });
   }
 
   let result = {};

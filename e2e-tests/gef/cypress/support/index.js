@@ -12,4 +12,7 @@ Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);
 Cypress.Commands.add('apiFetchAllFacilities', api.fetchAllFacilities);
 Cypress.Commands.add('apiUpdateApplication', api.updateApplication);
 Cypress.Commands.add('apiSetApplicationStatus', api.setApplicationStatus);
+Cypress.Commands.add('apiCreateApplication', api.createApplication);
+Cypress.Commands.add('apiCreateFacility', api.createFacility);
+Cypress.Commands.add('apiUpdateFacility', api.updateFacility);
 Cypress.Commands.add('uploadFile', uploadFile);

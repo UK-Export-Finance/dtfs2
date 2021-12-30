@@ -68,7 +68,7 @@ portalRouter.route('/banks/:id')
  *                 type: integer
  *           example:
  *             sort: { lastUpdated: -1, status: 'Draft' }
- *             filters: { '$and': [ { userId: '123456' }, { bankId: '9' } ] }
+ *             filters: { '$and': [ { userId: '123456' }, { bank: { id: '9' } } ] }
  *             start: 0
  *             pagesize: 10
  *     responses:

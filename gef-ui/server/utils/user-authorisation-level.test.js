@@ -33,7 +33,7 @@ const draftApplication = {
   _id: '123456789',
   userId: '11112',
   status: CONSTANTS.DEAL_STATUS.DRAFT,
-  bankId: '9',
+  bank: { id: '9' },
   exporter: {},
   bankInternalRefName: 'ref0001',
   mandatoryVersionId: null,
