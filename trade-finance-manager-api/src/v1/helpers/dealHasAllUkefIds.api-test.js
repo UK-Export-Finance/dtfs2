@@ -45,7 +45,6 @@ describe('dealHasAllUkefIds()', () => {
   it('Should return TRUE when a deal and facilities have UKEF IDs - GEF', async () => {
     const mockDeal = {
       ...MOCK_DEAL_GEF,
-      ukefDealId: '123',
       faclities: [
         {
           ukefFacilityId: '123',

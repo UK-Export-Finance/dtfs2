@@ -16,6 +16,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-p
 const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
 const submitDeal = require('../utils/submitDeal');
 const { now } = require('moment');
 
@@ -47,7 +48,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
-  dealType: 'BSS/EWCS',
+  dealType: mockDeal.dealType,
 });
 
 const createFacilityCoverEndDate = (facility) =>
@@ -526,7 +527,7 @@ describe('/v1/deals', () => {
     describe('GEF deal - on second submission', () => {
       const mockDeal = {
         ...MOCK_GEF_DEAL,
-        submissionCount: 1,
+        submissionCount: 2,
       };
 
       it('does NOT call premium schedule when dealType is GEF', async () => {
@@ -562,7 +563,7 @@ describe('/v1/deals', () => {
       });
 
       it('does NOT add fee record when deal is MIA', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         expect(status).toEqual(200);
 
@@ -573,11 +574,11 @@ describe('/v1/deals', () => {
       });
 
       it('Should update the application from MIA to MIN', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         expect(status).toEqual(200);
         expect(body.submissionType).toEqual(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
-        expect(body.manualInclusionNoticeSubmissionDate).toEqual(now());
+        expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
       });
     });
   });

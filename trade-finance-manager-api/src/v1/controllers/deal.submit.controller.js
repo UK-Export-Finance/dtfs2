@@ -59,6 +59,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
+
   console.log('UKEF IDs verified');
 
   if (!deal) {
@@ -137,7 +138,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
         updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
         updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
       }
-
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
