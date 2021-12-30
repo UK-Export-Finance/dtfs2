@@ -1,22 +1,13 @@
-const MOCK_DEAL = {
-  _id: 'MOCK_MIA_SECOND_SUBMIT',
+const MOCK_DEAL_NO_UKEF_ID = {
+  _id: 'NO_UKEF_ID',
   dealType: 'BSS/EWCS',
-  submissionType: 'Manual Inclusion Application',
+  submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
   status: 'Acknowledged by UKEF',
   previousStatus: 'Submitted',
-  bank: {
-    id: '123',
-    name: 'Barclays Bank',
-    emails: [
-      'test1@mock.com',
-      'test2@mock.com',
-    ],
-  },
   details: {
     bank: 'Mock bank',
-    ukefDealId: '20010739',
     maker: {
       username: 'JOE',
       firstname: 'Joe',
@@ -28,7 +19,15 @@ const MOCK_DEAL = {
       surname: 'Largo',
     },
     submissionDate: '1606900616651',
-    submissionCount: 2,
+    submissionCount: 1,
+    owningBank: {
+      id: '123',
+      name: 'Barclays Bank',
+      emails: [
+        'test1@mock.com',
+        'test2@mock.com',
+      ],
+    },
   },
   submissionDetails: {
     status: 'Incomplete',
@@ -163,81 +162,22 @@ const MOCK_DEAL = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
-  facilities: ['MOCK_MIA_SECOND_SUBMIT-BOND-1', 'MOCK_MIA_SECOND_SUBMIT-LOAN-1'],
-  bondTransactions: {
-    items: [
-      {
-        _id: 'MOCK_MIA_SECOND_SUBMIT-BOND-1',
-        facilityType: 'bond',
-        createdDate: 1610369832226.0,
-        bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
-        facilityStage: 'Unissued',
-        ukefGuaranteeInMonths: '10',
-        bondBeneficiary: 'test',
-        guaranteeFeePayableByBank: '9.0000',
-        value: '12345.00',
-        currencySameAsSupplyContractCurrency: 'true',
-        riskMarginFee: '10',
-        coveredPercentage: '20',
-        minimumRiskMarginFee: '30',
-        ukefExposure: '2,469.00',
-        feeType: 'At maturity',
-        dayCountBasis: '365',
-        ukefFacilityId: '123',
-        currency: {
-          text: 'GBP - UK Sterling',
-          id: 'GBP',
-        },
-        'coverEndDate-day': '20',
-        'coverEndDate-month': '10',
-        'coverEndDate-year': '2020',
+  facilities: [
+    {
+      facilitySnapshot: {
+        _id: 'NO_UKEF_ID_FACILITY',
       },
-    ],
+    },
+  ],
+  bondTransactions: {
+    items: [],
   },
   loanTransactions: {
-    items: [
-      {
-        _id: 'MOCK_MIA_SECOND_SUBMIT-LOAN-1',
-        facilityType: 'loan',
-        createdDate: 1610369832226.0,
-        facilityStage: 'Conditional',
-        ukefGuaranteeInMonths: '12',
-        bankReferenceNumber: '5678',
-        guaranteeFeePayableByBank: '27.0000',
-        lastEdited: 1610369832226.0,
-        value: '1234.00',
-        currencySameAsSupplyContractCurrency: 'true',
-        interestMarginFee: '30',
-        coveredPercentage: '20',
-        minimumQuarterlyFee: '10',
-        ukefExposure: '246.80',
-        premiumType: 'At maturity',
-        dayCountBasis: '365',
-        'issuedDate-day': '25',
-        'issuedDate-month': '08',
-        'issuedDate-year': '2020',
-        'coverEndDate-day': '24',
-        'coverEndDate-month': '09',
-        'coverEndDate-year': '2020',
-        disbursementAmount: '1,234.00',
-        issueFacilityDetailsStarted: true,
-        bankReferenceNumberRequiredForIssuance: true,
-        requestedCoverStartDate: 1610369832226.0,
-        issuedDate: 1610369832226.0,
-        issueFacilityDetailsProvided: true,
-        status: 'Acknowledged',
-        ukefFacilityId: '65432',
-        currency: {
-          text: 'GBP - UK Sterling',
-          id: 'GBP',
-        },
-      },
-    ],
+    items: [],
   },
   exporter: {
     companyName: 'test',
   },
 };
 
-module.exports = MOCK_DEAL;
+module.exports = MOCK_DEAL_NO_UKEF_ID;

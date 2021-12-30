@@ -25,7 +25,11 @@
       }) }}
       
       {% if isNotice %}
-      <p>We'll send you an email shortly to confirm we've accepted your notice</p>
+        {% if ukefDecisionAccepted %}
+          <p>We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.</p>
+        {% else %}
+          <p>We'll send you an email shortly to confirm we've accepted your notice.</p>
+        {% endif %}
       {% else %}
       <p>We've sent you a confirmation email.</p>
       <br/>

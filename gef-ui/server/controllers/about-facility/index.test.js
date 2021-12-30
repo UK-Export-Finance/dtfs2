@@ -119,7 +119,7 @@ describe('controllers/about-facility', () => {
         shouldCoverStartOnSubmission: null,
         monthsOfCover: null,
         name: undefined,
-        coverDateConfirmed: true,
+        coverDateConfirmed: null,
       });
     });
 
