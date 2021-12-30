@@ -80,6 +80,12 @@ const cloneFacilities = async (currentDealId, newDealId) => {
       allFacilities[val].updatedAt = Date.now();
       // reset the ukefFacilityId
       allFacilities[val].ukefFacilityId = null;
+      // reset changedToIssued to null
+      allFacilities[val].changedToIssued = null;
+      // reset issueDate to null
+      allFacilities[val].issueDate = null;
+      // reset coverDateConfirmed to null
+      allFacilities[val].coverDateConfirmed = null;
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
