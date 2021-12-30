@@ -156,7 +156,7 @@ describe('/graphql query deals', () => {
       expect(body.data.allDeals.status.code).toEqual(200);
     });
 
-    it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
+    it('returns a list of deals ordered by "updated"', async () => {
       const deals = [
         aDeal({ additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
         aDeal({ additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
@@ -171,12 +171,12 @@ describe('/graphql query deals', () => {
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
       await as(aBarclaysMaker).post(deals[3]).to('/v1/deals');
 
-      // const { status, body } = await as(anHSBCMaker).get('/v1/deals', anHSBCMaker.token);
       const { body } = await as(anHSBCMaker).post(queryBody).to('/graphql');
       expect(body.data.allDeals.status.code).toEqual(200);
 
       // expect to see deals in reverse order; most recent on top..
-      expect(body.data.allDeals.deals.length).toEqual(3);
+      expect(body.data.allDeals.deals.length).toEqual(deals.length);
+
       body.data.allDeals.deals.forEach((deal, index) => {
         expect(deal.bankRef).toEqual(deals[index].additionalRefName);
       });
@@ -211,7 +211,7 @@ describe('/graphql query deals', () => {
   });
 
   describe('/graphql list deals pagination', () => {
-    it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
+    it('returns a list of deals, ordered by "updated", paginated by start/pagesize', async () => {
       const deals = [
         aDeal({ additionalRefName: 'bank1-0', bankInternalRefName: 'mockSupplyContractId' }),
         aDeal({ additionalRefName: 'bank1-1', bankInternalRefName: 'mockSupplyContractId' }),
@@ -233,7 +233,6 @@ describe('/graphql query deals', () => {
       await as(aBarclaysMaker).post(deals[6]).to('/v1/deals');
       await as(aBarclaysMaker).post(deals[7]).to('/v1/deals');
 
-      //      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
       const { body } = await as(anHSBCMaker).post({ query: dealsPaginationQuery1 }).to('/graphql');
       expect(body.data.allDeals.status.code).toEqual(200);
 
