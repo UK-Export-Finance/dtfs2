@@ -1,4 +1,5 @@
 const Chance = require('chance');
+const { sub } = require('date-fns');
 
 const CONSTANTS = require('../../constants');
 
@@ -66,7 +67,7 @@ const MockRequestUrlChecker = (url) => ({
 const MockApplicationResponseDraft = () => ({
   _id: '1234',
   exporter: {},
-  bankId: 'BANKID',
+  bank: { id: 'BANKID' },
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
   status: CONSTANTS.DEAL_STATUS.DRAFT,
@@ -85,45 +86,50 @@ const MockApplicationResponseDraft = () => ({
   comments: [],
   ukefDealId: null,
   createdAt: chance.timestamp(),
-  submissionDate: chance.timestamp(),
 });
 
-const MockApplicationResponseSubmitted = () => ({
-  _id: '1234',
-  exporter: {},
-  bankId: 'BANKID',
-  bankInternalRefName: 'Internal reference',
-  additionalRefName: 'Additional reference',
-  status: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
-  userId: 'mock-user',
-  checkerId: 1235,
-  supportingInformation: {
-    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
-  },
-  eligibility: {
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
-  },
-  editedBy: ['MAKER_CHECKER'],
-  submissionType: 'Automatic Inclusion Notice',
-  submissionCount: 1,
-  comments: [],
-  ukefDealId: 123456,
-  createdAt: chance.timestamp(),
-  submissionDate: chance.timestamp(),
-  portalActivities: [{
-    type: 'NOTICE',
-    timestamp: chance.timestamp(),
-    author: {
-      firstName: 'Joe',
-      lastName: 'Bloggs',
-      id: 1235,
+const MockApplicationResponseSubmitted = () => {
+  const now = new Date();
+  const yesterday = sub(now, { days: 1 });
+
+  return {
+    _id: '1234',
+    exporter: {},
+    bank: { id: 'BANKID' },
+    bankInternalRefName: 'Internal reference',
+    additionalRefName: 'Additional reference',
+    status: CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
+    userId: 'mock-user',
+    checkerId: 1235,
+    supportingInformation: {
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
     },
-    text: '',
-    label: 'Automatic inclusion notice submitted to UKEF',
-  }],
-});
+    eligibility: {
+      criteria: [
+        { id: 12, answer: null, text: 'Test' },
+      ],
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    },
+    editedBy: ['MAKER_CHECKER'],
+    submissionType: 'Automatic Inclusion Notice',
+    submissionCount: 1,
+    comments: [],
+    ukefDealId: 123456,
+    createdAt: chance.timestamp(),
+    submissionDate: yesterday,
+    portalActivities: [{
+      type: 'NOTICE',
+      timestamp: chance.timestamp(),
+      author: {
+        firstName: 'Joe',
+        lastName: 'Bloggs',
+        id: 1235,
+      },
+      text: '',
+      label: 'Automatic inclusion notice submitted to UKEF',
+    }],
+  };
+};
 
 const MockUserResponse = () => ({
   username: 'maker',
@@ -176,7 +182,7 @@ const MockApplicationResponseSubmission = () => {
   const res = {};
   res._id = '1234';
   res.exporter = {};
-  res.bankId = 'BANKID';
+  res.bank = { id: 'BANKID' };
   res.bankInternalRefName = 'My test';
   res.eligibility = {
     criteria: [
@@ -273,6 +279,25 @@ const MockExpectedFacilityRenderChange = (change) => ({
   change,
 });
 
+const MockFacilitiesResponse = () => ({
+  items: [
+    {
+      details: {
+        type: 'CASH',
+        name: 'Foundry4',
+        hasBeenIssued: true,
+        monthsOfCover: null,
+        issueDate: '2022-01-05T00:00:00.000+00:00',
+        coverStartDate: '2022-01-02T00:00:00.000+00:00',
+        shouldCoverStartOnSubmission: true,
+        coverEndDate: '2030-01-02T00:00:00.000+00:00',
+      },
+      status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    },
+  ],
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
+});
+
 module.exports = {
   MockResponse,
   MockRequest,
@@ -291,4 +316,5 @@ module.exports = {
   MockRequestUnissued,
   MockFacilityResponseUnissued,
   MockExpectedFacilityRenderChange,
+  MockFacilitiesResponse,
 };

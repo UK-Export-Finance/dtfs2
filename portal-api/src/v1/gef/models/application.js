@@ -9,7 +9,7 @@ class Application {
       this.dealType = DEAL_TYPE;
       this.userId = req.userId ? String(req.userId) : null;
       this.status = STATUS.DRAFT;
-      this.bankId = req.bankId ? String(req.bankId) : null;
+      this.bank = req.bank;
 
       this.exporter = req.exporter ? req.exporter : {
         status: STATUS.NOT_STARTED,

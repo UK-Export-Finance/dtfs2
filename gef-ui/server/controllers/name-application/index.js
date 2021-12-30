@@ -20,13 +20,13 @@ const nameApplication = async (req, res, next) => {
 
 const createApplication = async (req, res, next) => {
   const { body, session } = req;
-  const { _id: userId, bank: { id: bankId } } = session.user;
+  const { _id: userId, bank } = session.user;
 
   try {
     const application = await api.createApplication({
       ...body,
       userId,
-      bankId,
+      bank,
     });
 
     // Validation errors

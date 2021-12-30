@@ -940,6 +940,12 @@ describe('facilityIssueDeadline()', () => {
 
     expect(result).toEqual(expected);
   });
+
+  it('should return null when there is no submissionDate', () => {
+    const result = facilityIssueDeadline();
+
+    expect(result).toEqual(null);
+  });
 });
 
 describe('summaryItemsConditions()', () => {
@@ -1124,12 +1130,14 @@ describe('summaryItemsConditions()', () => {
     MOCK_REQUEST.bank.id = 10;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
   });
+
   it('Should return FALSE as the user does not have `maker` role', () => {
     MOCK_REQUEST.roles = ['checker'];
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
   });
+
   it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
-    MOCK_DEAL.bankId = 1;
+    MOCK_DEAL.bank = { id: 1 };
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
   });
 });

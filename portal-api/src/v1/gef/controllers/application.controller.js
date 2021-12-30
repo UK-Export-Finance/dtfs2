@@ -335,7 +335,7 @@ const dealsFilters = (user, filters = []) => {
 
   // add the bank clause if we're not a superuser
   if (!isSuperUser(user)) {
-    amendedFilters.push({ bankId: { $eq: user.bank.id } });
+    amendedFilters.push({ 'bank.id': { $eq: user.bank.id } });
   }
 
   let result = {};
