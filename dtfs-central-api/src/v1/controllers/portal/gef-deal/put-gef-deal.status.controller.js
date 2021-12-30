@@ -34,6 +34,10 @@ exports.updateDealStatusPut = async (req, res) => {
 
   await findOneDeal(dealId, async (existingDeal) => {
     if (existingDeal) {
+      if (existingDeal.status === newStatus) {
+        return res.status(400).send();
+      }
+
       const updatedDeal = await updateDealStatus(
         dealId,
         existingDeal.status,
