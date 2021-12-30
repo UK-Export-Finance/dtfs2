@@ -1,5 +1,5 @@
 const api = require('../../api');
-const { STATUS } = require('../../constants');
+const { PRODUCT, STATUS } = require('../../constants');
 
 const {
   getApiData,
