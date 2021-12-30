@@ -28,11 +28,11 @@ const expectAddedFields = (obj) => {
     summary: {},
     comments: [],
     ...obj,
+    bank: expect.any(Object),
     details: {
       ...obj.details,
       created: expect.any(String),
       maker: expect.any(Object),
-      owningBank: expect.any(Object),
     },
     editedBy: [],
     exporter: {},

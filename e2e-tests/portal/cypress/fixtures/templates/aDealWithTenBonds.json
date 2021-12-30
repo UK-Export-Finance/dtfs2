@@ -4,16 +4,16 @@
   "bankInternalRefName": "aDealWithTenBonds",
   "additionalRefName": "aDealWithTenBonds",
   "status": "Draft",
+  "bank": {
+    "id": "9",
+    "name": "UKEF test bank (Delegated)",
+    "emails": [
+      "maker@ukexportfinance.gov.uk",
+      "checker@ukexportfinance.gov.uk"
+    ]
+  },
   "details": {
-    "ukefDealId": "ukef:aDealWithTenBonds",
-    "owningBank": {
-      "id": "9",
-      "name": "UKEF test bank (Delegated)",
-      "emails": [
-        "maker@ukexportfinance.gov.uk",
-        "checker@ukexportfinance.gov.uk"
-      ]
-    }
+    "ukefDealId": "ukef:aDealWithTenBonds"
   },
   "submissionDetails" : {
     "indemnifier-address-country" : "GBR",

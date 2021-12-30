@@ -78,9 +78,9 @@ exports.clone = async (req, res) => {
       updatedAt: existingDeal.updatedAt,
       bankInternalRefName,
       additionalRefName,
+      bank: existingDeal.bank,
       details: {
         maker: req.user,
-        owningBank: existingDeal.details.owningBank,
       },
       mandatoryCriteria: await getCurrentMandatoryCriteria(),
       editedBy: [],

@@ -75,7 +75,7 @@ const send = async (deal, fromStatus, user) => {
     updatedByEmail,
   };
 
-  const emailAddresses = deal.details.owningBank.emails;
+  const emailAddresses = deal.bank.emails;
 
   if (currentStatus === 'Abandoned') {
     await abandonedDealEmails(baseEmailVariables, emailAddresses);

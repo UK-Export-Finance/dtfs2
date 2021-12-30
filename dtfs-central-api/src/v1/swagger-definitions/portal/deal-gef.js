@@ -16,7 +16,7 @@
  *       status:
  *         type: string
  *         example: DRAFT
- *       owningBank:
+ *       bank:
  *         $ref: '#/definitions/Bank'
  *       exporter:
  *         type: object

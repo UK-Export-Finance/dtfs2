@@ -7,6 +7,13 @@ module.exports = {
 	"updatedAt": Date.now(),
 	"bankInternalRefName": "Manual Test 7",
 	"additionalRefName": "Manual Test 7",
+	"bank": {
+		"id": "9",
+		"name": "UKEF test bank (Delegated)",
+		"emails": [
+			"checker@ukexportfinance.gov.uk"
+		]
+	},
 	"details" : {
 		"status" : "Draft",
 		"submissionType" : "Manual Inclusion Application",
@@ -29,13 +36,6 @@ module.exports = {
 			"email" : "maker1@ukexportfinance.gov.uk",
 			"timezone" : "Europe/London",
 			"user-status" : "active"
-		},
-		"owningBank" : {
-			"id" : "9",
-			"name" : "UKEF test bank (Delegated)",
-			"emails" : [
-				"checker@ukexportfinance.gov.uk"
-			]
 		},
 		"created": nowTimestamp
 	},

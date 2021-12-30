@@ -103,7 +103,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 

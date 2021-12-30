@@ -50,7 +50,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 

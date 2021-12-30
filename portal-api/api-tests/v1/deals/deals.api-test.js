@@ -74,7 +74,7 @@ describe('/v1/deals', () => {
       expect(status).toEqual(200);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
@@ -201,7 +201,7 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const updatedDeal = {
@@ -353,7 +353,7 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests from users if <user>.bank != <resource>.details.owningBank', async () => {
+    it('401s requests from users if <user>.bank != <resource>.bank', async () => {
       const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${body._id}`);

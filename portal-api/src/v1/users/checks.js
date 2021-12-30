@@ -13,12 +13,12 @@ const userHasAccessTo = (user, resource) => {
 
   // if we've somehow got a resource that doesn't have an owning bank; reject
   // this one is up for some debate but i figure better safe than sorry...
-  if (!resource || !resource.details || !resource.details.owningBank) {
+  if (!resource || !resource.details || !resource.bank) {
     return false;
   }
 
   // ownership check..
-  return user.bank.id === resource.details.owningBank.id;
+  return user.bank.id === resource.bank.id;
 };
 
 const userOwns = (user, resource) =>

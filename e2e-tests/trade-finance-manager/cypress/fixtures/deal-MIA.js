@@ -5,6 +5,14 @@ const MOCK_DEAL = {
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
   previousStatus: 'Ready for Checker\'s Approval',
+  bank: {
+    id: '123',
+    name: 'Barclays Bank',
+    emails: [
+      'test1@mock.com',
+      'test2@mock.com',
+    ],
+  },
   details: {
     bank: 'Mock bank',
     maker: {
@@ -19,14 +27,6 @@ const MOCK_DEAL = {
     },
     submissionDate: '1606900616651',
     submissionCount: 1,
-    owningBank: {
-      id: '123',
-      name: 'Barclays Bank',
-      emails: [
-        'test1@mock.com',
-        'test2@mock.com',
-      ],
-    },
   },
   submissionDetails: {
     status: 'Incomplete',
