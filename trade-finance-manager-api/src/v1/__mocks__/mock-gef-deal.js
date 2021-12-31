@@ -56,11 +56,6 @@ const MOCK_GEF_DEAL = {
     smeType: 'MEDIUM',
     updatedAt: 162582748022,
   },
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-  },
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
