@@ -2,7 +2,6 @@ const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { findOneUser } = require('../../user/get-user.controller');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection('facilities');

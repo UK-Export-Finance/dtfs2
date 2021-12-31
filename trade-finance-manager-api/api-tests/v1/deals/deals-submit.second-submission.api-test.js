@@ -15,10 +15,8 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
 const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
-const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
 const submitDeal = require('../utils/submitDeal');
-const { now } = require('moment');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,

@@ -29,7 +29,6 @@ const {
 
 const dealsCollectionName = 'deals';
 const facilitiesCollectionName = 'gef-facilities';
-const userCollectionName = 'users';
 
 // const defaultPaginationOpts = {
 //   sortBy: null,
@@ -215,7 +214,6 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   } = existingApplication;
 
   // get maker user details
-  const userCollection = await db.getCollection(userCollectionName);
   const {
     firstname: firstName = '',
     surname = '',
