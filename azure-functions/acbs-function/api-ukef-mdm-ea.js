@@ -27,7 +27,7 @@ const getAPI = async (type) => {
   return response;
 };
 
-const getCurrency = (currencyCode) => getAPI(`currency/${currencyCode}`);
+const getCurrency = (currencyCode) => getAPI(`currency?searchtext=${currencyCode}`);
 
 const getACBSIndustrySector = async (industryId) => getAPI(`map-industry-sector?ukefIndustryId=${industryId}`);
 

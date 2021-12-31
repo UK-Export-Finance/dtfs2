@@ -23,7 +23,10 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   try {
     // 1. Facility Master
     const acbsFacilityMasterInput = mappings.facility.facilityMaster(
-      deal, facility, dealAcbsData, acbsReference,
+      deal,
+      facility,
+      dealAcbsData,
+      acbsReference,
     );
 
     const facilityMaster = yield context.df.callActivityWithRetry(
@@ -43,7 +46,9 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // 3. Facility Covenant
     const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(
-      deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
+      deal,
+      facility,
+      CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
     );
 
     const facilityCovenant = yield context.df.callActivityWithRetry(
