@@ -8,7 +8,7 @@ const MOCK_MAKER = {
     id: '9',
     name: 'UKEF test bank (Delegated)',
     mga: [
-      'mga_ukef_1.docx', 
+      'mga_ukef_1.docx',
       'mga_ukef_2.docx',
     ],
     emails: [
