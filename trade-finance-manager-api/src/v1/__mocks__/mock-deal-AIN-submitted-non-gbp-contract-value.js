@@ -6,6 +6,14 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
   previousStatus: 'Ready for Checker\'s approval',
+  bank: {
+    id: '123',
+    name: 'Barclays Bank',
+    emails: [
+      'test1@mock.com',
+      'test2@mock.com',
+    ],
+  },
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
@@ -21,14 +29,6 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     },
     submissionDate: '1606900616651',
     submissionCount: 1,
-    owningBank: {
-      id: '123',
-      name: 'Barclays Bank',
-      emails: [
-        'test1@mock.com',
-        'test2@mock.com',
-      ],
-    },
   },
   submissionDetails: {
     status: 'Incomplete',

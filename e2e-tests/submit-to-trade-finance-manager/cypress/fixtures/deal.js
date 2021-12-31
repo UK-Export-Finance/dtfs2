@@ -5,6 +5,14 @@ const MOCK_DEAL = {
   additionalRefName: 'Mock supply contract name',
   status: 'Acknowledged by UKEF',
   previousStatus: 'Submitted',
+  bank: {
+    id: '123',
+    name: 'Barclays Bank',
+    emails: [
+      'test1@mock.com',
+      'test2@mock.com',
+    ],
+  },
   details: {
     bank: 'Mock bank',
     maker: {
@@ -18,14 +26,6 @@ const MOCK_DEAL = {
       surname: 'Largo',
     },
     submissionDate: '1606900616651',
-    owningBank: {
-      id: '123',
-      name: 'Barclays Bank',
-      emails: [
-        'test1@mock.com',
-        'test2@mock.com',
-      ],
-    },
   },
   submissionDetails: {
     status: 'Incomplete',

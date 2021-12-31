@@ -4,14 +4,15 @@
   "bankInternalRefName": "Smoke test 17/02/21",
   "additionalRefName": "Smoke test 17/02/21",
   "status": "Submitted",
+  "bank": {
+    "name": "UKEF test bank (Delegated)",
+    "emails": [
+      "checker@ukexportfinance.gov.uk"
+    ]
+  },
   "details": {
     "ukefDealId": "0040005777",
     "submissionDate": "1613557575317",
-    "owningBank": {
-      "name": "UKEF test bank (Delegated)",
-      "emails": ["checker@ukexportfinance.gov.uk"],
-      "__typename": "OwningBank"
-    },
     "maker": {
       "firstname": "Hugo",
       "surname": "Drax",

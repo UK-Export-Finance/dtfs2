@@ -16,12 +16,12 @@ const createDeal = async (deal, maker) => {
     ...DEFAULTS.DEAL,
     ...deal,
     updatedAt: Date.now(),
+    bank: maker && maker.bank,
     details: {
       ...DEFAULTS.DEAL.details,
       ...details,
       created: time,
       maker,
-      owningBank: maker && maker.bank,
     },
     facilities: DEFAULTS.DEAL.facilities,
   };

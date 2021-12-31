@@ -7,6 +7,13 @@ module.exports = {
 	"updatedAt": Date.now(),
 	"bankInternalRefName": "A1 Test",
 	"additionalRefName": "Auto Test 1",
+	"bank": {
+		"id": "9",
+		"name": "UKEF test bank (Delegated)",
+		"emails": [
+			"checker@ukexportfinance.gov.uk"
+		]
+	},
 	"details" : {
 		"status" : "Draft",
 		"maker" : {
@@ -28,13 +35,6 @@ module.exports = {
 			"email" : "maker1@ukexportfinance.gov.uk",
 			"timezone" : "Europe/London",
 			"user-status" : "active"
-		},
-		"owningBank" : {
-			"id" : "9",
-			"name" : "UKEF test bank (Delegated)",
-			"emails" : [
-				"checker@ukexportfinance.gov.uk"
-			]
 		},
 		"created" : nowTimestamp
 	},

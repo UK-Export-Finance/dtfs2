@@ -110,7 +110,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
@@ -207,7 +207,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
@@ -264,7 +264,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
@@ -725,7 +725,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const { status } = await as(anHSBCMaker).remove(`/v1/deals/${dealId}/bond/12345678`);
 
       expect(status).toEqual(401);

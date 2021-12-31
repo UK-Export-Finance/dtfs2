@@ -27,12 +27,6 @@ describe('Mapping cross data model fields', () => {
       expect(actual).toEqual(expected);
     });
 
-    it('Should return Bank name', () => {
-      const actual = mapDataModel(deal, 'dealSnapshot.details.owningBank.name');
-      const expected = 'dealSnapshot.bank.name';
-      expect(actual).toEqual(expected);
-    });
-
     it('Should return the same path if the mapping does not exists', () => {
       const actual = mapDataModel(deal, 'dealSnapshot.path.doesnotexists');
       const expected = 'dealSnapshot.path.doesnotexists';

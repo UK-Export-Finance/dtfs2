@@ -10,6 +10,7 @@ const mapBssDeal = (deal) => {
   const mapped = {
     _id,
     dealSnapshot: {
+      bank: dealSnapshot.bank,
       details: dealSnapshot.details,
       submissionType: dealSnapshot.submissionType,
       submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
@@ -27,6 +28,7 @@ const mapGefDeal = (deal) => {
   const mapped = {
     _id,
     dealSnapshot: {
+      bank: dealSnapshot.bank,
       details: mapGefDealDetails(dealSnapshot),
       submissionType: dealSnapshot.submissionType,
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),

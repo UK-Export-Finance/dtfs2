@@ -4,15 +4,13 @@
   "bankInternalRefName": "abc-1-def",
   "additionalRefName": "Tibettan submarine acquisition scheme",
   "status": "Draft",
-  "details": {
-    "owningBank": {
-      "id": "956",
-      "name": "Barclays Bank",
-      "emails": [
-        "maker4@ukexportfinance.gov.uk",
-        "checker4@ukexportfinance.gov.uk"
-      ]
-    }
+  "bank": {
+    "id": "956",
+    "name": "Barclays Bank",
+    "emails": [
+      "maker4@ukexportfinance.gov.uk",
+      "checker4@ukexportfinance.gov.uk"
+    ]
   },
   "submissionDetails" : {
     "indemnifier-address-country" : {

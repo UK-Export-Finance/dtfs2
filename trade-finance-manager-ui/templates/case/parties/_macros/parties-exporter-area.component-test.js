@@ -10,12 +10,12 @@ describe(page, () => {
       _id: '12345678',
       bankInternalRefName: 'contract-1',
       additionalRefName: 'FirstContract',
+      bank: {
+        name: 'Lloyds',
+        emails: ['xxx@yyy.com'],
+      },
       details: {
         submissionType: 'Automatic Inclusion Notice',
-        owningBank: {
-          name: 'Lloyds',
-          emails: ['xxx@yyy.com'],
-        },
         maker: {
           firstname: 'John',
           surname: 'Doe',

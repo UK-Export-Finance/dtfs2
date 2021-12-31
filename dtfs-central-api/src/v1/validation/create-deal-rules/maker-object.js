@@ -2,11 +2,12 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 
 module.exports = (deal, errorList) => {
   const newErrorList = { ...errorList };
-  const { maker, owningBank } = deal.details;
+  const { bank, details } = deal;
+  const { maker } = details;
 
   if (!maker
     || !maker._id
-    || !owningBank) {
+    || !bank) {
     newErrorList.makerObject = {
       order: orderNumber(newErrorList),
       text: 'deal.details.maker object with bank is required',

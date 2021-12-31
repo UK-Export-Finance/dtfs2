@@ -4,16 +4,16 @@
   "bankInternalRefName": "aDealWithOneLoanAndOneBond",
   "additionalRefName": "aDealWithOneLoanAndOneBond",
   "status": "Draft",
+  "bank": {
+    "id": "9",
+    "name": "UKEF test bank (Delegated)",
+    "emails": [
+      "maker@ukexportfinance.gov.uk",
+      "checker@ukexportfinance.gov.uk"
+    ]
+  },
   "details": {
-    "ukefDealId": "ukef:aDealWithOneLoanAndOneBond",
-    "owningBank": {
-      "id": "9",
-      "name": "UKEF test bank (Delegated)",
-      "emails": [
-        "maker@ukexportfinance.gov.uk",
-        "checker@ukexportfinance.gov.uk"
-      ]
-    }
+    "ukefDealId": "ukef:aDealWithOneLoanAndOneBond"
   },
   "submissionDetails" : {
     "indemnifier-address-country" : "GBR",
