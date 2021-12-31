@@ -29,7 +29,7 @@ function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
 
 function downloadTransactions(transactions, timezone, res) {
   const columns = [{
-    prop: 'deal_owningBank',
+    prop: 'deal_bank',
     label: 'Bank',
   }, {
     prop: 'deal_bankInternalRefName',

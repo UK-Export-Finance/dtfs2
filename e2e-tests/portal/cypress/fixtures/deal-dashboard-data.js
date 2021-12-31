@@ -10,15 +10,13 @@ module.exports = [
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       status: 'Incomplete',
@@ -31,15 +29,13 @@ module.exports = [
     bankInternalRefName: 'abc-2-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       status: 'Not started',
@@ -49,16 +45,16 @@ module.exports = [
     bankInternalRefName: 'abc-3-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Draft',
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
     details: {
       submissionDate: now,
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -69,16 +65,16 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: "Ready for Checker's approval",
     previousStatus: 'Draft',
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
     details: {
       submissionDate: now,
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -97,16 +93,16 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: "Further Maker's input required",
     previousStatus: "Ready for Checker's approval",
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
     details: {
       submissionDate: now,
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -124,16 +120,16 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Abandoned',
     previousStatus: 'Draft',
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
     details: {
       submissionDate: now,
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -143,15 +139,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Submitted',
     previousStatus: "Ready for Checker's approval",
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -169,15 +163,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Submitted',
     previousStatus: "Ready for Checker's approval",
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -195,15 +187,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: "Ready for Checker's approval",
     previousStatus: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -221,15 +211,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Acknowledged by UKEF',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -238,15 +226,13 @@ module.exports = [
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -255,15 +241,13 @@ module.exports = [
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -272,15 +256,13 @@ module.exports = [
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -290,15 +272,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Acknowledged by UKEF',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -308,15 +288,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Accepted by UKEF (without conditions)',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -326,15 +304,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Rejected by UKEF',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -344,15 +320,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Rejected by UKEF',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -362,15 +336,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: "Further Maker's input required",
     previousStatus: "Ready for Checker's approval",
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -380,15 +352,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Accepted by UKEF (without conditions)',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -398,15 +368,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Accepted by UKEF (with conditions)',
     previousStatus: 'Submitted',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -416,15 +384,13 @@ module.exports = [
     additionalRefName: 'Tibettan submarine acquisition scheme',
     status: 'Abandoned',
     previousStatus: 'Draft',
-    details: {
-      owningBank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
+      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',

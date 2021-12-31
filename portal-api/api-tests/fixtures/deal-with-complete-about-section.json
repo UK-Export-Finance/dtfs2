@@ -3,6 +3,14 @@
     "updatedAt": 1639675204629.0,
     "bankInternalRefName": "abc-1-def",
     "additionalRefName": "Tibettan submarine acquisition scheme",
+    "bank": {
+        "id": "956",
+        "name": "Barclays Bank",
+        "emails": [
+            "maker4@ukexportfinance.gov.uk",
+            "checker4@ukexportfinance.gov.uk"
+        ]
+    },
     "details" : {
         "status" : "Draft",
         "submissionDate" : "2020 06 04 12:08:42:705 +0100",
@@ -19,14 +27,6 @@
                     "checker4@ukexportfinance.gov.uk"
                 ]
             }
-        },
-        "owningBank": {
-            "id": "956",
-            "name": "Barclays Bank",
-            "emails": [
-                "maker4@ukexportfinance.gov.uk",
-                "checker4@ukexportfinance.gov.uk"
-            ]
         }
     },
     "eligibility" : {

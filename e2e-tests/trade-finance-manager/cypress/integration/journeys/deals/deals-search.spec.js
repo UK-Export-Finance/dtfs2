@@ -143,7 +143,7 @@ context('User can view and filter multiple deals', () => {
     });
 
     row.bank().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(firstDeal.dealSnapshot.details.owningBank.name);
+      expect(text.trim()).to.contain(firstDeal.dealSnapshot.bank.name);
     });
 
     row.stage().invoke('text').then((text) => {
@@ -189,7 +189,7 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.searchFormSubmitButton().click();
 
     const dealsWithMakerTfmBank = ALL_SUBMITTED_DEALS.filter((deal) =>
-      deal.dealSnapshot.details.owningBank.name.includes(searchString));
+      deal.dealSnapshot.bank.name.includes(searchString));
 
     pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerTfmBank.length);
 

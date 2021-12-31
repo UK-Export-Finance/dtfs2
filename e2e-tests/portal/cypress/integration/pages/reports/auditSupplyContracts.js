@@ -21,7 +21,7 @@ const page = {
   applyFilters: () => cy.get('[data-cy="ApplyFilters"]'),
   facilityStage: () => cy.get('[data-cy="facilityStage"]'),
   status: () => cy.get('[data-cy="status"]'),
-  bank: () => cy.get('[data-cy="owningBank"]'),
+  bank: () => cy.get('[data-cy="bank"]'),
 
   results: () => cy.get('[data-cy="results"]'),
   first: () => cy.get('[data-cy="First"]'),

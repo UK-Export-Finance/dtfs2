@@ -13,11 +13,11 @@ describe(component, () => {
         _id: '123',
         dealSnapshot: {
           submissionType: 'Automatic Inclusion Notice',
+          bank: {
+            name: 'Bank name',
+          },
           details: {
             ukefDealId: '0040004833',
-            owningBank: {
-              name: 'Bank name',
-            },
           },
           submissionDetails: {
             supplierName: 'Supplier name',
@@ -37,11 +37,11 @@ describe(component, () => {
         _id: '456',
         dealSnapshot: {
           submissionType: 'Automatic Inclusion Notice',
+          bank: {
+            name: 'Bank name',
+          },
           details: {
             ukefDealId: '0040004834',
-            owningBank: {
-              name: 'Bank name',
-            },
           },
           submissionDetails: {
             supplierName: 'Supplier name',
@@ -153,7 +153,7 @@ describe(component, () => {
     it('should render buyer name table cell', () => {
       params.deals.forEach((deal) => {
         const cellSelector = `[data-cy="deal-${deal._id}-bank"]`;
-        wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.details.owningBank.name);
+        wrapper.expectText(cellSelector).toRead(deal.dealSnapshot.bank.name);
       });
     });
 

@@ -37,6 +37,7 @@ const mapGefDeal = (deal) => {
       dealType: dealSnapshot.dealType,
       facilitiesUpdated: dealSnapshot.facilitiesUpdated,
       eligibility: dealSnapshot.eligibility,
+      bank: dealSnapshot.bank,
       details: mapGefDealDetails(dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
       facilities: mapGefFacilities(dealSnapshot, deal.tfm),

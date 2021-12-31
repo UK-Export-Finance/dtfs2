@@ -53,28 +53,22 @@ describe('/v1/tfm/deals', () => {
         expect(body.deals).toEqual(expectedDeals);
       });
 
-      it('returns deals filtered by details.owningBank.name', async () => {
+      it('returns deals filtered by bank.name', async () => {
         const miaDeal = newDeal({
-          details: {
-            owningBank: {
-              name: 'My Bank',
-            },
+          bank: {
+            name: 'My Bank',
           },
         });
 
         const miaDeal2 = newDeal({
-          details: {
-            owningBank: {
-              name: 'My Bank',
-            },
+          bank: {
+            name: 'My Bank',
           },
         });
 
         const minDeal = newDeal({
-          details: {
-            owningBank: {
-              name: 'Another Bank',
-            },
+          bank: {
+            name: 'Another Bank',
           },
         });
 
@@ -86,7 +80,7 @@ describe('/v1/tfm/deals', () => {
 
         const mockReqBody = {
           queryParams: {
-            searchString: miaDeal.details.owningBank.name,
+            searchString: miaDeal.bank.name,
           },
         };
 
@@ -95,7 +89,7 @@ describe('/v1/tfm/deals', () => {
         expect(status).toEqual(200);
 
         const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.details.owningBank.name === miaDeal.details.owningBank.name);
+          deal.dealSnapshot.bank.name === miaDeal.bank.name);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 

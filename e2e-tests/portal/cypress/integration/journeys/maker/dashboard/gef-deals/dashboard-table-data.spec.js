@@ -85,6 +85,7 @@ context('Sort exporters alphabetically', () => {
   ];
 
   beforeEach(() => {
+    cy.deleteDeals(MAKER_LOGIN);
     cy.deleteGefApplications(MAKER_LOGIN);
     cy.insertManyGefApplications(mockDeals, MAKER_LOGIN).then((insertedDeals) => {
       deals = insertedDeals;

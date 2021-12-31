@@ -10,7 +10,7 @@ type Country {
   name: String
 }
 
-type OwningBank {
+type Bank {
   name: String
   emails: [String]
   partyUrn: String
@@ -39,7 +39,6 @@ type DealDetails {
   approvalDate: String
   created: String
   workflowStatus: String
-  owningBank: OwningBank
 }
 
 type DealSubmissionDetails {
@@ -359,6 +358,7 @@ type DealSnapshot {
   additionalRefName: String
   updatedAt: Float
   status: String
+  bank: Bank
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
