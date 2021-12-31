@@ -24,13 +24,13 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       eligibility,
       exporter,
       status,
+      maker,
     } = mockDeal.dealSnapshot;
 
     const {
       submissionCount,
       submissionDate,
       ukefDealId,
-      maker,
     } = details;
 
     const expected = {

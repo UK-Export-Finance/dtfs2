@@ -65,7 +65,7 @@ describe(component, () => {
                     .toRead(deal.previousStatus);
     });
 
-    it("displays deal.maker.username", () =>{
+    it("displays deal.maker name", () =>{
       return wrapper.expectText('[data-cy="maker"]')
                     .toRead(`${deal.maker.firstname} ${deal.maker.surname}`);
     });

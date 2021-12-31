@@ -14,6 +14,7 @@ const updatedIssuedFacilities = async (deal) => {
     dealType,
     submissionDate: dealSubmissionDate,
     submissionType,
+    maker,
   } = deal;
 
   const updatedFacilities = [];
@@ -99,6 +100,7 @@ const updatedIssuedFacilities = async (deal) => {
   await sendIssuedFacilitiesReceivedEmail(
     modifiedDeal,
     updatedFacilities,
+    maker,
   );
 
   return modifiedDeal;
