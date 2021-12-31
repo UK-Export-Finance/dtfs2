@@ -110,8 +110,8 @@ portalRouter.route('/deals').get(
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
  *             bank: { id: '9' }
+ *             maker: { _id: '123abc' }
  *             details:
- *               maker: { _id: '123abc' }
  *               ukefDealId: '20010739'
  *               submissionCount: 1
  *     responses:

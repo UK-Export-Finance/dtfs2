@@ -17,12 +17,10 @@ describe(page, () => {
         name: 'Lloyds',
         emails: ['xxx@yyy.com'],
       },
-      details: {
-        maker: {
-          firstname: 'John',
-          surname: 'Doe',
-          email: 'john.doe@exporter.com',
-        },
+      maker: {
+        firstname: 'John',
+        surname: 'Doe',
+        email: 'john.doe@exporter.com',
       },
       submissionDetails: {
         supplierName: 'The Supplier name',

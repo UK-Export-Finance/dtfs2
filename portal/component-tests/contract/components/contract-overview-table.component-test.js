@@ -14,12 +14,12 @@ describe(component, () => {
     bankInternalRefName: 'bankInternalRefName',
     status: 'status',
     previousStatus: 'previousStatus',
+    maker: {
+      firstname: 'Robert',
+      surname: 'Bruce',
+    },
     details: {
       ukefDealId: 'ukefDealId',
-      maker: {
-        firstname: 'Robert',
-        surname: 'Bruce',
-      },
       checker: {
         firstname: 'Rabbie',
         surname: 'Burns',
@@ -65,9 +65,9 @@ describe(component, () => {
                     .toRead(deal.previousStatus);
     });
 
-    it("displays deal.details.maker.username", () =>{
+    it("displays deal.maker.username", () =>{
       return wrapper.expectText('[data-cy="maker"]')
-                    .toRead(`${deal.details.maker.firstname} ${deal.details.maker.surname}`);
+                    .toRead(`${deal.maker.firstname} ${deal.maker.surname}`);
     });
 
     it("displays deal.details.checker", () =>{
@@ -120,11 +120,11 @@ describe(component, () => {
     const deal = {
       updatedAt: null,
       status: '',
+      maker: {},
       details: {
         bankInternalRefName: '',
         ukefDealId: ' ',
         previousStatus: '',
-        maker: {},
         checker: {},
         submissionDate: '',
       }

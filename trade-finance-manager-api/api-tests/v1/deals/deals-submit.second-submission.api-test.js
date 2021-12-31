@@ -276,10 +276,10 @@ describe('/v1/deals', () => {
 
         const expected = {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
+          sendToEmailAddress: mockDeal.maker.email,
           emailVariables: {
             exporterName: mockDeal.exporter.companyName,
-            recipientName: mockDeal.details.maker.firstname,
+            recipientName: mockDeal.maker.firstname,
             bankReferenceNumber: mockDeal.bankInternalRefName,
             ukefDealID: mockDeal.details.ukefDealId,
             facilitiesList: generateIssuedFacilitiesListString(allFacilities),
@@ -506,10 +506,10 @@ describe('/v1/deals', () => {
 
         const expected = {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
+          sendToEmailAddress: mockDeal.maker.email,
           emailVariables: {
             exporterName: mockDeal.exporter.companyName,
-            recipientName: mockDeal.details.maker.firstname,
+            recipientName: mockDeal.maker.firstname,
             bankReferenceNumber: mockDeal.bankInternalRefName,
             ukefDealID: mockDeal.details.ukefDealId,
             facilitiesList: generateIssuedFacilitiesListString(allFacilities),
