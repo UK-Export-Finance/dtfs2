@@ -17,7 +17,7 @@ context('View a deal', () => {
     const dummyDeal = {
       bank: { id: MAKER_LOGIN.bank.id },
       bankInternalRefName: 'Mock GEF exporter',
-      userId: MAKER_LOGIN._id,
+      maker: MAKER_LOGIN,
     };
 
     beforeEach(() => {

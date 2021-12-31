@@ -7,7 +7,7 @@ class Application {
     if (eligibilityTerms) {
       // New Application
       this.dealType = DEAL_TYPE;
-      this.userId = req.userId ? String(req.userId) : null;
+      this.maker = req.maker ? req.maker : null;
       this.status = STATUS.DRAFT;
       this.bank = req.bank;
 
@@ -32,7 +32,7 @@ class Application {
       this.supportingInformation = {};
       this.ukefDealId = null;
       this.checkerId = null;
-      editedBy.push(this.userId);
+      editedBy.push(this.maker._id);
       this.editedBy = editedBy;
       this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
       this.facilitiesUpdated = null;

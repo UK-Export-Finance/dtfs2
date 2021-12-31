@@ -11,7 +11,7 @@ const MockApplicationResponse = () => ({
   bankInternalRefName: 'Cloned deal',
   additionalRefName: 'additional',
   status: CONSTANTS.DEAL_STATUS.DRAFT,
-  userId: 'mock-user',
+  maker: { name: 'mock-user' },
   supportingInformation: {
     status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },

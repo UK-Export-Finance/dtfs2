@@ -22,7 +22,7 @@ const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = 'deals';
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
-  criteria.version === 1.5).terms;
+  criteria.version === 1.5);
 
 describe(baseUrl, () => {
   let aMaker;
@@ -78,7 +78,7 @@ describe(baseUrl, () => {
             updatedAt: expect.any(Number),
           },
           eligibility: {
-            criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+            criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
               ...criterion,
               answer: null,
             })),
@@ -123,7 +123,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         eligibility: {
-          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+          criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
@@ -202,7 +202,7 @@ describe(baseUrl, () => {
         checkerId: null,
         portalActivities: [],
         eligibility: {
-          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+          criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
@@ -210,6 +210,7 @@ describe(baseUrl, () => {
       };
       expect(body).toEqual({
         ...expectMongoId(expected),
+        maker: aMaker,
         exporter: {
           status: expect.any(String),
           updatedAt: expect.any(Number),
