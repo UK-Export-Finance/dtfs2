@@ -38,7 +38,7 @@ describe(baseUrl, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
-        userId: aMaker._id,
+        maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
@@ -59,7 +59,7 @@ describe(baseUrl, () => {
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
-        userId: aMaker._id,
+        maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
@@ -79,7 +79,7 @@ describe(baseUrl, () => {
     it('returns a new application ID when a deal is cloned', async () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
-        userId: aMaker._id,
+        maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
@@ -100,7 +100,7 @@ describe(baseUrl, () => {
     it('returns an error message when Bank Internal Ref Name is null', async () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
-        userId: aMaker._id,
+        maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',

@@ -31,7 +31,7 @@ const combinedUser = {
 
 const draftApplication = {
   _id: '123456789',
-  userId: '11112',
+  maker: { name: 'mock-user' },
   status: CONSTANTS.DEAL_STATUS.DRAFT,
   bank: { id: '9' },
   exporter: {},

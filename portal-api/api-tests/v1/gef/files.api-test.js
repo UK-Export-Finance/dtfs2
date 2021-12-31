@@ -43,7 +43,7 @@ describe(baseUrl, () => {
     mockDeal = await as(aMaker)
       .post({
         dealType: 'GEF',
-        userId: aMaker._id,
+        maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',

@@ -27,7 +27,7 @@ const dashboardFilters = (filter, user, dealType) => {
 
   if (createdByYou) {
     allFilters.push({
-      field: 'userId',
+      field: 'maker._id',
       value: user._id,
     });
   }

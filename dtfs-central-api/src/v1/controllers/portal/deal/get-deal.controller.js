@@ -110,21 +110,9 @@ const findOneGefDeal = async (_id, callback) => {
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 
   if (deal) {
-    const promises = await Promise.all([
-      findAllGefFacilitiesByDealId(_id),
-      findOneUser(deal.userId),
-    ]);
-
-    const [
-      facilities,
-      maker,
-    ] = [...promises];
+    const facilities = await findAllGefFacilitiesByDealId(_id);
 
     deal.facilities = facilities;
-
-    if (maker) {
-      deal.maker = maker;
-    }
   }
 
   if (callback) {
