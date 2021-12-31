@@ -80,13 +80,13 @@ const dealQuery = gql`
         bankInternalRefName
         additionalRefName
         status
+        bank {
+          name
+          emails
+        },
         details {
           ukefDealId
           submissionDate
-          owningBank {
-            name
-            emails
-          },
           maker {
             firstname
             surname

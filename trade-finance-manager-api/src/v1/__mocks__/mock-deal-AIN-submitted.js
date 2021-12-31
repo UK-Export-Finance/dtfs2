@@ -7,7 +7,6 @@ const MOCK_DEAL_AIN_SUBMITTED = {
   status: 'Submitted',
   previousStatus: 'Ready for Checker\'s approval',
   details: {
-    bank: 'Mock bank',
     ukefDealId: '20010739',
     maker: {
       username: 'JOE',
@@ -21,7 +20,7 @@ const MOCK_DEAL_AIN_SUBMITTED = {
     },
     submissionDate: '1606900616651',
     submissionCount: 1,
-    owningBank: {
+    bank: {
       id: '123',
       name: 'Barclays Bank',
       emails: [
