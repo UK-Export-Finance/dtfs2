@@ -110,7 +110,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/bank async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
