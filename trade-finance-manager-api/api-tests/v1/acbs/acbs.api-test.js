@@ -48,8 +48,13 @@ describe('acbs controller', () => {
   });
 
   describe('createACBS', () => {
-    it('should return false if deal if bankID not recognised', async () => {
-      const result = await acbsController.createACBS({ dealSnapshot: MOCK_DEAL });
+    it('should return false if deal if no banks exists', async () => {
+      const result = await acbsController.createACBS({
+        dealSnapshot: {
+          ...MOCK_DEAL,
+          bank: null,
+        },
+      });
       expect(result).toEqual(false);
       expect(api.createACBS).not.toHaveBeenCalled();
     });

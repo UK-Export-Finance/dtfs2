@@ -3,6 +3,14 @@
     "updatedAt": 1639675204629.0,
     "bankInternalRefName": "abc-1-def",
     "additionalRefName": "Tibettan submarine acquisition scheme",
+    "bank": {
+        "id": "9",
+        "name": "UKEF test bank (Delegated)",
+        "emails": [
+            "maker@ukexportfinance.gov.uk",
+            "checker@ukexportfinance.gov.uk"
+        ]
+    },
     "details" : {
         "status" : "Draft",
         "maker" : {
@@ -18,14 +26,6 @@
                     "checker@ukexportfinance.gov.uk"
                 ]
             }
-        },
-        "owningBank" : {
-            "id": "9",
-            "name": "UKEF test bank (Delegated)",
-            "emails": [
-                "maker@ukexportfinance.gov.uk",
-                "checker@ukexportfinance.gov.uk"
-            ]
         }
     },
     "eligibility" : {

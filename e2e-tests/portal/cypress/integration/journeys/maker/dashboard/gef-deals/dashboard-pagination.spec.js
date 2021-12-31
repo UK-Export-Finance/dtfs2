@@ -8,15 +8,19 @@ context('Dashboard Deals pagination controls', () => {
   let deals;
 
   before(() => {
+    cy.deleteDeals(MAKER_LOGIN);
     cy.deleteGefApplications(MAKER_LOGIN);
 
     const dummyDeals = new Array(21).fill('').map((_, i) => ({
       bankInternalRefName: `abc-${i + 1}-def`,
       bank: { id: '9' },
+      exporter: { companyName: 'test' },
     }));
 
     cy.insertManyGefApplications(dummyDeals, MAKER_LOGIN)
-      .then((insertedDeals) => { deals = insertedDeals; });
+      .then((insertedDeals) => {
+        deals = insertedDeals;
+      });
   });
 
   it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {

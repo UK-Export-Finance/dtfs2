@@ -109,9 +109,11 @@ portalRouter.route('/deals').get(
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
+ *             bank: { id: '9' }
  *             details:
  *               maker: { _id: '123abc' }
- *               owningBank: { id: '9' }
+ *               ukefDealId: '20010739'
+ *               submissionCount: 1
  *     responses:
  *       200:
  *         description: OK

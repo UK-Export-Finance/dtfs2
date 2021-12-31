@@ -9,7 +9,7 @@ const DEAL_ID = '_id';
 const DEAL_STATUS = 'status';
 const DEAL_PREVIOUS_STATUS = 'details.previousStatus';
 const TRANSACTION_PREVIOUS_COVER_START_DATE = 'transaction.previousCoverStartDate';
-const DEAL_BANK = 'details.owningBank.id';
+const DEAL_BANK = 'bank.id';
 const UKEF_DEAL_ID = 'details.ukefDealId';
 const DEAL_SUBMISSION_TYPE = 'submissionType';
 const SUBMISSION_SUPPLIER_NAME = 'submissionDetails.supplier-name';
@@ -76,7 +76,7 @@ const constructor = (user, filters) => {
         return listSoFar.concat([dealwithStatus]);
       }
       if (DEAL_BANK === filterField) {
-        const dealwithStatus = { 'details.owningBank.id': filter[filterField] };
+        const dealwithStatus = { 'bank.id': filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
       }
@@ -113,7 +113,7 @@ const constructor = (user, filters) => {
     }, []);
 
     if (!isSuperUser(user)) {
-      listOfMongoQueryElements.push({ 'details.owningBank.id': { $eq: user.bank.id } });
+      listOfMongoQueryElements.push({ 'bank.id': { $eq: user.bank.id } });
     }
 
     if (listOfMongoQueryElements.length === 1) {

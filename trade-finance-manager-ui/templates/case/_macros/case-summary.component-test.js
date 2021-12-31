@@ -69,7 +69,7 @@ describe(component, () => {
   });
 
   it('should render bank name', () => {
-    wrapper.expectText('[data-cy="bank-name"]').toRead(params.deal.details.owningBank.name);
+    wrapper.expectText('[data-cy="bank-name"]').toRead(params.deal.bank.name);
   });
 
   it('should render contract value', () => {

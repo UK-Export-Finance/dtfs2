@@ -41,8 +41,8 @@
         <tr data-cy="deal_{{deal._id }}" class="govuk-table__row">
 
           {% if user and user.roles.includes("admin")%}
-          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.details.owningBank.name }}
+          <td data-cy="bank" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.bank.name }}
           </td>
           {% endif %}
 

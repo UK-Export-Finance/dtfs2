@@ -28,11 +28,11 @@
  *       previousStatus:
  *         type: string
  *         example: Ready for Checker's approval
+ *       bank:
+ *         $ref: '#/definitions/Bank'
  *       details:
  *         type: object
  *         properties:
- *           owningBank:
- *             $ref: '#/definitions/Bank'
  *           maker:
  *             $ref: '#/definitions/User'
  *           created:

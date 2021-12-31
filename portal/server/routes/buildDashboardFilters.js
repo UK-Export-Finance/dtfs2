@@ -118,7 +118,7 @@ const buildDashboardFilters = (params, user) => {
   if (params.filterByBank) {
     isUsingAdvancedFilter = true;
     filters.push({
-      field: 'details.owningBank.id',
+      field: 'bank.id',
       value: params.filterByBank,
     });
   }

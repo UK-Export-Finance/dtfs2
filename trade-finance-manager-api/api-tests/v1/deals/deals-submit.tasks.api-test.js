@@ -121,7 +121,7 @@ describe('/v1/deals', () => {
               body.dealSnapshot.exporter.companyName,
               body.dealSnapshot.details.submissionType,
               moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
-              body.dealSnapshot.details.owningBank.name,
+              body.dealSnapshot.bank.name,
             ),
           };
 

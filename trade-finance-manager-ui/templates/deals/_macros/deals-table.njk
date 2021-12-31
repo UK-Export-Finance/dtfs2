@@ -83,7 +83,7 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-type">{{ deal.dealSnapshot.submissionType | dashIfEmpty}}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-exporterName">{{ deal.dealSnapshot.exporter.companyName | dashIfEmpty}}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-buyerName">{{ deal.dealSnapshot.submissionDetails.buyerName | dashIfEmpty}}</td>
-            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-bank">{{ deal.dealSnapshot.details.owningBank.name | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-bank">{{ deal.dealSnapshot.bank.name | dashIfEmpty }}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-stage">
               {{govukTag({
                 text: deal.tfm.stage | dashIfEmpty,

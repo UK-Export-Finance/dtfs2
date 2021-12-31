@@ -11,6 +11,9 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
       additionalRefName
       updatedAt
       status
+      bank {
+        name
+      }
       details {
         ukefDealId
         maker {
@@ -31,9 +34,6 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
         submissionDate
         approvalDate
         created
-        owningBank{
-          name
-        }
         workflowStatus
       }
     }

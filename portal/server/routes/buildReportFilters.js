@@ -157,7 +157,7 @@ const buildReportFilters = (params, user) => {
   if (params.filterByBank) {
     if (params.filterByBank !== 'any') {
       filters.push({
-        field: 'details.owningBank.id',
+        field: 'bank.id',
         value: params.filterByBank,
       });
     }

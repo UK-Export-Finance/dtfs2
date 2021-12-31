@@ -83,15 +83,15 @@ const dealQuery = gql`
         bank {
           name
           emails
-        },
+        }
+        maker {
+          firstname
+          surname
+          email
+        }
         details {
           ukefDealId
           submissionDate
-          maker {
-            firstname
-            surname
-            email
-          }
         }
         dealFiles {
           security

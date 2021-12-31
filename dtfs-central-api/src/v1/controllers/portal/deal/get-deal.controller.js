@@ -160,7 +160,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
     {
       $project: {
         _id: 1,
-        bankId: '$details.owningBank.id',
+        bankId: '$bank.id',
         bankRef: '$additionalRefName',
         status: '$status',
         product: 'BSS/EWCS',

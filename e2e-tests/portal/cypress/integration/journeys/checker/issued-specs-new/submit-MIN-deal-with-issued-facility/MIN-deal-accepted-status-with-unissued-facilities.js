@@ -6,6 +6,14 @@ const deal = {
   additionalRefName: 'testing',
   status: 'Accepted by UKEF (with conditions)',
   previousStatus: 'Submitted',
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+    emails: [
+      'maker@ukexportfinance.gov.uk',
+      'checker@ukexportfinance.gov.uk',
+    ],
+  },
   details: {
     created: new Date().valueOf(),
     maker: {
@@ -27,14 +35,6 @@ const deal = {
       email: 'maker@ukexportfinance.gov.uk',
       timezone: 'Europe/London',
       'user-status': 'active',
-    },
-    owningBank: {
-      id: '9',
-      name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
     },
     checker: {
       bank: {

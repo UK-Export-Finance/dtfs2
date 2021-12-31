@@ -17,13 +17,13 @@ const createMockDeal = (overrides) => {
   return {
     ...MOCK_DEAL_AIN,
     ...overrides,
+    bank: {
+      ...MOCK_DEAL_AIN.bank,
+      ...overrides.bank ? overrides.bank : {},
+    },
     details: {
       ...MOCK_DEAL_AIN.details,
       ...overrides.details,
-      owningBank: {
-        ...MOCK_DEAL_AIN.details.owningBank,
-        ...overrides.details && overrides.details.owningBank ? overrides.details.owningBank : {},
-      },
       submissionDate,
     },
     submissionDetails: {

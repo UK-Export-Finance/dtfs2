@@ -318,7 +318,7 @@ Therefore, to test eamils we just need to change these emails to your own email 
 1) `banks` MongoDB collection > `emails` array. Typically the bank with ID 9 is used.
 2) `users` MongoDB collection > `bank.emails` array. Typically the user `BANK1_MAKER1` is used
 
-If you want to test an already created BSS deal, you'll need to update `deal.details.owningBank.emails`.
+If you want to test an already created BSS deal, you'll need to update `deal.bank.emails`.
 
 The only exception to this is TFM Task emails - these emails are sent to the teams that own the tasks. To test the emails, simply replace the team's email in `tfm-teams` MongoDB collection.
 

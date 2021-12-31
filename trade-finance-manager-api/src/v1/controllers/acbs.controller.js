@@ -2,7 +2,6 @@ const moment = require('moment');
 const $ = require('mongo-dot-notation');
 const api = require('../api');
 const db = require('../../drivers/db-client');
-const { findOneBank } = require('./banks.controller');
 const tfmController = require('./tfm.controller');
 const isIssued = require('../helpers/is-issued');
 
@@ -35,12 +34,9 @@ const clearACBSLog = async () => {
 };
 
 const createACBS = async (deal) => {
-  // Add bank's full details so we can reference partyUrn in function
-  const bankId = deal.dealSnapshot.bank
-    ? deal.dealSnapshot.bank.id
-    : deal.dealSnapshot.details.owningBank.id;
-
-  const bank = await findOneBank(bankId);
+  // Reference partyUrn in function
+  const { dealSnapshot } = deal;
+  const { bank } = dealSnapshot;
 
   if (!bank) {
     return false;
