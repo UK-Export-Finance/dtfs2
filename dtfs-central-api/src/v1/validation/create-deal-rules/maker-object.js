@@ -10,7 +10,7 @@ module.exports = (deal, errorList) => {
     || !bank) {
     newErrorList.makerObject = {
       order: orderNumber(newErrorList),
-      text: 'deal.details.maker object with bank is required',
+      text: 'deal.maker object with bank is required',
     };
   }
 

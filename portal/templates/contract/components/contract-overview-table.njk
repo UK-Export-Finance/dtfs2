@@ -2,7 +2,7 @@
   {% set deal = params.deal %}
   {% set details = deal.details %}
   {% set user = params.user %}
-  {% set maker = details.makerMIN or details.maker %}
+  {% set maker = makerMIN or maker %}
   {% set checker = details.checkerMIN or details.checker %}
   <table class="govuk-table contract-table govuk-!-margin-bottom-0" data-cy="contract-overview-table">
     <thead class="govuk-table__head">

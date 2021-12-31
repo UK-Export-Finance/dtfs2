@@ -13,30 +13,30 @@
     ],
     "useTFM": true
   },
+  "maker": {
+    "_id": "5f3ab3f705e6630007dcfb25",
+    "username": "maker1@ukexportfinance.gov.uk",
+    "roles": [
+      "maker"
+    ],
+    "bank": {
+      "id": "9",
+      "name": "UKEF test bank (Delegated)",
+      "emails": [
+        "maker@ukexportfinance.gov.uk",
+        "checker@ukexportfinance.gov.uk"
+      ],
+      "useTFM": true
+    },
+    "lastLogin": "1610710442797",
+    "firstname": "Hugo",
+    "surname": "Drax",
+    "email": "maker1@ukexportfinance.gov.uk",
+    "timezone": "Europe/London",
+    "user-status": "active"
+  },
   "details": {
     "previousWorkflowStatus": "Draft",
-    "maker": {
-      "_id": "5f3ab3f705e6630007dcfb25",
-      "username": "maker1@ukexportfinance.gov.uk",
-      "roles": [
-        "maker"
-      ],
-      "bank": {
-        "id": "9",
-        "name": "UKEF test bank (Delegated)",
-        "emails": [
-          "maker@ukexportfinance.gov.uk",
-          "checker@ukexportfinance.gov.uk"
-        ],
-        "useTFM": true
-      },
-      "lastLogin": "1610710442797",
-      "firstname": "Hugo",
-      "surname": "Drax",
-      "email": "maker1@ukexportfinance.gov.uk",
-      "timezone": "Europe/London",
-      "user-status": "active"
-    }
   },
   "submissionDetails" : {
     "indemnifier-address-country" : {

@@ -5,7 +5,7 @@ const userCanSubmitDeal = (deal, user) => {
     return false;
   }
 
-  const userCreatedTheDeal = (deal.details.maker._id === user._id); // eslint-disable-line no-underscore-dangle
+  const userCreatedTheDeal = (deal.maker._id === user._id); // eslint-disable-line no-underscore-dangle
 
   if (userCreatedTheDeal) {
     return false;

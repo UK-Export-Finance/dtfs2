@@ -6,18 +6,18 @@ const getUserFilters = (params, user = {}) => {
 
   if (filterBySubmissionUser === 'createdByMe') {
     return {
-      field: 'details.maker.username',
+      field: 'maker.username',
       value: user.username,
     };
   }
 
   if (filterBySubmissionUser === 'createdByColleagues') {
     return {
-      field: 'details.maker.username',
+      field: 'maker.username',
       value: user.username,
       operator: 'ne',
     };
-    //    updated['details.maker.username'] = { $ne: user.username };
+    //    updated['maker.username'] = { $ne: user.username };
   }
 
   return false;
