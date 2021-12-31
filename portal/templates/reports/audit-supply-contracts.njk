@@ -60,8 +60,8 @@
           </td>
 
           {% if user and user.roles.includes("admin")%}
-          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.owningBank.name }}
+          <td data-cy="bank" class="govuk-table__cell govuk-!-font-size-14">
+            {{ contract.bank.name }}
           </td>
           {% endif %}
 

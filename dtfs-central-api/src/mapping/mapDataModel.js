@@ -10,8 +10,6 @@ const getBSSProperty = (propertyPath) => {
         return 'dealSnapshot.submissionDetails.supplier-name';
       case 'dealSnapshot.buyer.companyName':
         return 'dealSnapshot.submissionDetails.buyer-name';
-      case 'dealSnapshot.details.owningBank.name':
-        return 'dealSnapshot.bank.name';
       default:
         return propertyPath;
     }

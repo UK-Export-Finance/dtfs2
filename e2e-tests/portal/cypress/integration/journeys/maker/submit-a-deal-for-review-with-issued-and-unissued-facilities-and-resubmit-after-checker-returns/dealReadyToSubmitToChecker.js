@@ -9,12 +9,12 @@ const deal = {
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
   status: 'Draft',
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+  },
   details: {
     created: now,
-    owningBank: {
-      id: '9',
-      name: 'UKEF test bank (Delegated)',
-    },
   },
   eligibility: {
     status: 'Completed',

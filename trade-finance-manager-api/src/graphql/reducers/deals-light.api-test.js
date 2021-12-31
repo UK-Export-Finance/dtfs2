@@ -34,6 +34,7 @@ describe('reducer - deals', () => {
         _id: mockBssDeal._id,
         dealSnapshot: {
           submissionType: mockBssDeal.dealSnapshot.submissionType,
+          bank: mockBssDeal.dealSnapshot.bank,
           details: mockBssDeal.dealSnapshot.details,
           submissionDetails: mapSubmissionDetails(mockBssDeal.dealSnapshot.submissionDetails),
           exporter: mockBssDeal.dealSnapshot.exporter,
@@ -52,6 +53,7 @@ describe('reducer - deals', () => {
         _id: mockGefDeal._id,
         dealSnapshot: {
           submissionType: mockGefDeal.dealSnapshot.submissionType,
+          bank: mockGefDeal.dealSnapshot.bank,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
           exporter: mockGefDeal.dealSnapshot.exporter,

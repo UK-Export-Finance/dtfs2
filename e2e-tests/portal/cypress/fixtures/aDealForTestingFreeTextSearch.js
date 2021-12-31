@@ -4,15 +4,15 @@ module.exports = {
   bankInternalRefName: 'abc-1-def',
   additionalRefName: 'Tibettan submarine acquisition scheme',
   status: 'Draft',
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+    emails: [
+      'maker@ukexportfinance.gov.uk',
+      'checker@ukexportfinance.gov.uk',
+    ],
+  },
   details: {
-    owningBank: {
-      id: '9',
-      name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
-    },
     ukefDealId: 'A-deal-id-FROM_UKEF',
   },
   submissionDetails: {

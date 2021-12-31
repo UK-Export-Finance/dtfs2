@@ -10,7 +10,7 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       deal_supplierName,
       deal_bankInternalRefName,
       deal_ukefDealId,
-      deal_owningBank,
+      deal_bank,
       deal_created,
       deal_submissionDate,
       deal_submissionType,

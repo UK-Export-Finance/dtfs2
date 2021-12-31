@@ -46,7 +46,7 @@ describe('/v1/portal/deals', () => {
       expect(createdDeal.deal).toEqual(expectAddedFields(newDeal));
 
       expect(createdDeal.deal.details.maker).toEqual(mockUser);
-      expect(createdDeal.deal.details.owningBank).toEqual(mockUser.bank);
+      expect(createdDeal.deal.bank).toEqual(mockUser.bank);
       expect(createdDeal.deal.eligibility.status).toEqual(newDeal.eligibility.status);
       expect(createdDeal.deal.eligibility.criteria).toEqual(newDeal.eligibility.criteria);
       expect(createdDeal.deal.facilities).toEqual([]);

@@ -21,7 +21,6 @@ const mapDetails = (portalDealId, v1Deal) => {
     : v1Deal.Deal_information.Extra_fields.Deal_previous_status;
 
   const details = {
-    bank: v1Deal.Application_bank,
     ukefDealId: formatUkefId(v1Deal.UKEF_deal_id),
     status: findPortalValue(v1Deal.Deal_information.Extra_fields.Deal_status, 'Deal_status', 'DEAL', 'STATUS', logError),
     previousStatus: findPortalValue(previousStatus, 'Deal_previous_status', 'DEAL', 'STATUS', logError),

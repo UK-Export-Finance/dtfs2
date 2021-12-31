@@ -97,7 +97,7 @@ const constructor = (listOfFilters) => {
       deal_supplierName: deal.submissionDetails['supplier-name'],
       deal_bankInternalRefName: deal.bankInternalRefName,
       deal_ukefDealId: deal.details.ukefDealId,
-      deal_owningBank: deal.details.owningBank.name,
+      deal_bank: deal.bank.name,
       deal_created: deal.details.created,
       deal_submissionDate: deal.details.submissionDate,
       deal_submissionType: deal.submissionType,

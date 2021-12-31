@@ -14,11 +14,11 @@ const params = {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: chance.string({ length: 5 }),
     additionalRefName: chance.word(),
+    bank: {
+      name: chance.name(),
+      emails: [chance.email()],
+    },
     details: {
-      owningBank: {
-        name: chance.name(),
-        emails: [chance.email()],
-      },
       maker: {
         firstname: chance.first(),
         surname: chance.last(),
@@ -48,7 +48,7 @@ describe(`${page} when deal is BSS`, () => {
   });
 
   it('should render bank', () => {
-    wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.details.owningBank.name);
+    wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.bank.name);
   });
 
   it('should render contact name', () => {
@@ -95,7 +95,7 @@ describe(`${page} when deal is GEF`, () => {
   });
 
   it('should render bank', () => {
-    wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.details.owningBank.name);
+    wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.bank.name);
   });
 
   it('should render contact name', () => {
