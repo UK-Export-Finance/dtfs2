@@ -34,6 +34,8 @@ describe('mapGefDealSnapshot', () => {
       updatedAt: MOCK_GEF_DEAL.updatedAt,
       isFinanceIncreasing: MOCK_GEF_DEAL.exporter.isFinanceIncreasing,
       submissionType: MOCK_GEF_DEAL.submissionType,
+      maker: MOCK_GEF_DEAL.maker,
+      bank: MOCK_GEF_DEAL.bank,
       details: mapGefDealDetails(mockDeal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(mockDeal.dealSnapshot),
       eligibility: MOCK_GEF_DEAL.eligibility,

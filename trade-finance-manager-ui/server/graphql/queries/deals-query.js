@@ -17,6 +17,11 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         bankInternalRefName
         additionalRefName
         status
+        bank {
+          name
+          emails
+          partyUrn
+        }
         details {
           ukefDealId
           submissionDate
@@ -33,11 +38,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           manualInclusionNoticeSubmissionDate
           approvalDate
           created
-          owningBank {
-            name
-            emails
-            partyUrn
-          }
         }
         submissionDetails {
           supplierType
