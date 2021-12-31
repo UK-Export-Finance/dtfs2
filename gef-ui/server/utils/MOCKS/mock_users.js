@@ -23,7 +23,7 @@ const MOCK_MAKER = {
     surname: 'Rahani',
     email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    user-status: 'active',
+    'user-status': 'active',
 };
 
 module.exports = {
