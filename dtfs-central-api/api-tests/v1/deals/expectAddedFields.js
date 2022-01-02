@@ -20,8 +20,8 @@ const expectAddedFields = (obj) => {
     summary: {},
     comments: [],
     ...obj,
-    bank: expect.any(Object),
     maker: expect.any(Object),
+    bank: expect.any(Object),
     details: {
       ...obj.details,
       created: expect.any(String),
