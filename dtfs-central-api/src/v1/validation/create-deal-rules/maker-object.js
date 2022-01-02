@@ -2,8 +2,7 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 
 module.exports = (deal, errorList) => {
   const newErrorList = { ...errorList };
-  const { bank, details } = deal;
-  const { maker } = details;
+  const { bank, maker } = deal;
 
   if (!maker
     || !maker._id
