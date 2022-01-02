@@ -398,7 +398,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const updatedDeal = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
-      expect(updatedDeal.body.makerMIN.username).toEqual(aBarclaysMaker.username);
+      expect(updatedDeal.body.details.makerMIN.username).toEqual(aBarclaysMaker.username);
     });
   });
 
