@@ -23,7 +23,6 @@ const getPortalActivities = async (req, res) => {
   const deal = await getApplication(dealId);
 
   // returns objects from IDs stored in gef application
-  const maker = await getUserDetails(deal.userId, userToken);
   const checker = await getUserDetails(deal.checkerId, userToken);
 
   const mappedPortalActivities = mapPortalActivities(deal.portalActivities);
@@ -43,10 +42,10 @@ const getPortalActivities = async (req, res) => {
     applicationType: deal.submissionType,
     submissionCount: deal.submissionCount,
     checkedBy: `${checker.firstname} ${checker.surname}`,
-    createdBy: `${maker.firstname} ${maker.surname}`,
+    createdBy: `${deal.maker.firstname} ${deal.maker.surname}`,
     companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
-    timezone: maker.timezone || 'Europe/London',
+    timezone: deal.maker.timezone || 'Europe/London',
     submissionDate: deal.submissionDate,
   });
 };
