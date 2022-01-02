@@ -30,6 +30,7 @@ describe('controllers/dashboard', () => {
         user: {
           id: 'mock-user',
           roles: ['maker', 'checker'],
+          bank: { id: '9' },
         },
       },
     };
