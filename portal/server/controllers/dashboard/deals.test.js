@@ -1,9 +1,8 @@
 import { bssDeals, gefDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
-import { getApiData } from '../../helpers';
+import { getApiData, getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
 import { PRODUCT, STATUS } from '../../constants';
-import { getFlashSuccessMessage } from '../../helpers';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
