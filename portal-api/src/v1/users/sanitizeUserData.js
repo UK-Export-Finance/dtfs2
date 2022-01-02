@@ -9,7 +9,7 @@ const sanitizeUser = (user) => ({
   lastLogin: user.lastLogin,
   'user-status': user['user-status'],
   disabled: user.disabled,
-  _id: user._id, // eslint-disable-line no-underscore-dangle
+  _id: user._id,
 });
 
 const sanitizeUsers = (users) => users.map(sanitizeUser);

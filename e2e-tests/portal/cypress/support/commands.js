@@ -48,6 +48,7 @@ Cypress.Commands.add('insertManyGefFacilities', require('./portal-api/insertMany
 
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));
+Cypress.Commands.add('listAllUsers', require('./portal-api/listAllUsers'));
 
 Cypress.Commands.add('updateBond', require('./portal-api/updateBond'));
 Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));

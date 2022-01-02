@@ -58,7 +58,7 @@ module.exports.listAllUsers = (token) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
-  return resp.body.data;
+  return resp.body.users;
 });
 
 module.exports.deleteUser = (token, user) => cy.request({
