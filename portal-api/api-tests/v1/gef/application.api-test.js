@@ -77,6 +77,7 @@ describe(baseUrl, () => {
             status: expect.any(String),
             updatedAt: expect.any(Number),
           },
+          maker: aMaker,
           eligibility: {
             criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
               ...criterion,
@@ -122,6 +123,7 @@ describe(baseUrl, () => {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
+        maker: aMaker,
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
             ...criterion,
