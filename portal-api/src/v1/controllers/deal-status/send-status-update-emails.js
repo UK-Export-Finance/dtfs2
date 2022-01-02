@@ -42,13 +42,10 @@ const send = async (deal, fromStatus, user) => {
   const {
     submissionType,
     bankInternalRefName,
-    details,
-  } = deal;
-
-  const {
-    status: currentStatus,
     maker,
-  } = details;
+    details,
+    status: currentStatus,
+  } = deal;
 
   const {
     'supplier-name': supplierName,
