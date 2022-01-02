@@ -55,7 +55,10 @@ const facilitiesCollectionName = 'gef-facilities';
 exports.create = async (req, res) => {
   const newDeal = {
     ...req.body,
-    maker: req.user,
+    maker: {
+      ...req.user,
+      _id: String(req.user._id),
+    },
   };
 
   const applicationCollection = await db.getCollection(

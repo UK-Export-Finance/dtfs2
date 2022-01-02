@@ -25,25 +25,25 @@ const dashboardFilters = (filter, user, dealType) => {
 
   const { createdByYou } = filter;
 
+  allFilters.push({
+    field: 'bank.id',
+    value: user.bank.id,
+  });
+
   if (createdByYou) {
-    allFilters.push({
-      field: 'maker._id',
-      value: user._id,
-    });
-  }
+    if (dealType === PRODUCT.BSS_EWCS) {
+      allFilters.push({
+        field: 'details.maker._id',
+        value: user._id,
+      });
+    }
 
-  if (dealType === PRODUCT.BSS_EWCS) {
-    allFilters.push({
-      field: 'details.owningBank.id',
-      value: user.bank.id,
-    });
-  }
-
-  if (dealType === PRODUCT.GEF) {
-    allFilters.push({
-      field: 'bank.id',
-      value: user.bank.id,
-    });
+    if (dealType === PRODUCT.GEF) {
+      allFilters.push({
+        field: 'maker._id',
+        value: user._id,
+      });
+    }
   }
 
   return allFilters;

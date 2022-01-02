@@ -210,7 +210,10 @@ describe(baseUrl, () => {
       };
       expect(body).toEqual({
         ...expectMongoId(expected),
-        maker: aMaker,
+        maker: {
+          ...aMaker,
+          _id: String(aMaker._id),
+        },
         exporter: {
           status: expect.any(String),
           updatedAt: expect.any(Number),
