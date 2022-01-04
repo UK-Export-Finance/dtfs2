@@ -79,7 +79,6 @@ describe('getPortalActivities()', () => {
   it('it should render application-activity template', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
-    const maker = await api.getUserDetails(mockApplicationResponse.userId, mockRequest.session.userToken);
     const checker = await api.getUserDetails(mockApplicationResponse.checkerId, mockRequest.session.userToken);
 
     const mappedPortalActivities = mapPortalActivities(mockApplicationResponse.portalActivities);

@@ -7,7 +7,17 @@ class Application {
     if (eligibilityTerms) {
       // New Application
       this.dealType = DEAL_TYPE;
-      this.maker = req.maker ? req.maker : null;
+
+      // ensure we don't consume any sensitive fields
+      const {
+        token,
+        password,
+        lastLogin,
+        ...sanitisedMaker
+      } = req.maker;
+
+      this.maker = sanitisedMaker;
+
       this.status = STATUS.DRAFT;
       this.bank = req.bank;
 

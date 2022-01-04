@@ -20,30 +20,16 @@ const getRoles = (roles) => {
   };
 };
 
-const dashboardFilters = (filter, user, dealType) => {
+const dashboardFilters = (filter, user) => {
   const allFilters = [];
 
   const { createdByYou } = filter;
 
-  allFilters.push({
-    field: 'bank.id',
-    value: user.bank.id,
-  });
-
   if (createdByYou) {
-    if (dealType === PRODUCT.BSS_EWCS) {
-      allFilters.push({
-        field: 'details.maker._id',
-        value: user._id,
-      });
-    }
-
-    if (dealType === PRODUCT.GEF) {
-      allFilters.push({
-        field: 'maker._id',
-        value: user._id,
-      });
-    }
+    allFilters.push({
+      field: 'userId',
+      value: user._id,
+    });
   }
 
   return allFilters;
