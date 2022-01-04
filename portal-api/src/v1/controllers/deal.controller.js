@@ -175,10 +175,10 @@ const createNewDealData = async (deal, maker) => {
     ...DEFAULTS.DEAL,
     ...deal,
     bank: maker.bank,
+    maker,
     details: {
       ...DEFAULTS.DEAL.details,
       ...deal.details,
-      maker,
     },
     eligibility: await createDealEligibility(deal.eligibility),
   };
