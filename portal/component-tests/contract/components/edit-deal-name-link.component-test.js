@@ -11,16 +11,12 @@ describe(component, () => {
         {
           _id: 1,
           status: 'Draft',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 2,
           status: 'Further Maker\'s input required',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
       ];
 
@@ -37,51 +33,37 @@ describe(component, () => {
         {
           _id: 1,
           status: 'Submitted',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 2,
           status: 'Rejected by UKEF',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 3,
           status: 'Abandoned',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 4,
           status: 'Acknowledged by UKEF',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 5,
           status: 'Accepted by UKEF (without conditions)',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 6,
           status: 'Accepted by UKEF (with conditions)',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 7,
           status: 'Ready for Checker\'s approval',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
       ];
 
@@ -100,65 +82,47 @@ describe(component, () => {
         {
           _id: 1,
           status: 'Draft',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 2,
           status: 'Further Maker\'s input required',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 3,
           status: 'Submitted',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 4,
           status: 'Rejected by UKEF',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 5,
           status: 'Abandoned',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 6,
           status: 'Acknowledged by UKEF',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 7,
           status: 'Accepted by UKEF (without conditions)',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 8,
           status: 'Accepted by UKEF (with conditions)',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 9,
           status: 'Ready for Checker\'s approval',
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
       ];
 

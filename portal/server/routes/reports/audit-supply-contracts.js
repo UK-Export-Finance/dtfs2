@@ -56,8 +56,8 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
     // De-nest the fields we want from under details/maker/bank
     const row = {};
     Object.assign(row, supplyContract.details);
-    if (supplyContract.details.maker) {
-      row.maker_username = supplyContract.details.maker.username;
+    if (supplyContract.maker) {
+      row.maker_username = supplyContract.maker.username;
     }
     if (supplyContract.bank) {
       row.bank_name = supplyContract.bank.name;

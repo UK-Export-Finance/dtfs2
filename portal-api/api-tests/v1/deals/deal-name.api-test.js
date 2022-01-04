@@ -58,7 +58,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
       expect(status).toEqual(404);
     });
 
-    it('401s requests if <user> != <resource>/details.maker', async () => {
+    it('401s requests if <user> != <resource>/maker', async () => {
       const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(anotherBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${body._id}/additionalRefName`);
