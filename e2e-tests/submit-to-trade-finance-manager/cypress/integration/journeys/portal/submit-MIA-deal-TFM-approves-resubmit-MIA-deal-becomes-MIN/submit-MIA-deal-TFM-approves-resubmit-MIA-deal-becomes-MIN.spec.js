@@ -17,7 +17,7 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
   let bondId;
   let loanId;
-  const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'numeric', day: '2-digit' });
+  const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
   before(() => {
     cy.insertManyDeals([
@@ -177,6 +177,7 @@ context('Portal to TFM deal submission', () => {
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
+
 
     //---------------------------------------------------------------
     // Portal Deal should now:

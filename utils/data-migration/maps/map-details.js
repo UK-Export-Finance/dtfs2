@@ -48,7 +48,7 @@ const mapDetails = (portalDealId, v1Deal) => {
   const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(makerUsername);
 
   if (maker.username) {
-    details.maker = maker;
+    maker = maker;
   } else {
     hasError = true;
     logError(`maker username not found ${makerUsername}`);

@@ -20,19 +20,19 @@ const deal = {
       'checker@ukexportfinance.gov.uk',
     ],
   },
+  maker: {
+    username: 'MAKER',
+    roles: [
+      'maker',
+    ],
+    lastLogin: now.valueOf(),
+    firstname: 'Hugo',
+    surname: 'Drax',
+    email: 'maker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    'user-status': 'active',
+  },
   details: {
-    maker: {
-      username: 'MAKER',
-      roles: [
-        'maker',
-      ],
-      lastLogin: now.valueOf(),
-      firstname: 'Hugo',
-      surname: 'Drax',
-      email: 'maker@ukexportfinance.gov.uk',
-      timezone: 'Europe/London',
-      'user-status': 'active',
-    },
     created: '1599048723110',
     checker: {
       bank: {

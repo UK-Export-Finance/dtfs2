@@ -14,14 +14,14 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
       'test2@mock.com',
     ],
   },
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
+  },
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
-    maker: {
-      username: 'JOE',
-      firstname: 'Joe',
-      surname: 'Bloggs',
-    },
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
