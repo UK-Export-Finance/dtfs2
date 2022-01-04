@@ -16,13 +16,13 @@ const mapBssEwcsDeal = (deal) => {
     eligibility,
     exporter,
     status,
+    maker,
   } = dealSnapshot;
 
   const {
     submissionCount,
     submissionDate,
     ukefDealId,
-    maker,
   } = details;
 
   const bonds = bondTransactions.items;

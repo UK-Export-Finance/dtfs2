@@ -14,14 +14,14 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
       'test2@mock.com',
     ],
   },
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
+  },
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
-    maker: {
-      username: 'JOE',
-      firstname: 'Joe',
-      surname: 'Bloggs',
-    },
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',

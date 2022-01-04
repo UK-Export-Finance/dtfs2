@@ -18,12 +18,10 @@ const params = {
       name: chance.name(),
       emails: [chance.email()],
     },
-    details: {
-      maker: {
-        firstname: chance.first(),
-        surname: chance.last(),
-        email: chance.email(),
-      },
+    maker: {
+      firstname: chance.first(),
+      surname: chance.last(),
+      email: chance.email(),
     },
     submissionDetails: {
       supplierName: chance.name(),
@@ -52,11 +50,11 @@ describe(`${page} when deal is BSS`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.details.maker.firstname} ${params.deal.details.maker.surname}`);
+    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
-    wrapper.expectText('[data-cy="email"]').toRead(params.deal.details.maker.email);
+    wrapper.expectText('[data-cy="email"]').toRead(params.deal.maker.email);
   });
 
   it('should render bank reference', () => {
@@ -99,11 +97,11 @@ describe(`${page} when deal is GEF`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.details.maker.firstname} ${params.deal.details.maker.surname}`);
+    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
-    wrapper.expectText('[data-cy="email"]').toRead(params.deal.details.maker.email);
+    wrapper.expectText('[data-cy="email"]').toRead(params.deal.maker.email);
   });
 
   it('should render bank reference', () => {
