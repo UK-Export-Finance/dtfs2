@@ -77,13 +77,14 @@ describe(baseUrl, () => {
             status: expect.any(String),
             updatedAt: expect.any(Number),
           },
-          maker: aMaker,
+          maker: expect.any(Object),
           eligibility: {
             criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
               ...criterion,
               answer: null,
             })),
           },
+          editedBy: expect.any(Array),
           createdAt: expect.any(Number),
           status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
           dealType: 'GEF',
@@ -123,7 +124,7 @@ describe(baseUrl, () => {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
-        maker: aMaker,
+        maker: expect.any(Object),
         eligibility: {
           criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
             ...criterion,
@@ -132,6 +133,7 @@ describe(baseUrl, () => {
           status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         },
         status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
+        editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
@@ -212,15 +214,16 @@ describe(baseUrl, () => {
       };
       expect(body).toEqual({
         ...expectMongoId(expected),
-        maker: {
-          ...aMaker,
-          _id: String(aMaker._id),
-        },
+        maker: expect.any(Object),
         exporter: {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
       });
+
+      expect(body.maker.token).toBeUndefined();
+      expect(body.maker.password).toBeUndefined();
+      expect(body.maker.lastLogin).toBeUndefined();
     });
 
     it('it tells me the Bank Internal Ref Name is null', async () => {
