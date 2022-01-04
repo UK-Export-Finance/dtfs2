@@ -14,28 +14,28 @@ const deal = {
       'checker@ukexportfinance.gov.uk',
     ],
   },
-  details: {
-    maker: {
-      _id: '5f3ab3f705e6630007dcfb25',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker',
+  maker: {
+    _id: '5f3ab3f705e6630007dcfb25',
+    username: 'maker1@ukexportfinance.gov.uk',
+    roles: [
+      'maker',
+    ],
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'maker@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
       ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
-      lastLogin: '1606899737029',
-      firstname: 'Hugo',
-      surname: 'Drax',
-      email: 'maker1@ukexportfinance.gov.uk',
-      timezone: 'Europe/London',
-      'user-status': 'active',
     },
+    lastLogin: '1606899737029',
+    firstname: 'Hugo',
+    surname: 'Drax',
+    email: 'maker1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    'user-status': 'active',
+  },
+  details: {
     created: '1606900241023',
     submissionDate: '1606900616651',
     checker: {
