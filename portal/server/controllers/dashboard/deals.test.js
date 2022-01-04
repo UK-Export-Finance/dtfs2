@@ -28,7 +28,7 @@ describe('controllers/dashboard', () => {
       session: {
         dashboardFilters: 'mock-filters',
         user: {
-          id: 'mock-user',
+          _id: 'mock-user',
           roles: ['maker', 'checker'],
           bank: { id: '9' },
         },
@@ -63,10 +63,6 @@ describe('controllers/dashboard', () => {
       await bssDeals(req, res);
 
       const expectedFilters = [
-        {
-          field: 'bank.id',
-          value: req.session.user.bank.id,
-        },
         {
           field: 'status',
           value: STATUS.readyForApproval,
@@ -135,10 +131,6 @@ describe('controllers/dashboard', () => {
       await gefDeals(req, res);
 
       const expectedFilters = [
-        {
-          field: 'bank.id',
-          value: req.session.user.bank.id,
-        },
         {
           field: 'status',
           value: STATUS.readyForApproval,
