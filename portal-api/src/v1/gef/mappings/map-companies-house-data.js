@@ -5,7 +5,7 @@ const mapCompaniesHouseData = (data, industries) => {
   if (industries && industries.length === 1) {
     [selectedIndustry] = industries;
   }
-
+  // If country is not available set it to UK as default
   const mapped = {
     companiesHouseRegistrationNumber: data.company_number,
     companyName: data.company_name,
@@ -16,7 +16,7 @@ const mapCompaniesHouseData = (data, industries) => {
       addressLine3: address.address_line_3,
       locality: address.locality,
       postalCode: address.postal_code,
-      country: address.country,
+      country: !address.country ? 'United Kingdom' : address.country,
     },
     selectedIndustry,
     industries,
