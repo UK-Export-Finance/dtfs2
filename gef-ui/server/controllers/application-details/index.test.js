@@ -9,7 +9,7 @@ import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
-describe('controllers/application-detaills', () => {
+describe('controllers/application-details', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
@@ -48,15 +48,6 @@ describe('controllers/application-detaills', () => {
       expect(mockResponse.redirect).toHaveBeenCalled();
     });
 
-    it('should call get user API to get maker details', async () => {
-      await applicationDetails(mockRequest, mockResponse);
-
-      expect(api.getUserDetails).toHaveBeenCalledWith(
-        mockApplicationResponse.userId,
-        mockRequest.session.userToken,
-      );
-    });
-
     it('renders the `Application Details` template', async () => {
       mockFacilityResponse.items = [{
         details: { type: 'CASH' },
@@ -90,7 +81,6 @@ describe('controllers/application-detaills', () => {
           // body
           application: {
             ...mockApplicationResponse,
-            maker: mockUserResponse,
             userRoles: mockRequest.session.user.roles,
           },
           status: mockApplicationResponse.status,
