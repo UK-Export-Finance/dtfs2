@@ -10,15 +10,15 @@
       "checker@ukexportfinance.gov.uk"
     ]
   },
+  "maker": {
+    "firstname": "Hugo",
+    "surname": "Drax",
+    "email": "maker1@ukexportfinance.gov.uk",
+    "__typename": "Maker"
+  },
   "details": {
     "ukefDealId": "0040005777",
     "submissionDate": "1613557575317",
-    "maker": {
-      "firstname": "Hugo",
-      "surname": "Drax",
-      "email": "maker1@ukexportfinance.gov.uk",
-      "__typename": "Maker"
-    },
     "__typename": "DealDetails"
   },
   "totals": {

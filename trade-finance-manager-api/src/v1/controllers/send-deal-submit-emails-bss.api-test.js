@@ -29,7 +29,7 @@ describe('send-deal-submit-emails - BSS', () => {
       ukefDealId: mockDealMia.dealSnapshot.details.ukefDealId,
       submissionType: mockDealMia.dealSnapshot.submissionType,
       bankReferenceNumber: mockDealMia.dealSnapshot.bankInternalRefName,
-      maker: mockDealMia.dealSnapshot.details.maker,
+      maker: mockDealMia.dealSnapshot.maker,
       exporter: {
         companyName: mockDealMia.dealSnapshot.exporter.companyName,
       },
@@ -68,7 +68,7 @@ describe('send-deal-submit-emails - BSS', () => {
           ukefDealId: mockDealMin.dealSnapshot.details.ukefDealId,
           submissionType: mockDealMin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealMin.dealSnapshot.bankInternalRefName,
-          maker: mockDealMin.dealSnapshot.details.maker,
+          maker: mockDealMin.dealSnapshot.maker,
           exporter: {
             companyName: mockDealMin.dealSnapshot.exporter.companyName,
           },
@@ -129,7 +129,7 @@ describe('send-deal-submit-emails - BSS', () => {
           ukefDealId: mockDealMin.dealSnapshot.details.ukefDealId,
           submissionType: mockDealMin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealMin.dealSnapshot.bankInternalRefName,
-          maker: mockDealMin.dealSnapshot.details.maker,
+          maker: mockDealMin.dealSnapshot.maker,
           exporter: {
             companyName: mockDealMin.dealSnapshot.exporter.companyName,
           },
@@ -187,7 +187,7 @@ describe('send-deal-submit-emails - BSS', () => {
           ukefDealId: mockDealAin.dealSnapshot.details.ukefDealId,
           submissionType: mockDealAin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealAin.dealSnapshot.bankInternalRefName,
-          maker: mockDealAin.dealSnapshot.details.maker,
+          maker: mockDealAin.dealSnapshot.maker,
           exporter: {
             companyName: mockDealAin.dealSnapshot.exporter.companyName,
           },
@@ -248,7 +248,7 @@ describe('send-deal-submit-emails - BSS', () => {
           ukefDealId: mockDealAin.dealSnapshot.details.ukefDealId,
           submissionType: mockDealAin.dealSnapshot.submissionType,
           bankReferenceNumber: mockDealAin.dealSnapshot.bankInternalRefName,
-          maker: mockDealAin.dealSnapshot.details.maker,
+          maker: mockDealAin.dealSnapshot.maker,
           exporter: {
             companyName: mockDealAin.dealSnapshot.exporter.companyName,
           },

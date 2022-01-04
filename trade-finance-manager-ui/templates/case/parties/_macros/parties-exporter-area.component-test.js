@@ -14,13 +14,11 @@ describe(page, () => {
         name: 'Lloyds',
         emails: ['xxx@yyy.com'],
       },
-      details: {
-        submissionType: 'Automatic Inclusion Notice',
-        maker: {
-          firstname: 'John',
-          surname: 'Doe',
-          email: 'john.doe@exporter.com',
-        },
+      submissionType: 'Automatic Inclusion Notice',
+      maker: {
+        firstname: 'John',
+        surname: 'Doe',
+        email: 'john.doe@exporter.com',
       },
       submissionDetails: {
         supplierName: 'The company name',

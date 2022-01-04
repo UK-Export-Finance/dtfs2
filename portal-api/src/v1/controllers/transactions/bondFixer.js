@@ -113,7 +113,7 @@ const constructor = (listOfFilters) => {
       lastEdited: bond.lastEdited,
       issuedDate: bond.issuedDate,
       endDate: bond.endDate,
-      maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
+      maker: deal.maker ? `${deal.maker.firstname || ''} ${deal.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: bond.issueFacilityDetailsSubmitted,
       requestedCoverStartDate: bond.requestedCoverStartDate,
