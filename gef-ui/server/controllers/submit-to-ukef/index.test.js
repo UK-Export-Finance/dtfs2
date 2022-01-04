@@ -4,6 +4,9 @@ import CONSTANTS from '../../constants';
 
 const { isNotice } = require('../../utils/deal-helpers');
 
+const { RES_MOCK_AIN_APPLICATION_CHECKER } = require('../../utils/MOCKS/mock_applications');
+const { MOCK_ISSUED_FACILITY } = require('../../utils/MOCKS/mock_facilities');
+
 jest.mock('../../services/api');
 
 const MockResponse = () => {
@@ -21,7 +24,7 @@ const MockRequest = () => {
   req.params.dealId = '1234';
   req.session = {
     user: {
-      bank: { id: 'BANKID' },
+      bank: { id: '9' },
       roles: ['MAKER'],
     },
     userToken: 'TEST',
@@ -30,7 +33,8 @@ const MockRequest = () => {
 };
 
 const mockFacilities = {
-  status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
+  status: 'Completed',
+  items: [MOCK_ISSUED_FACILITY],
 };
 
 const MockFacilitiesResponse = () => mockFacilities;
@@ -48,6 +52,14 @@ const MockApplicationResponse = () => {
   }];
   res.bank = { id: 'BANKID' };
   res.submissionType = 'Automatic Inclusion Notice';
+  res.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
+  res.eligibility = {
+    criteria: [],
+    updatedAt: 1638535562287,
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  };
+  res.ukefDecisionAccepted = true;
+
   return res;
 };
 
@@ -69,7 +81,7 @@ describe('controllers/submit-to-ukef', () => {
 
     const mockFacilitiesResponse = MockFacilitiesResponse();
 
-    api.getApplication.mockResolvedValue(mockApplicationResponse);
+    api.getApplication.mockResolvedValue(RES_MOCK_AIN_APPLICATION_CHECKER());
     api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
     api.updateApplication.mockResolvedValue(mockApplicationResponse);
     api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
@@ -89,6 +101,7 @@ describe('controllers/submit-to-ukef', () => {
           submissionType: mockApplicationResponse.submissionType,
           isNotice: isNotice(mockApplicationResponse.submissionType),
           ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
+          unissuedToIssued: true,
         });
     });
 

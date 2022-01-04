@@ -141,6 +141,7 @@ describe('controllers/application-detaills', () => {
           unissuedFacilitiesPresent: expect.any(Boolean),
           facilitiesChangedToIssued: expect.any(Array),
           displayComments: expect.any(Boolean),
+          hasChangedFacilities: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),

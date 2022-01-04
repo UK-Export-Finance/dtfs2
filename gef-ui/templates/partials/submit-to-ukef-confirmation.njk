@@ -13,7 +13,8 @@
 
       {% set titleComponentData = {
         submissionType: submissionType,
-        text: 'submitted to UKEF'
+        text: 'submitted to UKEF',
+        unissuedToIssued: unissuedToIssued
       }%}
 
       {{ govukPanel({
@@ -23,7 +24,7 @@
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7"
       }) }}
-      
+
       {% if isNotice %}
         {% if ukefDecisionAccepted %}
           <p>We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.</p>

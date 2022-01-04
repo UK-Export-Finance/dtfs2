@@ -9,6 +9,7 @@ const {
   getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   coverDatesConfirmed,
+  hasChangedToIssued,
 } = require('../../utils/facility-helpers');
 const {
   isUkefReviewAvailable,
@@ -61,6 +62,13 @@ function buildBody(app, previewMode, user) {
   const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
   const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
   const coverDates = coverDatesConfirmed(app.facilities);
+  const hasChangedFacilities = hasChangedToIssued(app);
+
+  const mapSummaryParams = {
+    app,
+    user,
+    hasChangedFacilities,
+  };
 
   const appBody = {
     application: app,
@@ -73,8 +81,7 @@ function buildBody(app, previewMode, user) {
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
         }),
-        app,
-        user,
+        mapSummaryParams,
         previewMode,
       ),
     },
@@ -85,7 +92,7 @@ function buildBody(app, previewMode, user) {
       status: app.facilitiesStatus,
       data: app.facilities.items.map((item) => ({
         heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
-        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), app, user, previewMode),
+        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
         createdAt: item.details.createdAt,
         facilityId: item.details._id,
       }))
@@ -110,6 +117,7 @@ function buildBody(app, previewMode, user) {
     coverDatesConfirmed: coverDates,
     renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
     previewMode,
+    hasChangedFacilities,
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
   };

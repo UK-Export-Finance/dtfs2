@@ -22,12 +22,12 @@ const facilitiesChangedToIssuedAsArray = (application) => {
 };
 
 const summaryIssuedChangedToIssued = (app, user, data) =>
-  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
-   && data.details.changedToIssued === true;
+  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
+   && user.roles.includes('maker') && data.details.changedToIssued === true;
 
 const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
-  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
-    && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
+  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
+   && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
 
 /**
    * this function checks that the deal is an AIN
@@ -38,6 +38,7 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
 
 const areUnissuedFacilitiesPresent = (application) => {
   const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
+  // TODO: DTFS-4128 add MIN
   const accepableApplicationType = ['Automatic Inclusion Notice'];
 
   if (!accepableApplicationType.includes(application.submissionType)) {

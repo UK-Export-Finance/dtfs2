@@ -81,6 +81,27 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
   return facilities;
 };
 
+/*
+  If facility has been changed to issued (after first submission)
+  When submitting to UKEF, have to remove the changedToIssued flag
+  Ensures that cannot update this facility anymore
+*/
+const removeChangedToIssued = async (dealId) => {
+  const facilities = await getAllFacilitiesByDealId(dealId);
+
+  facilities.forEach(async (facility) => {
+    const { _id, changedToIssued } = facility;
+
+    if (changedToIssued) {
+      const update = {
+        changedToIssued: false,
+      };
+
+      await updateFacility(_id, update);
+    }
+  });
+};
+
 const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
@@ -160,6 +181,7 @@ const addSubmissionData = async (dealId, existingApplication) => {
 
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
+  await removeChangedToIssued(dealId);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   const submissionData = {
@@ -182,4 +204,5 @@ module.exports = {
   submissionTypeToConstant,
   getUserInfo,
   addSubmissionDateToIssuedFacilities,
+  removeChangedToIssued,
 };

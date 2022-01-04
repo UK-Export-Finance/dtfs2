@@ -98,6 +98,98 @@ const validationErrorHandler = (errs, href = '') => {
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
+// summary items for application details page
+const detailsSummaryItems = (hrefToSet, keys, item, value) => {
+  const summaryItems = [
+    ...(hrefToSet
+      ? [
+        {
+          href: hrefToSet,
+          /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
+         properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
+         Object is empty or not. */
+          text: `${keys || !isEmpty(value) ? 'Change' : 'Add'}`,
+          visuallyHiddenText: item.label,
+        },
+      ]
+      : []),
+  ];
+  return summaryItems;
+};
+
+// produces summary items array for application preview page
+const previewSummaryItems = (hrefToSet, keys, item) => {
+  const summaryItems = [
+    ...(hrefToSet
+      ? [
+        {
+          href: hrefToSet,
+          /*  */
+          text: `${keys ? 'Change' : ''}`,
+          visuallyHiddenText: item.label,
+        },
+      ]
+      : []),
+  ];
+
+  return summaryItems;
+};
+
+/*
+  sets mapSummaryList for applicationPreview
+  returns array with rows with relevant change or add links
+*/
+const previewItemConditions = (previewParams) => {
+  const {
+    app, user, data, facilitiesChanged, unissuedHref, changedToIssueShow, unissuedShow, item,
+  } = previewParams;
+  let summaryItems = [];
+
+  if (summaryIssuedChangedToIssued(app, user, data)) {
+    /**
+     *  if submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
+     * can change name, coverStartDate and coverEndDate column
+     * change link displayed taking to unissued-facility-change change page
+     */
+    summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
+  } else if (summaryIssuedUnchanged(app, user, data, facilitiesChanged)) {
+    /**
+     *  if submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
+     * only shows if other facilities have been changed to issued
+     * changes to issued
+     * add link displayed taking to unissued-facility-change change page
+     */
+    summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
+  }
+  return summaryItems;
+};
+
+/*
+  generates summaryItems for application details page
+  return to maker loads application details page and if has facilities changedToIssued then only makes certain fields clickable
+*/
+const detailItemConditions = (params) => {
+  const {
+    hasChangedFacilities,
+    href,
+    isCoverStartOnSubmission,
+    item,
+    value,
+  } = params;
+
+  let summaryItems = [];
+
+  // if facilities have been changedToIssued (when returning to maker)
+  if (hasChangedFacilities) {
+    summaryItems = previewItemConditions(params);
+  } else {
+    // for all other application details page
+    summaryItems = detailsSummaryItems(href, isCoverStartOnSubmission, item, value);
+  }
+
+  return summaryItems;
+};
+
 /* summaryItemsConditions runs through the the table rows and decides if change/add should be added
    on end of row.  On application details, all relevant rows are set to change/add if required.  On
    application preview (once submitted to UKEF) - for facilities, certain rows are set to change add
@@ -105,7 +197,7 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 */
 const summaryItemsConditions = (summaryItemsObj) => {
   const {
-    preview, item, details, app, user, data,
+    preview, item, details, app, user, data, hasChangedFacilities,
   } = summaryItemsObj;
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
@@ -119,64 +211,40 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // array of facilities which have been changed to issued
   const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
 
+  const params = {
+    app,
+    user,
+    data,
+    hasChangedFacilities,
+    facilitiesChanged,
+    href,
+    unissuedHref,
+    isCoverStartOnSubmission,
+    changedToIssueShow,
+    unissuedShow,
+    item,
+    value,
+  };
+
   let summaryItems = [];
+
   if (!preview) {
-    summaryItems = [
-      ...(href
-        ? [
-          {
-            href,
-            /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
-           properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
-           Object is empty or not. */
-            text: `${isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add'}`,
-            visuallyHiddenText: item.label,
-          },
-        ]
-        : []),
-    ];
-  } else if (summaryIssuedChangedToIssued(app, user, data)) {
-    /**
-     *  if submitted to UKEF && logged in as maker && facility changed to issued
-     * can change name, coverStartDate and coverEndDate column
-     * change link displayed taking to unissued-facility-change change page
-     */
-    summaryItems = [
-      ...(unissuedHref
-        ? [
-          {
-            href: unissuedHref,
-            /*  */
-            text: `${changedToIssueShow ? 'Change' : ''}`,
-            visuallyHiddenText: item.label,
-          },
-        ]
-        : []),
-    ];
-  } else if (summaryIssuedUnchanged(app, user, data, facilitiesChanged)) {
-    /**
-     *  if submitted to UKEF && logged in as maker && facility still unissued
-     * only shows if other facilities have been changed to issued
-     * changes to issued
-     * add link displayed taking to unissued-facility-change change page
-     */
-    summaryItems = [
-      ...(unissuedHref
-        ? [
-          {
-            href: unissuedHref,
-            /*  */
-            text: `${unissuedShow ? 'Change' : ''}`,
-            visuallyHiddenText: item.label,
-          },
-        ]
-        : []),
-    ];
+    // if application details
+    summaryItems = detailItemConditions(params);
+  } else {
+    // maps and shows relevant change/add links for application preview
+    summaryItems = previewItemConditions(params);
   }
   return summaryItems;
 };
 
-const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
+const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) => {
+  const {
+    app,
+    user,
+    hasChangedFacilities,
+  } = mapSummaryParams;
+
   if (!data || lodashIsEmpty(data)) {
     return [];
   }
@@ -255,6 +323,7 @@ const mapSummaryList = (data, itemsToShow, app, user, preview = false) => {
       app,
       user,
       data,
+      hasChangedFacilities,
     };
     const summaryItems = summaryItemsConditions(summaryItemsObj);
 
