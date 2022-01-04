@@ -3,10 +3,6 @@ import api from '../../services/api';
 import CONSTANTS from '../../constants';
 import MOCKS from '../mocks';
 
-const Chance = require('chance');
-
-const chance = new Chance();
-
 jest.mock('../../services/api');
 
 const MockResponse = () => {
