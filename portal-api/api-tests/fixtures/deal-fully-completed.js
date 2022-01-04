@@ -15,13 +15,13 @@ const deal = {
       'checker4@ukexportfinance.gov.uk',
     ],
   },
+  maker: {
+    username: 'CHECKER DURGA',
+  },
   details: {
     previousWorkflowStatus: 'Draft',
     checker: {
       username: 'test1',
-    },
-    maker: {
-      username: 'CHECKER DURGA',
     },
   },
   comments: [

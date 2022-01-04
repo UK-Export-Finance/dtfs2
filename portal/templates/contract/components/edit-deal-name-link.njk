@@ -4,7 +4,7 @@
   {% if params.deal.status %}
 
     {% if params.user.roles.includes('maker') %}
-      {% if params.user._id === params.deal.details.maker._id %}
+      {% if params.user._id === params.deal.maker._id %}
 
         {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) %}
           <a

@@ -45,7 +45,7 @@ describe('/v1/portal/deals', () => {
 
       expect(createdDeal.deal).toEqual(expectAddedFields(newDeal));
 
-      expect(createdDeal.deal.details.maker).toEqual(mockUser);
+      expect(createdDeal.deal.maker).toEqual(mockUser);
       expect(createdDeal.deal.bank).toEqual(mockUser.bank);
       expect(createdDeal.deal.eligibility.status).toEqual(newDeal.eligibility.status);
       expect(createdDeal.deal.eligibility.criteria).toEqual(newDeal.eligibility.criteria);
@@ -86,7 +86,7 @@ describe('/v1/portal/deals', () => {
         expect(body.validationErrors.count).toEqual(1);
 
         expect(body.validationErrors.errorList.makerObject).toBeDefined();
-        expect(body.validationErrors.errorList.makerObject.text).toEqual('deal.details.maker object with bank is required');
+        expect(body.validationErrors.errorList.makerObject.text).toEqual('deal.maker object with bank is required');
       });
     });
 
@@ -132,7 +132,7 @@ describe('/v1/portal/deals', () => {
         expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Bank deal name must be 100 characters or fewer');
 
         expect(body.validationErrors.errorList.makerObject).toBeDefined();
-        expect(body.validationErrors.errorList.makerObject.text).toEqual('deal.details.maker object with bank is required');
+        expect(body.validationErrors.errorList.makerObject.text).toEqual('deal.maker object with bank is required');
       });
     });
   });

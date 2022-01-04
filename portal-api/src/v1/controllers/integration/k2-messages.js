@@ -53,7 +53,7 @@ const generateTypeA = async (deal, fromStatus) => {
       deal.submissionDetails['supplyContractConversionDate-year'],
     );
 
-  const bank = await banksController.findOneBank(deal.details.maker.bank.id);
+  const bank = await banksController.findOneBank(deal.maker.bank.id);
 
   const builder = typeABuilder()
     .source('V2')
@@ -67,8 +67,8 @@ const generateTypeA = async (deal, fromStatus) => {
     .Bank_deal_id(deal.bankInternalRefName)
 
     .Application_route(deal.eligibility)
-    .Application_owner(`${deal.details.maker.firstname} ${deal.details.maker.surname}`)
-    .Application_owner_email(deal.details.maker.email)
+    .Application_owner(`${deal.maker.firstname} ${deal.maker.surname}`)
+    .Application_owner_email(deal.maker.email)
     .Application_bank(bank && bank.name)
     .Application_bank_co_hse_reg_number(bank && bank.companiesHouseNo)
     .UKEF_deal_id(deal.details.ukefDealId)

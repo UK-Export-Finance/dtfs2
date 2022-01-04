@@ -26,10 +26,8 @@ describe('userCanSubmitDeal', () => {
   describe('when user is a maker that has created the deal', () => {
     it('should return false', () => {
       const deal = {
-        details: {
-          maker: {
-            _id: '1234',
-          },
+        maker: {
+          _id: '1234',
         },
       };
 
@@ -46,10 +44,8 @@ describe('userCanSubmitDeal', () => {
   describe('when user is a maker AND checker that has created the deal', () => {
     it('should return false', () => {
       const deal = {
-        details: {
-          maker: {
-            _id: '1234',
-          },
+        maker: {
+          _id: '1234',
         },
       };
 
@@ -66,10 +62,8 @@ describe('userCanSubmitDeal', () => {
   describe('when user is a maker that has edited the deal', () => {
     it('should return false', () => {
       const deal = {
-        details: {
-          maker: {
-            _id: '12345678',
-          },
+        maker: {
+          _id: '12345678',
         },
         editedBy: [
           { userId: '1' },
@@ -92,10 +86,8 @@ describe('userCanSubmitDeal', () => {
   describe('when user is a maker AND checker that has edited the deal', () => {
     it('should return false', () => {
       const deal = {
-        details: {
-          maker: {
-            _id: '12345678',
-          },
+        maker: {
+          _id: '12345678',
         },
         editedBy: [
           { userId: '1' },
@@ -118,10 +110,8 @@ describe('userCanSubmitDeal', () => {
   describe('when user is a maker AND checker that has NOT created or edited the deal', () => {
     it('should return true', () => {
       const deal = {
-        details: {
-          maker: {
-            _id: '12345678',
-          },
+        maker: {
+          _id: '12345678',
         },
         editedBy: [
           { userId: '1' },

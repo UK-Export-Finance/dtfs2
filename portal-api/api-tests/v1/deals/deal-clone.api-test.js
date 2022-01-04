@@ -118,12 +118,12 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.updatedAt).toBeDefined();
         expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
 
-        expect(cloned.deal.details.maker.username).toEqual(aBarclaysMaker.username);
-        expect(cloned.deal.details.maker.roles).toEqual(aBarclaysMaker.roles);
-        expect(cloned.deal.details.maker.bank).toEqual(aBarclaysMaker.bank);
-        expect(cloned.deal.details.maker.firstname).toEqual(aBarclaysMaker.firstname);
-        expect(cloned.deal.details.maker.surname).toEqual(aBarclaysMaker.surname);
-        expect(cloned.deal.details.maker._id).toEqual(aBarclaysMaker._id);
+        expect(cloned.deal.maker.username).toEqual(aBarclaysMaker.username);
+        expect(cloned.deal.maker.roles).toEqual(aBarclaysMaker.roles);
+        expect(cloned.deal.maker.bank).toEqual(aBarclaysMaker.bank);
+        expect(cloned.deal.maker.firstname).toEqual(aBarclaysMaker.firstname);
+        expect(cloned.deal.maker.surname).toEqual(aBarclaysMaker.surname);
+        expect(cloned.deal.maker._id).toEqual(aBarclaysMaker._id);
 
         expect(cloned.deal.bank).toEqual(aBarclaysMaker.bank);
         expect(cloned.deal.status).toEqual('Draft');
