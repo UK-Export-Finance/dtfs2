@@ -196,6 +196,7 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         exporter: {},
         status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
+        editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
