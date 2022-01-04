@@ -21,6 +21,7 @@ const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
 
 const getDeal = async (dealId, dealType) => {
   let deal;
@@ -58,6 +59,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
+
   console.log('UKEF IDs verified');
 
   if (!deal) {
@@ -93,6 +95,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       /**
        * Current requirement only allows AIN & MIN deals to be send to ACBS
+       * This calls CREATES Deal & Facility ACBS records
        */
       const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
@@ -111,25 +114,33 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
 
-    // Update facility stage code to Issued
-    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    ) {
+    /**
+     * Current requirement only allows AIN & MIN deals to be send to ACBS
+     * This call UPDATES facility record by updating their stage from
+     * Unissued (06) to Issued (07)
+     */
+    if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
     if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
-      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, checker);
+      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
 
       // NOTE: this is the one and only time that TFM updates a snapshot.
       // Without this, it would involve additional API calls going around in circles.
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
 
       updatedDeal.submissionType = dealSnapshot.submissionType;
-      updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
-      updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
-
-      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
+        updatedDeal.checkerMIN = dealSnapshot.checkerMIN;
+      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+        updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
+      }
+      if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
+        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+      }
 
       await sendAinMinAcknowledgement(updatedDeal);
     }
@@ -150,8 +161,15 @@ const submitDealPUT = async (req, res) => {
     dealType,
     checker,
   } = req.body;
+  let deal;
 
-  const deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+  const canSubmitDealAfterUkefIds = await dealHasAllUkefIds(dealId);
+
+  if (canSubmitDealAfterUkefIds) {
+    deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+  } else {
+    deal = await submitDealBeforeUkefIds(dealId, dealType);
+  }
 
   if (!deal) {
     return res.status(404).send();

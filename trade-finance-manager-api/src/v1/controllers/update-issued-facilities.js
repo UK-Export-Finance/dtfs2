@@ -14,6 +14,7 @@ const updatedIssuedFacilities = async (deal) => {
     dealType,
     submissionDate: dealSubmissionDate,
     submissionType,
+    maker,
   } = deal;
 
   const updatedFacilities = [];
@@ -30,54 +31,64 @@ const updatedIssuedFacilities = async (deal) => {
     const shouldUpdateFacility = (hasBeenIssued && !hasBeenAcknowledged);
 
     if (shouldUpdateFacility) {
+      let facilityPremiumSchedule;
+      let feeRecord;
+      let facilityUpdate;
+
       // update portal facility status
       const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
-      await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
-      // add acknowledged flag to Portal facility
-      const portalFacilityUpdate = {
-        hasBeenAcknowledged: true,
-      };
+      // Add `hasBeenAcknowledged` flag to BSS/EWCS facility
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
 
-      const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+        const portalFacilityUpdate = {
+          hasBeenAcknowledged: true,
+        };
+
+        const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+        facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+        facility.status = facilityStatusUpdate;
+        facilityUpdate = {
+          ...portalFacilityUpdate,
+        };
+      }
 
       // update TFM facility
       const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-
       const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
 
-      let facilityPremiumSchedule;
+      // Premium Schedule is only valid for non-GEF facilities
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
         facilityPremiumSchedule = await getFacilityPremiumSchedule(
           facility,
           facilityExposurePeriod,
           facilityGuaranteeDates,
         );
+        facilityUpdate = {
+          premiumSchedule: facilityPremiumSchedule,
+        };
+      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      // Fee record is only valid for GEF facilities
+        if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+          feeRecord = calculateGefFacilityFeeRecord(facility);
+          facilityUpdate = {
+            feeRecord,
+          };
+        }
       }
 
-      let feeRecord;
-
-      const shouldCalculateFeeRecord = (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-        && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
-
-      if (shouldCalculateFeeRecord) {
-        feeRecord = calculateGefFacilityFeeRecord(facility);
-      }
-
-      const facilityUpdate = {
-        ...portalFacilityUpdate,
+      facilityUpdate = {
+        ...facilityUpdate,
         ...facilityExposurePeriod,
         facilityGuaranteeDates,
-        premiumSchedule: facilityPremiumSchedule,
-        feeRecord,
       };
 
+      /**
+       * Add the updated properties to the returned facility
+       * to retain flat, generic facility mapping used in deal submission calls.
+       * */
       const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
-
-      // add the updated properties to the returned facility
-      // to retain flat, generic facility mapping used in deal submission calls.
-      facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
-      facility.status = facilityStatusUpdate;
       facility.tfm = updateFacilityResponse.tfm;
 
       updatedFacilities.push(facility);
@@ -89,6 +100,7 @@ const updatedIssuedFacilities = async (deal) => {
   await sendIssuedFacilitiesReceivedEmail(
     modifiedDeal,
     updatedFacilities,
+    maker,
   );
 
   return modifiedDeal;

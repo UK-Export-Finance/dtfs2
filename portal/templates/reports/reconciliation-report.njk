@@ -29,7 +29,7 @@
       {% for deal in deals %}
         <tr data-cy="request_{{transaction._id}}" class="govuk-table__row">
           <td data-cy="bank" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ deal._id }}" class="govuk-link" data-cy="bankInternalRefNameLink">{{ deal.details.owningBank.name }}</a>
+            <a href="/contract/{{ deal._id }}" class="govuk-link" data-cy="bankInternalRefNameLink">{{ deal.bank.name }}</a>
           </td>
 
           <td data-cy="bankInternalRefName" class="govuk-table__cell govuk-!-font-size-14">
@@ -41,7 +41,7 @@
           </td>
 
           <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.details.maker | displayName }}
+            {{ deal.maker | displayName }}
           </td>
 
           <td data-cy="oldRequestedCoverStartDate" class="govuk-table__cell govuk-!-font-size-14">

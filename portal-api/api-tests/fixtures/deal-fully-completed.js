@@ -7,21 +7,21 @@ const deal = {
   bankInternalRefName: 'mock id',
   status: 'Ready for Checker\'s approval',
   previousStatus: 'Draft',
+  bank: {
+    id: '956',
+    name: 'Barclays Bank',
+    emails: [
+      'maker4@ukexportfinance.gov.uk',
+      'checker4@ukexportfinance.gov.uk',
+    ],
+  },
+  maker: {
+    username: 'CHECKER DURGA',
+  },
   details: {
     previousWorkflowStatus: 'Draft',
     checker: {
       username: 'test1',
-    },
-    maker: {
-      username: 'CHECKER DURGA',
-    },
-    owningBank: {
-      id: '956',
-      name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
     },
   },
   comments: [

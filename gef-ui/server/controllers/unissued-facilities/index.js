@@ -109,14 +109,41 @@ const changeUnissuedFacilityPreview = async (req, res) => {
  * @returns {res}
  */
 const postChangeUnissuedFacility = async (req, res) => {
+  const { body, query, params } = req;
+
   const {
     issueDate,
     coverStartDate,
     coverEndDate,
-    body,
+    aboutFacilityErrors,
     facilityId,
     dealId,
-  } = await facilityValidation(req, res);
+    errorsObject,
+  } = await facilityValidation(body, query, params);
+
+  if (aboutFacilityErrors.length > 0) {
+    return res.render('partials/unissued-change-about-facility.njk', {
+      errors: errorsObject.errors,
+      facilityName: errorsObject.facilityName,
+      shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
+      monthsOfCover: errorsObject.monthsOfCover,
+      hasBeenIssued: errorsObject.hasBeenIssued,
+      issueDateDay: errorsObject.issueDateDay,
+      issueDateMonth: errorsObject.issueDateMonth,
+      issueDateYear: errorsObject.issueDateYear,
+      coverStartDateDay: errorsObject.coverStartDateDay,
+      coverStartDateMonth: errorsObject.coverStartDateMonth,
+      coverStartDateYear: errorsObject.coverStartDateYear,
+      coverEndDateDay: errorsObject.coverEndDateDay,
+      coverEndDateMonth: errorsObject.coverEndDateMonth,
+      coverEndDateYear: errorsObject.coverEndDateYear,
+      facilityType: errorsObject.facilityType,
+      facilityTypeString: errorsObject.facilityTypeString,
+      dealId: errorsObject.dealId,
+      facilityId: errorsObject.facilityId,
+      status: errorsObject.status,
+    });
+  }
 
   try {
     await api.updateFacility(
@@ -152,14 +179,41 @@ const postChangeUnissuedFacility = async (req, res) => {
  * @returns {res}
  */
 const postChangeUnissuedFacilityPreview = async (req, res) => {
+  const { body, query, params } = req;
+
   const {
     issueDate,
     coverStartDate,
     coverEndDate,
-    body,
+    aboutFacilityErrors,
     facilityId,
     dealId,
-  } = await facilityValidation(req, res);
+    errorsObject,
+  } = await facilityValidation(body, query, params);
+
+  if (aboutFacilityErrors.length > 0) {
+    return res.render('partials/unissued-change-about-facility.njk', {
+      errors: errorsObject.errors,
+      facilityName: errorsObject.facilityName,
+      shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
+      monthsOfCover: errorsObject.monthsOfCover,
+      hasBeenIssued: errorsObject.hasBeenIssued,
+      issueDateDay: errorsObject.issueDateDay,
+      issueDateMonth: errorsObject.issueDateMonth,
+      issueDateYear: errorsObject.issueDateYear,
+      coverStartDateDay: errorsObject.coverStartDateDay,
+      coverStartDateMonth: errorsObject.coverStartDateMonth,
+      coverStartDateYear: errorsObject.coverStartDateYear,
+      coverEndDateDay: errorsObject.coverEndDateDay,
+      coverEndDateMonth: errorsObject.coverEndDateMonth,
+      coverEndDateYear: errorsObject.coverEndDateYear,
+      facilityType: errorsObject.facilityType,
+      facilityTypeString: errorsObject.facilityTypeString,
+      dealId: errorsObject.dealId,
+      facilityId: errorsObject.facilityId,
+      status: errorsObject.status,
+    });
+  }
 
   try {
     await api.updateFacility(

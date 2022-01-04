@@ -25,14 +25,14 @@
  *       previousStatus:
  *         type: string
  *         example: Ready for Checker's approval
+ *       bank:
+ *         $ref: '#/definitions/Bank'
  *       details:
  *         type: object
  *         properties:
  *           submissionType:
  *             type: string
  *             example: Automatic Inclusion Notice
- *           owningBank:
- *             $ref: '#/definitions/Bank'
  *           maker:
  *             type: object
  *           created:

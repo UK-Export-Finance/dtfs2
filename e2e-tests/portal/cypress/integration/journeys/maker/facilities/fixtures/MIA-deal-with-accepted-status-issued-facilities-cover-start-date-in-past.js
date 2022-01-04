@@ -12,29 +12,20 @@ const deal = {
   additionalRefName: 'testing',
   status: 'Accepted by UKEF (with conditions)',
   previousStatus: "Ready for Checker's approval",
-  details: {
-    createdDate: now,
-    maker: {
-      username: 'MAKER',
-      roles: [
-        'maker',
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
-      },
-      lastLogin: '1598276453454',
-      firstname: 'Hugo',
-      surname: 'Drax',
-      email: 'maker@ukexportfinance.gov.uk',
-      timezone: 'Europe/London',
-      'user-status': 'active',
-    },
-    owningBank: {
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+    emails: [
+      'maker@ukexportfinance.gov.uk',
+      'checker@ukexportfinance.gov.uk',
+    ],
+  },
+  maker: {
+    username: 'MAKER',
+    roles: [
+      'maker',
+    ],
+    bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
       emails: [
@@ -42,6 +33,15 @@ const deal = {
         'checker@ukexportfinance.gov.uk',
       ],
     },
+    lastLogin: '1598276453454',
+    firstname: 'Hugo',
+    surname: 'Drax',
+    email: 'maker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    'user-status': 'active',
+  },
+  details: {
+    createdDate: now,
     checker: {
       bank: {
         id: '9',

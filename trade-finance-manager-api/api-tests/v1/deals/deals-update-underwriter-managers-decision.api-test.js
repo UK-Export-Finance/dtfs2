@@ -53,9 +53,9 @@ describe('update tfm underwriter managers decision', () => {
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITH_CONDITIONS,
-        sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
+        sendToEmailAddress: MOCK_DEAL_BSS_MIA.maker.email,
         emailVariables: {
-          recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
+          recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
           bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
@@ -86,9 +86,9 @@ describe('update tfm underwriter managers decision', () => {
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITHOUT_CONDITIONS,
-        sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
+        sendToEmailAddress: MOCK_DEAL_BSS_MIA.maker.email,
         emailVariables: {
-          recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
+          recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
           bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
@@ -118,9 +118,9 @@ describe('update tfm underwriter managers decision', () => {
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_DECLINED,
-        sendToEmailAddress: MOCK_DEAL_BSS_MIA.details.maker.email,
+        sendToEmailAddress: MOCK_DEAL_BSS_MIA.maker.email,
         emailVariables: {
-          recipientName: MOCK_DEAL_BSS_MIA.details.maker.firstname,
+          recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
           bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,

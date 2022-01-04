@@ -88,11 +88,10 @@ context('Submit to UKEF', () => {
     describe('After submission', () => {
       it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
+        const todayFormatted = format(new Date(), 'dd MMM yyyy');
 
-        statusBanner.bannerStatus().contains('Submitted');
+        statusBanner.bannerDateSubmitted().contains(todayFormatted);
         statusBanner.bannerUkefDealId();
-
-        const todayFormatted = format(new Date(), 'dd MMM yyyy')
         statusBanner.bannerDateCreated().contains(todayFormatted);
       });
     });

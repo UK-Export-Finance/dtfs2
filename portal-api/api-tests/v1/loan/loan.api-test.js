@@ -98,7 +98,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -194,7 +194,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
       const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/loan/12345678`);
@@ -511,7 +511,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -590,7 +590,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
       const { status } = await as(anHSBCMaker).remove(`/v1/deals/${dealId}/loan/12345678`);
 
       expect(status).toEqual(401);

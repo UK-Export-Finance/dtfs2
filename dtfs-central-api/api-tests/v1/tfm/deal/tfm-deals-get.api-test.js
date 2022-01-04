@@ -17,12 +17,12 @@ const newDeal = (dealOverrides) => ({
   ...dealOverrides,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
+  maker: {
+    ...mockUser,
+    ...dealOverrides.maker ? dealOverrides.maker : {},
+  },
   details: {
     ...dealOverrides.details,
-    maker: {
-      ...mockUser,
-      ...(dealOverrides.details && dealOverrides.details.maker) ? dealOverrides.details.maker : {},
-    },
   },
   submissionDetails: dealOverrides.submissionDetails,
   editedBy: [],
@@ -41,7 +41,7 @@ const createAndSubmitDeals = async (deals) => {
     // create deal
     const createResponse = await api.post({
       deal,
-      user: deal.details.maker,
+      user: deal.maker,
     }).to('/v1/portal/deals');
 
     expect(createResponse.status).toEqual(200);

@@ -43,7 +43,6 @@ type DealDetails {
   approvalDate: String
   created: String
   workflowStatus: String
-  owningBank: Bank
 }
 
 type Deal {
@@ -54,6 +53,7 @@ type Deal {
   additionalRefName: String
   updatedAt: Float
   status: String
+  bank: Bank
   details: DealDetails
 }
 
@@ -103,7 +103,7 @@ type Transaction {
   deal_supplierName: String
   deal_bankInternalRefName: String
   deal_ukefDealId: String
-  deal_owningBank: String
+  deal_bank: String
   deal_created: String
   deal_submissionDate: String
   deal_submissionType: String

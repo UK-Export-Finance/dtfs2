@@ -9,6 +9,7 @@ const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   updatedAt: dealSnapshot.updatedAt,
   isFinanceIncreasing: dealSnapshot.exporter.isFinanceIncreasing,
   submissionType: dealSnapshot.submissionType,
+  bank: dealSnapshot.bank,
   details: mapGefDealDetails(dealSnapshot),
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibility: dealSnapshot.eligibility,

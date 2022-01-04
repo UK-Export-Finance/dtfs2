@@ -70,6 +70,7 @@ const MOCK_GEF_DEAL = {
   },
   mandatoryVersionId: null,
   status: CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.SUBMITTED_TO_UKEF,
+  ukefDealId: '123',
   updatedAt: null,
   userId: '60e705d74cf03e0013d38395',
   checkerId: '60a705d74bf03d1300d96383',

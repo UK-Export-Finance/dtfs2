@@ -34,14 +34,14 @@ const generateId = async ({
   user,
 });
 
-const generateUkefDealId = async (application) => application.ukefDealId || generateId({
+const generateUkefDealId = async (application) => generateId({
   entityId: application._id,
   entityType: 'deal',
   dealId: application._id,
   user: application.checkerId,
 });
 
-const generateUkefFacilityId = async (facility) => facility.ukefDealId || generateId({
+const generateUkefFacilityId = async (facility) => generateId({
   entityId: facility._id,
   entityType: 'facility',
   dealId: facility.dealId,
@@ -85,9 +85,8 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(facilities.map(async (facility) => {
-    const { ukefId } = await generateUkefFacilityId(facility);
-
-    if (ukefId !== facility.ukefFacilityId) {
+    if (!facility.ukefFacilityId) {
+      const { ukefId } = await generateUkefFacilityId(facility);
       const update = {
         ukefFacilityId: ukefId,
       };
@@ -158,18 +157,23 @@ const submissionPortalActivity = async (application) => {
 
 const addSubmissionData = async (dealId, existingApplication) => {
   const { count, date } = await generateSubmissionData(existingApplication);
-  const { ukefId } = await generateUkefDealId(existingApplication);
 
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
-  return {
+  const submissionData = {
     submissionCount: count,
     submissionDate: date,
-    ukefDealId: ukefId,
     portalActivities: updatedPortalActivity,
   };
+
+  if (!existingApplication.ukefDealId) {
+    const { ukefId } = await generateUkefDealId(existingApplication);
+    submissionData.ukefDealId = ukefId;
+  }
+
+  return submissionData;
 };
 
 module.exports = {

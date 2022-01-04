@@ -1,0 +1,55 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% macro render(coverEndDateDay, coverEndDateMonth, coverEndDateYear, errors) %}
+
+  {{ govukDateInput({
+      id: "coverEndDate",
+      namePrefix: "cover-end-date",
+      fieldset: {
+        legend: {
+          text: "When do you want the UKEF cover to end?",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      hint: {
+        text: "For example, 12 03 2021."
+      },
+      errorMessage: errors and errors.fieldErrors.coverEndDate and {
+        text: errors.fieldErrors.coverEndDate.text,
+        attributes: {
+          'data-cy': 'cover-end-date-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: coverEndDateDay,
+          attributes: {
+            'data-cy': "cover-end-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: coverEndDateMonth,
+          attributes: {
+            'data-cy': "cover-end-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: coverEndDateYear,
+          attributes: {
+            'data-cy': "cover-end-date-year"
+          }
+        }
+      ]
+  }) }}
+
+
+{% endmacro %}

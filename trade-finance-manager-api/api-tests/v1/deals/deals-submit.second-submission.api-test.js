@@ -16,7 +16,9 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-p
 const MOCK_FACILITIES = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
 const submitDeal = require('../utils/submitDeal');
+const { now } = require('moment');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
   MOCK_NOTIFY_EMAIL_RESPONSE,
@@ -46,7 +48,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
-  dealType: 'BSS/EWCS',
+  dealType: mockDeal.dealType,
 });
 
 const createFacilityCoverEndDate = (facility) =>
@@ -170,7 +172,7 @@ describe('/v1/deals', () => {
 
           const updatedBond = body.facilities.find((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-          expect(updatedBond.tfm.hasBeenAcknowledged).toEqual(true);
+          expect(updatedBond.hasBeenAcknowledged).toEqual(true);
         });
       });
 
@@ -257,7 +259,7 @@ describe('/v1/deals', () => {
 
           const updatedLoan = body.facilities.find((f) => f.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-          expect(updatedLoan.tfm.hasBeenAcknowledged).toEqual(true);
+          expect(updatedLoan.hasBeenAcknowledged).toEqual(true);
         });
       });
 
@@ -274,10 +276,10 @@ describe('/v1/deals', () => {
 
         const expected = {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
+          sendToEmailAddress: mockDeal.maker.email,
           emailVariables: {
             exporterName: mockDeal.exporter.companyName,
-            recipientName: mockDeal.details.maker.firstname,
+            recipientName: mockDeal.maker.firstname,
             bankReferenceNumber: mockDeal.bankInternalRefName,
             ukefDealID: mockDeal.details.ukefDealId,
             facilitiesList: generateIssuedFacilitiesListString(allFacilities),
@@ -301,7 +303,7 @@ describe('/v1/deals', () => {
     });
 
     describe('MIA deal - on second submission', () => {
-      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot', async () => {
+      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot and NOT call submitACBSIfAllPartiesHaveUrn', async () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.submissionType).toEqual('Manual Inclusion Application');
 
@@ -315,7 +317,7 @@ describe('/v1/deals', () => {
         expect(body.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
         expect(body.checkerMIN).toEqual(mockChecker);
-        expect(dealController.submitACBSIfAllPartiesHaveUrn).toHaveBeenCalled();
+        expect(dealController.submitACBSIfAllPartiesHaveUrn).not.toHaveBeenCalled();
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
@@ -504,10 +506,10 @@ describe('/v1/deals', () => {
 
         const expected = {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
-          sendToEmailAddress: mockDeal.details.maker.email,
+          sendToEmailAddress: mockDeal.maker.email,
           emailVariables: {
             exporterName: mockDeal.exporter.companyName,
-            recipientName: mockDeal.details.maker.firstname,
+            recipientName: mockDeal.maker.firstname,
             bankReferenceNumber: mockDeal.bankInternalRefName,
             ukefDealID: mockDeal.details.ukefDealId,
             facilitiesList: generateIssuedFacilitiesListString(allFacilities),
@@ -525,7 +527,7 @@ describe('/v1/deals', () => {
     describe('GEF deal - on second submission', () => {
       const mockDeal = {
         ...MOCK_GEF_DEAL,
-        submissionCount: 1,
+        submissionCount: 2,
       };
 
       it('does NOT call premium schedule when dealType is GEF', async () => {
@@ -561,7 +563,7 @@ describe('/v1/deals', () => {
       });
 
       it('does NOT add fee record when deal is MIA', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         expect(status).toEqual(200);
 
@@ -569,6 +571,14 @@ describe('/v1/deals', () => {
           facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+      });
+
+      it('Should update the application from MIA to MIN', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+
+        expect(status).toEqual(200);
+        expect(body.submissionType).toEqual(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
+        expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
       });
     });
   });

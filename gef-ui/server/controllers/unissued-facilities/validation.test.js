@@ -6,12 +6,10 @@ import MOCKS from '../mocks/index';
 jest.mock('../../services/api');
 
 describe('validation()', () => {
-  let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
   beforeEach(() => {
-    mockResponse = MOCKS.MockResponseUnissued();
     mockRequest = MOCKS.MockRequestUnissued();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
@@ -41,34 +39,31 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest, mockResponse);
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
 
     const expected = {
       coverStartDate: now,
       coverEndDate: tomorrow,
-      body: mockRequest.body,
+      aboutFacilityErrors: [],
       facilityId: 'xyz',
       dealId: '123',
     };
+
     // formatted to remove the millisecond mismatch (lag)
     const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
     const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
     const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
     const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
 
-    // have to compare each part individually as compared to whole object
-    // account for time mismatch due to difference in calls being 6ms
+    // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
-    expect(result.body).toEqual(expected.body);
     expect(result.facilityId).toEqual('xyz');
     expect(result.dealId).toEqual('123');
-
-    // does not render page with errors
-    expect(mockResponse.render).not.toHaveBeenCalledWith('partials/about-facility.njk');
+    expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 
-  it('should render template with errors if end date before start date', async () => {
+  it('should return object with errors populated if end date before start date', async () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.facilityName = 'Foundry4';
     mockRequest.query.saveAndReturn = 'true';
@@ -85,7 +80,15 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
     mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-    const result = await facilityValidation(mockRequest, mockResponse);
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected facility errors array
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before cover start date',
+      },
+    ];
 
     // expected error object format
     const expectedErrors = {
@@ -99,18 +102,13 @@ describe('validation()', () => {
         },
       },
     };
-    // undefined as will be empty as errors
-    expect(result).toEqual(undefined);
 
-    // check ids and that errors is as expected
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      dealId: '123',
-      facilityId: 'xyz',
-      errors: expectedErrors,
-    }));
+    // check that errors are correct
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should render template with errors if start date before issue date', async () => {
+  it('should return object with errors populated if start date before issue date', async () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.facilityName = 'Foundry4';
     mockRequest.query.saveAndReturn = 'true';
@@ -127,7 +125,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest, mockResponse);
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
 
     // expected error object format
     const expectedErrors = {
@@ -141,18 +139,17 @@ describe('validation()', () => {
         },
       },
     };
-    // undefined as will be empty as errors
-    expect(result).toEqual(undefined);
 
-    // check ids and that errors is as expected
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      dealId: '123',
-      facilityId: 'xyz',
-      errors: expectedErrors,
-    }));
+    const expectedFacilityErrors = [{
+      errRef: 'coverStartDate',
+      errMsg: 'Cover start date cannot be before the issue date',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should render template with errors if end date before issue date', async () => {
+  it('should return object with errors populated if end date before issue date', async () => {
     mockRequest.body.facilityType = 'CASH';
     mockRequest.body.facilityName = 'Foundry4';
     mockRequest.query.saveAndReturn = 'true';
@@ -169,7 +166,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
     mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-    const result = await facilityValidation(mockRequest, mockResponse);
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
 
     // expected error object format
     const expectedErrors = {
@@ -188,14 +185,17 @@ describe('validation()', () => {
         },
       },
     };
-    // undefined as will be empty as errors
-    expect(result).toEqual(undefined);
 
-    // check ids and that errors is as expected
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      dealId: '123',
-      facilityId: 'xyz',
-      errors: expectedErrors,
-    }));
+    const expectedFacilityErrors = [{
+      errRef: 'coverEndDate',
+      errMsg: 'Cover end date cannot be before cover start date',
+    },
+    {
+      errRef: 'coverEndDate',
+      errMsg: 'Cover end date cannot be before the issue date',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 });

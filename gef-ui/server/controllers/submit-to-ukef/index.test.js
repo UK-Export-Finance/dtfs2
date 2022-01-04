@@ -2,7 +2,7 @@ import { submitToUkef, createSubmissionToUkef } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
 
-const { isNotice } = require('../../utils/helpers');
+const { isNotice } = require('../../utils/deal-helpers');
 
 jest.mock('../../services/api');
 
@@ -88,6 +88,7 @@ describe('controllers/submit-to-ukef', () => {
         .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
           submissionType: mockApplicationResponse.submissionType,
           isNotice: isNotice(mockApplicationResponse.submissionType),
+          ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
         });
     });
 

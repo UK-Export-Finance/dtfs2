@@ -5,14 +5,22 @@ const MOCK_DEAL = {
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
   previousStatus: 'Submitted',
+  bank: {
+    id: '123',
+    name: 'Barclays Bank',
+    emails: [
+      'test1@mock.com',
+      'test2@mock.com',
+    ],
+  },
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
+    email: 'maker1@ukexportfinance.gov.uk',
+  },
   details: {
     bank: 'Mock bank',
-    maker: {
-      username: 'JOE',
-      firstname: 'Joe',
-      surname: 'Bloggs',
-      email: 'maker1@ukexportfinance.gov.uk',
-    },
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
@@ -20,14 +28,6 @@ const MOCK_DEAL = {
     },
     submissionDate: '1606900616651',
     submissionCount: 1,
-    owningBank: {
-      id: '123',
-      name: 'Barclays Bank',
-      emails: [
-        'test1@mock.com',
-        'test2@mock.com',
-      ],
-    },
   },
   submissionDetails: {
     status: 'Incomplete',

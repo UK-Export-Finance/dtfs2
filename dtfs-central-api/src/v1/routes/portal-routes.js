@@ -21,6 +21,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
 
 const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
 const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
+const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
 const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
 const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
 
@@ -108,9 +109,11 @@ portalRouter.route('/deals').get(
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
+ *             bank: { id: '9' }
+ *             maker: { _id: '123abc' }
  *             details:
- *               maker: { _id: '123abc' }
- *               owningBank: { id: '9' }
+ *               ukefDealId: '20010739'
+ *               submissionCount: 1
  *     responses:
  *       200:
  *         description: OK
@@ -603,6 +606,49 @@ portalRouter.route('/gef/deals')
 portalRouter.route('/gef/deals/:id')
   .get(
     getGefDealController.findOneDealGet,
+  );
+
+/**
+ * @openapi
+ * /portal/gef/deals/:id:
+ *   put:
+ *     summary: Update a Portal GEF deal
+ *     tags: [Portal - GEF]
+ *     description: Update a Portal GEF deal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               user: { _id: '123456abc' }
+ *               dealUpdate: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/DealGEF'
+ *                 - type: object
+ *                   properties:
+ *                     aNewField:
+ *                       example: true
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/gef/deals/:id')
+  .put(
+    updateGefDealController.updateDealPut,
   );
 
 /**

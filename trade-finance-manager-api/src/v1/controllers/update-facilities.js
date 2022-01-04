@@ -19,39 +19,41 @@ const updateFacilities = async (deal) => {
 
   modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
     const facility = f;
-
     const { _id: facilityId } = facility;
+    let facilityUpdate;
+    let facilityPremiumSchedule;
+    let feeRecord;
 
     const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
-
     const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
     const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
 
-    let facilityPremiumSchedule;
+    // Premium Schedule is only valid for non-GEF facilities
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       facilityPremiumSchedule = await getFacilityPremiumSchedule(
         facility,
         facilityExposurePeriod,
         facilityGuaranteeDates,
       );
+      facilityUpdate = {
+        premiumSchedule: facilityPremiumSchedule,
+      };
+    } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      // Fee record is only valid for GEF facilities
+      if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+        feeRecord = calculateGefFacilityFeeRecord(facility);
+        facilityUpdate = {
+          feeRecord,
+        };
+      }
     }
 
-    let feeRecord;
-
-    const shouldCalculateFeeRecord = (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
-
-    if (shouldCalculateFeeRecord) {
-      feeRecord = calculateGefFacilityFeeRecord(facility);
-    }
-
-    const facilityUpdate = {
+    facilityUpdate = {
+      ...facilityUpdate,
       ...facilityCurrencyConversion,
       ...facilityExposurePeriod,
       facilityGuaranteeDates,
       riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-      premiumSchedule: facilityPremiumSchedule,
-      feeRecord,
     };
 
     const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);

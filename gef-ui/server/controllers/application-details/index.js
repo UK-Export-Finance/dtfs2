@@ -1,20 +1,20 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const
-  {
-    mapSummaryList,
-    isUkefReviewAvailable,
-    isUkefReviewPositive,
-    areUnissuedFacilitiesPresent,
-    getUnissuedFacilitiesAsArray,
-    facilitiesChangedToIssuedAsArray,
-    getIssuedFacilitiesAsArray,
-    getFacilityCoverStartDate,
-    coverDatesConfirmed,
-    makerCanReSubmit,
-    displayTaskComments,
-  } = require('../../utils/helpers');
+const { mapSummaryList, displayTaskComments } = require('../../utils/helpers');
+const {
+  areUnissuedFacilitiesPresent,
+  getUnissuedFacilitiesAsArray,
+  facilitiesChangedToIssuedAsArray,
+  getIssuedFacilitiesAsArray,
+  getFacilityCoverStartDate,
+  coverDatesConfirmed,
+} = require('../../utils/facility-helpers');
+const {
+  isUkefReviewAvailable,
+  isUkefReviewPositive,
+  makerCanReSubmit,
+} = require('../../utils/deal-helpers');
 const {
   exporterItems, facilityItems,
 } = require('../../utils/display-items');

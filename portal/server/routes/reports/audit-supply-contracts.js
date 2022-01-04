@@ -37,7 +37,7 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
     prop: 'status',
     label: 'Status',
   }, {
-    prop: 'owningBank_name',
+    prop: 'bank_name',
     label: 'Bank',
   }, {
     prop: 'created',
@@ -53,14 +53,14 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
   // Replace nulls and missing keys with empty strings
   const rows = [];
   supplyContracts.forEach((supplyContract) => {
-    // De-nest the fields we want from under details/maker/owningBank
+    // De-nest the fields we want from under details/maker/bank
     const row = {};
     Object.assign(row, supplyContract.details);
-    if (supplyContract.details.maker) {
-      row.maker_username = supplyContract.details.maker.username;
+    if (supplyContract.maker) {
+      row.maker_username = supplyContract.maker.username;
     }
-    if (supplyContract.details.owningBank) {
-      row.owningBank_name = supplyContract.details.owningBank.name;
+    if (supplyContract.bank) {
+      row.bank_name = supplyContract.bank.name;
     }
 
     // null

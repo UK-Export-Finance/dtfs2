@@ -9,8 +9,8 @@ const deal = {
   bankInternalRefName: 'mock id',
   status: 'Ready for Checker\'s approval',
   previousStatus: 'Draft',
+  maker: { username: 'some.user@client.com' },
   details: {
-    maker: { username: 'some.user@client.com' },
     submissionDate: 1594296776916.0,
   },
   comments: [{

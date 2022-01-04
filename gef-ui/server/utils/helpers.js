@@ -2,8 +2,18 @@ const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
-const { format, add } = require('date-fns');
+const { format } = require('date-fns');
 const CONSTANTS = require('../constants');
+
+const {
+  facilitiesChangedToIssuedAsArray,
+  summaryIssuedChangedToIssued,
+  summaryIssuedUnchanged,
+  areUnissuedFacilitiesPresent,
+  facilitiesChangedPresent,
+} = require('./facility-helpers');
+
+const { isUkefReviewAvailable } = require('./deal-helpers');
 
 const userToken = (req) => {
   const token = req.session.userToken;
@@ -83,37 +93,10 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
-/*
-   Maps through facilities to check for changedToIssued to be true
-   if true, adds to array and returns array
-*/
-const facilitiesChangedToIssuedAsArray = (application) => {
-  const hasChanged = [];
-  application.facilities.items.map((facility) => {
-    if (facility.details.changedToIssued) {
-      const changed = {
-        name: facility.details.name,
-        id: facility.details._id,
-      };
-      hasChanged.push(changed);
-    }
-    return hasChanged;
-  });
-  return hasChanged;
-};
-
 /* Clean-Deep removes any properties with Null value from an Object. Therefore if all
   properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
-
-const summaryIssuedChangedToIssued = (app, user, data) =>
-  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
-   && data.details.changedToIssued === true;
-
-const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
-  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
-    && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
 
 /* summaryItemsConditions runs through the the table rows and decides if change/add should be added
    on end of row.  On application details, all relevant rows are set to change/add if required.  On
@@ -304,16 +287,6 @@ const isTrueSet = (val) => {
   return null;
 };
 
-const getApplicationType = (isAutomaticCover) => {
-  if (isAutomaticCover === true) {
-    return 'Automatic inclusion notice';
-  }
-  if (isAutomaticCover === false) {
-    return 'Manual inclusion notice';
-  }
-  return 'Unknown';
-};
-
 const selectDropdownAddresses = (addresses) => {
   if (!addresses) {
     return null;
@@ -331,139 +304,7 @@ const selectDropdownAddresses = (addresses) => {
   return placeholder.concat(mappedAddresses);
 };
 
-const status = ({
-  [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
-    text: CONSTANTS.DEAL_STATUS.NOT_STARTED,
-    class: 'govuk-tag--grey',
-    code: CONSTANTS.DEAL_STATUS.NOT_STARTED,
-  },
-  [CONSTANTS.DEAL_STATUS.IN_PROGRESS]: {
-    text: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
-    class: 'govuk-tag--blue',
-    code: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
-  },
-  [CONSTANTS.DEAL_STATUS.COMPLETED]: {
-    text: CONSTANTS.DEAL_STATUS.COMPLETED,
-    class: 'govuk-tag--green',
-    code: CONSTANTS.DEAL_STATUS.COMPLETED,
-  },
-});
-
 const stringToBoolean = (str) => (str === 'false' ? false : !!str);
-
-const isNotice = (type) => type.toLowerCase().includes('notice');
-
-const isUkefReviewAvailable = (applicationStatus, ukefDecision) => {
-  if (ukefDecision?.length > 0) {
-    const acceptable = [
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-      CONSTANTS.DEAL_STATUS.UKEF_REFUSED,
-    ];
-    return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
-  }
-  return false;
-};
-
-const isUkefReviewPositive = (applicationStatus, ukefDecision) => {
-  if (ukefDecision?.length > 0) {
-    const acceptable = [
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    ];
-    return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
-  }
-  return false;
-};
-
-/**
-   * this function checks that the deal is an AIN
-   * checks that it has been submitted to UKEF
-   * if any unissued facilitites
- if changes required to include MIA, add to application type and status
- * */
-
-const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
-  const accepableApplicationType = ['Automatic Inclusion Notice'];
-
-  if (!accepableApplicationType.includes(application.submissionType)) {
-    return false;
-  }
-  if (!acceptableStatuses.includes(application.status)) {
-    return false;
-  }
-
-  let hasUnissuedFacilities = false;
-
-  application.facilities.items.map((facility) => {
-    if (facility.details.hasBeenIssued === false) {
-      hasUnissuedFacilities = true;
-      return hasUnissuedFacilities;
-    }
-    return hasUnissuedFacilities;
-  });
-
-  return hasUnissuedFacilities;
-};
-
-/*
-   This function sets the deadline to display for unissued
-   facilities on the unissued facilities table 3 months
-   from date of submission
-*/
-const facilityIssueDeadline = (submissionDate) => {
-  if (submissionDate) {
-    // converts to timestamp from epoch - '+' to convert from str to int
-    const date = new Date(+submissionDate);
-    const deadlineDate = add(new Date(date), { months: 3 });
-
-    return format(deadlineDate, 'dd MMM yyyy');
-  }
-
-  return null;
-};
-
-/* govukTable mapping function to return array of facilities which are
-   not yet issued for the cover-start-date.njk template.
-*/
-const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
-  facilities.items
-    .filter(({ details }) => !details.hasBeenIssued)
-    .map(({ details }, index) => [
-      { text: details.name },
-      { text: details.ukefFacilityId },
-      { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-      { text: facilityIssueDeadline(submissionDate) },
-      {
-        html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about' class='govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-facility-button-${index}'>Update</a>`,
-      },
-    ]);
-
-/**
- * This is a bespoke govUkTable mapping function which
- * returns an array of all the facilities specifically
- * for the cover-start-date.njk template.
- * @param {Object} facilities
- * @returns {Array}
- */
-const getIssuedFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
-  .map(({ details }) =>
-    [
-      { text: details.name },
-      { text: details.ukefFacilityId },
-      { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-      { html: `<a href = '/gef/application-details/${details.dealId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
-    ]);
-
-const getFacilityCoverStartDate = (facility) => {
-  const epoch = facility.details.coverStartDate ? facility.details.coverStartDate : null;
-  return {
-    date: format(new Date(epoch), 'd'),
-    month: format(new Date(epoch), 'M'),
-    year: format(new Date(epoch), 'yyyy'),
-  };
-};
 
 const getUTCDate = () => {
   const date = new Date();
@@ -472,57 +313,6 @@ const getUTCDate = () => {
 
 const getEpoch = ({ day, month, year }) => Date.UTC(year, month - 1, day);
 
-const pastDate = ({ day, month, year }) => {
-  const input = getEpoch({ day, month, year });
-  const now = getUTCDate();
-  return input < now;
-};
-
-const futureDateInRange = ({ day, month, year }, days) => {
-  if (!pastDate({ day, month, year })) {
-    const input = getEpoch({ day, month, year });
-    let range = getUTCDate();
-    /**
-     * 86400000 = 24 hours * 60 minutes * 60 seconds * 1000 ms
-     * Number of ms in a day
-     * */
-    range += 86400000 * days;
-    return input <= range;
-  }
-  return false;
-};
-
-const coverDatesConfirmed = (facilities) =>
-  facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
-
-/*
-   function returns true or false based on length of array
-   of facilities that have changed to issued from unissued
-*/
-const hasChangedToIssued = (application) => {
-  const changedToIssued = facilitiesChangedToIssuedAsArray(application);
-
-  return changedToIssued.length > 0;
-};
-
-const makerCanReSubmit = (maker, application) => {
-  const acceptableStatus = [
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-  ];
-  let facilitiesChangedToIssued = true;
-
-  // only if AIN -> ensures a facility has changed to issued before resubmitting to bank
-  if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
-    facilitiesChangedToIssued = hasChangedToIssued(application);
-  }
-  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
-  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
-
-  return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
-};
-
 const commentsPresent = (app) => {
   if (app.comments) {
     return app.comments.length > 0;
@@ -530,8 +320,6 @@ const commentsPresent = (app) => {
 
   return false;
 };
-
-const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app).length > 0;
 
 /*
   checks if taskComments should be shown on top of application
@@ -547,32 +335,16 @@ const displayTaskComments = (app) => {
 
 module.exports = {
   apiErrorHandler,
-  getApplicationType,
   isEmpty,
   isObject,
   isTrueSet,
   mapSummaryList,
   selectDropdownAddresses,
-  status,
   userToken,
   validationErrorHandler,
   stringToBoolean,
-  isNotice,
-  isUkefReviewAvailable,
-  isUkefReviewPositive,
-  areUnissuedFacilitiesPresent,
-  getUnissuedFacilitiesAsArray,
-  facilitiesChangedToIssuedAsArray,
-  getIssuedFacilitiesAsArray,
-  getFacilityCoverStartDate,
-  futureDateInRange,
-  pastDate,
   getEpoch,
   getUTCDate,
-  coverDatesConfirmed,
-  makerCanReSubmit,
-  hasChangedToIssued,
   summaryItemsConditions,
-  facilityIssueDeadline,
   displayTaskComments,
 };

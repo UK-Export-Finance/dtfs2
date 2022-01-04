@@ -6,14 +6,22 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
   additionalRefName: 'Mock supply contract name',
   status: 'Acknowledged by UKEF',
   previousStatus: 'Submitted',
+  bank: {
+    id: '123',
+    name: 'Barclays Bank',
+    emails: [
+      'test1@mock.com',
+      'test2@mock.com',
+    ],
+  },
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
+  },
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
-    maker: {
-      username: 'JOE',
-      firstname: 'Joe',
-      surname: 'Bloggs',
-    },
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
@@ -21,14 +29,6 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
     },
     submissionDate: '1606900616651',
     submissionCount: 1,
-    owningBank: {
-      id: '123',
-      name: 'Barclays Bank',
-      emails: [
-        'test1@mock.com',
-        'test2@mock.com',
-      ],
-    },
   },
   submissionDetails: {
     status: 'Incomplete',

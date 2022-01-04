@@ -12,7 +12,7 @@ const api = require('../api');
 const dealsQuery = (user, filter) => {
   // add the bank clause if we're not a superuser
   if (!isSuperUser(user)) {
-    filter.push({ 'details.owningBank.id': { $eq: user.bank.id } });
+    filter.push({ 'bank.id': { $eq: user.bank.id } });
   }
 
   // swap out the 'bankInternalRefName' for an equivalent regex
@@ -174,11 +174,11 @@ const createNewDealData = async (deal, maker) => {
   const newDeal = {
     ...DEFAULTS.DEAL,
     ...deal,
+    bank: maker.bank,
+    maker,
     details: {
       ...DEFAULTS.DEAL.details,
       ...deal.details,
-      maker,
-      owningBank: maker.bank,
     },
     eligibility: await createDealEligibility(deal.eligibility),
   };

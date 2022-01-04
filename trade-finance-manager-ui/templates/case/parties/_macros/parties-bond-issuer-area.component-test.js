@@ -11,16 +11,14 @@ describe(page, () => {
       submissionType: 'Automatic Inclusion Notice',
       bankInternalRefName: 'contract-1',
       additionalRefName: 'FirstContract',
-      details: {
-        owningBank: {
-          name: 'Lloyds',
-          emails: ['xxx@yyy.com'],
-        },
-        maker: {
-          firstname: 'John',
-          surname: 'Doe',
-          email: 'john.doe@exporter.com',
-        },
+      bank: {
+        name: 'Lloyds',
+        emails: ['xxx@yyy.com'],
+      },
+      maker: {
+        firstname: 'John',
+        surname: 'Doe',
+        email: 'john.doe@exporter.com',
       },
       facilities: [],
     },
