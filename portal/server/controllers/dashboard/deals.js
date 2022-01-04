@@ -20,7 +20,7 @@ const getRoles = (roles) => {
   };
 };
 
-const dashboardFilters = (filter, user, dealType) => {
+const dashboardFilters = (filter, user) => {
   const allFilters = [];
 
   const { createdByYou } = filter;
@@ -29,20 +29,6 @@ const dashboardFilters = (filter, user, dealType) => {
     allFilters.push({
       field: 'userId',
       value: user._id,
-    });
-  }
-
-  if (dealType === PRODUCT.BSS_EWCS) {
-    allFilters.push({
-      field: 'details.owningBank.id',
-      value: user.bank.id,
-    });
-  }
-
-  if (dealType === PRODUCT.GEF) {
-    allFilters.push({
-      field: 'bank.id',
-      value: user.bank.id,
     });
   }
 
@@ -57,12 +43,16 @@ exports.allDeals = async (req, res) => {
   let filters = [];
   filters = dashboardFilters(req.body, req.session.user);
 
+  console.log('----- filters \n', filters);
+
   if (isChecker && !isMaker) {
     filters.push({
       field: 'status',
       value: STATUS.readyForApproval,
     });
   }
+
+  console.log('----- filters 2\n', filters);
 
   const { count, deals } = await getApiData(api.allDeals(
     req.params.page * PAGESIZE,
@@ -71,13 +61,17 @@ exports.allDeals = async (req, res) => {
     userToken,
   ), res);
 
+  console.log('----- count ', count);
+  console.log('----- deals \n', deals);
+
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
 
-  return res.render('dashboard/deals.njk', {
+  console.log('----- pages \n', pages);
+  const bingo = {
     deals,
     pages,
     successMessage: getFlashSuccessMessage(req),
@@ -85,5 +79,10 @@ exports.allDeals = async (req, res) => {
     tab,
     user: req.session.user,
     createdByYou: req.body.createdByYou,
-  });
+  };
+
+  console.log('----- bingo \n', bingo);
+
+
+  return res.render('dashboard/deals.njk', bingo);
 };

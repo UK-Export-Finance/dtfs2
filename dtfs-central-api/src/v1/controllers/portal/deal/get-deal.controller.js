@@ -2,7 +2,6 @@ const { ObjectID } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { findOneUser } = require('../../user/get-user.controller');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection('facilities');
@@ -110,21 +109,9 @@ const findOneGefDeal = async (_id, callback) => {
   const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
 
   if (deal) {
-    const promises = await Promise.all([
-      findAllGefFacilitiesByDealId(_id),
-      findOneUser(deal.userId),
-    ]);
-
-    const [
-      facilities,
-      maker,
-    ] = [...promises];
+    const facilities = await findAllGefFacilitiesByDealId(_id);
 
     deal.facilities = facilities;
-
-    if (maker) {
-      deal.maker = maker;
-    }
   }
 
   if (callback) {

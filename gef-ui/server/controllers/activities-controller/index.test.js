@@ -70,15 +70,6 @@ describe('getPortalActivities()', () => {
     jest.resetAllMocks();
   });
 
-  it('it should call getUserDetails for maker and checker details', async () => {
-    await getPortalActivities(mockRequest, mockResponse);
-
-    expect(api.getUserDetails).toHaveBeenCalledWith(
-      mockApplicationResponse.userId,
-      mockRequest.session.userToken,
-    );
-  });
-
   it('it should call getApplication to produce mojTimeline array format', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
@@ -88,7 +79,6 @@ describe('getPortalActivities()', () => {
   it('it should render application-activity template', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
-    const maker = await api.getUserDetails(mockApplicationResponse.userId, mockRequest.session.userToken);
     const checker = await api.getUserDetails(mockApplicationResponse.checkerId, mockRequest.session.userToken);
 
     const mappedPortalActivities = mapPortalActivities(mockApplicationResponse.portalActivities);
@@ -105,10 +95,10 @@ describe('getPortalActivities()', () => {
         applicationType: mockApplicationResponse.submissionType,
         submissionCount: mockApplicationResponse.submissionCount,
         checkedBy: `${checker.firstname} ${checker.surname}`,
-        createdBy: `${maker.firstname} ${maker.surname}`,
+        createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
         companyName: mockApplicationResponse.exporter.companyName,
         dateCreated: mockApplicationResponse.createdAt,
-        timezone: maker.timezone || 'Europe/London',
+        timezone: mockApplicationResponse.maker.timezone || 'Europe/London',
         submissionDate: mockApplicationResponse.submissionDate,
       });
   });

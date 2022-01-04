@@ -11,14 +11,21 @@ const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 context('View a deal', () => {
   context('no checker', () => {
     let deal;
+    let makerId;
     const dummyDeal = {
       bankInternalRefName: 'abc-1-def',
       additionalRefName: 'Tibetan submarine acquisition scheme',
+      maker: mockUsers[0],
     };
 
     beforeEach(() => {
       // clear down our test users old deals, and insert new ones - updating our deal object
       cy.deleteDeals(MAKER_LOGIN);
+
+      cy.listAllUsers().then((usersInDb) => {
+        makerId = usersInDb.find((user) => user.username === MAKER_LOGIN.username)._id;
+        dummyDeal.maker._id = makerId;
+      });
 
       cy.insertOneDeal(dummyDeal, MAKER_LOGIN).then((insertedDeal) => { deal = insertedDeal; });
     });

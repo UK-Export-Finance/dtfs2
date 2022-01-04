@@ -5,7 +5,7 @@ module.exports = (deals, opts) => {
 
   logIn(opts).then((token) => {
     const persisted = [];
-    listAllUsers(token).then(({ body: { users } }) => {
+    listAllUsers(token).then((users) => {
       const userId = users.find((user) => user.username === opts.username)._id;
 
       for (const deal of deals) {

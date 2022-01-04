@@ -20,7 +20,6 @@ const MOCK_DEAL_AIN_SUBMITTED = {
     surname: 'Bloggs',
   },
   details: {
-    bank: 'Mock bank',
     ukefDealId: '20010739',
     checker: {
       username: 'CHECKER',

@@ -1,18 +1,33 @@
 import { allDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
-import { getApiData } from '../../helpers';
+import { getApiData, getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
-import { PRODUCT } from '../../constants';
+import { PRODUCT, STATUS } from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
 }));
 
+const mockDeals = [
+  {
+    _id: 'mockDeal',
+    exporter: { companyName: 'mock company' },
+    product: PRODUCT.BSS_EWCS,
+    createdAt: 1234,
+  },
+  {
+    _id: 'mockDeal2',
+    exporter: { companyName: 'mock company' },
+    product: PRODUCT.GEF,
+    createdAt: 5678,
+  },
+];
+
 jest.mock('../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
     count: 2,
-    deals: ['mock deal 1', 'mock deal 2'],
+    deals: mockDeals,
   })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
@@ -23,15 +38,14 @@ describe('controllers/dashboard', () => {
   let res;
   beforeEach(() => {
     req = {
-      body: {
-        createdByYou: true,
-      },
+      body: { createdByYou: '' },
       params: { page: 1 },
       session: {
         dashboardFilters: 'mock-filters',
         user: {
-          id: 'mock-user',
+          _id: 'mock-user',
           roles: ['maker', 'checker'],
+          bank: { id: '9' },
         },
       },
     };
@@ -41,28 +55,6 @@ describe('controllers/dashboard', () => {
 
   describe('allDeals', () => {
     it('renders the correct template', async () => {
-      const mockDeals = [
-        {
-          _id: 'mockDeal',
-          exporter: { companyName: 'mock company' },
-          product: PRODUCT.BSS_EWCS,
-          createdAt: 1234,
-        },
-        {
-          _id: 'mockDeal2',
-          exporter: { companyName: 'mock company' },
-          product: PRODUCT.GEF,
-          createdAt: 5678,
-        },
-      ];
-
-      getApiData.mockResolvedValue({
-        count: 2,
-        deals: mockDeals,
-      });
-
-      await allDeals(req, res);
-
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
         deals: mockDeals,
         pages: {
@@ -70,12 +62,10 @@ describe('controllers/dashboard', () => {
           currentPage: 1,
           totalItems: 2,
         },
+        successMessage: getFlashSuccessMessage(req),
         primaryNav: 'home',
         tab: 'deals',
-        user: {
-          id: 'mock-user',
-          roles: ['maker', 'checker'],
-        },
+        user: req.session.user,
         createdByYou: req.body.createdByYou,
       });
     });
@@ -85,10 +75,19 @@ describe('controllers/dashboard', () => {
 
       await allDeals(req, res);
 
-      expect(api.allDeals).toHaveBeenCalledWith(20, 20, [{
-        field: 'status',
-        value: 'Ready for Checker\'s approval',
-      }], 'mock-token');
+      const expectedFilters = [
+        {
+          field: 'status',
+          value: STATUS.readyForApproval,
+        },
+      ];
+
+      expect(api.allDeals).toHaveBeenCalledWith(
+        20,
+        20,
+        expectedFilters,
+        'mock-token',
+      );
     });
   });
 });
