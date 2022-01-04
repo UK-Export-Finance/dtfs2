@@ -6,13 +6,13 @@ const MOCK_DEAL_NO_UKEF_ID = {
   additionalRefName: 'Mock supply contract name',
   status: 'Acknowledged by UKEF',
   previousStatus: 'Submitted',
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
+  },
   details: {
     bank: 'Mock bank',
-    maker: {
-      username: 'JOE',
-      firstname: 'Joe',
-      surname: 'Bloggs',
-    },
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',

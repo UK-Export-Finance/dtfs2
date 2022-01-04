@@ -11,18 +11,12 @@ describe(component, () => {
         {
           _id: 1,
           status: "Draft",
-          details: {
-            maker: {
-              _id:123,
-            },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 2,
           status: "Further Maker's input required",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
       ];
 
@@ -39,16 +33,12 @@ describe(component, () => {
         {
           _id: 1,
           status: "Submitted",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 2,
           status:"Rejected by UKEF",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
       ];
 
@@ -65,37 +55,27 @@ describe(component, () => {
         {
           _id: 1,
           status:"Abandoned",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 2,
           status: "Acknowledged by UKEF",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 3,
           status: "Accepted by UKEF (without conditions)",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 4,
           status: "Accepted by UKEF (with conditions)",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
         {
           _id: 5,
           status: "Ready for Checker's approval",
-          details: {
-            maker: { _id: 123 },
-          },
+          maker: { _id: 123 },
         },
       ];
 
@@ -112,8 +92,8 @@ describe(component, () => {
     it("should not render at all", () => {
       const user = { _id: 123, roles: ['checker'] };
       const deals = [
-        { _id: 1, status: "Draft", details: { maker: { _id: 123 } } },
-        { _id: 2, status: "Further Maker's input required", details: { maker: { _id: 123 } } },
+        { _id: 1, status: "Draft", maker: { _id: 123 } },
+        { _id: 2, status: "Further Maker's input required", maker: { _id: 123 } },
       ];
 
       for (const deal of deals) {
@@ -128,8 +108,8 @@ describe(component, () => {
     it("should render", () => {
       const user = { _id: 123, roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, status: "Draft", details: { maker: { _id: 123 } } },
-        { _id: 2, status: "Further Maker's input required", details: { maker: { _id: 123 } } },
+        { _id: 1, status: "Draft", maker: { _id: 123 } },
+        { _id: 2, status: "Further Maker's input required", maker: { _id: 123 } },
       ];
 
       for (const deal of deals) {
