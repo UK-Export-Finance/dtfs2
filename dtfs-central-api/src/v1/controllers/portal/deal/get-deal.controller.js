@@ -180,7 +180,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         submissionType: '$submissionType',
         exporter: '$exporter.companyName',
         updatedAt: '$updatedAt',
-        userId: '$details.maker._id',
+        userId: '$maker._id',
       },
     },
     //     ],

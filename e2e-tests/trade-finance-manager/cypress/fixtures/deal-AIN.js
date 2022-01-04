@@ -13,14 +13,14 @@ const MOCK_DEAL = {
       'test2@mock.com',
     ],
   },
+  maker: {
+    username: 'JOE',
+    firstname: 'Joe',
+    surname: 'Bloggs',
+    email: 'maker1@ukexportfinance.gov.uk',
+  },
   details: {
     bank: 'Mock bank',
-    maker: {
-      username: 'JOE',
-      firstname: 'Joe',
-      surname: 'Bloggs',
-      email: 'maker1@ukexportfinance.gov.uk',
-    },
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
