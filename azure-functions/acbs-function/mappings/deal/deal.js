@@ -7,7 +7,6 @@ const {
 } = require('./helpers');
 const { formatTimestamp } = require('../../helpers/date');
 const getDealSubmissionDate = require('./helpers/get-deal-submission-date');
-const CONSTANTS = require('../../constants');
 
 /*
   dealIdentifier                  string    UKEF ID
