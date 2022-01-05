@@ -175,7 +175,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
       $project: {
         count: '$count.total',
         deals: 1,
-      }
+      },
     },
   ]).toArray();
 

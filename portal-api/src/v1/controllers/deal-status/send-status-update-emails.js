@@ -43,7 +43,6 @@ const send = async (deal, fromStatus, user) => {
     submissionType,
     bankInternalRefName,
     maker,
-    details,
     status: currentStatus,
   } = deal;
 

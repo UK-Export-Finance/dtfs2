@@ -1,6 +1,6 @@
 import { allDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
-import { getApiData, getFlashSuccessMessage } from '../../helpers';
+import { getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
 import { PRODUCT, STATUS } from '../../constants';
 

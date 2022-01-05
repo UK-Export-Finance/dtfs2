@@ -1,5 +1,5 @@
 const api = require('../../api');
-const { PRODUCT, STATUS } = require('../../constants');
+const { STATUS } = require('../../constants');
 
 const {
   getApiData,
@@ -82,7 +82,6 @@ exports.allDeals = async (req, res) => {
   };
 
   console.log('----- bingo \n', bingo);
-
 
   return res.render('dashboard/deals.njk', bingo);
 };
