@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const {
   findOneTfmDeal,
   findOnePortalDeal,
@@ -159,14 +158,13 @@ const submitDealPUT = async (req, res) => {
   const {
     dealId,
     dealType,
-    checker,
   } = req.body;
   let deal;
 
   const canSubmitDealAfterUkefIds = await dealHasAllUkefIds(dealId);
 
   if (canSubmitDealAfterUkefIds) {
-    deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+    deal = await submitDealAfterUkefIds(dealId, dealType);
   } else {
     deal = await submitDealBeforeUkefIds(dealId, dealType);
   }

@@ -301,7 +301,7 @@ tfmRouter.route('/deals/:id/facilities')
  *         content:
  *           application/json:
  *             example:
- *               facilities: [ { tfmFacility: { dealId: '123456abc', facilityId: '1234', dealType: 'GEF' } } ]
+ *               facilities: [ { tfmFacilities: { dealId: '123456abc', facilityId: '1234', dealType: 'GEF' } } ]
  */
 tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
 

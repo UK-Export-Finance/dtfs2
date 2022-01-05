@@ -41,7 +41,7 @@ describe('/v1/tfm/facilities', () => {
       const { body: allFacilitiesAfterCreation } = await api.get('/v1/tfm/facilities');
 
       const expectedFacilityShape = {
-        tfmFacility: {
+        tfmFacilities: {
           dealId: expect.any(String),
           ukefFacilityId: expect.any(String),
           facilityId: expect.any(String),

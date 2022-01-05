@@ -16,7 +16,7 @@ const mockUser = {
 };
 
 const newDeal = aDeal({
-   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],

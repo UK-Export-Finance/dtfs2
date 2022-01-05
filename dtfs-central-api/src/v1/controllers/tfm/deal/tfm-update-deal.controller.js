@@ -15,7 +15,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   /**
    * Only use the tfm object. Remove anything else.
    * Only the tfm object should be updated.
-   * - e.g dealSnapshot or any other root level data should not be updatedd.
+   * - e.g dealSnapshot or any other root level data should not be updated.
    * */
   const { tfm } = dealChanges;
 

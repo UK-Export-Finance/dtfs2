@@ -25,7 +25,7 @@ exports.getAllFacilities = async (req, res) => {
 
   // mongodb query that returns an array of objects with the following format:
   // [{
-  //       "tfmFacility": {
+  //       "tfmFacilities": {
   //           "dealId": "Mock deal Id",
   //           "facilityId": "Mock facility Id",
   //           "ukefFacilityId": "0030136443",
@@ -43,7 +43,7 @@ exports.getAllFacilities = async (req, res) => {
     {
       $project: {
         _id: 0,
-        tfmFacility: {
+        tfmFacilities: {
           $map: {
             input: '$dealSnapshot.facilities',
             as: 'facilities', // alias for dealSnapshot.facilities array
@@ -152,18 +152,18 @@ exports.getAllFacilities = async (req, res) => {
         },
       },
     },
-    { $unwind: '$tfmFacility' },
+    { $unwind: '$tfmFacilities' },
     {
       // search functionality based on ukefFacilityId property OR companyName
       $match: {
         $or: [
-          { 'tfmFacility.ukefFacilityId': { $regex: searchString, $options: 'i' } },
-          { 'tfmFacility.companyName': { $regex: searchString, $options: 'i' } },
+          { 'tfmFacilities.ukefFacilityId': { $regex: searchString, $options: 'i' } },
+          { 'tfmFacilities.companyName': { $regex: searchString, $options: 'i' } },
         ],
       },
     },
     // sort based on the ukefFacilityId - this is default behavior
-    { $sort: { 'tfmFacility.ukefFacilityId': 1 } },
+    { $sort: { 'tfmFacilities.ukefFacilityId': 1 } },
 
   ]).toArray();
 

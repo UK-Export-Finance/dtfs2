@@ -41,12 +41,12 @@ const getFacilities = async (queryParams) => {
   const response = await apollo('GET', facilitiesLightQuery, queryParams);
 
   if (response.errors) {
-    console.error('TFM UI - GraphQL error querying deals ', response.errors);
+    console.error('TFM UI - GraphQL error querying facilities ', response.errors);
   }
 
-  if (response?.data?.facilities?.tfmFacility) {
+  if (response?.data?.facilities?.tfmFacilities) {
     return {
-      facilities: response.data.facilities.tfmFacility,
+      facilities: response.data.facilities.tfmFacilities,
     };
   }
 

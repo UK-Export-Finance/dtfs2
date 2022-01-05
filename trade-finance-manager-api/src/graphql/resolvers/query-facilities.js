@@ -8,11 +8,11 @@ exports.queryAllFacilities = async () => {
   let facility;
   // eslint-disable-next-line no-restricted-syntax
   for (const item of rawFacilities) {
-    facility = item.tfmFacility;
-    facility.value = `${item.tfmFacility.currency} ${formattedNumber(item.tfmFacility.value)}`;
-    facility.facilityType = item.tfmFacility.facilityType.toLowerCase();
+    facility = item.tfmFacilities;
+    facility.value = `${item.tfmFacilities.currency} ${formattedNumber(item.tfmFacilities.value)}`;
+    facility.facilityType = item.tfmFacilities.facilityType.toLowerCase();
     facilities.push(facility);
   }
 
-  return { tfmFacility: facilities };
+  return { tfmFacilities: facilities };
 };

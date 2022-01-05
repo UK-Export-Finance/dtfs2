@@ -391,7 +391,7 @@ type DealsQuery {
   deals: [Deal]
 }
 
-type DealSnapshotFacilities {
+type DealSnapshotFacility {
    dealId: String!
    facilityId: String!
    ukefFacilityId: String!
@@ -405,7 +405,7 @@ type DealSnapshotFacilities {
 }
 
 type FacilitiesQuery {
-   tfmFacility: [DealSnapshotFacilities]
+   tfmFacilities: [DealSnapshotFacility]
 }
 
 input TFMPartyInput {
