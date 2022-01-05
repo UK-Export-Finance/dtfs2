@@ -35,6 +35,7 @@
   "obligorPartyIdentifier":         Supplier partyUrn,
   "obligorName":                    Supplier name
   "obligorIndustryClassification":  ACBS Supplier industry classification - must be 4 characters e.g. 0104
+  "probabilityOfDefault":           Optional field used for GEF
   */
 
 const helpers = require('./helpers');
@@ -84,6 +85,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
     obligorName: deal.dealSnapshot.exporter.companyName.substring(0, 35),
     obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
+    probabilityOfDefault: deal.tfm.probabilityOfDefault,
   };
 };
 
