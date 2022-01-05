@@ -105,11 +105,20 @@ context('Return to Maker as MIA', () => {
 
       // should be able to edit eligibility criteria
       applicationDetails.automaticCoverSummaryListRowAction(0, 0).contains('Change');
+      applicationDetails.automaticCoverSummaryListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
+        expect(href).to.equal(`${dealId}/automatic-cover`);
+      });
 
       // abandon link should exist
       applicationDetails.abandonLink().should('exist');
+      applicationDetails.abandonLink().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal(`/gef/application-details/${dealId}/abandon`);
+      });
       // should be able to edit ref name
       applicationDetails.editRefNameLink().should('exist');
+      applicationDetails.editRefNameLink().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal(`/gef/applications/${dealId}/name`);
+      });
     });
 
     it('can change security details comments', () => {
