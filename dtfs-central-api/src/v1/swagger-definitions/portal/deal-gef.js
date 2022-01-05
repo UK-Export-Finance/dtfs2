@@ -10,14 +10,13 @@
  *       dealType:
  *         type: string
  *         example: GEF
- *       userId:
- *         type: string
- *         example: 123abc
  *       status:
  *         type: string
  *         example: DRAFT
  *       bank:
  *         $ref: '#/definitions/Bank'
+ *       maker:
+ *         $ref: '#/definitions/User'
  *       exporter:
  *         type: object
  *         example: {}

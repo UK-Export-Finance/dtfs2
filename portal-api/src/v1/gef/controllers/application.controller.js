@@ -29,7 +29,6 @@ const {
 
 const dealsCollectionName = 'deals';
 const facilitiesCollectionName = 'gef-facilities';
-const userCollectionName = 'users';
 
 // const defaultPaginationOpts = {
 //   sortBy: null,
@@ -54,14 +53,22 @@ const userCollectionName = 'users';
 // };
 
 exports.create = async (req, res) => {
-  const newDeal = req.body;
+  const newDeal = {
+    ...req.body,
+    maker: {
+      ...req.user,
+      _id: String(req.user._id),
+    },
+  };
 
   const applicationCollection = await db.getCollection(
     dealsCollectionName,
   );
+
   const validateErrs = validateApplicationReferences(
     newDeal,
   );
+
   if (validateErrs) {
     res.status(422)
       .send(validateErrs);
@@ -203,20 +210,17 @@ exports.updateSupportingInformation = async (req, res) => {
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   const {
-    userId,
+    maker,
     status: previousStatus,
     bankInternalRefName,
     exporter,
   } = existingApplication;
 
   // get maker user details
-  const userCollection = await db.getCollection(userCollectionName);
   const {
     firstname: firstName = '',
     surname = '',
-  } = userId
-    ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
-    : {};
+  } = maker;
 
   // get exporter name
   const { companyName = '' } = exporter;

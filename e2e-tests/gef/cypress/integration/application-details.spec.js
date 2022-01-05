@@ -54,7 +54,7 @@ context('Application Details Page', () => {
       const todayFormatted = format(new Date(), 'dd MMM yyyy')
       statusBanner.bannerDateCreated().contains(todayFormatted);
       statusBanner.bannerSubmissionType().should('have.text', '-');
-      statusBanner.bannerCreatedBy().should('have.text', `${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`)
+      statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`)
       statusBanner.bannerExporter().should('have.text', '-');
       statusBanner.bannerCheckedBy().should('have.text', '-');
       statusBanner.bannerBuyer().should('have.text', '-');

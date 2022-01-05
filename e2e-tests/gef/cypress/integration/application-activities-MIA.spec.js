@@ -12,6 +12,7 @@ import statusBanner from './pages/application-status-banner';
 
 import { format } from 'date-fns';
 
+let deal;
 let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
@@ -23,7 +24,8 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        dealId = body.items[2]._id;
+        deal = body.items[2];
+        dealId = deal._id;
 
         cy.login(CREDENTIALS.MAKER);
       });
@@ -111,7 +113,7 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.applicationBanner().should('exist');
       statusBanner.bannerDateCreated().contains(bannerDate);
       statusBanner.bannerDateSubmitted().contains(bannerDate);
-      statusBanner.bannerCreatedBy().contains(CREDENTIALS.MAKER.firstname);
+      statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
       statusBanner.bannerSubmissionType().contains('Manual Inclusion Application');
     });

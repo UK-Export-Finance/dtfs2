@@ -21,6 +21,7 @@ context('reconciliation report', () => {
     cy.deleteDeals(ADMIN_LOGIN);
     cy.deleteDeals(BANK1_MAKER);
     cy.deleteDeals(BANK2_MAKER);
+    cy.deleteGefApplications(BANK1_MAKER);
 
     cy.insertOneDeal(aDealWithOneBond, BANK1_MAKER)
       .then((inserted) => {
