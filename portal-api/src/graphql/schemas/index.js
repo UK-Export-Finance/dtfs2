@@ -174,7 +174,7 @@ type Eligibility {
 
 type GefDeal {
   _id: String
-  userId: String
+  maker: Maker
   status: String
   bank: Bank
   bankInternalRefName: String

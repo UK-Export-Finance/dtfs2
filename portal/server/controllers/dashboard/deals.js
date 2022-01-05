@@ -20,7 +20,7 @@ const getRoles = (roles) => {
   };
 };
 
-const dashboardFilters = (filter, user, dealType) => {
+const dashboardFilters = (filter, user) => {
   const allFilters = [];
 
   const { createdByYou } = filter;
@@ -29,20 +29,6 @@ const dashboardFilters = (filter, user, dealType) => {
     allFilters.push({
       field: 'userId',
       value: user._id,
-    });
-  }
-
-  if (dealType === PRODUCT.BSS_EWCS) {
-    allFilters.push({
-      field: 'details.owningBank.id',
-      value: user.bank.id,
-    });
-  }
-
-  if (dealType === PRODUCT.GEF) {
-    allFilters.push({
-      field: 'bank.id',
-      value: user.bank.id,
     });
   }
 

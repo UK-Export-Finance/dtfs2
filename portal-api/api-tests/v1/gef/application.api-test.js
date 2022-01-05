@@ -22,7 +22,7 @@ const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = 'deals';
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
-  criteria.version === 1.5).terms;
+  criteria.version === 1.5);
 
 describe(baseUrl, () => {
   let aMaker;
@@ -77,12 +77,14 @@ describe(baseUrl, () => {
             status: expect.any(String),
             updatedAt: expect.any(Number),
           },
+          maker: expect.any(Object),
           eligibility: {
-            criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+            criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
               ...criterion,
               answer: null,
             })),
           },
+          editedBy: expect.any(Array),
           createdAt: expect.any(Number),
           status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
           dealType: 'GEF',
@@ -122,14 +124,16 @@ describe(baseUrl, () => {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
+        maker: expect.any(Object),
         eligibility: {
-          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+          criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
           status: CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED,
         },
         status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
+        editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
@@ -192,6 +196,7 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         exporter: {},
         status: CONSTANTS.DEAL.GEF_STATUS.DRAFT,
+        editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         dealType: 'GEF',
         submissionType: null,
@@ -202,7 +207,7 @@ describe(baseUrl, () => {
         checkerId: null,
         portalActivities: [],
         eligibility: {
-          criteria: mockEligibilityCriteriaLatestVersion.map((criterion) => ({
+          criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
@@ -210,11 +215,16 @@ describe(baseUrl, () => {
       };
       expect(body).toEqual({
         ...expectMongoId(expected),
+        maker: expect.any(Object),
         exporter: {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
       });
+
+      expect(body.maker.token).toBeUndefined();
+      expect(body.maker.password).toBeUndefined();
+      expect(body.maker.lastLogin).toBeUndefined();
     });
 
     it('it tells me the Bank Internal Ref Name is null', async () => {

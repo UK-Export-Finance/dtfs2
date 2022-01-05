@@ -1,12 +1,14 @@
 const Chance = require('chance');
 const CONSTANTS = require('../../constants');
+const { MOCK_MAKER, MOCK_CHECKER } = require('./mock_users');
 
 const chance = new Chance();
 
 const MOCK_AIN_APPLICATION = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -115,36 +117,14 @@ const MOCK_AIN_APPLICATION = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_AIN_APPLICATION_CHECKER = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -253,36 +233,14 @@ const MOCK_AIN_APPLICATION_CHECKER = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_AIN_APPLICATION_RETURN_MAKER = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -391,36 +349,13 @@ const MOCK_AIN_APPLICATION_RETURN_MAKER = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -497,36 +432,13 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -603,36 +515,13 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_DEAL = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -672,36 +561,13 @@ const MOCK_DEAL = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.DRAFT,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -777,30 +643,6 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
@@ -809,6 +651,8 @@ const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
   res._id = '61a7710b2ae62b0013dae687';
   res.dealType = 'GEF';
   res.userId = '619bae3467cc7c002069fc1e';
+  res.maker = MOCK_MAKER;
+  res.checker = MOCK_CHECKER;
   res.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
   res.bank = { id: '9' };
   res.exporterId = '61a7710b2ae62b0013dae686';
@@ -917,30 +761,6 @@ const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
   res.supportingInfoStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
   res.canSubmit = false;
   res.checkerCanSubmit = false;
-  res.maker = {
-    username: 'BANK1_MAKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  };
-  res.checker = {
-    username: 'BANK1_CHECKER1',
-    firstname: chance.first(),
-    surname: chance.last(),
-    email: chance.email(),
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  };
 
   return res;
 };

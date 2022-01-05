@@ -194,13 +194,10 @@ const applicationDetails = async (req, res, next) => {
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
 
-    const maker = await api.getUserDetails(application.userId, userToken);
-
     const userRoles = user.roles;
 
-    const applicationWithMaker = {
+    const applicationWithUserRoles = {
       ...application,
-      maker,
       userRoles,
     };
 
@@ -223,7 +220,7 @@ const applicationDetails = async (req, res, next) => {
 
     const params = {
       user,
-      ...buildView(applicationWithMaker, previewMode, user),
+      ...buildView(applicationWithUserRoles, previewMode, user),
     };
 
     if (facility) {
