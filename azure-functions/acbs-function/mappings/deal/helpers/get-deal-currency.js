@@ -5,7 +5,7 @@ const getDealCurrency = (deal) => {
   // GEF
   if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
     const currency = getBaseCurrency(deal.dealSnapshot.facilities);
-    return !currency ? CONSTANTS.DEAL.CURRENCY.DEFAULT : currency;
+    return !currency && !!currency.id ? CONSTANTS.DEAL.CURRENCY.DEFAULT : currency;
   }
   // BSS/ECWS
   return (
