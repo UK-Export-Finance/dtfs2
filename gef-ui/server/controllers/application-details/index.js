@@ -187,6 +187,7 @@ const applicationDetails = async (req, res, next) => {
 
   try {
     const application = await Application.findById(dealId, user, userToken);
+    console.log('---------------->', application);
     if (!application) {
       // 404 not found or unauthorised
       return res.redirect('/dashboard');

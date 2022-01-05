@@ -33,7 +33,7 @@ const MockRequest = () => {
 };
 
 const mockFacilities = {
-  status: 'Completed',
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
   items: [MOCK_ISSUED_FACILITY],
 };
 

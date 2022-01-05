@@ -229,6 +229,32 @@ describe('controllers/application-details', () => {
           }));
       });
 
+      it('renders `application-details` with hasChangedFacilities as true when changed facilities present', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            hasChangedFacilities: true,
+          }));
+      });
+
+      it('renders `application-details` with hasChangedFacilities as false when no changed facilities present', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            hasChangedFacilities: false,
+          }));
+      });
+
       it('renders `application-preview` when status is UKEF_APPROVED_WITH_CONDITIONS', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);

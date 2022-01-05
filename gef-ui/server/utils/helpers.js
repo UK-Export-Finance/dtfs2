@@ -99,15 +99,12 @@ const validationErrorHandler = (errs, href = '') => {
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
 // summary items for application details page
-const detailsSummaryItems = (hrefToSet, keys, item, value) => {
+const detailsSummaryItems = (href, keys, item, value) => {
   const summaryItems = [
-    ...(hrefToSet
+    ...(href
       ? [
         {
-          href: hrefToSet,
-          /* Clean-Deep removes any properties with Null value = require( an Object. Therefore if al)l
-         properties are Null, this leaves us with an Empty Object. isEmpty checks to see if the
-         Object is empty or not. */
+          href,
           text: `${keys || !isEmpty(value) ? 'Change' : 'Add'}`,
           visuallyHiddenText: item.label,
         },
@@ -118,13 +115,12 @@ const detailsSummaryItems = (hrefToSet, keys, item, value) => {
 };
 
 // produces summary items array for application preview page
-const previewSummaryItems = (hrefToSet, keys, item) => {
+const previewSummaryItems = (href, keys, item) => {
   const summaryItems = [
-    ...(hrefToSet
+    ...(href
       ? [
         {
-          href: hrefToSet,
-          /*  */
+          href,
           text: `${keys ? 'Change' : ''}`,
           visuallyHiddenText: item.label,
         },
