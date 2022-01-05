@@ -314,7 +314,6 @@ describe('/v1/deals', () => {
 
         expect(body.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
-        expect(body.checkerMIN).toEqual(mockChecker);
         expect(dealController.submitACBSIfAllPartiesHaveUrn).not.toHaveBeenCalled();
       });
 
