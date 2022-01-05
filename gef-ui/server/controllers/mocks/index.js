@@ -71,7 +71,7 @@ const MockApplicationResponseDraft = () => ({
   bankInternalRefName: 'Internal reference',
   additionalRefName: 'Additional reference',
   status: CONSTANTS.DEAL_STATUS.DRAFT,
-  userId: 'mock-user',
+  maker: { name: 'mock-user', timezone: 'Europe/London' },
   supportingInformation: {
     status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
@@ -99,7 +99,7 @@ const MockApplicationResponseSubmitted = () => {
     bankInternalRefName: 'Internal reference',
     additionalRefName: 'Additional reference',
     status: CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
-    userId: 'mock-user',
+    maker: { name: 'mock-user', timezone: 'Europe/London' },
     checkerId: 1235,
     supportingInformation: {
       status: CONSTANTS.DEAL_STATUS.COMPLETED,

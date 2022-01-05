@@ -1,6 +1,6 @@
 import { bssDeals, gefDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
-import { getApiData } from '../../helpers';
+import { getApiData, getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
 import { PRODUCT, STATUS } from '../../constants';
 
@@ -23,13 +23,14 @@ describe('controllers/dashboard', () => {
   let res;
   beforeEach(() => {
     req = {
-      body: {},
+      body: { createdByYou: '' },
       params: { page: 1 },
       session: {
         dashboardFilters: 'mock-filters',
         user: {
-          id: 'mock-user',
+          _id: 'mock-user',
           roles: ['maker', 'checker'],
+          bank: { id: '9' },
         },
       },
     };
@@ -48,12 +49,11 @@ describe('controllers/dashboard', () => {
           currentPage: 1,
           totalItems: 2,
         },
+        successMessage: getFlashSuccessMessage(req),
         primaryNav: 'home',
         tab: 'bssDeals',
-        user: {
-          id: 'mock-user',
-          roles: ['maker', 'checker'],
-        },
+        user: req.session.user,
+        createdByYou: req.body.createdByYou,
       });
     });
 
@@ -62,10 +62,19 @@ describe('controllers/dashboard', () => {
 
       await bssDeals(req, res);
 
-      expect(api.allDeals).toHaveBeenCalledWith(20, 20, [{
-        field: 'status',
-        value: STATUS.readyForApproval,
-      }], 'mock-token');
+      const expectedFilters = [
+        {
+          field: 'status',
+          value: STATUS.readyForApproval,
+        },
+      ];
+
+      expect(api.allDeals).toHaveBeenCalledWith(
+        20,
+        20,
+        expectedFilters,
+        'mock-token',
+      );
     });
   });
 
@@ -108,12 +117,11 @@ describe('controllers/dashboard', () => {
           currentPage: 1,
           totalItems: 2,
         },
+        successMessage: getFlashSuccessMessage(req),
         primaryNav: 'home',
         tab: 'gefDeals',
-        user: {
-          id: 'mock-user',
-          roles: ['maker', 'checker'],
-        },
+        user: req.session.user,
+        createdByYou: req.body.createdByYou,
       });
     });
 
@@ -122,10 +130,19 @@ describe('controllers/dashboard', () => {
 
       await gefDeals(req, res);
 
-      expect(api.gefDeals).toHaveBeenCalledWith(20, 20, [{
-        field: 'status',
-        value: 'Ready for Checker\'s approval',
-      }], 'mock-token');
+      const expectedFilters = [
+        {
+          field: 'status',
+          value: STATUS.readyForApproval,
+        },
+      ];
+
+      expect(api.gefDeals).toHaveBeenCalledWith(
+        20,
+        20,
+        expectedFilters,
+        'mock-token',
+      );
     });
   });
 });

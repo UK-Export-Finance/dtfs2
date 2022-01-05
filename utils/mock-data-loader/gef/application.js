@@ -2,6 +2,9 @@ const {
   EXPORTER_COMPLETED,
   EXPORTER_NO_INDUSTRIES,
 } = require('./exporter');
+const USERS = require('../portal/users');
+
+const MAKER = USERS.find((user) => user.roles.includes('maker'));
 
 const APPLICATION = [{
   // not started
@@ -10,6 +13,7 @@ const APPLICATION = [{
   additionalRefName: null,
   mandatoryVersionId: '123', // further down the line you may want exact mongoIDs
   exporter: EXPORTER_COMPLETED,
+  maker: MAKER,
 }, {
   // in progress
   bank: { id: '9' },
@@ -17,6 +21,7 @@ const APPLICATION = [{
   additionalRefName: '',
   mandatoryVersionId: '123',
   exporter: EXPORTER_NO_INDUSTRIES,
+  maker: MAKER,
 }, {
   // completed
   bank: { id: '9' },
@@ -24,6 +29,7 @@ const APPLICATION = [{
   additionalRefName: 'Some Additional Reference',
   mandatoryVersionId: '123',
   exporter: EXPORTER_COMPLETED,
+  maker: MAKER,
 }, {
   // in progress - no exporter
   bank: { id: '9' },
@@ -31,6 +37,7 @@ const APPLICATION = [{
   additionalRefName: '',
   mandatoryVersionId: '123',
   exporter: {},
+  maker: MAKER,
 }];
 
 module.exports = APPLICATION;

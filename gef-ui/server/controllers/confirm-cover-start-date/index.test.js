@@ -1,10 +1,7 @@
 import { processCoverStartDate } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
-
-const Chance = require('chance');
-
-const chance = new Chance();
+import MOCKS from '../mocks';
 
 jest.mock('../../services/api');
 
@@ -40,52 +37,6 @@ const MockRequest = () => {
   };
   return req;
 };
-
-const MockApplicationResponse = () => {
-  const res = {};
-  res._id = '1234';
-  res.exporter = {};
-  res.bank = { id: 'BANKID' };
-  res.bankInternalRefName = 'Internal refernce';
-  res.additionalRefName = 'Additional reference';
-  res.status = CONSTANTS.DEAL_STATUS.DRAFT;
-  res.userId = 'mock-user';
-  res.supportingInformation = {
-    status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
-  };
-  res.eligibility = {
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
-    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
-  };
-  res.editedBy = ['MAKER_CHECKER'];
-  res.submissionType = 'Automatic Inclusion Application';
-  res.submissionCount = 0;
-  res.comments = [];
-  res.ukefDealId = null;
-  res.createdAt = chance.timestamp();
-  res.submissionDate = chance.timestamp();
-  return res;
-};
-
-const MockUserResponse = () => ({
-  username: 'maker',
-  bank: { id: 'BANKID' },
-  firstname: 'Joe',
-  surname: 'Bloggs',
-  timezone: 'Europe/London',
-});
-
-const MockEligibilityCriteriaResponse = () => ({
-  terms: [
-    {
-      id: 12,
-      text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibility',
-    },
-  ],
-});
 
 const MockFacilityResponse = () => {
   const res = {};
@@ -137,10 +88,10 @@ describe('controller/ukef-cover-start-date', () => {
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
-    mockApplicationResponse = MockApplicationResponse();
+    mockApplicationResponse = MOCKS.MockApplicationResponseDraft();
     mockFacilityResponse = MockFacilityResponse();
-    mockUserResponse = MockUserResponse();
-    mockEligibilityCriteriaResponse = MockEligibilityCriteriaResponse();
+    mockUserResponse = MOCKS.MockUserResponse();
+    mockEligibilityCriteriaResponse = MOCKS.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);

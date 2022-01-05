@@ -1,9 +1,10 @@
 const CONSTANTS = require('../../constants');
+const { MOCK_MAKER } = require('./mock_users');
 
 const MOCK_AIN_APPLICATION = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -112,18 +113,6 @@ const MOCK_AIN_APPLICATION = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: 'ABC',
-    surname: 'DEF',
-    email: 'test',
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
   checker: {
     username: 'BANK1_CHECKER1',
     firstname: 'DEF',
@@ -141,7 +130,7 @@ const MOCK_AIN_APPLICATION = {
 const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -218,18 +207,6 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: 'ABC',
-    surname: 'DEF',
-    email: 'test',
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
   checker: {
     username: 'BANK1_CHECKER1',
     firstname: 'DEF',
@@ -247,7 +224,7 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
 const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -324,18 +301,6 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: 'ABC',
-    surname: 'DEF',
-    email: 'test',
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
   checker: {
     username: 'BANK1_CHECKER1',
     firstname: 'DEF',
@@ -353,7 +318,7 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
 const MOCK_DEAL = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
   status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -393,18 +358,6 @@ const MOCK_DEAL = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: 'ABC',
-    surname: 'DEF',
-    email: 'test',
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
   checker: {
     username: 'BANK1_CHECKER1',
     firstname: 'DEF',
@@ -422,7 +375,7 @@ const MOCK_DEAL = {
 const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
-  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
   status: CONSTANTS.DEAL_STATUS.DRAFT,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -498,18 +451,6 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  maker: {
-    username: 'BANK1_MAKER1',
-    firstname: 'ABC',
-    surname: 'DEF',
-    email: 'test',
-    roles: [],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638807320335',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc1e',
-  },
   checker: {
     username: 'BANK1_CHECKER1',
     firstname: 'DEF',
