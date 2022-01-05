@@ -2,7 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
 const path = require('path');
 const routes = require('./routes');

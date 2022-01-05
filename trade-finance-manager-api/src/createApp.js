@@ -4,7 +4,7 @@ const compression = require('compression');
 const { CaptureConsole } = require('@sentry/integrations');
 const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
