@@ -16,6 +16,8 @@ const getMaximumLiability = require('./get-maximum-liability');
 const mapFeeFrequency = require('./map-fee-frequency');
 const getInsuredPercentage = require('./get-insured-percentage');
 const getBaseCurrency = require('./get-base-currency');
+const getCoverStartDate = require('./get-cover-start-date');
+const hasFacilityBeenIssued = require('./get-facility-issue-status');
 
 module.exports = {
   isIssued,
@@ -36,4 +38,6 @@ module.exports = {
   mapFeeFrequency,
   getInsuredPercentage,
   getBaseCurrency,
+  getCoverStartDate,
+  hasFacilityBeenIssued,
 };

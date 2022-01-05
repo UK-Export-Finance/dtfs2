@@ -13,7 +13,7 @@ const SME_TYPE = {
 };
 
 const EXPIRATION_DATE = {
-  NONE: null,
+  NONE: '9999-12-31',
 };
 
 const PARTY = {
