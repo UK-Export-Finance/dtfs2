@@ -43,16 +43,12 @@ exports.allDeals = async (req, res) => {
   let filters = [];
   filters = dashboardFilters(req.body, req.session.user);
 
-  console.log('----- filters \n', filters);
-
   if (isChecker && !isMaker) {
     filters.push({
       field: 'status',
       value: STATUS.readyForApproval,
     });
   }
-
-  console.log('----- filters 2\n', filters);
 
   const { count, deals } = await getApiData(api.allDeals(
     req.params.page * PAGESIZE,
@@ -61,17 +57,13 @@ exports.allDeals = async (req, res) => {
     userToken,
   ), res);
 
-  console.log('----- count ', count);
-  console.log('----- deals \n', deals);
-
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
 
-  console.log('----- pages \n', pages);
-  const bingo = {
+  return res.render('dashboard/deals.njk', {
     deals,
     pages,
     successMessage: getFlashSuccessMessage(req),
@@ -79,9 +71,5 @@ exports.allDeals = async (req, res) => {
     tab,
     user: req.session.user,
     createdByYou: req.body.createdByYou,
-  };
-
-  console.log('----- bingo \n', bingo);
-
-  return res.render('dashboard/deals.njk', bingo);
+  });
 };

@@ -55,6 +55,8 @@ describe('controllers/dashboard', () => {
 
   describe('allDeals', () => {
     it('renders the correct template', async () => {
+      await allDeals(req, res);
+
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
         deals: mockDeals,
         pages: {
