@@ -3,7 +3,7 @@ const FormData = require('form-data');
 const apollo = require('./graphql/apollo');
 
 const {
-  allDealsQuery, dealsQuery, transactionsQuery, gefDealsQuery, gefFacilitiesQuery,
+  allDealsQuery, dealsQuery, transactionsQuery, gefFacilitiesQuery,
 } = require('./graphql/queries');
 
 require('dotenv').config();
@@ -637,18 +637,6 @@ const createFeedback = async (formData, token) => {
   return response.data;
 };
 
-const gefDeals = async (start, pagesize, filters, token) => {
-  const params = {
-    start,
-    pagesize,
-    filters,
-  };
-
-  const response = await apollo('GET', gefDealsQuery, params, token);
-
-  return response.data.gefDeals || { count: 0, deals: [] };
-};
-
 const gefFacilities = async (start, pagesize, filters, token) => {
   const params = {
     start,
@@ -704,6 +692,5 @@ module.exports = {
   downloadFile,
   mga,
   downloadMga,
-  gefDeals,
   gefFacilities,
 };
