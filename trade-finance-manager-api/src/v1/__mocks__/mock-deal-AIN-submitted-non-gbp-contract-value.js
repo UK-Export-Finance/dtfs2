@@ -21,6 +21,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     firstname: 'Joe',
     surname: 'Bloggs',
   },
+  facilities: [],
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
