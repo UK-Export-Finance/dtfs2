@@ -1,11 +1,11 @@
-
 const { formatTimestamp } = require('../../../helpers/date');
-const isIssued = require('./is-issued');
+const hasFacilityBeenIssued = require('./get-facility-issue-status');
+const getCoverStartDate = require('./get-cover-start-date');
 
 const getIssueDate = (facility, submissionDate) => {
   if (facility.facilitySnapshot) {
-    return isIssued(facility.facilitySnapshot.facilityStage)
-      ? formatTimestamp(facility.facilitySnapshot.requestedCoverStartDate)
+    return hasFacilityBeenIssued(facility)
+      ? formatTimestamp(getCoverStartDate(facility, true))
       : formatTimestamp(submissionDate);
   }
   return formatTimestamp(submissionDate);
