@@ -24,15 +24,15 @@ import {
   MOCK_DEAL,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
-} from './MOCKS/mock_applications';
+} from './mocks/mock_applications';
 
 import {
   MOCK_UNISSUED_FACILITY,
   MOCK_ISSUED_FACILITY,
   MOCK_ISSUED_FACILITY_UNCHANGED,
-} from './MOCKS/mock_facilities';
+} from './mocks/mock_facilities';
 
-import { MOCK_REQUEST } from './MOCKS/mock_requests';
+import { MOCK_REQUEST } from './mocks/mock_requests';
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {

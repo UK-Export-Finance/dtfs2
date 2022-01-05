@@ -19,18 +19,18 @@ import {
   MOCK_AIN_APPLICATION_RETURN_MAKER,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_CHECKER,
-} from './MOCKS/mock_applications';
+} from './mocks/mock_applications';
 
 import {
   MOCK_ISSUED_FACILITY,
   MOCK_FACILITY,
   MOCK_ISSUED_FACILITY_UNCHANGED,
   MOCK_UNISSUED_FACILITY,
-} from './MOCKS/mock_facilities';
+} from './mocks/mock_facilities';
 
 import {
   MOCK_REQUEST, MOCK_REQUEST_CHECKER,
-} from './MOCKS/mock_requests';
+} from './mocks/mock_requests';
 
 describe('pastDate', () => {
   it('Should return TRUE for the specified date', () => {
