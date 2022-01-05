@@ -84,9 +84,32 @@ context('Return to Maker as MIA', () => {
       Cypress.Cookies.preserveOnce('connect.sid');
     });
 
-    it('comments are showing', () => {
+    it('comments are showing and application details page should be fully unlocked', () => {
       applicationPreview.comments().contains('comment1');
       statusBanner.bannerStatus().contains('Further Maker\'s input required');
+
+      // should be able to add and delete facilities
+      applicationDetails.addCashFacilityButton().should('exist');
+      applicationDetails.addContingentFacilityButton().should('exist');
+      applicationDetails.deleteFacilityLink().should('exist');
+
+      // should be able to edit facilities
+      applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(0, 1).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(0, 3).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(0, 4).contains('Change');
+
+      // should be able to edit company house reg number
+      applicationDetails.exporterSummaryListRowAction(0, 0).contains('Change');
+
+      // should be able to edit eligibility criteria
+      applicationDetails.automaticCoverSummaryListRowAction(0, 0).contains('Change');
+
+      // abandon link should exist
+      applicationDetails.abandonLink().should('exist');
+      // should be able to edit ref name
+      applicationDetails.editRefNameLink().should('exist');
     });
 
     it('can change security details comments', () => {

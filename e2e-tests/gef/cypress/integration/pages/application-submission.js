@@ -9,6 +9,7 @@ const applicationSubmission = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   confirmationPanelTitle: () => cy.get('[data-cy="submit-confirmation-title"]'),
   confirmationPanelTitleFacilities: () => cy.get('[data-cy="submit-facilities-confirmation-title"]'),
+  confirmationText: () => cy.get('[data-cy="confirmation-text"]'),
   backToDashboadLink: () => cy.get('[data-cy="dashboard-link"]'),
 };
 

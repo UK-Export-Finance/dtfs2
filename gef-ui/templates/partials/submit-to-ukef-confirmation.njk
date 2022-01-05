@@ -25,24 +25,29 @@
         classes: "govuk-!-margin-bottom-7"
       }) }}
 
-      {% if isNotice %}
-        {% if ukefDecisionAccepted %}
-          <p>We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.</p>
-        {% else %}
-          <p>We'll send you an email shortly to confirm we've accepted your notice.</p>
-        {% endif %}
+      {% if unissuedToIssued %}
+          <p data-cy="confirmation-text">We’ll send you a confirmation email shortly, once we’ve acknowledged your issued facilities.</p>
       {% else %}
-      <p>We've sent you a confirmation email.</p>
-      <br/>
-      <h2>What happens next</h2>
-      <p>Our underwriters will review this application and let you know if UKEF can provide a guarantee.</p>
-      <p>They’ll either:</p>
-        <ul>
-          <li>approve it with conditions</li>
-          <li>approve it without conditions</li>
-          <li>decline the application</li>
-        </ul>
+        {% if isNotice %}
+          {% if ukefDecisionAccepted %}
+            <p data-cy="confirmation-text">We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.</p>
+          {% else %}
+            <p data-cy="confirmation-text">We'll send you an email shortly to confirm we've accepted your notice.</p>
+          {% endif %}
+        {% else %}
+        <p data-cy="confirmation-text">We've sent you a confirmation email.</p>
+        <br/>
+        <h2>What happens next</h2>
+        <p>Our underwriters will review this application and let you know if UKEF can provide a guarantee.</p>
+        <p>They’ll either:</p>
+          <ul>
+            <li>approve it with conditions</li>
+            <li>approve it without conditions</li>
+            <li>decline the application</li>
+          </ul>
+        {% endif %}
       {% endif %}
+
       <p><a class="govuk-link" href="/dashboard" data-cy="dashboard-link">Return to all applications and notices</a></p>
     </div>
   </div>

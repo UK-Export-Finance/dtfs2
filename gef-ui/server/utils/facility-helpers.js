@@ -39,9 +39,9 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
 const areUnissuedFacilitiesPresent = (application) => {
   const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
   // TODO: DTFS-4128 add MIN
-  const accepableApplicationType = ['Automatic Inclusion Notice'];
+  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN];
 
-  if (!accepableApplicationType.includes(application.submissionType)) {
+  if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
   }
   if (!acceptableStatuses.includes(application.status)) {

@@ -4,8 +4,8 @@ import CONSTANTS from '../../constants';
 
 const { isNotice } = require('../../utils/deal-helpers');
 
-const { RES_MOCK_AIN_APPLICATION_CHECKER } = require('../../utils/MOCKS/mock_applications');
-const { MOCK_ISSUED_FACILITY } = require('../../utils/MOCKS/mock_facilities');
+const { RES_MOCK_AIN_APPLICATION_CHECKER } = require('../../utils/mocks/mock_applications');
+const { MOCK_ISSUED_FACILITY } = require('../../utils/mocks/mock_facilities');
 
 jest.mock('../../services/api');
 
