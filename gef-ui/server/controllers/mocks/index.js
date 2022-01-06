@@ -192,7 +192,7 @@ const MockFacilityResponseChangedIssued = {
       currency: 'JPY',
       value: 3000000,
       ukefFacilityId: '12345',
-      changedToIssued: true,
+      canResubmitIssuedFacilities: true,
     },
     validation: { required: [] },
     createdAt: 20,

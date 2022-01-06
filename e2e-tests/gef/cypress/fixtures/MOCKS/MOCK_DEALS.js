@@ -201,7 +201,7 @@ const MOCK_FACILITY_ONE = {
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,
-  changedToIssued: null,
+  canResubmitIssuedFacilities: null,
 };
 
 const MOCK_FACILITY_TWO = {
@@ -229,7 +229,7 @@ const MOCK_FACILITY_TWO = {
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: true,
-  changedToIssued: null,
+  canResubmitIssuedFacilities: null,
 };
 
 const MOCK_FACILITY_THREE = {
@@ -257,7 +257,7 @@ const MOCK_FACILITY_THREE = {
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,
-  changedToIssued: null,
+  canResubmitIssuedFacilities: null,
 };
 
 const MOCK_FACILITY_FOUR = {
@@ -285,7 +285,7 @@ const MOCK_FACILITY_FOUR = {
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,
-  changedToIssued: null,
+  canResubmitIssuedFacilities: null,
 
 };
 

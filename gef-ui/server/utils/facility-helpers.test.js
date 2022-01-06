@@ -165,49 +165,49 @@ describe('facilityIssueDeadline()', () => {
 });
 
 describe('summaryIssuedChangedToIssued()', () => {
-  it('should return true when UKEF_ACKNOWLEDGED, maker, and has changedToIssued', () => {
+  it('should return true when UKEF_ACKNOWLEDGED, maker, and has canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION, MOCK_REQUEST, MOCK_ISSUED_FACILITY);
 
     expect(result).toEqual(true);
   });
 
-  it('should return true when CHANGED_REQUIRED, maker, and has changedToIssued', () => {
+  it('should return true when CHANGED_REQUIRED, maker, and has canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST, MOCK_ISSUED_FACILITY);
 
     expect(result).toEqual(true);
   });
 
-  it('should return false when DRAFT, maker, and has no changedToIssued', () => {
+  it('should return false when DRAFT, maker, and has no canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION_FALSE_COMMENTS, MOCK_REQUEST, MOCK_FACILITY);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHECKER, maker, and has changedToIssued', () => {
+  it('should return false when CHECKER, maker, and has canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION_CHECKER, MOCK_REQUEST, MOCK_ISSUED_FACILITY);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, maker, and has  no changedToIssued', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, maker, and has  no canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION, MOCK_REQUEST, MOCK_ISSUED_FACILITY_UNCHANGED);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, maker, and has no changedToIssued', () => {
+  it('should return false when CHANGED_REQUIRED, maker, and has no canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST, MOCK_ISSUED_FACILITY_UNCHANGED);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, checker, and has changedToIssued', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, checker, and has canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION, MOCK_REQUEST_CHECKER, MOCK_ISSUED_FACILITY);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, checker, and has changedToIssued', () => {
+  it('should return false when CHANGED_REQUIRED, checker, and has canResubmitIssuedFacilities', () => {
     const result = summaryIssuedChangedToIssued(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST_CHECKER, MOCK_ISSUED_FACILITY);
 
     expect(result).toEqual(false);
@@ -215,70 +215,70 @@ describe('summaryIssuedChangedToIssued()', () => {
 });
 
 describe('summaryIssuedUnchanged()', () => {
-  it('should return true when UKEF_ACKNOWLEDGED, maker, facility unissued and has changedToIssued facilities', () => {
+  it('should return true when UKEF_ACKNOWLEDGED, maker, facility unissued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION, MOCK_REQUEST, MOCK_UNISSUED_FACILITY, changed);
 
     expect(result).toEqual(true);
   });
 
-  it('should return true when CHANGED_REQUIRED, maker, facility unissued and has changedToIssued facilities', () => {
+  it('should return true when CHANGED_REQUIRED, maker, facility unissued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST, MOCK_UNISSUED_FACILITY, changed);
 
     expect(result).toEqual(true);
   });
 
-  it('should return false when DRAFT, maker, facility unissued and has changedToIssued facilities', () => {
+  it('should return false when DRAFT, maker, facility unissued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION_FALSE_COMMENTS, MOCK_REQUEST, MOCK_UNISSUED_FACILITY, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHECKER, maker, and facilty not issued and has no changedToIssued facilities', () => {
+  it('should return false when CHECKER, maker, and facilty not issued and has no canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION_CHECKER, MOCK_REQUEST, MOCK_ISSUED_FACILITY, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, maker, and facilty not issued and has no changedToIssued facilities', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, maker, and facilty not issued and has no canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION_ISSUED_ONLY);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION, MOCK_REQUEST, MOCK_ISSUED_FACILITY_UNCHANGED, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, maker, and facilty not issued and has no changedToIssued facilities', () => {
+  it('should return false when CHANGED_REQUIRED, maker, and facilty not issued and has no canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION_ISSUED_ONLY);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST, MOCK_ISSUED_FACILITY_UNCHANGED, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, maker, and facilty issued and has changedToIssued facilities', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, maker, and facilty issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION, MOCK_REQUEST, MOCK_ISSUED_FACILITY, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, maker, and facilty issued and has changedToIssued facilities', () => {
+  it('should return false when CHANGED_REQUIRED, maker, and facilty issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST, MOCK_ISSUED_FACILITY, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, checker, and facilty not issued and has changedToIssued facilities', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, checker, and facilty not issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION, MOCK_REQUEST_CHECKER, MOCK_UNISSUED_FACILITY, changed);
 
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, checker, and facilty not issued and has changedToIssued facilities', () => {
+  it('should return false when CHANGED_REQUIRED, checker, and facilty not issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     const result = summaryIssuedUnchanged(MOCK_AIN_APPLICATION_RETURN_MAKER, MOCK_REQUEST_CHECKER, MOCK_UNISSUED_FACILITY, changed);
 

@@ -162,7 +162,7 @@ const previewItemConditions = (previewParams) => {
 
 /*
   generates summaryItems for application details page
-  return to maker loads application details page and if has facilities changedToIssued then only makes certain fields clickable
+  return to maker loads application details page and if has facilities canResubmitIssuedFacilities then only makes certain fields clickable
 */
 const detailItemConditions = (params) => {
   const {
@@ -175,7 +175,7 @@ const detailItemConditions = (params) => {
 
   let summaryItems = [];
 
-  // if facilities have been changedToIssued (when returning to maker)
+  // if facilities have been canResubmitIssuedFacilities (when returning to maker)
   if (hasChangedFacilities) {
     summaryItems = previewItemConditions(params);
   } else {

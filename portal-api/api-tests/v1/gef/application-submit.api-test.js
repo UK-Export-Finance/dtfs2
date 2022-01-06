@@ -170,12 +170,12 @@ describe('removeChangedToIssued()', () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
 
-    // posts facility with changedToIssued as true
+    // posts facility with canResubmitIssuedFacilities as true
     await as(aMaker).post({
       dealId: mockApplication.body._id,
       type: FACILITY_TYPE.CASH,
       hasBeenIssued: true,
-      changedToIssued: true,
+      canResubmitIssuedFacilities: true,
     }).to(baseUrl);
 
     const mockQuery = { dealId: mockApplication.body._id };
@@ -185,14 +185,14 @@ describe('removeChangedToIssued()', () => {
     await removeChangedToIssued(body.items[0].dealId);
   });
 
-  it('changes changedToIssued to false', async () => {
+  it('changes canResubmitIssuedFacilities to false', async () => {
     const mockQuery = { dealId: mockApplication.body._id };
 
     // gets facilities from DB
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
 
     // gets value from body for changedToIssed
-    const changedToIssuedValue = body.items[0].details.changedToIssued;
+    const changedToIssuedValue = body.items[0].details.canResubmitIssuedFacilities;
 
     expect(changedToIssuedValue).toEqual(false);
   });

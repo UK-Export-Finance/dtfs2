@@ -62,7 +62,7 @@ const MOCK_ISSUED_FACILITY = {
     feeFrequency: 'Monthly',
     dayCountBasis: 365,
     coverDateConfirmed: true,
-    changedToIssued: true,
+    canResubmitIssuedFacilities: true,
   },
   validation: { required: [] },
 };
@@ -96,7 +96,7 @@ const MOCK_ISSUED_FACILITY_UNCHANGED = {
     feeFrequency: 'Monthly',
     dayCountBasis: 365,
     coverDateConfirmed: true,
-    changedToIssued: false,
+    canResubmitIssuedFacilities: false,
   },
   validation: { required: [] },
 };
@@ -196,7 +196,7 @@ const MOCK_FACILITY = {
         feeFrequency: 'Monthly',
         dayCountBasis: 360,
         coverDateConfirmed: true,
-        changedToIssued: true,
+        canResubmitIssuedFacilities: true,
       },
       validation: { required: [] },
     },

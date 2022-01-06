@@ -52,7 +52,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
 
   facilities.forEach(async (facility) => {
     const {
-      _id, hasBeenIssued, changedToIssued, shouldCoverStartOnSubmission, issueDate
+      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate
     } = facility;
 
     if (hasBeenIssued) {
@@ -61,13 +61,13 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
       };
 
       /**
-       * if changedToIssued and shouldCoverStartOnSubmission is true
+       * if canResubmitIssuedFacilities and shouldCoverStartOnSubmission is true
        * sets coverStartDate to issueDate
-       * else if not changedToIssued then set on submission to UKEF date
+       * else if not canResubmitIssuedFacilities then set on submission to UKEF date
        * sets hour, min, seconds to midnight of the same day
        */
       if (shouldCoverStartOnSubmission) {
-        if (changedToIssued) {
+        if (canResubmitIssuedFacilities) {
           update.coverStartDate = (new Date(issueDate)).setHours(0, 0, 0, 0);
         } else {
           update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
@@ -83,18 +83,18 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
 
 /*
   If facility has been changed to issued (after first submission)
-  When submitting to UKEF, have to remove the changedToIssued flag
+  When submitting to UKEF, have to remove the canResubmitIssuedFacilities flag
   Ensures that cannot update this facility anymore
 */
 const removeChangedToIssued = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
-    const { _id, changedToIssued } = facility;
+    const { _id, canResubmitIssuedFacilities } = facility;
 
-    if (changedToIssued) {
+    if (canResubmitIssuedFacilities) {
       const update = {
-        changedToIssued: false,
+        canResubmitIssuedFacilities: false,
       };
 
       await updateFacility(_id, update);
