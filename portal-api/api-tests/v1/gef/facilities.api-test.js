@@ -62,7 +62,7 @@ describe(baseUrl, () => {
         feeType: null,
         feeFrequency: null,
         coverDateConfirmed: null,
-        changedToIssued: null,
+        canResubmitIssuedFacilities: null,
         issueDate: null,
       },
       validation: {

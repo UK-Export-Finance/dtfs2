@@ -80,8 +80,8 @@ const cloneFacilities = async (currentDealId, newDealId) => {
       allFacilities[val].updatedAt = Date.now();
       // reset the ukefFacilityId
       allFacilities[val].ukefFacilityId = null;
-      // reset changedToIssued to null
-      allFacilities[val].changedToIssued = null;
+      // reset canResubmitIssuedFacilities to null
+      allFacilities[val].canResubmitIssuedFacilities = null;
       // reset issueDate to null
       allFacilities[val].issueDate = null;
       // reset coverDateConfirmed to null

@@ -19,18 +19,20 @@ import { makerCanReSubmit } from './deal-helpers';
 
 import {
   MOCK_AIN_APPLICATION,
+  MOCK_AIN_APPLICATION_RETURN_MAKER,
+  MOCK_AIN_APPLICATION_CHECKER,
   MOCK_DEAL,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
-} from './MOCKS/mock_applications';
+} from './mocks/mock_applications';
 
 import {
   MOCK_UNISSUED_FACILITY,
   MOCK_ISSUED_FACILITY,
   MOCK_ISSUED_FACILITY_UNCHANGED,
-} from './MOCKS/mock_facilities';
+} from './mocks/mock_facilities';
 
-import { MOCK_REQUEST } from './MOCKS/mock_requests';
+import { MOCK_REQUEST } from './mocks/mock_requests';
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {
@@ -240,23 +242,37 @@ describe('mapSummaryList()', () => {
   ];
 
   it('returns an empty array if Data object is empty ', () => {
-    expect(mapSummaryList({})).toEqual([]);
-    expect(mapSummaryList(null)).toEqual([]);
-    expect(mapSummaryList(undefined)).toEqual([]);
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+    expect(mapSummaryList(null, null, mapSummaryParams, null)).toEqual([]);
+    expect(mapSummaryList(undefined, undefined, mapSummaryParams, undefined)).toEqual([]);
   });
 
   it('returns an array populated by the correct properties', () => {
     const mockedData = MockedData();
     const mockedDisplayItems = MockedDisplayItems();
 
-    expect(mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
+    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
   });
 
   it('returns populated items array if href property is required', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
-    const { items } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].actions;
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
+    const { items } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].actions;
     expect(items.length).toEqual(1);
   });
 
@@ -264,10 +280,16 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
-    const item = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].actions.items[0];
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
+    const item = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].actions.items[0];
     expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
     mockedData.details.id = null;
-    const item2 = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].actions.items[0];
+    const item2 = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].actions.items[0];
     expect(item2.text).toEqual('Add');
   });
 
@@ -275,9 +297,14 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedData.details.id = null;
     mockedData.validation.required = ['id'];
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(html).toMatch('required');
   });
 
@@ -285,8 +312,13 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedData.details.id = null;
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toMatch('—');
   });
 
@@ -294,19 +326,29 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedData.details.address = {};
     mockedData.details.address.line1 = null;
     mockedData.details.address.line2 = null;
     mockedDisplayItems.slice(1);
     mockedDisplayItems[0].label = 'Address';
     mockedDisplayItems[0].id = 'address';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toMatch('—');
   });
 
   it('returns an unordered list if property contains an object', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
 
     mockedData.details.address = {};
     mockedData.details.address.line1 = 'Test Road';
@@ -315,13 +357,19 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].label = 'Address';
     mockedDisplayItems[0].id = 'address';
 
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
   });
 
   it('returns an unordered list with Provided on details if property contains an object', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedData.details.details = ['OTHER'];
     mockedData.details.detailsOther = 'Other text';
     mockedDisplayItems.slice(1);
@@ -329,13 +377,18 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].label = 'Provided on';
     mockedDisplayItems[0].id = 'details';
 
-    const other = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const other = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(other.html).toEqual('<ul class="is-unstyled"><li>Other - Other text</li></ul>');
   });
 
   it('returns selected industry ', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
 
     mockedData.details.selectedIndustry = {
       code: '1017',
@@ -348,7 +401,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].isIndustry = true;
     mockedDisplayItems[0].id = 'selectedIndustry';
 
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(html).toEqual('Arts, entertainment and recreation<br>Artistic creation');
   });
 
@@ -356,10 +409,15 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedData.details.id = '123';
     mockedDisplayItems[0].id = 'abc';
 
-    const response = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0];
+    const response = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0];
     expect(response).toEqual(null);
   });
 
@@ -367,13 +425,18 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedDisplayItems[0].id = 'price';
     mockedDisplayItems[0].isCurrency = true;
 
     mockedData.details.price = 200;
     mockedData.details.currency = { id: 'GBP' };
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('200 GBP');
   });
 
@@ -381,12 +444,17 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedDisplayItems[0].id = 'price';
     mockedDisplayItems[0].prefix = '£';
 
     mockedData.details.price = 200;
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('£200');
   });
 
@@ -394,12 +462,17 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedDisplayItems[0].id = 'percentage';
     mockedDisplayItems[0].suffix = '%';
 
     mockedData.details.percentage = 15;
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('15%');
   });
 
@@ -407,13 +480,18 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     const reverseFunction = (val) => val.split('').reverse().join('');
 
     mockedDisplayItems[0].id = 'reverse';
     mockedDisplayItems[0].method = (callback) => reverseFunction(callback);
 
     mockedData.details.reverse = 'abcd';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('dcba');
   });
 
@@ -421,18 +499,28 @@ describe('mapSummaryList()', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
 
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
     mockedDisplayItems[0].id = 'coverStartDate';
     mockedDisplayItems[0].method = (callback) => moment(callback)
       .format('D MMMM YYYY');
 
     mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('20 December 2021');
   });
 
   it('coverStartDate should display as text when startOnSubmission and !issueDate', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
 
     mockedDisplayItems[0].id = 'coverStartDate';
     mockedDisplayItems[0].method = (callback) => moment(callback)
@@ -441,13 +529,18 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].issueDate = null;
 
     mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('Date you submit the notice');
   });
 
   it('coverStartDate should display as date when startOnSubmission and issueDate', () => {
     const mockedDisplayItems = MockedDisplayItems();
     const mockedData = MockedData();
+
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
 
     mockedDisplayItems[0].id = 'coverStartDate';
     mockedDisplayItems[0].method = (callback) => moment(callback)
@@ -459,7 +552,7 @@ describe('mapSummaryList()', () => {
     mockedData.details.shouldCoverStartOnSubmission = true;
     mockedData.details.issueDate = '2021-12-25T00:00:00.000+00:00';
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('25 December 2021');
   });
 
@@ -479,7 +572,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItems = MockedDisplayItemsIssued();
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
       // should be blank so cannot change
       expect(text).toEqual('');
     });
@@ -493,7 +591,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItems = MockedDisplayItemsIssued();
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
       // should be blank so cannot change
       expect(text).toEqual('');
     });
@@ -515,7 +618,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsName = MockedDisplayItemsName();
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -528,7 +636,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -541,7 +654,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -563,7 +681,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsName = MockedDisplayItemsName();
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -576,10 +699,16 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
+
     it('coverEndDate', () => {
       const MockedDisplayItemsStartEnd = () => [
         {
@@ -589,7 +718,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -611,7 +745,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsName = MockedDisplayItemsName();
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -625,7 +764,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -639,7 +783,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -653,7 +802,12 @@ describe('mapSummaryList()', () => {
       ];
       const mockedDisplayItemsIssued = MockedDisplayItemsIssued();
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, MOCK_AIN_APPLICATION_ISSUED_ONLY, MOCK_REQUEST, true)[0].actions.items;
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -669,9 +823,253 @@ describe('mapSummaryList()', () => {
     ];
     const mockedDisplayItemsName = MockedDisplayItemsStage();
 
-    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, MOCK_AIN_APPLICATION, MOCK_REQUEST, true)[0].actions.items[0];
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
+    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
     // should be allowed to change so should display change
     expect(text).toEqual('Change');
+  });
+
+  describe('when with checker when changedToIssuedFacilities', () => {
+    it('Should return a blank array with stage', () => {
+    // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Stage',
+          id: 'hasBeenIssued',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_CHECKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      // should be [] as unable to change on checker
+      expect(result).toEqual([]);
+    });
+
+    it('Should return a blank array when with checker with coverStartDate', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_CHECKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      // should be [] as unable to change on checker
+      expect(result).toEqual([]);
+    });
+
+    it('Should return a blank array when with checker with coverEndDate', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_CHECKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      // should be [] as unable to change on checker
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('when returning to maker with changed to issued facilities', () => {
+    it('should not be able to change stage', () => {
+    // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Stage',
+          id: 'hasBeenIssued',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('');
+    });
+
+    it('Should show change for coverStartDate', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+
+    it('Should show change for coverEndDate', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+
+    it('Should show change for stage when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Stage',
+          id: 'hasBeenIssued',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+
+    it('Should show not change for coverStartDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      expect(text).toEqual('');
+    });
+
+    it('Should show not change for coverEndDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      expect(text).toEqual('');
+    });
+
+    it('Should not show change for stage when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Stage',
+          id: 'hasBeenIssued',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([]);
+    });
+
+    it('Should show not change for coverStartDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([]);
+    });
+
+    it('Should show not change for coverEndDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([]);
+    });
   });
 });
 
