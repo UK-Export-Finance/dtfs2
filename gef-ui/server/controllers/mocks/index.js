@@ -178,6 +178,47 @@ const MockFacilityResponse = () => ({
   }],
 });
 
+const MockFacilityResponseChangedIssued = {
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  items: [{
+    details: {
+      type: 'CASH',
+      name: 'Foundry4',
+      hasBeenIssued: false,
+      monthsOfCover: null,
+      coverStartDate: '2022-01-02T00:00:00.000+00:00',
+      shouldCoverStartOnSubmission: true,
+      coverEndDate: '2030-01-02T00:00:00.000+00:00',
+      currency: 'JPY',
+      value: 3000000,
+      ukefFacilityId: '12345',
+      canResubmitIssuedFacilities: true,
+    },
+    validation: { required: [] },
+    createdAt: 20,
+  }],
+};
+
+const MockFacilityResponseNotChangedIssued = {
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  items: [{
+    details: {
+      type: 'CASH',
+      name: 'Foundry4',
+      hasBeenIssued: false,
+      monthsOfCover: null,
+      coverStartDate: '2022-01-02T00:00:00.000+00:00',
+      shouldCoverStartOnSubmission: true,
+      coverEndDate: '2030-01-02T00:00:00.000+00:00',
+      currency: 'JPY',
+      value: 3000000,
+      ukefFacilityId: '12345',
+    },
+    validation: { required: [] },
+    createdAt: 20,
+  }],
+};
+
 const MockApplicationResponseSubmission = () => {
   const res = {};
   res._id = '1234';
@@ -317,4 +358,6 @@ module.exports = {
   MockFacilityResponseUnissued,
   MockExpectedFacilityRenderChange,
   MockFacilitiesResponse,
+  MockFacilityResponseChangedIssued,
+  MockFacilityResponseNotChangedIssued,
 };

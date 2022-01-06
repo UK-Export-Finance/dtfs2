@@ -131,6 +131,7 @@ describe('controllers/application-details', () => {
           unissuedFacilitiesPresent: expect.any(Boolean),
           facilitiesChangedToIssued: expect.any(Array),
           displayComments: expect.any(Boolean),
+          hasChangedFacilities: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),
@@ -225,6 +226,32 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
+          }));
+      });
+
+      it('renders `application-details` with hasChangedFacilities as true when changed facilities present', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            hasChangedFacilities: true,
+          }));
+      });
+
+      it('renders `application-details` with hasChangedFacilities as false when no changed facilities present', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            hasChangedFacilities: false,
           }));
       });
 

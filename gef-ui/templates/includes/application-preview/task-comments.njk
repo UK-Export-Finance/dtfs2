@@ -35,7 +35,11 @@
     {% endif %}
 
     {% if facilitiesChangedToIssued.length > 0 %}
-      <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+      {% if status === "Further Maker's input required"%}
+        <h2 data-cy="update-unissued-stage">Change facility details</h2>
+      {% else %}
+        <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+      {% endif %}
       <h3 data-cy="changed-unissued-header">The following facility stages have been updated to issued:</h3>
       <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities-list">
         {% for item in facilitiesChangedToIssued %}

@@ -82,6 +82,7 @@ context('Submit to UKEF', () => {
       submitToUkef.comment().type('Test comment');
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic inclusion notice submitted to UKEF');
+      submitToUkefConfirmation.confirmationText().contains('We\'ll send you an email shortly to confirm we\'ve accepted your notice.');
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
 

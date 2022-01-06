@@ -1,10 +1,14 @@
+const Chance = require('chance');
 const CONSTANTS = require('../../constants');
-const { MOCK_MAKER } = require('./mock_users');
+const { MOCK_MAKER, MOCK_CHECKER } = require('./mock_users');
+
+const chance = new Chance();
 
 const MOCK_AIN_APPLICATION = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -13,7 +17,7 @@ const MOCK_AIN_APPLICATION = {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-  bankInternalRefName: 'abc',
+  bankInternalRefName: chance.string({ length: 5 }),
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
@@ -101,7 +105,7 @@ const MOCK_AIN_APPLICATION = {
           feeFrequency: 'Monthly',
           dayCountBasis: 365,
           coverDateConfirmed: true,
-          changedToIssued: true,
+          canResubmitIssuedFacilities: true,
         },
         validation: { required: [] },
       },
@@ -113,25 +117,15 @@ const MOCK_AIN_APPLICATION = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: 'DEF',
-    surname: 'GHJ',
-    email: 'test2',
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
-const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
+const MOCK_AIN_APPLICATION_CHECKER = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
+  userId: '619bae3467cc7c002069fc1e',
   maker: MOCK_MAKER,
-  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  checker: MOCK_CHECKER,
+  status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
   eligibility: {
@@ -139,7 +133,7 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-  bankInternalRefName: 'abc',
+  bankInternalRefName: chance.string({ length: 5 }),
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
@@ -195,7 +189,39 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
           feeFrequency: 'Monthly',
           dayCountBasis: 365,
           coverDateConfirmed: false,
-          changedToIssued: null,
+        },
+        validation: { required: [] },
+      },
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae69a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: 'CASH',
+          hasBeenIssued: true,
+          name: 'Facility one',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: true,
+          canResubmitIssuedFacilities: true,
         },
         validation: { required: [] },
       },
@@ -207,24 +233,129 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: 'DEF',
-    surname: 'GHJ',
-    email: 'test2',
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
-const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
+const MOCK_AIN_APPLICATION_RETURN_MAKER = {
+  _id: '61a7710b2ae62b0013dae687',
+  dealType: 'GEF',
+  userId: '619bae3467cc7c002069fc1e',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
+  status: CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
+  bank: { id: '9' },
+  exporterId: '61a7710b2ae62b0013dae686',
+  eligibility: {
+    criteria: [],
+    updatedAt: 1638535562287,
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  },
+  bankInternalRefName: chance.string({ length: 5 }),
+  mandatoryVersionId: null,
+  createdAt: 1638363403942,
+  updatedAt: 1638983294975,
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+  submissionCount: 1,
+  submissionDate: '1638363716309',
+  supportingInformation: {
+    manualInclusion: [],
+    securityDetails: {},
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
+    requiredFields: [],
+  },
+  ukefDealId: '0030113304',
+  checkerId: '619bae3467cc7c002069fc21',
+  editedBy: ['619bae3467cc7c002069fc1e'],
+  additionalRefName: null,
+  facilitiesUpdated: 1638542220497,
+  comments: [],
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
+  ukefDecision: [],
+  ukefDecisionAccepted: true,
+  id: '61a7710b2ae62b0013dae687',
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
+  facilities: {
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    items: [
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae68a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: 'CASH',
+          hasBeenIssued: false,
+          name: 'Facility two',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: false,
+        },
+        validation: { required: [] },
+      },
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae69a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: 'CASH',
+          hasBeenIssued: true,
+          name: 'Facility one',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: true,
+          canResubmitIssuedFacilities: true,
+        },
+        validation: { required: [] },
+      },
+    ],
+  },
+  exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  canSubmit: false,
+  checkerCanSubmit: false,
+};
+
+const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -233,7 +364,90 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-  bankInternalRefName: 'abc',
+  bankInternalRefName: chance.string({ length: 5 }),
+  mandatoryVersionId: null,
+  createdAt: 1638363403942,
+  updatedAt: 1638983294975,
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+  submissionCount: 1,
+  submissionDate: '1638363716309',
+  supportingInformation: {
+    manualInclusion: [],
+    securityDetails: {},
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
+    requiredFields: [],
+  },
+  ukefDealId: '0030113304',
+  checkerId: '619bae3467cc7c002069fc21',
+  editedBy: ['619bae3467cc7c002069fc1e'],
+  additionalRefName: null,
+  facilitiesUpdated: 1638542220497,
+  comments: [],
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
+  ukefDecision: [],
+  ukefDecisionAccepted: true,
+  id: '61a7710b2ae62b0013dae687',
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
+  facilities: {
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    items: [
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae68a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: 'CASH',
+          hasBeenIssued: false,
+          name: 'Facility two',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: false,
+          canResubmitIssuedFacilities: null,
+        },
+        validation: { required: [] },
+      },
+    ],
+  },
+  exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  canSubmit: false,
+  checkerCanSubmit: false,
+};
+
+const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
+  _id: '61a7710b2ae62b0013dae687',
+  dealType: 'GEF',
+  maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
+  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  bank: { id: '9' },
+  exporterId: '61a7710b2ae62b0013dae686',
+  eligibility: {
+    criteria: [],
+    updatedAt: 1638535562287,
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  },
+  bankInternalRefName: chance.string({ length: 5 }),
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
@@ -289,7 +503,7 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
           feeFrequency: 'Monthly',
           dayCountBasis: 365,
           coverDateConfirmed: false,
-          changedToIssued: null,
+          canResubmitIssuedFacilities: null,
         },
         validation: { required: [] },
       },
@@ -301,24 +515,13 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: 'DEF',
-    surname: 'GHJ',
-    email: 'test2',
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_DEAL = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -327,7 +530,7 @@ const MOCK_DEAL = {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-  bankInternalRefName: 'abc',
+  bankInternalRefName: chance.string({ length: 5 }),
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
@@ -358,24 +561,13 @@ const MOCK_DEAL = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: 'DEF',
-    surname: 'GHJ',
-    email: 'test2',
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
 };
 
 const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   _id: '61a7710b2ae62b0013dae687',
   dealType: 'GEF',
   maker: MOCK_MAKER,
+  checker: MOCK_CHECKER,
   status: CONSTANTS.DEAL_STATUS.DRAFT,
   bank: { id: '9' },
   exporterId: '61a7710b2ae62b0013dae686',
@@ -384,7 +576,7 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-  bankInternalRefName: 'abc',
+  bankInternalRefName: chance.string({ length: 5 }),
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
@@ -451,24 +643,135 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   canSubmit: false,
   checkerCanSubmit: false,
-  checker: {
-    username: 'BANK1_CHECKER1',
-    firstname: 'DEF',
-    surname: 'GHJ',
-    email: 'test2',
-    roles: ['maker'],
-    bank: {},
-    timezone: 'Europe/London',
-    lastLogin: '1638964634607',
-    'user-status': 'active',
-    _id: '619bae3467cc7c002069fc21',
-  },
+};
+
+const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
+  const res = {};
+
+  res._id = '61a7710b2ae62b0013dae687';
+  res.dealType = 'GEF';
+  res.userId = '619bae3467cc7c002069fc1e';
+  res.maker = MOCK_MAKER;
+  res.checker = MOCK_CHECKER;
+  res.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
+  res.bank = { id: '9' };
+  res.exporterId = '61a7710b2ae62b0013dae686';
+  res.eligibility = {
+    criteria: [],
+    updatedAt: 1638535562287,
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  };
+  res.bankInternalRefName = 'abc';
+  res.mandatoryVersionId = null;
+  res.createdAt = 1638363403942;
+  res.updatedAt = 1638983294975;
+  res.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
+  res.submissionCount = 1;
+  res.submissionDate = '1638363716309';
+  res.supportingInformation = {
+    manualInclusion: [],
+    securityDetails: {},
+    status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
+    requiredFields: [],
+  };
+  res.ukefDealId = '0030113304';
+  res.checkerId = '619bae3467cc7c002069fc21';
+  res.editedBy = ['619bae3467cc7c002069fc1e'];
+  res.additionalRefName = null;
+  res.facilitiesUpdated = 1638542220497;
+  res.comments = [];
+  res.previousStatus = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+  res.ukefDecision = [];
+  res.ukefDecisionAccepted = true;
+  res.id = '61a7710b2ae62b0013dae687';
+  res.exporter = { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] };
+  res.facilities = {
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    items: [
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae68a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: 'CASH',
+          hasBeenIssued: false,
+          name: 'Facility two',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: false,
+        },
+        validation: { required: [] },
+      },
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae69a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: 'CASH',
+          hasBeenIssued: true,
+          name: 'Facility one',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: true,
+          canResubmitIssuedFacilities: true,
+        },
+        validation: { required: [] },
+      },
+    ],
+  };
+  res.exporterStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
+  res.eligibilityCriteriaStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
+  res.facilitiesStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
+  res.supportingInfoStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
+  res.canSubmit = false;
+  res.checkerCanSubmit = false;
+
+  return res;
 };
 
 module.exports = {
   MOCK_AIN_APPLICATION,
+  MOCK_AIN_APPLICATION_RETURN_MAKER,
+  MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_DEAL,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+  RES_MOCK_AIN_APPLICATION_CHECKER,
 };
