@@ -21,14 +21,26 @@ const getRoles = (roles) => {
 };
 
 const dashboardFilters = (filter, user) => {
+  const { createdByYou } = filter;
+  const { isMaker, isChecker } = getRoles(user.roles);
   const allFilters = [];
 
-  const { createdByYou } = filter;
+  allFilters.push({
+    field: 'bank.id',
+    value: user.bank.id,
+  });
 
   if (createdByYou) {
     allFilters.push({
-      field: 'userId',
+      field: 'maker._id',
       value: user._id,
+    });
+  }
+
+  if (isChecker && !isMaker) {
+    allFilters.push({
+      field: 'status',
+      value: STATUS.readyForApproval,
     });
   }
 
@@ -38,17 +50,8 @@ const dashboardFilters = (filter, user) => {
 exports.allDeals = async (req, res) => {
   const tab = 'deals';
   const { userToken } = requestParams(req);
-  const { isMaker, isChecker } = getRoles(req.session.user.roles);
 
-  let filters = [];
-  filters = dashboardFilters(req.body, req.session.user);
-
-  if (isChecker && !isMaker) {
-    filters.push({
-      field: 'status',
-      value: STATUS.readyForApproval,
-    });
-  }
+  const filters = dashboardFilters(req.body, req.session.user);
 
   const { count, deals } = await getApiData(api.allDeals(
     req.params.page * PAGESIZE,

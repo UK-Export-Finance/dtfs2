@@ -69,9 +69,7 @@ context('View dashboard deals as a checker', () => {
   });
 
   it('Only deals with checker status appear on the dashboard. Each deal goes to correct deal URL', () => {
-    //---------------------------------------------------------------
     // login, go to dashboard
-    //---------------------------------------------------------------
     cy.login(CHECKER_LOGIN);
     dashboard.visit();
 
@@ -93,9 +91,7 @@ context('View dashboard deals as a checker', () => {
       link,
     } = dashboard.row;
 
-    //---------------------------------------------------------------
     // should only see 2 deals
-    //---------------------------------------------------------------
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(2 items)');
     });
@@ -133,22 +129,16 @@ context('View dashboard deals as a checker', () => {
       expect(text.trim()).to.match(regexDateTime);
     });
 
-    //---------------------------------------------------------------
     // link should take you to GEF deal page
-    //---------------------------------------------------------------
     link(gefDealId).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
 
 
-    //---------------------------------------------------------------
     // go back to the dashboard
-    //---------------------------------------------------------------
     dashboard.visit();
 
 
-    //---------------------------------------------------------------
     // second deal (BSS)
-    //---------------------------------------------------------------
     const secondRow = cy.get('table tr').eq(2);
     const bssDealId = bssDeal._id;
 
@@ -178,9 +168,7 @@ context('View dashboard deals as a checker', () => {
       expect(text.trim()).to.match(regexDateTime);
     });
 
-    //---------------------------------------------------------------
     // link should take you to BSS deal page
-    //---------------------------------------------------------------
     link(bssDealId).click();
     cy.url().should('eq', relative(`/contract/${bssDealId}`));
   });

@@ -4,7 +4,6 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
-// test data we want to set up + work with..
 const twentyOneDeals = require('../../../../../fixtures/deal-dashboard-data');
 
 context('Dashboard Deals pagination controls', () => {
@@ -12,13 +11,13 @@ context('Dashboard Deals pagination controls', () => {
 
   before(() => {
     cy.deleteGefApplications(MAKER_LOGIN);
-
     cy.deleteDeals(MAKER_LOGIN);
+
     cy.insertManyDeals(twentyOneDeals, MAKER_LOGIN)
       .then((insertedDeals) => { deals = insertedDeals; });
   });
 
-  it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {
+  it('Dashboard Deals displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
     // login and go to the dashboard
     cy.login(MAKER_LOGIN);
     dashboard.visit();

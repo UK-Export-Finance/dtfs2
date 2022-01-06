@@ -3,6 +3,8 @@ const page = {
 
   createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
 
+  createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
+
   showFilters: () => cy.contains('Show filters'),
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),

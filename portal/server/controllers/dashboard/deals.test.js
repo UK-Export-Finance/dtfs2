@@ -54,6 +54,26 @@ describe('controllers/dashboard', () => {
   });
 
   describe('allDeals', () => {
+    it('calls api.allDeals with bank.id filter', async () => {
+      await allDeals(req, res);
+
+      expect(api.allDeals).toBeCalledTimes(1);
+
+      const expectedFilters = [
+        {
+          field: 'bank.id',
+          value: req.session.user.bank.id,
+        },
+      ];
+
+      expect(api.allDeals).toHaveBeenCalledWith(
+        20,
+        20,
+        expectedFilters,
+        'mock-token',
+      );
+    });
+
     it('renders the correct template', async () => {
       await allDeals(req, res);
 
@@ -72,24 +92,56 @@ describe('controllers/dashboard', () => {
       });
     });
 
-    it('adds filter if user is a checker', async () => {
-      req.session.user.roles = ['checker'];
+    describe('when req.body.createdByYou is provided', () => {
+      it('calls api.allDeals with `maker._id`` filter', async () => {
+        req.body.createdByYou = 'true';
 
-      await allDeals(req, res);
+        await allDeals(req, res);
 
-      const expectedFilters = [
-        {
-          field: 'status',
-          value: STATUS.readyForApproval,
-        },
-      ];
+        const expectedFilters = [
+          {
+            field: 'bank.id',
+            value: req.session.user.bank.id,
+          },
+          {
+            field: 'maker._id',
+            value: req.session.user._id,
+          },
+        ];
 
-      expect(api.allDeals).toHaveBeenCalledWith(
-        20,
-        20,
-        expectedFilters,
-        'mock-token',
-      );
+        expect(api.allDeals).toHaveBeenCalledWith(
+          20,
+          20,
+          expectedFilters,
+          'mock-token',
+        );
+      });
+    });
+
+    describe('when user is a checker', () => {
+      it(`calls api.allDeals with ${STATUS.readyForApproval} filter`, async () => {
+        req.session.user.roles = ['checker'];
+
+        await allDeals(req, res);
+
+        const expectedFilters = [
+          {
+            field: 'bank.id',
+            value: req.session.user.bank.id,
+          },
+          {
+            field: 'status',
+            value: STATUS.readyForApproval,
+          },
+        ];
+
+        expect(api.allDeals).toHaveBeenCalledWith(
+          20,
+          20,
+          expectedFilters,
+          'mock-token',
+        );
+      });
     });
   });
 });

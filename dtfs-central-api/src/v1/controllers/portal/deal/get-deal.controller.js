@@ -147,6 +147,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   const collection = await db.getCollection('deals');
 
   const deals = await collection.aggregate([
+    { $match: filters },
     {
       $project: {
         _id: 1,
@@ -156,10 +157,8 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         submissionType: '$submissionType',
         exporter: '$exporter.companyName',
         updatedAt: '$updatedAt',
-        // userId: '$maker._id',
       },
     },
-    { $match: filters },
     { $sort: { ...sort, updatedAt: -1 } },
     {
       $facet: {
