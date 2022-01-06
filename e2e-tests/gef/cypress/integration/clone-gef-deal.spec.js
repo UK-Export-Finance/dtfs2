@@ -311,7 +311,7 @@ context('Clone GEF (MIN) deal', () => {
       });
     });
   });
-  describe('Clone MIA deal', () => {
+  describe('Clone MIN deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
@@ -319,13 +319,13 @@ context('Clone GEF (MIN) deal', () => {
       cy.visit(relative(`/gef/application-details/${MINdealId}`));
     });
 
-    it('should clone a GEF (MIA) deal', () => {
+    it('should clone a GEF (MIN) deal', () => {
       cloneGEFdeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
-      nameApplication.internalRef().clear().type('Cloned MIA deal');
+      nameApplication.internalRef().clear().type('Cloned MIN deal');
       nameApplication.form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
