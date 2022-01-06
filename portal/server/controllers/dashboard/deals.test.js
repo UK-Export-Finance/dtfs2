@@ -31,6 +31,13 @@ jest.mock('../../helpers', () => ({
   })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
+  isSuperUser: jest.fn((user) => {
+    if (user.bank.id === '*') {
+      return true;
+    }
+
+    return false;
+  }),
 }));
 
 describe('controllers/dashboard', () => {
@@ -72,24 +79,6 @@ describe('controllers/dashboard', () => {
         expectedFilters,
         'mock-token',
       );
-    });
-
-    it('renders the correct template', async () => {
-      await allDeals(req, res);
-
-      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-        deals: mockDeals,
-        pages: {
-          totalPages: 1,
-          currentPage: 1,
-          totalItems: 2,
-        },
-        successMessage: getFlashSuccessMessage(req),
-        primaryNav: 'home',
-        tab: 'deals',
-        user: req.session.user,
-        createdByYou: req.body.createdByYou,
-      });
     });
 
     describe('when req.body.createdByYou is provided', () => {
@@ -141,6 +130,41 @@ describe('controllers/dashboard', () => {
           expectedFilters,
           'mock-token',
         );
+      });
+    });
+
+    describe('when user is a super user', () => {
+      it('calls api.allDeals without any filters', async () => {
+        req.session.user.bank.id = '*';
+
+        await allDeals(req, res);
+
+        const expectedFilters = [];
+
+        expect(api.allDeals).toHaveBeenCalledWith(
+          20,
+          20,
+          expectedFilters,
+          'mock-token',
+        );
+      });
+    });
+    
+    it('renders the correct template', async () => {
+      await allDeals(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
+        deals: mockDeals,
+        pages: {
+          totalPages: 1,
+          currentPage: 1,
+          totalItems: 2,
+        },
+        successMessage: getFlashSuccessMessage(req),
+        primaryNav: 'home',
+        tab: 'deals',
+        user: req.session.user,
+        createdByYou: req.body.createdByYou,
       });
     });
   });

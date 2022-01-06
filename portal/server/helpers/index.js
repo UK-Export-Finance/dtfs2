@@ -6,14 +6,15 @@ const generateErrorSummary = require('./generateErrorSummary');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
 const formattedTimestamp = require('./formattedTimestamp');
 const errorHref = require('./errorHref');
-const postToApi = require('./postToApi');
+const isObject = require('./isObject');
+const isSuperUser = require('./isSuperUser');
 const mapCurrencies = require('./mapCurrencies');
 const mapCountries = require('./mapCountries');
 const mapIndustryClasses = require('./mapIndustryClasses');
 const mapIndustrySectors = require('./mapIndustrySectors');
 const { pageSpecificValidationErrors } = require('./pageSpecificValidationErrors');
+const postToApi = require('./postToApi');
 const sanitizeCurrency = require('./sanitizeCurrency');
-const isObject = require('./isObject');
 const validationErrorHandler = require('./validationErrorHandler');
 
 module.exports = {
@@ -26,13 +27,14 @@ module.exports = {
   formatCountriesForGDSComponent,
   formattedTimestamp,
   errorHref,
-  postToApi,
+  isObject,
+  isSuperUser,
   mapCountries,
   mapCurrencies,
   mapIndustryClasses,
   mapIndustrySectors,
   pageSpecificValidationErrors,
+  postToApi,
   sanitizeCurrency,
-  isObject,
   validationErrorHandler,
 };

@@ -5,6 +5,7 @@ const {
   getApiData,
   requestParams,
   getFlashSuccessMessage,
+  isSuperUser,
 } = require('../../helpers');
 
 const PAGESIZE = 20;
@@ -25,10 +26,12 @@ const dashboardFilters = (filter, user) => {
   const { isMaker, isChecker } = getRoles(user.roles);
   const allFilters = [];
 
-  allFilters.push({
-    field: 'bank.id',
-    value: user.bank.id,
-  });
+  if (!isSuperUser(user)) {
+    allFilters.push({
+      field: 'bank.id',
+      value: user.bank.id,
+    });
+  }
 
   if (createdByYou) {
     allFilters.push({
