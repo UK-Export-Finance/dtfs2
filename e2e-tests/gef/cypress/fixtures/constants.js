@@ -1,6 +1,12 @@
+const DEAL_TYPE = {
+  GEF: 'GEF',
+  BSS_EWCS: 'BSS/EWCS',
+};
+
 const DEAL_SUBMISSION_TYPE = {
   AIN: 'Automatic Inclusion Notice',
   MIA: 'Manual Inclusion Application',
+  MIN: 'Manual Inclusion Notice',
 };
 
 const DEAL_STATUS = {
@@ -30,4 +36,6 @@ const FACILITY_TYPE = {
   CONTINGENT: 'CONTINGENT',
 };
 
-exports.default = { DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE };
+exports.default = {
+  DEAL_TYPE, DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE,
+};

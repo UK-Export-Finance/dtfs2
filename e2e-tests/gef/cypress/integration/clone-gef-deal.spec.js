@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
@@ -8,9 +10,12 @@ import nameApplication from './pages/name-application';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import uploadFiles from './pages/upload-files';
 import statusBanner from './pages/application-status-banner';
+import CONSTANTS from '../fixtures/constants';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const { format } = require('date-fns');
+import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
+import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
+import { MOCK_MIN_APPLICATION } from '../fixtures/mocks/mock-MIN-deal';
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -95,10 +100,10 @@ context('Clone GEF (AIN) deal', () => {
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
         statusBanner.bannerDateCreated().contains(bannerDate);
-        statusBanner.bannerSubmissionType().contains('Automatic Inclusion Notice');
+        statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
-        applicationDetails.mainHeading().contains('Automatic Inclusion Notice');
+        applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
         applicationDetails.automaticCoverStatus().contains('Completed');
         applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
@@ -270,10 +275,10 @@ context('Clone GEF (MIA) deal', () => {
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
         statusBanner.bannerDateCreated().contains(bannerDate);
-        statusBanner.bannerSubmissionType().contains('Manual Inclusion Application');
+        statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
-        applicationDetails.mainHeading().contains('Manual Inclusion Application');
+        applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
         applicationDetails.automaticCoverStatus().contains('Completed');
         applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
@@ -282,6 +287,51 @@ context('Clone GEF (MIA) deal', () => {
           .find('.govuk-summary-list__key')
           .contains('Stage');
       });
+    });
+  });
+});
+
+context('Clone GEF (MIN) deal', () => {
+  let MINdealId;
+  let token;
+  let facilityOneId;
+  before(() => {
+    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+      token = t;
+    }).then(() => {
+      cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
+        MINdealId = body._id;
+        console.log(body);
+        cy.apiUpdateApplication(MINdealId, token, MOCK_MIN_APPLICATION).then(() => {
+          cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+            facilityOneId = facility.body.details._id;
+            cy.apiUpdateFacility(facilityOneId, token, MOCK_FACILITY_ONE);
+          });
+        });
+      });
+    });
+  });
+  describe('Clone MIA deal', () => {
+    beforeEach(() => {
+      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.login(CREDENTIALS.MAKER);
+      console.log(MINdealId);
+      cy.visit(relative(`/gef/application-details/${MINdealId}`));
+    });
+
+    it('should clone a GEF (MIA) deal', () => {
+      cloneGEFdeal.cloneGefDealLink().click();
+      cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone`));
+      mandatoryCriteria.trueRadio().click();
+      mandatoryCriteria.form().submit();
+      cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
+      nameApplication.internalRef().clear().type('Cloned MIA deal');
+      nameApplication.form().submit();
+
+      cy.get('[data-cy="success-message-link"]').click();
+      statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
+      statusBanner.bannerStatus().contains('Draft');
+      statusBanner.bannerCheckedBy().contains('-');
     });
   });
 });
