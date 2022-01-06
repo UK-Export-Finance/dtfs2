@@ -315,7 +315,6 @@ context('Clone GEF (MIN) deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
-      console.log(MINdealId);
       cy.visit(relative(`/gef/application-details/${MINdealId}`));
     });
 
