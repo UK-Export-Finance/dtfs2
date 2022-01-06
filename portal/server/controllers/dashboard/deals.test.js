@@ -149,7 +149,7 @@ describe('controllers/dashboard', () => {
         );
       });
     });
-    
+
     it('renders the correct template', async () => {
       await allDeals(req, res);
 

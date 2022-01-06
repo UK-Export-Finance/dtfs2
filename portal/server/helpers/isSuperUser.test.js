@@ -3,7 +3,7 @@ const isSuperUser = require('./isSuperUser');
 describe('isSuperUser', () => {
   it('should return true when user.bank.id is `*`', () => {
     const mockUser = {
-      bank: { id: '*'},
+      bank: { id: '*' },
     };
 
     const result = isSuperUser(mockUser);
