@@ -1,4 +1,4 @@
 const isSuperUser = (user) =>
-  user?.bank?.id === '*';
+  user && user.bank && user.bank.id === '*';
 
 module.exports = isSuperUser;
