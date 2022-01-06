@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   dtfs-submissions-data:
     image: mongo:5.0.5
@@ -26,7 +26,8 @@ services:
       - dtfs-submissions-data
       - reference-data-proxy
     ports:
-      - "5005:5005"
+      - "5005:5005" # http
+      - "9223:9223" # debug
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
     deploy:
@@ -39,8 +40,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - DTFS_CENTRAL_API=http://localhost:5005
-    entrypoint: npx nodemon src/index.js -L
+    command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
   trade-finance-manager-ui:
     build: ./trade-finance-manager-ui
@@ -48,7 +48,8 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - "5003:5003"
+      - "5003:5003" # http
+      - "9224:9224" # debug
     volumes:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
@@ -64,7 +65,8 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
-    command: npx nodemon server/index.js -L
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+    command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
@@ -75,7 +77,8 @@ services:
       - dtfs-central-api
       - reference-data-proxy
     ports:
-      - "5004:5004"
+      - "5004:5004" # http
+      - "9225:9225" # debug
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
@@ -95,7 +98,7 @@ services:
         limits:
           cpus: "0.2"
           memory: 600M
-    entrypoint: npx nodemon src/index.js -L
+    command: npx nodemon --inspect=0.0.0.0:9225 src/index.js -L
 
   portal:
     build: ./portal
@@ -105,7 +108,8 @@ services:
       - redis
       - portal-api
     ports:
-      - "5000:5000"
+      - "5000:5000" # http
+      - "9226:9226" # debug
     volumes:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
@@ -122,7 +126,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
-    command: npx nodemon server/index.js -L
+    command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:
     build: ./portal-api
@@ -132,7 +136,8 @@ services:
       - dtfs-central-api
       - reference-data-proxy
     ports:
-      - "5001:5001"
+      - "5001:5001" # http
+      - "9227:9227" # debug
     volumes:
       - ./portal-api/src:/app/src:ro
     deploy:
@@ -166,7 +171,7 @@ services:
       - TFM_API=http://trade-finance-manager-api:5004
       - SENTRY_DSN=${SENTRY_DSN}
 
-    entrypoint: npx nodemon src/index.js -L
+    command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 
   reference-data-proxy:
     build: ./reference-data-proxy
@@ -175,7 +180,8 @@ services:
     depends_on:
       - dtfs-submissions-data
     ports:
-      - "5002:5002"
+      - "5002:5002" # http
+      - "9228:9228" # debug
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
     deploy:
@@ -213,7 +219,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - SENTRY_DSN=${SENTRY_DSN}
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx nodemon --inspect=0.0.0.0:9229 src/index.js -L
 
   gef-ui:
     build: ./gef-ui
@@ -223,7 +229,8 @@ services:
       - redis
       - portal-api
     ports:
-      - "5006:5006"
+      - "5006:5006" # http
+      - "9229:9229" # debug
     volumes:
       - ./gef-ui/server:/app/server:ro
       - ./gef-ui/public:/app/public:ro
@@ -240,7 +247,9 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
-    command: npx nodemon server/index.js -L
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+    command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 
   # ACBS function is causing an out of memory error on github actions. disable for now
   # acbs-function:
