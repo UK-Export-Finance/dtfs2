@@ -158,13 +158,14 @@ const submitDealPUT = async (req, res) => {
   const {
     dealId,
     dealType,
+    checker,
   } = req.body;
   let deal;
 
   const canSubmitDealAfterUkefIds = await dealHasAllUkefIds(dealId);
 
   if (canSubmitDealAfterUkefIds) {
-    deal = await submitDealAfterUkefIds(dealId, dealType);
+    deal = await submitDealAfterUkefIds(dealId, dealType, checker);
   } else {
     deal = await submitDealBeforeUkefIds(dealId, dealType);
   }

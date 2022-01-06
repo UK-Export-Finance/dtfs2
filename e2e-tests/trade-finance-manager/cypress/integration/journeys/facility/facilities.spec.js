@@ -45,31 +45,22 @@ context('Facility page', () => {
     page.facilitiesPage.exporterColumn().should('contain', 'Exporter');
     page.facilitiesPage.valueColumn().should('contain', 'Value (export currency)');
     page.facilitiesPage.coverEndDateColumn().should('contain', 'Cover end date');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).find('[data-cy="facility__ukefFacilityId"]')
-      .should('contain', '10000000002');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).find('[data-cy="facility__product"]')
-      .should('contain', 'BSS/EWCS');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).find('[data-cy="facility__facilityType"]')
-      .should('contain', 'bond');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).find('[data-cy="facility__companyName"]')
-      .should('contain', 'Mock company');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).find('[data-cy="facility__facilityValue"]')
-      .should('contain', 'GBP 12,345.00');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).find('[data-cy="facility__coverEndDate"]')
-      .should('contain', '20 Oct 2020');
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).find('[data-cy="facility__ukefFacilityId"]')
-      .should('contain', '10000000003');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).find('[data-cy="facility__product"]')
-      .should('contain', 'BSS/EWCS');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).find('[data-cy="facility__facilityType"]')
-      .should('contain', 'loan');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).find('[data-cy="facility__companyName"]')
-      .should('contain', 'Mock company');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).find('[data-cy="facility__facilityValue"]')
-      .should('contain', 'GBP 1,234.00');
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).find('[data-cy="facility__coverEndDate"]')
-      .should('contain', '24 Sep 2020');
+    const row1 = page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1);
+    row1.find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000002');
+    row1.find('[data-cy="facility__product"]').should('contain', 'BSS/EWCS');
+    row1.find('[data-cy="facility__facilityType"]').should('contain', 'bond');
+    row1.find('[data-cy="facility__companyName"]').should('contain', 'Mock company');
+    row1.find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
+    row1.find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+
+    const row2 = page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2);
+    row2.find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000003');
+    row2.find('[data-cy="facility__product"]').should('contain', 'BSS/EWCS');
+    row2.find('[data-cy="facility__facilityType"]').should('contain', 'loan');
+    row2.find('[data-cy="facility__companyName"]').should('contain', 'Mock company');
+    row2.find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
+    row2.find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
   });
 
   it('renders case summary with deal data', () => {
