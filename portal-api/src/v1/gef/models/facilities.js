@@ -68,9 +68,14 @@ class Facility {
       this.feeFrequency = null;
       this.dayCountBasis = null;
       this.coverDateConfirmed = null;
-      this.changedToIssued = null;
-      if (req.changedToIssued != null) {
-        this.changedToIssued = Boolean(req.changedToIssued);
+      /**
+       * canResubmitIssuedFacilities used temporarily once unissued facility changed to issued after first UKEF submission
+       * used to populate change links on facility table and show which facilities changed to issued
+       * Used as a criteria for resubmission to UKEF
+       */
+      this.canResubmitIssuedFacilities = null;
+      if (req.canResubmitIssuedFacilities != null) {
+        this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
     } else {
       // update facility
@@ -176,8 +181,8 @@ class Facility {
         this.coverDateConfirmed = req.coverDateConfirmed;
       }
 
-      if (req.changedToIssued != null) {
-        this.changedToIssued = Boolean(req.changedToIssued);
+      if (req.canResubmitIssuedFacilities != null) {
+        this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
 
       this.updatedAt = Date.now();

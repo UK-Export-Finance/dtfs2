@@ -156,7 +156,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         hasBeenIssued: true,
-        changedToIssued: true,
+        canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
       },
       (req.success = {
@@ -226,7 +226,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         hasBeenIssued: true,
-        changedToIssued: true,
+        canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
       },
       (req.url = `/gef/application-details/${dealId}`),

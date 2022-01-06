@@ -92,6 +92,7 @@ context('Submit MIA to UKEF', () => {
     it('Submits without comments and displays the confirmation page', () => {
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains('Manual inclusion application submitted to UKEF');
+      submitToUkefConfirmation.confirmationText().contains('We\'ve sent you a confirmation email.');
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });

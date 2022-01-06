@@ -3,13 +3,13 @@ const { getEpoch, getUTCDate } = require('./helpers');
 const CONSTANTS = require('../constants');
 
 /*
-   Maps through facilities to check for changedToIssued to be true
+   Maps through facilities to check for canResubmitIssuedFacilities to be true
    if true, adds to array and returns array
 */
 const facilitiesChangedToIssuedAsArray = (application) => {
   const hasChanged = [];
   application.facilities.items.map((facility) => {
-    if (facility.details.changedToIssued) {
+    if (facility.details.canResubmitIssuedFacilities) {
       const changed = {
         name: facility.details.name,
         id: facility.details._id,
@@ -22,12 +22,12 @@ const facilitiesChangedToIssuedAsArray = (application) => {
 };
 
 const summaryIssuedChangedToIssued = (app, user, data) =>
-  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
-   && data.details.changedToIssued === true;
+  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
+   && user.roles.includes('maker') && data.details.canResubmitIssuedFacilities === true;
 
 const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
-  app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && user.roles.includes('maker')
-    && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
+  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
+   && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
 
 /**
    * this function checks that the deal is an AIN
@@ -38,9 +38,10 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
 
 const areUnissuedFacilitiesPresent = (application) => {
   const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
-  const accepableApplicationType = ['Automatic Inclusion Notice'];
+  // TODO: DTFS-4128 add MIN
+  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN];
 
-  if (!accepableApplicationType.includes(application.submissionType)) {
+  if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
   }
   if (!acceptableStatuses.includes(application.status)) {
@@ -126,9 +127,9 @@ const coverDatesConfirmed = (facilities) =>
    of facilities that have changed to issued from unissued
 */
 const hasChangedToIssued = (application) => {
-  const changedToIssued = facilitiesChangedToIssuedAsArray(application);
+  const canResubmitIssuedFacilities = facilitiesChangedToIssuedAsArray(application);
 
-  return changedToIssued.length > 0;
+  return canResubmitIssuedFacilities.length > 0;
 };
 
 const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app).length > 0;

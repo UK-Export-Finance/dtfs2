@@ -1,7 +1,27 @@
 const { format, fromUnixTime } = require('date-fns');
 const db = require('../../../src/drivers/db-client');
-const { submissionPortalActivity, submissionTypeToConstant, getUserInfo } = require('../../../src/v1/gef/controllers/application-submit');
+const { FACILITY_TYPE } = require('../../../src/v1/gef/enums');
+
+const {
+  submissionPortalActivity,
+  submissionTypeToConstant,
+  getUserInfo,
+  removeChangedToIssued
+} = require('../../../src/v1/gef/controllers/application-submit');
 const mockApplications = require('../../fixtures/gef/application');
+
+const wipeDB = require('../../wipeDB');
+
+const app = require('../../../src/createApp');
+const testUserCache = require('../../api-test-users');
+
+const { as } = require('../../api')(app);
+
+const baseUrl = '/v1/gef/facilities';
+const collectionName = 'gef-facilities';
+
+const applicationCollectionName = 'deals';
+const applicationBaseUrl = '/v1/gef/application';
 
 const MOCK_APPLICATION = mockApplications[0];
 
@@ -131,5 +151,49 @@ describe('getUserInfo()', () => {
     };
 
     expect(returnedUser).toEqual(expectedUserObject);
+  });
+});
+
+describe('removeChangedToIssued()', () => {
+  let aMaker;
+  let aChecker;
+  let mockApplication;
+
+  beforeAll(async () => {
+    const testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole('maker').one();
+    aChecker = testUsers().withRole('checker').one();
+    mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
+  });
+
+  beforeEach(async () => {
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    // posts facility with canResubmitIssuedFacilities as true
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      canResubmitIssuedFacilities: true,
+    }).to(baseUrl);
+
+    const mockQuery = { dealId: mockApplication.body._id };
+
+    const { body } = await as(aChecker).get(baseUrl, mockQuery);
+    // changes to false to test
+    await removeChangedToIssued(body.items[0].dealId);
+  });
+
+  it('changes canResubmitIssuedFacilities to false', async () => {
+    const mockQuery = { dealId: mockApplication.body._id };
+
+    // gets facilities from DB
+    const { body } = await as(aChecker).get(baseUrl, mockQuery);
+
+    // gets value from body for changedToIssed
+    const changedToIssuedValue = body.items[0].details.canResubmitIssuedFacilities;
+
+    expect(changedToIssuedValue).toEqual(false);
   });
 });

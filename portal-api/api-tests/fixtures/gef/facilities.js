@@ -30,7 +30,7 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
-    changedToIssued: null,
+    canResubmitIssuedFacilities: null,
   }, {
     type: 'CASH',
     hasBeenIssued: false,
@@ -76,7 +76,7 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
-    changedToIssued: true,
+    canResubmitIssuedFacilities: true,
     issueDate: '2021-12-01T12:32:00.000+00:00',
   }
 ];

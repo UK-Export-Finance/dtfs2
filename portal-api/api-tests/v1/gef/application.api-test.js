@@ -448,12 +448,12 @@ describe(baseUrl, () => {
         expect(receivedDate).toEqual(expected);
       });
 
-      it('coverStartDate is issueDate if (shouldCoverStartOnSubmission === true) && changedToIssued === true', async () => {
+      it('coverStartDate is issueDate if (shouldCoverStartOnSubmission === true) && canResubmitIssuedFacilities === true', async () => {
         // create deal
         const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
         const dealId = body._id;
         // create issued facility that's associated with the deal
-        const issuedFacility = mockFacilities.find((f) => f.changedToIssued === true);
+        const issuedFacility = mockFacilities.find((f) => f.canResubmitIssuedFacilities === true);
 
         const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);

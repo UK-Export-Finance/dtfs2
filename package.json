@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
+    "chance": "^1.1.8",
     "date-fns": "^2.27.0"
   },
   "devDependencies": {

@@ -35,7 +35,7 @@
       rows: [{ key: { text: "Eligible for automatic cover?" },
         value: { text: captionText },
         actions: {
-          items: [] if previewMode else [{
+          items: [] if previewMode or hasChangedFacilities else [{
             href: dealId + '/automatic-cover',
             text: "Change",
             visuallyHiddenText: "automatic cover"
