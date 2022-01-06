@@ -16,7 +16,6 @@ const deleteAllDeals = (token, deals) => {
 
 module.exports = (opts) => logIn(opts).then((token) => {
   listAllDeals(token).then(async (deals) => {
-    console.log('deleteDeals - deals from listAllDeals ', deals);
     await deleteAllDeals(token, deals);
   });
 });
