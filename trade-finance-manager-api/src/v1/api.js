@@ -632,6 +632,7 @@ const getAllFacilities = async () => {
     });
     return response.data;
   } catch ({ response }) {
+    console.error('Unable to get all facilities', response);
     return response;
   }
 };
