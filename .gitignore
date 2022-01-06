@@ -29,4 +29,3 @@ e2e-tests/trade-finance-manager/cypress/.eslintrc.json
 db-schema/**
 
 temp/
-docker-compose.dev.yml
