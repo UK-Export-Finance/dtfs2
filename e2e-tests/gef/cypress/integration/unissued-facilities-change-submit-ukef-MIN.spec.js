@@ -5,7 +5,7 @@ const CONSTANTS = require('../fixtures/constants');
 const { add, format } = require('date-fns');
 
 import {
-  MOCK_AIN_APPLICATION, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
+  MOCK_APPLICATION_MIN, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
 } from '../fixtures/MOCKS/MOCK_DEALS';
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
@@ -49,7 +49,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       // creates application and inserts facilities and changes status
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_AIN_APPLICATION).then(() => {
+        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(dealId, 'CASH', token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);

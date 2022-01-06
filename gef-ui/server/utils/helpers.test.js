@@ -13,7 +13,20 @@ import {
   getEpoch,
   summaryItemsConditions,
   displayTaskComments,
+  pastDate,
+  futureDateInRange,
 } from './helpers';
+
+import {
+  getFacilityCoverStartDate,
+} from './facility-helpers';
+
+import {
+  MOCK_ISSUED_FACILITY,
+  MOCK_FACILITY,
+  MOCK_ISSUED_FACILITY_UNCHANGED,
+  MOCK_UNISSUED_FACILITY,
+} from './mocks/mock_facilities';
 
 import { makerCanReSubmit } from './deal-helpers';
 
@@ -25,12 +38,6 @@ import {
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
 } from './mocks/mock_applications';
-
-import {
-  MOCK_UNISSUED_FACILITY,
-  MOCK_ISSUED_FACILITY,
-  MOCK_ISSUED_FACILITY_UNCHANGED,
-} from './mocks/mock_facilities';
 
 import { MOCK_REQUEST } from './mocks/mock_requests';
 
@@ -1324,5 +1331,51 @@ describe('displayTaskComments()', () => {
     const result = displayTaskComments(MOCK_AIN_APPLICATION_FALSE_COMMENTS);
 
     expect(result).toEqual(false);
+  });
+});
+
+describe('pastDate', () => {
+  it('Should return TRUE for the specified date', () => {
+    expect(pastDate({ day: 1, month: 1, year: 1970 })).toEqual(true);
+  });
+  it('Should return TRUE for the specified date', () => {
+    expect(pastDate({ day: 20, month: 9, year: 1989 })).toEqual(true);
+  });
+  it('Should return FALSE for the specified date', () => {
+    const date = new Date();
+    expect(pastDate({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() })).toEqual(false);
+  });
+});
+
+describe('futureDateInRange', () => {
+  it('Should return FALSE for the specified day and range days', () => {
+    expect(futureDateInRange({ day: 1, month: 1, year: 1970 }, 30)).toEqual(false);
+  });
+  it('Should return FALSE for the specified day and range days', () => {
+    expect(futureDateInRange({ day: 1, month: 1, year: 9999 }, 30)).toEqual(false);
+  });
+  it('Should return TRUE for the specified day and range days', () => {
+    const date = new Date();
+    expect(futureDateInRange({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() }, 365)).toEqual(true);
+  });
+
+  describe('getFacilityCoverStartDate', () => {
+    it('Should return expected date object for mock facility', () => {
+      const expected = {
+        date: '2',
+        month: '12',
+        year: '2021',
+      };
+      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[1])).toEqual(expected);
+    });
+
+    it('Should return expected date object for mock facility', () => {
+      const expected = {
+        date: '3',
+        month: '12',
+        year: '2021',
+      };
+      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
+    });
   });
 });

@@ -1,7 +1,4 @@
 import {
-  pastDate,
-  futureDateInRange,
-  getFacilityCoverStartDate,
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
   hasChangedToIssued,
@@ -19,6 +16,7 @@ import {
   MOCK_AIN_APPLICATION_RETURN_MAKER,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_CHECKER,
+  MOCK_AIN_APPLICATION_GENERATOR,
 } from './mocks/mock_applications';
 
 import {
@@ -32,51 +30,7 @@ import {
   MOCK_REQUEST, MOCK_REQUEST_CHECKER,
 } from './mocks/mock_requests';
 
-describe('pastDate', () => {
-  it('Should return TRUE for the specified date', () => {
-    expect(pastDate({ day: 1, month: 1, year: 1970 })).toEqual(true);
-  });
-  it('Should return TRUE for the specified date', () => {
-    expect(pastDate({ day: 20, month: 9, year: 1989 })).toEqual(true);
-  });
-  it('Should return FALSE for the specified date', () => {
-    const date = new Date();
-    expect(pastDate({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() })).toEqual(false);
-  });
-});
-
-describe('futureDateInRange', () => {
-  it('Should return FALSE for the specified day and range days', () => {
-    expect(futureDateInRange({ day: 1, month: 1, year: 1970 }, 30)).toEqual(false);
-  });
-  it('Should return FALSE for the specified day and range days', () => {
-    expect(futureDateInRange({ day: 1, month: 1, year: 9999 }, 30)).toEqual(false);
-  });
-  it('Should return TRUE for the specified day and range days', () => {
-    const date = new Date();
-    expect(futureDateInRange({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() }, 365)).toEqual(true);
-  });
-
-  describe('getFacilityCoverStartDate', () => {
-    it('Should return expected date object for mock facility', () => {
-      const expected = {
-        date: '2',
-        month: '12',
-        year: '2021',
-      };
-      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[1])).toEqual(expected);
-    });
-
-    it('Should return expected date object for mock facility', () => {
-      const expected = {
-        date: '3',
-        month: '12',
-        year: '2021',
-      };
-      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
-    });
-  });
-});
+const CONSTANTS = require('../constants');
 
 describe('getIssuedFacilitiesAsArray', () => {
   it('Should return the expected facilities object from mock facilities array where the facility date has not been confirmed by the bank', () => {
@@ -138,11 +92,52 @@ describe('areUnissuedFacilitiesPresent', () => {
   it('should return false if no unissued facilities', () => {
     expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_ISSUED_ONLY)).toEqual(false);
   });
-  it('should return true if only unissued facilities', () => {
+
+  it('should return true if only unissued facilities and UKEF_ACKNOWLEDGED', () => {
     expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(true);
   });
-  it('should return true if only unissued and issued facilities', () => {
+
+  it('should return true if unissued and issued facilities and UKEF_ACKNOWLEDGED', () => {
     expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION)).toEqual(true);
+  });
+
+  it('should return false if only unissued and issued facilities and not UKEF_ACKNOWLEDGED', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_REFUSED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+  });
+
+  it('should return true if only unissued and issued facilities and not MIN or AIN', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(true);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)))
+      .toEqual(true);
   });
 });
 
