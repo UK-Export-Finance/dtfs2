@@ -42,7 +42,7 @@ const threeMonthsOneDayYear = format(threeMonthsOneDay, 'yyyy');
   for changing facilities to issued from preview page.
   To unlock functionality, need to first issue one facility from unissued-facility table
 */
-context('Unissued Facilities AIN - change to issued from preview page', () => {
+context('Unissued Facilities MIN - change to issued from preview page', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;

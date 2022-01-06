@@ -41,7 +41,7 @@ const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
 const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'M');
 const threeMonthsOneDayYear = format(threeMonthsOneDay, 'yyyy');
 
-context('Unissued Facilities AIN - change all to issued from unissued table', () => {
+context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
