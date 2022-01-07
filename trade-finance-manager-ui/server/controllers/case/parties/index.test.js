@@ -192,7 +192,8 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.getBondIssuerPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-issuer-edit.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-issuer-edit.njk',
           {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
@@ -201,7 +202,8 @@ describe('controllers - case - parties', () => {
             activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
             user: session.user,
-          });
+          },
+        );
       });
     });
 
@@ -273,7 +275,8 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.getBondBeneficiaryPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-beneficiary-edit.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-beneficiary-edit.njk',
           {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
@@ -282,7 +285,8 @@ describe('controllers - case - parties', () => {
             activeSubNavigation: 'parties',
             deal: mockDeal.dealSnapshot,
             user: session.user,
-          });
+          },
+        );
       });
     });
 

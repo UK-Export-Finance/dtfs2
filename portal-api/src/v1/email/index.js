@@ -1,4 +1,5 @@
 const { NotifyClient } = require('notifications-node-client');
+require('dotenv').config();
 
 const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY);
 

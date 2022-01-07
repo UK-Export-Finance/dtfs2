@@ -62,15 +62,15 @@ const doMutate = async (mutation, variables) => {
   }
 };
 
-const apollo = async (method, query, variables, token) => {
+const apollo = async (method, query, variables) => {
   switch (method) {
     case 'POST':
     case 'PUT':
-      return doMutate(query, variables, token);
+      return doMutate(query, variables);
 
     case 'GET':
     default:
-      return doQuery(query, variables, token);
+      return doQuery(query, variables);
   }
 };
 

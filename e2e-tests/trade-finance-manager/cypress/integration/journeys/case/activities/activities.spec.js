@@ -109,7 +109,7 @@ context('Users can create and submit comments', () => {
       activityCommentBoxPage.activityCommentBox().type(longComment);
       activityCommentBoxPage.addCommentButton().click();
       activityCommentBoxPage.commentErrorSummary().contains('Comments must be 1000 characters or fewer');
-      activityCommentBoxPage.commentErrorMesssage().contains('Comments must be 1000 characters or fewer');
+      activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');
     });
   });
 });

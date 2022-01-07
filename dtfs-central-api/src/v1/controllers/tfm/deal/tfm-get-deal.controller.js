@@ -15,7 +15,7 @@ const findOneDeal = async (_id, callback) => {
         dealSnapshot: deal.dealSnapshot,
       };
     } else {
-      const facilityIds = deal.facilities;
+      const facilityIds = deal.dealSnapshot.facilities.map((facility) => facility._id);
 
       if (facilityIds && facilityIds.length > 0) {
         const mappedDeal = deal.dealSnapshot;

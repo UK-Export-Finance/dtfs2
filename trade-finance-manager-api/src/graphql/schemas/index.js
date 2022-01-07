@@ -31,7 +31,6 @@ type Checker {
 
 type DealDetails {
   ukefDealId: String
-  maker: Maker
   checker: Checker
   checkerMIN: Checker
   submissionDate: String
@@ -350,6 +349,10 @@ input DealsInput {
   byField: [DealsByField]
 }
 
+input FacilitiesInput {
+   searchString: String
+}
+
 type DealSnapshot {
   _id: String!
   dealType: String!
@@ -359,6 +362,7 @@ type DealSnapshot {
   updatedAt: Float
   status: String
   bank: Bank
+  maker: Maker
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
@@ -385,6 +389,23 @@ type DealsQuery {
   status: StatusType
   count: Int,
   deals: [Deal]
+}
+
+type DealSnapshotFacility {
+   dealId: String!
+   facilityId: String!
+   ukefFacilityId: String!
+   dealType: String!
+   facilityType: String
+   value: String
+   coverEndDate: String
+   companyName: String
+   hasBeenIssued: Boolean
+   currency: String
+}
+
+type FacilitiesQuery {
+   tfmFacilities: [DealSnapshotFacility]
 }
 
 input TFMPartyInput {
@@ -482,6 +503,7 @@ type Query {
   deals(params: DealsInput): DealsQuery
   dealsLight(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
+  facilities(params: FacilitiesInput): FacilitiesQuery
   teamMembers(teamId: String!): [TeamMember]
   user(userId: String!): User
 }

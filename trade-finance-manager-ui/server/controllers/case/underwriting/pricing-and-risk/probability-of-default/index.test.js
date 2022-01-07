@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import probabilityOfDefaultController from '..';
 import api from '../../../../../api';
 import { mockRes } from '../../../../../test-mocks';
@@ -43,16 +42,18 @@ describe('GET underwriting - probability of default', () => {
       };
 
       await probabilityOfDefaultController.getUnderWritingProbabilityOfDefault(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/underwriting/pricing-and-risk/probability-of-default.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
           activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
-        });
+        },
+      );
     });
   });
 
@@ -173,7 +174,8 @@ describe('POST underwriting - probability of default', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/probability-of-default.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -186,7 +188,8 @@ describe('POST underwriting - probability of default', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
@@ -219,7 +222,8 @@ describe('POST underwriting - probability of default', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/probability-of-default.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -232,7 +236,8 @@ describe('POST underwriting - probability of default', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
   });

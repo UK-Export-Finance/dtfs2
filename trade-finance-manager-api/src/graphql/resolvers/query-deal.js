@@ -3,8 +3,6 @@ const { findOneTfmDeal } = require('../../v1/controllers/deal.controller');
 const { filterTasks } = require('./filters/filterTasks');
 const { filterActivities } = require('./filters/filterActivities');
 
-require('dotenv').config();
-
 const queryDeal = async ({ params }) => {
   const { _id, tasksFilters, activityFilters } = params;
 

@@ -5,7 +5,7 @@ const {
 } = require('./map-bss-ewcs-facility');
 const isIssued = require('../../helpers/is-issued');
 const { stripCommas } = require('../../../utils/string');
-const MOCK_FACILITIES = require('../../__mocks__/mock-facilities');
+const { MOCK_FACILITIES } = require('../../__mocks__/mock-facilities');
 
 describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
   describe('hasCoverEndDate', () => {

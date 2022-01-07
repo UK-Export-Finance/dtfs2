@@ -2,8 +2,8 @@ module.exports = {
   extends: ['airbnb-base', 'plugin:cypress/recommended'],
   env: {
     'cypress/globals': true,
-    jest: true,
     browser: true,
+    node: true,
   },
   plugins: ['cypress'],
   rules: {
@@ -15,11 +15,12 @@ module.exports = {
       ignoreTemplateLiterals: true,
     }],
     'no-console': 'off',
-    'import/first': 0,
+    'import/first': 'off',
     'import/order': 'off',
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'import/no-named-as-default': 0,
-    'implicit-arrow-linebreak': 0,
+    'import/no-named-as-default': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: false }],
     'cypress/no-assigning-return-values': 'error',
     'cypress/no-unnecessary-waiting': 'error',
@@ -27,5 +28,8 @@ module.exports = {
     'cypress/no-force': 'warn',
     'cypress/no-async-tests': 'error',
     'cypress/no-pause': 'error',
+  },
+  parserOptions: {
+    ecmaVersion: 12, // es2021
   },
 };

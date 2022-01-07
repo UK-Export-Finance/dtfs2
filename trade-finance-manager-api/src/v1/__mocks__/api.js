@@ -4,7 +4,7 @@ const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('./mock-deal-issued-facilities');
-const MOCK_BSS_FACILITIES = require('./mock-facilities');
+const { MOCK_FACILITIES } = require('./mock-facilities');
 const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_DEAL_MIA_SUBMITTED = require('./mock-deal-MIA-submitted');
@@ -53,14 +53,14 @@ const ALL_MOCK_DEALS = [
 ];
 
 const ALL_MOCK_FACILITIES = [
-  ...MOCK_BSS_FACILITIES,
+  ...MOCK_FACILITIES,
   ...MOCK_BSS_FACILITIES_USD_CURRENCY,
   ...MOCK_CASH_CONTINGENT_FACILITIES,
 ];
 
 module.exports = {
   findOneDeal: (dealId) => {
-    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     let tfmHistory = { tasks: [], emails: [] };
     let tfmStage;
