@@ -61,7 +61,7 @@ const buildDashboardFilters = (params, user) => {
   if (params.filterByShowAbandonedDeals === false || params.filterByShowAbandonedDeals === 'false') {
     filters.push({
       field: 'status',
-      value: STATUS.abandoned,
+      value: STATUS.ABANDONED,
       operator: 'ne',
     });
   }

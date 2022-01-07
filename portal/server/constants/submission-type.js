@@ -1,7 +1,7 @@
 const SUBMISSION_TYPE = {
-  manualInclusionApplication: 'Manual Inclusion Application',
-  automaticInclusionNotice: 'Automatic Inclusion Notice',
-  manualInclusionNotice: 'Manual Inclusion Notice',
+  AIN: 'Automatic Inclusion Notice',
+  MIA: 'Manual Inclusion Application',
+  MIN: 'Manual Inclusion Notice',
 };
 
 module.exports = SUBMISSION_TYPE;

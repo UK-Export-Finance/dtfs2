@@ -12,15 +12,15 @@ const aDealInStatus = (status) => ({
 });
 
 const oneDealInEachStatus = () => [
-  aDealInStatus(STATUS.draft),
-  aDealInStatus(STATUS.readyForApproval),
-  aDealInStatus(STATUS.inputRequired),
-  aDealInStatus(STATUS.abandoned),
-  aDealInStatus(STATUS.submitted),
-  aDealInStatus(STATUS.submissionAcknowledged),
-  aDealInStatus(STATUS.approved),
-  aDealInStatus(STATUS.approvedWithConditions),
-  aDealInStatus(STATUS.refused),
+  aDealInStatus(STATUS.DRAFT),
+  aDealInStatus(STATUS.READY_FOR_APPROVAL),
+  aDealInStatus(STATUS.INPUT_REQUIRED),
+  aDealInStatus(STATUS.ABANDONED),
+  aDealInStatus(STATUS.SUBMITTED),
+  aDealInStatus(STATUS.SUBMISSION_ACKNOWLEDGED),
+  aDealInStatus(STATUS.APPROVED),
+  aDealInStatus(STATUS.APPROVEDWithConditions),
+  aDealInStatus(STATUS.REFUSED),
 ];
 
 const roles = ['maker', 'checker'];

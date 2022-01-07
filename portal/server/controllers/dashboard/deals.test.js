@@ -108,7 +108,7 @@ describe('controllers/dashboard', () => {
     });
 
     describe('when user is a checker', () => {
-      it(`calls api.allDeals with ${STATUS.readyForApproval} filter`, async () => {
+      it(`calls api.allDeals with ${STATUS.READY_FOR_APPROVAL} filter`, async () => {
         req.session.user.roles = ['checker'];
 
         await allDeals(req, res);
@@ -120,7 +120,7 @@ describe('controllers/dashboard', () => {
           },
           {
             field: 'status',
-            value: STATUS.readyForApproval,
+            value: STATUS.READY_FOR_APPROVAL,
           },
         ];
 
