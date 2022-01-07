@@ -31,7 +31,6 @@ type Checker {
 
 type DealDetails {
   ukefDealId: String
-  maker: Maker
   checker: Checker
   checkerMIN: Checker
   submissionDate: String
@@ -359,6 +358,7 @@ type DealSnapshot {
   updatedAt: Float
   status: String
   bank: Bank
+  maker: Maker
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
