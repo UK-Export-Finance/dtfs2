@@ -120,14 +120,14 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         name,
         emails
       },
+      maker {
+        firstname,
+        surname,
+        email,
+      }
       details {
         ukefDealId,
         submissionDate,
-        maker {
-          firstname,
-          surname,
-          email,
-        }
       }
       dealFiles {
         security
