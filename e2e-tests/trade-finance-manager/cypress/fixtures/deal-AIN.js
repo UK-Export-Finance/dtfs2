@@ -1,6 +1,8 @@
+const CONSTANTS = require('./constants');
+
 const MOCK_DEAL = {
-  dealType: 'BSS/EWCS',
-  submissionType: 'Automatic Inclusion Notice',
+  dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
+  submissionType: CONSTANTS.DEAL_TYPE.AIN,
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
@@ -166,7 +168,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
       facilityStage: 'Issued',
@@ -193,13 +195,13 @@ const MOCK_DEAL = {
       bankReferenceNumber: 'Test-123',
     },
     {
-      facilityType: 'loan',
-      createdDate: 1610369832226.0,
+      facilityType: CONSTANTS.FACILITY_TYPE.LOAN,
+      createdDate: 1610369832226,
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '5678',
       guaranteeFeePayableByBank: '27.0000',
-      lastEdited: 1610369832226.0,
+      lastEdited: 1610369832226,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '30',

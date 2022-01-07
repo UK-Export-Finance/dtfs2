@@ -6,6 +6,9 @@ const facilitiesPage = {
   exporterColumn: () => cy.get('[data-cy="facility__header--exporter"]'),
   valueColumn: () => cy.get('[data-cy="facility__header--value"]'),
   coverEndDateColumn: () => cy.get('[data-cy="facility__header--coverEndDate"]'),
+  searchFormInput: () => cy.get('[data-cy="search-input"]'),
+  searchFormSubmitButton: () => cy.get('[data-cy="submit-button"]'),
+  dealsTableRows: () => cy.get('[data-cy="tfm-facilities-table"] tbody tr'),
 };
 
 module.exports = facilitiesPage;

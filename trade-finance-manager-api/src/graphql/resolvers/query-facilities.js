@@ -1,8 +1,8 @@
 const { getAllFacilities } = require('../../v1/controllers/facility.controller');
 const { formattedNumber } = require('../../utils/number');
 // list all facilities from the database
-exports.queryAllFacilities = async () => {
-  const rawFacilities = await getAllFacilities();
+exports.queryAllFacilities = async (queryParams) => {
+  const rawFacilities = await getAllFacilities(queryParams.params);
 
   const facilities = [];
   let facility;

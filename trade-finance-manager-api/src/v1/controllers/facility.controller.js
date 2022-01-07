@@ -6,8 +6,8 @@ const findOneFacility = async (_id) => {
   return facility;
 };
 
-const getAllFacilities = async () => {
-  const allFacilities = await api.getAllFacilities();
+const getAllFacilities = async (searchString) => {
+  const allFacilities = await api.getAllFacilities(searchString);
 
   return allFacilities;
 };
