@@ -8,7 +8,7 @@ const expectAddedFields = (obj) => {
 
   const expectation = expectMongoId({
     status: 'Draft',
-    updatedAt: expect.any(Number),
+    submissionType: expect.any(String),
     eligibility: {
       status: 'Not started',
       criteria: expect.any(Array),
@@ -28,7 +28,8 @@ const expectAddedFields = (obj) => {
     },
     facilities: [],
     editedBy: [],
-    exporter: {},
+    exporter: expect.any(Object),
+    updatedAt: expect.any(Number),
   });
 
   return expectation;

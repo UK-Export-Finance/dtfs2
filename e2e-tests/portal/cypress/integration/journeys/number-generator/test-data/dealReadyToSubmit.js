@@ -17,8 +17,8 @@ module.exports = () => {
   loan.requestedCoverStartDate = now.valueOf();
 
   const aMonthInTheFuture = nowPlusMonths(1);
-  loan['coverEndDate-day'] = aMonthInTheFuture.getDate();
-  loan['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
-  loan['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
+  loan['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  loan['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  loan['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   return deal;
 };

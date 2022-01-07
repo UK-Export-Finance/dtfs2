@@ -10,9 +10,9 @@ module.exports = () => {
 
   dealWithBadCoverStartDate.bondTransactions.items[0].requestedCoverStartDate = invalidCoverStartDate;
 
-  dealWithBadCoverStartDate.bondTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.getDate();
-  dealWithBadCoverStartDate.bondTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
-  dealWithBadCoverStartDate.bondTransactions.items[0]['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
+  dealWithBadCoverStartDate.bondTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  dealWithBadCoverStartDate.bondTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  dealWithBadCoverStartDate.bondTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   dealWithBadCoverStartDate.bondTransactions.items[0].facilityStage = 'Issued';
 
   return dealWithBadCoverStartDate;

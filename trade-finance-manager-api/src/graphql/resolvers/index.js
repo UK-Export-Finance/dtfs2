@@ -1,7 +1,8 @@
 const queryDealsLight = require('./query-deals-light');
 const queryDeals = require('./query-deals');
 const queryDeal = require('./query-deal');
-const queryFacility = require('./query-facility');
+const { queryFacility } = require('./query-facility');
+const { queryAllFacilities } = require('./query-facilities');
 const queryTeamMembers = require('./query-team-members');
 const queryUser = require('./query-user');
 
@@ -22,6 +23,7 @@ const resolvers = {
     deals: (root, args) => queryDeals(args.params),
     dealsLight: (root, args) => queryDealsLight(args.params),
     facility: (root, args) => queryFacility(args),
+    facilities: (root, args) => queryAllFacilities(args),
     teamMembers: (root, args) => queryTeamMembers(args),
     user: (root, args) => queryUser(args),
   },

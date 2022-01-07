@@ -4,6 +4,11 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
+const DEAL_TYPE = {
+  GEF: 'GEF',
+  BSS_EWCS: 'BSS/EWCS',
+};
+
 const UNDERWRITING_MANAGERS_DECISION_INPUT = {
   APPROVE_WITH_CONDITIONS: 'Approve with conditions',
   APPROVE_WITHOUT_CONDITIONS: 'Approve without conditions',
@@ -18,6 +23,7 @@ const DEAL_STAGE = {
 
 module.exports = {
   SUBMISSION_TYPE,
+  DEAL_TYPE,
   UNDERWRITING_MANAGERS_DECISION_INPUT,
   DEAL_STAGE,
 };

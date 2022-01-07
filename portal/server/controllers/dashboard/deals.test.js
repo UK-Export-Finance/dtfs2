@@ -1,21 +1,43 @@
-import { bssDeals, gefDeals } from '.';
+import { allDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
-import { getApiData, getFlashSuccessMessage } from '../../helpers';
+import { getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
 import { PRODUCT, STATUS } from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
-  gefDeals: jest.fn(),
 }));
+
+const mockDeals = [
+  {
+    _id: 'mockDeal',
+    exporter: { companyName: 'mock company' },
+    product: PRODUCT.BSS_EWCS,
+    createdAt: 1234,
+  },
+  {
+    _id: 'mockDeal2',
+    exporter: { companyName: 'mock company' },
+    product: PRODUCT.GEF,
+    createdAt: 5678,
+  },
+];
+
 jest.mock('../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
     count: 2,
-    deals: ['mock deal 1', 'mock deal 2'],
+    deals: mockDeals,
   })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
+  isSuperUser: jest.fn((user) => {
+    if (user.bank.id === '*') {
+      return true;
+    }
+
+    return false;
+  }),
 }));
 
 describe('controllers/dashboard', () => {
@@ -38,34 +60,16 @@ describe('controllers/dashboard', () => {
     res = mockResponse();
   });
 
-  describe('bssDeals', () => {
-    it('renders the correct template', async () => {
-      await bssDeals(req, res);
+  describe('allDeals', () => {
+    it('calls api.allDeals with bank.id filter', async () => {
+      await allDeals(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-        deals: ['mock deal 1', 'mock deal 2'],
-        pages: {
-          totalPages: 1,
-          currentPage: 1,
-          totalItems: 2,
-        },
-        successMessage: getFlashSuccessMessage(req),
-        primaryNav: 'home',
-        tab: 'bssDeals',
-        user: req.session.user,
-        createdByYou: req.body.createdByYou,
-      });
-    });
-
-    it('adds filter if user is a checker', async () => {
-      req.session.user.roles = ['checker'];
-
-      await bssDeals(req, res);
+      expect(api.allDeals).toBeCalledTimes(1);
 
       const expectedFilters = [
         {
-          field: 'status',
-          value: STATUS.readyForApproval,
+          field: 'bank.id',
+          value: req.session.user.bank.id,
         },
       ];
 
@@ -76,42 +80,81 @@ describe('controllers/dashboard', () => {
         'mock-token',
       );
     });
-  });
 
-  describe('gefDeals', () => {
-    it('renders the correct template', async () => {
-      getApiData.mockResolvedValue({
-        count: 2,
-        deals: [
+    describe('when req.body.createdByYou is provided', () => {
+      it('calls api.allDeals with `maker._id`` filter', async () => {
+        req.body.createdByYou = 'true';
+
+        await allDeals(req, res);
+
+        const expectedFilters = [
           {
-            _id: 'mockDeal',
-            exporter: { companyName: 'mock company' },
-            createdAt: 1234,
+            field: 'bank.id',
+            value: req.session.user.bank.id,
           },
           {
-            _id: 'mockDeal2',
-            exporter: { companyName: 'mock company' },
-            createdAt: 5678,
+            field: 'maker._id',
+            value: req.session.user._id,
           },
-        ],
+        ];
+
+        expect(api.allDeals).toHaveBeenCalledWith(
+          20,
+          20,
+          expectedFilters,
+          'mock-token',
+        );
       });
+    });
 
-      await gefDeals(req, res);
+    describe('when user is a checker', () => {
+      it(`calls api.allDeals with ${STATUS.readyForApproval} filter`, async () => {
+        req.session.user.roles = ['checker'];
+
+        await allDeals(req, res);
+
+        const expectedFilters = [
+          {
+            field: 'bank.id',
+            value: req.session.user.bank.id,
+          },
+          {
+            field: 'status',
+            value: STATUS.readyForApproval,
+          },
+        ];
+
+        expect(api.allDeals).toHaveBeenCalledWith(
+          20,
+          20,
+          expectedFilters,
+          'mock-token',
+        );
+      });
+    });
+
+    describe('when user is a super user', () => {
+      it('calls api.allDeals without any filters', async () => {
+        req.session.user.bank.id = '*';
+
+        await allDeals(req, res);
+
+        const expectedFilters = [];
+
+        expect(api.allDeals).toHaveBeenCalledWith(
+          20,
+          20,
+          expectedFilters,
+          'mock-token',
+        );
+      });
+    });
+
+    it('renders the correct template', async () => {
+      await allDeals(req, res);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-        deals: [
-          {
-            _id: 'mockDeal2',
-            exporter: 'mock company',
-            product: PRODUCT.GEF,
-            updatedAt: 5678,
-          },
-          {
-            _id: 'mockDeal',
-            exporter: 'mock company',
-            product: PRODUCT.GEF,
-            updatedAt: 1234,
-          }],
+        deals: mockDeals,
         pages: {
           totalPages: 1,
           currentPage: 1,
@@ -119,30 +162,10 @@ describe('controllers/dashboard', () => {
         },
         successMessage: getFlashSuccessMessage(req),
         primaryNav: 'home',
-        tab: 'gefDeals',
+        tab: 'deals',
         user: req.session.user,
         createdByYou: req.body.createdByYou,
       });
-    });
-
-    it('adds filter if user is a checker', async () => {
-      req.session.user.roles = ['checker'];
-
-      await gefDeals(req, res);
-
-      const expectedFilters = [
-        {
-          field: 'status',
-          value: STATUS.readyForApproval,
-        },
-      ];
-
-      expect(api.gefDeals).toHaveBeenCalledWith(
-        20,
-        20,
-        expectedFilters,
-        'mock-token',
-      );
     });
   });
 });

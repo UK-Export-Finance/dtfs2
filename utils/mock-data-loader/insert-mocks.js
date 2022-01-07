@@ -52,7 +52,7 @@ const insertMocks = async () => {
     insertedDeals.push(createdDeal);
   }
 
-  console.log('inserting BSS facilites');
+  console.log('inserting BSS facilities');
 
   for (facility of MOCKS.FACILITIES) {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);

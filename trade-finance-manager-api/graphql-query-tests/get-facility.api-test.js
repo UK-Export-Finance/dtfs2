@@ -8,7 +8,7 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
-const MOCK_BSS_FACILITIES = require('../src/v1/__mocks__/mock-facilities');
+const { MOCK_FACILITIES } = require('../src/v1/__mocks__/mock-facilities');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../src/v1/__mocks__/mock-cash-contingent-facilities');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
@@ -116,11 +116,11 @@ describe('graphql query - get facility', () => {
   it('should return a BSS/EWCS facility via facilityReducer', async () => {
     const { data } = await query({
       query: GET_FACILITY,
-      variables: { id: MOCK_BSS_FACILITIES[0]._id },
+      variables: { id: MOCK_FACILITIES[0]._id },
     });
 
     const mockFacility = {
-      ...MOCK_BSS_FACILITIES[0],
+      ...MOCK_FACILITIES[0],
       tfm: mockFacilityTfm,
     };
 
@@ -131,7 +131,7 @@ describe('graphql query - get facility', () => {
 
     const reducerResult = facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
 
-    expect(data.facility._id).toEqual(MOCK_BSS_FACILITIES[0]._id);
+    expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
 
     const expectedSnapshot = {
       ...reducerResult.facilitySnapshot,

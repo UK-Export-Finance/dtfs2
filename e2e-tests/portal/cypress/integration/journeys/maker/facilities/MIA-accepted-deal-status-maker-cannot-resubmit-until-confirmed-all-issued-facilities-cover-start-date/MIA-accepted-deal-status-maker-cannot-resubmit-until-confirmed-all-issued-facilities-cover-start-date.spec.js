@@ -265,7 +265,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.contract.proceedToReview().click();
     pages.contractReadyForReview.comments().type('Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
 
     //---------------------------------------------------------------
     // Maker can no longer change cover start dates

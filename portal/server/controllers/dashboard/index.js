@@ -1,9 +1,8 @@
-const { bssDeals, gefDeals } = require('./deals');
+const { allDeals } = require('./deals');
 const { bssFacilities, gefFacilities } = require('./facilities');
 
 module.exports = {
-  bssDeals,
-  gefDeals,
+  allDeals,
   bssFacilities,
   gefFacilities,
 };

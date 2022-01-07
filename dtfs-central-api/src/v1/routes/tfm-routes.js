@@ -255,7 +255,7 @@ tfmRouter.route('/deals')
  *   get:
  *     summary: Get TFM facilities associated with a deal ID
  *     tags: [TFM]
- *     description: Get TFM facilities associated with a deal ID. This currenty only works for GEF facilities
+ *     description: Get TFM facilities associated with a deal ID. This currently only works for GEF facilities
  *     parameters:
  *       - in: path
  *         name: id
@@ -274,6 +274,36 @@ tfmRouter.route('/deals/:id/facilities')
   .get(
     tfmGetFacilitiesController.findFacilitiesGet,
   );
+
+/**
+ * @openapi
+ * /tfm/facilities:
+ *   get:
+ *     summary: Get TFM facilities
+ *     tags: [TFM]
+ *     description: Get all facilities from TFM
+ *     requestBody:
+ *       description: Search based on specific string - ukefFacilityId & companyName
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               queryParams:
+ *                 type: object
+ *                 properties:
+ *                   searchString:
+ *                     type: string
+ *                     example: HSBC bank
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               facilities: [ { tfmFacilities: { dealId: '123456abc', facilityId: '1234', dealType: 'GEF' } } ]
+ */
+tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
 
 /**
  * @openapi

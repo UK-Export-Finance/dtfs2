@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import underwritingController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -44,7 +43,8 @@ describe('GET underwriting - bank security', () => {
       };
 
       await underwritingController.getUnderWritingBankSecurity(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/bank-security/bank-security.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/underwriting/bank-security/bank-security.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
@@ -53,7 +53,8 @@ describe('GET underwriting - bank security', () => {
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
-        });
+        },
+      );
     });
   });
 

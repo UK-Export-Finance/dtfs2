@@ -34,7 +34,7 @@ context('Login', () => {
   it('A successful login takes the user to the /dashboard page', () => {
     cy.login(MAKER_LOGIN);
 
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('Logged-in user home link should point to gov.uk', () => {
@@ -50,6 +50,6 @@ context('Login', () => {
 
     header.dashboard().click();
 
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });

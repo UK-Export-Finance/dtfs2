@@ -1,7 +1,7 @@
 version: "3"
 services:
   dtfs-submissions-data:
-    image: mongo
+    image: mongo:5.0.5
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions

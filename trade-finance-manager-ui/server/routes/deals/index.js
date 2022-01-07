@@ -1,9 +1,9 @@
 const express = require('express');
-const controller = require('../../controllers/deals');
+const { getDeals, queryDeals } = require('../../controllers/deals');
 
 const router = express.Router();
 
-router.get('/', controller.getDeals);
-router.post('/', controller.queryDeals);
+router.get('/', getDeals);
+router.post('/', queryDeals);
 
 module.exports = router;
