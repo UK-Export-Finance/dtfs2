@@ -4,6 +4,7 @@ const aDeal = require('../deal-builder');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
+const CONSTANTS = require('../../../src/constants');
 
 const mockUser = {
   _id: '123456789',
@@ -22,11 +23,19 @@ const mockUserNoBank = {
 };
 
 const newDeal = aDeal({
+  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   editedBy: [],
   eligibility: {
     status: 'Not started',
     criteria: [{}],
   },
+  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+  exporter: {
+    companyName: 'mock company',
+  },
+  bankInternalRefName: 'test',
+  submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+  updatedAt: 123456789,
 });
 
 describe('/v1/portal/deals', () => {
@@ -35,6 +44,28 @@ describe('/v1/portal/deals', () => {
     await wipeDB.wipe(['facilities']);
   });
 
+  describe('GET /v1/portal/deals', () => {
+    it('should return count and mapped deals', async () => {
+      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = postResult.body._id;
+
+      const { status, body } = await api.get('/v1/portal/deals');
+
+      expect(status).toEqual(200);
+
+      expect(typeof body[0].count).toEqual('number');
+
+      const firstDeal = body[0].deals[0];
+
+      expect(typeof firstDeal._id).toEqual('string');
+      expect(firstDeal.bankInternalRefName).toEqual(newDeal.bankInternalRefName);
+      expect(firstDeal.status).toEqual(newDeal.status);
+      expect(firstDeal.product).toEqual(newDeal.dealType);
+      expect(firstDeal.submissionType).toEqual(newDeal.submissionType);
+      expect(firstDeal.exporter).toEqual(newDeal.exporter.companyName);
+      expect(typeof firstDeal.updatedAt).toEqual('number');
+    })
+  });
   describe('POST /v1/portal/deals', () => {
     it('returns the created deal with correct fields', async () => {
       const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');

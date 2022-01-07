@@ -49,7 +49,7 @@
                 text: "Created by you",
                 checked: createdByYou,
                 attributes: {
-                "data-cy": "created-by-you",
+                "data-cy": "created-by-you-checkbox",
                 'onChange': 'this.form.submit()'
               }
               }
@@ -60,7 +60,7 @@
               text: 'Submit',
               classes: 'moj-js-hidden',
               attributes: {
-                'data-cy': 'submit-created-by-you'
+                'data-cy': 'created-by-you-submit'
               }
             }) }}
           </div>
@@ -79,20 +79,20 @@
           class="govuk-link"
           data-cy="deal__link--{{ deal._id }}"
       >
-        {{ deal.bankRef }}
+        {{ deal.bankInternalRefName }}
       </a>
     {% endset %}
     {% set item = [
       {
-        text: deal.exporter,
+        text: deal.exporter or "-",
         attributes: { "data-cy": "deal__exporter--" + deal._id  }
       },
       {
         html: linkHtml,
-        attributes: { "data-cy": "deal__bankRef--" + deal._id }
+        attributes: { "data-cy": "deal__bankRef--bankInternalRefName" + deal._id }
       },
       {
-        text: deal.product,
+        text: deal.product or "-",
         attributes: { "data-cy": "deal__product--" + deal._id }
       },
       {
@@ -100,11 +100,11 @@
         attributes: { "data-cy": "deal__submissionType--" + deal._id }
       },
       {
-        text: deal.status,
+        text: deal.status or "-",
         attributes: { "data-cy": "deal__status--" + deal._id }
       },
       {
-        text: deal.updatedAt | localiseTimestamp("D MMM YYYY", user.timezone),
+        text: deal.updatedAt | localiseTimestamp("D MMM YYYY", user.timezone) or "-",
         attributes: {
         'data-cy': 'deal__updated--' + deal._id }
       }
@@ -160,6 +160,6 @@
     rows: items
   }) }}
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/bss' if tab === 'bssDeals' else '/dashboard' ) }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' ) }}
 
 {% endblock %}

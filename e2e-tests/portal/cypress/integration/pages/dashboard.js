@@ -1,14 +1,16 @@
 const page = {
-  visit: () => cy.visit('/dashboard/bss/0'),
+  visit: () => cy.visit('/dashboard/deals/0'),
 
   createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
+
+  createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
 
   showFilters: () => cy.contains('Show filters'),
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   row: {
     exporter: (id) => cy.get(`[data-cy="deal__exporter--${id}"]`),
-    bankRef: (id) => cy.get(`[data-cy="deal__bankRef--${id}"]`),
+    bankRef: (id) => cy.get(`[data-cy="deal__bankRef--bankInternalRefName${id}"]`),
     link: (id) => cy.get(`[data-cy="deal__link--${id}"]`),
     product: (id) => cy.get(`[data-cy="deal__product--${id}"]`),
     status: (id) => cy.get(`[data-cy="deal__status--${id}"]`),

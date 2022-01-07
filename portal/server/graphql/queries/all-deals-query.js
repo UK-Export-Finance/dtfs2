@@ -7,7 +7,7 @@ query allDeals($start: Int, $pagesize: Int, $filters: [DashboardFilters]){
     deals {
       _id
       status
-      bankRef
+      bankInternalRefName
       exporter
       product
       submissionType

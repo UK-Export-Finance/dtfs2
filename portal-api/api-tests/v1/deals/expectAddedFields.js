@@ -35,7 +35,7 @@ const expectAddedFields = (obj) => {
       created: expect.any(String),
     },
     editedBy: [],
-    exporter: {},
+    exporter: expect.any(Object),
     updatedAt: expect.any(Number),
   });
 

@@ -35,7 +35,7 @@ class Application {
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;
       this.createdAt = Date.now();
-      this.updatedAt = null;
+      this.updatedAt = Date.now();
       this.submissionType = null;
       this.submissionCount = 0;
       this.submissionDate = null;

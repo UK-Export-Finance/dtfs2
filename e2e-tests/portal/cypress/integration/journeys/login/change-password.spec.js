@@ -83,7 +83,7 @@ context('Admin user creates a new user; the new user updates their password.', (
       ...userToCreate,
       password: 'P4ssPl£ase',
     });
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // prove that we cant re-use an old password
     header.profile().click();

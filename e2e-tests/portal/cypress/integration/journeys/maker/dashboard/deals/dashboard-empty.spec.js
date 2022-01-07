@@ -4,7 +4,7 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
-context('Dashboard BSS Deals', () => {
+context('Dashboard deals', () => {
   beforeEach(() => {
     cy.deleteDeals(MAKER_LOGIN);
   });
