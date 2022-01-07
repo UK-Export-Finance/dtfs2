@@ -1,5 +1,4 @@
 const { format, add } = require('date-fns');
-const { getEpoch, getUTCDate } = require('./helpers');
 const CONSTANTS = require('../constants');
 
 /*
@@ -30,16 +29,14 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
    && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
 
 /**
-   * this function checks that the deal is an AIN
+   * this function checks that the deal is an AIN or MIN
    * checks that it has been submitted to UKEF
    * if any unissued facilitites
- if changes required to include MIA, add to application type and status
- * */
-
+   * if changes required add to application type and status
+* */
 const areUnissuedFacilitiesPresent = (application) => {
   const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
-  // TODO: DTFS-4128 add MIN
-  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN];
+  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIN];
 
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
@@ -134,26 +131,6 @@ const hasChangedToIssued = (application) => {
 
 const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app).length > 0;
 
-const pastDate = ({ day, month, year }) => {
-  const input = getEpoch({ day, month, year });
-  const now = getUTCDate();
-  return input < now;
-};
-
-const futureDateInRange = ({ day, month, year }, days) => {
-  if (!pastDate({ day, month, year })) {
-    const input = getEpoch({ day, month, year });
-    let range = getUTCDate();
-    /**
-     * 86400000 = 24 hours * 60 minutes * 60 seconds * 1000 ms
-     * Number of ms in a day
-     * */
-    range += 86400000 * days;
-    return input <= range;
-  }
-  return false;
-};
-
 module.exports = {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -166,6 +143,4 @@ module.exports = {
   facilitiesChangedPresent,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
-  pastDate,
-  futureDateInRange,
 };

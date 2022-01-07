@@ -10,6 +10,28 @@
       </div>
     {% endif %}
 
+    {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 %}
+      <h2 data-cy="update-unissued-header">Update facility stage for unissued facilities</h2>
+      <div class="govuk-!-margin-bottom-6">
+        <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">
+          View unissued facilities</a>
+      </div>
+    {% endif %}
+
+    {% if facilitiesChangedToIssued.length > 0 %}
+      {% if status === "Further Maker's input required"%}
+        <h2 data-cy="update-unissued-stage">Change facility details</h2>
+      {% else %}
+        <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+      {% endif %}
+      <strong data-cy="changed-unissued-header">The following facility stages have been updated to issued:</strong>
+      <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities-list">
+        {% for item in facilitiesChangedToIssued %}
+          <p>{{ item.name }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% if coverDatesConfirmed %}
       {% if ukefDecision[0].decision == 'Accepted (without conditions)' %}
         <strong>You are proceeding with UKEF cover</strong>
@@ -25,29 +47,6 @@
         <p>{{ ukefDecision[0].text | safe }}</p>
       {% endif %}
     {% endif %}
-
-    {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 %}
-      <h2 data-cy="update-unissued-header">Update facility stage for unissued facilities</h2>
-      <div class="govuk-!-margin-bottom-6">
-        <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">
-          View unissued facilities</a>
-      </div>
-    {% endif %}
-
-    {% if facilitiesChangedToIssued.length > 0 %}
-      {% if status === "Further Maker's input required"%}
-        <h2 data-cy="update-unissued-stage">Change facility details</h2>
-      {% else %}
-        <h2 data-cy="update-unissued-stage">Review facility stage</h2>
-      {% endif %}
-      <h3 data-cy="changed-unissued-header">The following facility stages have been updated to issued:</h3>
-      <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities-list">
-        {% for item in facilitiesChangedToIssued %}
-          <p>{{ item.name }}</p>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
 
   <div data-cy="latest-comment">
     {% for comment in comments %}

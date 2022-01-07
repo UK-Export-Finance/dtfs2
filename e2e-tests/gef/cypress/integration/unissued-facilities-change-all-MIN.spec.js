@@ -6,11 +6,12 @@ import CONSTANTS from '../fixtures/constants';
 
 import dateConstants from '../fixtures/dateConstants';
 
-import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
 } from '../fixtures/mocks/mock-facilities';
+
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
@@ -28,7 +29,7 @@ const unissuedFacilitiesArray = [
   MOCK_FACILITY_FOUR,
 ];
 
-context('Unissued Facilities AIN - change all to issued from unissued table', () => {
+context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
@@ -36,7 +37,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       // creates application and inserts facilities and changes status
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
@@ -61,11 +62,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
     });
 
     // ensures the task comment box exists with correct headers and link
-    it('task comment box exists with correct header and unissued facilities link', () => {
+    it('task comment box exists with correct header and unissued facilities link and shows type as MIN', () => {
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
       applicationPreview.submitButtonPostApproval().should('not.exist');
-      applicationPreview.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+      applicationPreview.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN);
     });
 
     /* application preview should not have unlocked ability to change unissued facilities until
