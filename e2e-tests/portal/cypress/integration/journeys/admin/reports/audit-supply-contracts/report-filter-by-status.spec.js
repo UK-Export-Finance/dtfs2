@@ -9,7 +9,9 @@ const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 context('Audit - Report', () => {
   before(() => {
+    cy.deleteGefApplications(ADMIN_LOGIN);
     cy.deleteDeals(ADMIN_LOGIN);
+
     cy.insertManyDeals(dashboardTestData, ADMIN_LOGIN);
   });
 
@@ -17,17 +19,17 @@ context('Audit - Report', () => {
     cy.login(ADMIN_LOGIN);
     auditSupplyContracts.visit();
 
-    auditSupplyContracts.filterByStatus().select('all');
+    auditSupplyContracts.filterByStatus().select('ALL');
     auditSupplyContracts.applyFilters().click();
 
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(21 items)');
     });
 
-    auditSupplyContracts.filterByStatus().should('have.value', 'all');
+    auditSupplyContracts.filterByStatus().should('have.value', 'ALL');
 
     // filter by draft
-    auditSupplyContracts.filterByStatus().select('draft');
+    auditSupplyContracts.filterByStatus().select('DRAFT');
     auditSupplyContracts.applyFilters().click();
     auditSupplyContracts.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(6 items)');

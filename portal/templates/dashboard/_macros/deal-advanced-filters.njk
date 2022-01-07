@@ -27,17 +27,17 @@
         </label>
 
         <select data-cy="filterByStatus" class="govuk-select" id="filterByStatus" name="filterByStatus">
-          <option value="all" {% if filter.filterByStatus==='all' %}selected{%endif%}>Any</option>
-          <option value="draft" {% if filter.filterByStatus==='draft' %}selected{%endif%}>Draft</option>
-          <option value="readyForApproval" {% if filter.filterByStatus==='readyForApproval' %}selected{%endif%}>Ready for Checker's approval</option>
-          <option value="inputRequired" {% if filter.filterByStatus==='inputRequired' %}selected{%endif%}>Further Maker's input required</option>
-          <option value="abandoned" {% if filter.filterByStatus==='abandoned' %}selected{%endif%}>Abandoned</option>
-          <option value="submitted" {% if filter.filterByStatus==='submitted' %}selected{%endif%}>Submitted</option>
-          <option value="submissionAcknowledged" {% if filter.filterByStatus==='submissionAcknowledged' %}selected{%endif%}>Acknowledged by UKEF</option>
-          <option value="inProgress" {% if filter.filterByStatus==='inProgress' %}selected{%endif%}>In Progress by UKEF</option>
-          <option value="approved" {% if filter.filterByStatus==='approved' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
-          <option value="approvedWithConditions" {% if filter.filterByStatus==='approvedWithConditions' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
-          <option value="refused" {% if filter.filterByStatus==='refused' %}selected{%endif%}>Rejected by UKEF</option></select>
+          <option value="ALL" {% if filter.filterByStatus==='ALL' %}selected{%endif%}>Any</option>
+          <option value="DRAFT" {% if filter.filterByStatus==='DRAFT' %}selected{%endif%}>Draft</option>
+          <option value="READY_FOR_APPROVAL" {% if filter.filterByStatus==='READY_FOR_APPROVAL' %}selected{%endif%}>Ready for Checker's approval</option>
+          <option value="INPUT_REQUIRED" {% if filter.filterByStatus==='INPUT_REQUIRED' %}selected{%endif%}>Further Maker's input required</option>
+          <option value="ABANDONED" {% if filter.filterByStatus==='ABANDONED' %}selected{%endif%}>Abandoned</option>
+          <option value="SUBMITTED" {% if filter.filterByStatus==='SUBMITTED' %}selected{%endif%}>Submitted</option>
+          <option value="SUBMISSION_ACKNOWLEDGED" {% if filter.filterByStatus==='SUBMISSION_ACKNOWLEDGED' %}selected{%endif%}>Acknowledged by UKEF</option>
+          <option value="IN_PROGRESS_BY_UKEF" {% if filter.filterByStatus==='IN_PROGRESS_BY_UKEF' %}selected{%endif%}>In Progress by UKEF</option>
+          <option value="APPROVED" {% if filter.filterByStatus==='APPROVED' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
+          <option value="APPROVED_WITH_CONDITIONS" {% if filter.filterByStatus==='APPROVED_WITH_CONDITIONS' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
+          <option value="REFUSED" {% if filter.filterByStatus==='REFUSED' %}selected{%endif%}>Rejected by UKEF</option></select>
         </select>
       </div>
     </div>
