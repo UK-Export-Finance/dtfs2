@@ -1,6 +1,6 @@
 const api = require('../../api');
 const { STATUS } = require('../../constants');
-
+const { dashboardFilters } = require('./dashboardFilters');
 const {
   getApiData,
   requestParams,
@@ -21,7 +21,7 @@ const getRoles = (roles) => {
   };
 };
 
-const dashboardFilters = (filter, user) => {
+const dashboardFiltersQuery = (filter, user) => {
   const { createdByYou } = filter;
   const { isMaker, isChecker } = getRoles(user.roles);
   const allFilters = [];
@@ -54,12 +54,12 @@ exports.allDeals = async (req, res) => {
   const tab = 'deals';
   const { userToken } = requestParams(req);
 
-  const filters = dashboardFilters(req.body, req.session.user);
+  const filtersQuery = dashboardFiltersQuery(req.body, req.session.user);
 
   const { count, deals } = await getApiData(api.allDeals(
     req.params.page * PAGESIZE,
     PAGESIZE,
-    filters,
+    filtersQuery,
     userToken,
   ), res);
 
@@ -72,6 +72,7 @@ exports.allDeals = async (req, res) => {
   return res.render('dashboard/deals.njk', {
     deals,
     pages,
+    filters: dashboardFilters(),
     successMessage: getFlashSuccessMessage(req),
     primaryNav,
     tab,

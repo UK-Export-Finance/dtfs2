@@ -1,0 +1,48 @@
+{% from 'moj/components/filter/macro.njk' import mojFilter %}
+{% import './dashboard-filters-form.njk' as dashboardFiltersForm %}
+
+{% macro render(params) %}
+  {% set filters = params.filters %}
+
+  <div class="moj-filter-layout__filter">
+
+    {{ mojFilter({
+      heading: {
+      text: 'Filter'
+      },
+      selectedFilters: {
+        heading: {
+          text: 'Selected filters'
+        },
+        clearLink: {
+          text: 'Clear filters'
+        },
+        categories: [
+          {
+            heading: {
+              text: 'Colour'
+            },
+            items: [{
+              href: '#',
+              text: 'Blue'
+            }, {
+              href: '#',
+              text: 'Yellow'
+            }]
+          },
+          {
+            heading: {
+              text: 'Status'
+            },
+            items: [{
+              href: '#',
+              text: 'Complete'
+            }]
+          }
+        ]
+      },
+      optionsHtml: dashboardFiltersForm.render({ filters: filters })
+    }) }}
+
+  </div>
+{% endmacro %}

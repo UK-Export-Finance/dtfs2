@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
+{%- from "moj/components/filter/macro.njk" import mojFilter -%}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
@@ -8,7 +8,7 @@
 {% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-sub-nav.njk' as dashboardSubNav %}
 {% import '_macros/pagination.njk' as pagination %}
-{% import './_macros/deal-filters.njk' as dashboardFilters %}
+{% import './_macros/dashboard-filters.njk' as dashboardFilters %}
 
 {% block pageTitle %}Deals{% endblock %}
 
@@ -32,6 +32,7 @@
   }) }}
 
   {{ dashboardSubNav.subnav(selected = tab) }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       &nbsp
@@ -113,53 +114,112 @@
     {% set items = (items.push(item), items) %}
   {% endfor %}
 
-  {{ govukTable({
-    classes: "govuk-table govuk-!-margin-bottom-0",
-    attributes: {
-    'data-module': 'moj-sortable-table'
-   },
-    head: [
-      {
-        text: "Exporter",
-        attributes: {
-        "data-cy": "deal__header--exporter",
-        "aria-sort": "none"
-      }
-      },
-      {
-        text: "Bank ref",
-        attributes: {
-        "data-cy": "deal__header--bankRef"
-      }
-      },
-      {
-        text: "Product",
-        attributes: {
-        "data-cy": "deal__header--product"
-      }
-      },
-      {
-        text: "Type",
-        attributes: {
-        "data-cy": "deal__header--type"
-      }
-      },
-      {
-        text: "Status",
-        attributes: {
-        "data-cy": "deal__header--status"
-      }
-      },
-      {
-        text: "Last updated",
-        attributes: {
-        "data-cy": "deal__header--updated"
-      }
-      }
-    ],
-    rows: items
-  }) }}
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' ) }}
 
+  <div class="moj-filter-layout">
+
+    {{dashboardFilters.render({ filters: filters })}}
+
+    <div class="moj-filter-layout__content">
+
+      <div class="moj-action-bar">
+
+        <div class="moj-action-bar__filter"></div>
+
+        {# {{ mojButtonMenu({
+          items: [{
+            text: 'Action 1',
+            classes: 'govuk-button--secondary'
+          }, {
+            text: 'Action 2',
+            classes: 'govuk-button--secondary'
+          }]
+        }) }} #}
+
+      </div>
+
+      <div class="moj-scrollable-pane">
+
+        <div class="moj-scrollable-pane__wrapper">
+
+          {{ govukTable({
+            classes: "govuk-table govuk-!-margin-bottom-0",
+            attributes: {
+            'data-module': 'moj-sortable-table'
+          },
+            head: [
+              {
+                text: "Exporter",
+                attributes: {
+                "data-cy": "deal__header--exporter",
+                "aria-sort": "none"
+              }
+              },
+              {
+                text: "Bank ref",
+                attributes: {
+                "data-cy": "deal__header--bankRef"
+              }
+              },
+              {
+                text: "Product",
+                attributes: {
+                "data-cy": "deal__header--product"
+              }
+              },
+              {
+                text: "Type",
+                attributes: {
+                "data-cy": "deal__header--type"
+              }
+              },
+              {
+                text: "Status",
+                attributes: {
+                "data-cy": "deal__header--status"
+              }
+              },
+              {
+                text: "Last updated",
+                attributes: {
+                "data-cy": "deal__header--updated"
+              }
+              }
+            ],
+            rows: items
+          }) }}
+
+          {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' ) }}
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script>
+    if (typeof MOJFrontend.FilterToggleButton !== 'undefined') {
+      new MOJFrontend.FilterToggleButton({
+        bigModeMediaQuery: "(min-width: 48.063em)",
+        startHidden: true,
+        toggleButton: {
+          container: $(".moj-action-bar__filter"),
+          showText: "Show filter",
+          hideText: "Hide filter",
+          classes: "govuk-button--secondary",
+        },
+        closeButton: {
+          container: $(".moj-filter__header-action"),
+          text: "Close",
+        },
+        filter: {
+          container: $(".moj-filter"),
+        },
+      });
+    }
+  </script>
 {% endblock %}
