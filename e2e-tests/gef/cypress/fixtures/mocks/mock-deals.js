@@ -112,7 +112,7 @@ const commonApplicationDetails = {
   },
 };
 
-const MOCK_APPLICATION_AIN = {
+export const MOCK_APPLICATION_AIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   eligibility: {
@@ -179,7 +179,7 @@ const MOCK_APPLICATION_AIN = {
   ...commonApplicationDetails,
 };
 
-const MOCK_APPLICATION_MIN = {
+export const MOCK_APPLICATION_MIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.MIN,
   eligibility: {
@@ -254,8 +254,4 @@ const MOCK_APPLICATION_MIN = {
     requiredFields: ['manualInclusion'],
   },
   ...commonApplicationDetails,
-};
-
-export default {
-  MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN,
 };
