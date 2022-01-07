@@ -621,10 +621,11 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   }
 };
 
-const getAllFacilities = async () => {
+const getAllFacilities = async (searchString) => {
   try {
     const response = await axios({
       method: 'GET',
+      data: searchString,
       url: `${centralApiUrl}/v1/tfm/facilities`,
       headers: {
         'Content-Type': 'application/json',

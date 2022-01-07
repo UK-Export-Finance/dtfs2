@@ -163,7 +163,7 @@ exports.getAllFacilities = async (req, res) => {
       },
     },
     // sort based on the ukefFacilityId - this is default behavior
-    { $sort: { 'tfmFacilities.ukefFacilityId': 1 } },
+    { $sort: { 'tfmFacilities.ukefFacilityId': -1 } },
 
   ]).toArray();
 
