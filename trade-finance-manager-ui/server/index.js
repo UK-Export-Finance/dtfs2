@@ -14,12 +14,7 @@ const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
+// app.use(helmet());
 
 const PORT = process.env.PORT || 5003;
 

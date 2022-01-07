@@ -32,24 +32,25 @@ const getSubmissionCount = (deal) => {
 };
 
 const createDealSnapshot = async (deal) => {
+  const { dealType, _id: dealId } = deal;
   const collection = await db.getCollection('tfm-deals');
 
   const submissionCount = getSubmissionCount(deal);
+  const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-  const tfmInit = submissionCount === 1
-    ? {
-      tfm: DEFAULTS.DEAL_TFM,
-    }
-    : null;
-
-  const update = {
+  const dealObj = {
     dealSnapshot: deal,
     ...tfmInit,
   };
 
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const dealFacilities = await findAllFacilitiesByDealId(dealId);
+    dealObj.dealSnapshot.facilities = dealFacilities;
+  }
+
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: String(deal._id) },
-    $.flatten(withoutId(update)),
+    $.flatten(withoutId(dealObj)),
     { returnOriginal: false, upsert: true },
   );
 
@@ -62,7 +63,7 @@ const createFacilitiesSnapshot = async (deal) => {
     _id: dealId,
   } = deal;
 
-  let dealFacilities;
+  let dealFacilities = [];
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealFacilities = await findAllFacilitiesByDealId(dealId);
   }
@@ -82,7 +83,7 @@ const createFacilitiesSnapshot = async (deal) => {
     : null;
 
   if (dealFacilities) {
-    const updatedFacilties = Promise.all(
+    const updatedFacilities = Promise.all(
       dealFacilities.map(async (facility) => collection.findOneAndUpdate(
         { _id: String(facility._id) },
         $.flatten({ facilitySnapshot: facility, ...tfmInit }),
@@ -90,7 +91,7 @@ const createFacilitiesSnapshot = async (deal) => {
       )),
     );
 
-    return updatedFacilties;
+    return updatedFacilities;
   }
 
   return dealFacilities;

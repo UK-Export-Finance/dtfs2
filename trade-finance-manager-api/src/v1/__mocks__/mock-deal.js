@@ -1,3 +1,5 @@
+const { MOCK_FACILITIES } = require('./mock-facilities');
+
 const MOCK_DEAL = {
   _id: '123456789',
   dealType: 'BSS/EWCS',
@@ -162,7 +164,7 @@ const MOCK_DEAL = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
-  facilities: ['12345678', '23456789'],
+  facilities: [MOCK_FACILITIES[0], MOCK_FACILITIES[1]],
   bondTransactions: {
     items: [
       {

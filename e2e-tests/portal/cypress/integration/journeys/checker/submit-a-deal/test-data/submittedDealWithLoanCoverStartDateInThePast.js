@@ -12,9 +12,9 @@ module.exports = () => {
 
   deal.loanTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
 
-  deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.getDate();
-  deal.loanTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture.getMonth() + 1;
-  deal.loanTransactions.items[0]['coverEndDate-year'] = aMonthInTheFuture.getFullYear();
+  deal.loanTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  deal.loanTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  deal.loanTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   deal.loanTransactions.items[0].facilityStage = 'Unconditional';
 
   return deal;

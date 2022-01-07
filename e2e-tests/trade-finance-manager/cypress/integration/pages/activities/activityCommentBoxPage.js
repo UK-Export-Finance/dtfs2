@@ -4,7 +4,7 @@ const activityCommentBoxPage = {
   cancelButton: () => cy.get('[data-cy="cancel-comment-link"]'),
 
   commentErrorSummary: () => cy.get('[data-cy="error-summary"]'),
-  commentErrorMesssage: () => cy.get('[data-cy="activity-comment-error"]'),
+  commentErrorMessage: () => cy.get('[data-cy="activity-comment-error"]'),
 
 };
 

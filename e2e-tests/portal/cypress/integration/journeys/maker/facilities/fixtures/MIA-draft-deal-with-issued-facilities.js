@@ -188,9 +188,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': nowPlusMonth.getDate(),
-      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth.getFullYear(),
+      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
+      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
+      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
@@ -215,9 +215,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': nowPlusMonth.getDate(),
-      'coverEndDate-month': nowPlusMonth.getMonth() + 1,
-      'coverEndDate-year': nowPlusMonth.getFullYear(),
+      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
+      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
+      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
       bankReferenceNumber: '1234',
       guaranteeFeePayableByBank: '21.6000',
       lastEdited: now,
@@ -329,6 +329,5 @@ const deal = {
     security: '',
   },
 };
-
 
 module.exports = deal;

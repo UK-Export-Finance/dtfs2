@@ -1,5 +1,5 @@
 const api = require('../../api');
-const generateHeadingText = require('./helpers');
+const generateHeadingText = require('../helpers');
 const CONSTANTS = require('../../constants');
 
 const getDeals = async (req, res) => {

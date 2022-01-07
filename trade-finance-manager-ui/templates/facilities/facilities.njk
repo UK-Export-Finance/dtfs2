@@ -1,0 +1,110 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/button-menu/macro.njk" import mojButtonMenu %}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Trade Finance Manager
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-three-quarters">
+      <h2 class="header-label" data-cy="deals-heading">{{ heading }}</h2>
+    </div>
+  </div>
+
+
+  {% set items = [] %}
+  {% for facility in facilities %}
+    {% set facilityLink %}
+      <a
+         class="govuk-link"
+         href="/case/{{ facility.dealId }}/facility/{{ facility.facilityId }}"
+         aria-label="View facility details"
+         data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link">
+         <span data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link-text">{{ facility.ukefFacilityId }}</span>
+      </a>
+    {% endset %}
+
+    {% set coverEndDate %}
+      {% if facility.coverEndDate %}
+         {{ facility.coverEndDate | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
+         {% if facility.hasBeenIssued %}
+            (issued)
+         {% else %}
+            (unissued)
+         {% endif %}
+      {% else %}
+         -
+      {% endif %}
+    {% endset %}
+
+    {% set item = [
+      {
+        html: facilityLink,
+        attributes: { "data-cy": "facility__ukefFacilityId", "data-sort-value": facility.ukefFacilityId  }
+      },
+      {
+        text: facility.dealType or "-",
+        attributes: { "data-cy": "facility__product" }
+      },
+      {
+        text: facility.facilityType or "-",
+        attributes: { "data-cy": "facility__facilityType" }
+      },
+      {
+        text: facility.companyName or "-",
+        attributes: { "data-cy": "facility__companyName" }
+      },
+      {
+        text: facility.value or "-",
+        attributes: { "data-cy": "facility__facilityValue" }
+      },
+      {
+        html: coverEndDate,
+        attributes: { "data-cy": "facility__coverEndDate" }
+      }
+    ] %}
+
+    {% set items = (items.push(item), items) %}
+  {% endfor %}
+
+
+{{ govukTable({
+   attributes: { 'data-module': 'moj-sortable-table', 'data-cy': 'tfm-facilities-table' },
+   classes: 'tfm__facilities-table',
+   head: [
+      {
+        text: "Facility ID",
+        attributes: { "data-cy": "facility__header--ukefFacilityId", "aria-sort": "ascending" }
+      },
+      {
+        text: "Product",
+         attributes: { "data-cy": "facility__header--product"}
+      },
+      {
+        text: "Type",
+        attributes: { "data-cy": "facility__header--dataType" }
+      },
+      {
+        text: "Exporter",
+        attributes: { "data-cy": "facility__header--exporter" }
+      },
+      {
+        text: "Value (export currency)",
+        attributes: { "data-cy": "facility__header--value" }
+      },
+      {
+        text: "Cover end date",
+        attributes: { "data-cy": "facility__header--coverEndDate" }
+      }
+    ],
+    rows: items
+  }) }}
+
+{% endblock %}
