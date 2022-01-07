@@ -1,11 +1,10 @@
-/* eslint-disable no-undef */
-const BASE_URL = 'http://localhost:5001/v1';
+const portalApi = 'http://localhost:5001/v1';
 
 const login = (credentials) => {
   const { username, password } = credentials;
 
   return cy.request({
-    url: `${BASE_URL}/login`,
+    url: `${portalApi}/login`,
     method: 'POST',
     body: { username, password },
     headers: {
@@ -15,7 +14,7 @@ const login = (credentials) => {
 };
 
 const fetchAllApplications = (token) => cy.request({
-  url: `${BASE_URL}/gef/application`,
+  url: `${portalApi}/gef/application`,
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -24,7 +23,7 @@ const fetchAllApplications = (token) => cy.request({
 }).then((res) => res);
 
 const fetchAllFacilities = (dealId, token) => cy.request({
-  url: `${BASE_URL}/gef/facilities`,
+  url: `${portalApi}/gef/facilities`,
   qs: {
     dealId,
   },
@@ -36,7 +35,7 @@ const fetchAllFacilities = (dealId, token) => cy.request({
 }).then((res) => res);
 
 const createApplication = (user, token) => cy.request({
-  url: `${BASE_URL}/gef/application`,
+  url: `${portalApi}/gef/application`,
   method: 'POST',
   body: user,
   headers: {
@@ -46,7 +45,7 @@ const createApplication = (user, token) => cy.request({
 }).then((res) => res);
 
 const updateApplication = (dealId, token, update) => cy.request({
-  url: `${BASE_URL}/gef/application/${dealId}`,
+  url: `${portalApi}/gef/application/${dealId}`,
   method: 'PUT',
   body: update,
   headers: {
@@ -56,7 +55,7 @@ const updateApplication = (dealId, token, update) => cy.request({
 }).then((res) => res);
 
 const createFacility = (dealId, type, token) => cy.request({
-  url: `${BASE_URL}/gef/facilities`,
+  url: `${portalApi}/gef/facilities`,
   method: 'POST',
   body: { dealId, type },
   headers: {
@@ -66,7 +65,7 @@ const createFacility = (dealId, type, token) => cy.request({
 }).then((res) => res);
 
 const updateFacility = (facilityId, token, update) => cy.request({
-  url: `${BASE_URL}/gef/facilities/${facilityId}`,
+  url: `${portalApi}/gef/facilities/${facilityId}`,
   method: 'PUT',
   body: update,
   headers: {
@@ -76,7 +75,7 @@ const updateFacility = (facilityId, token, update) => cy.request({
 }).then((res) => res);
 
 const setApplicationStatus = (dealId, token, status) => cy.request({
-  url: `${BASE_URL}/gef/application/status/${dealId}`,
+  url: `${portalApi}/gef/application/status/${dealId}`,
   method: 'PUT',
   body: { status },
   headers: {

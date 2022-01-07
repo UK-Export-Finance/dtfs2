@@ -4,7 +4,7 @@ const { validate } = require('../../role-validator');
 const fileUpload = require('./middleware/fileUpload');
 
 const application = require('./controllers/application.controller');
-const cloneApplication = require('./controllers/clone-application.controller');
+const cloneApplication = require('./controllers/clone-gef-deal.controller');
 const facilities = require('./controllers/facilities.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
