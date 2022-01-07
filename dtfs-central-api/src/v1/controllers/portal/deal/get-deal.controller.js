@@ -135,7 +135,7 @@ exports.findOneDealGet = async (req, res) => {
 };
 
 /**
- * Queries all deals, both BSS and GEF
+ * Queries all deals in the deals collection (BSS, GEF)
  * @param {*} filters any filters for list, uses match spec
  * @param {*} sort any additional sort fields for list
  * @param {*} start where list should start - part of pagination.
@@ -147,78 +147,36 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   const collection = await db.getCollection('deals');
 
   const deals = await collection.aggregate([
-    // commented out as causing issues with cosmos db
-    // // clear the collection
-    // { $limit: 1 },
-    // { $project: { _id: 1 } },
-    // { $project: { _id: 0 } },
-    // // add data sets
-    // {
-    //   $lookup: {
-    //     from: 'deals',
-    //     pipeline: [
+    { $match: filters },
     {
       $project: {
         _id: 1,
-        bankId: '$bank.id',
-        bankRef: '$additionalRefName',
+        bankInternalRefName: '$bankInternalRefName',
         status: '$status',
-        product: 'BSS/EWCS',
+        product: '$dealType',
         submissionType: '$submissionType',
         exporter: '$exporter.companyName',
         updatedAt: '$updatedAt',
-        userId: '$maker._id',
       },
     },
-    //     ],
-    //     as: 'BSS',
-    //   },
-    // },
-    // {
-    //   $lookup: {
-    //     from: 'deals',
-    //     pipeline: [
-    //       {
-    //         $lookup: {
-    //           from: 'gef-exporter',
-    //           localField: 'exporterId',
-    //           foreignField: '_id',
-    //           as: 'exporter',
-    //         },
-    //       },
-    //       { $unwind: '$exporter' },
-    //       {
-    //         $project: {
-    //           _id: 1,
-    //           bankRef: '$bankInternalRefName',
-    //           bankId: 1,
-    //           status: 1,
-    //           product: 'GEF',
-    //           type: '$submissionType',
-    //           exporter: '$exporter.companyName',
-    //           lastUpdate: { $ifNull: ['$updatedAt', '$createdAt'] },
-    //         },
-    //       },
-    //     ],
-    //     as: 'GEF',
-    //   },
-    // },
-    // // combine data sets and flatten
-    // { $project: { union: { $concatArrays: ['$BSS', '$GEF'] } } },
-    // { $unwind: '$union' },
-    // { $replaceRoot: { newRoot: '$union' } },
-    { $match: filters },
     { $sort: { ...sort, updatedAt: -1 } },
     {
       $facet: {
         count: [{ $count: 'total' }],
-        deals: [{ $skip: start }, ...pagesize ? [{ $limit: pagesize }] : []],
+        deals: [
+          { $skip: start },
+          ...(pagesize ? [{ $limit: pagesize }] : []),
+        ],
       },
     },
     { $unwind: '$count' },
-    { $project: { count: '$count.total', deals: 1 } },
-  ])
-    .toArray();
+    {
+      $project: {
+        count: '$count.total',
+        deals: 1,
+      },
+    },
+  ]).toArray();
 
   return deals;
 };
@@ -228,6 +186,7 @@ exports.queryAllDeals = async (req, res) => {
     const deals = await queryAllDeals(req.body.filters, req.body.sort, req.body.start, req.body.pagesize);
     res.status(200).send(deals);
   } catch (err) {
+    console.error('Error querying all deals ', err);
     res.status(500).send(`Error: ${err}`);
   }
 };

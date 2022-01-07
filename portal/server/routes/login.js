@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
       errors: validationErrorHandler(loginErrors),
     });
   }
-  return res.redirect('/dashboard/0');
+  return res.redirect('/dashboard/deals/0');
 });
 
 router.get('/logout', (req, res) => {

@@ -60,6 +60,6 @@ context('Admin user updates an existing user', () => {
 
     // prove we can log in again
     cy.login(userToUpdate);
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });

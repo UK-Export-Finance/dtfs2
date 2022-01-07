@@ -57,11 +57,11 @@ context('Admin user creates a new user', () => {
 
     // login as the new user
     cy.login(validUser);
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // prove the lastLogin timestamp
     cy.login(ADMIN_LOGIN);
-    cy.url().should('eq', relative('/dashboard/0'));
+    cy.url().should('eq', relative('/dashboard/deals/0'));
     header.users().click();
 
     users.row(validUser).lastLogin().invoke('text').then((text) => {

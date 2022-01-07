@@ -21,7 +21,6 @@ module.exports = {
   contractSubmissionDetails: require('./contractSubmissionDetails'),
   editDealName: require('./contract/contract-edit-name'),
   dashboard: require('./dashboard'),
-  gefDashboard: require('./gefDashboard'),
   facilitiesDashboard: require('./facilitiesDashboard'),
   gefFacilitiesDashboard: require('./gefFacilitiesDashboard'),
   cloneDeal: require('./cloneDeal'),

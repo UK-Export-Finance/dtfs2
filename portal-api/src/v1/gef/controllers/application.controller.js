@@ -244,6 +244,7 @@ exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);
+
   if (enumValidationErr) {
     return res.status(422)
       .send(enumValidationErr);
