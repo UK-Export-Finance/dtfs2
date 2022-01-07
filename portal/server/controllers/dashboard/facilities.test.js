@@ -82,7 +82,7 @@ describe('controllers/facilities', () => {
     it('passes the expected filter for checker', async () => {
       await bssFacilities(checkerReq, res);
 
-      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'status', operator: 'eq', value: STATUS.readyForApproval }], 'mock-token');
+      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'status', operator: 'eq', value: STATUS.READY_FOR_APPROVAL }], 'mock-token');
     });
 
     it('renders the correct template', async () => {
@@ -164,7 +164,7 @@ describe('controllers/facilities', () => {
     it('passes the expected filter for checker', async () => {
       await gefFacilities(checkerReq, res);
 
-      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: STATUS.readyForApproval }], 'mock-token');
+      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: STATUS.READY_FOR_APPROVAL }], 'mock-token');
     });
 
     it('renders the correct template', async () => {

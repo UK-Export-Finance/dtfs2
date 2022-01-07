@@ -17,7 +17,7 @@ exports.bssFacilities = async (req, res) => {
   const { user } = req.session;
   const facilityFilters = [];
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'status', value: STATUS.readyForApproval, operator: 'eq' });
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'status', value: STATUS.READY_FOR_APPROVAL, operator: 'eq' });
 
   const filters = [...facilityFilters];
 
@@ -63,7 +63,7 @@ exports.gefFacilities = async (req, res) => {
   const { user } = req.session;
   const facilityFilters = [];
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: STATUS.readyForApproval, operator: 'eq' });
+  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: STATUS.READY_FOR_APPROVAL, operator: 'eq' });
 
   const filters = [...facilityFilters];
 
