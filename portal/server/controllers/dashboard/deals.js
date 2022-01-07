@@ -43,7 +43,7 @@ const dashboardFilters = (filter, user) => {
   if (isChecker && !isMaker) {
     allFilters.push({
       field: 'status',
-      value: STATUS.readyForApproval,
+      value: STATUS.READY_FOR_APPROVAL,
     });
   }
 

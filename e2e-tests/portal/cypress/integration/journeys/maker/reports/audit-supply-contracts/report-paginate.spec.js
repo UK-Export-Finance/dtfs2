@@ -27,7 +27,7 @@ context('Audit - Report', () => {
       auditSupplyContracts.next().click();
       cy.url().should('eq', relative('/reports/audit-supply-contracts/1'));
 
-      auditSupplyContracts.filterByStatus().select('Draft');
+      auditSupplyContracts.filterByStatus().select('DRAFT');
       auditSupplyContracts.applyFilters().click();
       cy.url().should('eq', relative('/reports/audit-supply-contracts/0'));
     });
