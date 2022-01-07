@@ -14,7 +14,6 @@ const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('U
 context('Portal to TFM deal submission', () => {
   let deal;
   let dealId;
-  const dealFacilities = [];
   let bondId;
   let loanId;
   const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -30,7 +29,6 @@ context('Portal to TFM deal submission', () => {
         const { mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
           createdFacilities.forEach((facility) => {
             const { facilityType } = facility;
 

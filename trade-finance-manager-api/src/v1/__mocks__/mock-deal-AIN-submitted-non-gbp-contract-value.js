@@ -1,3 +1,5 @@
+const { MOCK_FACILITIES } = require('./mock-facilities');
+
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   _id: 'AIN_DEAL_SUBMITTED_NON_GBP_CONTRACT_VALUE',
   dealType: 'BSS/EWCS',
@@ -19,6 +21,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     firstname: 'Joe',
     surname: 'Bloggs',
   },
+  facilities: [],
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
@@ -162,8 +165,8 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     agentName: 'AGENT NAME',
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
+    facilities: [MOCK_FACILITIES[0], MOCK_FACILITIES[1]],
   },
-  facilities: ['12345678', '23456789'],
   bondTransactions: {
     items: [
       {

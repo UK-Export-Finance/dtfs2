@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import activityController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -47,17 +46,19 @@ describe('GET activity', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.getActivity(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/activity/activity.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'activity',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
-        });
+        },
+      );
     });
   });
 
@@ -148,17 +149,19 @@ describe('POST activity (filter)', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.filterActivities(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/activity/activity.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'activity',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
           activities,
-        });
+        },
+      );
     });
   });
 
@@ -212,12 +215,14 @@ describe('GET activity - post-comment', () => {
       };
 
       await activityController.getCommentBox(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/activity/activity-comment.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/activity/activity-comment.njk',
         {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           maxCommentLength: 1000,
-        });
+        },
+      );
     });
   });
 
@@ -274,7 +279,8 @@ describe('POST activity - post-comment', () => {
       };
 
       await activityController.postComment(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/activity/activity-comment.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/activity/activity-comment.njk',
         {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
@@ -286,7 +292,8 @@ describe('POST activity - post-comment', () => {
             {},
           ),
           comment: longComment,
-        });
+        },
+      );
     });
 
     it('should return render activities page with all-activity filter after posting comment', async () => {
@@ -302,17 +309,19 @@ describe('POST activity - post-comment', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.postComment(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/activity/activity.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'activity',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
-        });
+        },
+      );
     });
     it('should return render activities page with all-activity filter after not posting a comment', async () => {
       const req = {
@@ -327,17 +336,19 @@ describe('POST activity - post-comment', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.postComment(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/activity/activity.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'activity',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
-        });
+        },
+      );
     });
   });
 

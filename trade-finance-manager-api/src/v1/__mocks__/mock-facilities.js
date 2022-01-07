@@ -1,4 +1,4 @@
-const MOCK_FACILIIES = [
+const MOCK_FACILITIES = [
   {
     _id: '12345678',
     dealId: '123456789',
@@ -193,4 +193,4 @@ const MOCK_FACILIIES = [
   },
 ];
 
-module.exports = MOCK_FACILIIES;
+module.exports = { MOCK_FACILITIES };

@@ -7,9 +7,9 @@ const dealWithNoCoverStartDate = { ...dealReadyToSubmitForReview };
 
 const loan = dealWithNoCoverStartDate.mockFacilities.find((f) => f.facilityType === 'loan');
 
-loan['coverEndDate-day'] = date.getDate();
-loan['coverEndDate-month'] = date.getMonth() + 1;
-loan['coverEndDate-year'] = date.getFullYear();
+loan['coverEndDate-day'] = (date.getDate()).toString();
+loan['coverEndDate-month'] = (date.getMonth() + 1).toString();
+loan['coverEndDate-year'] = (date.getFullYear()).toString();
 loan.facilityStage = 'Unconditional';
 
 module.exports = dealWithNoCoverStartDate;

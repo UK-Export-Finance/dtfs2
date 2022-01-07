@@ -3,10 +3,10 @@ const { mapPremiumFrequencyId, mapPremiumTypeId } = require('./map-premium-ids')
 const mapProductGroup = require('./map-product-group');
 const { mapBssEwcsFacility } = require('../map-submitted-deal/map-bss-ewcs-facility');
 
-const MOCK_FACILIIES = require('../../__mocks__/mock-facilities');
+const { MOCK_FACILITIES } = require('../../__mocks__/mock-facilities');
 
 describe('mapPremiumScheduleFacility', () => {
-  const mappedFacility = mapBssEwcsFacility(MOCK_FACILIIES[1]);
+  const mappedFacility = mapBssEwcsFacility(MOCK_FACILITIES[1]);
 
   const mockFacility = {
     ...mappedFacility,

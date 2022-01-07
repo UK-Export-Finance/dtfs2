@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import lossGivenDefaultController from '..';
 import api from '../../../../../api';
 import { mockRes } from '../../../../../test-mocks';
@@ -43,16 +42,18 @@ describe('GET underwriting - loss given default', () => {
       };
 
       await lossGivenDefaultController.getUnderWritingLossGivenDefault(req, res);
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk',
+      expect(res.render).toHaveBeenCalledWith(
+        'case/underwriting/pricing-and-risk/loss-given-default.njk',
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
           activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
-        });
+        },
+      );
     });
   });
 
@@ -151,7 +152,8 @@ describe('POST underwriting - loss given default', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -164,7 +166,8 @@ describe('POST underwriting - loss given default', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
@@ -197,7 +200,8 @@ describe('POST underwriting - loss given default', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -210,7 +214,8 @@ describe('POST underwriting - loss given default', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
@@ -243,7 +248,8 @@ describe('POST underwriting - loss given default', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -256,7 +262,8 @@ describe('POST underwriting - loss given default', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
 
@@ -289,7 +296,8 @@ describe('POST underwriting - loss given default', () => {
         };
 
         // eslint-disable-next-line no-underscore-dangle
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk',
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
@@ -302,7 +310,8 @@ describe('POST underwriting - loss given default', () => {
             dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
             user: session.user,
             validationErrors: expectedValidationErrors,
-          });
+          },
+        );
       });
     });
   });

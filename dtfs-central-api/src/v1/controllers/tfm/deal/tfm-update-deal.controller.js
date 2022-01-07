@@ -1,6 +1,8 @@
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
+const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
+const CONSTANTS = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -13,7 +15,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   /**
    * Only use the tfm object. Remove anything else.
    * Only the tfm object should be updated.
-   * - e.g dealSnapshot or any other root level data should not be updatedd.
+   * - e.g dealSnapshot or any other root level data should not be updated.
    * */
   const { tfm } = dealChanges;
 
@@ -120,7 +122,6 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const dealId = deal._id;
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -138,6 +139,11 @@ exports.updateDealSnapshotPut = async (req, res) => {
   const deal = await findOneDeal(dealId, false, 'tfm');
 
   const snapshotUpdate = req.body;
+
+  if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const dealFacilities = await findAllFacilitiesByDealId(dealId);
+    snapshotUpdate.facilities = dealFacilities;
+  }
 
   if (deal) {
     const updatedDeal = await updateDealSnapshot(

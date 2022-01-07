@@ -2,6 +2,7 @@ const axios = require('axios');
 const apollo = require('./graphql/apollo');
 const dealQuery = require('./graphql/queries/deal-query');
 const dealsLightQuery = require('./graphql/queries/deals-query-light');
+const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
 const facilityQuery = require('./graphql/queries/facility-query');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
 const userQuery = require('./graphql/queries/user-query');
@@ -18,11 +19,11 @@ const createActivityMutation = require('./graphql/mutations/create-activity');
 
 require('dotenv').config();
 
-const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
+const tfmAPIurl = process.env.TRADE_FINANCE_MANAGER_API_URL;
 
 const getDeal = async (id, tasksFilters, activityFilters) => {
   const queryParams = {
-    _id: id, // eslint-disable-line no-underscore-dangle
+    _id: id,
     tasksFilters,
     activityFilters,
   };
@@ -34,6 +35,22 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
   }
 
   return response.data.deal;
+};
+
+const getFacilities = async (queryParams) => {
+  const response = await apollo('GET', facilitiesLightQuery, queryParams);
+
+  if (response.errors) {
+    console.error('TFM UI - GraphQL error querying facilities ', response.errors);
+  }
+
+  if (response?.data?.facilities?.tfmFacilities) {
+    return {
+      facilities: response.data.facilities.tfmFacilities,
+    };
+  }
+
+  return { facilities: [] };
 };
 
 const getDeals = async (queryParams) => {
@@ -178,13 +195,13 @@ const createActivity = async (dealId, activityUpdate) => {
   return apollo('PUT', createActivityMutation, updateVariable);
 };
 
-// Temp login for mock users. Active Directory will proabably replace this
+// Temp login for mock users. Active Directory will probably replace this
 // Just get the user, not really concerned about logging in with passwords for mock users
 const login = async (username) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/users/${username}`,
+      url: `${tfmAPIurl}/v1/users/${username}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -212,4 +229,5 @@ module.exports = {
   updateLeadUnderwriter,
   createActivity,
   login,
+  getFacilities,
 };

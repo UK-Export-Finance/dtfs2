@@ -166,8 +166,8 @@ const MOCK_DEAL = {
     agentAddressTown: 'City',
   },
   facilities: [
-    MOCK_FACILITIES_USD_CURRENCY[0]._id, // eslint-disable-line no-underscore-dangle
-    MOCK_FACILITIES_USD_CURRENCY[1]._id, // eslint-disable-line no-underscore-dangle
+    MOCK_FACILITIES_USD_CURRENCY[0]._id,
+    MOCK_FACILITIES_USD_CURRENCY[1]._id,
   ],
   bondTransactions: {
     items: [

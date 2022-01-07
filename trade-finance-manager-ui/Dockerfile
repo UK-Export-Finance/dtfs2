@@ -2,8 +2,10 @@ FROM node:14.18.1-alpine3.13
 
 WORKDIR /app
 
-COPY . .
+COPY package.json .
 RUN npm install
+
+COPY . .
 
 # Identifies the code in the running container
 ARG GITHUB_SHA
