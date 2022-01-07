@@ -43,14 +43,14 @@ const getLabel = () => {
 };
 
 const getComments = (role) => {
-  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS) {
+  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.user.roles.includes(role));
     if (comments.length > 0) {
       return comments[0].text;
     }
   }
 
-  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.role === role);
     if (comments.length > 0) {
       return comments[0].comment;
@@ -88,17 +88,17 @@ const getObject = async () => {
   return object;
 };
 
-const add = (id, response, type, update = false) => {
+const add = async (id, response, type, update = false) => {
   if (id && response && type) {
     dealId = id;
     acbsResponse = response;
     record = type;
     updateRecord = update;
-    getObject().then((result) => {
+    getObject().then(async (result) => {
       const tfm = {
         activities: result,
       };
-      api.updateTfmDeal(dealId, tfm);
+      await api.updateTfmDeal(dealId, tfm);
     });
   }
 };

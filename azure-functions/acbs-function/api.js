@@ -102,7 +102,7 @@ const postToACBS = async (apiRef, acbsInput) => {
     if (CONSTANTS.ACTIVITY.ACCEPTED_ENDPOINTS.includes(apiRef)
     && acbsInput._id
     && !isHttpErrorStatus(response.status)) {
-      activity.add(acbsInput._id, response, apiRef);
+      await activity.add(acbsInput._id, response, apiRef);
     }
 
     return response;
