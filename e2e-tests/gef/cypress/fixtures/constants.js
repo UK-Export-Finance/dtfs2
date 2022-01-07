@@ -31,4 +31,10 @@ const FACILITY_TYPE = {
   CONTINGENT: 'CONTINGENT',
 };
 
-exports.default = { DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE };
+const DEAL_TYPE = {
+  GEF: 'GEF',
+};
+
+exports.default = {
+  DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE, DEAL_TYPE,
+};

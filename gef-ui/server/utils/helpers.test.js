@@ -34,7 +34,7 @@ import {
   MOCK_AIN_APPLICATION,
   MOCK_AIN_APPLICATION_RETURN_MAKER,
   MOCK_AIN_APPLICATION_CHECKER,
-  MOCK_DEAL,
+  MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
 } from './mocks/mock_applications';
@@ -1306,17 +1306,17 @@ describe('summaryItemsConditions()', () => {
 
   it('Should return FALSE as the Maker is from a different Bank', () => {
     MOCK_REQUEST.bank.id = 10;
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
 
   it('Should return FALSE as the user does not have `maker` role', () => {
     MOCK_REQUEST.roles = ['checker'];
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
 
   it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
-    MOCK_DEAL.bank = { id: 1 };
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+    MOCK_BASIC_DEAL.bank = { id: 1 };
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
 });
 

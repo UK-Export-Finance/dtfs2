@@ -1,12 +1,15 @@
+import { format } from 'date-fns';
+
 import relative from './relativeURL';
 
-const CONSTANTS = require('../fixtures/constants');
+import CONSTANTS from '../fixtures/constants';
 
-const { add, format } = require('date-fns');
+import dateConstants from '../fixtures/dateConstants';
 
 import {
   MOCK_APPLICATION_AIN, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
 } from '../fixtures/MOCKS/MOCK_DEALS';
+
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
@@ -24,20 +27,6 @@ const unissuedFacilitiesArray = [
   MOCK_FACILITY_FOUR,
 ];
 
-const today = new Date();
-const oneMonth = add(today, { months: 1 });
-const oneMonthDay = format(oneMonth, 'dd');
-const oneMonthMonth = format(oneMonth, 'M');
-const oneMonthYear = format(oneMonth, 'yyyy');
-const twoMonths = add(today, { months: 2 });
-const twoMonthsDay = format(twoMonths, 'dd');
-const twoMonthsMonth = format(twoMonths, 'M');
-const twoMonthsYear = format(twoMonths, 'yyyy');
-const threeMonthsOneDay = add(today, { months: 3, days: 1 });
-const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
-const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'M');
-const threeMonthsOneDayYear = format(threeMonthsOneDay, 'yyyy');
-
 /*
   for changing facilities to issued from preview page.
   To unlock functionality, need to first issue one facility from unissued-facility table
@@ -50,15 +39,15 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) => {
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
           });
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
           cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
@@ -110,18 +99,18 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twoMonthsYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
@@ -143,9 +132,9 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      const issuedDate = format(oneMonth, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
+      const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       // can change facility one name and issue dates etc since changed to issued
       applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
@@ -191,25 +180,25 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_FOUR.name}name`);
 
-      aboutFacilityUnissued.issueDateDay().type(oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twoMonthsYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
-      const issuedDate = format(oneMonth, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
+      const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');

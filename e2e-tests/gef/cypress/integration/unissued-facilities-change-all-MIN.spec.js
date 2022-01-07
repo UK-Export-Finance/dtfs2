@@ -1,12 +1,15 @@
+import { format } from 'date-fns';
+
 import relative from './relativeURL';
 
-const CONSTANTS = require('../fixtures/constants');
+import CONSTANTS from '../fixtures/constants';
 
-const { sub, add, format } = require('date-fns');
+import dateConstants from '../fixtures/dateConstants';
 
 import {
   MOCK_APPLICATION_MIN, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
 } from '../fixtures/MOCKS/MOCK_DEALS';
+
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
@@ -24,26 +27,6 @@ const unissuedFacilitiesArray = [
   MOCK_FACILITY_FOUR,
 ];
 
-const today = new Date();
-// to test cannot be issued in past
-const fourDaysAgo = sub(today, { days: 4 });
-const fourDaysAgoDay = format(fourDaysAgo, 'dd');
-const fourDaysAgoMonth = format(fourDaysAgo, 'M');
-const fourDaysAgoYear = format(fourDaysAgo, 'yyyy');
-const oneMonth = add(today, { months: 1 });
-const oneMonthDay = format(oneMonth, 'dd');
-const oneMonthMonth = format(oneMonth, 'M');
-const oneMonthYear = format(oneMonth, 'yyyy');
-const twoMonths = add(today, { months: 2 });
-const twoMonthsDay = format(twoMonths, 'dd');
-const twoMonthsMonth = format(twoMonths, 'M');
-const twoMonthsYear = format(twoMonths, 'yyyy');
-// to test that if beyond issue/ coverstartdate limit
-const threeMonthsOneDay = add(today, { months: 3, days: 1 });
-const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
-const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'M');
-const threeMonthsOneDayYear = format(threeMonthsOneDay, 'yyyy');
-
 context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
@@ -53,15 +36,15 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) => {
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
           });
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
           cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
@@ -149,11 +132,6 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     });
 
     it('error messages should be correct when entering dates beyond validation limits', () => {
-      const twentyEight = add(today, { days: 28 });
-      const twentyEightDay = format(twentyEight, 'dd');
-      const twentyEightMonth = format(twentyEight, 'M');
-      const twentyEightYear = format(twentyEight, 'yyyy');
-
       // when entering no dates
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
@@ -167,9 +145,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.errorSummary().contains('Enter a cover end date');
 
       // entering date in the past for issue date
-      aboutFacilityUnissued.issueDateDay().type(fourDaysAgoDay);
-      aboutFacilityUnissued.issueDateMonth().type(fourDaysAgoMonth);
-      aboutFacilityUnissued.issueDateYear().type(fourDaysAgoYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.fourDaysAgoDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.fourDaysAgoMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.fourDaysAgoYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.issueDateError().contains('The issue date must not be before the date of the inclusion notice submission date');
       aboutFacilityUnissued.errorSummary().contains('The issue date must not be before the date of the inclusion notice submission date');
@@ -178,9 +156,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateDay().clear();
       aboutFacilityUnissued.issueDateMonth().clear();
       aboutFacilityUnissued.issueDateYear().clear();
-      aboutFacilityUnissued.issueDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.issueDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.issueDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.issueDateError().contains('The issue date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.errorSummary().contains('The issue date must be within 3 months of the inclusion notice submission date');
@@ -188,15 +166,15 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateDay().clear();
       aboutFacilityUnissued.issueDateMonth().clear();
       aboutFacilityUnissued.issueDateYear().clear();
-      aboutFacilityUnissued.issueDateDay().type(oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
 
       // entering cover start date before issue date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(twentyEightDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twentyEightMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twentyEightYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twentyEightDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twentyEightMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twentyEightYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');
       aboutFacilityUnissued.errorSummary().contains('Cover start date cannot be before the issue date');
@@ -205,9 +183,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverStartDateDay().clear();
       aboutFacilityUnissued.coverStartDateMonth().clear();
       aboutFacilityUnissued.coverStartDateYear().clear();
-      aboutFacilityUnissued.coverStartDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
@@ -216,12 +194,12 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverStartDateDay().clear();
       aboutFacilityUnissued.coverStartDateMonth().clear();
       aboutFacilityUnissued.coverStartDateYear().clear();
-      aboutFacilityUnissued.coverStartDateDay().type(twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twoMonthsYear);
-      aboutFacilityUnissued.coverEndDateDay().type(twentyEightDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(twentyEightMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(twentyEightYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.twentyEightDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.twentyEightMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.twentyEightYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.coverEndDateError().contains('Cover end date cannot be before the issue date');
       aboutFacilityUnissued.errorSummary().contains('Cover end date cannot be before cover start date');
@@ -232,18 +210,18 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twoMonthsYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
@@ -253,17 +231,17 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       unissuedFacilityTable.continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      aboutFacilityUnissued.issueDateDay().type(oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twoMonthsYear);
-      aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
@@ -271,18 +249,18 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       unissuedFacilityTable.continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      aboutFacilityUnissued.issueDateDay().type(oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(twoMonthsYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.rows().should('have.length', 0);
@@ -306,9 +284,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     /* should be able to change dates on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = format(oneMonth, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
+      const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       // should be able to change facility four as changed to issued
       applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_FOUR.name);
@@ -336,8 +314,8 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
     // checks that can edit changed facility
     it('clicking change should take you to about facility page with different url', () => {
-      const issuedDate = format(oneMonth, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
 
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);

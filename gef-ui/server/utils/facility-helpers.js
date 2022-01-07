@@ -32,7 +32,7 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
    * this function checks that the deal is an AIN or MIN
    * checks that it has been submitted to UKEF
    * if any unissued facilitites
- if changes required add to application type and status
+   * if changes required add to application type and status
 * */
 const areUnissuedFacilitiesPresent = (application) => {
   const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
