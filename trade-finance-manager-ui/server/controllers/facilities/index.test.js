@@ -1,6 +1,7 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
+import CONSTANTS from '../../constants';
 
 describe('controllers - facilities', () => {
   let res;
@@ -9,11 +10,11 @@ describe('controllers - facilities', () => {
       dealId: '121212',
       facilityId: '112233',
       ukefFacilityId: '123456',
-      facilityType: 'cash',
+      facilityType: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
       companyName: 'Mock Company Name',
       value: 'GBP 1,000,000.00',
       coverEndDate: '2021-08-12T00:00:00.000Z',
-      dealType: 'GEF',
+      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
       hasBeenIssued: true,
       currency: 'GBP',
     },
@@ -21,11 +22,11 @@ describe('controllers - facilities', () => {
       dealId: '122122',
       facilityId: '223344',
       ukefFacilityId: '1234567',
-      facilityType: 'cash',
+      facilityType: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
       companyName: 'Mock Company Name',
       value: 'EUR 18,000,000.00',
       coverEndDate: null,
-      dealType: 'BSS/EWCS',
+      dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
       hasBeenIssued: false,
       currency: 'EUR',
     },

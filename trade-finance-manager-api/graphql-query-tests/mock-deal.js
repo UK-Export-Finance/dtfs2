@@ -1,10 +1,12 @@
+const CONSTANTS = require('./constants');
+
 const MOCK_DEAL = {
   _id: '1234567',
   dealSnapshot: {
-    submissionType: 'Automatic Inclusion Notice',
+    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     bankInternalRefName: 'Mock supply contract ID',
     additionalRefName: 'Mock supply contract name',
-    status: 'Acknowledged by UKEF',
+    status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     previousStatus: 'Submitted',
     bank: {
       id: '123',
@@ -165,7 +167,7 @@ const MOCK_DEAL = {
     facilities: [
       {
         _id: '1010738',
-        facilityType: 'loan',
+        facilityType: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
         createdDate: '1640088922460',
         bankReferenceNumber: '1122444',
         'coverEndDate-day': '21',
@@ -193,7 +195,8 @@ const MOCK_DEAL = {
         dayCountBasis: '365',
         premiumFrequency: null,
         premiumType: 'At maturity',
-        status: 'Acknowledged by UKEF',
+        status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+
         dealId: '1007117',
         issueFacilityDetailsSubmitted: true,
         issuedFacilitySubmittedToUkefBy: {
@@ -230,7 +233,7 @@ const MOCK_DEAL = {
       },
       {
         _id: '1010739',
-        facilityType: 'bond',
+        facilityType: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
         createdDate: '1640088922461',
         bondBeneficiary: '',
         bondIssuer: '',
@@ -291,7 +294,7 @@ const MOCK_DEAL = {
           username: 'BANK1_CHECKER1',
         },
         issuedFacilitySubmittedToUkefTimestamp: '1640088932976',
-        status: 'Acknowledged by UKEF',
+        status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
         ukefFacilityId: '0030134210',
         previousStatus: 'Completed',
         hasBeenAcknowledged: true,
@@ -303,7 +306,7 @@ const MOCK_DEAL = {
           _id: '12345678',
           ukefFacilityId: '0040004833',
           bondIssuer: 'Issuer',
-          facilityType: 'bond',
+          facilityType: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
           bondType: 'Advance payment guarantee',
           facilityStage: 'Unissued',
           ukefGuaranteeInMonths: '10',
@@ -331,7 +334,7 @@ const MOCK_DEAL = {
       items: [
         {
           _id: '23456789',
-          facilityType: 'loan',
+          facilityType: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
           ukefFacilityId: '0040004833',
           createdDate: 1610369832226.0,
           facilityStage: 'Conditional',
