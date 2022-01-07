@@ -1,6 +1,7 @@
 const { dashboard } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
+const CONSTANTS = require('../../../../fixtures/constants');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));
@@ -12,18 +13,18 @@ context('View dashboard deals as a checker', () => {
 
   const BSS_DEALS = {
     DRAFT: {
-      dealType: 'BSS/EWCS',
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       bankInternalRefName: 'Draft BSS',
-      status: 'Draft',
+      status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
       additionalRefName: 'Tibettan submarine acquisition scheme',
     },
     READY_FOR_CHECK: {
-      dealType: 'BSS/EWCS',
-      submissionType: 'Manual Inclusion Notice',
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+      submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
       bankInternalRefName: 'Ready BSS',
       additionalRefName: 'Tibettan submarine acquisition scheme',
-      status: 'Ready for Checker\'s approval',
-      previousStatus: 'Draft',
+      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK,
+      previousStatus: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
       exporter: {
         companyName: 'mock company',
       },
@@ -32,16 +33,16 @@ context('View dashboard deals as a checker', () => {
 
   const GEF_DEALS = {
     DRAFT: {
-      dealType: 'GEF',
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       bank: { id: MAKER_LOGIN.bank.id },
       bankInternalRefName: 'Draft GEF',
-      status: 'Draft',
+      status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
     },
     READY_FOR_CHECK: {
-      dealType: 'GEF',
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       bank: { id: MAKER_LOGIN.bank.id },
       bankInternalRefName: 'Ready GEF',
-      status: 'Ready for Checker\'s approval',
+      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK,
       exporter: {
         companyName: 'mock company',
       },
@@ -74,12 +75,12 @@ context('View dashboard deals as a checker', () => {
     dashboard.visit();
 
     const gefDeal = ALL_DEALS.find(({ dealType, status }) =>
-      dealType === 'GEF'
-      && status === 'Ready for Checker\'s approval');
+      dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+      && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK);
 
     const bssDeal = ALL_DEALS.find(({ dealType, status}) =>
-      dealType === 'BSS/EWCS'
-      && status === 'Ready for Checker\'s approval');
+      dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS
+      && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK);
     
     const {
       exporter,

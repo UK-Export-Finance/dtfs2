@@ -29,7 +29,7 @@ const newDeal = aDeal({
     status: 'Not started',
     criteria: [{}],
   },
-  status: 'Draft',
+  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
   exporter: {
     companyName: 'mock company',
   },

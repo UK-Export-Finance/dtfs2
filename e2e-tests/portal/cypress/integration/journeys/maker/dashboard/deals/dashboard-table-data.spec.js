@@ -1,6 +1,7 @@
 const { dashboard } = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const mockUsers = require('../../../../../fixtures/mockUsers');
+const CONSTANTS = require('../../../../../fixtures/constants');
 
 const BANK1_MAKER1 = mockUsers.find((user) =>
   (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
@@ -24,21 +25,21 @@ context('View dashboard deals as a maker', () => {
   const ALL_DEALS = [];
 
   const BSS_DEAL = {
-    dealType: 'BSS/EWCS',
-    submissionType: 'Automatic Inclusion Notice',
+    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     bankInternalRefName: 'Draft BSS',
     additionalRefName: 'Tibettan submarine acquisition scheme',
-    status: 'Draft',
+    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
     exporter: {
       companyName: 'mock company',
     },
   };
 
   const GEF_DEAL = {
-    dealType: 'GEF',
+    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
     bank: { id: BANK1_MAKER1.bank.id },
     bankInternalRefName: 'Draft GEF',
-    status: 'Draft',
+    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
     exporter: {
       companyName: 'mock company',
     },
@@ -92,11 +93,11 @@ context('View dashboard deals as a maker', () => {
 
   beforeEach(() => {
     gefDeal = ALL_DEALS.find(({ dealType, status, maker }) =>
-      dealType === 'GEF'
+      dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
       && maker.username === BANK1_MAKER2.username);
 
     bssDeal = ALL_DEALS.find(({ dealType, status }) =>
-      dealType === 'BSS/EWCS');
+      dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
     gefDealId = gefDeal._id;
     bssDealId = bssDeal._id;

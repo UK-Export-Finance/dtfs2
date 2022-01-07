@@ -22,14 +22,10 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
-const SORT_BY = {
-  ASCENDING: 'ascending',
-  DESCENDING: 'descending',
-};
-
 module.exports = {
-  DEAL_TYPE,
-  DEAL_STATUS,
-  SUBMISSION_TYPE,
-  SORT_BY,
+  DEALS: {
+    DEAL_TYPE,
+    DEAL_STATUS,
+    SUBMISSION_TYPE,
+  },
 };
