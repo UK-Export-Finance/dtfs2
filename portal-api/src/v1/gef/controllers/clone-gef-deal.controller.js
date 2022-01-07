@@ -100,12 +100,12 @@ const cloneFacilities = async (currentDealId, newDealId) => {
   }
 };
 
-const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId, bank) => {
+const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, userId, bank) => {
   const applicationCollection = 'deals';
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
   // any additional fields that are located at the root of the object and that need removing can be added here
-  const unusedProperties = ['_id', 'ukefDecision', 'comments', 'previousStatus'];
+  const unusedProperties = ['_id', 'ukefDecision', 'ukefDecisionAccepted', 'checkerMIN', 'manualInclusionNoticeSubmissionDate', 'comments', 'previousStatus'];
   // removed unused properties inside the `supportingInformation` property
   const unusedSupportingInfo = ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'];
 
@@ -131,12 +131,15 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, userId,
   clonedDeal.updatedAt = Date.now();
   clonedDeal.facilitiesUpdated = Date.now();
   clonedDeal.eligibility.updatedAt = Date.now();
+  if (clonedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+    clonedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+  }
   clonedDeal.status = CONSTANTS.DEAL.STATUS.DRAFT;
   clonedDeal.submissionCount = 0;
   clonedDeal.submissionDate = null;
   clonedDeal.bankInternalRefName = bankInternalRefName;
   clonedDeal.additionalRefName = additionalRefName;
-  clonedDeal.userId = userId;
+  clonedDeal.maker = maker;
   clonedDeal.bank = bank;
   clonedDeal.ukefDealId = null;
   clonedDeal.checkerId = null;
@@ -169,7 +172,7 @@ exports.clone = async (req, res) => {
     res.status(422).send(validateErrs);
   } else {
     // clone GEF deal
-    const { newDealId } = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, userId, bank);
+    const { newDealId } = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, req.user, userId, bank);
 
     // clone the corresponding facilities
     await cloneFacilities(existingDealId, newDealId);

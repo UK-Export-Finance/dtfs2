@@ -4,12 +4,15 @@ import relative from './relativeURL';
 
 import CONSTANTS from '../fixtures/constants';
 
+import {
+  MOCK_APPLICATION_AIN,
+} from '../fixtures/mocks/mock-AIN-deal';
+import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import dateConstants from '../fixtures/dateConstants';
 
 import {
-  MOCK_APPLICATION_AIN, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
-} from '../fixtures/MOCKS/MOCK_DEALS';
-
+  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+} from '../fixtures/mocks/mock-facilities';
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
