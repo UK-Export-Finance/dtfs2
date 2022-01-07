@@ -1,12 +1,16 @@
+const { add, format } = require('date-fns');
+
 import relative from './relativeURL';
 
 const CONSTANTS = require('../fixtures/constants');
 
-const { add, format } = require('date-fns');
-
 import {
-  MOCK_AIN_APPLICATION, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
-} from '../fixtures/MOCKS/MOCK_DEALS';
+  MOCK_AIN_APPLICATION,
+} from '../fixtures/mocks/mock-AIN-deal';
+import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
+import {
+  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+} from '../fixtures/mocks/mock-facilities';
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
@@ -50,15 +54,15 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
         cy.apiUpdateApplication(dealId, token, MOCK_AIN_APPLICATION).then(() => {
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) => {
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
           });
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, 'CASH', token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
           cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
