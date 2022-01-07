@@ -56,7 +56,7 @@ const renderBody = (body) => ({
   facilityName: body.facilityName,
   hasBeenIssued: body.hasBeenIssued,
   monthsOfCover: body.monthsOfCover,
-  shouldCoverStartOnSubmission: body.monthsOfCover,
+  shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
   issueDateDay: body.issueDateDay,
   issueDateMonth: body.issueDateMonth,
   issueDateYear: body.issueDateYear,

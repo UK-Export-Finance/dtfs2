@@ -1,4 +1,5 @@
 const { format } = require('date-fns');
+
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
@@ -6,7 +7,6 @@ import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-let applications;
 let dealWithEmptyExporter;
 let dealWithInProgressExporter;
 let dealWithCompletedExporterAndFacilities;
@@ -20,8 +20,6 @@ context('Application Details Page', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        applications = body.items;
-
         dealWithEmptyExporter = body.items.find((deal) =>
           deal.exporter.status === 'Not started');
 
@@ -31,7 +29,6 @@ context('Application Details Page', () => {
         dealWithCompletedExporterAndFacilities = body.items.find((deal) =>
           deal.exporter.status === 'Completed'
           && deal.facilitiesUpdated);
-
       });
 
     cy.login(CREDENTIALS.MAKER);
@@ -49,12 +46,12 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       statusBanner.bannerStatus().contains('Draft');
-      statusBanner.bannerProduct().should('have.text','General Export Facility');
+      statusBanner.bannerProduct().should('have.text', 'General Export Facility');
 
-      const todayFormatted = format(new Date(), 'dd MMM yyyy')
+      const todayFormatted = format(new Date(), 'dd MMM yyyy');
       statusBanner.bannerDateCreated().contains(todayFormatted);
       statusBanner.bannerSubmissionType().should('have.text', '-');
-      statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`)
+      statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
       statusBanner.bannerExporter().should('have.text', '-');
       statusBanner.bannerCheckedBy().should('have.text', '-');
       statusBanner.bannerBuyer().should('have.text', '-');
@@ -187,7 +184,7 @@ context('Application Details Page', () => {
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
+      automaticCover.automaticCoverTerm().each(($el) => {
         $el.find('[data-cy="automatic-cover-true"]').trigger('click');
       });
       automaticCover.saveAndReturnButton().click();
@@ -248,7 +245,7 @@ context('Application Details Page', () => {
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
+      automaticCover.automaticCoverTerm().each(($el) => {
         $el.find('[data-cy="automatic-cover-false"]').trigger('click');
       });
       automaticCover.saveAndReturnButton().click();

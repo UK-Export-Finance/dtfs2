@@ -26,6 +26,10 @@ const DEAL_STATUS = {
   WITHDRAWN: 'Withdrawn',
 };
 
+const DEAL_TYPE = {
+  GEF: 'GEF',
+};
+
 const FACILITY_TYPE = {
   CASH: 'CASH',
   CONTINGENT: 'CONTINGENT',
@@ -80,6 +84,7 @@ const DATE_FORMAT = {
 module.exports = {
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
+  DEAL_TYPE,
   FACILITY_TYPE,
   SME_TYPE,
   BOOLEAN,

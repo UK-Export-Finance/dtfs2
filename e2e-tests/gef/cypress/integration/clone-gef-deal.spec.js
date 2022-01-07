@@ -15,7 +15,7 @@ import CREDENTIALS from '../fixtures/credentials.json';
 
 import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
-import { MOCK_MIN_APPLICATION } from '../fixtures/mocks/mock-MIN-deal';
+import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -302,7 +302,7 @@ context('Clone GEF (MIN) deal', () => {
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         MINdealId = body._id;
         console.log(body);
-        cy.apiUpdateApplication(MINdealId, token, MOCK_MIN_APPLICATION).then(() => {
+        cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facilityOneId, token, MOCK_FACILITY_ONE);

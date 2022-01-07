@@ -4,13 +4,14 @@ import relative from './relativeURL';
 
 import CONSTANTS from '../fixtures/constants';
 
-import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
-import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import dateConstants from '../fixtures/dateConstants';
 
+import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
+import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
 } from '../fixtures/mocks/mock-facilities';
+
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
@@ -32,14 +33,14 @@ const unissuedFacilitiesArray = [
   for changing facilities to issued from preview page.
   To unlock functionality, need to first issue one facility from unissued-facility table
 */
-context('Unissued Facilities AIN - change to issued from preview page', () => {
+context('Unissued Facilities MIN - change to issued from preview page', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
     }).then(() => {
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);

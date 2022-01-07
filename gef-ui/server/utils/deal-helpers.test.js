@@ -10,7 +10,7 @@ import {
 
 import {
   MOCK_AIN_APPLICATION,
-  MOCK_DEAL,
+  MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
 } from './mocks/mock_applications';
 
@@ -32,48 +32,48 @@ describe('isNotice()', () => {
 
 describe('isUkefReviewAvailable()', () => {
   it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to `Ready for Checkers approval`', () => {
-    MOCK_DEAL.ukefDecision = [{
+    MOCK_BASIC_DEAL.ukefDecision = [{
       text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
       decision: 'Accepted (with conditions)',
       timestamp: 1639657163,
     }];
-    expect(isUkefReviewAvailable(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(true);
+    expect(isUkefReviewAvailable(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(true);
   });
 
   it('Should return FALSE for application with no UkefDecision and status set to `Ready for Checkers approval`', () => {
-    MOCK_DEAL.ukefDecision = [];
-    expect(isUkefReviewAvailable(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(false);
+    MOCK_BASIC_DEAL.ukefDecision = [];
+    expect(isUkefReviewAvailable(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(false);
   });
 });
 
 describe('isUkefReviewPositive()', () => {
   it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to `Ready for Checkers approval`', () => {
-    MOCK_DEAL.ukefDecision = [{
+    MOCK_BASIC_DEAL.ukefDecision = [{
       text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
       decision: 'Accepted (with conditions)',
       timestamp: 1639657163,
     }];
-    expect(isUkefReviewPositive(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(true);
+    expect(isUkefReviewPositive(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(true);
   });
 
   it('Should return FALSE for application with UkefDecision set to `Rejected by UKEF` and status set to `Ready for Checkers approval`', () => {
-    MOCK_DEAL.ukefDecision = [
+    MOCK_BASIC_DEAL.ukefDecision = [
       {
         text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
         decision: 'Rejected by UKEF',
         timestamp: 1639657163,
       },
     ];
-    expect(isUkefReviewPositive(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(false);
+    expect(isUkefReviewPositive(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(false);
   });
 
   it('Should return FALSE for application with no UkefDecision and status set to `Ready for Checkers approval`', () => {
-    MOCK_DEAL.ukefDecision = [];
-    expect(isUkefReviewPositive(MOCK_DEAL.status, MOCK_DEAL.ukefDecision)).toEqual(false);
+    MOCK_BASIC_DEAL.ukefDecision = [];
+    expect(isUkefReviewPositive(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(false);
   });
 
   it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
-    const UKEF_APPPROVED_DEAL = MOCK_DEAL;
+    const UKEF_APPPROVED_DEAL = MOCK_BASIC_DEAL;
     UKEF_APPPROVED_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
     UKEF_APPPROVED_DEAL.ukefDecision = [{
       text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
@@ -86,12 +86,12 @@ describe('isUkefReviewPositive()', () => {
 
 describe('makerCanReSubmit', () => {
   it('Should return FALSE since the deal status is BANK_CHECK', () => {
-    MOCK_DEAL.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(false);
+    MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
   it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS', () => {
-    MOCK_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_DEAL)).toEqual(true);
+    MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(true);
   });
   it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION)).toEqual(true);
