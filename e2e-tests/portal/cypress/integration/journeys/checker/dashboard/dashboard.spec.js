@@ -23,7 +23,7 @@ context('View dashboard deals as a checker', () => {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
       bankInternalRefName: 'Ready BSS',
       additionalRefName: 'Tibettan submarine acquisition scheme',
-      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK,
+      status: CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK,
       previousStatus: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
       exporter: {
         companyName: 'mock company',
@@ -42,7 +42,7 @@ context('View dashboard deals as a checker', () => {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       bank: { id: MAKER_LOGIN.bank.id },
       bankInternalRefName: 'Ready GEF',
-      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK,
+      status: CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK,
       exporter: {
         companyName: 'mock company',
       },
@@ -76,11 +76,11 @@ context('View dashboard deals as a checker', () => {
 
     const gefDeal = ALL_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK);
+      && status === CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
 
     const bssDeal = ALL_DEALS.find(({ dealType, status}) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS
-      && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_CHECK);
+      && status === CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
     
     const {
       exporter,
