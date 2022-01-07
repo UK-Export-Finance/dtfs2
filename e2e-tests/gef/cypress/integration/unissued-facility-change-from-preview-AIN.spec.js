@@ -4,9 +4,7 @@ import relative from './relativeURL';
 
 import CONSTANTS from '../fixtures/constants';
 
-import {
-  MOCK_AIN_APPLICATION,
-} from '../fixtures/mocks/mock-AIN-deal';
+import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import dateConstants from '../fixtures/dateConstants';
 

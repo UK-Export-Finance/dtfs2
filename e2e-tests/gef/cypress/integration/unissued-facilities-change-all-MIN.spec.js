@@ -6,9 +6,11 @@ import CONSTANTS from '../fixtures/constants';
 
 import dateConstants from '../fixtures/dateConstants';
 
+import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
+import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import {
-  MOCK_APPLICATION_MIN, MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR, MOCK_USER_MAKER,
-} from '../fixtures/MOCKS/MOCK_DEALS';
+  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+} from '../fixtures/mocks/mock-facilities';
 
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';

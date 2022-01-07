@@ -6,9 +6,7 @@ import CONSTANTS from '../fixtures/constants';
 
 import dateConstants from '../fixtures/dateConstants';
 
-import {
-  MOCK_AIN_APPLICATION,
-} from '../fixtures/mocks/mock-AIN-deal';
+import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
@@ -38,7 +36,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       // creates application and inserts facilities and changes status
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_AIN_APPLICATION).then(() => {
+        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
