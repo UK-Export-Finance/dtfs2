@@ -18,7 +18,7 @@ dotenv.config();
 
 console.log('The name of the CI server is:', ci.name);
 
-if (ci.GITHUB_ACTIONS) {
+if (!ci.GITHUB_ACTIONS) {
   // validate environment variables
   const { error } = schemas.environments.validate(process.env);
 
