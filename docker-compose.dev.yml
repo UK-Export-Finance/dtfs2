@@ -219,7 +219,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - SENTRY_DSN=${SENTRY_DSN}
-    entrypoint: npx nodemon --inspect=0.0.0.0:9229 src/index.ts -L
+    entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
     build: ./gef-ui
