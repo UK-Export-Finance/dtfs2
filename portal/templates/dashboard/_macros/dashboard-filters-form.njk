@@ -4,8 +4,6 @@
 {% macro render(params) %}
   {% set filters = params.filters %}
 
-  <form method="POST" autocomplete="off" action="/temp">
-
     {{ govukInput({
       id: 'keyword',
       name: 'keyword',
@@ -16,8 +14,8 @@
     }) }}
 
     {{ govukCheckboxes({
-      idPrefix: 'type',
-      name: 'type',
+      idPrefix: 'dealType',
+      name: 'dealType',
       classes: "govuk-checkboxes--small",
       fieldset: {
         legend: {
@@ -53,7 +51,5 @@
       },
       items: filters.status
     }) }}
-
-  </form>
 
 {% endmacro %}

@@ -50,9 +50,9 @@
                 text: "Created by you",
                 checked: createdByYou,
                 attributes: {
-                "data-cy": "created-by-you-checkbox",
-                'onChange': 'this.form.submit()'
-              }
+                  "data-cy": "created-by-you-checkbox",
+                  'onChange': 'this.form.submit()'
+                }
               }
             ]
           }) }}
@@ -114,11 +114,12 @@
     {% set items = (items.push(item), items) %}
   {% endfor %}
 
-
-
   <div class="moj-filter-layout">
 
-    {{dashboardFilters.render({ filters: filters })}}
+    {{dashboardFilters.render({
+      filters: filters,
+      selectedFilters: selectedFilters
+    })}}
 
     <div class="moj-filter-layout__content">
 

@@ -3,46 +3,28 @@
 
 {% macro render(params) %}
   {% set filters = params.filters %}
+  {% set selectedFilters = params.selectedFilters %}
 
   <div class="moj-filter-layout__filter">
 
-    {{ mojFilter({
-      heading: {
-      text: 'Filter'
-      },
-      selectedFilters: {
+    <form method="POST" autocomplete="off">
+      {{ mojFilter({
         heading: {
-          text: 'Selected filters'
+          text: 'Filter'
         },
-        clearLink: {
-          text: 'Clear filters'
-        },
-        categories: [
-          {
-            heading: {
-              text: 'Colour'
-            },
-            items: [{
-              href: '#',
-              text: 'Blue'
-            }, {
-              href: '#',
-              text: 'Yellow'
-            }]
+        selectedFilters: {
+          heading: {
+            text: 'Selected filters'
           },
-          {
-            heading: {
-              text: 'Status'
-            },
-            items: [{
-              href: '#',
-              text: 'Complete'
-            }]
-          }
-        ]
-      },
-      optionsHtml: dashboardFiltersForm.render({ filters: filters })
-    }) }}
+          clearLink: {
+            text: 'Clear filters'
+          },
+          categories: selectedFilters
+        },
+        optionsHtml: dashboardFiltersForm.render({ filters: filters })
+      }) }}
+
+    </form>
 
   </div>
 {% endmacro %}
