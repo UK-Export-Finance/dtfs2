@@ -1,7 +1,7 @@
 // @ts-ignore: Elastic search APM
 // eslint-disable-next-line no-unused-vars
 import { elasticSearchApm } from './config';
-
+import isCI from 'is-ci';
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import compression from 'compression';
@@ -16,11 +16,13 @@ import { schemas } from './validations';
 
 dotenv.config();
 
-// validate environment variables
-const { error } = schemas.environments.validate(process.env);
+if (!isCI) {
+  // validate environment variables
+  const { error } = schemas.environments.validate(process.env);
 
-if (error) {
-  throw new Error(`External APIs: config validation error: ${error.message}`);
+  if (error) {
+    throw new Error(`External APIs: config validation error: ${error.message}`);
+  }
 }
 
 export const app: any = express();

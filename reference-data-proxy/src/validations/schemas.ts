@@ -2,6 +2,9 @@ import Joi from 'joi';
 
 export const schemas = {
   environments: Joi.object({
+    // JWT Signing key
+    JWT_SIGNING_KEY: Joi.string().required(),
+
     // Notify API
     GOV_NOTIFY_API_KEY: Joi.string().required(),
 

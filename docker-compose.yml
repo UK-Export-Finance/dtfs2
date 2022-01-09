@@ -213,6 +213,8 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - SENTRY_DSN=${SENTRY_DSN}
+      - ELASTIC_APM_ACTIVE=false
+      - ELASTIC_APM_ENVIRONMENT=development
     entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
