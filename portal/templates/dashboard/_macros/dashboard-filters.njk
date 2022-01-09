@@ -8,6 +8,8 @@
   <div class="moj-filter-layout__filter">
 
     <form method="POST" autocomplete="off">
+
+    {% if selectedFilters.length %}
       {{ mojFilter({
         heading: {
           text: 'Filter'
@@ -23,6 +25,17 @@
         },
         optionsHtml: dashboardFiltersForm.render({ filters: filters })
       }) }}
+
+      {% else %}
+
+      {{ mojFilter({
+        heading: {
+          text: 'Filter'
+        },
+        optionsHtml: dashboardFiltersForm.render({ filters: filters })
+      }) }}
+
+    {% endif %}
 
     </form>
 
