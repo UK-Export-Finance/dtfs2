@@ -2,9 +2,6 @@ import Joi from 'joi';
 
 export const schemas = {
   environments: Joi.object({
-    // Sentry DSN
-    SENTRY_DSN: Joi.string(),
-
     // JWT Signing key
     JWT_SIGNING_KEY: Joi.string().required(),
 
