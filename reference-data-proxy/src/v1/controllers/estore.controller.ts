@@ -39,7 +39,6 @@ export const createEstore = async (req: Request, res: Response) => {
     exporterName,
     buyerName,
   });
-
   result.buyerName = createBuyer.data.buyerName;
 
   const createDeal = await createDealFolder({
@@ -50,18 +49,18 @@ export const createEstore = async (req: Request, res: Response) => {
     destinationMarket,
     riskMarket,
   });
-
   result.folderName = createDeal.data.folderName;
 
   const createFacilities = facilityIdentifiers.map(
     (facilityIdentifier: any) =>
       new Promise((resolve, reject) =>
+        // eslint-disable-next-line no-promise-executor-return
         createFacilityFolder({
           siteName,
           dealIdentifier,
           exporterName,
           buyerName,
-          facilityIdentifier,
+          facilityIdentifier: facilityIdentifier.toString(),
           destinationMarket,
           riskMarket,
         }).then(
