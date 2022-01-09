@@ -85,50 +85,7 @@ const dashboardFilters = (submittedFilters = {}) => ({
   status: statusFilters(submittedFilters),
 });
 
-const selectedDashboardFilters = (submittedFilters) => {
-  const selected = [];
-
-  if (submittedFilters.dealType) {
-    selected.push({
-      heading: {
-        text: 'Product',
-      },
-      items: submittedFilters.dealType.map((value) => ({
-        href: '#',
-        text: value,
-      })),
-    })
-  }
-
-  if (submittedFilters.submissionType) {
-    selected.push({
-      heading: {
-        text: 'Notice type',
-      },
-      items: submittedFilters.submissionType.map((value) => ({
-        href: '#',
-        text: value,
-      })),
-    })
-  }
-
-  if (submittedFilters.status) {
-    selected.push({
-      heading: {
-        text: 'Status',
-      },
-      items: submittedFilters.status.map((value) => ({
-        href: '#',
-        text: value,
-      })),
-    })
-  }
-
-  return selected;
-};
-
 module.exports = {
   generateFilterObject,
   dashboardFilters,
-  selectedDashboardFilters,
 };
