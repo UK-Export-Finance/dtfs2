@@ -1,8 +1,9 @@
-const commonSettings = require('./api-test-common.jest.config');
-
 module.exports = {
-  collectCoverageFrom: ['src/**/*.{js,}'],
+  collectCoverageFrom: ['src/**/*.{ts,}'],
   coverageDirectory: 'generated_reports/coverage/api-test',
-  testMatch: ['**/*.api-test.js'],
-  ...commonSettings,
+  testMatch: ['**/*.api-test.ts'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  globalTeardown: './api-test-teardown.jest.config.js',
 };

@@ -1,0 +1,59 @@
+name: Build External APIs
+
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: 'SHA input'
+        required: true
+        type: string
+    secrets:
+      AZURE_DIGITAL_DEV:
+        description: 'Azure Digital Dev secret'
+        required: true
+      ACR_REGISTRY_DEV:
+        description: 'ACR Registry Dev secret'
+        required: true
+      ACR_USERNAME_DEV:
+        description: 'ACR Username Dev secret'
+        required: true
+      ACR_PASSWORD_DEV:
+        description: 'ACR Password Dev secret'
+        required: true
+
+env:
+  environment: dev
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+jobs:
+  set-environment:
+    name: Set Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
+
+  build:
+    name: Build and push Reference Data Proxy
+    runs-on: ubuntu-latest
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ inputs.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: reference-data-proxy
+        path: reference-data-proxy
+        tags: ${{ inputs.sha }}
+        build_args: GITHUB_SHA=${{ inputs.sha }}
+        add_git_labels: true
