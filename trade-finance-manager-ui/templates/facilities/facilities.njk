@@ -70,12 +70,11 @@
         attributes: { "data-cy": "facility__companyName", "data-sort-value": facility.companyName }
       },
       {
-        text: facility.value or "-",
+        text: facility.currencyAndValue or "-",
         attributes: { "data-cy": "facility__facilityValue", "data-sort-value": facility.value }
       },
       {
-        html: coverEndDate,
-        format: "numeric",
+        html: facility.coverEndDate,
         attributes: { "data-cy": "facility__coverEndDate", "data-sort-value": facility.coverEndDateEpoch }
       },
       {
@@ -114,7 +113,6 @@
       },
       {
         text: "Cover end date",
-        format: "numeric",
         attributes: { "data-cy": "facility__header--coverEndDate", "aria-sort": "none" }
       },
       {
