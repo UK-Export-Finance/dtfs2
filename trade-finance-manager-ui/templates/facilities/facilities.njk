@@ -39,13 +39,16 @@
     {% set coverEndDate %}
       {% if facility.coverEndDate %}
          {{ facility.coverEndDate | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
-         {% if facility.hasBeenIssued %}
-            (issued)
-         {% else %}
-            (unissued)
-         {% endif %}
       {% else %}
          -
+      {% endif %}
+    {% endset %}
+
+    {% set facilityStage %}
+      {% if facility.hasBeenIssued %}
+        Issued
+      {% else %}
+        Unissued
       {% endif %}
     {% endset %}
 
@@ -73,6 +76,10 @@
       {
         html: coverEndDate,
         attributes: { "data-cy": "facility__coverEndDate" }
+      },
+      {
+        html: facilityStage,
+        attributes: { "data-cy": "facility__facilityStage" }
       }
     ] %}
 
@@ -107,6 +114,10 @@
       {
         text: "Cover end date",
         attributes: { "data-cy": "facility__header--coverEndDate" }
+      },
+      {
+        text: "Facility stage",
+        attributes: { "data-cy": "facility__header--facilityStage" }
       }
     ],
     rows: items

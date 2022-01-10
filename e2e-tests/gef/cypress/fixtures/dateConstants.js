@@ -3,6 +3,9 @@ import {
 } from 'date-fns';
 
 const today = new Date();
+const todayDay = format(today, 'dd');
+const todayMonth = format(today, 'M');
+const todayYear = format(today, 'yyyy');
 // to test cannot be issued in past
 const fourDaysAgo = sub(today, { days: 4 });
 const fourDaysAgoDay = format(fourDaysAgo, 'dd');
@@ -17,6 +20,10 @@ const twoMonthsDay = format(twoMonths, 'dd');
 const twoMonthsMonth = format(twoMonths, 'M');
 const twoMonthsYear = format(twoMonths, 'yyyy');
 // to test that if beyond issue/ coverstartdate limit
+const tomorrow = add(today, { days: 1 });
+const tomorrowDay = format(tomorrow, 'dd');
+const tomorrowMonth = format(tomorrow, 'M');
+const tomorrowYear = format(tomorrow, 'yyyy');
 const threeMonthsOneDay = add(today, { months: 3, days: 1 });
 const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
 const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'M');
@@ -28,9 +35,19 @@ const twentyEightYear = format(twentyEight, 'yyyy');
 
 const threeDaysAgo = sub(today, { days: 3 });
 const threeDaysAgoUnix = getUnixTime(threeDaysAgo).toString();
+const threeDaysDay = format(threeDaysAgo, 'dd');
+const threeDaysMonth = format(threeDaysAgo, 'M');
+const threeDaysYear = format(threeDaysAgo, 'yyyy');
 
 export default {
   today,
+  todayDay,
+  todayMonth,
+  todayYear,
+  tomorrow,
+  tomorrowDay,
+  tomorrowMonth,
+  tomorrowYear,
   fourDaysAgo,
   fourDaysAgoDay,
   fourDaysAgoMonth,
@@ -53,4 +70,7 @@ export default {
   twentyEightYear,
   threeDaysAgo,
   threeDaysAgoUnix,
+  threeDaysDay,
+  threeDaysMonth,
+  threeDaysYear,
 };

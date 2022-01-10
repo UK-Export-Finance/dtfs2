@@ -154,16 +154,16 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateError().contains('The issue date must not be before the date of the inclusion notice submission date');
       aboutFacilityUnissued.errorSummary().contains('The issue date must not be before the date of the inclusion notice submission date');
 
-      // entering date more than 3 months from notice date
+      // entering issue date in the future
       aboutFacilityUnissued.issueDateDay().clear();
       aboutFacilityUnissued.issueDateMonth().clear();
       aboutFacilityUnissued.issueDateYear().clear();
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeMonthsOneDayDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeMonthsOneDayYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.tomorrowDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.tomorrowMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.tomorrowYear);
       aboutFacilityUnissued.continueButton().click();
-      aboutFacilityUnissued.issueDateError().contains('The issue date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.errorSummary().contains('The issue date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.issueDateError().contains('The issue date cannot be in the future');
+      aboutFacilityUnissued.errorSummary().contains('The issue date cannot be in the future');
 
       aboutFacilityUnissued.issueDateDay().clear();
       aboutFacilityUnissued.issueDateMonth().clear();
@@ -212,14 +212,14 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
@@ -233,9 +233,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       unissuedFacilityTable.continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
@@ -251,9 +251,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       unissuedFacilityTable.continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
@@ -286,7 +286,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     /* should be able to change dates on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
       const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
@@ -316,8 +316,8 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
     // checks that can edit changed facility
     it('clicking change should take you to about facility page with different url', () => {
-      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
+      const coverStart = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
 
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);

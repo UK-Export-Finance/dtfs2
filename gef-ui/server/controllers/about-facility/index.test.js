@@ -25,7 +25,7 @@ const MockFacilityResponse = () => {
   const res = {};
   res.details = {
     type: 'CASH',
-    name: 'Foundry4',
+    name: 'UKEF123',
     hasBeenIssued: true,
     monthsOfCover: null,
     coverStartDate: '2030-01-02T00:00:00.000+00:00',
@@ -61,7 +61,7 @@ describe('controllers/about-facility', () => {
       await aboutFacility(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
         facilityType: 'CASH',
-        facilityName: 'Foundry4',
+        facilityName: 'UKEF123',
         hasBeenIssued: true,
         monthsOfCover: null,
         shouldCoverStartOnSubmission: 'true',

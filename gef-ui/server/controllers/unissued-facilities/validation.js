@@ -84,9 +84,10 @@ const facilityValidation = async (body, query, params) => {
       subFieldErrorRefs: dateFieldsInError,
     });
   } else if (issueDateIsFullyComplete) {
-    const submissionDate = new Date(+application.submissionDate);
-    const threeMonthsFromSubmission = add(submissionDate, { months: 3 });
-    const issueDateSet = set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay });
+    // set to midnight to stop mismatch if submission date in past so set to midnight of past date
+    const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
+    const now = new Date();
+    const issueDateSet = (set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay })).setHours(0, 0, 0, 0);
 
     if (isBefore(issueDateSet, submissionDate)) {
       aboutFacilityErrors.push({
@@ -95,10 +96,10 @@ const facilityValidation = async (body, query, params) => {
       });
     }
 
-    if (isAfter(issueDateSet, threeMonthsFromSubmission)) {
+    if (isAfter(issueDateSet, now)) {
       aboutFacilityErrors.push({
         errRef: 'issueDate',
-        errMsg: 'The issue date must be within 3 months of the inclusion notice submission date',
+        errMsg: 'The issue date cannot be in the future',
       });
     }
   }
@@ -140,9 +141,10 @@ const facilityValidation = async (body, query, params) => {
         subFieldErrorRefs: dateFieldsInError,
       });
     } else if (coverStartDateIsFullyComplete) {
-      const submissionDate = new Date(+application.submissionDate);
+      // set to midnight to stop mismatch if submission date in past so set to midnight of past date
+      const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
       const threeMonthsFromSubmission = add(submissionDate, { months: 3 });
-      const startDate = set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
+      const startDate = (set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay })).setHours(0, 0, 0, 0);
 
       if (isBefore(startDate, submissionDate)) {
         aboutFacilityErrors.push({
