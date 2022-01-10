@@ -1,4 +1,4 @@
-import { add, format } from 'date-fns';
+import { add, format, sub } from 'date-fns';
 import {
   renderChangeFacilityPartial,
   changeUnissuedFacility,
@@ -169,15 +169,18 @@ describe('postChangeUnissuedFacility()', () => {
 
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
+  const yesterday = sub(now, { days: 1 });
+  const twoDaysAgo = sub(now, { days: 2 });
+  const twoDaysAgoMidnight = (new Date(twoDaysAgo)).setHours(0, 0, 0, 0);
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   it('posts and returns correct message and url', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
     mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
@@ -192,15 +195,96 @@ describe('postChangeUnissuedFacility()', () => {
     expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
       coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
-      issueDate: format(tomorrow, 'MMMM d, yyyy'),
+      issueDate: format(now, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
+    '/gef/application-details/123/unissued-facilities');
+  });
+
+  it('should not update facility if issue date before submissionDate', async () => {
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = false;
+    mockRequest.body['issue-date-day'] = format(twoDaysAgoMidnight, 'd');
+    mockRequest.body['issue-date-month'] = format(twoDaysAgoMidnight, 'M');
+    mockRequest.body['issue-date-year'] = format(twoDaysAgoMidnight, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(now, 'd');
+    mockRequest.body['cover-start-date-month'] = format(now, 'M');
+    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
+      errors: {
+        errorSummary: [
+          {
+            text: 'The issue date must not be before the date of the inclusion notice submission date',
+            href: '#issueDate',
+          }],
+        fieldErrors: {
+          issueDate: { text: 'The issue date must not be before the date of the inclusion notice submission date' },
+        },
+      },
+    }));
+
+    // should not go ahead with call as errors
+    expect(api.updateFacility).not.toHaveBeenCalledWith(MOCKS.MockRequestUnissued.facilityId, {
+      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+      coverStartDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
+      issueDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
+      shouldCoverStartOnSubmission: null,
+      monthsOfCover: null,
+      name: 'UKEF123',
+      hasBeenIssued: true,
+      canResubmitIssuedFacilities: true,
+      coverDateConfirmed: true,
+    },
+    { message: 'UKEF123 is updated' },
+    '/gef/application-details/123/unissued-facilities');
+  });
+
+  it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+    mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+    mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+    mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+    mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+    expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
+      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+      coverStartDate: format(yesterday, 'MMMM d, yyyy'),
+      issueDate: format(yesterday, 'MMMM d, yyyy'),
+      shouldCoverStartOnSubmission: null,
+      monthsOfCover: null,
+      name: 'UKEF123',
+      hasBeenIssued: true,
+      canResubmitIssuedFacilities: true,
+      coverDateConfirmed: true,
+    },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
@@ -245,12 +329,12 @@ describe('postChangeUnissuedFacility()', () => {
       issueDate: format(tomorrow, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
@@ -295,12 +379,12 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
   it('posts and returns correct url', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
     mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
@@ -315,10 +399,10 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
       coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
       coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
-      issueDate: format(tomorrow, 'MMMM d, yyyy'),
+      issueDate: format(now, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
@@ -365,12 +449,12 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       issueDate: format(tomorrow, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 

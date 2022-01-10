@@ -66,14 +66,14 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
@@ -87,9 +87,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       unissuedFacilityTable.continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
@@ -298,16 +298,16 @@ context('Return to maker for unissued to issued facilities', () => {
 
     // change facility to issued and check correct format
     it('change unissued to issued from application details whilst changes required', () => {
-      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
       const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationDetails.facilitySummaryListRowAction(3, 1).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);

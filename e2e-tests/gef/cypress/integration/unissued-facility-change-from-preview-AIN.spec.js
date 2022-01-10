@@ -100,9 +100,9 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
@@ -133,7 +133,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
       const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
@@ -181,9 +181,9 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_FOUR.name}name`);
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
@@ -197,7 +197,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
-      const issuedDate = format(dateConstants.oneMonth, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
       const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 

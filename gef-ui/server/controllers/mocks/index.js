@@ -1,5 +1,5 @@
 const Chance = require('chance');
-const { sub } = require('date-fns');
+const { sub, getUnixTime } = require('date-fns');
 
 const CONSTANTS = require('../../constants');
 
@@ -116,7 +116,8 @@ const MockApplicationResponseSubmitted = () => {
     comments: [],
     ukefDealId: 123456,
     createdAt: chance.timestamp(),
-    submissionDate: yesterday,
+    // 449 is random number added to end to make unix timestamp in ms (breaks with seconds)
+    submissionDate: `${getUnixTime(yesterday).toString()}449`,
     portalActivities: [{
       type: 'NOTICE',
       timestamp: chance.timestamp(),
@@ -163,7 +164,7 @@ const MockFacilityResponse = () => ({
   items: [{
     details: {
       type: 'CASH',
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: false,
       monthsOfCover: null,
       coverStartDate: '2022-01-02T00:00:00.000+00:00',
@@ -183,7 +184,7 @@ const MockFacilityResponseChangedIssued = {
   items: [{
     details: {
       type: 'CASH',
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: false,
       monthsOfCover: null,
       coverStartDate: '2022-01-02T00:00:00.000+00:00',
@@ -204,7 +205,7 @@ const MockFacilityResponseNotChangedIssued = {
   items: [{
     details: {
       type: 'CASH',
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: false,
       monthsOfCover: null,
       coverStartDate: '2022-01-02T00:00:00.000+00:00',
@@ -268,7 +269,7 @@ const MockRequestUnissued = () => {
   req.body = {};
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
-  req.params.facilityName = 'Foundry4';
+  req.params.facilityName = 'UKEF123';
   req.session = {
     user: {
       bank: { id: 'BANKID' },
@@ -277,7 +278,7 @@ const MockRequestUnissued = () => {
     userToken: 'TEST',
   };
   req.success = {
-    message: 'Foundry4 is updated',
+    message: 'UKEF123 is updated',
   };
   req.url = '/gef/application-details/123/unissued-facilities';
   return req;
@@ -287,7 +288,7 @@ const MockFacilityResponseUnissued = () => {
   const res = {};
   res.details = {
     type: 'CASH',
-    name: 'Foundry4',
+    name: 'UKEF123',
     hasBeenIssued: true,
     monthsOfCover: null,
     issueDate: '2022-01-05T00:00:00.000+00:00',
@@ -300,7 +301,7 @@ const MockFacilityResponseUnissued = () => {
 
 const MockExpectedFacilityRenderChange = (change) => ({
   facilityType: 'CASH',
-  facilityName: 'Foundry4',
+  facilityName: 'UKEF123',
   hasBeenIssued: true,
   monthsOfCover: null,
   shouldCoverStartOnSubmission: 'true',
@@ -325,7 +326,7 @@ const MockFacilitiesResponse = () => ({
     {
       details: {
         type: 'CASH',
-        name: 'Foundry4',
+        name: 'UKEF123',
         hasBeenIssued: true,
         monthsOfCover: null,
         issueDate: '2022-01-05T00:00:00.000+00:00',
