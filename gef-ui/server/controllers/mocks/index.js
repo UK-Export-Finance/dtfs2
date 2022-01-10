@@ -1,5 +1,5 @@
 const Chance = require('chance');
-const { sub } = require('date-fns');
+const { sub, getUnixTime } = require('date-fns');
 
 const CONSTANTS = require('../../constants');
 
@@ -116,7 +116,7 @@ const MockApplicationResponseSubmitted = () => {
     comments: [],
     ukefDealId: 123456,
     createdAt: chance.timestamp(),
-    submissionDate: yesterday,
+    submissionDate: `${getUnixTime(yesterday).toString()}449`,
     portalActivities: [{
       type: 'NOTICE',
       timestamp: chance.timestamp(),
