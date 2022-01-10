@@ -85,7 +85,7 @@ const facilityValidation = async (body, query, params) => {
     });
   } else if (issueDateIsFullyComplete) {
     // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-    const submissionDate = (new Date(+application.submissionDate)).setHours(0, 0, 0, 0);
+    const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
     const now = new Date();
     const issueDateSet = (set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay })).setHours(0, 0, 0, 0);
 
@@ -142,7 +142,7 @@ const facilityValidation = async (body, query, params) => {
       });
     } else if (coverStartDateIsFullyComplete) {
       // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-      const submissionDate = (new Date(+application.submissionDate)).setHours(0, 0, 0, 0);
+      const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
       const threeMonthsFromSubmission = add(submissionDate, { months: 3 });
       const startDate = (set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay })).setHours(0, 0, 0, 0);
 

@@ -29,7 +29,7 @@ describe('validation()', () => {
 
   it('returns correct object with no errors on correct facility update', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['cover-start-date-day'] = format(now, 'd');
     mockRequest.body['cover-start-date-month'] = format(now, 'M');
@@ -65,7 +65,7 @@ describe('validation()', () => {
 
   it('should return object with errors populated if end date before start date', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = '';
@@ -110,7 +110,7 @@ describe('validation()', () => {
 
   it('should return object with errors populated if start date before issue date', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
@@ -151,7 +151,7 @@ describe('validation()', () => {
 
   it('should return object with errors populated if end date before issue date', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
@@ -201,7 +201,7 @@ describe('validation()', () => {
 
   it('should return object with errors populated if issue date in the future', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(tomorrow, 'd');

@@ -176,7 +176,7 @@ describe('postChangeUnissuedFacility()', () => {
 
   it('posts and returns correct message and url', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['issue-date-day'] = format(now, 'd');
     mockRequest.body['issue-date-month'] = format(now, 'M');
@@ -198,18 +198,18 @@ describe('postChangeUnissuedFacility()', () => {
       issueDate: format(now, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
   it('should not update facility if issue date before submissionDate', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body.shouldCoverStartOnSubmission = false;
     mockRequest.body['issue-date-day'] = format(twoDaysAgoMidnight, 'd');
@@ -246,18 +246,18 @@ describe('postChangeUnissuedFacility()', () => {
       issueDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
   it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['issue-date-day'] = format(yesterday, 'd');
     mockRequest.body['issue-date-month'] = format(yesterday, 'M');
@@ -279,12 +279,12 @@ describe('postChangeUnissuedFacility()', () => {
       issueDate: format(yesterday, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
@@ -329,12 +329,12 @@ describe('postChangeUnissuedFacility()', () => {
       issueDate: format(tomorrow, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
@@ -379,7 +379,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
   it('posts and returns correct url', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
@@ -402,7 +402,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       issueDate: format(now, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
@@ -449,12 +449,12 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       issueDate: format(tomorrow, 'MMMM d, yyyy'),
       shouldCoverStartOnSubmission: null,
       monthsOfCover: null,
-      name: 'Foundry4',
+      name: 'UKEF123',
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
     },
-    { message: 'Foundry4 is updated' },
+    { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
   });
 
