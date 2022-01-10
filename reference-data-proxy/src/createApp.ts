@@ -1,7 +1,7 @@
 // @ts-ignore: Elastic search APM
 // eslint-disable-next-line no-unused-vars
 import { elasticSearchApm } from './config';
-const ci = require('ci-info');
+const envCi = require('env-ci');
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import compression from 'compression';
@@ -16,9 +16,11 @@ import { schemas } from './validations';
 
 dotenv.config();
 
-console.log('The name of the CI server is:', ci.name);
+const { name, isPr } = envCi();
 
-if (!ci.GITHUB_ACTIONS) {
+console.log('The name of the CI server is:', name, isPr);
+
+if (!isPr) {
   // validate environment variables
   const { error } = schemas.environments.validate(process.env);
 
