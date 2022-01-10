@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
-    "start": "npx nodemon --exec npx ts-node src/index.ts",
+    "start": "node src/index.ts",
     "start:dev": "npx nodemon src/index.ts",
     "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js",
     "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch",

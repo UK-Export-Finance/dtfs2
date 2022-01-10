@@ -16,7 +16,7 @@ export const lookup = async (req: Request, res: Response) => {
     auth: { username, password: '' },
   }).catch((error: any) => {
     console.error('Error calling Companies House API', error.response);
-    return error.response
+    return error.response;
   });
 
   const { status, data } = response;
