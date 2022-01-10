@@ -301,7 +301,7 @@ describe('/v1/deals', () => {
     });
 
     describe('MIA deal - on second submission', () => {
-      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot and NOT call submitACBSIfAllPartiesHaveUrn', async () => {
+      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot and call submitACBSIfAllPartiesHaveUrn', async () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.submissionType).toEqual('Manual Inclusion Application');
 
@@ -314,7 +314,7 @@ describe('/v1/deals', () => {
 
         expect(body.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
-        expect(dealController.submitACBSIfAllPartiesHaveUrn).not.toHaveBeenCalled();
+        expect(dealController.submitACBSIfAllPartiesHaveUrn).toHaveBeenCalled();
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
