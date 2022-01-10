@@ -2,7 +2,7 @@
  * Transforms an object of submitted filters into a consistent array of objects.
  * If a submitted filter has just one string value, wrap into an array.
  *
- * @param {object} object of submitted filters
+ * @param {object} all submitted filters
  * @example { fieldA: 'value', fieldB: ['a', 'b'] }
  * @returns [ { fieldA: ['value'] }, { fieldB: ['a', 'b'] } ]
  */
@@ -13,7 +13,7 @@ const submittedFiltersArray = (allSubmittedFilters) => {
     ...submittedFilters
   } = allSubmittedFilters;
 
-  let consistentArray = [];
+  const consistentArray = [];
 
   const filtersArray = Object.keys(submittedFilters);
 
@@ -58,6 +58,6 @@ const submittedFiltersObject = (filtersArray) => {
 };
 
 module.exports = {
-  submittedFiltersArray, 
+  submittedFiltersArray,
   submittedFiltersObject,
 };

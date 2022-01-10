@@ -1,9 +1,21 @@
 const {
+  FIELD_NAMES,
   PRODUCT,
-  SUBMISSION_TYPE,  
+  SUBMISSION_TYPE,
   STATUS,
-} = require('../../constants');
+} = require('../../../constants');
+const CONTENT_STRINGS = require('../../../content-strings');
 
+/**
+ * Generates an object to be consumed by GOVUK component.
+ * This will be an object in items array for checkboxes component.
+ *
+ * @param {string} field name
+ * @param {string} field value
+ * @param {object} submitted filters
+ * @example ( field: 'dealType', value: 'GEF', submittedFilters: { dealType: ['GEF', 'BSS/EWCS'] })
+ * @returns { text: 'GEF', value: 'GEF', checked: true }
+ */
 const generateFilterObject = (field, value, submittedFilters) => {
   let checked = false;
 
@@ -19,12 +31,22 @@ const generateFilterObject = (field, value, submittedFilters) => {
   }
 
   return {
-    value,
     text: value,
+    value,
     checked,
   };
 };
 
+/**
+ * Generate an array of objects to be consumed by GOVUK component.
+ * This will used in the checkboxes component 'items' array.
+ *
+ * @param {string} field name
+ * @param {array} array of field values - all possible values for the field name
+ * @param {object} submitted filters
+ * @example ( fieldName: 'dealType', fieldValues: ['GEF', 'BSS/EWCS'], submittedFilters: { dealType: ['GEF'] })
+ * @returns [ { text: 'GEF', value: 'GEF', checked: true }, { text: 'BSS/EWCS', value: 'BSS/EWCS', checked: false } ]
+ */
 const generateFiltersArray = (fieldName, fieldValues, submittedFilters) => {
   const filtersArray = fieldValues.map((fieldValue) =>
     generateFilterObject(
@@ -36,8 +58,12 @@ const generateFiltersArray = (fieldName, fieldValues, submittedFilters) => {
   return filtersArray;
 };
 
+/**
+ * Create filters array for the 'dealType' (or 'product') field.
+ * This will used in the checkboxes component 'items' array.
+ */
 const productFilters = (submittedFilters) => {
-  const fieldName = 'dealType';
+  const fieldName = FIELD_NAMES.DEAL.DEAL_TYPE;
 
   const fieldValues = [
     PRODUCT.BSS_EWCS,
@@ -47,8 +73,12 @@ const productFilters = (submittedFilters) => {
   return generateFiltersArray(fieldName, fieldValues, submittedFilters);
 };
 
+/**
+ * Create filters array for the 'submissionType' (or 'Notice type') field.
+ * This will used in the checkboxes component 'items' array.
+ */
 const submissionTypeFilters = (submittedFilters) => {
-  const fieldName = 'submissionType';
+  const fieldName = FIELD_NAMES.DEAL.SUBMISSION_TYPE;
 
   const fieldValues = [
     SUBMISSION_TYPE.AIN,
@@ -59,11 +89,15 @@ const submissionTypeFilters = (submittedFilters) => {
   return generateFiltersArray(fieldName, fieldValues, submittedFilters);
 };
 
+/**
+ * Create filters array for the 'status type' field.
+ * This will used in the checkboxes component 'items' array.
+ */
 const statusFilters = (submittedFilters) => {
-  const fieldName = 'status';
+  const fieldName = FIELD_NAMES.DEAL.STATUS;
 
   const fieldValues = [
-    'All statuses',
+    CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES,
     STATUS.DRAFT,
     STATUS.READY_FOR_APPROVAL,
     STATUS.INPUT_REQUIRED,
@@ -79,6 +113,10 @@ const statusFilters = (submittedFilters) => {
   return generateFiltersArray(fieldName, fieldValues, submittedFilters);
 };
 
+/**
+ * Create an object for all filters.
+ * This will used in multiple checkboxes components.
+ */
 const dashboardFilters = (submittedFilters = {}) => ({
   product: productFilters(submittedFilters),
   submissionType: submissionTypeFilters(submittedFilters),

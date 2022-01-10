@@ -1,3 +1,4 @@
+const CONSTANTS = require('../../../constants');
 const { isSuperUser } = require('../../../helpers');
 
 const getRoles = (roles) => {
@@ -35,7 +36,7 @@ const dashboardFiltersQuery = (
   if (isChecker && !isMaker) {
     filtersQuery.push({
       field: 'status',
-      value: STATUS.READY_FOR_APPROVAL,
+      value: CONSTANTS.STATUS.READY_FOR_APPROVAL,
     });
   }
 
