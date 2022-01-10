@@ -29,7 +29,7 @@ describe('validation()', () => {
 
   it('returns correct object with no errors on correct facility update', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['cover-start-date-day'] = format(now, 'd');
     mockRequest.body['cover-start-date-month'] = format(now, 'M');
@@ -65,7 +65,7 @@ describe('validation()', () => {
 
   it('should return object with errors populated if end date before start date', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = '';
@@ -110,16 +110,16 @@ describe('validation()', () => {
 
   it('should return object with errors populated if start date before issue date', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+    mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+    mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+    mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
     mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
@@ -151,12 +151,12 @@ describe('validation()', () => {
 
   it('should return object with errors populated if end date before issue date', async () => {
     mockRequest.body.facilityType = 'CASH';
-    mockRequest.body.facilityName = 'Foundry4';
+    mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
-    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
     mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
@@ -193,6 +193,48 @@ describe('validation()', () => {
     {
       errRef: 'coverEndDate',
       errMsg: 'Cover end date cannot be before the issue date',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated if issue date in the future', async () => {
+    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['issue-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['issue-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#issueDate',
+          text: 'The issue date cannot be in the future',
+        }],
+      fieldErrors: {
+        issueDate: {
+          text: 'The issue date cannot be in the future',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [{
+      errRef: 'issueDate',
+      errMsg: 'The issue date cannot be in the future',
     }];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
