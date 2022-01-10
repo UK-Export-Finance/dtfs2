@@ -122,6 +122,7 @@ describe('controllers/application-details', () => {
           makerCanSubmit: expect.any(Boolean),
           makerCanReSubmit: expect.any(Boolean),
           checkerCanSubmit: expect.any(Boolean),
+          link: expect.any(String),
           isUkefReviewAvailable: expect.any(Boolean),
           isUkefReviewPositive: expect.any(Boolean),
           ukefDecisionAccepted: expect.any(Boolean),

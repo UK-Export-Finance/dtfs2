@@ -225,6 +225,7 @@ const MockApplicationResponseSubmission = () => {
   res.exporter = {};
   res.bank = { id: 'BANKID' };
   res.bankInternalRefName = 'My test';
+  res.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
   res.eligibility = {
     criteria: [
       { id: 12, answer: null, text: 'Test' },

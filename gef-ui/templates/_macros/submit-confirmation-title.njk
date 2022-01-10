@@ -1,6 +1,10 @@
 {% macro render(params) %}
   {% if params.unissuedToIssued %}
-    <h1 class="govuk-panel__title" data-cy="submit-facilities-confirmation-title">Issued facilities
+    {% if params.status === "Ready for Checker\'s approval" and params.submissionType === "Manual Inclusion Application" %}
+      <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">{{ params.submissionType | capitalize }}
+    {% else %}
+      <h1 class="govuk-panel__title" data-cy="submit-facilities-confirmation-title">Issued facilities
+    {% endif %}
     {{ params.text | safe }}</h1>
   {% else %}
     <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">{{ params.submissionType | capitalize }}

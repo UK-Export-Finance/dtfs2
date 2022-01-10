@@ -184,6 +184,7 @@ const applicationDetails = async (req, res, next) => {
 
   let facility;
   let url;
+  const link = `/gef/application-details/${dealId}`;
 
   try {
     const application = await Application.findById(dealId, user, userToken);
@@ -222,6 +223,7 @@ const applicationDetails = async (req, res, next) => {
     const params = {
       user,
       ...buildView(applicationWithUserRoles, previewMode, user),
+      link,
     };
 
     if (facility) {
@@ -234,6 +236,10 @@ const applicationDetails = async (req, res, next) => {
 
     if (req.success) {
       params.success = req.success;
+    }
+
+    if (params.unissuedFacilitiesPresent) {
+      params.link += '/unissued-facilities';
     }
 
     return res.render(`partials/${partial}.njk`, params);

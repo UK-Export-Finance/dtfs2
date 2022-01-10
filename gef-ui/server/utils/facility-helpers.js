@@ -20,13 +20,34 @@ const facilitiesChangedToIssuedAsArray = (application) => {
   return hasChanged;
 };
 
-const summaryIssuedChangedToIssued = (app, user, data) =>
-  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
-   && user.roles.includes('maker') && data.details.canResubmitIssuedFacilities === true;
+const summaryIssuedChangedToIssued = (params) => {
+  const {
+    acceptableStatus,
+    acceptableRole,
+    app,
+    data,
+    user,
+  } = params;
 
-const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
-  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
-   && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
+  return acceptableStatus.includes(app.status)
+   && user.roles.some((role) => acceptableRole.includes(role))
+   && Boolean(data.details.canResubmitIssuedFacilities);
+};
+
+const summaryIssuedUnchanged = (params) => {
+  const {
+    acceptableStatus,
+    acceptableRole,
+    facilitiesChanged,
+    app,
+    data,
+    user,
+  } = params;
+  return acceptableStatus.includes(app.status)
+   && user.roles.some((role) => acceptableRole.includes(role))
+   && Boolean(!data.details.hasBeenIssued)
+   && facilitiesChanged.length !== 0;
+};
 
 /**
    * this function checks that the deal is an AIN or MIN
@@ -35,8 +56,16 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
    * if changes required add to application type and status
 * */
 const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
-  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIN];
+  const acceptableStatuses = [
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+  ];
+  const acceptableApplicationType = [
+    CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+    CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
+    CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
+  ];
 
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
