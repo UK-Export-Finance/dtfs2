@@ -7,7 +7,6 @@ const CONSTANTS = require('../../../constants');
  */
 const generateSelectedFiltersObject = (
   heading,
-  fieldName,
   submittedFieldFilters,
 ) => ({
   heading: {
@@ -26,26 +25,23 @@ const generateSelectedFiltersObject = (
 const selectedDashboardFilters = (submittedFilters) => {
   const selected = [];
 
-  if (submittedFilters.dealType) {
+  if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
-      CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
       submittedFilters.dealType,
     ));
   }
 
-  if (submittedFilters.submissionType) {
+  if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
-      CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
       submittedFilters.submissionType,
     ));
   }
 
-  if (submittedFilters.status) {
+  if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.STATUS]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
-      CONSTANTS.FIELD_NAMES.DEAL.STATUS,
       submittedFilters.status,
     ));
   }
