@@ -77,22 +77,6 @@ const mockNumGenParams = {
 
 describe('/number-generator', () => {
   describe('Trigger Number Generator Function', () => {
-    it('should return 200 and log result if success', async () => {
-      const { status } = await post(mockNumGenParams).to('/number-generator');
-      expect(status).toEqual(200);
-
-      const logCallParams = {
-        data: {
-          ...mockNumGenParams,
-          instanceId: expect.any(String),
-          numberGeneratorFunctionUrls: expect.any(Object),
-        },
-        type: 'NUMBER_GENERATOR',
-      };
-
-      expect(addDurableFunctionLog).toHaveBeenCalledWith(logCallParams);
-    });
-
     it('should return status error and log error if unsuccessful', async () => {
       const apiError = {
         toJSON: () => ({
