@@ -22,9 +22,6 @@ export const schemas = {
     // Exposure period
     MULESOFT_API_EXPOSURE_PERIOD_URL: Joi.string().required(),
 
-    // Number generator URL - defined in azure-functions folder
-    AZURE_NUMBER_GENERATOR_FUNCTION_URL: Joi.string(),
-
     // PORT - defaults to 5002
     PORT: Joi.number().default(5002),
 
