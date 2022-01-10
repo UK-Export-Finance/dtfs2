@@ -36,14 +36,6 @@
       </a>
     {% endset %}
 
-    {% set coverEndDate %}
-      {% if facility.coverEndDate %}
-         {{ facility.coverEndDate }}
-      {% else %}
-         -
-      {% endif %}
-    {% endset %}
-
     {% set facilityStage %}
       {% if facility.hasBeenIssued %}
         Issued
