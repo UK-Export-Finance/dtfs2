@@ -13,8 +13,7 @@ context('Facility page', () => {
   const dealTwoFacilities = [];
 
   before(() => {
-    cy.deleteTfmDeals(dealOne?._id);
-    cy.deleteTfmDeals(dealTwo?._id);
+    cy.deleteTfmDeals();
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealOne = insertedDeal;
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
@@ -43,8 +42,7 @@ context('Facility page', () => {
   });
 
   after(() => {
-    cy.deleteTfmDeals(dealOne?._id);
-    cy.deleteTfmDeals(dealTwo?._id);
+    cy.deleteTfmDeals();
     dealOneFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
@@ -60,6 +58,7 @@ context('Facility page', () => {
     page.facilitiesPage.exporterColumn().should('contain', 'Exporter');
     page.facilitiesPage.valueColumn().should('contain', 'Value (export currency)');
     page.facilitiesPage.coverEndDateColumn().should('contain', 'Cover end date');
+    page.facilitiesPage.facilityStageColumn().should('contain', 'Facility stage');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
     cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000006');
@@ -68,6 +67,7 @@ context('Facility page', () => {
     cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
     cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
     cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
+    cy.get('@row1').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
     cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000005');
@@ -76,6 +76,7 @@ context('Facility page', () => {
     cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
     cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
     cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+    cy.get('@row2').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
   });
 
   it('renders case summary with deal data', () => {
