@@ -51,6 +51,7 @@ describe('controllers/application-submission', () => {
       await postApplicationSubmission(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
         dealId: expect.any(String),
+        status: expect.any(String),
         submissionType: expect.any(String),
         unissuedToIssued: expect.any(Boolean),
       }));

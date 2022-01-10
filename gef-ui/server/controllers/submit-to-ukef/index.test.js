@@ -99,6 +99,7 @@ describe('controllers/submit-to-ukef', () => {
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
           submissionType: mockApplicationResponse.submissionType,
+          status: mockApplicationResponse.status,
           isNotice: isNotice(mockApplicationResponse.submissionType),
           ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
           unissuedToIssued: true,
