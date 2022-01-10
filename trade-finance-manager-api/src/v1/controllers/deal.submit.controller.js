@@ -137,7 +137,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
         updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
         updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
       }
-      if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
+      if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
 
