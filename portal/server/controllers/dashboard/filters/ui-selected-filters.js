@@ -11,11 +11,11 @@ const generateSelectedFiltersObject = (
   submittedFieldFilters,
 ) => ({
   heading: {
-    text: fieldName,
+    text: heading,
   },
   items: submittedFieldFilters.map((fieldValue) => ({
-    href: '#',
     text: fieldValue,
+    href: '#',
   })),
 });
 
@@ -54,5 +54,6 @@ const selectedDashboardFilters = (submittedFilters) => {
 };
 
 module.exports = {
+  generateSelectedFiltersObject,
   selectedDashboardFilters,
 };

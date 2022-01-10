@@ -2,7 +2,14 @@ import { allDeals } from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
-import { PRODUCT, STATUS } from '../../constants';
+import {
+  submittedFiltersArray,
+  submittedFiltersObject,
+} from './filters/helpers';
+import { dashboardFiltersQuery } from './filters/query';
+import { dashboardFilters } from './filters/ui-filters';
+import { selectedDashboardFilters } from './filters/ui-selected-filters';
+import { PRODUCT } from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
@@ -38,6 +45,7 @@ jest.mock('../../helpers', () => ({
 
     return false;
   }),
+  getUserRoles: jest.fn(() => ({ isMaker: true })),
 }));
 
 describe('controllers/dashboard', () => {
@@ -61,17 +69,18 @@ describe('controllers/dashboard', () => {
   });
 
   describe('allDeals', () => {
-    it('calls api.allDeals with bank.id filter', async () => {
+    it('calls api.allDeals with filters query', async () => {
       await allDeals(req, res);
 
       expect(api.allDeals).toBeCalledTimes(1);
 
-      const expectedFilters = [
-        {
-          field: 'bank.id',
-          value: req.session.user.bank.id,
-        },
-      ];
+      const filtersArray = submittedFiltersArray(req.body);
+
+      const expectedFilters = dashboardFiltersQuery(
+        req.body.createdByYou,
+        filtersArray,
+        req.session.user,
+      );
 
       expect(api.allDeals).toHaveBeenCalledWith(
         20,
@@ -81,77 +90,11 @@ describe('controllers/dashboard', () => {
       );
     });
 
-    describe('when req.body.createdByYou is provided', () => {
-      it('calls api.allDeals with `maker._id`` filter', async () => {
-        req.body.createdByYou = 'true';
-
-        await allDeals(req, res);
-
-        const expectedFilters = [
-          {
-            field: 'bank.id',
-            value: req.session.user.bank.id,
-          },
-          {
-            field: 'maker._id',
-            value: req.session.user._id,
-          },
-        ];
-
-        expect(api.allDeals).toHaveBeenCalledWith(
-          20,
-          20,
-          expectedFilters,
-          'mock-token',
-        );
-      });
-    });
-
-    describe('when user is a checker', () => {
-      it(`calls api.allDeals with ${STATUS.READY_FOR_APPROVAL} filter`, async () => {
-        req.session.user.roles = ['checker'];
-
-        await allDeals(req, res);
-
-        const expectedFilters = [
-          {
-            field: 'bank.id',
-            value: req.session.user.bank.id,
-          },
-          {
-            field: 'status',
-            value: STATUS.READY_FOR_APPROVAL,
-          },
-        ];
-
-        expect(api.allDeals).toHaveBeenCalledWith(
-          20,
-          20,
-          expectedFilters,
-          'mock-token',
-        );
-      });
-    });
-
-    describe('when user is a super user', () => {
-      it('calls api.allDeals without any filters', async () => {
-        req.session.user.bank.id = '*';
-
-        await allDeals(req, res);
-
-        const expectedFilters = [];
-
-        expect(api.allDeals).toHaveBeenCalledWith(
-          20,
-          20,
-          expectedFilters,
-          'mock-token',
-        );
-      });
-    });
-
     it('renders the correct template', async () => {
       await allDeals(req, res);
+
+      const filtersArray = submittedFiltersArray(req.body);
+      const filtersObj = submittedFiltersObject(filtersArray);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
         deals: mockDeals,
@@ -160,6 +103,8 @@ describe('controllers/dashboard', () => {
           currentPage: 1,
           totalItems: 2,
         },
+        filters: dashboardFilters(filtersObj),
+        selectedFilters: selectedDashboardFilters(filtersObj),
         successMessage: getFlashSuccessMessage(req),
         primaryNav: 'home',
         tab: 'deals',

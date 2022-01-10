@@ -1,5 +1,5 @@
 const api = require('../../api');
-const dashboardFiltersQuery = require('./filters/query');
+const { dashboardFiltersQuery } = require('./filters/query');
 const { dashboardFilters } = require('./filters/ui-filters');
 const { selectedDashboardFilters } = require('./filters/ui-selected-filters');
 const {

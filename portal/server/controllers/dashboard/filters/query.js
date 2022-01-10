@@ -1,22 +1,15 @@
 const CONSTANTS = require('../../../constants');
-const { isSuperUser } = require('../../../helpers');
-
-const getRoles = (roles) => {
-  const isMaker = roles.includes('maker');
-  const isChecker = roles.includes('checker');
-
-  return {
-    isMaker,
-    isChecker,
-  };
-};
+const {
+  getUserRoles,
+  isSuperUser,
+} = require('../../../helpers');
 
 const dashboardFiltersQuery = (
   createdByYou,
   filters,
   user,
 ) => {
-  const { isMaker, isChecker } = getRoles(user.roles);
+  const { isMaker, isChecker } = getUserRoles(user.roles);
   const filtersQuery = [];
 
   if (!isSuperUser(user)) {
@@ -54,4 +47,6 @@ const dashboardFiltersQuery = (
   return filtersQuery;
 };
 
-module.exports = dashboardFiltersQuery;
+module.exports = {
+  dashboardFiltersQuery,
+};

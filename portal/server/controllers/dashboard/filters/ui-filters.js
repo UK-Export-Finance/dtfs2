@@ -125,5 +125,9 @@ const dashboardFilters = (submittedFilters = {}) => ({
 
 module.exports = {
   generateFilterObject,
+  generateFiltersArray,
+  productFilters,
+  submissionTypeFilters,
+  statusFilters,
   dashboardFilters,
 };
