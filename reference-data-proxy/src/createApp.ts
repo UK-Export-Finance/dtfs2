@@ -11,16 +11,16 @@ import { healthcheck } from './healthcheck';
 import { apiRoutes } from './v1/routes';
 
 // validation schemas
-import { schemas } from './validations';
+// import { schemas } from './validations';
 
 dotenv.config();
 
 // validate environment variables
-const { error } = schemas.environments.validate(process.env);
+// const { error } = schemas.environments.validate(process.env);
 
-if (error) {
-  throw new Error(`External APIs: config validation error: ${error.message}`);
-}
+// if (error) {
+//   throw new Error(`External APIs: config validation error: ${error.message}`);
+// }
 
 export const app: any = express();
 app.use(express.json());
