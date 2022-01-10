@@ -116,6 +116,7 @@ const MockApplicationResponseSubmitted = () => {
     comments: [],
     ukefDealId: 123456,
     createdAt: chance.timestamp(),
+    // 449 is random number added to end to make unix timestamp in ms (breaks with seconds)
     submissionDate: `${getUnixTime(yesterday).toString()}449`,
     portalActivities: [{
       type: 'NOTICE',
