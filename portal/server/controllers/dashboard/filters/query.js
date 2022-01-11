@@ -37,10 +37,18 @@ const dashboardFiltersQuery = (
     const fieldName = Object.keys(filterObj)[0];
 
     filterObj[fieldName].forEach((filterValue) => {
-      filtersQuery.push({
-        field: fieldName,
-        value: filterValue,
-      });
+      if (fieldName === 'keyword') {
+        filtersQuery.push({
+          field: fieldName,
+          value: filterValue,
+          operator: 'or',
+        });
+      } else {
+        filtersQuery.push({
+          field: fieldName,
+          value: filterValue,
+        });
+      }
     });
   });
 

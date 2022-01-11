@@ -4,12 +4,21 @@ const dealsReducer = require('../reducers/deals');
 
 const queryAllDeals = async (_, { params = {} }, ctx) => {
   const {
-    start = 0, pagesize, filters = [], sort = [],
+    start = 0,
+    pagesize,
+    filters = [],
+    sort = [],
   } = params;
 
-  const dbFilters = filters.map((clause) => ({
-    [clause.field]: clause.operator ? dbHelpers.createDbQuery(clause.operator, clause.value) : clause.value,
-  }));
+  const dbFilters = filters.map((clause) => {
+    if (clause.field === 'keyword') {
+      return dbHelpers.createDbQueryKeywordDeals(clause.value);
+    }
+
+    return {
+      [clause.field]: clause.operator ? dbHelpers.createDbQuery(clause.operator, clause.value) : clause.value,
+    };
+  });
 
   const deals = pagesize
     ? await findAllPaginatedDeals(ctx.user, dbFilters, sort, start, pagesize)

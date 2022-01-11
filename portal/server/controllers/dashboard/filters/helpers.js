@@ -9,7 +9,6 @@
 const submittedFiltersArray = (allSubmittedFilters) => {
   const {
     createdByYou,
-    keyword,
     ...submittedFilters
   } = allSubmittedFilters;
 

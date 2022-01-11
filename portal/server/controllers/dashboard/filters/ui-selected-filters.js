@@ -25,6 +25,13 @@ const generateSelectedFiltersObject = (
 const selectedDashboardFilters = (submittedFilters) => {
   const selected = [];
 
+  if (submittedFilters.keyword) {
+    selected.push(generateSelectedFiltersObject(
+      CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.KEYWORD,
+      submittedFilters.keyword,
+    ));
+  }
+
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,

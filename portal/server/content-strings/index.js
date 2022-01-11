@@ -7,6 +7,7 @@ const DASHBOARD_FILTERS = {
   // bespoke filter values are values that
   // do not exist in the data.
   BESPOKE_FILTER_VALUES: {
+    KEYWORD: 'Keyword',
     ALL_STATUSES: 'All statuses',
   },
 };

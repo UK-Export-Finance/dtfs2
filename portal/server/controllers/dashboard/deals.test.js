@@ -53,7 +53,10 @@ describe('controllers/dashboard', () => {
   let res;
   beforeEach(() => {
     req = {
-      body: { createdByYou: '' },
+      body: {
+        createdByYou: '',
+        keyword: '',
+      },
       params: { page: 1 },
       session: {
         dashboardFilters: 'mock-filters',
@@ -97,6 +100,9 @@ describe('controllers/dashboard', () => {
       const filtersObj = submittedFiltersObject(filtersArray);
 
       expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
+        user: req.session.user,
+        primaryNav: 'home',
+        tab: 'deals',
         deals: mockDeals,
         pages: {
           totalPages: 1,
@@ -106,10 +112,8 @@ describe('controllers/dashboard', () => {
         filters: dashboardFilters(filtersObj),
         selectedFilters: selectedDashboardFilters(filtersObj),
         successMessage: getFlashSuccessMessage(req),
-        primaryNav: 'home',
-        tab: 'deals',
-        user: req.session.user,
         createdByYou: req.body.createdByYou,
+        keyword: req.body.keyword,
       });
     });
   });

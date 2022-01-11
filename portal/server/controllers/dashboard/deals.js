@@ -27,8 +27,6 @@ exports.allDeals = async (req, res) => {
     req.session.user,
   );
 
-  console.log('---- filtersQuery\n', filtersQuery);
-
   const { count, deals } = await getApiData(api.allDeals(
     req.params.page * PAGESIZE,
     PAGESIZE,
@@ -45,14 +43,15 @@ exports.allDeals = async (req, res) => {
   const filtersObj = submittedFiltersObject(filtersArray);
 
   return res.render('dashboard/deals.njk', {
+    user: req.session.user,
+    primaryNav,
+    tab,
     deals,
     pages,
     filters: dashboardFilters(filtersObj),
     selectedFilters: selectedDashboardFilters(filtersObj),
     successMessage: getFlashSuccessMessage(req),
-    primaryNav,
-    tab,
-    user: req.session.user,
     createdByYou: req.body.createdByYou,
+    keyword: req.body.keyword,
   });
 };

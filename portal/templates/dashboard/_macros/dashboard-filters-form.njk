@@ -3,10 +3,13 @@
 
 {% macro render(params) %}
   {% set filters = params.filters %}
+  {% set keyword = params.keyword %}
+
 
     {{ govukInput({
       id: 'keyword',
       name: 'keyword',
+      value: keyword,
       label: {
         text: 'Keyword',
         classes: 'govuk-label--m'
