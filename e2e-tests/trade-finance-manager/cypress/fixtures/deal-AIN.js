@@ -2,7 +2,7 @@ const CONSTANTS = require('./constants');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
-  submissionType: CONSTANTS.DEAL_TYPE.AIN,
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
