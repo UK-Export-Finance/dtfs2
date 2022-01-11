@@ -283,6 +283,7 @@ type TFMDealData {
   estore: TFMEstore
   leadUnderwriter: String
   activities: [TFMActivity]
+  lastUpdated: Float
 }
 
 type PremiumScheduleData {
