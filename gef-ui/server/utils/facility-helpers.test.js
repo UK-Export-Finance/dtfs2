@@ -7,6 +7,7 @@ import {
   facilityIssueDeadline,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
+  checkCoverDateConfirmed,
 } from './facility-helpers';
 
 import {
@@ -31,6 +32,7 @@ import {
 } from './mocks/mock_requests';
 
 const CONSTANTS = require('../constants');
+
 const acceptableStatus = [
   CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
@@ -346,5 +348,37 @@ describe('summaryIssuedUnchanged()', () => {
     const result = summaryIssuedUnchanged(mockParam);
 
     expect(result).toEqual(false);
+  });
+});
+
+describe('checkCoverDateConfirmed()', () => {
+  it.only('Should return `0` when the application status is not DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+    expect(await checkCoverDateConfirmed(MOCK_AIN_APPLICATION_ISSUED_ONLY)).toEqual(0);
+  });
+
+  it.only('Should return `1` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+    const mockApplication = MOCK_AIN_APPLICATION_ISSUED_ONLY;
+    mockApplication.status = CONSTANTS.DEAL_STATUS.DRAFT;
+    expect(await checkCoverDateConfirmed(mockApplication)).toEqual(1);
+  });
+
+  it.only('Should return `0` when the application status is not DRAFT, type is MIA and have atleast one facility with issued status', async () => {
+    const mockMIAApplication = MOCK_AIN_APPLICATION_ISSUED_ONLY;
+    mockMIAApplication.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
+    mockMIAApplication.dealType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIA;
+    expect(await checkCoverDateConfirmed(mockMIAApplication)).toEqual(0);
+  });
+
+  it.only('Should return `0` when the application status is DRAFT, type is MIA and have atleast one facility with issued status', async () => {
+    const mockMIAApplication = MOCK_AIN_APPLICATION_ISSUED_ONLY;
+    mockMIAApplication.status = CONSTANTS.DEAL_STATUS.DRAFT;
+    mockMIAApplication.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIA;
+    expect(await checkCoverDateConfirmed(mockMIAApplication)).toEqual(0);
+  });
+
+  it.only('Should return `0` when the application status is DRAFT, type is AIN and does not have an issued facility', async () => {
+    const mockAINApplication = MOCK_AIN_APPLICATION_UNISSUED_ONLY;
+    mockAINApplication.status = CONSTANTS.DEAL_STATUS.DRAFT;
+    expect(await checkCoverDateConfirmed(mockAINApplication)).toEqual(0);
   });
 });
