@@ -55,6 +55,34 @@ exports.MOCK_FACILITY_TWO = {
   canResubmitIssuedFacilities: null,
 };
 
+exports.MOCK_FACILITY_TWO_NULL_MIA = {
+  type: CONSTANTS.FACILITY_TYPE.CASH,
+  hasBeenIssued: true,
+  name: 'Facility two',
+  shouldCoverStartOnSubmission: true,
+  coverStartDate: 1638403200000,
+  coverEndDate: '2030-01-01T00:00:00.000Z',
+  monthsOfCover: null,
+  details: ['TERM', 'RESOLVING', 'COMMITTED', 'UNCOMMITTED', 'ON_DEMAND', 'FACTORING', 'OTHER'],
+  detailsOther: 'Other',
+  currency: 'GBP',
+  value: 2000,
+  coverPercentage: 80,
+  interestPercentage: 1,
+  paymentType: 'IN_ADVANCE_MONTHLY',
+  createdAt: 1638363596947,
+  updatedAt: 1638442632540,
+  ukefExposure: 1600,
+  guaranteeFee: 0.9,
+  submittedAsIssuedDate: null,
+  ukefFacilityId: '0030113305',
+  feeType: 'in advance',
+  feeFrequency: 'Monthly',
+  dayCountBasis: 365,
+  coverDateConfirmed: null,
+  canResubmitIssuedFacilities: null,
+};
+
 exports.MOCK_FACILITY_THREE = {
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,

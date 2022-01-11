@@ -294,6 +294,9 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.abandonLink().should('not.exist');
       // should not be able to edit ref name
       applicationDetails.editRefNameLink().should('not.exist');
+
+      applicationDetails.supportingInfoListRowAction(0, 0).should('not.exist');
+      applicationDetails.supportingInfoListRowAction(0, 1).should('not.exist');
     });
 
     // change facility to issued and check correct format

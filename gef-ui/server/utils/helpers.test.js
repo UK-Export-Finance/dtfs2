@@ -15,6 +15,7 @@ import {
   displayTaskComments,
   pastDate,
   futureDateInRange,
+  displayChangeSupportingInfo,
 } from './helpers';
 
 import {
@@ -37,9 +38,12 @@ import {
   MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+  MOCK_AIN_APPLICATION_SUPPORTING_INFO,
 } from './mocks/mock_applications';
 
 import { MOCK_REQUEST } from './mocks/mock_requests';
+
+const CONSTANTS = require('../constants');
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {
@@ -1376,6 +1380,28 @@ describe('futureDateInRange', () => {
         year: '2021',
       };
       expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
+    });
+  });
+
+  describe('displayChangeSupportingInfo()', () => {
+    it('Should return false if preview mode', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 0), true);
+      expect(result).toEqual(false);
+    });
+
+    it('Should return false if preview mode and submission count over 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 1), true);
+      expect(result).toEqual(false);
+    });
+
+    it('Should return true if not preview mode and submission count is 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+      expect(result).toEqual(true);
+    });
+
+    it('Should return true if not preview mode and submission count is 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+      expect(result).toEqual(true);
     });
   });
 });

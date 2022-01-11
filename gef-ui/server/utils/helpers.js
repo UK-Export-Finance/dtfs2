@@ -438,6 +438,14 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
+const displayChangeSupportingInfo = (application, preview) => {
+  if (preview || application.submissionCount > 0) {
+    return false;
+  }
+
+  return true;
+};
+
 module.exports = {
   apiErrorHandler,
   isEmpty,
@@ -454,4 +462,5 @@ module.exports = {
   displayTaskComments,
   pastDate,
   futureDateInRange,
+  displayChangeSupportingInfo,
 };

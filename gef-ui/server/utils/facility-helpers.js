@@ -129,12 +129,12 @@ const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
  * @returns {Array}
  */
 const getIssuedFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
-  .map(({ details }) =>
+  .map(({ details }, index) =>
     [
       { text: details.name },
       { text: details.ukefFacilityId },
       { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-      { html: `<a href = '/gef/application-details/${details.dealId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
+      { html: `<a href = '/gef/application-details/${details.dealId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-coverStartDate-button-${index}'>Update</a>` },
     ]);
 
 const getFacilityCoverStartDate = (facility) => {
