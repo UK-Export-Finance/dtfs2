@@ -420,6 +420,11 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   ...commonDealItems,
 };
 
+const MOCK_AIN_APPLICATION_SUPPORTING_INFO = (appStatus, submissionCounter) => ({
+  status: appStatus,
+  submissionCount: submissionCounter,
+});
+
 const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
   const res = {};
 
@@ -625,6 +630,7 @@ module.exports = {
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+  MOCK_AIN_APPLICATION_SUPPORTING_INFO,
   RES_MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_GENERATOR,
 };

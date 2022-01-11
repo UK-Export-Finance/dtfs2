@@ -59,7 +59,7 @@
               visuallyHiddenText: "security details",
               attributes: { 'data-cy': 'supportingInfo__manual-inclusion-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('manualInclusion'),
       {
@@ -79,7 +79,7 @@
               visuallyHiddenText: "security details",
               attributes: { 'data-cy': 'supportingInfo__management-accounts-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('managementAccounts'),
       {
@@ -99,7 +99,7 @@
               visuallyHiddenText: "financial statements",
               attributes: { 'data-cy': 'supportingInfo__financial-statements-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('financialStatements'),
       {
@@ -119,7 +119,7 @@
               visuallyHiddenText: "financial forecasts",
               attributes: { 'data-cy': 'supportingInfo__financial-forecasts-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('financialForecasts'),
       {
@@ -139,7 +139,7 @@
               visuallyHiddenText: "financial commentary",
               attributes: { 'data-cy': 'supportingInfo__financial-commentary-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('financialCommentary'),
       {
@@ -159,7 +159,7 @@
               visuallyHiddenText: "corporate structure",
               attributes: { 'data-cy': 'supportingInfo__corporate-structure-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('corporateStructure'),
       {
@@ -179,7 +179,7 @@
               visuallyHiddenText: "aged debtor and creditor listing",
               attributes: { 'data-cy': 'supportingInfo__debtor-creditor-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('debtorAndCreditorReports'),
       {
@@ -199,7 +199,7 @@
               visuallyHiddenText: "security details",
               attributes: { 'data-cy': 'security-details-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       },
       {
@@ -219,7 +219,7 @@
               visuallyHiddenText: "export licence",
               attributes: { 'data-cy': 'supportingInfo__export-licence-cta' }
             }
-          ] if not previewMode
+          ] if displayChangeSupportingInfo
         }
       } if supportingInfo.requiredFields.includes('exportLicence')
     ]

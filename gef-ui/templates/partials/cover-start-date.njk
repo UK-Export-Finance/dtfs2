@@ -60,9 +60,12 @@
                             captionClasses: "govuk-table__caption--xl",
                             firstCellIsHeader: false,
                             classes: "govuk-table__vertical-align",
+                            attributes: {
+                              'data-cy': 'confirm-cover-start-table'
+                            },
                             head: [
                                 {
-                                text: "Faciliy name"
+                                text: "Facility name"
                                 },
                                 {
                                 text: "UKEF Facility ID"
@@ -81,7 +84,10 @@
                         mojBanner({
                         type: 'success',
                         text: 'All cover start dates confirmed for issued facilities',
-                        iconFallbackText: 'Success'
+                        iconFallbackText: 'Success',
+                        attributes: {
+                          'data-cy': 'confirm-cover-start-success'
+                        }
                         })
                     }}
 
@@ -89,7 +95,10 @@
                         {{
                             govukButton({
                             text: "Continue",
-                            href: link
+                            href: link,
+                            attributes: {
+                              'data-cy': 'continue-button'
+                            }
                             })
                         }}
                     </div>

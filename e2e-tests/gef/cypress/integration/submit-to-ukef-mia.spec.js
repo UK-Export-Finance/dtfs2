@@ -8,6 +8,9 @@ import applicationSubmission from './pages/application-submission';
 import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 
+import CONSTANTS from '../fixtures/constants';
+import { toTitleCase } from '../fixtures/helpers';
+
 let dealId;
 
 context('Submit MIA to UKEF', () => {
@@ -91,7 +94,7 @@ context('Submit MIA to UKEF', () => {
 
     it('Submits without comments and displays the confirmation page', () => {
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanelTitle().contains('Manual inclusion application submitted to UKEF');
+      submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
       submitToUkefConfirmation.confirmationText().contains('We\'ve sent you a confirmation email.');
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
