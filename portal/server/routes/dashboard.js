@@ -3,6 +3,7 @@ const {
   bssFacilities,
   gefFacilities,
   allDeals,
+  allDealsClearFilters,
 } = require('../controllers/dashboard');
 
 const validateToken = require('./middleware/validate-token');
@@ -14,11 +15,13 @@ router.use('/dashboard/*', validateToken);
 router.get('/', validateToken, (_, res) => res.redirect('/dashboard/deals/0'));
 
 router.get('/dashboard', async (req, res) => {
-  req.session.dashboardFilters = null;
+  req.session.dashboardFilters = null; // TODO ?
   res.redirect('/dashboard/deals/0');
 });
 
 router.get('/dashboard/deals', async (req, res) => res.redirect('/dashboard/deals/0'));
+
+router.get('/dashboard/deals/clear-all-filters', (req, res) => res.redirect('/dashboard/deals/0'));
 
 router.get('/dashboard/facilities/gef', async (req, res) => res.redirect('/dashboard/facilities/gef/0'));
 

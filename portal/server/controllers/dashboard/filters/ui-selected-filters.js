@@ -25,7 +25,9 @@ const generateSelectedFiltersObject = (
 const selectedDashboardFilters = (submittedFilters) => {
   const selected = [];
 
-  if (submittedFilters.keyword) {
+  const hasKeyword = (submittedFilters.keyword && submittedFilters.keyword[0].length);
+
+  if (hasKeyword) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.KEYWORD,
       submittedFilters.keyword,
