@@ -9,6 +9,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
   describe('generateSelectedFiltersObject', () => {
     it('should return mapped object', () => {
       const mockHeading = CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT;
+      const mockFieldName = CONSTANTS.FIELD_NAMES.DEAL_TYPE;
       const mockSubmittedFieldFilters = [
         CONSTANTS.PRODUCT.GEF,
         CONSTANTS.PRODUCT.BSS_EWCS,
@@ -16,16 +17,26 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
 
       const result = generateSelectedFiltersObject(
         mockHeading,
+        mockFieldName,
         mockSubmittedFieldFilters,
       );
+
+      const expectedFormattedFieldValue = (fieldValue) => fieldValue.replace('/', '-');
+      const expectedHref = (name, value) => `filters/remove/${name}/${value}`;
 
       const expected = {
         heading: {
           text: mockHeading,
         },
         items: [
-          { text: mockSubmittedFieldFilters[0], href: '#' },
-          { text: mockSubmittedFieldFilters[1], href: '#' },
+          {
+            text: mockSubmittedFieldFilters[0],
+            href: expectedHref(mockFieldName, expectedFormattedFieldValue(mockSubmittedFieldFilters[0])),
+          },
+          {
+            text: mockSubmittedFieldFilters[1],
+            href: expectedHref(mockFieldName, expectedFormattedFieldValue(mockSubmittedFieldFilters[1])),
+          },
         ],
       };
 
@@ -47,18 +58,22 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
       const expected = [
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.KEYWORD,
+          'keyword',
           mockSubmittedFilters.keyword,
         ),
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
+          CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
           mockSubmittedFilters.dealType,
         ),
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
+          CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
           mockSubmittedFilters.submissionType,
         ),
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
+          CONSTANTS.FIELD_NAMES.DEAL.STATUS,
           mockSubmittedFilters.status,
         ),
       ];

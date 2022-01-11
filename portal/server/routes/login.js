@@ -43,6 +43,7 @@ router.post('/login', async (req, res) => {
     if (success) {
       req.session.userToken = token;
       req.session.user = user;
+      req.session.dashboardFilters = {};
     } else {
       loginErrors.push(emailError);
       loginErrors.push(passwordError);

@@ -59,7 +59,10 @@ describe('controllers/dashboard', () => {
       },
       params: { page: 1 },
       session: {
-        dashboardFilters: 'mock-filters',
+        dashboardFilters: {
+          createdByYou: '',
+          keyword: '',
+        },
         user: {
           _id: 'mock-user',
           roles: ['maker', 'checker'],
@@ -77,7 +80,7 @@ describe('controllers/dashboard', () => {
 
       expect(api.allDeals).toBeCalledTimes(1);
 
-      const filtersArray = submittedFiltersArray(req.body);
+      const filtersArray = submittedFiltersArray(req.session.dashboardFilters);
 
       const expectedFilters = dashboardFiltersQuery(
         req.body.createdByYou,
@@ -112,8 +115,8 @@ describe('controllers/dashboard', () => {
         filters: dashboardFilters(filtersObj),
         selectedFilters: selectedDashboardFilters(filtersObj),
         successMessage: getFlashSuccessMessage(req),
-        createdByYou: req.body.createdByYou,
-        keyword: req.body.keyword,
+        createdByYou: req.session.dashboardFilters.createdByYou,
+        keyword: req.session.dashboardFilters.keyword,
       });
     });
   });

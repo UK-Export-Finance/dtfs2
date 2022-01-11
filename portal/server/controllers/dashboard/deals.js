@@ -14,17 +14,22 @@ const {
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
+const tab = 'deals';
 
 exports.allDeals = async (req, res) => {
-  const tab = 'deals';
   const { userToken } = requestParams(req);
+  const { user } = req.session;
 
-  const filtersArray = submittedFiltersArray(req.body);
+  if (Object.keys(req.body).length) {
+    req.session.dashboardFilters = req.body;
+  }
+
+  const filtersArray = submittedFiltersArray(req.session.dashboardFilters);
 
   const filtersQuery = dashboardFiltersQuery(
-    req.body.createdByYou,
+    req.session.dashboardFilters.createdByYou,
     filtersArray,
-    req.session.user,
+    user,
   );
 
   const { count, deals } = await getApiData(api.allDeals(
@@ -43,7 +48,7 @@ exports.allDeals = async (req, res) => {
   const filtersObj = submittedFiltersObject(filtersArray);
 
   return res.render('dashboard/deals.njk', {
-    user: req.session.user,
+    user,
     primaryNav,
     tab,
     deals,
@@ -51,7 +56,13 @@ exports.allDeals = async (req, res) => {
     filters: dashboardFilters(filtersObj),
     selectedFilters: selectedDashboardFilters(filtersObj),
     successMessage: getFlashSuccessMessage(req),
-    createdByYou: req.body.createdByYou,
-    keyword: req.body.keyword,
+    createdByYou: req.session.dashboardFilters.createdByYou,
+    keyword: req.session.dashboardFilters.keyword,
   });
+};
+
+exports.removeAllDealsFilter = (req, res) => {
+  delete req.session.dashboardFilters[req.params.fieldName];
+
+  return res.redirect('/dashboard/deals/0');
 };

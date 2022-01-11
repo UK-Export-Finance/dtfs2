@@ -7,15 +7,20 @@ const CONSTANTS = require('../../../constants');
  */
 const generateSelectedFiltersObject = (
   heading,
+  fieldName,
   submittedFieldFilters,
 ) => ({
   heading: {
     text: heading,
   },
-  items: submittedFieldFilters.map((fieldValue) => ({
-    text: fieldValue,
-    href: '#',
-  })),
+  items: submittedFieldFilters.map((fieldValue) => {
+    const formattedFieldValue = fieldValue.replace('/', '-');
+
+    return {
+      text: fieldValue,
+      href: `filters/remove/${fieldName}/${formattedFieldValue}`,
+    };
+  }),
 });
 
 /**
@@ -30,6 +35,7 @@ const selectedDashboardFilters = (submittedFilters) => {
   if (hasKeyword) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.KEYWORD,
+      'keyword',
       submittedFilters.keyword,
     ));
   }
@@ -37,6 +43,7 @@ const selectedDashboardFilters = (submittedFilters) => {
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
+      CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
       submittedFilters.dealType,
     ));
   }
@@ -44,6 +51,7 @@ const selectedDashboardFilters = (submittedFilters) => {
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
+      CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
       submittedFilters.submissionType,
     ));
   }
@@ -51,6 +59,7 @@ const selectedDashboardFilters = (submittedFilters) => {
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.STATUS]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
+      CONSTANTS.FIELD_NAMES.DEAL.STATUS,
       submittedFilters.status,
     ));
   }
