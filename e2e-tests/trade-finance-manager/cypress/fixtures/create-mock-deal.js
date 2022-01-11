@@ -1,6 +1,6 @@
 import MOCK_DEAL_AIN from './deal-AIN';
 
-export const createMockDeal = (overrides) => {
+const createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [
     { ...MOCK_DEAL_AIN.mockFacilities[0] },
@@ -33,3 +33,6 @@ export const createMockDeal = (overrides) => {
     mockFacilities: facilities,
   };
 };
+
+
+export default createMockDeal;
