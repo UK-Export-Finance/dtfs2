@@ -279,14 +279,14 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(3, 7).should('have.value', '');
 
       // should not be able to edit exporter table
-      applicationDetails.exporterSummaryListRowAction(0, 0).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 1).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 2).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 3).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 4).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 5).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 6).should('not.exist');
-      applicationDetails.exporterSummaryListRowAction(0, 7).should('not.exist');
+      applicationDetails.exporterSummaryListRowAction(0, 0).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 1).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 2).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 3).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 4).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 5).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 6).should('have.value', '');
+      applicationDetails.exporterSummaryListRowAction(0, 7).should('have.value', '');
 
       // should not be able to edit eligibility criteria
       applicationDetails.automaticCoverSummaryListRowAction(0, 0).should('not.exist');

@@ -103,8 +103,8 @@ context('Submit AIN deal and check portalActivities', () => {
     it('should display the activity timeline with submission information', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`).should('not.exist');
+      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
+      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`).should('not.exist');
       applicationActivities.activityTimeline().contains(date);
       applicationActivities.activityTimeline().contains(CREDENTIALS.CHECKER.firstname);
     });
@@ -118,7 +118,7 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerDateSubmitted().contains(bannerDate);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
-      statusBanner.bannerSubmissionType().contains('Manual Inclusion Application');
+      statusBanner.bannerSubmissionType().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
     });
   });
 });
