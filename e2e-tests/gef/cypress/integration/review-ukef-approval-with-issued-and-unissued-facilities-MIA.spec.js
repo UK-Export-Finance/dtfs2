@@ -35,7 +35,7 @@ const issuedFacilities = [
   MOCK_FACILITY_TWO_NULL_MIA,
 ];
 
-context('Unissued Facilities MIN - change all to issued from unissued table', () => {
+context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
@@ -61,7 +61,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     });
   });
 
-  describe('Change facility to issued from unissued table', () => {
+  describe('Review UKEF decision', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(CREDENTIALS.MAKER);
@@ -267,7 +267,7 @@ context('Return to maker', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('should show changed facilities in task comments box with correct heading', () => {
+    it('should show changed facilities in task comments box with correct heading for reviewing UKEF decision', () => {
       applicationPreview.miaStageChecker().contains('Check manual inclusion application before submitting to UKEF');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
     });
@@ -311,7 +311,7 @@ context('Return to maker', () => {
       applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
 
-      // forth facility table - shorter as not yet issued
+      // forth facility
       applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
@@ -335,8 +335,7 @@ context('Return to maker', () => {
 
   /**
    * log in as maker as application is on Further Maker's input required
-   * ensure application details page is locked apart from unissued facilites section
-   * change 1 facility to issued and ensure added to changed list
+   * ensure application details page is locked apart from unissued facilities section
    * submit to checker
   */
   describe('Check application details page works as expected with correct fields unlocked', () => {
@@ -358,7 +357,7 @@ context('Return to maker', () => {
       applicationDetails.addContingentFacilityButton().should('not.exist');
       applicationDetails.deleteFacilityLink().should('not.exist');
 
-      // the already issued so cannot change anything
+      // facility which confirmed cover
       applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
@@ -370,7 +369,7 @@ context('Return to maker', () => {
       applicationDetails.facilitySummaryListRowAction(2, 8).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 9).should('not.exist');
 
-      // 1st facility table - makes sure no action buttons exist (change or add)
+      // 1st facility table - make sure change exists on issue action
       applicationDetails.facilitySummaryListRowAction(0, 0).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(0, 1).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
@@ -381,7 +380,7 @@ context('Return to maker', () => {
       applicationDetails.facilitySummaryListRowAction(0, 7).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(0, 8).should('have.value', '');
 
-      // second facility
+      // second facility - make sure change exists on issue action
       applicationDetails.facilitySummaryListRowAction(1, 0).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(1, 1).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(1, 2).contains('Change');
@@ -392,7 +391,7 @@ context('Return to maker', () => {
       applicationDetails.facilitySummaryListRowAction(1, 7).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(1, 8).should('have.value', '');
 
-      // forth facility table only has change as not yet issued
+      // forth facility has change links as changedToIssued
       applicationDetails.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
@@ -421,7 +420,7 @@ context('Return to maker', () => {
       applicationDetails.abandonLink().should('not.exist');
       // should not be able to edit ref name
       applicationDetails.editRefNameLink().should('not.exist');
-
+      // should not be able to edit supporting info
       applicationDetails.supportingInfoListRowAction(0, 0).should('not.exist');
       applicationDetails.supportingInfoListRowAction(0, 1).should('not.exist');
     });

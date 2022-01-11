@@ -7,6 +7,9 @@ import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
+import CONSTANTS from '../fixtures/constants';
+import { toTitleCase } from '../fixtures/helpers';
+
 let dealWithEmptyExporter;
 let dealWithInProgressExporter;
 let dealWithCompletedExporterAndFacilities;
@@ -200,12 +203,12 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
       statusBanner.bannerStatus().contains('Draft');
-      statusBanner.bannerSubmissionType().should('have.text', 'Automatic Inclusion Notice');
+      statusBanner.bannerSubmissionType().should('have.text', `${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`);
       statusBanner.bannerExporter().should('not.contain', '-');
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails.mainHeading().contains('Automatic Inclusion Notice');
+      applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
 
     it('displays the correct exporter elements', () => {
@@ -258,7 +261,7 @@ context('Application Details Page', () => {
     it('displays the correct submission type heading and text in banner', () => {
       applicationDetails.mainHeading().contains('Manual Inclusion Application');
 
-      statusBanner.bannerSubmissionType().should('have.text', 'Manual Inclusion Application');
+      statusBanner.bannerSubmissionType().should('have.text', `${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
     });
 
     describe('Supporting information section', () => {

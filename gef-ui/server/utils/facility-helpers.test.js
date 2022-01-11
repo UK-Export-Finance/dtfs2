@@ -1,3 +1,4 @@
+import api from '../services/api';
 import {
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
@@ -30,6 +31,8 @@ import {
 import {
   MOCK_REQUEST, MOCK_REQUEST_CHECKER,
 } from './mocks/mock_requests';
+
+jest.mock('../services/api');
 
 const CONSTANTS = require('../constants');
 
@@ -352,31 +355,35 @@ describe('summaryIssuedUnchanged()', () => {
 });
 
 describe('checkCoverDateConfirmed()', () => {
-  it.only('Should return `0` when the application status is not DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+  beforeEach(() => {
+    api.updateFacility.mockResolvedValue({});
+  });
+
+  it('Should return `0` when the application status is not DRAFT, type is AIN and have atleast one facility with issued status', async () => {
     expect(await checkCoverDateConfirmed(MOCK_AIN_APPLICATION_ISSUED_ONLY)).toEqual(0);
   });
 
-  it.only('Should return `1` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+  it('Should return `1` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
     const mockApplication = MOCK_AIN_APPLICATION_ISSUED_ONLY;
     mockApplication.status = CONSTANTS.DEAL_STATUS.DRAFT;
     expect(await checkCoverDateConfirmed(mockApplication)).toEqual(1);
   });
 
-  it.only('Should return `0` when the application status is not DRAFT, type is MIA and have atleast one facility with issued status', async () => {
+  it('Should return `0` when the application status is not DRAFT, type is MIA and have atleast one facility with issued status', async () => {
     const mockMIAApplication = MOCK_AIN_APPLICATION_ISSUED_ONLY;
     mockMIAApplication.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
     mockMIAApplication.dealType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIA;
     expect(await checkCoverDateConfirmed(mockMIAApplication)).toEqual(0);
   });
 
-  it.only('Should return `0` when the application status is DRAFT, type is MIA and have atleast one facility with issued status', async () => {
+  it('Should return `0` when the application status is DRAFT, type is MIA and have atleast one facility with issued status', async () => {
     const mockMIAApplication = MOCK_AIN_APPLICATION_ISSUED_ONLY;
     mockMIAApplication.status = CONSTANTS.DEAL_STATUS.DRAFT;
     mockMIAApplication.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIA;
     expect(await checkCoverDateConfirmed(mockMIAApplication)).toEqual(0);
   });
 
-  it.only('Should return `0` when the application status is DRAFT, type is AIN and does not have an issued facility', async () => {
+  it('Should return `0` when the application status is DRAFT, type is AIN and does not have an issued facility', async () => {
     const mockAINApplication = MOCK_AIN_APPLICATION_UNISSUED_ONLY;
     mockAINApplication.status = CONSTANTS.DEAL_STATUS.DRAFT;
     expect(await checkCoverDateConfirmed(mockAINApplication)).toEqual(0);
