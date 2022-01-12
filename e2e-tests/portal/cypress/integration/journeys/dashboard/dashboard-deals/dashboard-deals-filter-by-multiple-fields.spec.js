@@ -1,0 +1,153 @@
+const relative = require('../../../relativeURL');
+const mockUsers = require('../../../../fixtures/mockUsers');
+const CONSTANTS = require('../../../../fixtures/constants');
+const { dashboard } = require('../../../pages');
+
+const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+
+context('Dashboard Deals filters - filter by multiple fields', () => {
+  const ALL_DEALS = [];
+
+  const BSS_DEAL_MIA_DRAFT = {
+    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
+    bankInternalRefName: 'Draft BSS',
+    additionalRefName: 'Tibettan submarine acquisition scheme',
+    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+    exporter: {
+      companyName: 'mock company',
+    },
+  };
+
+  const GEF_DEAL_DRAFT = {
+    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+    bank: { id: BANK1_MAKER1.bank.id },
+    bankInternalRefName: 'Draft GEF',
+    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+    exporter: {
+      companyName: 'mock company',
+    },
+  };
+
+  before(() => {
+    cy.deleteGefApplications(BANK1_MAKER1);
+    cy.deleteDeals(BANK1_MAKER1);
+
+    cy.insertOneDeal(BSS_DEAL_MIA_DRAFT, BANK1_MAKER1).then((deal) => {
+      ALL_DEALS.push(deal);
+    });
+
+    cy.insertOneDeal(BSS_DEAL_MIA_DRAFT, BANK1_MAKER1).then((deal) => {
+      ALL_DEALS.push(deal);
+    });
+
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+      ALL_DEALS.push(deal);
+    });
+  });
+
+  before(() => {
+    cy.login(BANK1_MAKER1);
+    dashboard.visit();
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('submits the filters and redirects to the dashboard', () => {
+    // toggle to show filters (hidden by default)
+    dashboard.filtersShowHideButton().click();
+
+    // apply filter 1
+    dashboard.filterCheckboxStatusDraft().click();
+
+    // apply filter 2
+    dashboard.filterCheckboxSubmissionTypeMIA().click();
+
+    // submit filters
+    dashboard.filtersApplyFiltersButton().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('renders checked checkboxes', () => {
+    // toggle to show filters (hidden by default)
+    dashboard.filtersShowHideButton().click();
+
+    dashboard.filterCheckboxStatusDraft().should('be.checked');
+    dashboard.filterCheckboxSubmissionTypeMIA().should('be.checked');
+  });
+
+  it('renders the applied filter in the `applied filters` section', () => {
+    dashboard.filtersAppliedContainer().should('be.visible');
+    dashboard.filtersAppliedList().should('be.visible');
+
+    // applied filter 1
+    const firstAppliedFilterHeading = dashboard.filtersAppliedHeading().eq(0);
+
+    firstAppliedFilterHeading.should('be.visible');
+    firstAppliedFilterHeading.should('have.text', 'Notice Type');
+
+    const firstAppliedFilter = dashboard.filtersAppliedListItem().eq(0);
+
+    firstAppliedFilter.should('be.visible');
+
+    let expectedText = `Remove this filter ${CONSTANTS.DEALS.SUBMISSION_TYPE.MIA}`;
+    firstAppliedFilter.should('have.text', expectedText);
+
+    // applied filter 2
+    const secondAppliedFilterHeading = dashboard.filtersAppliedHeading().eq(1);
+
+    secondAppliedFilterHeading.should('be.visible');
+    secondAppliedFilterHeading.should('have.text', 'Status');
+
+    const secondAppliedFilter = dashboard.filtersAppliedListItem().eq(1);
+
+    secondAppliedFilter.should('be.visible');
+
+    expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.DRAFT}`;
+    secondAppliedFilter.should('have.text', expectedText);
+  });
+
+  it('renders only deals that are MIA and Draft status matching properties', () => {
+    const EXPECTED_MIA_DRAFT_DEALS = ALL_DEALS.filter(({ submissionType, status }) =>
+      status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
+      && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+
+    dashboard.rows().should('have.length', EXPECTED_MIA_DRAFT_DEALS.length);
+
+    const miaDraftDeal1 = EXPECTED_MIA_DRAFT_DEALS[0];
+    const miaDraftDeal2 = EXPECTED_MIA_DRAFT_DEALS[1];
+
+    dashboard.row.status(miaDraftDeal1._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+    dashboard.row.type(miaDraftDeal1._id).should('have.text', CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+
+    dashboard.row.status(miaDraftDeal2._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+    dashboard.row.type(miaDraftDeal2._id).should('have.text', CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('removes all applied filters by clicking `clear filters` button', () => {
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+
+    // click `clear all` button
+    dashboard.filtersClearAllLink().should('be.visible');
+    dashboard.filtersClearAllLink().click();
+
+    // should be redirected
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+
+    // toggle to show filters (hidden by default)
+    dashboard.filtersShowHideButton().click();
+    dashboard.filtersContainer().should('be.visible');
+
+    // should have empty applied filters
+    dashboard.filtersAppliedContainer().should('not.exist');
+    dashboard.filtersAppliedList().should('not.exist');
+
+    // checkbox should be NOT be checked
+    dashboard.filterCheckboxStatusDraft().should('not.be.checked');
+    dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');
+
+    // should render all deals
+    dashboard.rows().should('have.length', ALL_DEALS.length);
+  });
+});
