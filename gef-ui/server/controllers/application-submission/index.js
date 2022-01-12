@@ -1,6 +1,6 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { hasChangedToIssued, checkCoverDateConfirmed } = require('../../utils/facility-helpers');
+const { hasChangedToIssued } = require('../../utils/facility-helpers');
 const Application = require('../../models/application');
 const CONSTANTS = require('../../constants');
 
@@ -54,7 +54,6 @@ const postApplicationSubmission = async (req, res, next) => {
     } else {
       await api.updateApplication(dealId, { editorId: user._id });
     }
-    await checkCoverDateConfirmed(application);
     await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.BANK_CHECK);
   } catch (err) {
     console.error('Unable to post application submission', { err });
