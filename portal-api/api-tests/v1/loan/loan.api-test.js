@@ -547,7 +547,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.deal.loanTransactions.items.length).toEqual(1);
       expect(body.deal.loanTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
       expect(typeof body.deal.loanTransactions.items[0].createdDate).toEqual('string');
-      expect(body.deal.loanTransactions.items[0].facilityType).toEqual('loan');
+      expect(body.deal.loanTransactions.items[0].facilityType).toEqual('Loan');
     });
 
     it('adds an empty loan to a deal', async () => {

@@ -158,7 +158,7 @@ describe('/v1/portal/facilities', () => {
         expect(body.validationErrors.count).toEqual(1);
 
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
-        expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be Bond or loan');
+        expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be Bond or Loan');
       });
     });
   });
