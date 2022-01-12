@@ -6,8 +6,10 @@ const {
   submissionPortalActivity,
   submissionTypeToConstant,
   getUserInfo,
-  removeChangedToIssued
+  removeChangedToIssued,
+  checkCoverDateConfirmed,
 } = require('../../../src/v1/gef/controllers/application-submit');
+
 const mockApplications = require('../../fixtures/gef/application');
 
 const wipeDB = require('../../wipeDB');
@@ -24,6 +26,7 @@ const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 
 const MOCK_APPLICATION = mockApplications[0];
+const CONSTANTS = require('../../../src/constants');
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
@@ -195,5 +198,49 @@ describe('removeChangedToIssued()', () => {
     const changedToIssuedValue = body.items[0].details.canResubmitIssuedFacilities;
 
     expect(changedToIssuedValue).toEqual(false);
+  });
+});
+
+describe('checkCoverDateConfirmed()', () => {
+  let mockApplication;
+  let aMaker;
+
+  beforeAll(async () => {
+    const testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+  });
+
+  // Create facilities with issued and unissued stages
+  beforeEach(async () => {
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: null,
+    }).to(baseUrl);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: false,
+      coverDateConfirmed: null,
+    }).to(baseUrl);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: false,
+    }).to(baseUrl);
+  });
+
+  it.only('Should return `1` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(1);
   });
 });
