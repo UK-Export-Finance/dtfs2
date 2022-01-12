@@ -2,7 +2,8 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.DEAL_API_URL;
+const centralApi = process.env.DTFS_CENTRAL_API;
+const portalApi = process.env.DEAL_API_URL;
 
 const createApplication = async (data, token) => {
   const response = await axios({
@@ -12,7 +13,7 @@ const createApplication = async (data, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application`,
+    url: `${portalApi}/v1/gef/application`,
     data,
   }).catch((err) => { console.log(`err: ${err}`); });
 
@@ -27,7 +28,7 @@ const updateApplication = async (id, data, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application/${id}`,
+    url: `${portalApi}/v1/gef/application/${id}`,
     data,
   }).catch((err) => { console.log(`err: ${err}`); });
 
@@ -42,7 +43,7 @@ const listDeals = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application`,
+    url: `${portalApi}/v1/gef/application`,
   }).catch((err) => { console.log(`err: ${err}`); });
   return response.data.items;
 };
@@ -55,7 +56,7 @@ const deleteDeal = async (dealId, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application/${dealId}`,
+    url: `${portalApi}/v1/gef/application/${dealId}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -69,7 +70,7 @@ const createFacilities = async (data, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/facilities`,
+    url: `${portalApi}/v1/gef/facilities`,
     data,
   }).catch((err) => { console.log(`err: ${err}`); });
 
@@ -84,9 +85,10 @@ const listFacilities = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/facilities`, // ?page=null&pageSize=null
+    url: `${centralApi}/v1/portal/gef/facilities`
   }).catch((err) => { console.log(`err: ${err}`); });
-  return response.data.items;
+  if (!response) return [];
+  return response.data;
 };
 
 const deleteFacilities = async (facility, token) => {
@@ -97,7 +99,7 @@ const deleteFacilities = async (facility, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/facilities/${facility._id}`,
+    url: `${portalApi}/v1/gef/facilities/${facility._id}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response;
@@ -111,7 +113,7 @@ const updateFacilities = async (facility, data, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/facilities/${facility._id}`,
+    url: `${portalApi}/v1/gef/facilities/${facility._id}`,
     data,
   }).catch((err) => { console.log(`err: ${err}`); });
 
@@ -126,7 +128,7 @@ const createEligibilityCriteria = async (data, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/eligibility-criteria`,
+    url: `${portalApi}/v1/gef/eligibility-criteria`,
     data,
   }).catch((err) => { console.log(`err: ${err}`); });
 
@@ -141,7 +143,7 @@ const deleteEligibilityCriteria = async (mandatoryCriteria, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
+    url: `${portalApi}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -155,7 +157,7 @@ const listEligibilityCriteria = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/eligibility-criteria`,
+    url: `${portalApi}/v1/gef/eligibility-criteria`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data.items;
@@ -171,7 +173,7 @@ const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/mandatory-criteria-versioned`,
+    url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
     data: mandatoryCriteria,
   }).catch((err) => { console.log(`err: ${err}`); });
 
@@ -186,7 +188,7 @@ const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
+    url: `${portalApi}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -200,12 +202,24 @@ const listMandatoryCriteriaVersioned = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/mandatory-criteria-versioned`,
+    url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data.items;
 };
 
+const getDurableFunctions = async (token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${centralApi}/v1/portal/durable-functions`
+  }).catch((err) => { console.log(`err: ${err}`); });
+  return response;
+};
 
 module.exports = {
   createApplication,
@@ -222,4 +236,5 @@ module.exports = {
   createMandatoryCriteriaVersioned,
   deleteMandatoryCriteriaVersioned,
   listMandatoryCriteriaVersioned,
+  getDurableFunctions,
 };

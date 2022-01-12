@@ -283,6 +283,7 @@ type TFMDealData {
   estore: TFMEstore
   leadUnderwriter: String
   activities: [TFMActivity]
+  lastUpdated: Float
 }
 
 type PremiumScheduleData {
@@ -397,11 +398,13 @@ type DealSnapshotFacility {
    ukefFacilityId: String!
    dealType: String!
    facilityType: String
-   value: String
    coverEndDate: String
+   coverEndDateEpoch: String
    companyName: String
    hasBeenIssued: Boolean
+   value: Int
    currency: String
+   currencyAndValue: String
 }
 
 type FacilitiesQuery {
