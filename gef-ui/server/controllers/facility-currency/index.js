@@ -9,7 +9,7 @@ const facilityCurrency = async (req, res) => {
 
   try {
     const { details } = await api.getFacility(facilityId);
-    const facilityTypeConst = FACILITY_TYPE[details.type];
+    const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
     return res.render('partials/facility-currency.njk', {
@@ -30,7 +30,7 @@ const updateFacilityCurrency = async (req, res) => {
   const { dealId, facilityId } = params;
   const { currency, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
-  const facilityTypeConst = FACILITY_TYPE[facilityType];
+  const facilityTypeConst = FACILITY_TYPE[facilityType.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityCurrencyErrors = [];
 

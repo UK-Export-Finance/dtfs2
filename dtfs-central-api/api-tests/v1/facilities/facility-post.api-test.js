@@ -14,7 +14,7 @@ const mockUser = {
 };
 
 const newFacility = {
-  facilityType: 'bond',
+  facilityType: 'Bond',
   dealId: '123123456',
 };
 
@@ -51,7 +51,7 @@ describe('/v1/portal/facilities', () => {
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: '1234',
-        facilityType: 'bond',
+        facilityType: 'Bond',
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
@@ -62,7 +62,7 @@ describe('/v1/portal/facilities', () => {
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: '1234',
-        facilityType: 'bond',
+        facilityType: 'Bond',
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId }).to('/v1/portal/facilities');
@@ -158,7 +158,7 @@ describe('/v1/portal/facilities', () => {
         expect(body.validationErrors.count).toEqual(1);
 
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
-        expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be bond or loan');
+        expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be Bond or loan');
       });
     });
   });

@@ -14,7 +14,7 @@ describe(component, () => {
         facilitySnapshot: {
           _id: '123',
           ukefFacilityId: '0040004833',
-          ukefFacilityType: 'bond',
+          ukefFacilityType: 'Bond',
           bondIssuer: 'test bond issuer',
         },
         tfm: {
@@ -25,7 +25,7 @@ describe(component, () => {
         _id: '456',
         facilitySnapshot: {
           _id: '456',
-          ukefFacilityType: 'bond',
+          ukefFacilityType: 'Bond',
           ukefFacilityId: '0040004833',
           bondIssuer: 'test bond issuer',
           bankFacilityReference: '1234-test',
@@ -38,7 +38,7 @@ describe(component, () => {
         _id: '789',
         facilitySnapshot: {
           _id: '789',
-          ukefFacilityType: 'bond',
+          ukefFacilityType: 'Bond',
           ukefFacilityId: '0040004833',
           bankFacilityReference: '1234-test',
         },
@@ -69,7 +69,7 @@ describe(component, () => {
 
   it('should render ukefFacilityId link, linking to facility id', () => {
     const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f }) =>
-      f.ukefFacilityType === 'bond'
+      f.ukefFacilityType === 'Bond'
     && f.bondIssuer);
 
     expectedFacilities.forEach(({ facilitySnapshot: facility }) => {

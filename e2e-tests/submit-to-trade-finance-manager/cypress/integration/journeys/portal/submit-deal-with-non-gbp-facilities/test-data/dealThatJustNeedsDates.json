@@ -110,7 +110,7 @@
   },
   "mockFacilities": [
     {
-        "facilityType": "bond",
+        "facilityType": "Bond",
         "bondIssuer": "issuer",
         "bondType": "bond type",
         "facilityStage": "Unissued",
@@ -135,7 +135,7 @@
         "ukefExposure": "80,000.00"
     },
     {
-      "facilityType": "loan",
+      "facilityType": "Loan",
       "facilityStage": "Unconditional",
       "bankReferenceNumber": "123",
       "value": "123",

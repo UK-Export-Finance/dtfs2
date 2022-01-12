@@ -12,14 +12,14 @@ const aboutFacility = async (req, res) => {
 
   try {
     const { details } = await api.getFacility(facilityId);
-    const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
+    const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
     const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
     const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
     const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
     return res.render('partials/about-facility.njk', {
-      facilityType: FACILITY_TYPE[details.type],
+      facilityType: FACILITY_TYPE[details.type.toUpperCase()],
       facilityName: details.name,
       hasBeenIssued: details.hasBeenIssued,
       monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,

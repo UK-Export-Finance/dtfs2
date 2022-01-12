@@ -89,8 +89,8 @@ context('A maker selects to submit a contract for review from the view-contract 
         const { mockFacilities } = dealReadyToSubmitForReview;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.dealReadyToSubmitForReview.bonds = bonds;
           dealFacilities.dealReadyToSubmitForReview.loans = loans;
@@ -106,8 +106,8 @@ context('A maker selects to submit a contract for review from the view-contract 
 
         const { mockFacilities } = dealWithNoBondCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.dealWithNoBondCoverStartDate.bonds = bonds;
           dealFacilities.dealWithNoBondCoverStartDate.loans = loans;
@@ -123,8 +123,8 @@ context('A maker selects to submit a contract for review from the view-contract 
 
         const { mockFacilities } = dealWithNoLoanCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.dealWithNoLoanCoverStartDate.bonds = bonds;
           dealFacilities.dealWithNoLoanCoverStartDate.loans = loans;

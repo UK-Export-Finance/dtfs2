@@ -31,8 +31,8 @@ const DEAL_TYPE = {
 };
 
 const FACILITY_TYPE = {
-  CASH: 'CASH',
-  CONTINGENT: 'CONTINGENT',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 };
 
 const SME_TYPE = {

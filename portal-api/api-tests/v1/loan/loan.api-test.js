@@ -555,7 +555,7 @@ describe('/v1/deals/:id/loan', () => {
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
       const newLoan = {
-        facilityType: 'loan',
+        facilityType: 'Loan',
         dealId,
       };
 

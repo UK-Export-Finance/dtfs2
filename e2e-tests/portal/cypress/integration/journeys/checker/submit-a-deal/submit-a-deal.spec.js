@@ -13,7 +13,6 @@ const submittedDealWithBondCoverStartDateInThePast = require('./test-data/submit
 const submittedDealWithLoanCoverStartDateInThePast = require('./test-data/submittedDealWithLoanCoverStartDateInThePast');
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 
-
 context('A checker selects to submit a contract from the view-contract page', () => {
   let goodDeal;
   let badDealInvalidLoanCoverStartDate;
@@ -123,7 +122,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  it('If the deal has NOT yet been submitted and the deal contains a bond with a cover start date that is now in the past, an error should be generated.', () => {
+  it('If the deal has NOT yet been submitted and the deal contains a Bond with a cover start date that is now in the past, an error should be generated.', () => {
     // log in, visit a deal, submit
     cy.login(CHECKER_LOGIN);
     contract.visit(badDealInvalidBondCoverStartDate);
@@ -144,7 +143,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  describe('If a deal has been previously submitted and the deal contains a bond with a cover start date that is now in the past', () => {
+  describe('If a deal has been previously submitted and the deal contains a Bond with a cover start date that is now in the past', () => {
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
       cy.login(CHECKER_LOGIN);
@@ -197,7 +196,6 @@ context('A checker selects to submit a contract from the view-contract page', ()
     successMessage.successMessageListItem().invoke('text').then((text) => {
       expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
     });
-
 
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);

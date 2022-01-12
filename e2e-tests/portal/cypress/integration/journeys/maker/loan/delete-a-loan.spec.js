@@ -20,7 +20,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
@@ -38,7 +38,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
@@ -56,7 +56,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
@@ -94,7 +94,7 @@ context('Delete a Loan', () => {
         const { mockFacilities } = MOCK_DEAL;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.loans = loans;
         });

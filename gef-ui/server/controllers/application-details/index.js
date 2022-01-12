@@ -69,6 +69,7 @@ function buildBody(app, previewMode, user) {
     user,
     hasChangedFacilities,
   };
+  console.log(app.facilities);
 
   const appBody = {
     application: app,
@@ -91,7 +92,7 @@ function buildBody(app, previewMode, user) {
     facilities: {
       status: app.facilitiesStatus,
       data: app.facilities.items.map((item) => ({
-        heading: _startCase(FACILITY_TYPE[item.details.type].toLowerCase()),
+        heading: _startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
         rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
         createdAt: item.details.createdAt,
         facilityId: item.details._id,

@@ -1,5 +1,6 @@
 import { facilities, createFacility } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -23,7 +24,7 @@ const MockFacilityResponse = () => {
   const res = {};
   res.details = {
     _id: 'abc',
-    facilityType: 'CASH',
+    facilityType: CONSTANTS.FACILITY_TYPE.CASH,
     dealId: '123',
     hasBeenIssued: true,
   };
@@ -107,7 +108,7 @@ describe('controllers/facilities', () => {
       expect(api.createFacility).toHaveBeenCalledWith({
         dealId: '123',
         hasBeenIssued: true,
-        type: 'CASH',
+        type: CONSTANTS.FACILITY_TYPE.CASH,
       });
     });
 

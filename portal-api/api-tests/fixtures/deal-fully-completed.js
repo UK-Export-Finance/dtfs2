@@ -38,7 +38,7 @@ const deal = {
   ],
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'my issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -70,7 +70,7 @@ const deal = {
       ukefExposure: '1,234.56',
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'my issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -98,7 +98,7 @@ const deal = {
       ukefExposure: '1,234.56',
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -123,7 +123,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -147,7 +147,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -172,7 +172,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -198,7 +198,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       guaranteeFeePayableByBank: '10.8000',
@@ -224,7 +224,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
@@ -256,7 +256,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       guaranteeFeePayableByBank: '10.8000',
@@ -282,7 +282,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Unconditional',
       requestedCoverStartDate: moment().utc().valueOf(),
       'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
@@ -311,7 +311,7 @@ const deal = {
       status: 'Completed',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Unconditional',
       previousFacilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',

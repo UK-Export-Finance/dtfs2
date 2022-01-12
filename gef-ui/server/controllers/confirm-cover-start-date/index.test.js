@@ -46,7 +46,7 @@ const MockFacilityResponse = () => {
     details: {
       _id: '61a7714f2ae62b0013dae689',
       dealId: '61a7710b2ae62b0013dae687',
-      type: 'CASH',
+      type: CONSTANTS.FACILITY_TYPE.CASH,
       hasBeenIssued: true,
       name: 'Facility one',
       shouldCoverStartOnSubmission: false,

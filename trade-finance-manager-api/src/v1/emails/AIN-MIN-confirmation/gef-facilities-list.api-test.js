@@ -22,7 +22,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
   const mockFacilityType = {
     name: 'facilityType',
-    value: 'CASH',
+    value: 'Cash',
   };
 
   const mockBankReference = {
@@ -141,14 +141,14 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const mockCashFacilities = [
         {
           ...mockFacility,
-          facilityType: 'CASH',
+          facilityType: 'Cash',
         },
       ];
 
       const mockContingentFacilities = [
         {
           ...mockFacility,
-          facilityType: 'CONTINGENT',
+          facilityType: 'Contingent',
         },
       ];
 

@@ -37,10 +37,10 @@
   },
   "mockFacilities": [
     {
-      "facilityType": "bond"
+      "facilityType": "Bond"
     },
     {
-      "facilityType": "bond"
+      "facilityType": "Bond"
     }
   ]
 }

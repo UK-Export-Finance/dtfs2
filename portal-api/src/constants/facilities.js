@@ -1,6 +1,6 @@
 const FACILITY_TYPE = {
-  BOND: 'bond',
-  LOAN: 'loan',
+  BOND: 'Bond',
+  LOAN: 'Loan',
 };
 
 const FEE_TYPE = {
@@ -49,7 +49,7 @@ const TYPE = {
   PROGRESS_PAYMENT_BOND: 'Progress payment bond',
   RETENTION_BOND: 'Retention bond',
   STANDBY_LETTER_OF_CREDIT: 'Standby letter of credit',
-  WARRANY_LETTER: 'Warranty letter',
+  WARRANTY_LETTER: 'Warranty letter',
 };
 
 module.exports = {

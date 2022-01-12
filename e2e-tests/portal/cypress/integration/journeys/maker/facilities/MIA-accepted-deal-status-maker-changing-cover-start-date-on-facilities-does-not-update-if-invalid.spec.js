@@ -25,8 +25,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
         const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -98,7 +98,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     pages.facilityConfirmCoverStartDate.cancelButton().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
-
 
     //---------------------------------------------------------------
     // facility tables should display original dates

@@ -8,6 +8,7 @@ import {
 } from './index';
 import api from '../../services/api';
 import MOCKS from '../mocks/index';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -175,7 +176,7 @@ describe('postChangeUnissuedFacility()', () => {
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   it('posts and returns correct message and url', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['issue-date-day'] = format(now, 'd');
@@ -208,7 +209,7 @@ describe('postChangeUnissuedFacility()', () => {
   });
 
   it('should not update facility if issue date before submissionDate', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body.shouldCoverStartOnSubmission = false;
@@ -256,7 +257,7 @@ describe('postChangeUnissuedFacility()', () => {
   });
 
   it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['issue-date-day'] = format(yesterday, 'd');
@@ -289,7 +290,7 @@ describe('postChangeUnissuedFacility()', () => {
   });
 
   it('should not update facility if no name or dates', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityId = 'xyz';
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
@@ -340,7 +341,7 @@ describe('postChangeUnissuedFacility()', () => {
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
     api.updateFacility.mockRejectedValueOnce();
     await postChangeUnissuedFacility(mockRequest, mockResponse);
@@ -378,7 +379,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   it('posts and returns correct url', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
@@ -411,7 +412,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   });
 
   it('should not update facility if no name or dates', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
@@ -460,7 +461,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
     api.updateFacility.mockRejectedValueOnce();
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);

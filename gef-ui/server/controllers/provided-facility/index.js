@@ -9,11 +9,11 @@ const providedFacility = async (req, res) => {
 
   try {
     const { details } = await api.getFacility(facilityId);
-    const facilityTypeConst = FACILITY_TYPE[details.type];
+    const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
     return res.render('partials/provided-facility.njk', {
-      facilityType: FACILITY_TYPE[details.type],
+      facilityType: FACILITY_TYPE[details.type.toUpperCase()],
       details: details.details || [],
       detailsOther: details.detailsOther,
       facilityTypeString,
@@ -32,7 +32,7 @@ const validateProvidedFacility = async (req, res) => {
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;
   const providedFacilityErrors = [];
-  const facilityTypeConst = FACILITY_TYPE[body.facilityType];
+  const facilityTypeConst = FACILITY_TYPE[body.facilityType.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const details = Array.isArray(body.details) ? body.details : [body.details];
 

@@ -18,7 +18,7 @@ const renderChangeFacilityPartial = async (params, query, change) => {
   const { status } = query;
 
   const { details } = await api.getFacility(facilityId);
-  const facilityTypeString = FACILITY_TYPE[details.type].toLowerCase();
+  const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
   const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
   const issueDate = details.issueDate ? new Date(details.issueDate) : null;
   const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
@@ -26,7 +26,7 @@ const renderChangeFacilityPartial = async (params, query, change) => {
   const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
   const body = {
-    facilityType: FACILITY_TYPE[details.type],
+    facilityType: FACILITY_TYPE[details.type.toUpperCase()],
     facilityName: details.name,
     hasBeenIssued: details.hasBeenIssued,
     monthsOfCover: monthsOfCover !== 'null' ? monthsOfCover : null,

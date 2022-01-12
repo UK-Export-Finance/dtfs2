@@ -7,7 +7,7 @@ describe('reducer helpers - isGefFacility', () => {
   });
 
   it('should return true when facilityType is `CONTINGENT`', () => {
-    const result = isGefFacility('CONTINGENT');
+    const result = isGefFacility('Contingent');
     expect(result).toEqual(true);
   });
 

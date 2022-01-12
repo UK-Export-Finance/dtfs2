@@ -15,14 +15,14 @@ context('User can view and sort deals by product', () => {
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'bond'),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'Bond'),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'loan'),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'Loan'),
     ],
   });
 
