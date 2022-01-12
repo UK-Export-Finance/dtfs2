@@ -78,7 +78,7 @@ describe('controllers/application-submission', () => {
       const expected = {
         ...{
           comments: [{
-            role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
+            roles: ['MAKER'], userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
           }],
           editorId: 1235,
         },

@@ -101,7 +101,7 @@ context('Clone GEF (AIN) deal', () => {
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
         statusBanner.bannerDateCreated().contains(bannerDate);
-        statusBanner.bannerSubmissionType().contains(toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN));
+        statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
@@ -276,7 +276,7 @@ context('Clone GEF (MIA) deal', () => {
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
         statusBanner.bannerDateCreated().contains(bannerDate);
-        statusBanner.bannerSubmissionType().contains(toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA));
+        statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
         applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
@@ -329,7 +329,7 @@ context('Clone GEF (MIN) deal', () => {
       nameApplication.form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
-      statusBanner.bannerSubmissionType().contains(toTitleCase(toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)));
+      statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerCheckedBy().contains('-');
     });

@@ -15,6 +15,7 @@ const MockRequest = () => ({
   query: {},
   session: {
     user: {
+      username: 'maker',
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
       _id: 1235,
@@ -249,6 +250,7 @@ const MockSubmissionRequest = () => ({
   session: {
     userToken: '',
     user: {
+      username: 'maker',
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
       _id: 1235,
