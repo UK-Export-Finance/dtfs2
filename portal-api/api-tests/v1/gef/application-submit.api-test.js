@@ -238,7 +238,7 @@ describe('checkCoverDateConfirmed()', () => {
     }).to(baseUrl);
   });
 
-  it.only('Should return `2` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+  it('Should return `2` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
     expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(2);
   });
 });
