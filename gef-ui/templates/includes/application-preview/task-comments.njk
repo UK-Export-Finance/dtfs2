@@ -10,11 +10,10 @@
       </div>
     {% endif %}
 
-    {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 and ukefDecisionAccepted %}
+    {% if canUpdateUnissuedFacilities %}
       <h2 data-cy="update-unissued-header">Update facility stage for unissued facilities</h2>
       <div class="govuk-!-margin-bottom-6">
-        <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">
-          View unissued facilities</a>
+        <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">View unissued facilities</a>
       </div>
     {% endif %}
 
