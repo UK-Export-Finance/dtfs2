@@ -43,6 +43,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
     tfm {
       product
       dateReceived
+      lastUpdated
       parties {
         exporter {
           partyUrn
