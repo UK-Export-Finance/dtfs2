@@ -213,10 +213,9 @@
           showText: "Show filter",
           hideText: "Hide filter",
           classes: "govuk-button--secondary",
-        },
-        closeButton: {
-          container: $(".moj-filter__header-action"),
-          text: "Close",
+          attributes: {
+            "data-cy": "show-hide-filters-toggle-button"
+          }
         },
         filter: {
           container: $(".moj-filter"),
