@@ -5,7 +5,7 @@ const cleanFacilities = async (token) => {
   console.log('cleaning GEF facilities');
 
   for (data of await api.listFacilities(token)) {
-    await api.deleteFacilities(data.details, token);
+    await api.deleteFacilities(data, token);
   }
 };
 
@@ -25,6 +25,16 @@ const cleanMandatoryCriteriaVersioned = async (token) => {
   }
 };
 
+const cleanDurableFunctions =  async (token) => {
+  const {status, error} = await api.getDurableFunctions(token);
+
+  if (status === 200) {
+    console.log('cleaning durable-functions-log');
+  } else {
+    console.log('CANT clean durable-functions-log', error);
+  }
+}
+
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
@@ -36,6 +46,7 @@ const cleanAllTables = async () => {
   await cleanFacilities(token);
   await cleanEligibilityCriteria(token);
   await cleanMandatoryCriteriaVersioned(token);
+  await cleanDurableFunctions(token);
 };
 
 module.exports = cleanAllTables;
