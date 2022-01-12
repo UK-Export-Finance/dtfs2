@@ -14,10 +14,7 @@ router.use('/dashboard/*', validateToken);
 
 router.get('/', validateToken, (_, res) => res.redirect('/dashboard/deals/0'));
 
-router.get('/dashboard', async (req, res) => {
-  req.session.dashboardFilters = null; // TODO ?
-  res.redirect('/dashboard/deals/0');
-});
+router.get('/dashboard', async (req, res) => res.redirect('/dashboard/deals/0'));
 
 router.get('/dashboard/deals', async (req, res) => res.redirect('/dashboard/deals/0'));
 
