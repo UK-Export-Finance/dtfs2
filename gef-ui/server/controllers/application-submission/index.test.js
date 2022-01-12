@@ -21,7 +21,6 @@ describe('controllers/application-submission', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MOCKS.MockEligibilityCriteriaResponse());
-    api.getUserDetails.mockResolvedValue(MOCKS.MockUserResponse());
     api.updateApplication.mockResolvedValue({});
     api.setApplicationStatus.mockResolvedValue({});
   });
