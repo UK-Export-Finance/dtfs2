@@ -2,14 +2,14 @@ const axios = require('axios');
 
 require('dotenv').config();
 
-const urlRoot = process.env.DTFS_CENTRAL_API;
+const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const tfmUrl = process.env.TFM_API;
 
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/portal/deals/${dealId}`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -25,7 +25,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${urlRoot}/v1/portal/deals/query`,
+      url: `${centralApiUrl}/v1/portal/deals/query`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -46,7 +46,7 @@ const queryAllDeals = async (filters, sort, start = 0, pagesize = 0) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/portal/deals`,
+      url: `${centralApiUrl}/v1/portal/deals`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -68,7 +68,7 @@ const createDeal = async (deal, user) => {
   try {
     return await axios({
       method: 'post',
-      url: `${urlRoot}/v1/portal/deals`,
+      url: `${centralApiUrl}/v1/portal/deals`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -86,7 +86,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${urlRoot}/v1/portal/deals/${dealId}`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -106,7 +106,7 @@ const deleteDeal = async (dealId) => {
   try {
     return await axios({
       method: 'delete',
-      url: `${urlRoot}/v1/portal/deals/${dealId}`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -120,7 +120,7 @@ const addDealComment = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${urlRoot}/v1/portal/deals/${dealId}/comment`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -140,7 +140,7 @@ const createFacility = async (facility, user) => {
   try {
     return await axios({
       method: 'post',
-      url: `${urlRoot}/v1/portal/facilities`,
+      url: `${centralApiUrl}/v1/portal/facilities`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -158,7 +158,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
   try {
     return await axios({
       method: 'post',
-      url: `${urlRoot}/v1/portal/multiple-facilities`,
+      url: `${centralApiUrl}/v1/portal/multiple-facilities`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -177,7 +177,7 @@ const findOneFacility = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -193,7 +193,7 @@ const updateFacility = async (facilityId, facility, user) => {
   try {
     return await axios({
       method: 'put',
-      url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -211,7 +211,7 @@ const deleteFacility = async (facilityId, user) => {
   try {
     return await axios({
       method: 'delete',
-      url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
       },

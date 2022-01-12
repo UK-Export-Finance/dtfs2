@@ -36,14 +36,6 @@
       </a>
     {% endset %}
 
-    {% set coverEndDate %}
-      {% if facility.coverEndDate %}
-         {{ facility.coverEndDate | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
-      {% else %}
-         -
-      {% endif %}
-    {% endset %}
-
     {% set facilityStage %}
       {% if facility.hasBeenIssued %}
         Issued
@@ -59,23 +51,23 @@
       },
       {
         text: facility.dealType or "-",
-        attributes: { "data-cy": "facility__product" }
+        attributes: { "data-cy": "facility__product", "data-sort-value": facility.dealType }
       },
       {
         text: facility.facilityType or "-",
-        attributes: { "data-cy": "facility__facilityType" }
+        attributes: { "data-cy": "facility__facilityType", "data-sort-value": facility.facilityType }
       },
       {
         text: facility.companyName or "-",
-        attributes: { "data-cy": "facility__companyName" }
+        attributes: { "data-cy": "facility__companyName", "data-sort-value": facility.companyName }
       },
       {
-        text: facility.value or "-",
-        attributes: { "data-cy": "facility__facilityValue" }
+        text: facility.currencyAndValue or "-",
+        attributes: { "data-cy": "facility__facilityValue", "data-sort-value": facility.value }
       },
       {
-        html: coverEndDate,
-        attributes: { "data-cy": "facility__coverEndDate" }
+        html: facility.coverEndDate,
+        attributes: { "data-cy": "facility__coverEndDate", "data-sort-value": facility.coverEndDateEpoch }
       },
       {
         html: facilityStage,
@@ -97,27 +89,27 @@
       },
       {
         text: "Product",
-         attributes: { "data-cy": "facility__header--product"}
+         attributes: { "data-cy": "facility__header--product", "aria-sort": "none"}
       },
       {
         text: "Type",
-        attributes: { "data-cy": "facility__header--dataType" }
+        attributes: { "data-cy": "facility__header--dataType", "aria-sort": "none" }
       },
       {
         text: "Exporter",
-        attributes: { "data-cy": "facility__header--exporter" }
+        attributes: { "data-cy": "facility__header--exporter", "aria-sort": "none" }
       },
       {
         text: "Value (export currency)",
-        attributes: { "data-cy": "facility__header--value" }
+        attributes: { "data-cy": "facility__header--value", "aria-sort": "none" }
       },
       {
         text: "Cover end date",
-        attributes: { "data-cy": "facility__header--coverEndDate" }
+        attributes: { "data-cy": "facility__header--coverEndDate", "aria-sort": "none" }
       },
       {
         text: "Facility stage",
-        attributes: { "data-cy": "facility__header--facilityStage" }
+        attributes: { "data-cy": "facility__header--facilityStage", "aria-sort": "none" }
       }
     ],
     rows: items

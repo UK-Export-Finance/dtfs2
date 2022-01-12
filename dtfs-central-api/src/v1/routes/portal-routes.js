@@ -28,6 +28,8 @@ const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwri
 const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
 
+const durableFunctionsController = require('../controllers/durable-functions/durable-functions-controller');
+
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
 portalRouter.use((req, res, next) => {
@@ -786,9 +788,39 @@ portalRouter.route('/gef/deals/:id/facilities')
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/gef/facilities')
-  .post(
-    createGefFacilityController.createFacilityPost,
-  );
+portalRouter.route('/gef/facilities').post(createGefFacilityController.createFacilityPost);
+
+/**
+ * @openapi
+ * /gef/facilities:
+ *   get:
+ *     summary: Return all facilities in gef-facilities collection as an array
+ *     tags: [Portal - GEF]
+ *     description: Return all gef-facilities
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *            application/json:
+ *             schema:
+ *                $ref: '#/definitions/FacilityGEF'
+ */
+portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFacilities);
+
+/**
+ * @openapi
+ * /durable-functions:
+ *   delete:
+ *     summary: Deletes durable-functions-log
+ *     tags: [DURABLE-FUNCTIONS-LOG]
+ *     description: deletes durable-functions-log
+ *     responses:
+ *       200:
+ *         description: OK
+ *       210:
+ *         description: FAILURE
+ *
+ */
+portalRouter.route('/durable-functions').delete(durableFunctionsController.deleteAllDurableFunctions);
 
 module.exports = portalRouter;

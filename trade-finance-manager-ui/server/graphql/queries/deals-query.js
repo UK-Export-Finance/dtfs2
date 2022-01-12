@@ -131,6 +131,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
       }
       tfm {
         dateReceived
+        lastUpdated
         product
         stage
         underwriterManagersDecision {
