@@ -28,10 +28,16 @@ describe('controllers/dashboard/filters - ui-filters', () => {
         mockSubmittedFilters,
       );
 
+      const expectedFormattedFieldValue = mockValue.replace(/[\s+/]/g, '-').replace('\'', '');
+      const expectedDataCy = `filter-${mockField}-${expectedFormattedFieldValue}`;
+
       const expected = {
         text: mockValue,
         value: mockValue,
         checked: false,
+        attributes: {
+          'data-cy': expectedDataCy,
+        },
       };
 
       expect(result).toEqual(expected);

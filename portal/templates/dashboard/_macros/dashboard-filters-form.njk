@@ -5,54 +5,53 @@
   {% set filters = params.filters %}
   {% set keyword = params.keyword %}
 
+  {{ govukInput({
+    id: 'keyword',
+    name: 'keyword',
+    value: keyword,
+    label: {
+      text: 'Keyword',
+      classes: 'govuk-label--m'
+    }
+  }) }}
 
-    {{ govukInput({
-      id: 'keyword',
-      name: 'keyword',
-      value: keyword,
-      label: {
-        text: 'Keyword',
-        classes: 'govuk-label--m'
+  {{ govukCheckboxes({
+    idPrefix: 'dealType',
+    name: 'dealType',
+    classes: "govuk-checkboxes--small",
+    fieldset: {
+      legend: {
+        text: 'Product',
+        classes: 'govuk-fieldset__legend--m'
       }
-    }) }}
+    },
+    items: filters.product
+  }) }}
 
-    {{ govukCheckboxes({
-      idPrefix: 'dealType',
-      name: 'dealType',
-      classes: "govuk-checkboxes--small",
-      fieldset: {
-        legend: {
-          text: 'Product',
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: filters.product
-    }) }}
+  {{ govukCheckboxes({
+    idPrefix: 'submissionType',
+    name: 'submissionType',
+    classes: "govuk-checkboxes--small",
+    fieldset: {
+      legend: {
+        text: 'Notice type',
+        classes: 'govuk-fieldset__legend--m'
+      }
+    },
+    items: filters.submissionType
+  }) }}
 
-    {{ govukCheckboxes({
-      idPrefix: 'submissionType',
-      name: 'submissionType',
-      classes: "govuk-checkboxes--small",
-      fieldset: {
-        legend: {
-          text: 'Notice type',
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: filters.submissionType
-    }) }}
-
-    {{ govukCheckboxes({
-      idPrefix: 'status',
-      name: 'status',
-      classes: "govuk-checkboxes--small",
-      fieldset: {
-        legend: {
-          text: 'Status',
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: filters.status
-    }) }}
+  {{ govukCheckboxes({
+    idPrefix: 'status',
+    name: 'status',
+    classes: "govuk-checkboxes--small",
+    fieldset: {
+      legend: {
+        text: 'Status',
+        classes: 'govuk-fieldset__legend--m'
+      }
+    },
+    items: filters.status
+  }) }}
 
 {% endmacro %}

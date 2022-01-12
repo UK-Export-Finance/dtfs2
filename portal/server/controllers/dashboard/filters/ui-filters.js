@@ -30,10 +30,16 @@ const generateFilterObject = (field, value, submittedFilters) => {
     }
   }
 
+  // replace white space, dashes and single quotes.
+  const formattedFieldValue = value.replace(/[\s+/]/g, '-').replace('\'', '');
+
   return {
     text: value,
     value,
     checked,
+    attributes: {
+      'data-cy': `filter-${field}-${formattedFieldValue}`,
+    },
   };
 };
 
