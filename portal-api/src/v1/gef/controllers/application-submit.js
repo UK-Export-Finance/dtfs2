@@ -4,7 +4,7 @@ const refDataApi = require('../../../reference-data/api');
 const db = require('../../../drivers/db-client');
 const {
   getAllFacilitiesByDealId,
-  update,
+  update: updateFacility,
 } = require('./facilities.controller');
 const CONSTANTS = require('../../../constants');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../portalActivity-object-generator/activityConstants');
@@ -212,7 +212,7 @@ const checkCoverDateConfirmed = async (app) => {
       const facilities = await getAllFacilitiesByDealId(app._id);
       if (app.status === CONSTANTS.DEAL.STATUS.DRAFT && app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN && facilities?.length > 0) {
         const updated = facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
-          await update(f._id, {
+          await updateFacility(f._id, {
             coverDateConfirmed: true,
           });
         });
