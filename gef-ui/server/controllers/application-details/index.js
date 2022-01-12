@@ -63,6 +63,9 @@ function buildBody(app, previewMode, user) {
   const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
   const coverDates = coverDatesConfirmed(app.facilities);
   const hasChangedFacilities = hasChangedToIssued(app);
+  const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
+  const facilitiesChangedToIssued = facilitiesChangedToIssuedAsArray(app);
+  const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
 
   const mapSummaryParams = {
     app,
@@ -109,11 +112,11 @@ function buildBody(app, previewMode, user) {
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
-    unissuedFacilitiesPresent: areUnissuedFacilitiesPresent(app),
-    facilitiesChangedToIssued: facilitiesChangedToIssuedAsArray(app),
+    unissuedFacilitiesPresent,
+    facilitiesChangedToIssued,
     isUkefReviewAvailable: ukefReviewAvailable,
     isUkefReviewPositive: ukefReviewPositive,
-    ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
+    ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
     renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
     previewMode,
@@ -121,6 +124,7 @@ function buildBody(app, previewMode, user) {
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
+    canUpdateUnissuedFacilities: (areUnissuedFacilitiesPresent && !facilitiesChangedToIssued.length && hasUkefDecisionAccepted),
   };
 
   return appBody;

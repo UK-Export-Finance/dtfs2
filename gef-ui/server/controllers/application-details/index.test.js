@@ -134,6 +134,7 @@ describe('controllers/application-details', () => {
           displayComments: expect.any(Boolean),
           hasChangedFacilities: expect.any(Boolean),
           displayChangeSupportingInfo: expect.any(Boolean),
+          canUpdateUnissuedFacilities: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),
