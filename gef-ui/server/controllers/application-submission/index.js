@@ -42,7 +42,7 @@ const postApplicationSubmission = async (req, res, next) => {
         dealId, maxCommentLength, errors, comment,
       });
     }
-    console.log('----------------------->', user);
+
     if (comment) {
       const commentObj = {
         roles: user.roles, userName: user.username, createdAt: Date.now(), comment,
