@@ -69,7 +69,6 @@ function buildBody(app, previewMode, user) {
     user,
     hasChangedFacilities,
   };
-  console.log(app.facilities);
 
   const appBody = {
     application: app,

@@ -38,7 +38,7 @@ exports.bssFacilities = async (req, res) => {
     bankStage: facility.transactionStage,
     ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here
     date: facility.issuedDate,
-    url: `/contract/${facility.deal_id}/${facility.transactionType}/${facility.transaction_id}/${facility.transactionType === 'Bond' ? 'details' : 'guarantee-details'}`,
+    url: `/contract/${facility.deal_id}/${facility.transactionType.toLowerCase()}/${facility.transaction_id}/${facility.transactionType.toLowerCase() === 'bond' ? 'details' : 'guarantee-details'}`,
   }));
 
   const pages = {

@@ -6,8 +6,8 @@ const CURRENCIES = 'currencies';
 const MANDATORY_CRITERIA = 'mandatoryCriteria';
 const DEAL = 'deal';
 const DEAL_VALIDATION = 'dealValidation';
-const LOAN = 'Loan';
-const BOND = 'Bond';
+const LOAN = 'loan';
+const BOND = 'bond';
 
 const get = async (dataType, req) => {
   const token = req.session.userToken;
