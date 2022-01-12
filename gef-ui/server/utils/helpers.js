@@ -438,6 +438,16 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
+/**
+ * checks application object for submission count or if preview mode
+ * if is ^ then returns false
+ * used to display supporting info change or add links
+ * should be hidden if checker/MIA/AIN and returning to maker
+ * logic done in nunjucks template so needs this function
+ * @param {Object} application
+ * @param {Boolean} preview
+ * @returns {Boolean}
+ */
 const displayChangeSupportingInfo = (application, preview) => {
   if (preview || application.submissionCount > 0) {
     return false;

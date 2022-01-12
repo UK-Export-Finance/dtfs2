@@ -1,4 +1,3 @@
-import api from '../services/api';
 import {
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
@@ -30,8 +29,6 @@ import {
 import {
   MOCK_REQUEST, MOCK_REQUEST_CHECKER,
 } from './mocks/mock_requests';
-
-jest.mock('../services/api');
 
 const CONSTANTS = require('../constants');
 
