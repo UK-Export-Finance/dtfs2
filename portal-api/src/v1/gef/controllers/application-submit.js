@@ -212,11 +212,9 @@ const checkCoverDateConfirmed = async (app) => {
       const facilities = await getAllFacilitiesByDealId(app._id);
       if (app.status === CONSTANTS.DEAL.STATUS.DRAFT && app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN && facilities?.length > 0) {
         const updated = facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
-          console.log('---------', { f });
           await update(f._id, {
             coverDateConfirmed: true,
           });
-          console.log('============');
         });
         return updated.length;
       }

@@ -205,16 +205,14 @@ describe('checkCoverDateConfirmed()', () => {
   let mockApplication;
   let aMaker;
 
+  // Create facilities with issued and unissued stages
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
     const mockAIN = mockApplications[0];
     mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-  });
 
-  // Create facilities with issued and unissued stages
-  beforeEach(async () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
 
@@ -240,7 +238,7 @@ describe('checkCoverDateConfirmed()', () => {
     }).to(baseUrl);
   });
 
-  it.only('Should return `1` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(1);
+  it.only('Should return `2` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(2);
   });
 });
