@@ -15,3 +15,10 @@ exports.findAllGet = async (req, res) => {
 
   return res.status(200).send(facilities);
 };
+
+exports.findAllFacilities = async (req, res) => {
+  const collection = await db.getCollection('gef-facilities');
+  const facilities = await collection.find().toArray();
+
+  res.status(200).send(facilities);
+};
