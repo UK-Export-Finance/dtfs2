@@ -1,4 +1,4 @@
-const DASHBOARD_FILTERS_DEFAULT = require('./dashboard-filters')
+const DASHBOARD_FILTERS_DEFAULT = require('./dashboard-filters');
 const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
 const PRODUCT = require('./product');
