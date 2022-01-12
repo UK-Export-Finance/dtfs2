@@ -12,12 +12,12 @@ const {
 } = require('../../helpers/notify-template-formatters');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITES = require('../../__mocks__/mock-cash-contingent-facilities');
 const { mapCashContingentFacility } = require('../../mappings/map-submitted-deal/map-cash-contingent-facility');
 
 describe('generate AIN/MIN confirmation email facilities list email variable/string  - GEF', () => {
   const mockFacility = mapCashContingentFacility(
-    MOCK_CASH_CONTINGENT_FACILIIES[0],
+    MOCK_CASH_CONTINGENT_FACILITES[0],
   );
 
   const mockFacilityType = {
@@ -86,7 +86,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const result = generateFacilityFieldListItemString(mockFacilityType.value, mockFieldName, mockFieldValue);
 
-      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockFacilityType.value][mockFieldName];
+      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockFacilityType.value?.toUpperCase()][mockFieldName];
       const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
 
       expect(result).toEqual(expected);
