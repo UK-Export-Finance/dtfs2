@@ -29,14 +29,21 @@ describe('controllers/dashboard/filters - ui-filters', () => {
       );
 
       const expectedFormattedFieldValue = mockValue.replace(/[\s+/]/g, '-').replace('\'', '');
-      const expectedDataCy = `filter-${mockField}-${expectedFormattedFieldValue}`;
+
+      const expectedLabelDataCy = `filter-label-${mockField}-${expectedFormattedFieldValue}`;
+      const expectedValueDataCy = `filter-input-${mockField}-${expectedFormattedFieldValue}`;
 
       const expected = {
+        label: {
+          attributes: {
+            'data-cy': expectedLabelDataCy,
+          },
+        },
         text: mockValue,
         value: mockValue,
         checked: false,
         attributes: {
-          'data-cy': expectedDataCy,
+          'data-cy': expectedValueDataCy,
         },
       };
 

@@ -34,11 +34,16 @@ const generateFilterObject = (field, value, submittedFilters) => {
   const formattedFieldValue = value.replace(/[\s+/]/g, '-').replace('\'', '');
 
   return {
+    label: {
+      attributes: {
+        'data-cy': `filter-label-${field}-${formattedFieldValue}`,
+      },
+    },
     text: value,
     value,
     checked,
     attributes: {
-      'data-cy': `filter-${field}-${formattedFieldValue}`,
+      'data-cy': `filter-input-${field}-${formattedFieldValue}`,
     },
   };
 };

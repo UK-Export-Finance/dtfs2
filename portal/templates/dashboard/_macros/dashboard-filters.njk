@@ -25,6 +25,9 @@
           },
           categories: selectedFilters
         },
+        attributes: {
+          'data-cy': 'filters-container'
+        },
         optionsHtml: dashboardFiltersForm.render({ filters: filters, keyword: keyword })
       }) }}
 
@@ -33,6 +36,9 @@
       {{ mojFilter({
         heading: {
           text: 'Filter'
+        },
+        attributes: {
+          'data-cy': 'filters-container'
         },
         optionsHtml: dashboardFiltersForm.render({ filters: filters, keyword: keyword })
       }) }}
