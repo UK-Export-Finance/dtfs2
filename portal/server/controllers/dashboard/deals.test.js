@@ -1,4 +1,8 @@
-import { allDeals } from '.';
+import {
+  allDeals,
+  removeSingleAllDealsFilter,
+  removeAllDealsFilters,
+} from '.';
 import mockResponse from '../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
@@ -9,7 +13,7 @@ import {
 import { dashboardFiltersQuery } from './filters/query';
 import { dashboardFilters } from './filters/ui-filters';
 import { selectedDashboardFilters } from './filters/ui-selected-filters';
-import { PRODUCT } from '../../constants';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../api', () => ({
   allDeals: jest.fn(),
@@ -19,13 +23,13 @@ const mockDeals = [
   {
     _id: 'mockDeal',
     exporter: { companyName: 'mock company' },
-    product: PRODUCT.BSS_EWCS,
+    product: CONSTANTS.PRODUCT.BSS_EWCS,
     createdAt: 1234,
   },
   {
     _id: 'mockDeal2',
     exporter: { companyName: 'mock company' },
-    product: PRODUCT.GEF,
+    product: CONSTANTS.PRODUCT.GEF,
     createdAt: 5678,
   },
 ];
@@ -49,20 +53,17 @@ jest.mock('../../helpers', () => ({
 }));
 
 describe('controllers/dashboard', () => {
-  let req;
-  let res;
+  let mockReq;
+  let mockRes;
   beforeEach(() => {
-    req = {
+    mockReq = {
       body: {
         createdByYou: '',
         keyword: '',
       },
       params: { page: 1 },
       session: {
-        dashboardFilters: {
-          createdByYou: '',
-          keyword: '',
-        },
+        dashboardFilters: CONSTANTS.DASHBOARD_FILTERS_DEFAULT,
         user: {
           _id: 'mock-user',
           roles: ['maker', 'checker'],
@@ -71,21 +72,21 @@ describe('controllers/dashboard', () => {
       },
     };
 
-    res = mockResponse();
+    mockRes = mockResponse();
   });
 
   describe('allDeals', () => {
     it('calls api.allDeals with filters query', async () => {
-      await allDeals(req, res);
+      await allDeals(mockReq, mockRes);
 
       expect(api.allDeals).toBeCalledTimes(1);
 
-      const filtersArray = submittedFiltersArray(req.session.dashboardFilters);
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
       const expectedFilters = dashboardFiltersQuery(
-        req.body.createdByYou,
+        mockReq.body.createdByYou,
         filtersArray,
-        req.session.user,
+        mockReq.session.user,
       );
 
       expect(api.allDeals).toHaveBeenCalledWith(
@@ -97,13 +98,13 @@ describe('controllers/dashboard', () => {
     });
 
     it('renders the correct template', async () => {
-      await allDeals(req, res);
+      await allDeals(mockReq, mockRes);
 
-      const filtersArray = submittedFiltersArray(req.body);
+      const filtersArray = submittedFiltersArray(mockReq.body);
       const filtersObj = submittedFiltersObject(filtersArray);
 
-      expect(res.render).toHaveBeenCalledWith('dashboard/deals.njk', {
-        user: req.session.user,
+      expect(mockRes.render).toHaveBeenCalledWith('dashboard/deals.njk', {
+        user: mockReq.session.user,
         primaryNav: 'home',
         tab: 'deals',
         deals: mockDeals,
@@ -114,10 +115,50 @@ describe('controllers/dashboard', () => {
         },
         filters: dashboardFilters(filtersObj),
         selectedFilters: selectedDashboardFilters(filtersObj),
-        successMessage: getFlashSuccessMessage(req),
-        createdByYou: req.session.dashboardFilters.createdByYou,
-        keyword: req.session.dashboardFilters.keyword,
+        successMessage: getFlashSuccessMessage(mockReq),
+        createdByYou: mockReq.session.dashboardFilters.createdByYou,
+        keyword: mockReq.session.dashboardFilters.keyword,
       });
+    });
+  });
+
+  describe('removeSingleAllDealsFilter', () => {
+    it('should remove a single filter from mockReq.session.dashboardFilters', async () => {
+      mockReq = {
+        ...mockReq,
+        session: {
+          ...mockReq.session,
+          dashboardFilters: {
+            fieldA: 'valueA',
+            fieldB: 'valueB',
+          },
+        },
+        params: {
+          fieldName: 'fieldB',
+        },
+      };
+      
+      await removeSingleAllDealsFilter(mockReq, mockRes);
+
+      const expected = { fieldA: 'valueA' };
+
+      expect(mockReq.session.dashboardFilters).toEqual(expected);
+    });
+  });
+
+  describe('removeAllDealsFilters', () => {
+    it('should remove a single filter from mockReq.session.dashboardFilters', async () => {
+      mockReq = {
+        ...mockReq,
+        session: {
+          ...mockReq.session,
+          dashboardFilters: { fieldA: 'valueA' },
+        },
+      };
+
+      await removeAllDealsFilters(mockReq, mockRes);
+
+      expect(mockReq.session.dashboardFilters).toEqual(CONSTANTS.DASHBOARD_FILTERS_DEFAULT);
     });
   });
 });

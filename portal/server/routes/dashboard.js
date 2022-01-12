@@ -3,7 +3,7 @@ const {
   bssFacilities,
   gefFacilities,
   allDeals,
-  removeAllDealsFilter,
+  removeSingleAllDealsFilter,
   removeAllDealsFilters,
 } = require('../controllers/dashboard');
 
@@ -21,7 +21,7 @@ router.get('/dashboard/deals', async (req, res) => res.redirect('/dashboard/deal
 
 router.get('/dashboard/deals/clear-all-filters', removeAllDealsFilters);
 
-router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeAllDealsFilter);
+router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeSingleAllDealsFilter);
 
 router.get('/dashboard/facilities/gef', async (req, res) => res.redirect('/dashboard/facilities/gef/0'));
 

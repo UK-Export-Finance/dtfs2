@@ -62,7 +62,7 @@ exports.allDeals = async (req, res) => {
   });
 };
 
-exports.removeAllDealsFilter = (req, res) => {
+exports.removeSingleAllDealsFilter = (req, res) => {
   delete req.session.dashboardFilters[req.params.fieldName];
 
   return res.redirect('/dashboard/deals/0');

@@ -1,6 +1,6 @@
 const {
   allDeals,
-  removeAllDealsFilter,
+  removeSingleAllDealsFilter,
   removeAllDealsFilters,
 } = require('./deals');
 const {
@@ -10,7 +10,7 @@ const {
 
 module.exports = {
   allDeals,
-  removeAllDealsFilter,
+  removeSingleAllDealsFilter,
   removeAllDealsFilters,
   bssFacilities,
   gefFacilities,
