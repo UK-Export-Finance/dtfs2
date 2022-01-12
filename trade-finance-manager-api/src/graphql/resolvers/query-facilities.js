@@ -14,6 +14,7 @@ exports.queryAllFacilities = async (queryParams) => {
     const defaultFacilityValue = parseInt(item.tfmFacilities.value, 10);
 
     facility.coverEndDate = item.tfmFacilities.coverEndDate ? formatCoverEndDate : '';
+    // the EPOCH format is required to sort the facilities based on date
     facility.coverEndDateEpoch = item.tfmFacilities.coverEndDate ? getUnixTime(new Date(item.tfmFacilities.coverEndDate)) : '';
     facility.currencyAndValue = `${item.tfmFacilities.currency} ${formattedNumber(defaultFacilityValue)}`;
     facility.value = parseInt(item.tfmFacilities.value, 10);
