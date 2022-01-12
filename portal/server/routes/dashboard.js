@@ -4,6 +4,7 @@ const {
   gefFacilities,
   allDeals,
   removeAllDealsFilter,
+  removeAllDealsFilters,
 } = require('../controllers/dashboard');
 
 const validateToken = require('./middleware/validate-token');
@@ -18,7 +19,7 @@ router.get('/dashboard', async (req, res) => res.redirect('/dashboard/deals/0'))
 
 router.get('/dashboard/deals', async (req, res) => res.redirect('/dashboard/deals/0'));
 
-router.get('/dashboard/deals/clear-all-filters', (req, res) => res.redirect('/dashboard/deals/0'));
+router.get('/dashboard/deals/clear-all-filters', removeAllDealsFilters);
 
 router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeAllDealsFilter);
 

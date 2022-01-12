@@ -11,6 +11,7 @@ const {
   requestParams,
   getFlashSuccessMessage,
 } = require('../../helpers');
+const CONSTANTS = require('../../constants');
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
@@ -63,6 +64,12 @@ exports.allDeals = async (req, res) => {
 
 exports.removeAllDealsFilter = (req, res) => {
   delete req.session.dashboardFilters[req.params.fieldName];
+
+  return res.redirect('/dashboard/deals/0');
+};
+
+exports.removeAllDealsFilters = (req, res) => {
+  req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
 
   return res.redirect('/dashboard/deals/0');
 };

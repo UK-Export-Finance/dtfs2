@@ -1,6 +1,7 @@
 const {
   allDeals,
   removeAllDealsFilter,
+  removeAllDealsFilters,
 } = require('./deals');
 const {
   bssFacilities,
@@ -10,6 +11,7 @@ const {
 module.exports = {
   allDeals,
   removeAllDealsFilter,
+  removeAllDealsFilters,
   bssFacilities,
   gefFacilities,
 };

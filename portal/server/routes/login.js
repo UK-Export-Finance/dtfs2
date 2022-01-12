@@ -1,8 +1,12 @@
 const express = require('express');
 const api = require('../api');
 const {
-  requestParams, generateErrorSummary, errorHref, validationErrorHandler,
+  requestParams,
+  generateErrorSummary,
+  errorHref,
+  validationErrorHandler,
 } = require('../helpers');
+const CONSTANTS = require('../constants');
 
 const router = express.Router();
 
@@ -43,10 +47,7 @@ router.post('/login', async (req, res) => {
     if (success) {
       req.session.userToken = token;
       req.session.user = user;
-      req.session.dashboardFilters = {
-        createdByYou: null,
-        keyword: '',
-      };
+      req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
     } else {
       loginErrors.push(emailError);
       loginErrors.push(passwordError);
