@@ -94,11 +94,12 @@ exports.getById = async (req, res) => {
 };
 
 const update = async (id, updateBody) => {
+  console.log.og('========HERE');
   const collection = await db.getCollection(collectionName);
   const dealsCollection = await db.getCollection(dealsCollectionName);
 
   const facilityId = ObjectID(String(id));
-
+  console.log(facilityId);
   const existingFacility = await collection.findOne({ _id: facilityId });
 
   const facilityUpdate = new Facility({
@@ -106,7 +107,7 @@ const update = async (id, updateBody) => {
     ukefExposure: calculateUkefExposure(updateBody, existingFacility),
     guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
   });
-
+  console.log(facilityUpdate);
   const updatedFacility = await collection.findOneAndUpdate(
     { _id: { $eq: facilityId } },
     { $set: facilityUpdate },
