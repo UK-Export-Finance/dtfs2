@@ -118,7 +118,7 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerDateSubmitted().contains(bannerDate);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
-      statusBanner.bannerSubmissionType().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
+      statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
     });
   });
 });
