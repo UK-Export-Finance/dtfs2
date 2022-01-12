@@ -82,11 +82,11 @@ exports.getAllFacilities = async (req, res) => {
                   branches: [
                     {
                       case: { $eq: ['$dealSnapshot.dealType', 'GEF'] },
-                      then: '$$facilities.coverEndDate',
+                      then: '$$facilities.coverEndDate', // YYYY-MM-DD
                     },
                     {
                       case: { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                      then: { $concat: ['$$facilities.coverEndDate-month', '-', '$$facilities.coverEndDate-day', '-', '$$facilities.coverEndDate-year'] },
+                      then: { $concat: ['$$facilities.coverEndDate-year', '-', '$$facilities.coverEndDate-month', '-', '$$facilities.coverEndDate-day'] }, // YYYY-MM-DD
                     },
                   ],
                 },

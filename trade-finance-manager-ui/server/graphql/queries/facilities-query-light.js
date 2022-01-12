@@ -9,11 +9,13 @@ query Facilities($searchString: String){
       ukefFacilityId
       facilityType
       companyName
-      value
       coverEndDate
+      coverEndDateEpoch
       dealType
       hasBeenIssued
+      value
       currency
+      currencyAndValue
    }
    }
 }
