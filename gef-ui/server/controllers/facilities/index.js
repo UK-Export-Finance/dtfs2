@@ -9,7 +9,7 @@ const facilities = async (req, res) => {
   let { facilityType } = query;
 
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  const facilityTypeString = FACILITY_TYPE[facilityType.toUpperCase()].toLowerCase();
+  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
 
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
@@ -43,7 +43,7 @@ const createFacility = async (req, res) => {
   const hasBeenIssuedErrors = [];
   let facility;
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  const facilityTypeString = FACILITY_TYPE[facilityType.toUpperCase()].toLowerCase();
+  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
 
   try {
     // Don't validate form if user clicks on 'return to application` button

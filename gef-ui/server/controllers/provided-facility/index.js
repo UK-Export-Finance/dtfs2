@@ -32,7 +32,7 @@ const validateProvidedFacility = async (req, res) => {
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;
   const providedFacilityErrors = [];
-  const facilityTypeConst = FACILITY_TYPE[body.facilityType.toUpperCase()];
+  const facilityTypeConst = FACILITY_TYPE[body.facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const details = Array.isArray(body.details) ? body.details : [body.details];
 

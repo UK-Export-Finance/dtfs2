@@ -30,7 +30,7 @@ const updateFacilityCurrency = async (req, res) => {
   const { dealId, facilityId } = params;
   const { currency, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
-  const facilityTypeConst = FACILITY_TYPE[facilityType.toUpperCase()];
+  const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityCurrencyErrors = [];
 
