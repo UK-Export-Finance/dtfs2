@@ -1,5 +1,4 @@
 const { format, add } = require('date-fns');
-const api = require('../services/api');
 const CONSTANTS = require('../constants');
 
 /*
@@ -161,28 +160,6 @@ const hasChangedToIssued = (application) => {
 
 const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app).length > 0;
 
-/**
- * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
- * If the submission type is AIN and application status is DRAFT then `coverDateConfirmed`
- * is updated to `true`. This helper function mitigates a know bug which is produced upon
- * cloning a deal.
- * @param {Object} app Application object
- * @returns {Integer} Number of facilities updated
- */
-const checkCoverDateConfirmed = async (app) => {
-  if (app) {
-    if (app.status === CONSTANTS.DEAL_STATUS.DRAFT && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN && Boolean(app.facilities)) {
-      const updated = app.facilities.items.filter((f) => f.details.hasBeenIssued && !f.details.coverDateConfirmed).map(async ({ details }) => {
-        await api.updateFacility(details._id, {
-          coverDateConfirmed: true,
-        });
-      });
-      return updated.length;
-    }
-  }
-  return 0;
-};
-
 module.exports = {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -195,5 +172,4 @@ module.exports = {
   facilitiesChangedPresent,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
-  checkCoverDateConfirmed,
 };

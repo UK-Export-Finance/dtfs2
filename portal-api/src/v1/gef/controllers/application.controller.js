@@ -19,7 +19,7 @@ const { isSuperUser } = require('../../users/checks');
 const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
-const { addSubmissionData } = require('./application-submit');
+const { addSubmissionData, checkCoverDateConfirmed } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const {
@@ -258,6 +258,10 @@ exports.changeStatus = async (req, res) => {
   if (!existingApplication) {
     return res.status(404)
       .send();
+  }
+
+  if (existingApplication.status === GEF_STATUS.DRAFT) {
+    await checkCoverDateConfirmed(existingApplication);
   }
 
   const { status } = req.body;
