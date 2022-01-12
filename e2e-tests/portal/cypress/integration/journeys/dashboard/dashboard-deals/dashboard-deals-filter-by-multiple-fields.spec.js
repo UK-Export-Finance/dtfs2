@@ -124,30 +124,4 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     dashboard.row.type(miaDraftDeal2._id).should('have.text', CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
-
-  it('removes all applied filters by clicking `clear filters` button', () => {
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    // click `clear all` button
-    dashboard.filtersClearAllLink().should('be.visible');
-    dashboard.filtersClearAllLink().click();
-
-    // should be redirected
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
-    dashboard.filtersContainer().should('be.visible');
-
-    // should have empty applied filters
-    dashboard.filtersAppliedContainer().should('not.exist');
-    dashboard.filtersAppliedList().should('not.exist');
-
-    // checkbox should be NOT be checked
-    dashboard.filterCheckboxStatusDraft().should('not.be.checked');
-    dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');
-
-    // should render all deals
-    dashboard.rows().should('have.length', ALL_DEALS.length);
-  });
 });

@@ -137,7 +137,7 @@ describe('controllers/dashboard', () => {
           fieldName: 'fieldB',
         },
       };
-      
+
       await removeSingleAllDealsFilter(mockReq, mockRes);
 
       const expected = { fieldA: 'valueA' };
