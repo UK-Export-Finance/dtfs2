@@ -284,7 +284,7 @@ describe('controllers/application-details', () => {
           }));
       });
 
-      it('renders `application-details` with displayChangeSupportingInfo as true submission count is 0', async () => {
+      it('renders `application-details` with displayChangeSupportingInfo as true when the submission count is 0', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
         mockApplicationResponse.submissionCount = 0;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
