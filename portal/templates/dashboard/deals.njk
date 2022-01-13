@@ -1,14 +1,13 @@
 {% extends "index.njk" %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "moj/components/filter/macro.njk" import mojFilter %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-sub-nav.njk' as dashboardSubNav %}
 {% import '_macros/pagination.njk' as pagination %}
-{% import './_macros/dashboard-filters.njk' as dashboardFilters %}
+
+{% import './_macros/dashboard-filters-action-bar.njk' as dashboardFitlersActionBar %}
+{% import './_macros/dashboard-filters-panel.njk' as dashboardFiltersPanel %}
 
 {% block pageTitle %}Deals{% endblock %}
 
@@ -37,38 +36,6 @@
     <div class="govuk-grid-column-three-quarters">
       &nbsp
     </div>
-
-    {# <div class=" govuk-grid-column-one-quarter">
-      <div class="govuk-!-padding-left-2">
-        <form method="POST" autocomplete="off">
-          {{ govukCheckboxes({
-            name: "createdByYou",
-            classes: "govuk-checkboxes--small",
-            items: [
-              {
-                value: "true",
-                text: "Created by you",
-                checked: createdByYou,
-                attributes: {
-                  "data-cy": "created-by-you-checkbox",
-                  'onChange': 'this.form.submit()'
-                }
-              }
-            ]
-          }) }}
-          <div class="moj-button-action">
-            {{ govukButton({
-              text: 'Submit',
-              classes: 'moj-js-hidden',
-              attributes: {
-                'data-cy': 'created-by-you-submit'
-              }
-            }) }}
-          </div>
-
-        </form>
-      </div>
-    </div> #}
   </div>
 
   {% set items = [] %}
@@ -76,9 +43,9 @@
     {% set path = '/gef/application-details/' if deal.product === "GEF" else "/contract/" %}
     {% set linkHtml %}
       <a
-          href="{{ path }}{{ deal._id }}"
-          class="govuk-link"
-          data-cy="deal__link--{{ deal._id }}"
+        href="{{ path }}{{ deal._id }}"
+        class="govuk-link"
+        data-cy="deal__link--{{ deal._id }}"
       >
         {{ deal.bankInternalRefName }}
       </a>
@@ -116,7 +83,7 @@
 
   <div class="moj-filter-layout">
 
-    {{dashboardFilters.render({
+    {{dashboardFiltersPanel.render({
       filters: filters,
       selectedFilters: selectedFilters,
       keyword: keyword
@@ -124,71 +91,10 @@
 
     <div class="moj-filter-layout__content">
 
-      <div class="moj-action-bar" data-cy="filters-action-bar">
-
-        <div class="govuk-grid-row govuk-!-margin-right-0 govuk-!-margin-left-0">
-          <div class="govuk-grid-column-one-half">
-            <div class="moj-action-bar__filter"></div>
-          </div>
-        
-          <div class="govuk-grid-column-one-half">
-
-            <form method="POST" autocomplete="off" class="created-by-you-form">
-                {{ govukCheckboxes({
-                  name: "createdByYou",
-                  classes: "govuk-checkboxes--small created-by-you",
-                  items: [
-                    {
-                      value: "true",
-                      text: "Created by you",
-                      checked: createdByYou,
-                      label: {
-                        classes: 'govuk-!-padding-right-0'
-                      },
-                      attributes: {
-                        "data-cy": "created-by-you-checkbox",
-                        'onChange': 'this.form.submit()'
-                      }
-                    }
-                  ]
-                }) }}
-                <div class="moj-button-action">
-                  {{ govukButton({
-                    text: 'Submit',
-                    classes: 'moj-js-hidden text-align-right',
-                    attributes: {
-                      'data-cy': 'created-by-you-submit'
-                    }
-                  }) }}
-                </div>
-
-              </form>
-
-          </div>
-        </div>
-
-        {% if selectedFilters.length %}
-          {% for filter in selectedFilters %}
-            <ul class="govuk-!-padding-left-0" data-cy="main-container-selected-filters">
-              {% for filterItem in filter.items %}
-                <li>
-                  <a
-                    class="govuk-link govuk-button--secondary moj-filter__tag"
-                    href="{{ filterItem.href }}"
-                    data-cy="main-container-selected-filter-{{ filterItem.formattedFieldValue}}"
-                  >
-                    <span class="govuk-visually-hidden">Remove this filter</span>
-                    {{ filterItem.text }}
-                  </a>
-                </li>
-              {% endfor %}
-            <ul>
-          {% endfor %}
-        {% endif %}
-
-      </div>
-
-      <br />
+      {{dashboardFitlersActionBar.render({
+        createdByYou: createdByYou,
+        selectedFilters: selectedFilters
+      })}}
 
       <div class="moj-scrollable-pane">
 

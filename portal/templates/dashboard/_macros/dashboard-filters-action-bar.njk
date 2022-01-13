@@ -1,0 +1,72 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set createdByYou = params.createdByYou %}
+  {% set selectedFilters = params.selectedFilters %}
+
+  <div class="moj-action-bar" data-cy="filters-action-bar">
+
+    <div class="govuk-grid-row govuk-!-margin-right-0 govuk-!-margin-left-0">
+      <div class="govuk-grid-column-one-half">
+        <div class="moj-action-bar__filter"></div>
+      </div>
+    
+      <div class="govuk-grid-column-one-half">
+
+        <form method="POST" autocomplete="off" class="created-by-you-form">
+          {{ govukCheckboxes({
+            name: "createdByYou",
+            classes: "govuk-checkboxes--small created-by-you",
+            items: [
+              {
+                value: "true",
+                text: "Created by you",
+                checked: createdByYou,
+                label: {
+                  classes: 'govuk-!-padding-right-0'
+                },
+                attributes: {
+                  "data-cy": "created-by-you-checkbox",
+                  'onChange': 'this.form.submit()'
+                }
+              }
+            ]
+          }) }}
+          <div class="moj-button-action">
+            {{ govukButton({
+              text: 'Submit',
+              classes: 'moj-js-hidden text-align-right',
+              attributes: {
+                'data-cy': 'created-by-you-submit'
+              }
+            }) }}
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    {% if selectedFilters.length %}
+      {% for filter in selectedFilters %}
+        <ul class="govuk-!-padding-left-0" data-cy="main-container-selected-filters">
+          {% for filterItem in filter.items %}
+            <li>
+              <a
+                class="govuk-link govuk-button--secondary moj-filter__tag"
+                href="{{ filterItem.href }}"
+                data-cy="main-container-selected-filter-{{ filterItem.formattedFieldValue}}"
+              >
+                <span class="govuk-visually-hidden">Remove this filter</span>
+                {{ filterItem.text }}
+              </a>
+            </li>
+          {% endfor %}
+        <ul>
+      {% endfor %}
+    {% endif %}
+
+  </div>
+
+{% endmacro %}
