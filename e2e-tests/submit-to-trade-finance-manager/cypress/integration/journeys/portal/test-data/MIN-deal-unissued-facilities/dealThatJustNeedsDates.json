@@ -140,6 +140,7 @@
       "bondIssuer": "",
       "bondType": "Advance payment guarantee",
       "facilityStage": "Unissued",
+      "hasBeenIssued": false,
       "lastEdited": "1615380612017",
       "ukefGuaranteeInMonths": "12",
       "conversionRate": "100",

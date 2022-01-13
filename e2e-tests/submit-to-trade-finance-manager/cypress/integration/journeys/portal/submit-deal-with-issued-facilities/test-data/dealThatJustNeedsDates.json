@@ -154,6 +154,7 @@
       "coverEndDate-month": "06",
       "coverEndDate-year": "2021",
       "facilityStage": "Issued",
+      "hasBeenIssued": true,
       "lastEdited": "1615380612017",
       "requestedCoverStartDate": "1615380529968",
       "requestedCoverStartDate-day": "10",

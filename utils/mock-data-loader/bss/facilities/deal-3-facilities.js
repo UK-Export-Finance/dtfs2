@@ -14,6 +14,7 @@ module.exports = [
 		"bondType" : "Maintenance bond",
 		"ukefGuaranteeInMonths" : null,
 		"facilityStage" : "Issued",
+    "hasBeenIssued": true,
 		"requestedCoverStartDate-day": twoMonths.day,
 		"requestedCoverStartDate-month": twoMonths.month,
 		"requestedCoverStartDate-year": twoMonths.year,

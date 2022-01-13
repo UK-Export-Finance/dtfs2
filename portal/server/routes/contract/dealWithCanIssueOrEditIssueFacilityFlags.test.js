@@ -12,14 +12,22 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
     },
     bondTransactions: {
       items: [
-        { facilityStage: 'Unissued', status: 'Not started' },
-        { facilityStage: 'Issued', status: 'Completed' },
+        {
+          facilityStage: 'Unissued',
+          hasBeenIssued: false,
+          status: 'Not started',
+        },
+        {
+          facilityStage: 'Issued',
+          hasBeenIssued: true,
+          status: 'Completed',
+        },
       ],
     },
     loanTransactions: {
       items: [
-        { facilityStage: 'Conditional', status: 'Not started' },
-        { facilityStage: 'Unconditional', status: 'Completed' },
+        { facilityStage: 'Conditional', hasBeenIssued: false, status: 'Not started' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Completed' },
       ],
     },
   };

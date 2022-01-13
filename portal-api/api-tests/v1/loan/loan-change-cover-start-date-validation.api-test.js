@@ -58,6 +58,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
     const modifiedLoan = {
       ...getCreatedLoan.body.loan,
       facilityStage: 'Unconditional',
+      hasBeenIssued: true,
     };
 
     const updatedLoan = await updateLoan(dealId, loanId, modifiedLoan);

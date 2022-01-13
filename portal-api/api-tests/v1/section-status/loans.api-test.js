@@ -5,7 +5,6 @@ const {
 } = require('../../../src/v1/section-status/loans');
 
 describe('section-status - loan', () => {
-
   describe('loanStatus', () => {
     describe('when loan.status exists', () => {
       it('should return loan.status', () => {
@@ -39,6 +38,7 @@ describe('section-status - loan', () => {
   describe('loanHasIncompleteIssueFacilityDetails', () => {
     const validMockLoan = {
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       issueFacilityDetailsSubmitted: false,
     };
 
@@ -56,7 +56,7 @@ describe('section-status - loan', () => {
         { status: 'Submitted', previousStatus: 'Test' },
       ];
 
-      mockDeals.forEach(deal => {
+      mockDeals.forEach((deal) => {
         const result = loanHasIncompleteIssueFacilityDetails(deal.status, deal.previousStatus, validMockLoan);
         expect(result).toEqual(true);
       });
@@ -84,12 +84,12 @@ describe('section-status - loan', () => {
     it('should return false when facility stage is not allowed', () => {
       const mockLoan = {
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
       };
 
       const result = loanHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockLoan);
       expect(result).toEqual(false);
     });
-
 
     it('should return false when issueFacilityDetailsSubmitted is true', () => {
       const mockLoan = {
@@ -103,21 +103,22 @@ describe('section-status - loan', () => {
   });
 
   describe('addAccurateStatusesToLoans', () => {
-
     describe('when a loan in a deal has issueFacilityDetailsStarted', () => {
       it('should update loan.status from loanStatus function', () => {
         const mockLoans = [
           {
             facilityStage: 'Conditional',
+            hasBeenIssued: false,
             issueFacilityDetailsStarted: false,
           },
           {
             facilityStage: 'Conditional',
+            hasBeenIssued: false,
             issueFacilityDetailsStarted: true,
           },
         ];
 
-        const mockDeal = (submissionType)  => ({
+        const mockDeal = (submissionType) => ({
           status: 'Further Maker\'s input required',
           submissionType,
           loanTransactions: {
@@ -131,7 +132,7 @@ describe('section-status - loan', () => {
           { ...mockDeal('Automatic Inclusion Notice') },
         ];
 
-        mockDeals.forEach(deal => {
+        mockDeals.forEach((deal) => {
           const result = addAccurateStatusesToLoans(deal);
 
           const expected = loanStatus(mockLoans[1]);

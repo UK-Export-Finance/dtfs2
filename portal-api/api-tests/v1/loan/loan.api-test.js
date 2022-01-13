@@ -153,6 +153,7 @@ describe('/v1/deals/:id/loan', () => {
 
         const loan = {
           facilityStage: 'Unconditional',
+          hasBeenIssued: true,
           bankReferenceNumber: '1234',
           ...requestedCoverStartDate(),
           ...coverEndDate(),
@@ -226,6 +227,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const conditionalLoan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',
         value: '100',
         currencySameAsSupplyContractCurrency: 'true',
@@ -278,6 +280,7 @@ describe('/v1/deals/:id/loan', () => {
 
         const conditionalLoan = {
           facilityStage: 'Conditional',
+          hasBeenIssued: false,
           ukefGuaranteeInMonths: '12',
           value: '100',
           currencySameAsSupplyContractCurrency: 'true',
@@ -292,6 +295,7 @@ describe('/v1/deals/:id/loan', () => {
         const updateToUnconditionalLoan = {
           ...conditionalLoan,
           facilityStage: 'Unconditional',
+          hasBeenIssued: true,
           bankReferenceNumber: '1234',
           ...requestedCoverStartDate(),
           ...coverEndDate(),
@@ -311,6 +315,7 @@ describe('/v1/deals/:id/loan', () => {
 
         const unconditionalLoan = {
           facilityStage: 'Unconditional',
+          hasBeenIssued: true,
           bankReferenceNumber: '1234',
           value: '100',
           currencySameAsSupplyContractCurrency: 'true',
@@ -328,6 +333,7 @@ describe('/v1/deals/:id/loan', () => {
         const updateToConditionalLoan = {
           ...unconditionalLoan,
           facilityStage: 'Conditional',
+          hasBeenIssued: false,
           ukefGuaranteeInMonths: '12',
         };
 
@@ -350,6 +356,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const loan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',
         value: '100',
         currencySameAsSupplyContractCurrency: 'true',
@@ -376,6 +383,7 @@ describe('/v1/deals/:id/loan', () => {
 
         const loan = {
           facilityStage: 'Conditional',
+          hasBeenIssued: false,
           ukefGuaranteeInMonths: '12',
           value: '100',
           currencySameAsSupplyContractCurrency: 'false',
@@ -441,6 +449,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const loan = {
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         bankReferenceNumber: '1234',
         ...requestedCoverStartDate(),
         ...coverEndDate(),
@@ -468,6 +477,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const loan = {
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         bankReferenceNumber: '1234',
       };
 

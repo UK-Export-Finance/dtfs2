@@ -77,6 +77,7 @@ const facilityStageFields = (bond) => {
   if (facilityStage === 'Issued') {
     // remove any `Unissued Facility Stage` specific fields/values
     modifiedBond.ukefGuaranteeInMonths = null;
+    modifiedBond.hasBeenIssued = true;
   }
 
   if (facilityStage === 'Unissued') {
@@ -89,6 +90,7 @@ const facilityStageFields = (bond) => {
     modifiedBond['coverEndDate-month'] = null;
     modifiedBond['coverEndDate-year'] = null;
     modifiedBond.uniqueIdentificationNumber = null;
+    modifiedBond.hasBeenIssued = false;
   }
 
   return modifiedBond;

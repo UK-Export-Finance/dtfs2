@@ -34,7 +34,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
     return result.body;
   };
- 
+
   const updateLoan = async (dealId, loanId, body) => {
     const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/loan/${loanId}`);
     return result.body;
@@ -60,6 +60,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     const modifiedLoan = {
       ...getCreatedLoan.body.loan,
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
     };
 
     const updatedLoan = await updateLoan(dealId, loanId, modifiedLoan);
@@ -99,8 +100,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
         const body = await updateLoanIssuance(dealId, loanId, loan);
         return body;
       };
-    
-    
+
       describe('when has some values', () => {
         it('should return validationError', async () => {
           await createDealAndLoan();
@@ -178,7 +178,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
         const body = await updateLoanIssuance(dealId, loanId, loan);
         return body;
       };
-  
+
       describe('when has some values', () => {
         beforeEach(async () => {
           await createDealAndLoan();

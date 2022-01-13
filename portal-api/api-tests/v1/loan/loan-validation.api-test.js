@@ -103,6 +103,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Conditional',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '',
             };
 
@@ -116,6 +117,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Conditional',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: 'test',
             };
 
@@ -142,6 +144,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Conditional',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '-1',
             };
 
@@ -155,6 +158,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Conditional',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '1000',
             };
 
@@ -172,6 +176,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               bankReferenceNumber: '',
             };
 
@@ -185,6 +190,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               bankReferenceNumber: 'a'.repeat(31),
             };
 
@@ -199,6 +205,7 @@ describe('/v1/deals/:id/loan', () => {
         const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
           const loan = {
             facilityStage: 'Unconditional',
+            hasBeenIssued: true,
             ...requestedCoverStartDate,
           };
 
@@ -345,6 +352,7 @@ describe('/v1/deals/:id/loan', () => {
         const updateCoverEndDate = async (coverEndDate) => {
           const loan = {
             facilityStage: 'Unconditional',
+            hasBeenIssued: true,
             ...coverEndDate,
           };
 
@@ -415,6 +423,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
               'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
               'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
@@ -435,6 +444,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               disbursementAmount: '',
             };
 
@@ -449,6 +459,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               disbursementAmount: '123test',
             };
 
@@ -463,6 +474,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               disbursementAmount: '12.345',
             };
 
@@ -476,6 +488,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               disbursementAmount: '0',
             };
 
@@ -489,6 +502,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
+              hasBeenIssued: true,
               value: '9',
               disbursementAmount: '9.10',
             };

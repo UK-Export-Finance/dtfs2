@@ -29,6 +29,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
   const mockLoan = {
     facilityStage: 'Unconditional',
+    hasBeenIssued: true,
     'requestedCoverStartDate-day': moment(mockCoverStartDate).format('DD'),
     'requestedCoverStartDate-month': moment(mockCoverStartDate).format('MM'),
     'requestedCoverStartDate-year': moment(mockCoverStartDate).format('YYYY'),
@@ -126,6 +127,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
       it('should return 400', async () => {
         const conditionalLoanBody = {
           facilityStage: 'Conditional',
+          hasBeenIssued: false,
         };
         const body = await updateLoan(dealId, loanId, conditionalLoanBody);
 

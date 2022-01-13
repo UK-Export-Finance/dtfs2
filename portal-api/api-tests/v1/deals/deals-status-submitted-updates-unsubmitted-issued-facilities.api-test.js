@@ -34,6 +34,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     const mockUnsubmittedUnconditionalLoan = () => ({
       facilityType: 'Loan',
       facilityStage: 'Unconditional',
+      hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
       guaranteeFeePayableByBank: '10.8000',
@@ -74,6 +75,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
+      hasBeenIssued: true,
       ukefGuaranteeInMonths: '24',
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: 'test',

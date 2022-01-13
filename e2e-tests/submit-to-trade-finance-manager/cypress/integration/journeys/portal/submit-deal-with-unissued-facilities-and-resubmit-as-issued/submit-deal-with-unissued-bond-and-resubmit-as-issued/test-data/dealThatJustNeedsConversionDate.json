@@ -114,6 +114,7 @@
         "bondIssuer": "issuer",
         "bondType": "bond type",
         "facilityStage": "Unissued",
+        "hasBeenIssued": false,
         "ukefGuaranteeInMonths": "24",
         "bondBeneficiary": "test",
         "value": "100000.00",

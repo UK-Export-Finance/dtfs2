@@ -27,6 +27,7 @@ module.exports = [
 		"createdDate": nowTimestamp,
 
 		"facilityStage" : "Conditional",
+    "hasBeenIssued": false,
 		"requestedCoverStartDate-day" : null,
 		"requestedCoverStartDate-month" : null,
 		"requestedCoverStartDate-year" : null,
