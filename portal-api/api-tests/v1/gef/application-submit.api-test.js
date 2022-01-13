@@ -202,7 +202,7 @@ describe('removeChangedToIssued()', () => {
 });
 
 describe('checkCoverDateConfirmed()', () => {
-  it('Should return `2` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+  it('Should return and set `coverDateConfirmed` to true with following conditions:\n\n1. AIN\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole('maker').one();
     const mockAIN = mockApplications[0];
@@ -219,57 +219,10 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: false,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
-
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: false,
-    }).to(baseUrl);
-
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(2);
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
   });
 
-  it('Should return `0` when the application status is DRAFT, type is NOT AIN and have atleast one facility with issued status', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole('maker').one();
-    const mockAIN = mockApplications[0];
-    const mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
-
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
-
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: false,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
-
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: false,
-    }).to(baseUrl);
-
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(0);
-  });
-
-  it('Should return `0` when the application status is DRAFT, type is AIN and does not have atleast one facility with issued status', async () => {
+  it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. AIN\n2. Have one unissued facility and cover date is not true \n3. Not yet submitted to UKEF', async () => {
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole('maker').one();
     const mockAIN = mockApplications[0];
@@ -286,22 +239,15 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: false,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
-
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(0);
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(false);
   });
 
-  it('Should return `1` when the application status is DRAFT, type is AIN and have atleast one facility with issued status', async () => {
+  it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole('maker').one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
@@ -313,6 +259,19 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+  });
+
+  it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one unissued facility \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
     await as(aMaker).post({
       dealId: mockApplication.body._id,
       type: FACILITY_TYPE.CASH,
@@ -320,6 +279,53 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(1);
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(false);
+  });
+
+  it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility with cover date set to true \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: true,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+  });
+
+  it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued and unissued facilities with cover date set to true \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: true,
+    }).to(baseUrl);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: false,
+      coverDateConfirmed: true,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
   });
 });
