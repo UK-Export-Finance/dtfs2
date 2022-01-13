@@ -2,32 +2,15 @@ const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboard } = require('../../../pages');
+const {
+  BSS_DEAL_DRAFT,
+  GEF_DEAL_DRAFT,
+} = require('./fixtures');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Dashboard Deals filters - remove a filter', () => {
   const ALL_DEALS = [];
-
-  const BSS_DEAL_DRAFT = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
-    bankInternalRefName: 'Draft BSS',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
-    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-    exporter: {
-      companyName: 'mock company',
-    },
-  };
-
-  const GEF_DEAL_DRAFT = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-    bank: { id: BANK1_MAKER1.bank.id },
-    bankInternalRefName: 'Draft GEF',
-    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-    exporter: {
-      companyName: 'mock company',
-    },
-  };
 
   before(() => {
     cy.deleteGefApplications(BANK1_MAKER1);

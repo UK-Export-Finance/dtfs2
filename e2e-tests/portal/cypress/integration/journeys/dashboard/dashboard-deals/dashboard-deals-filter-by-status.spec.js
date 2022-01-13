@@ -3,42 +3,25 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../../fixtures/constants');
 const CONTENT_STRINGS = require('../../../../fixtures/content-strings');
 const { dashboard } = require('../../../pages');
+const {
+  BSS_DEAL_READY_FOR_CHECK,
+  GEF_DEAL_DRAFT,
+} = require('./fixtures');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Dashboard Deals filters - filter by status', () => {
   const ALL_DEALS = [];
 
-  const BSS_DEAL_DRAFT = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
-    bankInternalRefName: 'Ready for Check BSS',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
-    status: CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK,
-    exporter: {
-      companyName: 'mock company',
-    },
-  };
-
-  const GEF_DEAL_READY_FOR_CHECK = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-    bank: { id: BANK1_MAKER1.bank.id },
-    bankInternalRefName: 'Draft GEF',
-    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-    exporter: {
-      companyName: 'mock company',
-    },
-  };
-
   before(() => {
     cy.deleteGefApplications(BANK1_MAKER1);
     cy.deleteDeals(BANK1_MAKER1);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_READY_FOR_CHECK, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
     });
   });
