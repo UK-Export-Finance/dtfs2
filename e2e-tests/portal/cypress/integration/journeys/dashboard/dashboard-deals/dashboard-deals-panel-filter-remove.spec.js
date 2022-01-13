@@ -31,19 +31,19 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
 
   it('applies and removes a filter', () => {
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
     // apply filter
-    dashboard.filterCheckboxSubmissionTypeMIA().click();
-    dashboard.filtersApplyFiltersButton().click();
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboard.filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
     // check the filter is in the applied filters section
-    const firstAppliedFilter = dashboard.filtersAppliedListItem().first();
+    const firstAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().first();
     firstAppliedFilter.should('be.visible');
 
     // click remove button
@@ -53,15 +53,15 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
-    dashboard.filtersContainer().should('be.visible');
+    dashboard.filters.showHideButton().click();
+    dashboard.filters.panel.container().should('be.visible');
 
     // should have empty applied filters
-    dashboard.filtersAppliedContainer().should('not.exist');
-    dashboard.filtersAppliedList().should('not.exist');
+    dashboard.filters.panel.selectedFilters.container().should('not.exist');
+    dashboard.filters.panel.selectedFilters.list().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboard.rows().should('have.length', ALL_DEALS.length);

@@ -34,32 +34,32 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filtersShowHideButton().click();
+      dashboard.filters.showHideButton().click();
 
       // apply filter
-      dashboard.filterCheckboxSubmissionTypeMIA().click();
-      dashboard.filtersApplyFiltersButton().click();
+      dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
+      dashboard.filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filtersShowHideButton().click();
+      dashboard.filters.showHideButton().click();
 
-      dashboard.filterCheckboxSubmissionTypeMIA().should('be.checked');
+      dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      dashboard.filtersAppliedContainer().should('be.visible');
-      dashboard.filtersAppliedList().should('be.visible');
+      dashboard.filters.panel.selectedFilters.container().should('be.visible');
+      dashboard.filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboard.filtersAppliedHeading().first();
+      const firstAppliedFilterHeading = dashboard.filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Notice Type');
 
-      const firstAppliedFilter = dashboard.filtersAppliedListItem().first();
+      const firstAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -68,10 +68,10 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
-      dashboard.filtersSelectedMainContainerNoticeMIA().should('be.visible');
+      dashboard.filters.mainContainer.selectedFilters.noticeMIA().should('be.visible');
 
       const expectedText = `Remove this filter ${CONSTANTS.DEALS.SUBMISSION_TYPE.MIA}`;
-      dashboard.filtersSelectedMainContainerNoticeMIA().contains(expectedText);
+      dashboard.filters.mainContainer.selectedFilters.noticeMIA().contains(expectedText);
     });
 
     it('renders only MIA deals', () => {

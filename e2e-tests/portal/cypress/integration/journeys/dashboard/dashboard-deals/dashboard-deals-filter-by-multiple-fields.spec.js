@@ -37,39 +37,39 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
 
   it('submits the filters and redirects to the dashboard', () => {
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
     // apply filter 1
-    dashboard.filterCheckboxStatusDraft().click();
+    dashboard.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboard.filterCheckboxSubmissionTypeMIA().click();
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
-    dashboard.filtersApplyFiltersButton().click();
+    dashboard.filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('renders checked checkboxes', () => {
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
-    dashboard.filterCheckboxStatusDraft().should('be.checked');
-    dashboard.filterCheckboxSubmissionTypeMIA().should('be.checked');
+    dashboard.filters.panel.form.status.draft.checkbox().should('be.checked');
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
   });
 
   it('renders the applied filters in the `applied filters` section', () => {
-    dashboard.filtersAppliedContainer().should('be.visible');
-    dashboard.filtersAppliedList().should('be.visible');
+    dashboard.filters.panel.selectedFilters.container().should('be.visible');
+    dashboard.filters.panel.selectedFilters.list().should('be.visible');
 
     // applied filter 1
-    const firstAppliedFilterHeading = dashboard.filtersAppliedHeading().eq(0);
+    const firstAppliedFilterHeading = dashboard.filters.panel.selectedFilters.heading().eq(0);
 
     firstAppliedFilterHeading.should('be.visible');
     firstAppliedFilterHeading.should('have.text', 'Notice Type');
 
-    const firstAppliedFilter = dashboard.filtersAppliedListItem().eq(0);
+    const firstAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().eq(0);
 
     firstAppliedFilter.should('be.visible');
 
@@ -77,12 +77,12 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     firstAppliedFilter.should('have.text', expectedText);
 
     // applied filter 2
-    const secondAppliedFilterHeading = dashboard.filtersAppliedHeading().eq(1);
+    const secondAppliedFilterHeading = dashboard.filters.panel.selectedFilters.heading().eq(1);
 
     secondAppliedFilterHeading.should('be.visible');
     secondAppliedFilterHeading.should('have.text', 'Status');
 
-    const secondAppliedFilter = dashboard.filtersAppliedListItem().eq(1);
+    const secondAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().eq(1);
 
     secondAppliedFilter.should('be.visible');
 
@@ -92,16 +92,16 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
 
   it('renders the applied filters in the `main container selected filters` section', () => {
     // applied filter 1
-    dashboard.filtersSelectedMainContainerNoticeMIA().should('be.visible');
+    dashboard.filters.mainContainer.selectedFilters.noticeMIA().should('be.visible');
 
     let expectedText = `Remove this filter ${CONSTANTS.DEALS.SUBMISSION_TYPE.MIA}`;
-    dashboard.filtersSelectedMainContainerNoticeMIA().contains(expectedText);
+    dashboard.filters.mainContainer.selectedFilters.noticeMIA().contains(expectedText);
 
     // applied filter 2
-    dashboard.filtersSelectedMainContainerStatusDraft().should('be.visible');
+    dashboard.filters.mainContainer.selectedFilters.statusDraft().should('be.visible');
 
     expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.DRAFT}`;
-    dashboard.filtersSelectedMainContainerStatusDraft().contains(expectedText);
+    dashboard.filters.mainContainer.selectedFilters.statusDraft().contains(expectedText);
   });
 
   it('renders only deals that have matching fields - MIA and Draft status', () => {

@@ -31,28 +31,28 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
 
   it('applies and removes a filter', () => {
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
     // apply filter
-    dashboard.filterCheckboxSubmissionTypeMIA().click();
-    dashboard.filtersApplyFiltersButton().click();
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboard.filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // check the filter is in the applied filters section
-    dashboard.filtersSelectedMainContainerNoticeMIA().should('be.visible');
+    dashboard.filters.mainContainer.selectedFilters.noticeMIA().should('be.visible');
 
     // click remove button
-    dashboard.filtersSelectedMainContainerNoticeMIA().click();
+    dashboard.filters.mainContainer.selectedFilters.noticeMIA().click();
 
     // should be redirected
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // should have empty applied filter
-    dashboard.filtersSelectedMainContainerNoticeMIA().should('not.exist');
+    dashboard.filters.mainContainer.selectedFilters.noticeMIA().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboard.rows().should('have.length', ALL_DEALS.length);

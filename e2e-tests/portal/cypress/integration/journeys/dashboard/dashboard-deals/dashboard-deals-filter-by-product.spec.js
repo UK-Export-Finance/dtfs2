@@ -34,32 +34,32 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filtersShowHideButton().click();
+      dashboard.filters.showHideButton().click();
 
       // apply filter
-      dashboard.filterCheckboxDealTypeBssEwcs().click();
-      dashboard.filtersApplyFiltersButton().click();
+      dashboard.filters.panel.form.dealType.bssEwcs.checkbox().click();
+      dashboard.filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filtersShowHideButton().click();
+      dashboard.filters.showHideButton().click();
 
-      dashboard.filterCheckboxDealTypeBssEwcs().should('be.checked');
+      dashboard.filters.panel.form.dealType.bssEwcs.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      dashboard.filtersAppliedContainer().should('be.visible');
-      dashboard.filtersAppliedList().should('be.visible');
+      dashboard.filters.panel.selectedFilters.container().should('be.visible');
+      dashboard.filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboard.filtersAppliedHeading().first();
+      const firstAppliedFilterHeading = dashboard.filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Product');
 
-      const firstAppliedFilter = dashboard.filtersAppliedListItem().first();
+      const firstAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -86,32 +86,32 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filtersShowHideButton().click();
+      dashboard.filters.showHideButton().click();
 
       // apply filter
-      dashboard.filterCheckboxDealTypeGef().click();
-      dashboard.filtersApplyFiltersButton().click();
+      dashboard.filters.panel.form.dealType.gef.checkbox().click();
+      dashboard.filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filtersShowHideButton().click();
+      dashboard.filters.showHideButton().click();
 
-      dashboard.filterCheckboxDealTypeGef().should('be.checked');
+      dashboard.filters.panel.form.dealType.gef.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      dashboard.filtersAppliedContainer().should('be.visible');
-      dashboard.filtersAppliedList().should('be.visible');
+      dashboard.filters.panel.selectedFilters.container().should('be.visible');
+      dashboard.filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboard.filtersAppliedHeading().first();
+      const firstAppliedFilterHeading = dashboard.filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Product');
 
-      const firstAppliedFilter = dashboard.filtersAppliedListItem().first();
+      const firstAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -120,10 +120,10 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
-      dashboard.filtersSelectedMainContainerProductGEF().should('be.visible');
+      dashboard.filters.mainContainer.selectedFilters.productGEF().should('be.visible');
 
       const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`;
-      dashboard.filtersSelectedMainContainerProductGEF().contains(expectedText);
+      dashboard.filters.mainContainer.selectedFilters.productGEF().contains(expectedText);
     });
 
     it('renders only GEF deals', () => {

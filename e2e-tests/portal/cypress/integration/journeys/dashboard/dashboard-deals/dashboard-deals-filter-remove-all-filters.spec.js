@@ -37,47 +37,47 @@ context('Dashboard Deals filters - remove all filters', () => {
 
   it('removes all applied filters by clicking `clear filters` button', () => {
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
     // apply filter 1
-    dashboard.filterCheckboxStatusDraft().click();
+    dashboard.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboard.filterCheckboxSubmissionTypeMIA().click();
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
-    dashboard.filtersApplyFiltersButton().click();
+    dashboard.filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
+    dashboard.filters.showHideButton().click();
 
     // check filters are applied
-    dashboard.filterCheckboxStatusDraft().should('be.checked');
-    dashboard.filterCheckboxSubmissionTypeMIA().should('be.checked');
+    dashboard.filters.panel.form.status.draft.checkbox().should('be.checked');
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // click `clear all` button
-    dashboard.filtersClearAllLink().should('be.visible');
-    dashboard.filtersClearAllLink().click();
+    dashboard.filters.panel.selectedFilters.clearAllLink().should('be.visible');
+    dashboard.filters.panel.selectedFilters.clearAllLink().click();
 
     // should be redirected
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
-    dashboard.filtersContainer().should('be.visible');
+    dashboard.filters.showHideButton().click();
+    dashboard.filters.panel.container().should('be.visible');
 
     // should have empty panel applied filters
-    dashboard.filtersAppliedContainer().should('not.exist');
-    dashboard.filtersAppliedList().should('not.exist');
+    dashboard.filters.panel.selectedFilters.container().should('not.exist');
+    dashboard.filters.panel.selectedFilters.list().should('not.exist');
 
     // should have empty main container applied filters
-    dashboard.filtersSelectedMainContainer().should('not.exist');
+    dashboard.filters.mainContainer.selectedFilters.container().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboard.filterCheckboxStatusDraft().should('not.be.checked');
-    dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');
+    dashboard.filters.panel.form.status.draft.checkbox().should('not.be.checked');
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboard.rows().should('have.length', ALL_DEALS.length);
