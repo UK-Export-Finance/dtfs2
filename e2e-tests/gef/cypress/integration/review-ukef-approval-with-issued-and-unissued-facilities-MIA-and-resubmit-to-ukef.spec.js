@@ -143,22 +143,8 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
     });
 
-    it('clicking review UKEF decision displays correct page', () => {
-      applicationPreview.ukefReviewLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/review-decision`));
-      applicationPreview.ukefReviewHeading().contains('Review UKEF decision');
-      applicationPreview.reviewDecision().contains('Do you want to accept these conditions and proceed with UKEF cover?');
-    });
-
     it('entering cover date in past on confirm cover start date shows an error', () => {
-      applicationPreview.ukefReviewLink().click();
-
-      applicationPreview.reviewDecisionTrue().click();
-
-      applicationPreview.reviewDecisionContinue().click();
-
-      coverStartDate.updateIndividualCoverStartDateButton(0).click();
-
+      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
@@ -191,13 +177,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     });
 
     it('entering cover date correctly shows success message and redirects to unissued facilities table', () => {
-      applicationPreview.ukefReviewLink().click();
-
-      applicationPreview.reviewDecisionTrue().click();
-
-      applicationPreview.reviewDecisionContinue().click();
-
-      coverStartDate.updateIndividualCoverStartDateButton(0).click();
+      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
