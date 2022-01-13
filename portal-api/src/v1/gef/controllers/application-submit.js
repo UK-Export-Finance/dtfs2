@@ -178,41 +178,42 @@ const submissionPortalActivity = async (application) => {
 
 /**
  * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
- * If the submission type is AIN and application status is DRAFT then `coverDateConfirmed`
- * is updated to `true`. This helper function mitigates a know bug which is produced upon
- * cloning a deal.
  * @param {Object} app Application object
- * @returns {Integer} Number of facilities updated
+ * @returns {Bool} Facility(ies) was(were) updated or not
  */
 const checkCoverDateConfirmed = async (app) => {
+  let hasUpdated = false;
+
   if (app) {
     try {
       const facilities = await getAllFacilitiesByDealId(app._id);
-      let facilitiesUpdated = 0;
-      if (!app.submissionCount && app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN && facilities?.length > 0) {
-        // Set coverDateConfirmed to `true`
-        let updated = facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
+      const notYetSubmittedToUKEF = !app.submissionCount;
+      const haveFacilites = facilities?.length > 0;
+      const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+
+      if (notYetSubmittedToUKEF && haveFacilites) {
+        // Iterate through issued facilites
+        facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
+          hasUpdated = true;
           await updateFacility(f._id, {
-            coverDateConfirmed: true,
+            coverDateConfirmed: Boolean(isAIN),
           });
         });
-        facilitiesUpdated = updated.length;
 
-        // Set coverDateCofirmed to `false`
-        updated = facilities.filter((f) => !f.hasBeenIssued && f.coverDateConfirmed).map(async (f) => {
+        // Iterate through unissued facilities
+        facilities.filter((f) => !f.hasBeenIssued && f.coverDateConfirmed).map(async (f) => {
+          hasUpdated = true;
           await updateFacility(f._id, {
             coverDateConfirmed: false,
           });
         });
-
-        facilitiesUpdated += updated.length;
-        return facilitiesUpdated;
+        return hasUpdated;
       }
     } catch (e) {
       console.error('Unable to set coverDateConfirmed for AIN facilities.', { e });
     }
   }
-  return 0;
+  return hasUpdated;
 };
 
 const addSubmissionData = async (dealId, existingApplication) => {
