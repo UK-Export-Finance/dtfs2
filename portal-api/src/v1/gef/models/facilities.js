@@ -77,6 +77,7 @@ class Facility {
       if (req.canResubmitIssuedFacilities != null) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
+      this.unissuedToIssuedBy = Object(req.unissuedToIssuedBy) || null;
     } else {
       // update facility
       if (req.hasBeenIssued != null) {
@@ -183,6 +184,10 @@ class Facility {
 
       if (req.canResubmitIssuedFacilities != null) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
+      }
+
+      if (req.unissuedToIssuedBy != null) {
+        this.unissuedToIssuedBy = Object(req.unissuedToIssuedBy);
       }
 
       this.updatedAt = Date.now();

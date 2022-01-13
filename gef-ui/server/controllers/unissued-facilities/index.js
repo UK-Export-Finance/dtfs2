@@ -110,6 +110,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
  */
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
+  const { user } = req.session;
 
   const {
     issueDate,
@@ -145,6 +146,12 @@ const postChangeUnissuedFacility = async (req, res) => {
     });
   }
 
+  const userObj = {
+    firstname: user.firstname,
+    surname: user.surname,
+    _id: user._id,
+  };
+
   try {
     await api.updateFacility(
       facilityId,
@@ -158,6 +165,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
+        unissuedToIssuedBy: userObj,
       },
       (req.success = {
         message: `${body.facilityName} is updated`,
@@ -180,6 +188,7 @@ const postChangeUnissuedFacility = async (req, res) => {
  */
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
+  const { user } = req.session;
 
   const {
     issueDate,
@@ -215,6 +224,12 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     });
   }
 
+  const userObj = {
+    firstname: user.firstname,
+    surname: user.surname,
+    _id: user._id,
+  };
+
   try {
     await api.updateFacility(
       facilityId,
@@ -228,6 +243,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
+        unissuedToIssuedBy: userObj,
       },
       (req.url = `/gef/application-details/${dealId}`),
     );
