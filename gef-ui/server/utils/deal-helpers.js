@@ -2,6 +2,7 @@ const CONSTANTS = require('../constants');
 const {
   hasChangedToIssued,
   coverDatesConfirmed,
+  getIssuedFacilitiesAsArray,
 } = require('./facility-helpers');
 
 const status = ({
@@ -59,7 +60,9 @@ const makerCanReSubmit = (maker, application) => {
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
-  const coverDateConfirmed = coverDatesConfirmed(application.facilities);
+  const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0
+    ? coverDatesConfirmed(application.facilities)
+    : true;
   const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
 
   return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
