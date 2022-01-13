@@ -6,6 +6,7 @@ const redis = require('redis');
 const flash = require('connect-flash');
 const path = require('path');
 const RedisStore = require('connect-redis')(session);
+const helmet = require('helmet');
 const dotenv = require('dotenv');
 
 require('./azure-env');
@@ -13,15 +14,9 @@ const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const sentry = require('./utils/sentry');
-// const helmet = require('helmet');
 
 const app = express();
-// TODO: re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
+app.use(helmet({ contentSecurityPolicy: false }));
 
 dotenv.config();
 
