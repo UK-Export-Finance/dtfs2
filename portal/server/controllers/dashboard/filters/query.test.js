@@ -1,5 +1,6 @@
 import { dashboardFiltersQuery } from './query';
 import { STATUS } from '../../../constants';
+import CONTENT_STRINGS from '../../../content-strings';
 
 describe('controllers/dashboard/filters - query', () => {
   const mockUser = {
@@ -129,6 +130,25 @@ describe('controllers/dashboard/filters - query', () => {
         value: mockFilters[1].submissionType[0],
       },
     ];
+
+    expect(result).toEqual(expected);
+  });
+
+  it(`should NOT add a filter to the query when the field value is ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`, () => {
+    const mockCreatedByYou = '';
+    const mockFilters = [
+      { status: [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES] },
+    ];
+    mockUser.bank.id = '*';
+    mockUser.roles = [];
+
+    const result = dashboardFiltersQuery(
+      mockCreatedByYou,
+      mockFilters,
+      mockUser,
+    );
+
+    const expected = [];
 
     expect(result).toEqual(expected);
   });

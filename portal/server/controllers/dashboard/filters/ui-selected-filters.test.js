@@ -57,7 +57,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
 
       const expected = [
         generateSelectedFiltersObject(
-          CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.KEYWORD,
+          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
           'keyword',
           mockSubmittedFilters.keyword,
         ),

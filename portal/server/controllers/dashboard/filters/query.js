@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../../constants');
+const CONTENT_STRINGS = require('../../../content-strings');
 const {
   getUserRoles,
   isSuperUser,
@@ -37,17 +38,19 @@ const dashboardFiltersQuery = (
     const fieldName = Object.keys(filterObj)[0];
 
     filterObj[fieldName].forEach((filterValue) => {
-      if (fieldName === 'keyword') {
-        filtersQuery.push({
-          field: fieldName,
-          value: filterValue,
-          operator: 'or',
-        });
-      } else {
-        filtersQuery.push({
-          field: fieldName,
-          value: filterValue,
-        });
+      if (filterValue !== CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES) {
+        if (fieldName === 'keyword') {
+          filtersQuery.push({
+            field: fieldName,
+            value: filterValue,
+            operator: 'or',
+          });
+        } else {
+          filtersQuery.push({
+            field: fieldName,
+            value: filterValue,
+          });
+        }
       }
     });
   });
