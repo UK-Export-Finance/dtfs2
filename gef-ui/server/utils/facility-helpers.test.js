@@ -72,6 +72,20 @@ describe('coverDatesConfirmed', () => {
     MOCK_FACILITY.items[0].details.hasBeenIssued = true;
     expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(false);
   });
+
+  it('Should return FALSE as there are no issued facilities', () => {
+    const noIssuedFacility = MOCK_FACILITY;
+    noIssuedFacility.items[0].details.hasBeenIssued = true;
+    noIssuedFacility.items[1].details.hasBeenIssued = true;
+    noIssuedFacility.items[2].details.hasBeenIssued = true;
+    expect(coverDatesConfirmed(noIssuedFacility)).toEqual(false);
+  });
+
+  it('Should return TRUE a facility has been issued and has coverStartConfirmed', () => {
+    MOCK_FACILITY.items[0].details.hasBeenIssued = true;
+    MOCK_FACILITY.items[0].details.coverDateConfirmed = true;
+    expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(true);
+  });
 });
 
 describe('hasChangedToIssued()', () => {

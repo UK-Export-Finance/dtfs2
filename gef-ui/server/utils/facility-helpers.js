@@ -145,8 +145,13 @@ const getFacilityCoverStartDate = (facility) => {
   };
 };
 
-const coverDatesConfirmed = (facilities) =>
-  facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
+const coverDatesConfirmed = (facilities) => {
+  if (facilities.items.filter(({ details }) => details.hasBeenIssued).length > 0) {
+    return facilities.items.filter(({ details }) => details.hasBeenIssued).length
+   === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
+  }
+  return false;
+};
 
 /*
    function returns true or false based on length of array
