@@ -176,9 +176,48 @@ const submissionPortalActivity = async (application) => {
   return portalActivities;
 };
 
-const addSubmissionData = async (dealId, existingApplication) => {
-  const { count, date } = await generateSubmissionData(existingApplication);
+/**
+ * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
+ * If the submission type is AIN and application status is DRAFT then `coverDateConfirmed`
+ * is updated to `true`. This helper function mitigates a know bug which is produced upon
+ * cloning a deal.
+ * @param {Object} app Application object
+ * @returns {Integer} Number of facilities updated
+ */
+const checkCoverDateConfirmed = async (app) => {
+  if (app) {
+    try {
+      const facilities = await getAllFacilitiesByDealId(app._id);
+      let facilitiesUpdated = 0;
+      if (!app.submissionCount && app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN && facilities?.length > 0) {
+        // Set coverDateConfirmed to `true`
+        let updated = facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
+          await updateFacility(f._id, {
+            coverDateConfirmed: true,
+          });
+        });
+        facilitiesUpdated = updated.length;
 
+        // Set coverDateCofirmed to `false`
+        updated = facilities.filter((f) => !f.hasBeenIssued && f.coverDateConfirmed).map(async (f) => {
+          await updateFacility(f._id, {
+            coverDateConfirmed: false,
+          });
+        });
+
+        facilitiesUpdated += updated.length;
+        return facilitiesUpdated;
+      }
+    } catch (e) {
+      console.error('Unable to set coverDateConfirmed for AIN facilities.', { e });
+    }
+  }
+  return 0;
+};
+
+const addSubmissionData = async (dealId, existingApplication) => {
+  await checkCoverDateConfirmed(existingApplication);
+  const { count, date } = await generateSubmissionData(existingApplication);
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
   await removeChangedToIssued(dealId);
@@ -196,33 +235,6 @@ const addSubmissionData = async (dealId, existingApplication) => {
   }
 
   return submissionData;
-};
-
-/**
- * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
- * If the submission type is AIN and application status is DRAFT then `coverDateConfirmed`
- * is updated to `true`. This helper function mitigates a know bug which is produced upon
- * cloning a deal.
- * @param {Object} app Application object
- * @returns {Integer} Number of facilities updated
- */
-const checkCoverDateConfirmed = async (app) => {
-  if (app) {
-    try {
-      const facilities = await getAllFacilitiesByDealId(app._id);
-      if (app.status === CONSTANTS.DEAL.STATUS.DRAFT && app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN && facilities?.length > 0) {
-        const updated = facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
-          await updateFacility(f._id, {
-            coverDateConfirmed: true,
-          });
-        });
-        return updated.length;
-      }
-    } catch (e) {
-      console.error('Unable to set coverDateConfirmed for AIN facilities.', { e });
-    }
-  }
-  return 0;
 };
 
 module.exports = {
