@@ -59,7 +59,7 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     dashboard.filterCheckboxSubmissionTypeMIA().should('be.checked');
   });
 
-  it('renders the applied filter in the `applied filters` section', () => {
+  it('renders the applied filters in the `applied filters` section', () => {
     dashboard.filtersAppliedContainer().should('be.visible');
     dashboard.filtersAppliedList().should('be.visible');
 
@@ -90,7 +90,21 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     secondAppliedFilter.should('have.text', expectedText);
   });
 
-  it('renders only deals that are MIA and Draft status matching properties', () => {
+  it('renders the applied filters in the `main container selected filters` section', () => {
+    // applied filter 1
+    dashboard.filtersSelectedMainContainerNoticeMIA().should('be.visible');
+
+    let expectedText = `Remove this filter ${CONSTANTS.DEALS.SUBMISSION_TYPE.MIA}`;
+    dashboard.filtersSelectedMainContainerNoticeMIA().contains(expectedText);
+
+    // applied filter 2
+    dashboard.filtersSelectedMainContainerStatusDraft().should('be.visible');
+
+    expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.DRAFT}`;
+    dashboard.filtersSelectedMainContainerStatusDraft().contains(expectedText);
+  });
+
+  it('renders only deals that have matching fields - MIA and Draft status', () => {
     const EXPECTED_MIA_DRAFT_DEALS = ALL_DEALS.filter(({ submissionType, status }) =>
       status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
       && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);

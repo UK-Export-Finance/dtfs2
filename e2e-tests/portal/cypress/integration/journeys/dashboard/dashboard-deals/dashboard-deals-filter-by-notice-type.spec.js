@@ -67,6 +67,13 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
+    it('renders the applied filter in the `main container selected filters` section', () => {
+      dashboard.filtersSelectedMainContainerNoticeMIA().should('be.visible');
+
+      const expectedText = `Remove this filter ${CONSTANTS.DEALS.SUBMISSION_TYPE.MIA}`;
+      dashboard.filtersSelectedMainContainerNoticeMIA().contains(expectedText);
+    });
+
     it('renders only MIA deals', () => {
       const ALL_MIA_DEALS = ALL_DEALS.filter(({ submissionType }) => submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
       dashboard.rows().should('have.length', ALL_MIA_DEALS.length);

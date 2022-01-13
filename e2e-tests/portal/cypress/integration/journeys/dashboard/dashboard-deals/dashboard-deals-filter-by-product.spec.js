@@ -119,6 +119,13 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
+    it('renders the applied filter in the `main container selected filters` section', () => {
+      dashboard.filtersSelectedMainContainerProductGEF().should('be.visible');
+
+      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`;
+      dashboard.filtersSelectedMainContainerProductGEF().contains(expectedText);
+    });
+
     it('renders only GEF deals', () => {
       const ALL_GEF_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
       dashboard.rows().should('have.length', ALL_GEF_DEALS.length);

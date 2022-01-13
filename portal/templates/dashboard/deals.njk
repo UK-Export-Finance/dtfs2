@@ -1,8 +1,8 @@
 {% extends "index.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{%- from "moj/components/filter/macro.njk" import mojFilter -%}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
-{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% import '_macros/success-message.njk' as success %}
@@ -38,7 +38,7 @@
       &nbsp
     </div>
 
-    <div class=" govuk-grid-column-one-quarter">
+    {# <div class=" govuk-grid-column-one-quarter">
       <div class="govuk-!-padding-left-2">
         <form method="POST" autocomplete="off">
           {{ govukCheckboxes({
@@ -68,7 +68,7 @@
 
         </form>
       </div>
-    </div>
+    </div> #}
   </div>
 
   {% set items = [] %}
@@ -126,19 +126,66 @@
 
       <div class="moj-action-bar" data-cy="filters-action-bar">
 
-        <div class="moj-action-bar__filter"></div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            <div class="moj-action-bar__filter"></div>
+          </div>
+        
+          <div class="govuk-grid-column-one-half">
+            
+            <form method="POST" autocomplete="off">
+              {{ govukCheckboxes({
+                name: "createdByYou",
+                classes: "govuk-checkboxes--small",
+                items: [
+                  {
+                    value: "true",
+                    text: "Created by you",
+                    checked: createdByYou,
+                    attributes: {
+                      "data-cy": "created-by-you-checkbox",
+                      'onChange': 'this.form.submit()'
+                    }
+                  }
+                ]
+              }) }}
+              <div class="moj-button-action">
+                {{ govukButton({
+                  text: 'Submit',
+                  classes: 'moj-js-hidden',
+                  attributes: {
+                    'data-cy': 'created-by-you-submit'
+                  }
+                }) }}
+              </div>
 
-        {# {{ mojButtonMenu({
-          items: [{
-            text: 'Action 1',
-            classes: 'govuk-button--secondary'
-          }, {
-            text: 'Action 2',
-            classes: 'govuk-button--secondary'
-          }]
-        }) }} #}
+            </form>
+
+          </div>
+        </div>
+
+        {% if selectedFilters.length %}
+          {% for filter in selectedFilters %}
+            <ul class="govuk-!-padding-left-0" data-cy="main-container-selected-filters">
+              {% for filterItem in filter.items %}
+                <li>
+                  <a
+                    class="govuk-link govuk-button--secondary moj-filter__tag"
+                    href="{{ filterItem.href }}"
+                    data-cy="main-container-selected-filter-{{ filterItem.formattedFieldValue}}"
+                  >
+                    <span class="govuk-visually-hidden">Remove this filter</span>
+                    {{ filterItem.text }}
+                  </a>
+                </li>
+              {% endfor %}
+            <ul>
+          {% endfor %}
+        {% endif %}
 
       </div>
+
+      <br />
 
       <div class="moj-scrollable-pane">
 

@@ -76,6 +76,13 @@ context('Dashboard Deals filters - filter by keyword', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
+    it('renders the applied keyword in the `main container selected filters` section', () => {
+      dashboard.filtersSelectedMainContainerKeyword(MOCK_KEYWORD).should('be.visible');
+
+      const expectedText = `Remove this filter ${MOCK_KEYWORD}`;
+      dashboard.filtersSelectedMainContainerKeyword(MOCK_KEYWORD).contains(expectedText);
+    });
+
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
       const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
       dashboard.rows().should('have.length', ALL_KEYWORD_DEALS.length);

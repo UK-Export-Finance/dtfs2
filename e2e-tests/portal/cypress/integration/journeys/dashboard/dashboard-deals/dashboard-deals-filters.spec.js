@@ -95,10 +95,6 @@ context('Dashboard Deals filters', () => {
     });
 
     it('status', () => {
-      //////////////////// TODO
-      // TODO: make sure all statuses actually works
-      //////////////////// TODO
-
       // status - all statuses
       dashboard.filterLabelStatusAllStatuses().contains('All statuses');
       dashboard.filterCheckboxStatusAllStatuses().should('exist');
@@ -155,14 +151,4 @@ context('Dashboard Deals filters', () => {
       dashboard.filterCheckboxStatusAbandoned().should('not.be.checked');
     });
   });
-
-
-  // it('multiple filters can be applied and render in the `selected fitlers` section', () => {
-  // });
-
-  // it('multiple filters can be removed after being applied', () => {
-  // });
-
-  // it('clicking `clear all filters` removes all applied filters', () => {
-  // });
 });

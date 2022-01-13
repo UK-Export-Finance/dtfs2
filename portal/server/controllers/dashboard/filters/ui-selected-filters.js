@@ -14,11 +14,13 @@ const generateSelectedFiltersObject = (
     text: heading,
   },
   items: submittedFieldFilters.map((fieldValue) => {
-    const formattedFieldValue = fieldValue.replace('/', '-');
+    // const formattedFieldValue = fieldValue.replace('/', '-');
+    const formattedFieldValue = fieldValue.replace(/[\s+/]/g, '-').replace('\'', '');
 
     return {
       text: fieldValue,
       href: `filters/remove/${fieldName}/${formattedFieldValue}`,
+      formattedFieldValue,
     };
   }),
 });

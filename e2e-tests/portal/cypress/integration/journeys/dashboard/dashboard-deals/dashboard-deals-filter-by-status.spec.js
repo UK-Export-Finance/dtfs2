@@ -68,6 +68,13 @@ context('Dashboard Deals filters - filter by status', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
+    it('renders the applied filter in the `main container selected filters` section', () => {
+      dashboard.filtersSelectedMainContainerStatusDraft().should('be.visible');
+
+      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.DRAFT}`;
+      dashboard.filtersSelectedMainContainerStatusDraft().contains(expectedText);
+    });
+
     it('renders only draft deals', () => {
       const ALL_DRAFT_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
       dashboard.rows().should('have.length', ALL_DRAFT_DEALS.length);
@@ -120,6 +127,13 @@ context('Dashboard Deals filters - filter by status', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
+    it('renders the applied filter in the `main container selected filters` section', () => {
+      dashboard.filtersSelectedMainContainerStatusReadyForChecker().should('be.visible');
+
+      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK}`;
+      dashboard.filtersSelectedMainContainerStatusReadyForChecker().contains(expectedText);
+    });
+
     it('renders only Ready for Check deals', () => {
       const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
       dashboard.rows().should('have.length', ALL_READY_FOR_CHECK_DEALS.length);
@@ -170,6 +184,13 @@ context('Dashboard Deals filters - filter by status', () => {
 
       const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`;
       firstAppliedFilter.should('have.text', expectedText);
+    });
+
+    it('renders the applied filter in the `main container selected filters` section', () => {
+      dashboard.filtersSelectedMainContainerStatusAll().should('be.visible');
+
+      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`;
+      dashboard.filtersSelectedMainContainerStatusAll().contains(expectedText);
     });
 
     it('renders all deals regardless of status', () => {

@@ -3,49 +3,38 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboard } = require('../../../pages');
 const {
-  BSS_DEAL_MIA,
+  BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
 } = require('./fixtures');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
-context('Dashboard Deals filters - remove all filters', () => {
+context('Dashboard Deals - panel selected filters - remove a filter', () => {
   const ALL_DEALS = [];
 
   before(() => {
     cy.deleteGefApplications(BANK1_MAKER1);
     cy.deleteDeals(BANK1_MAKER1);
 
-    cy.insertOneDeal(BSS_DEAL_MIA, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
-
-    cy.insertOneDeal(BSS_DEAL_MIA, BANK1_MAKER1).then((deal) => {
+    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
     });
-  });
 
-  before(() => {
     cy.login(BANK1_MAKER1);
     dashboard.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
-  it('removes all applied filters by clicking `clear filters` button', () => {
+  it('applies and removes a filter', () => {
     // toggle to show filters (hidden by default)
     dashboard.filtersShowHideButton().click();
 
-    // apply filter 1
-    dashboard.filterCheckboxStatusDraft().click();
-
-    // apply filter 2
+    // apply filter
     dashboard.filterCheckboxSubmissionTypeMIA().click();
-
-    // submit filters
     dashboard.filtersApplyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -53,13 +42,12 @@ context('Dashboard Deals filters - remove all filters', () => {
     // toggle to show filters (hidden by default)
     dashboard.filtersShowHideButton().click();
 
-    // check filters are applied
-    dashboard.filterCheckboxStatusDraft().should('be.checked');
-    dashboard.filterCheckboxSubmissionTypeMIA().should('be.checked');
+    // check the filter is in the applied filters section
+    const firstAppliedFilter = dashboard.filtersAppliedListItem().first();
+    firstAppliedFilter.should('be.visible');
 
-    // click `clear all` button
-    dashboard.filtersClearAllLink().should('be.visible');
-    dashboard.filtersClearAllLink().click();
+    // click remove button
+    firstAppliedFilter.click();
 
     // should be redirected
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -68,15 +56,11 @@ context('Dashboard Deals filters - remove all filters', () => {
     dashboard.filtersShowHideButton().click();
     dashboard.filtersContainer().should('be.visible');
 
-    // should have empty panel applied filters
+    // should have empty applied filters
     dashboard.filtersAppliedContainer().should('not.exist');
     dashboard.filtersAppliedList().should('not.exist');
 
-    // should have empty main container applied filters
-    dashboard.filtersSelectedMainContainer().should('not.exist');
-
     // checkbox should be NOT be checked
-    dashboard.filterCheckboxStatusDraft().should('not.be.checked');
     dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');
 
     // should render all deals

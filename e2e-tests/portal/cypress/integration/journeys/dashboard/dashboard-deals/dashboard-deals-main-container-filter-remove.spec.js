@@ -9,7 +9,7 @@ const {
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
-context('Dashboard Deals filters - remove a filter', () => {
+context('Dashboard Deals - main container selected filters - remove a filter', () => {
   const ALL_DEALS = [];
 
   before(() => {
@@ -39,26 +39,17 @@ context('Dashboard Deals filters - remove a filter', () => {
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
-    // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
-
     // check the filter is in the applied filters section
-    const firstAppliedFilter = dashboard.filtersAppliedListItem().first();
-    firstAppliedFilter.should('be.visible');
+    dashboard.filtersSelectedMainContainerNoticeMIA().should('be.visible');
 
     // click remove button
-    firstAppliedFilter.click();
+    dashboard.filtersSelectedMainContainerNoticeMIA().click();
 
     // should be redirected
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
-    // toggle to show filters (hidden by default)
-    dashboard.filtersShowHideButton().click();
-    dashboard.filtersContainer().should('be.visible');
-
-    // should have empty applied filters
-    dashboard.filtersAppliedContainer().should('not.exist');
-    dashboard.filtersAppliedList().should('not.exist');
+    // should have empty applied filter
+    dashboard.filtersSelectedMainContainerNoticeMIA().should('not.exist');
 
     // checkbox should be NOT be checked
     dashboard.filterCheckboxSubmissionTypeMIA().should('not.be.checked');

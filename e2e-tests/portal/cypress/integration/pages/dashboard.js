@@ -29,7 +29,7 @@ const page = {
   totalItems: () => cy.get('[data-cy="totalItems"]'),
 
 
-  filtersShowHideButton: () => cy.get('[data-cy="filters-action-bar"] button'),
+  filtersShowHideButton: () => cy.get('[data-cy="filters-action-bar"] button').first(),
   filtersContainer: () => cy.get('[data-cy="filters-container"]'),
   filtersApplyFiltersButton: () => cy.get('[data-cy="filters-container"] button'),
 
@@ -94,6 +94,18 @@ const page = {
   filtersAppliedList: () => cy.get('[data-cy="filters-container"] .moj-filter__selected .moj-filter-tags'),
   filtersAppliedListItem: () => cy.get('[data-cy="filters-container"] .moj-filter__selected .moj-filter-tags li'),
   filtersClearAllLink: () => cy.get('[data-cy="filters-container"] .moj-filter__selected .moj-filter__heading-action a'),
+
+  // selected filters - main container
+  filtersSelectedMainContainer: () => cy.get('[data-cy="main-container-selected-filters'),
+  filtersSelectedMainContainerKeyword: (keyword) => cy.get(`[data-cy="main-container-selected-filter-${keyword}"]`),
+
+  filtersSelectedMainContainerNoticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),
+
+  filtersSelectedMainContainerProductGEF: () => cy.get('[data-cy="main-container-selected-filter-GEF'),
+
+  filtersSelectedMainContainerStatusDraft: () => cy.get('[data-cy="main-container-selected-filter-Draft'),
+  filtersSelectedMainContainerStatusReadyForChecker: () => cy.get('[data-cy="main-container-selected-filter-Ready-for-Checkers-approval'),
+  filtersSelectedMainContainerStatusAll: () => cy.get('[data-cy="main-container-selected-filter-All-statuses'),
 };
 
 module.exports = page;
