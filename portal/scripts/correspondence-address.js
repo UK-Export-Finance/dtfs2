@@ -21,8 +21,6 @@ function CorrespondenceAddress() {
 
 const correspondenceAddress = new CorrespondenceAddress();
 
-correspondenceAddress;
-
 document.querySelector('[data-cy="correspondence-yes"]').addEventListener('click', () => {
   correspondenceAddress.toggle(false);
 });
