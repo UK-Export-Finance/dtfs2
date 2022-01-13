@@ -46,7 +46,7 @@ describe(page, () => {
               facilitySnapshot: {
                 _id: '123',
                 ukefFacilityId: '0040004833',
-                ukefFacilityType: 'bond',
+                ukefFacilityType: 'Bond',
                 bondIssuer: 'test bond beneficiary',
               },
               tfm: {
@@ -57,7 +57,7 @@ describe(page, () => {
               _id: '456',
               facilitySnapshot: {
                 _id: '456',
-                ukefFacilityType: 'bond',
+                ukefFacilityType: 'Bond',
                 ukefFacilityId: '0040004833',
                 bondIssuer: 'test bond beneficiary',
               },
@@ -69,7 +69,7 @@ describe(page, () => {
               _id: '789',
               facilitySnapshot: {
                 _id: '789',
-                ukefFacilityType: 'bond',
+                ukefFacilityType: 'Bond',
                 ukefFacilityId: '0040004833',
               },
               tfm: {
@@ -96,21 +96,21 @@ describe(page, () => {
               _id: '123',
               facilitySnapshot: {
                 _id: '123',
-                ukefFacilityType: 'bond',
+                ukefFacilityType: 'Bond',
               },
             },
             {
               _id: '456',
               facilitySnapshot: {
                 _id: '456',
-                ukefFacilityType: 'bond',
+                ukefFacilityType: 'Bond',
               },
             },
             {
               _id: '789',
               facilitySnapshot: {
                 _id: '789',
-                ukefFacilityType: 'bond',
+                ukefFacilityType: 'Bond',
               },
             },
           ],

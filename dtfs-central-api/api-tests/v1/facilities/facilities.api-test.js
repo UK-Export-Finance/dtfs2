@@ -14,7 +14,7 @@ const mockUser = {
 };
 
 const mockFacility = {
-  facilityType: 'bond',
+  facilityType: 'Bond',
   dealId: '123123456',
 };
 

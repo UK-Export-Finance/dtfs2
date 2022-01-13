@@ -4,7 +4,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}Facility value, cover and {{ "interest" if facilityType === "CASH" else "risk" }} margin{% endblock %}
+{% block pageTitle %}Facility value, cover and {{ "interest" if facilityType === "Cash" else "risk" }} margin{% endblock %}
 
 {% block content %}
   {% if errors %}
@@ -40,7 +40,7 @@
       Add a facility
     </span>
     <h1 class="govuk-heading-xl" data-cy="main-heading">
-      Value, cover and {{ "interest" if facilityType === "CASH" else "risk" }} margin
+      Value, cover and {{ "interest" if facilityType === "Cash" else "risk" }} margin
     </h1>
   </header>
 

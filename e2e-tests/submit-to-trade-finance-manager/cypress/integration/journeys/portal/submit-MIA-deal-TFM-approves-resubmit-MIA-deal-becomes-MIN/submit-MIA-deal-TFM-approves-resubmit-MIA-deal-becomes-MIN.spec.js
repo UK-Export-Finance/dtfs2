@@ -32,11 +32,11 @@ context('Portal to TFM deal submission', () => {
           createdFacilities.forEach((facility) => {
             const { facilityType } = facility;
 
-            if (facilityType === 'bond') {
+            if (facilityType === 'Bond') {
               bondId = facility._id;
             }
 
-            if (facilityType === 'loan') {
+            if (facilityType === 'Loan') {
               loanId = facility._id;
             }
           });

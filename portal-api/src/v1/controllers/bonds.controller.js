@@ -23,7 +23,7 @@ exports.create = async (req, res) => {
     }
 
     const facilityBody = {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       dealId: req.params.id,
       ...req.body,
     };

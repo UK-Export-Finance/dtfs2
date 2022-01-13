@@ -29,8 +29,8 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
         const { mockFacilities } = dealWithStatus;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -77,7 +77,6 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
 
     pages.contract.proceedToReview().should('not.be.disabled');
 
-
     const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -101,7 +100,6 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     });
 
     pages.contract.proceedToReview().should('not.be.disabled');
-
 
     // submit deal for review
     pages.contract.proceedToReview().click();
@@ -150,7 +148,6 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
       expect(href).to.equal(`/contract/${dealId}/submission-details#loan-${loanId}`);
     });
-
 
     // since no other facilities have had their details/forms completed
     // and the deal is now has `Ready for Checker\'s approval` status

@@ -50,19 +50,19 @@
         "answer": true
       }
     ]
-  },  
+  },
   "mockFacilities": [
     {
-      "facilityType": "loan"
+      "facilityType": "Loan"
     },
     {
-      "facilityType": "loan"
+      "facilityType": "Loan"
     },
     {
-      "facilityType": "loan"
+      "facilityType": "Loan"
     },
     {
-      "facilityType": "loan"
+      "facilityType": "Loan"
     }
   ]
 }

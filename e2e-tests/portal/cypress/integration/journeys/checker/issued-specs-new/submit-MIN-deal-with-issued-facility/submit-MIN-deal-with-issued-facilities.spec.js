@@ -30,8 +30,8 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
         const { mockFacilities } = MIADealAcceptedStatusWithUnissuedFacilities;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -57,7 +57,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    // complete issue bond facility form
+    // complete issue Bond facility form
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 

@@ -180,7 +180,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Advance payment guarantee',
@@ -209,7 +209,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       'requestedCoverStartDate-day': '',

@@ -12,7 +12,7 @@
  *         example: 456abc
  *       facilityType:
  *         type: string
- *         example: bond
+ *         example: Bond
  *       createdDate:
  *         type: string
  *         example: '1632392646415'

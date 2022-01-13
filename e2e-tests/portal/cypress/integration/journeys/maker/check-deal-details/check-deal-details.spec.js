@@ -29,8 +29,8 @@ context('Check deal details', () => {
         const { mockFacilities } = fullyCompletedDeal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -66,7 +66,6 @@ context('Check deal details', () => {
     pages.contractSubmissionDetails.editLinkAboutSupplier(dealId).click();
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
-
     //---------------------------------------------------------------
     // Confirm Eligibility
     //---------------------------------------------------------------
@@ -75,7 +74,6 @@ context('Check deal details', () => {
     pages.contractSubmissionDetails.editLinkConfirmEligibility(dealId).should('be.visible');
     pages.contractSubmissionDetails.editLinkConfirmEligibility(dealId).click();
     cy.url().should('eq', relative(`/contract/${dealId}/eligibility/criteria`));
-
 
     //---------------------------------------------------------------
     // A Bond
@@ -86,7 +84,6 @@ context('Check deal details', () => {
     pages.contractSubmissionDetails.editLinkBond(dealId, bondId).should('be.visible');
     pages.contractSubmissionDetails.editLinkBond(dealId, bondId).click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/details`));
-
 
     //---------------------------------------------------------------
     // A Loan

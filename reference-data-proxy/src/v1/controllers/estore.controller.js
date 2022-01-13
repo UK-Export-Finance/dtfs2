@@ -59,13 +59,14 @@ const createEstore = async (req, res) => {
   const createFacilities = facilityIdentifiers.map(
     (facilityIdentifier) =>
       new Promise((resolve, reject) =>
+        // eslint-disable-next-line no-promise-executor-return
         apiEstore
           .createFacilityFolder({
             siteName,
             dealIdentifier,
             exporterName,
             buyerName,
-            facilityIdentifier: facilityIdentifier.toString(),
+            facilityIdentifier: facilityIdentifier?.toString(),
             destinationMarket,
             riskMarket,
           })

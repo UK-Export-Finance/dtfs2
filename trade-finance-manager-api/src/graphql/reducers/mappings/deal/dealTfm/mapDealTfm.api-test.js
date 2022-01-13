@@ -12,12 +12,12 @@ describe('mapDealTfm', () => {
         facilities: [
           {
             _id: '1',
-            facilityType: 'bond',
+            facilityType: 'Bond',
             productCode: 'BSS',
           },
           {
             _id: '2',
-            facilityType: 'bond',
+            facilityType: 'Bond',
             productCode: 'BSS',
           },
         ],

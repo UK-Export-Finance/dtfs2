@@ -5,7 +5,7 @@ const date = nowPlusMonths(1);
 
 const dealWithNoCoverStartDate = { ...dealReadyToSubmitForReview };
 
-const bond = dealWithNoCoverStartDate.mockFacilities.find((f) => f.facilityType === 'bond');
+const bond = dealWithNoCoverStartDate.mockFacilities.find((f) => f.facilityType === 'Bond');
 
 bond['coverEndDate-day'] = (date.getDate()).toString();
 bond['coverEndDate-month'] = (date.getMonth() + 1).toString();

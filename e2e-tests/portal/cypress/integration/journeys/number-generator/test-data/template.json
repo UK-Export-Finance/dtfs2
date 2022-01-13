@@ -138,7 +138,7 @@
   },
   "mockFacilities": [
     {
-      "facilityType": "bond",
+      "facilityType": "Bond",
       "bondIssuer": "Issuer",
       "bondType": "Advance payment guarantee",
       "facilityStage": "Unissued",
@@ -159,7 +159,7 @@
       }
     },
     {
-      "facilityType": "loan",
+      "facilityType": "Loan",
       "facilityStage": "Unconditional",
       "bankReferenceNumber": "8888888",
       "guaranteeFeePayableByBank": "18.0000",

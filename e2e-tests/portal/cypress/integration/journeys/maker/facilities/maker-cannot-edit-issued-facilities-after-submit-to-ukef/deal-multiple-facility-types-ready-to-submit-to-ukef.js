@@ -192,7 +192,7 @@ const deal = {
   bondTransactions: {
     items: [
       {
-        facilityType: 'bond',
+        facilityType: 'Bond',
         createdDate: now,
         bondIssuer: '',
         bondType: 'Advance payment guarantee',
@@ -226,7 +226,7 @@ const deal = {
   loanTransactions: {
     items: [
       {
-        facilityType: 'loan',
+        facilityType: 'Loan',
         createdDate: now,
         facilityStage: 'Unconditional',
         'requestedCoverStartDate-day': '',
