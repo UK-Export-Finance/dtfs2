@@ -1,4 +1,5 @@
 const { validationErrorHandler } = require('../../utils/helpers');
+const { getIssuedFacilitiesAsArray } = require('../../utils/facility-helpers');
 const { applicationDetails } = require('../application-details');
 const api = require('../../services/api');
 
@@ -9,10 +10,19 @@ const acceptUkefDecision = async (req, res) => {
   try {
     if (decision) {
       const application = await api.getApplication(dealId);
+      const facilities = await api.getFacilities(dealId);
 
       application.ukefDecisionAccepted = true;
       await api.updateApplication(dealId, application);
-      return res.redirect(`/gef/application-details/${dealId}/cover-start-date`);
+      /**
+       * If issued facilities available then redirect user to
+       * set cover start date else issue a facility
+       * * */
+      const link = getIssuedFacilitiesAsArray(facilities).length
+        ? `/gef/application-details/${dealId}/cover-start-date`
+        : `/gef/application-details/${dealId}/unissued-facilities`;
+
+      return res.redirect(link);
     }
     const errors = validationErrorHandler({
       errRef: 'decision',

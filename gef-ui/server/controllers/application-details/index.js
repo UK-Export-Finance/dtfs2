@@ -118,13 +118,13 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
+    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: (areUnissuedFacilitiesPresent && !facilitiesChangedToIssued.length && hasUkefDecisionAccepted),
+    canUpdateUnissuedFacilities: (unissuedFacilitiesPresent && !facilitiesChangedToIssued.length && hasUkefDecisionAccepted),
   };
 
   return appBody;
