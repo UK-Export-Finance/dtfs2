@@ -209,7 +209,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       createdDate: new Date().valueOf(),
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -233,7 +233,7 @@ const deal = {
       status: 'Not started',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: new Date().valueOf(),
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',

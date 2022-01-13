@@ -1,5 +1,6 @@
 import { facilityCurrency, updateFacilityCurrency } from '.';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -38,7 +39,7 @@ describe('GET Facility Currency', () => {
 
     mockRequest.query.status = 'change';
     mockFacilityCurrencyResponse.details.currency = { id: 'EUR' };
-    mockFacilityCurrencyResponse.details.type = 'CASH';
+    mockFacilityCurrencyResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
     api.getFacility.mockResolvedValueOnce(mockFacilityCurrencyResponse);
 
     await facilityCurrency(mockRequest, mockResponse);

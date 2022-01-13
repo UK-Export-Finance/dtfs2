@@ -41,7 +41,7 @@ const MockFacilityResponse = () => {
   res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
   res.items = [{
-    details: { type: 'CASH' },
+    details: { type: CONSTANTS.FACILITY_TYPE.CASH },
     validation: { required: [] },
     createdAt: 20,
   }];

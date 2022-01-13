@@ -5,7 +5,7 @@ const MOCK_UNISSUED_FACILITY = {
   details: {
     _id: '61a771cc2ae62b0013dae68a',
     dealId: '61a7710b2ae62b0013dae687',
-    type: 'CASH',
+    type: CONSTANTS.FACILITY_TYPE.CASH,
     hasBeenIssued: false,
     name: 'Facility two',
     shouldCoverStartOnSubmission: true,
@@ -38,7 +38,7 @@ const MOCK_ISSUED_FACILITY = {
   details: {
     _id: '61a771cc2ae62b0013dae68a',
     dealId: '61a7710b2ae62b0013dae687',
-    type: 'CASH',
+    type: CONSTANTS.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: 'Facility one',
     shouldCoverStartOnSubmission: true,
@@ -72,7 +72,7 @@ const MOCK_ISSUED_FACILITY_UNCHANGED = {
   details: {
     _id: '61a771cc2ae62b0013dae68a',
     dealId: '61a7710b2ae62b0013dae687',
-    type: 'CASH',
+    type: CONSTANTS.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: 'Facility one',
     shouldCoverStartOnSubmission: true,
@@ -108,7 +108,7 @@ const MOCK_FACILITY = {
       details: {
         _id: '61a7714f2ae62b0013dae689',
         dealId: '61a7710b2ae62b0013dae687',
-        type: 'CASH',
+        type: CONSTANTS.FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         name: 'Facility one',
         shouldCoverStartOnSubmission: false,
@@ -140,7 +140,7 @@ const MOCK_FACILITY = {
       details: {
         _id: '61a771cc2ae62b0013dae68a',
         dealId: '61a7710b2ae62b0013dae687',
-        type: 'CASH',
+        type: CONSTANTS.FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         name: 'Facility two',
         shouldCoverStartOnSubmission: true,
@@ -172,7 +172,7 @@ const MOCK_FACILITY = {
       details: {
         _id: '61a7714f2ae62b0013dae699',
         dealId: '61a7710b2ae62b0013dae687',
-        type: 'CASH',
+        type: CONSTANTS.FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         name: 'Facility one',
         shouldCoverStartOnSubmission: false,

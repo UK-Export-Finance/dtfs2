@@ -505,7 +505,7 @@ describe(baseUrl, () => {
         }]);
       });
       it('returns an enum error when putting the payment type', async () => {
-        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: 'CASH', paymentType: 'TEST' }).to(baseUrl);
+        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, paymentType: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([{
           errCode: ERROR.ENUM_ERROR,

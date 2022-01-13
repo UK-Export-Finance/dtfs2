@@ -12,7 +12,7 @@
  *         example: 456abc
  *       facilityType:
  *         type: string
- *         example: loan
+ *         example: Loan
  *       createdDate:
  *         type: string
  *         example: '1632392646415'

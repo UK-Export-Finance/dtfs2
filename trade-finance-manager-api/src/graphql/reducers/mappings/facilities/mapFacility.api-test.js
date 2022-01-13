@@ -36,7 +36,7 @@ describe('mapFacility', () => {
   };
 
   const mockFacilityValue = '12345.00';
-  const mockFacilityType = 'bond';
+  const mockFacilityType = 'Bond';
   const mockFacilityStage = 'Unissued';
 
   const mockFacility = {

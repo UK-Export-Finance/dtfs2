@@ -1,5 +1,6 @@
 import { providedFacility, validateProvidedFacility } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -49,7 +50,7 @@ describe('controllers/provided-facility', () => {
     it('renders the `Provided Facility` template', async () => {
       mockRequest.query.status = 'change';
       mockProvidedFacilityResponse.details.details = ['TERMS', 'RESOLVING'];
-      mockProvidedFacilityResponse.details.type = 'CASH';
+      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
 
@@ -123,7 +124,7 @@ describe('controllers/provided-facility', () => {
 
     it('calls the updateFacility api with the correct data', async () => {
       mockRequest.body.details = ['TERMS', 'RESOLVING'];
-      mockRequest.body.type = 'CASH';
+      mockRequest.body.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       await validateProvidedFacility(mockRequest, mockResponse);
 

@@ -32,8 +32,8 @@ const DEAL_STATUS = {
 };
 
 const FACILITY_TYPE = {
-  CASH: 'CASH',
-  CONTINGENT: 'CONTINGENT',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 };
 
 const DEAL_COMMENT_TYPE_PORTAL = {
@@ -42,10 +42,10 @@ const DEAL_COMMENT_TYPE_PORTAL = {
   SPECIAL_CONDITIONS: 'specialConditions',
 };
 
-exports.default = {
+module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
-  DEAL_STATUS,
-  FACILITY_TYPE,
+  DEAL_STATUS, 
+  FACILITY_TYPE, 
   DEAL_COMMENT_TYPE_PORTAL,
 };

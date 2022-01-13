@@ -5,7 +5,7 @@ const deal = {
   ...dealFullyCompleted,
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -30,7 +30,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -54,7 +54,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -80,7 +80,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
@@ -108,7 +108,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
@@ -135,7 +135,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Unconditional',
       previousFacilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',

@@ -11,8 +11,8 @@
 const mdmEaApi = require('../api-ukef-mdm-ea');
 
 const getAcbsIndustrySector = async (context) => {
-  const { industryCode } = context.bindingData;
-  const { status, data } = await mdmEaApi.getACBSIndustrySector(industryCode);
+  const { industry } = context.bindingData;
+  const { status, data } = await mdmEaApi.getACBSIndustrySector(industry);
   return (status === 200) ? data[0].acbsIndustryId : '0001';
 };
 

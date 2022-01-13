@@ -67,7 +67,7 @@ describe('controllers/facility-value', () => {
     it('renders the `Facility Value` template', async () => {
       mockRequest.query.status = 'change';
       mockFacilityValueResponse.details.currency = { id: 'EUR' };
-      mockFacilityValueResponse.details.type = 'CASH';
+      mockFacilityValueResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
       mockFacilityValueResponse.details.value = 2000;
       mockFacilityValueResponse.details.coverPercentage = 20;
       mockFacilityValueResponse.details.interestPercentage = 10;
@@ -77,7 +77,7 @@ describe('controllers/facility-value', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
         currency: 'EUR',
         value: '2000',
-        facilityType: 'CASH',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         coverPercentage: '20',
         interestPercentage: '10',
         facilityTypeString: 'cash',

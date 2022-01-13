@@ -75,7 +75,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
         const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-          f.facilityType === 'bond'
+          f.facilityType === 'Bond'
           && isUnsubmittedIssuedFacility(f)
           && !f.requestedCoverStartDate);
 
@@ -99,7 +99,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
 
         const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-          f.facilityType === 'loan'
+          f.facilityType === 'Loan'
           && isUnsubmittedIssuedFacility(f)
           && !f.requestedCoverStartDate);
 
@@ -152,7 +152,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
 
         const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-          f.facilityType === 'bond'
+          f.facilityType === 'Bond'
           && isUnsubmittedIssuedFacility(f)
           && !f.requestedCoverStartDate);
 
@@ -175,7 +175,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
 
         const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-          f.facilityType === 'loan'
+          f.facilityType === 'Loan'
           && isUnsubmittedIssuedFacility(f)
           && !f.requestedCoverStartDate);
 

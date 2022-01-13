@@ -1,6 +1,7 @@
 import relative from './relativeURL';
 import facilities from './pages/facilities';
 import CREDENTIALS from '../fixtures/credentials.json';
+import CONSTANTS from '../fixtures/constants';
 
 const dealIds = [];
 let token;
@@ -39,7 +40,7 @@ context('Facilities Page', () => {
     });
 
     it('displays the correct elements for contingent faciltiy', () => {
-      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=CONTINGENT`));
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`));
       facilities.backLink();
       facilities.headingCaption();
       facilities.hasBeenIssuedHeading().contains('contingent');
@@ -62,7 +63,6 @@ context('Facilities Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0]}`));
     });
   });
-
 
   describe('Clicking on Continue button', () => {
     it('validates form', () => {

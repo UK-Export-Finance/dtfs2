@@ -12,7 +12,7 @@
  *         example: 456abc
  *       type:
  *         type: string
- *         example: CONTINGENT
+ *         example: Contingent
  *       hasBeenIssued:
  *         type: boolean
  *         example: false

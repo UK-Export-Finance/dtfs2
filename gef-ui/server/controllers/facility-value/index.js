@@ -41,7 +41,7 @@ const updateFacilityValue = async (req, res) => {
   } = body;
 
   const { status, saveAndReturn } = query;
-  const facilityTypeConst = FACILITY_TYPE[facilityType];
+  const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityValueErrors = [];
   async function update() {

@@ -8,8 +8,8 @@ const SME_TYPE = {
 };
 
 const FACILITY_TYPE = {
-  CASH: 'CASH',
-  CONTINGENT: 'CONTINGENT',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 };
 
 const PAYMENT_TYPE = {

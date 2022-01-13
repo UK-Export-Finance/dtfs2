@@ -17,7 +17,7 @@ module.exports = (facility = {}, errorList) => {
     if (facilityType !== FACILITY_TYPE.BOND && facilityType !== FACILITY_TYPE.LOAN) {
       newErrorList.facilityType = {
         order: orderNumber(newErrorList),
-        text: 'Facility type must be bond or loan',
+        text: 'Facility type must be Bond or Loan',
       };
     }
   }

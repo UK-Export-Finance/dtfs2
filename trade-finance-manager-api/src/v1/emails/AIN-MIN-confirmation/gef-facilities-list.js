@@ -66,7 +66,7 @@ const facilityFieldsObj = (facility) => {
 * returns a formatted string for a single field/list item.
 */
 const generateFacilityFieldListItemString = (facilityType, fieldName, fieldValue) => {
-  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[facilityType][fieldName];
+  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[facilityType?.toUpperCase()][fieldName];
 
   const str = generateListItemString(`${title}: ${fieldValue}`);
 

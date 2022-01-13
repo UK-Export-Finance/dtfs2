@@ -37,14 +37,14 @@ context('User can view and filter multiple deals', () => {
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'bond'),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'Bond'),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'loan'),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'Loan'),
     ],
   });
 
@@ -117,7 +117,7 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.heading().invoke('text').then((text) => {
       expect(text.trim()).to.equal('All deals');
     });
-    
+
     // test that one deal has correct fields displayed
     const firstDeal = ALL_SUBMITTED_DEALS[0];
     const row = pages.dealsPage.dealsTable.row(firstDeal._id);
@@ -261,7 +261,7 @@ context('User can view and filter multiple deals', () => {
     const searchString = 'BSS';
 
     const dealsWithBonds = MOCK_DEALS.filter((deal) => {
-      if (deal.mockFacilities.find((f) => f.facilityType === 'bond')) {
+      if (deal.mockFacilities.find((f) => f.facilityType === 'Bond')) {
         return deal;
       }
       return null;

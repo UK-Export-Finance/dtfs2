@@ -294,7 +294,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const dealId = postResult.body._id;
 
       const modifiedMockFacilities = originalFacilities;
-      const firstBond = modifiedMockFacilities.find((f) => f.facilityType === 'bond');
+      const firstBond = modifiedMockFacilities.find((f) => f.facilityType === 'Bond');
 
       firstBond.status = 'Ready for check';
       firstBond.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
@@ -322,7 +322,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const dealId = postResult.body._id;
 
       const modifiedMockFacilities = originalFacilities;
-      const firstLoan = modifiedMockFacilities.find((f) => f.facilityType === 'loan');
+      const firstLoan = modifiedMockFacilities.find((f) => f.facilityType === 'Loan');
 
       firstLoan.status = 'Ready for check';
       firstLoan.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();

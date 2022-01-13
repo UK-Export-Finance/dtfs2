@@ -155,7 +155,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'bond'
+              f.facilityType === 'Bond'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -178,7 +178,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'loan'
+              f.facilityType === 'Loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -203,7 +203,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'bond'
+              f.facilityType === 'Bond'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -226,7 +226,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'loan'
+              f.facilityType === 'Loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -282,7 +282,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'bond'
+              f.facilityType === 'Bond'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -305,7 +305,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = createdFacilities.filter((f) =>
-              f.facilityType === 'loan'
+              f.facilityType === 'Loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -368,7 +368,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'bond'
+            f.facilityType === 'Bond'
             && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some bonds to test against
@@ -390,7 +390,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'loan'
+            f.facilityType === 'Loan'
             && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some loans to test against
@@ -422,7 +422,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const baseBond = {
-        facilityType: 'bond',
+        facilityType: 'Bond',
         bondIssuer: 'issuer',
         bondType: 'bond type',
         bondBeneficiary: 'test',
@@ -459,7 +459,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       ];
 
       const conditionalLoan = () => ({
-        facilityType: 'loan',
+        facilityType: 'Loan',
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
         value: '100',
@@ -472,7 +472,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const unconditionalLoan = () => ({
-        facilityType: 'loan',
+        facilityType: 'Loan',
         facilityStage: 'Unconditional',
         value: '100',
         bankReferenceNumber: '1234',
@@ -648,7 +648,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'loan'
+            f.facilityType === 'Loan'
             && f.facilityStage === 'Unconditional');
 
           // make sure we have some loans to test against
@@ -674,7 +674,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'bond'
+            f.facilityType === 'Bond'
             && f.facilityStage === 'Issued');
 
           // make sure we have some bonds to test against
@@ -700,7 +700,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'loan'
+            f.facilityType === 'Loan'
             && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f));
 
           // make sure we have some loans to test against
@@ -723,7 +723,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'bond'
+            f.facilityType === 'Bond'
             && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f));
 
           // make sure we have some bonds to test against

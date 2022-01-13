@@ -50,12 +50,12 @@ describe('controllers/application-details', () => {
 
     it('renders the `Application Details` template', async () => {
       mockFacilityResponse.items = [{
-        details: { type: 'CASH' },
+        details: { type: CONSTANTS.FACILITY_TYPE.CASH },
         validation: { required: [] },
         createdAt: 20,
       },
       {
-        details: { type: 'CONTINGENT' },
+        details: { type: CONSTANTS.FACILITY_TYPE.CONTINGENT },
         validation: { required: [] },
         createdAt: 10,
       }];

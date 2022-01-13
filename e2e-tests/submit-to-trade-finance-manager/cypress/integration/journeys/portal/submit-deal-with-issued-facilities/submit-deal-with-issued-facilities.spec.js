@@ -41,7 +41,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -76,7 +75,7 @@ context('Portal to TFM deal submission', () => {
     let facilityRow;
 
     const issuedBond = dealFacilities.find((facility) =>
-      facility.facilityType === 'bond'
+      facility.facilityType === 'Bond'
       && facility.facilityStage === 'Issued');
 
     const issuedBondId = issuedBond._id;
@@ -100,7 +99,7 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(tfmCaseDealPage);
 
     const issuedLoan = dealFacilities.find((facility) =>
-      facility.facilityType === 'loan'
+      facility.facilityType === 'Loan'
       && facility.facilityStage === 'Unconditional');
 
     const issuedLoanId = issuedLoan._id;

@@ -1,6 +1,7 @@
 import { add, sub, format } from 'date-fns';
 import { aboutFacility, validateAboutFacility } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -24,7 +25,7 @@ const MockRequest = () => {
 const MockFacilityResponse = () => {
   const res = {};
   res.details = {
-    type: 'CASH',
+    type: CONSTANTS.FACILITY_TYPE.CASH,
     name: 'UKEF123',
     hasBeenIssued: true,
     monthsOfCover: null,
@@ -60,7 +61,7 @@ describe('controllers/about-facility', () => {
 
       await aboutFacility(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        facilityType: 'CASH',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         facilityName: 'UKEF123',
         hasBeenIssued: true,
         monthsOfCover: null,
@@ -93,7 +94,7 @@ describe('controllers/about-facility', () => {
 
     it('redirects user to application page if save and return is set to true', async () => {
       mockRequest.query.saveAndReturn = 'true';
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
       await validateAboutFacility(mockRequest, mockResponse);
 
@@ -101,7 +102,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('sets the correct date format using single day, month and year values', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
@@ -124,7 +125,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if month of cover is not a number', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.monthsOfCover = 'ab';
 
       await validateAboutFacility(mockRequest, mockResponse);
@@ -137,7 +138,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if no facility name has been provided', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'name';
       mockRequest.body.hasBeenIssued = 'true';
 
@@ -161,7 +162,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if facility name is more than 30 characters', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'name';
       mockRequest.body.hasBeenIssued = 'true';
 
@@ -185,7 +186,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if facility name has disallowed characters', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'name .,;-';
       mockRequest.body.hasBeenIssued = 'true';
 
@@ -209,7 +210,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if no shouldCoverStartOnSubmission radio button has been selected', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
 
@@ -233,7 +234,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if no coverStartDateDay or coverStartDateMonth or coverStartDateYear has been provided', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
       mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
@@ -271,7 +272,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if coverStartDate is more than 3 months away', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
       mockRequest.body['cover-start-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
@@ -288,7 +289,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('doesnt show error message if coverStartDate is less than 3 months away', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
       mockRequest.body['cover-start-date-day'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'd');
@@ -305,7 +306,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if coverStartDate is in the past', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
       mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
@@ -322,7 +323,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if coverStartDate is after coverEndDate is in the past', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
       mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
@@ -342,7 +343,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if no monthsOfcover has been provided', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '';
 
@@ -356,7 +357,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if monthsOfcover is not a number', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1ab';
 
@@ -370,7 +371,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('shows error message if monthsOfcover is greater than 999 months', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1000';
 
@@ -384,7 +385,7 @@ describe('controllers/about-facility', () => {
     });
 
     it('redirects user to provided facility page if all of method passes', async () => {
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.facilityName = 'Name';
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
@@ -404,7 +405,7 @@ describe('controllers/about-facility', () => {
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       mockRequest.query.saveAndReturn = 'true';
-      mockRequest.body.facilityType = 'CASH';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
       api.updateFacility.mockRejectedValueOnce();
       await validateAboutFacility(mockRequest, mockResponse);
