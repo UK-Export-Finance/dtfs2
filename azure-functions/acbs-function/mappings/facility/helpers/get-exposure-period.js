@@ -38,11 +38,9 @@ const getExposurePeriod = (facility, dealType) => {
     return facilitySnapshot.ukefGuaranteeInMonths;
   }
 
-
   const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
 
   const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
-
 
   return durationMonths + monthOffset;
 };
