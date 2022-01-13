@@ -1,5 +1,6 @@
 import { facilityConfirmDeletion, deleteFacility } from './index';
 import api from '../../services/api';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -49,7 +50,7 @@ describe('controllers/facility-confirm-deletion', () => {
   });
   describe('GET Facility Confirm Deletion', () => {
     it('renders the `Facility Currency` template', async () => {
-      mockFacilityResponse.details.type = 'CASH';
+      mockFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
       api.getFacility.mockResolvedValueOnce(mockFacilityResponse);
 
       await facilityConfirmDeletion(mockRequest, mockResponse);

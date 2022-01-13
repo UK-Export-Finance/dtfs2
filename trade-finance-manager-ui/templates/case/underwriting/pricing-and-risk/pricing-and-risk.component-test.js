@@ -16,21 +16,21 @@ describe(page, () => {
           _id: '1',
           facilitySnapshot: {
             ukefFacilityId: '100',
-            facilityType: 'loan',
+            facilityType: 'Loan',
           },
         },
         {
           _id: '2',
           facilitySnapshot: {
             ukefFacilityId: '100',
-            facilityType: 'loan',
+            facilityType: 'Loan',
           },
         },
         {
           _id: '3',
           facilitySnapshot: {
             ukefFacilityId: '100',
-            facilityType: 'loan',
+            facilityType: 'Loan',
           },
         },
       ],

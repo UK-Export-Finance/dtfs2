@@ -8,7 +8,7 @@ const {
 module.exports = [
 	{
 		"mockDealId": 2,
-		"facilityType" : "bond",
+		"facilityType" : "Bond",
 		"ukefGuaranteeInMonths" : null,
 		"facilityStage" : "Issued",
 		"coverEndDate-day": threeMonths.day,
@@ -47,7 +47,7 @@ module.exports = [
 	},
 	{
 		"mockDealId": 2,
-		"facilityType" : "loan",
+		"facilityType" : "Loan",
 		"ukefGuaranteeInMonths" : "12",
 		"coverEndDate-day" : null,
 		"coverEndDate-month" : null,

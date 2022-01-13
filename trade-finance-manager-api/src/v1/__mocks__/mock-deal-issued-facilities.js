@@ -168,7 +168,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
     items: [
       {
         _id: 'MOCK_DEAL_FACILITY_ISSUED_BOND',
-        facilityType: 'bond',
+        facilityType: 'Bond',
         createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
@@ -199,7 +199,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
     items: [
       {
         _id: 'MOCK_DEAL_FACILITY_ISSUED_LOAN',
-        facilityType: 'loan',
+        facilityType: 'Loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Unconditional',
         ukefGuaranteeInMonths: '12',

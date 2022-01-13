@@ -5,7 +5,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% block pageTitle %}Add a {{ "cash" if facilityType === "CASH" else "contingent" }} guarantee fee{% endblock %}
+{% block pageTitle %}Add a {{ "cash" if facilityType === "Cash" else "contingent" }} guarantee fee{% endblock %}
 
 {% block content %}
   {% if errors %}

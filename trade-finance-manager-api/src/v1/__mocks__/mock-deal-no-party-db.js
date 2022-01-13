@@ -170,7 +170,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
     items: [
       {
         _id: '12345678',
-        facilityType: 'bond',
+        facilityType: 'Bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
         facilityStage: 'Unissued',
@@ -199,7 +199,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
     items: [
       {
         _id: '23456789',
-        facilityType: 'loan',
+        facilityType: 'Loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',

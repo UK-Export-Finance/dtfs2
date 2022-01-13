@@ -134,7 +134,7 @@ The only exception for updating the snapshot is when TFM changes the `submission
 There are currently 2 types of deals and 4 types of facilities that TFM receives:
 
 - BSS and EWCS (bond and loan facilities for a BSS deal)
-- CASH and CONTINGENT (facilities for a GEF deal)
+- Cash and Contingent (facilities for a GEF deal)
 
 More info in the [glossary](https://ukef-dtfs.atlassian.net/wiki/spaces/DS/pages/7471490/DTFS+-+glossary)
 
@@ -178,7 +178,7 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
 ```js
 {
   _id: '100',
-  facilityType: 'bond',
+  facilityType: 'Bond',
   requestedCoverStartDate: '1606900616652',
   coveredPercentage: '20',
   ...
@@ -190,7 +190,7 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
 ```js
 {
   _id: '200',
-  type: 'CASH',
+  type: 'Cash',
   coverStartDate: '2021-12-12T00:00:00.000Z',
   coverPercentage: 12,
   ...

@@ -8,7 +8,7 @@ const {
 module.exports = [
   {
     "mockDealId": 1,
-    "facilityType": "bond",
+    "facilityType": "Bond",
     "createdDate": nowTimestamp,
     "bondIssuer": "",
     "bondType": "Performance bond",

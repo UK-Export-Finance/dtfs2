@@ -25,7 +25,7 @@ context('View a deal', () => {
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '00000001',
-        type: 'CASH',
+        type: 'Cash',
         name: 'abc-1-def',
         hasBeenIssued: true,
         value: '123.00',

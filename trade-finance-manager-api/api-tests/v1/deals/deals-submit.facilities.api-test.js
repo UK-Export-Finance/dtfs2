@@ -143,8 +143,8 @@ describe('/v1/deals', () => {
           expect(status).toEqual(200);
 
           expect(externalApis.getFacilityExposurePeriod.mock.calls).toEqual([
-            ['2021-01-11', '2023-01-11', 'bond'],
-            ['2021-01-11', '2023-01-11', 'loan'],
+            ['2021-01-11', '2023-01-11', 'Bond'],
+            ['2021-01-11', '2023-01-11', 'Loan'],
           ]);
         });
 

@@ -5,7 +5,6 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   describe('when viewed a maker', () => {
-
     describe('with facility.canIssueOrEditIssueFacility', () => {
       const user = { roles: ['maker'] };
       const deal = { _id: '1234' };
@@ -13,10 +12,12 @@ describe(component, () => {
         _id: '5678',
         canIssueOrEditIssueFacility: true,
       };
-      const facilityName = 'loan';
+      const facilityName = 'Loan';
 
       it('should render a link to issue facility page', () => {
-        const wrapper = render({ user, deal, facility, facilityName });
+        const wrapper = render({
+          user, deal, facility, facilityName,
+        });
         wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
           .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Issue facility');
       });
@@ -25,7 +26,9 @@ describe(component, () => {
         it('should render a link to issue facility page with `Facility issued` text', () => {
           facility.issueFacilityDetailsStarted = true;
           facility.issueFacilityDetailsProvided = true;
-          const wrapper = render({ user, deal, facility, facilityName });
+          const wrapper = render({
+            user, deal, facility, facilityName,
+          });
           wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Facility issued');
         });
@@ -39,14 +42,16 @@ describe(component, () => {
           _id: '5678',
           issueFacilityDetailsProvided: true,
         };
-        const facilityName = 'loan';
+        const facilityName = 'Loan';
 
         const deals = [
           { _id: '1', status: 'Ready for Checker\'s approval' },
         ];
 
         deals.forEach((deal) => {
-          const wrapper = render({ user, deal, facility: mockFacility, facilityName });
+          const wrapper = render({
+            user, deal, facility: mockFacility, facilityName,
+          });
           wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${mockFacility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/submission-details#${facilityName}-${mockFacility._id}`, 'Facility issued');
         });
@@ -60,7 +65,9 @@ describe(component, () => {
         const deal = { _id: '1234' };
 
         facilities.forEach((facility) => {
-          const wrapper = render({ user, deal, facility, facilityName });
+          const wrapper = render({
+            user, deal, facility, facilityName,
+          });
           wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/submission-details#${facilityName}-${facility._id}`, 'Facility issued');
         });
@@ -71,7 +78,7 @@ describe(component, () => {
       it('should render a link to delete', () => {
         const user = { roles: ['maker'] };
         const facility = { _id: '5678' };
-        const facilityName = 'loan';
+        const facilityName = 'Loan';
         const facilityTableIndex = 1;
 
         const deals = [
@@ -80,13 +87,14 @@ describe(component, () => {
         ];
 
         deals.forEach((deal) => {
-          const wrapper = render({ user, deal, facility, facilityName, facilityTableIndex, editable: true });
+          const wrapper = render({
+            user, deal, facility, facilityName, facilityTableIndex, editable: true,
+          });
           wrapper.expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
 
           wrapper.expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`)
             .toEqual(`Delete ${facilityName} ${facilityTableIndex}`);
-
         });
       });
     });

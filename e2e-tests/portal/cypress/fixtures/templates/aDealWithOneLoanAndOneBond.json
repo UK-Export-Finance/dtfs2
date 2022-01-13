@@ -99,7 +99,7 @@
     "items": [
       {
           "bondIssuer": "issuer",
-          "bondType": "bond type",
+          "bondType": "Bond type",
           "facilityStage": "Issued",
           "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-bond1",
           "ukefGuaranteeInMonths": "24",

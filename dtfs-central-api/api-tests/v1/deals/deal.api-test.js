@@ -47,7 +47,6 @@ describe('/v1/portal/deals', () => {
   describe('GET /v1/portal/deals', () => {
     it('should return count and mapped deals', async () => {
       const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const dealId = postResult.body._id;
 
       const { status, body } = await api.get('/v1/portal/deals');
 
@@ -64,7 +63,7 @@ describe('/v1/portal/deals', () => {
       expect(firstDeal.submissionType).toEqual(newDeal.submissionType);
       expect(firstDeal.exporter).toEqual(newDeal.exporter.companyName);
       expect(typeof firstDeal.updatedAt).toEqual('number');
-    })
+    });
   });
   describe('POST /v1/portal/deals', () => {
     it('returns the created deal with correct fields', async () => {
@@ -183,12 +182,12 @@ describe('/v1/portal/deals', () => {
       };
 
       const mockBond = {
-        facilityType: 'bond',
+        facilityType: 'Bond',
         ...mockFacility,
       };
 
       const mockLoan = {
-        facilityType: 'loan',
+        facilityType: 'Loan',
         ...mockFacility,
       };
 
@@ -251,12 +250,12 @@ describe('/v1/portal/deals', () => {
         };
 
         const mockBond = {
-          facilityType: 'bond',
+          facilityType: 'Bond',
           ...mockFacility,
         };
 
         const mockLoan = {
-          facilityType: 'loan',
+          facilityType: 'Loan',
           ...mockFacility,
         };
 

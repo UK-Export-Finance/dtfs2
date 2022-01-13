@@ -54,7 +54,7 @@
  *             example: 456abc
  *           type:
  *             type: string
- *             example: CASH
+ *             example: Cash
  *           value:
  *             type: integer
  *             example: 123

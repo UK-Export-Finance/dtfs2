@@ -188,7 +188,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -223,7 +223,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -252,7 +252,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Bid bond',
@@ -275,7 +275,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -310,7 +310,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       ukefGuaranteeInMonths: '12',
@@ -339,7 +339,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       ukefGuaranteeInMonths: '12',
@@ -362,7 +362,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: now,
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
@@ -383,7 +383,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       ukefGuaranteeInMonths: '12',
@@ -602,6 +602,5 @@ const deal = {
     security: '',
   },
 };
-
 
 module.exports = deal;

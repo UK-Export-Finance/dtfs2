@@ -62,10 +62,10 @@ const insertMocks = async () => {
     for (const subitem of item) {
       // eslint-disable-next-line no-param-reassign
       subitem.dealId = gefDeals[index]._id;
-      const facilty = await api.createFacilities(subitem, token);
+      const facility = await api.createFacilities(subitem, token);
       // eslint-disable-next-line no-param-reassign
       delete subitem.dealId;
-      await api.updateFacilities(facilty.details, subitem, token);
+      await api.updateFacilities(facility.details, subitem, token);
     }
   }
 };

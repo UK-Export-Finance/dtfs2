@@ -26,8 +26,8 @@ context('A checker selects to return a deal (with some issued facilities) to mak
         const { mockFacilities } = dealWithSomeIssuedFacilitiesReadyForReview;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -95,7 +95,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     partials.successMessage.successMessageLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    // assert bond statuses
+    // assert Bond statuses
     unissuedBondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Maker\'s input required');
     });

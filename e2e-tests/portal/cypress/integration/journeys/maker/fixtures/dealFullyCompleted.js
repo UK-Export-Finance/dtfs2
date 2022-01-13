@@ -22,7 +22,7 @@ const deal = {
   }],
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'my issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -55,7 +55,7 @@ const deal = {
       ukefExposure: '1,234.56',
     },
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'my issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -84,7 +84,7 @@ const deal = {
       ukefExposure: '1,234.56',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
@@ -104,7 +104,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       facilityStage: 'Unconditional',
       'requestedCoverStartDate-day': now.getDate(),
       'requestedCoverStartDate-month': now.getMonth() + 1,

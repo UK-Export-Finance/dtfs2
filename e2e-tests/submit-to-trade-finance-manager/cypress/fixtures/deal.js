@@ -162,7 +162,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: 'bond',
+      facilityType: 'Bond',
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
       facilityStage: 'Issued',
@@ -189,7 +189,7 @@ const MOCK_DEAL = {
       bankReferenceNumber: 'Test-123',
     },
     {
-      facilityType: 'loan',
+      facilityType: 'Loan',
       createdDate: 1610369832226.0,
       facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',

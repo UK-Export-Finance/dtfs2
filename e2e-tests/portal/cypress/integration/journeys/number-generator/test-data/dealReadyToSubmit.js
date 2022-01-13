@@ -13,7 +13,7 @@ module.exports = () => {
   deal.submissionDetails['supplyContractConversionDate-month'] = now.getMonth() + 1;
   deal.submissionDetails['supplyContractConversionDate-year'] = now.getFullYear();
 
-  const loan = deal.mockFacilities.find((f) => f.facilityType === 'loan');
+  const loan = deal.mockFacilities.find((f) => f.facilityType === 'Loan');
   loan.requestedCoverStartDate = now.valueOf();
 
   const aMonthInTheFuture = nowPlusMonths(1);

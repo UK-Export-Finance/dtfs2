@@ -24,8 +24,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -272,7 +272,6 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
 
     incompleteIssueFacilityBondRow.issueFacilityLink().should('not.exist');
 
-
     incompleteIssueFacilityLoanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Incomplete');
     });
@@ -282,7 +281,6 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     });
 
     incompleteIssueFacilityLoanRow.issueFacilityLink().should('not.exist');
-
 
     //---------------------------------------------------------------
     // Facilities that have NOT started should not be updated
@@ -299,7 +297,6 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     });
 
     notStartedIssueFacilityBondRow.issueFacilityLink().should('not.exist');
-
 
     const notStartedFacilityLoanId = dealFacilities.loans[2]._id;
     const notStartedFacilityLoanRow = pages.contract.loansTransactionsTable.row(notStartedFacilityLoanId);

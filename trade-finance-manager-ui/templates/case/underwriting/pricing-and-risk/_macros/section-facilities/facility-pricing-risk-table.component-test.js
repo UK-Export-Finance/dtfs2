@@ -12,7 +12,7 @@ describe(component, () => {
       _id: '1',
       facilitySnapshot: {
         ukefFacilityId: '100',
-        facilityType: 'loan',
+        facilityType: 'Loan',
       },
       tfm: {
         riskProfile: 'Flat',

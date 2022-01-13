@@ -252,7 +252,7 @@ describe('/v1/tfm/deals', () => {
           },
           bondTransactions: {
             items: [
-              { _id: '1', facilityType: 'bond' },
+              { _id: '1', facilityType: 'Bond' },
             ],
           },
         });
@@ -264,7 +264,7 @@ describe('/v1/tfm/deals', () => {
           },
           loanTransactions: {
             items: [
-              { _id: '1', facilityType: 'loan' },
+              { _id: '1', facilityType: 'Loan' },
             ],
           },
         });
@@ -276,7 +276,7 @@ describe('/v1/tfm/deals', () => {
           ]);
         });
 
-        it('returns deals filtered by bond productCode', async () => {
+        it('returns deals filtered by Bond productCode', async () => {
           const mockReqBody = {
             queryParams: {
               searchString: 'BSS',
@@ -314,7 +314,7 @@ describe('/v1/tfm/deals', () => {
           expect(body.deals).toEqual(expectedDeals);
         });
 
-        it('returns deals filtered by bond and loan productCode', async () => {
+        it('returns deals filtered by Bond and loan productCode', async () => {
           const dealWithBondsAndLoans = newDeal({
             submissionType: 'Manual Inclusion Application',
             details: {
@@ -322,7 +322,7 @@ describe('/v1/tfm/deals', () => {
             },
             loanTransactions: {
               items: [
-                { _id: '1', facilityType: 'loan' },
+                { _id: '1', facilityType: 'Loan' },
               ],
             },
           });
