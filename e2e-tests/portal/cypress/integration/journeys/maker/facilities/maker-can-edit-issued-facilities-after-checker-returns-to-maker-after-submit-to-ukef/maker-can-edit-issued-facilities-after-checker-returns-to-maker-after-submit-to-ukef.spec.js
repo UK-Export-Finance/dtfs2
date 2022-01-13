@@ -25,8 +25,8 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
         const { mockFacilities } = mockDeal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;

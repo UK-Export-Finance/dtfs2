@@ -388,7 +388,7 @@ portalRouter.route('/facilities').get(
  *               dealId:
  *                 type: string
  *           example:
- *             facilityType: 'bond'
+ *             facilityType: 'Bond'
  *             dealId: '123abc'
  *     responses:
  *       200:
@@ -407,7 +407,7 @@ portalRouter.route('/facilities').get(
  *                 errorList:
  *                   facilityType:
  *                     order: '1'
- *                     text: 'Facility type must be bond or loan'
+ *                     text: 'Facility type must be Bond or Loan'
  *                   dealId:
  *                     order: '2'
  *                     text: 'Enter the Associated deal id'

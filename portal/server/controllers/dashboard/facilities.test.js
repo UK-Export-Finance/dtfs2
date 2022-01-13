@@ -56,7 +56,7 @@ describe('controllers/facilities', () => {
             transaction_id: 'mockFacility1',
             deal_id: 'mock-deal-1',
             bankFacilityId: 'mock-facility',
-            transactionType: 'bond',
+            transactionType: 'Bond',
             currency: { id: 'GBP' },
           },
           {
@@ -94,7 +94,7 @@ describe('controllers/facilities', () => {
             _id: 'mockFacility1',
             bankId: 'mock-facility',
             dealId: 'mock-deal-1',
-            facilityType: 'bond',
+            facilityType: 'Bond',
             product: PRODUCT.BSS_EWCS,
             ukefStage: '-',
             value: { currency: 'GBP' },

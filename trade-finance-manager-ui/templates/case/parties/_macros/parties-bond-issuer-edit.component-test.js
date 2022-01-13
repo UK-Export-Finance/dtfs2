@@ -14,7 +14,7 @@ describe(page, () => {
         facilitySnapshot: {
           _id: '123',
           ukefFacilityId: '0040004833',
-          ukefFacilityType: 'bond',
+          ukefFacilityType: 'Bond',
           bondIssuer: 'test bond issuer',
         },
         tfm: {

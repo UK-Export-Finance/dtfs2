@@ -1,20 +1,20 @@
 const { ObjectID } = require('mongodb');
 
-function checkType(type) {
+const checkType = (type) => {
   if (type) {
-    switch (type.toUpperCase()) {
-      case 'CASH':
-      case 'CONTINGENT':
-        return type.toUpperCase();
+    switch (type) {
+      case 'Cash':
+      case 'Contingent':
+        return type;
       default:
         return null;
     }
   } else {
     return null;
   }
-}
+};
 
-function checkPaymentType(paymentType) {
+const checkPaymentType = (paymentType) => {
   if (paymentType) {
     switch (paymentType.toUpperCase()) {
       case 'IN_ARREARS_MONTHLY':
@@ -33,7 +33,7 @@ function checkPaymentType(paymentType) {
   } else {
     return null;
   }
-}
+};
 
 class Facility {
   constructor(req) {

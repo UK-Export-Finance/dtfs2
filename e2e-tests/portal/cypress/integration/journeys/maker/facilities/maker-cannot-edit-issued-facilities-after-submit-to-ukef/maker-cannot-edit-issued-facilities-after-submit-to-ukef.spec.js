@@ -26,8 +26,8 @@ context('Checker submits a deal with all facility types to UKEF', () => {
         ];
 
         cy.createFacilities(dealId, facilitiesToCreate, MAKER_LOGIN).then((createdFacilities) => {
-          dealFacilities.bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
-          dealFacilities.loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+          dealFacilities.bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          dealFacilities.loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
         });
       });
   });

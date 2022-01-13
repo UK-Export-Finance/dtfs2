@@ -163,7 +163,7 @@ const MockFacilityResponse = () => ({
   data: [],
   items: [{
     details: {
-      type: 'CASH',
+      type: CONSTANTS.FACILITY_TYPE.CASH,
       name: 'UKEF123',
       hasBeenIssued: false,
       monthsOfCover: null,
@@ -183,7 +183,7 @@ const MockFacilityResponseChangedIssued = {
   status: CONSTANTS.DEAL_STATUS.COMPLETED,
   items: [{
     details: {
-      type: 'CASH',
+      type: CONSTANTS.FACILITY_TYPE.CASH,
       name: 'UKEF123',
       hasBeenIssued: false,
       monthsOfCover: null,
@@ -204,7 +204,7 @@ const MockFacilityResponseNotChangedIssued = {
   status: CONSTANTS.DEAL_STATUS.COMPLETED,
   items: [{
     details: {
-      type: 'CASH',
+      type: CONSTANTS.FACILITY_TYPE.CASH,
       name: 'UKEF123',
       hasBeenIssued: false,
       monthsOfCover: null,
@@ -287,7 +287,7 @@ const MockRequestUnissued = () => {
 const MockFacilityResponseUnissued = () => {
   const res = {};
   res.details = {
-    type: 'CASH',
+    type: CONSTANTS.FACILITY_TYPE.CASH,
     name: 'UKEF123',
     hasBeenIssued: true,
     monthsOfCover: null,
@@ -300,7 +300,7 @@ const MockFacilityResponseUnissued = () => {
 };
 
 const MockExpectedFacilityRenderChange = (change) => ({
-  facilityType: 'CASH',
+  facilityType: CONSTANTS.FACILITY_TYPE.CASH,
   facilityName: 'UKEF123',
   hasBeenIssued: true,
   monthsOfCover: null,
@@ -325,7 +325,7 @@ const MockFacilitiesResponse = () => ({
   items: [
     {
       details: {
-        type: 'CASH',
+        type: CONSTANTS.FACILITY_TYPE.CASH,
         name: 'UKEF123',
         hasBeenIssued: true,
         monthsOfCover: null,

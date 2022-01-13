@@ -1,6 +1,6 @@
 const FACILITIES = [
   {
-    type: 'CASH',
+    type: 'Cash',
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -16,7 +16,7 @@ const FACILITIES = [
     paymentType: null,
   },
   {
-    type: 'CASH',
+    type: 'Cash',
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,
@@ -32,7 +32,7 @@ const FACILITIES = [
     paymentType: null,
     canResubmitIssuedFacilities: null,
   }, {
-    type: 'CASH',
+    type: 'Cash',
     hasBeenIssued: false,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -47,7 +47,7 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
   }, {
-    type: 'CONTINGENT',
+    type: 'Contingent',
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -62,7 +62,7 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
   }, {
-    type: 'CONTINGENT',
+    type: 'Contingent',
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,

@@ -5,7 +5,7 @@ const {
 module.exports = [
 	{
 		"mockDealId": 8,
-		"facilityType" : "loan",
+		"facilityType" : "Loan",
 		"ukefGuaranteeInMonths" : "24",
 		"coverEndDate-day" : null,
 		"coverEndDate-month" : null,

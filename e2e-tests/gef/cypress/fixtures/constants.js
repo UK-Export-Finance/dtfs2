@@ -32,10 +32,10 @@ const DEAL_STATUS = {
 };
 
 const FACILITY_TYPE = {
-  CASH: 'CASH',
-  CONTINGENT: 'CONTINGENT',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 };
 
-exports.default = {
+module.exports = {
   DEAL_TYPE, DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE,
 };

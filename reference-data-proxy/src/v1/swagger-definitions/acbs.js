@@ -77,7 +77,7 @@
  *             example: '8'
  *           productTypeName:
  *             type: string
- *             example: 'BOND'
+ *             example: 'Bond'
  *           currency:
  *             type: string
  *             example: 'CAD'

@@ -110,7 +110,7 @@
   },
   "mockFacilities": [
     {
-      "facilityType": "loan",
+      "facilityType": "Loan",
       "createdDate": "1615380531878",
       "facilityStage": "Conditional",
       "lastEdited": "1615380612045",
@@ -134,7 +134,7 @@
       "status": "Completed"
     },
     {
-      "facilityType": "bond",
+      "facilityType": "Bond",
       "createdDate": "1615380491206",
       "bondBeneficiary": "",
       "bondIssuer": "",

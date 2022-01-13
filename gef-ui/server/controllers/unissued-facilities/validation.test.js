@@ -2,6 +2,7 @@ import { add, sub, format } from 'date-fns';
 import { facilityValidation } from './validation';
 import api from '../../services/api';
 import MOCKS from '../mocks/index';
+import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
@@ -28,7 +29,7 @@ describe('validation()', () => {
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   it('returns correct object with no errors on correct facility update', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body['cover-start-date-day'] = format(now, 'd');
@@ -64,7 +65,7 @@ describe('validation()', () => {
   });
 
   it('should return object with errors populated if end date before start date', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
@@ -109,7 +110,7 @@ describe('validation()', () => {
   });
 
   it('should return object with errors populated if start date before issue date', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
@@ -150,7 +151,7 @@ describe('validation()', () => {
   });
 
   it('should return object with errors populated if end date before issue date', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 
@@ -200,7 +201,7 @@ describe('validation()', () => {
   });
 
   it('should return object with errors populated if issue date in the future', async () => {
-    mockRequest.body.facilityType = 'CASH';
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
 

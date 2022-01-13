@@ -12,7 +12,7 @@ class Facility {
       if (bank.id !== user.bank.id) {
         return null;
       }
-      const facilityTypeConst = FACILITY_TYPE[details.type];
+      const facilityTypeConst = FACILITY_TYPE[details.type?.toUpperCase()];
       const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
       const value = JSON.stringify(details.value);

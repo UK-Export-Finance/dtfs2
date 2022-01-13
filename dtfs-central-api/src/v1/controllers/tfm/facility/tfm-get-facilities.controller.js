@@ -30,7 +30,7 @@ exports.getAllFacilities = async (req, res) => {
   //           "facilityId": "Mock facility Id",
   //           "ukefFacilityId": "0030136443",
   //           "dealType": "GEF",
-  //           "facilityType": "CASH",
+  //           "facilityType": "Cash",
   //           "value": 1000000,
   //           "currency": "GBP",
   //           "coverEndDate": "2021-08-12T00:00:00.000Z",
@@ -106,7 +106,7 @@ exports.getAllFacilities = async (req, res) => {
                       case: {
                         $and: [
                           { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'bond'] },
+                          { $eq: ['$$facilities.facilityType', 'Bond'] },
                           { $eq: ['$$facilities.facilityStage', 'Issued'] },
                         ],
                       },
@@ -116,7 +116,7 @@ exports.getAllFacilities = async (req, res) => {
                       case: {
                         $and: [
                           { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'bond'] },
+                          { $eq: ['$$facilities.facilityType', 'Bond'] },
                           { $eq: ['$$facilities.facilityStage', 'Unissued'] },
                         ],
                       },
@@ -126,7 +126,7 @@ exports.getAllFacilities = async (req, res) => {
                       case: {
                         $and: [
                           { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'loan'] },
+                          { $eq: ['$$facilities.facilityType', 'Loan'] },
                           { $eq: ['$$facilities.facilityStage', 'Conditional'] },
                         ],
                       },
@@ -136,7 +136,7 @@ exports.getAllFacilities = async (req, res) => {
                       case: {
                         $and: [
                           { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'loan'] },
+                          { $eq: ['$$facilities.facilityType', 'Loan'] },
                           { $eq: ['$$facilities.facilityStage', 'Unconditional '] },
                         ],
                       },

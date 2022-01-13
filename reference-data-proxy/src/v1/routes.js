@@ -424,9 +424,9 @@ openRouter.route('/currency-exchange-rate/:source/:target')
  *         name: facilityType
  *         schema:
  *           type: string
- *           example: bond
+ *           example: Bond
  *         required: true
- *         description: Type of facility - bond/loan/CASH/CONTINGENT
+ *         description: Type of facility - Bond/Loan/Cash/Contingent
  *     responses:
  *       200:
  *         description: OK

@@ -23,10 +23,10 @@ const SUBMISSION_TYPE = {
 };
 
 const FACILITY_TYPE = {
-  BOND: 'bond',
-  LOAN: 'loan',
-  CASH: 'CASH',
-  CONTINGENT: 'CONTINGENT',
+  BOND: 'Bond',
+  LOAN: 'Loan',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 };
 
 module.exports = {

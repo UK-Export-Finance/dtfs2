@@ -21,7 +21,7 @@ context('Dashboard Deals pagination controls', () => {
 
         const dummyFacilities = new Array(21).fill('').map((_, i) => ({
           dealId: deal._id,
-          type: 'CASH',
+          type: 'Cash',
           name: `abc-${i + 1}-def`,
         }));
 

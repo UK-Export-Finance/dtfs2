@@ -6,6 +6,7 @@ import automaticCover from './pages/automatic-cover';
 import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
+import CONSTANTS from '../fixtures/constants';
 
 let dealWithEmptyExporter;
 let dealWithInProgressExporter;
@@ -118,7 +119,7 @@ context('Application Details Page', () => {
 
     it('takes you to Contingent facility page when clicking on `Add a contingent facility` button', () => {
       applicationDetails.addContingentFacilityButton().click();
-      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/facilities?facilityType=CONTINGENT`));
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`));
     });
   });
 
@@ -127,7 +128,7 @@ context('Application Details Page', () => {
       cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Start the Eligibility Criteria selection, but don't complete it.
-      // This puts the Eligibility Criteira section in an "in progress" state.
+      // This puts the Eligibility Criteria section in an "in progress" state.
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el, index) => {
         if (index === 1) {

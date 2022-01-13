@@ -21,7 +21,7 @@ describe('mapFacilityType', () => {
     it('should capitalize facilityType', () => {
       const mockLoanFacility = {
         bondType: null,
-        facilityType: 'loan',
+        facilityType: 'Loan',
         facilityProduct: {
           code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
         },

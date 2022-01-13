@@ -5,11 +5,11 @@ describe('send-issued-facilities-received-email - generateIssuedFacilitiesListSt
   it('should return a list in a formatted string', () => {
     const facilities = [
       {
-        facilityType: 'bond',
+        facilityType: 'Bond',
         ukefFacilityId: '1',
       },
       {
-        facilityType: 'loan',
+        facilityType: 'Loan',
         ukefFacilityId: '2',
       },
     ];

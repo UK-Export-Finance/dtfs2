@@ -86,7 +86,7 @@ tfmRouter.route('/deals/submit')
 *                       type: object
 *                       properties:
 *                         facilities:
-*                           example: [ { _id: 123abc, type: CASH }, { _id: 456abc, type: CONTINGENT } ]
+*                           example: [ { _id: '123abc', type: 'Cash' }, { _id: '456abc', type: 'Contingent' } ]
 *       404:
 *         description: Not found
 */
