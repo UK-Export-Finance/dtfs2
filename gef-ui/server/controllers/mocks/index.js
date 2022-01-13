@@ -252,7 +252,7 @@ const MockSubmissionRequest = () => ({
     user: {
       username: 'maker',
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: ['maker'],
       _id: 1235,
     },
   },

@@ -12,7 +12,6 @@ import uploadFiles from './pages/upload-files';
 import statusBanner from './pages/application-status-banner';
 import CONSTANTS from '../fixtures/constants';
 import CREDENTIALS from '../fixtures/credentials.json';
-import { toTitleCase } from '../fixtures/helpers';
 
 import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';

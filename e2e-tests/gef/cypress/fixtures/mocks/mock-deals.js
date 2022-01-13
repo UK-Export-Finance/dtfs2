@@ -7,6 +7,64 @@ import {
 
 const chance = new Chance();
 
+const eligibilityCriteria = (type) => (
+  {
+    criteria: [{
+      id: 12,
+      name: 'coverStart',
+      text: 'The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.',
+      errMsg: 'Select if the Maximum Cover period has been exceeded',
+      answer: true,
+    }, {
+      id: 13,
+      name: 'noticeDate',
+      text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
+      errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
+      answer: true,
+    }, {
+      id: 14,
+      name: 'facilityLimit',
+      text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:',
+      textList: ['the Available Master Guarantee Limit; and', "the Available Obligor's limit"],
+      errMsg: 'Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
+      answer: true,
+    }, {
+      id: 15,
+      name: 'exporterDeclaration',
+      text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
+      errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
+      answer: true,
+    }, {
+      id: 16,
+      name: 'dueDiligence',
+      text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due Diligence.',
+      errMsg: 'Select if the Bank has completed its Due Diligence',
+      answer: true,
+    }, {
+      id: 17,
+      name: 'facilityLetter',
+      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
+      textList: ["has been set in accordance with the Bank's normal pricing policies consistently applied;", 'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;', '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and', '(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility'],
+      errMsg: 'Select if the Facility Letter satisfies the following conditions',
+      answer: true,
+    }, {
+      id: 18,
+      name: 'facilityBaseCurrency',
+      text: 'Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency.',
+      errMsg: 'Select if the Facility Base Currency satisfies the condition',
+      answer: true,
+    }, {
+      id: 19,
+      name: 'facilityPaymentCurrency',
+      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
+      errMsg: 'Select if the Facility Letter satisfies the condition',
+      answer: type,
+    }],
+    updatedAt: 1638535562287,
+    status: 'COMPLETED',
+  }
+);
+
 const commonApplicationDetails = {
   dealType: DEAL_TYPE.GEF,
   bank: { id: '9' },
@@ -114,61 +172,7 @@ export const MOCK_APPLICATION_AIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   ukefDecisionAccepted: true,
-  eligibility: {
-    criteria: [{
-      id: 12,
-      name: 'coverStart',
-      text: 'The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.',
-      errMsg: 'Select if the Maximum Cover period has been exceeded',
-      answer: true,
-    }, {
-      id: 13,
-      name: 'noticeDate',
-      text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
-      errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
-      answer: true,
-    }, {
-      id: 14,
-      name: 'facilityLimit',
-      text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:',
-      textList: ['the Available Master Guarantee Limit; and', "the Available Obligor's limit"],
-      errMsg: 'Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
-      answer: true,
-    }, {
-      id: 15,
-      name: 'exporterDeclaration',
-      text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-      errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
-      answer: true,
-    }, {
-      id: 16,
-      name: 'dueDiligence',
-      text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due Diligence.',
-      errMsg: 'Select if the Bank has completed its Due Diligence',
-      answer: true,
-    }, {
-      id: 17,
-      name: 'facilityLetter',
-      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
-      textList: ["has been set in accordance with the Bank's normal pricing policies consistently applied;", 'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;', '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and', '(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility'],
-      errMsg: 'Select if the Facility Letter satisfies the following conditions',
-      answer: true,
-    }, {
-      id: 18,
-      name: 'facilityBaseCurrency',
-      text: 'Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency.',
-      errMsg: 'Select if the Facility Base Currency satisfies the condition',
-      answer: true,
-    }, {
-      id: 19,
-      name: 'facilityPaymentCurrency',
-      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
-      errMsg: 'Select if the Facility Letter satisfies the condition',
-      answer: true,
-    }],
-    updatedAt: 1638535562287,
-    status: 'COMPLETED',
-  },
+  eligibility: eligibilityCriteria(true),
   supportingInformation: {
     manualInclusion: [],
     securityDetails: {},
@@ -183,61 +187,7 @@ export const MOCK_APPLICATION_MIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.MIN,
   ukefDecisionAccepted: true,
-  eligibility: {
-    criteria: [{
-      id: 12,
-      name: 'coverStart',
-      text: 'The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.',
-      errMsg: 'Select if the Maximum Cover period has been exceeded',
-      answer: true,
-    }, {
-      id: 13,
-      name: 'noticeDate',
-      text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
-      errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
-      answer: true,
-    }, {
-      id: 14,
-      name: 'facilityLimit',
-      text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:',
-      textList: ['the Available Master Guarantee Limit; and', "the Available Obligor's limit"],
-      errMsg: 'Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
-      answer: true,
-    }, {
-      id: 15,
-      name: 'exporterDeclaration',
-      text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-      errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
-      answer: true,
-    }, {
-      id: 16,
-      name: 'dueDiligence',
-      text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due Diligence.',
-      errMsg: 'Select if the Bank has completed its Due Diligence',
-      answer: true,
-    }, {
-      id: 17,
-      name: 'facilityLetter',
-      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
-      textList: ["has been set in accordance with the Bank's normal pricing policies consistently applied;", 'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;', '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and', '(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility'],
-      errMsg: 'Select if the Facility Letter satisfies the following conditions',
-      answer: true,
-    }, {
-      id: 18,
-      name: 'facilityBaseCurrency',
-      text: 'Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency.',
-      errMsg: 'Select if the Facility Base Currency satisfies the condition',
-      answer: true,
-    }, {
-      id: 19,
-      name: 'facilityPaymentCurrency',
-      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
-      errMsg: 'Select if the Facility Letter satisfies the condition',
-      answer: false,
-    }],
-    updatedAt: 1638535562287,
-    status: 'COMPLETED',
-  },
+  eligibility: eligibilityCriteria(false),
   supportingInformation: {
     manualInclusion: [
       {
@@ -262,61 +212,7 @@ export const MOCK_APPLICATION_MIA = {
   status: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   submissionType: DEAL_SUBMISSION_TYPE.MIA,
   ukefDecisionAccepted: false,
-  eligibility: {
-    criteria: [{
-      id: 12,
-      name: 'coverStart',
-      text: 'The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.',
-      errMsg: 'Select if the Maximum Cover period has been exceeded',
-      answer: true,
-    }, {
-      id: 13,
-      name: 'noticeDate',
-      text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
-      errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
-      answer: true,
-    }, {
-      id: 14,
-      name: 'facilityLimit',
-      text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:',
-      textList: ['the Available Master Guarantee Limit; and', "the Available Obligor's limit"],
-      errMsg: 'Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
-      answer: true,
-    }, {
-      id: 15,
-      name: 'exporterDeclaration',
-      text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-      errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
-      answer: true,
-    }, {
-      id: 16,
-      name: 'dueDiligence',
-      text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due Diligence.',
-      errMsg: 'Select if the Bank has completed its Due Diligence',
-      answer: true,
-    }, {
-      id: 17,
-      name: 'facilityLetter',
-      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
-      textList: ["has been set in accordance with the Bank's normal pricing policies consistently applied;", 'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;', '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and', '(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility'],
-      errMsg: 'Select if the Facility Letter satisfies the following conditions',
-      answer: true,
-    }, {
-      id: 18,
-      name: 'facilityBaseCurrency',
-      text: 'Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency.',
-      errMsg: 'Select if the Facility Base Currency satisfies the condition',
-      answer: true,
-    }, {
-      id: 19,
-      name: 'facilityPaymentCurrency',
-      text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
-      errMsg: 'Select if the Facility Letter satisfies the condition',
-      answer: false,
-    }],
-    updatedAt: 1638535562287,
-    status: 'COMPLETED',
-  },
+  eligibility: eligibilityCriteria(false),
   supportingInformation: {
     manualInclusion: [
       {
