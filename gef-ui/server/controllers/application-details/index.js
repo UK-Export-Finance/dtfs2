@@ -1,7 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const { mapSummaryList, displayTaskComments, displayChangeSupportingInfo } = require('../../utils/helpers');
+const {
+  mapSummaryList,
+  displayTaskComments,
+  displayChangeSupportingInfo,
+  canUpdateUnissuedFacilitiesCheck,
+} = require('../../utils/helpers');
 const {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -124,7 +129,7 @@ function buildBody(app, previewMode, user) {
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: (unissuedFacilitiesPresent && !facilitiesChangedToIssued.length && hasUkefDecisionAccepted),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
   };
 
   return appBody;
