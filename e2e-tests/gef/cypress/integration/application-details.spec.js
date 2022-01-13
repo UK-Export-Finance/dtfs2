@@ -8,8 +8,6 @@ import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 import CONSTANTS from '../fixtures/constants';
 
-import CONSTANTS from '../fixtures/constants';
-
 let dealWithEmptyExporter;
 let dealWithInProgressExporter;
 let dealWithCompletedExporterAndFacilities;
