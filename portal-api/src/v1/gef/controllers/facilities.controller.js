@@ -94,40 +94,42 @@ exports.getById = async (req, res) => {
 };
 
 const update = async (id, updateBody) => {
-  const collection = await db.getCollection(collectionName);
-  const dealsCollection = await db.getCollection(dealsCollectionName);
+  try {
+    const collection = await db.getCollection(collectionName);
+    const dealsCollection = await db.getCollection(dealsCollectionName);
 
-  const facilityId = ObjectID(String(id));
+    const facilityId = ObjectID(String(id));
+    const existingFacility = await collection.findOne({ _id: facilityId });
+    const facilityUpdate = new Facility({
+      ...updateBody,
+      ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+      guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
+    });
 
-  const existingFacility = await collection.findOne({ _id: facilityId });
-
-  const facilityUpdate = new Facility({
-    ...updateBody,
-    ukefExposure: calculateUkefExposure(updateBody, existingFacility),
-    guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
-  });
-
-  const updatedFacility = await collection.findOneAndUpdate(
-    { _id: { $eq: facilityId } },
-    { $set: facilityUpdate },
-    { returnOriginal: false },
-  );
-
-  if (existingFacility) {
-    // update facilitiesUpdated timestamp in the deal
-    const dealUpdateObj = {
-      facilitiesUpdated: new Date().valueOf(),
-    };
-    const dealUpdate = new Application(dealUpdateObj);
-
-    await dealsCollection.findOneAndUpdate(
-      { _id: { $eq: ObjectID(existingFacility.dealId) } },
-      { $set: dealUpdate },
+    const updatedFacility = await collection.findOneAndUpdate(
+      { _id: { $eq: facilityId } },
+      { $set: facilityUpdate },
       { returnOriginal: false },
     );
-  }
 
-  return updatedFacility;
+    if (existingFacility) {
+    // update facilitiesUpdated timestamp in the deal
+      const dealUpdateObj = {
+        facilitiesUpdated: new Date().valueOf(),
+      };
+      const dealUpdate = new Application(dealUpdateObj);
+
+      await dealsCollection.findOneAndUpdate(
+        { _id: { $eq: ObjectID(existingFacility.dealId) } },
+        { $set: dealUpdate },
+        { returnOriginal: false },
+      );
+    }
+    return updatedFacility;
+  } catch (e) {
+    console.error('Unable to update the facility', { e });
+    return e;
+  }
 };
 exports.update = update;
 

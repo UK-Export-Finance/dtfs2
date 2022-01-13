@@ -176,9 +176,49 @@ const submissionPortalActivity = async (application) => {
   return portalActivities;
 };
 
-const addSubmissionData = async (dealId, existingApplication) => {
-  const { count, date } = await generateSubmissionData(existingApplication);
+/**
+ * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
+ * @param {Object} app Application object
+ * @returns {Bool} Facility(ies) was(were) updated or not
+ */
+const checkCoverDateConfirmed = async (app) => {
+  let hasUpdated = false;
 
+  if (app) {
+    try {
+      const facilities = await getAllFacilitiesByDealId(app._id);
+      const notYetSubmittedToUKEF = !app.submissionCount;
+      const haveFacilites = facilities?.length > 0;
+      const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+
+      if (notYetSubmittedToUKEF && haveFacilites) {
+        // Iterate through issued facilites
+        facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
+          hasUpdated = true;
+          await updateFacility(f._id, {
+            coverDateConfirmed: Boolean(isAIN),
+          });
+        });
+
+        // Iterate through unissued facilities
+        facilities.filter((f) => !f.hasBeenIssued && f.coverDateConfirmed).map(async (f) => {
+          hasUpdated = true;
+          await updateFacility(f._id, {
+            coverDateConfirmed: false,
+          });
+        });
+        return hasUpdated;
+      }
+    } catch (e) {
+      console.error('Unable to set coverDateConfirmed for AIN facilities.', { e });
+    }
+  }
+  return hasUpdated;
+};
+
+const addSubmissionData = async (dealId, existingApplication) => {
+  await checkCoverDateConfirmed(existingApplication);
+  const { count, date } = await generateSubmissionData(existingApplication);
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
   await removeChangedToIssued(dealId);
@@ -205,4 +245,5 @@ module.exports = {
   getUserInfo,
   addSubmissionDateToIssuedFacilities,
   removeChangedToIssued,
+  checkCoverDateConfirmed,
 };

@@ -15,6 +15,7 @@ const MockRequest = () => ({
   query: {},
   session: {
     user: {
+      username: 'maker',
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
       _id: 1235,
@@ -226,6 +227,7 @@ const MockApplicationResponseSubmission = () => {
   res.exporter = {};
   res.bank = { id: 'BANKID' };
   res.bankInternalRefName = 'My test';
+  res.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
   res.eligibility = {
     criteria: [
       { id: 12, answer: null, text: 'Test' },
@@ -248,8 +250,9 @@ const MockSubmissionRequest = () => ({
   session: {
     userToken: '',
     user: {
+      username: 'maker',
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: ['maker'],
       _id: 1235,
     },
   },

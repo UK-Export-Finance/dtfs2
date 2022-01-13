@@ -67,6 +67,8 @@ context('Return to Maker as MIA', () => {
     });
 
     it('should return the application to the Maker', () => {
+      applicationPreview.supportingInfoListRowAction(0, 0).should('not.exist');
+      applicationPreview.supportingInfoListRowAction(0, 1).should('not.exist');
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('comment1');
       returnToMaker.submitButton().click();
@@ -118,6 +120,15 @@ context('Return to Maker as MIA', () => {
       applicationDetails.editRefNameLink().should('exist');
       applicationDetails.editRefNameLink().invoke('attr', 'href').then((href) => {
         expect(href).to.equal(`/gef/applications/${dealId}/name`);
+      });
+      // supporting info should show change link
+      applicationDetails.supportingInfoListRowAction(0, 0).contains('Change');
+      applicationDetails.supportingInfoListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
+        expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`);
+      });
+      applicationDetails.supportingInfoListRowAction(0, 1).contains('Change');
+      applicationDetails.supportingInfoListRowAction(0, 1).find('.govuk-link').invoke('attr', 'href').then((href) => {
+        expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/security-details`);
       });
     });
 

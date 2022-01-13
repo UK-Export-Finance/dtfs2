@@ -20,13 +20,34 @@ const facilitiesChangedToIssuedAsArray = (application) => {
   return hasChanged;
 };
 
-const summaryIssuedChangedToIssued = (app, user, data) =>
-  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
-   && user.roles.includes('maker') && data.details.canResubmitIssuedFacilities === true;
+const summaryIssuedChangedToIssued = (params) => {
+  const {
+    acceptableStatus,
+    acceptableRole,
+    app,
+    data,
+    user,
+  } = params;
 
-const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
-  ((app.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) || (app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED))
-   && user.roles.includes('maker') && data.details.hasBeenIssued === false && facilitiesChanged.length !== 0;
+  return acceptableStatus.includes(app.status)
+   && user.roles.some((role) => acceptableRole.includes(role))
+   && Boolean(data.details.canResubmitIssuedFacilities);
+};
+
+const summaryIssuedUnchanged = (params) => {
+  const {
+    acceptableStatus,
+    acceptableRole,
+    facilitiesChanged,
+    app,
+    data,
+    user,
+  } = params;
+  return acceptableStatus.includes(app.status)
+   && user.roles.some((role) => acceptableRole.includes(role))
+   && Boolean(!data.details.hasBeenIssued)
+   && facilitiesChanged.length !== 0;
+};
 
 /**
    * this function checks that the deal is an AIN or MIN
@@ -35,8 +56,16 @@ const summaryIssuedUnchanged = (app, user, data, facilitiesChanged) =>
    * if changes required add to application type and status
 * */
 const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = [CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED];
-  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIN];
+  const acceptableStatuses = [
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+  ];
+  const acceptableApplicationType = [
+    CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+    CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
+    CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
+  ];
 
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
@@ -98,14 +127,19 @@ const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
  * @param {Object} facilities
  * @returns {Array}
  */
-const getIssuedFacilitiesAsArray = (facilities) => facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
-  .map(({ details }) =>
-    [
-      { text: details.name },
-      { text: details.ukefFacilityId },
-      { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-      { html: `<a href = '/gef/application-details/${details.dealId}/${details._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0'>Update</a>` },
-    ]);
+const getIssuedFacilitiesAsArray = (facilities) => {
+  if (facilities.items) {
+    return facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
+      .map(({ details }, index) =>
+        [
+          { text: details?.name },
+          { text: details?.ukefFacilityId },
+          { text: `${details?.currency?.id} ${details.value?.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+          { html: `<a href = '/gef/application-details/${details?.dealId}/${details?._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-coverStartDate-button-${index}'>Update</a>` },
+        ]);
+  }
+  return [];
+};
 
 const getFacilityCoverStartDate = (facility) => {
   const epoch = facility.details.coverStartDate ? facility.details.coverStartDate : null;
@@ -116,8 +150,13 @@ const getFacilityCoverStartDate = (facility) => {
   };
 };
 
-const coverDatesConfirmed = (facilities) =>
-  facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
+const coverDatesConfirmed = (facilities) => {
+  if (facilities.items.filter(({ details }) => details.hasBeenIssued).length > 0) {
+    return facilities.items.filter(({ details }) => details.hasBeenIssued).length
+   === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
+  }
+  return false;
+};
 
 /*
    function returns true or false based on length of array

@@ -21,7 +21,6 @@ describe('controllers/application-submission', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponse());
     api.getEligibilityCriteria.mockResolvedValue(MOCKS.MockEligibilityCriteriaResponse());
-    api.getUserDetails.mockResolvedValue(MOCKS.MockUserResponse());
     api.updateApplication.mockResolvedValue({});
     api.setApplicationStatus.mockResolvedValue({});
   });
@@ -51,6 +50,7 @@ describe('controllers/application-submission', () => {
       await postApplicationSubmission(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
         dealId: expect.any(String),
+        status: expect.any(String),
         submissionType: expect.any(String),
         unissuedToIssued: expect.any(Boolean),
       }));
@@ -77,7 +77,7 @@ describe('controllers/application-submission', () => {
       const expected = {
         ...{
           comments: [{
-            role: 'maker', userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
+            roles: ['maker'], userName: 'maker', createdAt: expect.any(Number), comment: mockRequest.body.comment,
           }],
           editorId: 1235,
         },
