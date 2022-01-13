@@ -15,6 +15,8 @@ import {
   displayTaskComments,
   pastDate,
   futureDateInRange,
+  displayChangeSupportingInfo,
+  canUpdateUnissuedFacilitiesCheck,
 } from './helpers';
 
 import {
@@ -37,9 +39,14 @@ import {
   MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+  MOCK_AIN_APPLICATION_SUPPORTING_INFO,
+  MOCK_AIN_APPLICATION_UNISSUED_ONLY,
+  MOCK_MIA_APPLICATION_UNISSUED_ONLY,
 } from './mocks/mock_applications';
 
 import { MOCK_REQUEST } from './mocks/mock_requests';
+
+const CONSTANTS = require('../constants');
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {
@@ -1376,6 +1383,70 @@ describe('futureDateInRange', () => {
         year: '2021',
       };
       expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
+    });
+  });
+
+  describe('displayChangeSupportingInfo()', () => {
+    it('Should return false if preview mode', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 0), true);
+      expect(result).toEqual(false);
+    });
+
+    it('Should return false if preview mode and submission count over 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 1), true);
+      expect(result).toEqual(false);
+    });
+
+    it('Should return true if not preview mode and submission count is 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+      expect(result).toEqual(true);
+    });
+
+    it('Should return true if not preview mode and submission count is 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('canUpdateUnissuedFacilitiesCheck()', () => {
+    it('if AIN, returns true if unissuedFacilities and no facilitiesChanged to issued', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true, [], null);
+      expect(result).toEqual(true);
+    });
+
+    it('if AIN, returns false if unissuedFacilities and facilitiesChanged to issued', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true, ['mock1'], null);
+      expect(result).toEqual(false);
+    });
+
+    it('if AIN, returns false if no unissuedFacilities and no facilitiesChanged to issued', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false, [], null);
+      expect(result).toEqual(false);
+    });
+
+    it('if AIN, returns false if no unissuedFacilities and facilitiesChanged to issued', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false, ['mock1'], null);
+      expect(result).toEqual(false);
+    });
+
+    it('if MIA, returns true if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], true);
+      expect(result).toEqual(true);
+    });
+
+    it('if MIA, returns false if no unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, false, [], true);
+      expect(result).toEqual(false);
+    });
+
+    it('if MIA, returns false if unissuedFacilities and facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, ['mock1'], true);
+      expect(result).toEqual(false);
+    });
+
+    it('if MIA, returns false if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is false', () => {
+      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], false);
+      expect(result).toEqual(false);
     });
   });
 });

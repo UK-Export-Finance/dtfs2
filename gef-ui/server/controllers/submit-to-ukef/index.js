@@ -76,6 +76,7 @@ const createSubmissionToUkef = async (req, res) => {
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType: application.submissionType,
+      status: application.status,
       isNotice: isDealNotice(application.ukefDecisionAccepted, application.submissionType),
       ukefDecisionAccepted,
       unissuedToIssued: hasUnissuedToIssued,

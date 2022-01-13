@@ -1,7 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const { mapSummaryList, displayTaskComments } = require('../../utils/helpers');
+const {
+  mapSummaryList,
+  displayTaskComments,
+  displayChangeSupportingInfo,
+  canUpdateUnissuedFacilitiesCheck,
+} = require('../../utils/helpers');
 const {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -63,6 +68,9 @@ function buildBody(app, previewMode, user) {
   const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
   const coverDates = coverDatesConfirmed(app.facilities);
   const hasChangedFacilities = hasChangedToIssued(app);
+  const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
+  const facilitiesChangedToIssued = facilitiesChangedToIssuedAsArray(app);
+  const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
 
   const mapSummaryParams = {
     app,
@@ -109,17 +117,19 @@ function buildBody(app, previewMode, user) {
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
-    unissuedFacilitiesPresent: areUnissuedFacilitiesPresent(app),
-    facilitiesChangedToIssued: facilitiesChangedToIssuedAsArray(app),
+    unissuedFacilitiesPresent,
+    facilitiesChangedToIssued,
     isUkefReviewAvailable: ukefReviewAvailable,
     isUkefReviewPositive: ukefReviewPositive,
-    ukefDecisionAccepted: app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false,
+    ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates),
+    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
+    displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
   };
 
   return appBody;
@@ -184,6 +194,7 @@ const applicationDetails = async (req, res, next) => {
 
   let facility;
   let url;
+  const link = `/gef/application-details/${dealId}`;
 
   try {
     const application = await Application.findById(dealId, user, userToken);
@@ -222,6 +233,7 @@ const applicationDetails = async (req, res, next) => {
     const params = {
       user,
       ...buildView(applicationWithUserRoles, previewMode, user),
+      link,
     };
 
     if (facility) {
@@ -234,6 +246,10 @@ const applicationDetails = async (req, res, next) => {
 
     if (req.success) {
       params.success = req.success;
+    }
+
+    if (params.unissuedFacilitiesPresent) {
+      params.link += '/unissued-facilities';
     }
 
     return res.render(`partials/${partial}.njk`, params);

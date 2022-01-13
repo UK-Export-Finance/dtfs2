@@ -323,6 +323,51 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
   ...commonDealItems,
 };
 
+const MOCK_MIA_APPLICATION_UNISSUED_ONLY = {
+  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
+  previousStatus: CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
+  facilities: {
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    items: [
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae68a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: CONSTANTS.FACILITY_TYPE.CASH,
+          hasBeenIssued: false,
+          name: 'Facility two',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: false,
+          canResubmitIssuedFacilities: null,
+        },
+        validation: { required: [] },
+      },
+    ],
+  },
+  ...commonDealItems,
+};
+
 const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
   status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
@@ -419,6 +464,11 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
   },
   ...commonDealItems,
 };
+
+const MOCK_AIN_APPLICATION_SUPPORTING_INFO = (appStatus, submissionCounter) => ({
+  status: appStatus,
+  submissionCount: submissionCounter,
+});
 
 const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
   const res = {};
@@ -622,9 +672,11 @@ module.exports = {
   MOCK_AIN_APPLICATION_RETURN_MAKER,
   MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
+  MOCK_MIA_APPLICATION_UNISSUED_ONLY,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+  MOCK_AIN_APPLICATION_SUPPORTING_INFO,
   RES_MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_GENERATOR,
 };

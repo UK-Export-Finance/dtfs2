@@ -8,6 +8,9 @@ import applicationDetails from './pages/application-details';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
+import CONSTANTS from '../fixtures/constants';
+import { toTitleCase } from '../fixtures/helpers';
+
 let dealId;
 
 context('Submit to UKEF', () => {
@@ -73,7 +76,7 @@ context('Submit to UKEF', () => {
 
     it('submits without comments and displays the confirmation page', () => {
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic inclusion notice submitted to UKEF');
+      submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
@@ -81,7 +84,7 @@ context('Submit to UKEF', () => {
     it('submits with comments', () => {
       submitToUkef.comment().type('Test comment');
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanelTitle().contains('Automatic inclusion notice submitted to UKEF');
+      submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
       submitToUkefConfirmation.confirmationText().contains('We\'ll send you an email shortly to confirm we\'ve accepted your notice.');
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });

@@ -5,24 +5,29 @@
     {% set bannerHtml %}
 
     {% if renderReviewDecisionLink %}
-      <div class="govuk-!-margin-bottom-6" data-cy="ukef-review">
-        <a href="/gef/application-details/{{ dealId }}/review-decision" class="govuk-link">Review UKEF decision</a>
+      <div class="govuk-!-margin-bottom-0" data-cy="ukef-review">
+        <a href="/gef/application-details/{{ dealId }}/review-decision" class="govuk-link" data-cy="ukef-review-link">Review UKEF decision</a>
       </div>
     {% endif %}
 
-    {% if unissuedFacilitiesPresent and facilitiesChangedToIssued.length === 0 %}
-      <h2 data-cy="update-unissued-header">Update facility stage for unissued facilities</h2>
+    {% if canUpdateUnissuedFacilities %}
+      <h3 data-cy="update-unissued-header">Update facility stage for unissued facilities</h3>
       <div class="govuk-!-margin-bottom-6">
-        <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">
-          View unissued facilities</a>
+        <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">View unissued facilities</a>
       </div>
     {% endif %}
 
     {% if facilitiesChangedToIssued.length > 0 %}
-      {% if status === "Further Maker's input required"%}
-        <h2 data-cy="update-unissued-stage">Change facility details</h2>
+      {% if applicationType !== "Manual Inclusion Application" %}
+        {% if status === "Further Maker\'s input required" %}
+          <h2 data-cy="update-unissued-stage">Change facility details</h2>
+        {% else %}
+            <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+        {% endif %}
       {% else %}
-        <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+        {% if status === "Ready for Checker\'s approval" %}
+          <h2 data-cy="update-mia-stage">Check manual inclusion application before submitting to UKEF</h2>
+        {% endif %}
       {% endif %}
       <strong data-cy="changed-unissued-header">The following facility stages have been updated to issued:</strong>
       <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities-list">
@@ -31,8 +36,8 @@
         {% endfor %}
       </div>
     {% endif %}
-
-    {% if coverDatesConfirmed %}
+  
+    {% if ukefDecisionAccepted %}
       {% if ukefDecision[0].decision == 'Accepted (without conditions)' %}
         <strong>You are proceeding with UKEF cover</strong>
       {% elif ukefDecision[0].decision == 'Accepted (with conditions)' %}
@@ -48,7 +53,7 @@
       {% endif %}
     {% endif %}
 
-  <div data-cy="latest-comment">
+  <div class="govuk-!-margin-top-3" data-cy="latest-comment">
     {% for comment in comments %}
       <strong>Comments from {{ comment.role }} ({{ comment.userName }})</strong>
       <p>{{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>

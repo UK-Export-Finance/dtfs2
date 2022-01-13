@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -8,7 +10,8 @@ import applicationSubmission from './pages/application-submission';
 import applicationPreview from './pages/application-preview';
 import submitToUkef from './pages/submit-to-ukef';
 
-import { format } from 'date-fns';
+import CONSTANTS from '../fixtures/constants';
+import { toTitleCase } from '../fixtures/helpers';
 
 let deal;
 let dealId;
@@ -88,8 +91,8 @@ context('Submit AIN deal and check portalActivities', () => {
     it('should display the activity timeline with submission information', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
-      applicationActivities.activityTimeline().contains('Automatic inclusion notice submitted to UKEF');
-      applicationActivities.activityTimeline().contains('Manual inclusion application submitted to UKEF').should('not.exist');
+      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`);
+      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`).should('not.exist');
       applicationActivities.activityTimeline().contains(date);
       applicationActivities.activityTimeline().contains(CREDENTIALS.CHECKER.firstname);
     });
@@ -103,7 +106,7 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerDateSubmitted().contains(bannerDate);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
-      statusBanner.bannerSubmissionType().contains('Automatic Inclusion Notice');
+      statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
   });
 });
