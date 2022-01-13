@@ -37,7 +37,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
           {
             text: mockSubmittedFieldFilters[1],
             href: expectedHref(mockFieldName, expectedFormattedFieldValue(mockSubmittedFieldFilters[1])),
-            formattedFieldValue: expectedFormattedFieldValue(mockSubmittedFieldFilters[0]),
+            formattedFieldValue: expectedFormattedFieldValue(mockSubmittedFieldFilters[1]),
           },
         ],
       };
