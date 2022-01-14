@@ -122,6 +122,7 @@ describe('controllers/application-details', () => {
           makerCanSubmit: expect.any(Boolean),
           makerCanReSubmit: expect.any(Boolean),
           checkerCanSubmit: expect.any(Boolean),
+          link: expect.any(String),
           isUkefReviewAvailable: expect.any(Boolean),
           isUkefReviewPositive: expect.any(Boolean),
           ukefDecisionAccepted: expect.any(Boolean),
@@ -132,6 +133,8 @@ describe('controllers/application-details', () => {
           facilitiesChangedToIssued: expect.any(Array),
           displayComments: expect.any(Boolean),
           hasChangedFacilities: expect.any(Boolean),
+          displayChangeSupportingInfo: expect.any(Boolean),
+          canUpdateUnissuedFacilities: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),
@@ -252,6 +255,59 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
             hasChangedFacilities: false,
+          }));
+      });
+
+      it('renders `application-details` with displayChangeSupportingInfo as true when draft', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.DRAFT;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            displayChangeSupportingInfo: true,
+          }));
+      });
+
+      it('renders `application-details` with displayChangeSupportingInfo as false when preview mode (UKEF_IN_PROGRESS)', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            displayChangeSupportingInfo: false,
+          }));
+      });
+
+      it('renders `application-details` with displayChangeSupportingInfo as true when the submission count is 0', async () => {
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
+        mockApplicationResponse.submissionCount = 0;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            displayChangeSupportingInfo: true,
+          }));
+      });
+
+      it('renders `application-details` with displayChangeSupportingInfo as false submission count is 1', async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
+        mockApplicationResponse.submissionCount = 1;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+            displayChangeSupportingInfo: false,
           }));
       });
 

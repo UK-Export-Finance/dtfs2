@@ -178,7 +178,7 @@ class Facility {
         this.monthsOfCover = null;
       }
 
-      if (req.coverDateConfirmed) {
+      if (req.coverDateConfirmed === true || req.coverDateConfirmed === false) {
         this.coverDateConfirmed = req.coverDateConfirmed;
       }
 

@@ -147,7 +147,7 @@ context('Application Details Page', () => {
       applicationDetails.abandonLink();
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
-      statusBanner.bannerStatus().contains('Draft');
+      statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.DRAFT);
       statusBanner.bannerExporter().should('not.contain', '-');
     });
 
@@ -159,14 +159,14 @@ context('Application Details Page', () => {
 
     it('displays the correct exporter elements', () => {
       applicationDetails.exporterHeading();
-      applicationDetails.exporterStatus().contains('In progress');
+      applicationDetails.exporterStatus().contains(CONSTANTS.DEAL_STATUS.IN_PROGRESS);
       applicationDetails.exporterDetailsLink().should('not.exist');
       applicationDetails.exporterSummaryList();
     });
 
     it('displays the correct automatic cover elements', () => {
       applicationDetails.automaticCoverHeading();
-      applicationDetails.automaticCoverStatus().contains('In progress');
+      applicationDetails.automaticCoverStatus().contains(CONSTANTS.DEAL_STATUS.IN_PROGRESS);
       applicationDetails.automaticCoverDetailsLink();
       applicationDetails.automaticCoverCriteria().should('not.exist');
       applicationDetails.automaticCoverSummaryList().should('not.exist');
@@ -201,24 +201,23 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
       statusBanner.bannerStatus().contains('Draft');
-      statusBanner.bannerSubmissionType().should('have.text', 'Automatic Inclusion Notice');
-      statusBanner.bannerExporter().should('not.contain', '-');
+      statusBanner.bannerSubmissionType().should('have.text', CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails.mainHeading().contains('Automatic Inclusion Notice');
+      applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
 
     it('displays the correct exporter elements', () => {
       applicationDetails.exporterHeading();
-      applicationDetails.exporterStatus().contains('Completed');
+      applicationDetails.exporterStatus().contains(CONSTANTS.DEAL_STATUS.COMPLETED);
       applicationDetails.exporterDetailsLink().should('not.exist');
       applicationDetails.exporterSummaryList();
     });
 
     it('displays the correct automatic cover elements', () => {
       applicationDetails.automaticCoverHeading();
-      applicationDetails.automaticCoverStatus().contains('Complete');
+      applicationDetails.automaticCoverStatus().contains(CONSTANTS.DEAL_STATUS.COMPLETED);
       applicationDetails.automaticCoverCriteria();
       applicationDetails.automaticCoverDetailsLink().should('not.exist');
       applicationDetails.automaticCoverSummaryList();
@@ -259,14 +258,14 @@ context('Application Details Page', () => {
     it('displays the correct submission type heading and text in banner', () => {
       applicationDetails.mainHeading().contains('Manual Inclusion Application');
 
-      statusBanner.bannerSubmissionType().should('have.text', 'Manual Inclusion Application');
+      statusBanner.bannerSubmissionType().should('have.text', CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
     });
 
     describe('Supporting information section', () => {
       it('displays the section elements', () => {
         applicationDetails.supportingInfoHeading();
         applicationDetails.supportingInfoStartLink();
-        applicationDetails.supportingInfoStatus().contains('Not started');
+        applicationDetails.supportingInfoStatus().contains(CONSTANTS.DEAL_STATUS.NOT_STARTED);
       });
 
       it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {

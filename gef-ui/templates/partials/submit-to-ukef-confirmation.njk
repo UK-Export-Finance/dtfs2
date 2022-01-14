@@ -13,6 +13,7 @@
 
       {% set titleComponentData = {
         submissionType: submissionType,
+        status: status,
         text: 'submitted to UKEF',
         unissuedToIssued: unissuedToIssued
       }%}
@@ -25,7 +26,7 @@
         classes: "govuk-!-margin-bottom-7"
       }) }}
 
-      {% if unissuedToIssued %}
+      {% if unissuedToIssued and submissionType !== 'Manual Inclusion Application'%}
           <p data-cy="confirmation-text">We’ll send you a confirmation email shortly, once we’ve acknowledged your issued facilities.</p>
       {% else %}
         {% if isNotice %}
@@ -39,7 +40,7 @@
         <br/>
         <h2>What happens next</h2>
         <p>Our underwriters will review this application and let you know if UKEF can provide a guarantee.</p>
-        <p>They’ll either:</p>
+        <p>They'll either:</p>
           <ul>
             <li>approve it with conditions</li>
             <li>approve it without conditions</li>

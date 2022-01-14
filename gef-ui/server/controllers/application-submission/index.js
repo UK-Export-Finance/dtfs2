@@ -28,7 +28,7 @@ const postApplicationSubmission = async (req, res, next) => {
   const { comment } = body;
   const application = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
-  const maker = await api.getUserDetails(application.userId, userToken);
+  const currentStatus = application.status;
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
   try {
@@ -42,9 +42,10 @@ const postApplicationSubmission = async (req, res, next) => {
         dealId, maxCommentLength, errors, comment,
       });
     }
+
     if (comment) {
       const commentObj = {
-        role: 'maker', userName: maker.username, createdAt: Date.now(), comment,
+        roles: user.roles, userName: user.username, createdAt: Date.now(), comment,
       };
       const comments = application.comments || [];
       comments.push(commentObj);
@@ -55,13 +56,14 @@ const postApplicationSubmission = async (req, res, next) => {
     }
     await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.BANK_CHECK);
   } catch (err) {
-    console.error(err);
+    console.error('Unable to post application submission', { err });
     return next(err);
   }
 
   return res.render('application-details-submitted.njk', {
     dealId,
     submissionType,
+    status: currentStatus,
     unissuedToIssued: hasChangedToIssued(application),
   });
 };
