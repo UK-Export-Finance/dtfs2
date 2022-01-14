@@ -6,6 +6,10 @@ const portalActivityGenerator = require('../../portalActivity-object-generator')
 
 const CONSTANTS = require('../../../constants');
 
+const {
+  update: updateFacility,
+} = require('./facilities.controller');
+
 // retrieves user information from database
 const getUserInfo = async (userId) => {
   const userCollectionName = 'users';
@@ -48,6 +52,16 @@ const submissionTypeToConstant = (submissionType) => {
   return submissionConstant;
 };
 
+const addCheckerToFacility = async (_id, checkerId) => {
+  const checker = await getUserInfo(checkerId);
+
+  const update = {
+    unissuedToIssuedByChecker: checker,
+  };
+
+  await updateFacility(_id, update);
+};
+
 const firstSubmissionPortalActivity = async (application) => {
   const { submissionType, portalActivities, checkerId } = application;
 
@@ -61,6 +75,9 @@ const firstSubmissionPortalActivity = async (application) => {
     activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
     activityText: '',
     activityHTML: '',
+    facility: '',
+    maker: '',
+    checker: '',
   };
   // generates an activities object
   const activityObj = portalActivityGenerator(activityParams);
@@ -70,32 +87,22 @@ const firstSubmissionPortalActivity = async (application) => {
   return portalActivities;
 };
 
-const htmlGeneratorFacility = (facility) => {
-  const { type, ukefFacilityId } = facility;
-
-  const html = `
-  <a class="govuk-link" data-cy="facility-link">${type} facility ${ukefFacilityId}</a>
-  <strong class="govuk-tag govuk-tag--purple"> Unissued </strong>
-   >
-  <strong class="govuk-tag govuk-tag--purple"> Issued </strong>
-  `;
-
-  return html;
-};
-
-const facilityChangePortalActivity = (application, facilities) => {
-  const { portalActivities } = application;
-
-  facilities.forEach((facility) => {
+const facilityChangePortalActivity = async (application, facilities) => {
+  const { portalActivities, checkerId } = application;
+  const checker = await getUserInfo(checkerId);
+  facilities.forEach(async (facility) => {
     if (facility.canResubmitIssuedFacilities) {
       // creates user object to add to array
-      const user = facility.unissuedToIssuedBy;
+      const maker = facility.unissuedToIssuedByMaker;
       const activityParams = {
         type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
-        user,
+        user: '',
         activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
         activityText: '',
         activityHTML: 'facility',
+        facility,
+        maker,
+        checker,
       };
       // generates an activities object
       const activityObj = portalActivityGenerator(activityParams);

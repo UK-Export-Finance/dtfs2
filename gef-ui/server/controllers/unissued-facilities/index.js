@@ -165,7 +165,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
-        unissuedToIssuedBy: userObj,
+        unissuedToIssuedByMaker: userObj,
       },
       (req.success = {
         message: `${body.facilityName} is updated`,
@@ -243,7 +243,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
-        unissuedToIssuedBy: userObj,
+        unissuedToIssuedByMaker: userObj,
       },
       (req.url = `/gef/application-details/${dealId}`),
     );

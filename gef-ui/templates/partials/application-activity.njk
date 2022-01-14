@@ -21,11 +21,53 @@
 
   <h1 class="govuk-heading-xl" data-cy="main-activity-heading">Activity and comments</h1>
 
-    {%for activity in portalActivities%}
-    {%endfor%}
+
+
+    {% set portalActivitiesWithHTML = [] %}
+
+    {% for activity in portalActivities %}
+
+      {% set facilityHtml %}
+        <a class="colour-light-grey">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</a> <br>
+        <a class="colour-light-grey">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </a> <br>
+        <br>
+        <a class="govuk-link" data-cy="facility-link">{{activity.facility}}</a>
+        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2"> Unissued </strong>
+        >
+        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2"> Issued </strong>
+      {% endset %}
+
+      {% if activity.html === 'facility'%}
+
+        {% set activityToAdd =
+          {
+            label: activity.label,
+            text: activity.text,
+            datetime: activity.datetime,
+            byline: activity.byline,
+            html: facilityHtml
+          }
+        %}
+
+      {% else %}
+
+        {% set activityToAdd =
+          {
+            label: activity.label,
+            text: activity.text,
+            datetime: activity.datetime,
+            byline: activity.byline,
+            html: activity.html
+          }
+        %}
+
+      {% endif %}
+
+      {% set portalActivitiesWithHTML = (portalActivitiesWithHTML.push(activityToAdd), portalActivitiesWithHTML) %}
+    {% endfor %}
 
    {{ mojTimeline({
-        items: portalActivities,
+        items: portalActivitiesWithHTML,
         attributes: {
           'data-cy': 'portal-activities-timeline'
         }

@@ -15,6 +15,9 @@ const mapPortalActivities = (portalActivities) => portalActivities.map((portalAc
     text: `${portalActivity.author.firstName} ${portalActivity.author.lastName}`,
   },
   html: portalActivity.html,
+  facility: portalActivity.facility,
+  maker: portalActivity.maker,
+  checker: portalActivity.checker,
 }));
 
 const getPortalActivities = async (req, res) => {

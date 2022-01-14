@@ -143,7 +143,7 @@ const submissionPortalActivity = async (application) => {
     portalActivities = await firstSubmissionPortalActivity(application);
   }
   if (checkForChangedFacilities(facilities)) {
-    portalActivities = facilityChangePortalActivity(application, facilities);
+    portalActivities = await facilityChangePortalActivity(application, facilities);
   }
 
   return portalActivities;

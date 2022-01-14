@@ -7,6 +7,9 @@ const portalActivityGenerator = (activityParams) => {
     activityType,
     activityText,
     activityHTML,
+    facility,
+    maker,
+    checker,
   } = activityParams;
 
   const userToAdd = {
@@ -22,6 +25,9 @@ const portalActivityGenerator = (activityParams) => {
     text: activityText,
     label: type,
     html: activityHTML,
+    facility: facility ? `${facility.type} facility ${facility.ukefFacilityId}` : '',
+    maker,
+    checker,
   };
 
   return portalActivityObj;
