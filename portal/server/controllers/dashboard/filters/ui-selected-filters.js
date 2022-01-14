@@ -1,3 +1,4 @@
+const { formatFieldValue } = require('./helpers');
 const CONTENT_STRINGS = require('../../../content-strings');
 const CONSTANTS = require('../../../constants');
 
@@ -14,8 +15,7 @@ const generateSelectedFiltersObject = (
     text: heading,
   },
   items: submittedFieldFilters.map((fieldValue) => {
-    // const formattedFieldValue = fieldValue.replace('/', '-');
-    const formattedFieldValue = fieldValue.replace(/[\s+/]/g, '-').replace('\'', '');
+    const formattedFieldValue = formatFieldValue(fieldValue);
 
     return {
       text: fieldValue,

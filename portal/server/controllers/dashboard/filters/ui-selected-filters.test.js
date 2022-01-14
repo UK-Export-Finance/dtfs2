@@ -2,6 +2,7 @@ import {
   generateSelectedFiltersObject,
   selectedDashboardFilters,
 } from './ui-selected-filters';
+import { formatFieldValue } from './helpers';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
@@ -21,7 +22,6 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         mockSubmittedFieldFilters,
       );
 
-      const expectedFormattedFieldValue = (fieldValue) => fieldValue.replace(/[\s+/]/g, '-').replace('\'', '');
       const expectedHref = (name, value) => `filters/remove/${name}/${value}`;
 
       const expected = {
@@ -31,13 +31,13 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         items: [
           {
             text: mockSubmittedFieldFilters[0],
-            href: expectedHref(mockFieldName, expectedFormattedFieldValue(mockSubmittedFieldFilters[0])),
-            formattedFieldValue: expectedFormattedFieldValue(mockSubmittedFieldFilters[0]),
+            href: expectedHref(mockFieldName, formatFieldValue(mockSubmittedFieldFilters[0])),
+            formattedFieldValue: formatFieldValue(mockSubmittedFieldFilters[0]),
           },
           {
             text: mockSubmittedFieldFilters[1],
-            href: expectedHref(mockFieldName, expectedFormattedFieldValue(mockSubmittedFieldFilters[1])),
-            formattedFieldValue: expectedFormattedFieldValue(mockSubmittedFieldFilters[1]),
+            href: expectedHref(mockFieldName, formatFieldValue(mockSubmittedFieldFilters[1])),
+            formattedFieldValue: formatFieldValue(mockSubmittedFieldFilters[1]),
           },
         ],
       };

@@ -56,7 +56,23 @@ const submittedFiltersObject = (filtersArray) => {
   return obj;
 };
 
+/**
+ * Replace some special characters in a string.
+ * - White space and forward slash replaced with a dash.
+ * - Single quotes are removed.
+ * This is used in HTML for HREF's and data-cy
+ * 
+ * @param {string} string
+ * @example 'BSS/EWCS'
+ * @returns 'BSS-EWCS'
+ * @example 'Ready for Checker's approval'
+ * @returns 'Ready-for-Checkers-approval'
+ */
+const formatFieldValue = (fieldValue) =>
+  fieldValue.replace(/[\s/]/g, '-').replace('\'', '');
+
 module.exports = {
   submittedFiltersArray,
   submittedFiltersObject,
+  formatFieldValue,
 };

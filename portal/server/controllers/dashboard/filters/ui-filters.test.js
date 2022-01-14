@@ -6,6 +6,7 @@ import {
   statusFilters,
   dashboardFilters,
 } from './ui-filters';
+import { formatFieldValue } from './helpers';
 import {
   FIELD_NAMES,
   PRODUCT,
@@ -28,7 +29,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
         mockSubmittedFilters,
       );
 
-      const expectedFormattedFieldValue = mockValue.replace(/[\s+/]/g, '-').replace('\'', '');
+      const expectedFormattedFieldValue = formatFieldValue(mockValue);
 
       const expectedLabelDataCy = `filter-label-${mockField}-${expectedFormattedFieldValue}`;
       const expectedValueDataCy = `filter-input-${mockField}-${expectedFormattedFieldValue}`;

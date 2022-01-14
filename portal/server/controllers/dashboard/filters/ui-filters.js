@@ -1,3 +1,4 @@
+const { formatFieldValue } = require('./helpers');
 const {
   FIELD_NAMES,
   PRODUCT,
@@ -30,8 +31,7 @@ const generateFilterObject = (field, value, submittedFilters) => {
     }
   }
 
-  // replace white space, dashes and single quotes.
-  const formattedFieldValue = value.replace(/[\s+/]/g, '-').replace('\'', '');
+  const formattedFieldValue = formatFieldValue(value);
 
   return {
     label: {

@@ -1,6 +1,7 @@
 import {
   submittedFiltersArray,
   submittedFiltersObject,
+  formatFieldValue,
 } from './helpers';
 
 describe('controllers/dashboard/filters - helpers', () => {
@@ -90,6 +91,18 @@ describe('controllers/dashboard/filters - helpers', () => {
 
         expect(result).toEqual({});
       });
+    });
+  });
+
+  describe('formatFieldValue', () => {
+    it('replaces/removes special characters from a string', () => {
+      const mockString = 'Ready for Checker\'s Approval BSS/EWCS';
+
+      const result = formatFieldValue(mockString);
+
+      const expected = 'Ready-for-Checkers-Approval-BSS-EWCS';
+
+      expect(result).toEqual(expected);
     });
   });
 });
