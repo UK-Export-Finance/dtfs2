@@ -5,6 +5,12 @@ const CONSTANTS = require('../../../constants');
 /**
  * Create an object for a single, selected filter
  * This will used in mojFilter component - selectedFilters.categories.
+ *
+ * @param {string} field heading
+ * @param {string} field name
+ * @param {array} submitted filters
+ * @example ( 'Mock heading', 'dealType', [ 'BSS/EWCS', 'GEF' ] )
+ * @returns { heading: { text: 'Mock heading' }, items: [ { text: 'BSS-EWCS', href: `filters/remove/dealType/BSS-EWCS`, value: 'BSS-EWCS' } ] }
  */
 const generateSelectedFiltersObject = (
   heading,
@@ -25,9 +31,14 @@ const generateSelectedFiltersObject = (
   }),
 });
 
+
 /**
  * Create an array of objects for all selected filters.
  * This will used in mojFilter component - selectedFilters.categories.
+ *
+ * @param {object} submitted filters
+ * @example ( { keyword: 'Special exporter' }, { dealType: ['BSS/EWCS', 'GEF'] } )
+ * @returns [ generateSelectedFiltersObject(...keyword), generateSelectedFiltersObject(...dealType) ]
  */
 const selectedDashboardFilters = (submittedFilters) => {
   const selected = [];

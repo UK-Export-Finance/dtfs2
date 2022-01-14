@@ -8,7 +8,7 @@ const {
 const CONTENT_STRINGS = require('../../../content-strings');
 
 /**
- * Generates an object to be consumed by GOVUK component.
+ * Generate an object to be consumed by GOVUK component.
  * This will be an object in items array for checkboxes component.
  *
  * @param {string} field name
