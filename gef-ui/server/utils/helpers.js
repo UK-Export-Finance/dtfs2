@@ -137,10 +137,12 @@ const previewSummaryItems = (href, keys, item) => {
 */
 const previewItemConditions = (previewParams) => {
   const {
+    issuedHref,
     unissuedHref,
     changedToIssueShow,
     unissuedShow,
     item,
+    details,
   } = previewParams;
   let summaryItems = [];
 
@@ -159,6 +161,8 @@ const previewItemConditions = (previewParams) => {
      * add link displayed taking to unissued-facility-change change page
      */
     summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
+  } else if (details.coverDateConfirmed && item.id === 'coverStartDate') {
+    summaryItems = previewSummaryItems(issuedHref, details.coverDateConfirmed, item);
   }
   return summaryItems;
 };
@@ -220,6 +224,8 @@ const summaryItemsConditions = (summaryItemsObj) => {
   const changedToIssueShow = id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate';
   // column key to display add if facility not yet issued
   const unissuedShow = id === 'hasBeenIssued';
+  // Issued facility change link (post confirmation)
+  const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
   // personalised href for facility to change to issued (once submitted to UKEF)
   const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
   // array of facilities which have been changed to issued
@@ -232,6 +238,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
     hasChangedFacilities,
     facilitiesChanged,
     href,
+    issuedHref,
     unissuedHref,
     isCoverStartOnSubmission,
     changedToIssueShow,
@@ -240,6 +247,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
     value,
     acceptableStatus,
     acceptableRole,
+    details,
   };
 
   let summaryItems = [];
