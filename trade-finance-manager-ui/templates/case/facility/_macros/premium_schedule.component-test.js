@@ -20,6 +20,7 @@ describe(page, () => {
       ukefFacilityId: '0040004833',
       facilityType: 'Performance Bond',
       facilityStage: 'Commitment',
+      hasBeenIssued: true,
       facilityProduct: {
         name: 'Bond Support Scheme',
       },

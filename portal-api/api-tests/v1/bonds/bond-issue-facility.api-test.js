@@ -36,6 +36,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     bondIssuer: 'issuer',
     bondType: 'bond type',
     facilityStage: 'Unissued',
+    hasBeenIssued: false,
     previousFacilityStage: 'Unissued',
     ukefGuaranteeInMonths: '24',
     bondBeneficiary: 'test',

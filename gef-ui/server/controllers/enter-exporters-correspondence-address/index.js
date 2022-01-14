@@ -8,7 +8,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
   const { address } = session;
   const parseAddress = address ? JSON.parse(address) : null;
   const { status } = query;
-  const backUrl = req.get('Referrer');
+  const backUrl = `/gef/application-details/${dealId}`;
 
   try {
     const { exporter } = await api.getApplication(dealId);

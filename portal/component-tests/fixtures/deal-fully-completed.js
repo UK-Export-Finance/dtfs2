@@ -29,6 +29,7 @@ const deal = {
         bondIssuer: 'my issuer',
         bondType: 'Retention bond',
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
         'requestedCoverStartDate-day': `${moment().format('DD')}`,
         'requestedCoverStartDate-month': `${moment().format('MM')}`,
@@ -63,6 +64,7 @@ const deal = {
         bondIssuer: 'my issuer',
         bondType: 'Retention bond',
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
         'requestedCoverStartDate-day': `${moment().format('DD')}`,
         'requestedCoverStartDate-month': `${moment().format('MM')}`,
@@ -99,6 +101,7 @@ const deal = {
       {
         _id: '123456',
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         'requestedCoverStartDate-day': `${moment().format('DD')}`,
         'requestedCoverStartDate-month': `${moment().format('MM')}`,
         'requestedCoverStartDate-year': `${moment().format('YYYY')}`,
@@ -131,6 +134,7 @@ const deal = {
       {
         _id: '789123',
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         'requestedCoverStartDate-day': `${moment().format('DD')}`,
         'requestedCoverStartDate-month': `${moment().format('MM')}`,
         'requestedCoverStartDate-year': `${moment().format('YYYY')}`,

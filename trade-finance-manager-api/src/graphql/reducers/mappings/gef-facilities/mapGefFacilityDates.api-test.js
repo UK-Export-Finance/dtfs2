@@ -11,6 +11,7 @@ describe('mapGefFacilityDates', () => {
   const mockFacility = {
     ...MOCK_CASH_CONTINGENT_FACILIIES[0],
     facilityStage: 'Issued',
+    hasBeenIssued: true,
   };
 
   const mockFacilityTfm = {

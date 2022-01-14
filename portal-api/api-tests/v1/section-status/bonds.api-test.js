@@ -5,7 +5,6 @@ const {
 } = require('../../../src/v1/section-status/bonds');
 
 describe('section-status - bond', () => {
-
   describe('bondStatus', () => {
     describe('when bond.status exists', () => {
       it('should return bond.status', () => {
@@ -39,6 +38,7 @@ describe('section-status - bond', () => {
   describe('bondHasIncompleteIssueFacilityDetails', () => {
     const validMockBond = {
       facilityStage: 'Unissued',
+      hasBeenIssued: false,
       issueFacilityDetailsSubmitted: false,
     };
 
@@ -56,7 +56,7 @@ describe('section-status - bond', () => {
         { status: 'Submitted', previousStatus: 'Test' },
       ];
 
-      mockDeals.forEach(deal => {
+      mockDeals.forEach((deal) => {
         const result = bondHasIncompleteIssueFacilityDetails(deal.status, deal.previousStatus, validMockBond);
         expect(result).toEqual(true);
       });
@@ -84,12 +84,12 @@ describe('section-status - bond', () => {
     it('should return false when facility stage is not allowed', () => {
       const mockBond = {
         facilityStage: 'Issued',
+        hasBeenIssued: true,
       };
 
       const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
       expect(result).toEqual(false);
     });
-
 
     it('should return false when issueFacilityDetailsSubmitted is true', () => {
       const mockBond = {
@@ -103,16 +103,17 @@ describe('section-status - bond', () => {
   });
 
   describe('addAccurateStatusesToBonds', () => {
-
     describe('when a bond in a deal has issueFacilityDetailsStarted', () => {
       it('should update bond.status from bondStatus function', () => {
         const mockBonds = [
           {
             facilityStage: 'Unissued',
+            hasBeenIssued: false,
             issueFacilityDetailsStarted: false,
           },
           {
             facilityStage: 'Unissued',
+            hasBeenIssued: false,
             issueFacilityDetailsStarted: true,
           },
         ];
@@ -131,7 +132,7 @@ describe('section-status - bond', () => {
           { ...mockDeal('Automatic Inclusion Notice') },
         ];
 
-        mockDeals.forEach(deal => {
+        mockDeals.forEach((deal) => {
           const result = addAccurateStatusesToBonds(deal);
 
           const expected = bondStatus(mockBonds[1]);

@@ -25,7 +25,8 @@ describe('/v1/deals/:id/bond', () => {
   const allBondFields = {
     bondIssuer: 'issuer',
     bondType: 'bond type',
-    facilityStage: 'unissued',
+    facilityStage: 'Unissued',
+    hasBeenIssued: false,
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
@@ -205,6 +206,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Unissued',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '',
             };
 
@@ -219,6 +221,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Unissued',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: 'test',
             };
 
@@ -233,6 +236,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Unissued',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '6.3',
             };
 
@@ -247,6 +251,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Unissued',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '-1',
             };
 
@@ -261,6 +266,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Unissued',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '1000',
             };
 
@@ -278,6 +284,7 @@ describe('/v1/deals/:id/bond', () => {
           const bond = {
             ...allBondFields,
             facilityStage: 'Issued',
+            hasBeenIssued: true,
             ...requestedCoverStartDate,
           };
 
@@ -427,6 +434,7 @@ describe('/v1/deals/:id/bond', () => {
           const bond = {
             ...allBondFields,
             facilityStage: 'Issued',
+            hasBeenIssued: true,
             ...coverEndDate,
           };
 
@@ -494,6 +502,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Issued',
+              hasBeenIssued: true,
               'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
               'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
               'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
@@ -515,6 +524,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Issued',
+              hasBeenIssued: true,
               uniqueIdentificationNumber: '',
             };
 
@@ -529,6 +539,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Issued',
+              hasBeenIssued: true,
               uniqueIdentificationNumber: 'a'.repeat(31),
             };
 

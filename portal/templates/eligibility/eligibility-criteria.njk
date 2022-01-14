@@ -32,7 +32,7 @@
     entityName: 'eligibility',
     items: taskListItems
   })}}
-  
+
   <form method="POST" autocomplete="off">
 
     {% for criterion in eligibility.criteria %}
@@ -91,10 +91,10 @@
         </fieldset>
 
       </div>
-      
+
       {% if criterion.id == "11" %}
         <div id="criterion-group-additional-{{criterion.id}}" {% if criterion.answer != false  %}hidden{% endif %} aria-hidden="{% if criterion.answer != false %}true{% else %}false{% endif %}" data-cy="criteria-11-extra-info">
-          
+
           {% set hasAgentNameValidationError = validationErrors.errorList.agentName %}
 
           <div id="criterion-group-agent-name" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
@@ -107,7 +107,7 @@
                 <span id="agentName-hint" class="govuk-hint">
                   This should be the legal name of the entity.
                 </span>
-                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
+                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" />
               </div>
 
               <span id="agentName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agents-name-count">
@@ -125,7 +125,7 @@
               isPageHeading: false
             }
           }) %}
-          
+
             {{ govukSelect({
                 id: "criterion-group-agentAddressCountry",
                 name: "agentAddressCountry",
@@ -138,7 +138,7 @@
                   "data-cy":"agent-country"
                 }
               }) }}
-                
+
             {{ govukInput({
               id: "criterion-group-agentAddressLine1",
               label: {
@@ -151,7 +151,7 @@
                 "maxlength": "50"
               },
               errorMessage: validationErrors.errorList.agentAddressLine1
-            
+
             }) }}
 
             {{ govukInput({
@@ -221,7 +221,7 @@
       value="Save and go back to deal"
       data-cy="save-go-back-button"
     />
-    
+
   </form>
 
 {% endblock %}
