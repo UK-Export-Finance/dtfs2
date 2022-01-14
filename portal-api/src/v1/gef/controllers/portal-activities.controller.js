@@ -56,10 +56,11 @@ const firstSubmissionPortalActivity = async (application) => {
   // creates user object to add to array
   const user = await getUserInfo(checkerId);
   const activityParams = {
-    applicationType,
+    type: applicationType,
     user,
     activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
     activityText: '',
+    activityHTML: '',
   };
   // generates an activities object
   const activityObj = portalActivityGenerator(activityParams);
@@ -69,6 +70,46 @@ const firstSubmissionPortalActivity = async (application) => {
   return portalActivities;
 };
 
+const htmlGeneratorFacility = (facility) => {
+  const { type, ukefFacilityId } = facility;
+
+  const html = `
+  <a class="govuk-link" data-cy="facility-link">${type} facility ${ukefFacilityId}</a>
+  <strong class="govuk-tag govuk-tag--purple"> Unissued </strong>
+   >
+  <strong class="govuk-tag govuk-tag--purple"> Issued </strong>
+  `;
+
+  return html;
+};
+
+const facilityChangePortalActivity = (application, facilities) => {
+  const { portalActivities } = application;
+
+  facilities.forEach((facility) => {
+    if (facility.canResubmitIssuedFacilities) {
+      // creates user object to add to array
+      const user = facility.unissuedToIssuedBy;
+      const activityParams = {
+        type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
+        user,
+        activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
+        activityText: '',
+        activityHTML: 'facility',
+      };
+      // generates an activities object
+      const activityObj = portalActivityGenerator(activityParams);
+      // adds to beginning of portalActivities array so most recent displayed first
+      portalActivities.unshift(activityObj);
+    }
+  });
+
+  return portalActivities;
+};
+
 module.exports = {
   firstSubmissionPortalActivity,
+  submissionTypeToConstant,
+  getUserInfo,
+  facilityChangePortalActivity,
 };

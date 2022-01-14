@@ -12,8 +12,14 @@ describe('portalActivityGenerator()', () => {
   const text = 'test123';
 
   it('should correctly return populated object', () => {
+    const generatorObj = {
+      type: applicationType,
+      user,
+      activityType,
+      text,
+    };
     // ensures the returned object is properly generated with required fields
-    const result = portalActivityGenerator(applicationType, user, activityType, text);
+    const result = portalActivityGenerator(generatorObj);
 
     expect(result.type).toEqual('NOTICE');
     // matches date as timestamps may be seconds off

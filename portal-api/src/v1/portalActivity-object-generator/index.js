@@ -2,10 +2,11 @@ const { getUnixTime } = require('date-fns');
 
 const portalActivityGenerator = (activityParams) => {
   const {
-    applicationType,
+    type,
     user,
     activityType,
-    activityText
+    activityText,
+    activityHTML,
   } = activityParams;
 
   const userToAdd = {
@@ -19,7 +20,8 @@ const portalActivityGenerator = (activityParams) => {
     timestamp: getUnixTime(new Date()),
     author: userToAdd,
     text: activityText,
-    label: applicationType,
+    label: type,
+    html: activityHTML,
   };
 
   return portalActivityObj;

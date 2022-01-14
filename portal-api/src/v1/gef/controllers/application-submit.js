@@ -5,7 +5,8 @@ const {
   update: updateFacility,
 } = require('./facilities.controller');
 const {
-  firstSubmissionPortalActivity
+  firstSubmissionPortalActivity,
+  facilityChangePortalActivity,
 } = require('./portal-activities.controller');
 
 const CONSTANTS = require('../../../constants');
@@ -118,13 +119,31 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   return facilities;
 };
 
+// checks if any canResubmitIssuedFacilities present
+const checkForChangedFacilities = (facilities) => {
+  let hasChanged = false;
+
+  facilities.forEach((facility) => {
+    if (facility.canResubmitIssuedFacilities) {
+      hasChanged = true;
+    }
+  });
+
+  return hasChanged;
+};
+
 // adds to the portalActivities array for submission to UKEF events
 const submissionPortalActivity = async (application) => {
   const { submissionCount } = application;
   let { portalActivities } = application;
 
+  const facilities = await getAllFacilitiesByDealId(application._id);
+
   if (!submissionCount) {
     portalActivities = await firstSubmissionPortalActivity(application);
+  }
+  if (checkForChangedFacilities(facilities)) {
+    portalActivities = facilityChangePortalActivity(application, facilities);
   }
 
   return portalActivities;
@@ -173,10 +192,10 @@ const checkCoverDateConfirmed = async (app) => {
 const addSubmissionData = async (dealId, existingApplication) => {
   await checkCoverDateConfirmed(existingApplication);
   const { count, date } = await generateSubmissionData(existingApplication);
+  const updatedPortalActivity = await submissionPortalActivity(existingApplication);
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
   await removeChangedToIssued(dealId);
-  const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   const submissionData = {
     submissionCount: count,

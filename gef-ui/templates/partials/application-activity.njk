@@ -21,6 +21,9 @@
 
   <h1 class="govuk-heading-xl" data-cy="main-activity-heading">Activity and comments</h1>
 
+    {%for activity in portalActivities%}
+    {%endfor%}
+
    {{ mojTimeline({
         items: portalActivities,
         attributes: {
