@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
       const collection = await db.getCollection(facilitiesCollectionName);
       const createdFacility = await collection.insertOne(new Facility(req.body));
 
-      const facility = await collection.findOne({
+      const facility = await facilitiesQuery.findOne({
         _id: ObjectID(String(createdFacility.insertedId)),
       });
 
@@ -119,7 +119,7 @@ const update = async (id, updateBody) => {
       };
       const dealUpdate = new Application(dealUpdateObj);
 
-      await dealsCollection.findOneAndUpdate(
+      await dbQuery.findOneAndUpdate(
         { _id: { $eq: ObjectID(existingFacility.dealId) } },
         { $set: dealUpdate },
         { returnOriginal: false },
