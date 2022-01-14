@@ -58,7 +58,6 @@ const MockApplicationResponse = () => {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   };
-  res.ukefDecisionAccepted = true;
 
   return res;
 };
