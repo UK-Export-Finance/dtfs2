@@ -30,18 +30,18 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   let dealId;
   let loanId;
 
-  const updateDeal = async (dealId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
+  const updateDeal = async (bssDealId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}`);
     return result.body;
   };
 
-  const updateLoan = async (dealId, loanId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/loan/${loanId}`);
+  const updateLoan = async (bssDealId, bssLoanId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
     return result.body;
   };
 
-  const updateLoanIssuance = async (theDealId, loanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${theDealId}/loan/${loanId}/issue-facility`);
+  const updateLoanIssuance = async (bssDealId, bssLoanId, loan) => {
+    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/issue-facility`);
     return response.body;
   };
 
@@ -159,7 +159,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           const { validationErrors } = await updateIssuedDate(issuedDateFields);
           expect(validationErrors.errorList.issuedDate.order).toBeDefined();
 
-          const formattedSubmissionDate = moment(formattedTimestamp(newDeal.details.submissionDate)).format('Do MMMM YYYY');
           const expectedText = 'Issued Date must be today or in the past';
           expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
         });
@@ -336,7 +335,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               },
             };
 
-            const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -422,7 +420,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               },
             };
 
-            const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),

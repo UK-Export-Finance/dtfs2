@@ -35,13 +35,13 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     'requestedCoverStartDate-year': moment(mockCoverStartDate).format('YYYY'),
   };
 
-  const updateLoan = async (dealId, loanId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/loan/${loanId}`);
+  const updateLoan = async (bssDealId, bssLoanId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
     return result.body;
   };
 
-  const updateLoanCoverStartDate = async (dealId, loanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`);
+  const updateLoanCoverStartDate = async (bssDealId, bssLoanId, loan) => {
+    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
     return response;
   };
 
@@ -95,7 +95,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+      dealId = deal.body._id;
 
       const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/123456789012/change-cover-start-date`);
 
@@ -110,7 +110,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
     it('404s requests for unknown loan', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+      dealId = deal.body._id;
 
       const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/123456789012/change-cover-start-date`);
 

@@ -131,6 +131,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Conditional',
+              hasBeenIssued: false,
               ukefGuaranteeInMonths: '6.3',
             };
 

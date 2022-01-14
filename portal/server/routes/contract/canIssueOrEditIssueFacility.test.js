@@ -365,9 +365,9 @@ describe('canIssueOrEditIssueFacility', () => {
       };
 
       const mockBonds = [
-        { facilityStage: 'Unconditional', status: 'Ready for check' },
-        { facilityStage: 'Unconditional', status: 'Submitted' },
-        { facilityStage: 'Unconditional', status: 'Acknowledged' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Ready for check' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Submitted' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Acknowledged' },
       ];
 
       mockBonds.forEach((bond) => {

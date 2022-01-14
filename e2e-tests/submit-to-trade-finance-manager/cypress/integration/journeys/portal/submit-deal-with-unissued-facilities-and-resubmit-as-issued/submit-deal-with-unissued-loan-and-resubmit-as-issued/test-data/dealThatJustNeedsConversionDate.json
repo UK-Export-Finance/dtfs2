@@ -112,6 +112,7 @@
     {
       "facilityType": "Loan",
       "facilityStage": "Conditional",
+      "hasBeenIssued": false,
       "ukefGuaranteeInMonths": "12",
       "bankReferenceNumber": "",
       "guaranteeFeePayableByBank": "10.8000",

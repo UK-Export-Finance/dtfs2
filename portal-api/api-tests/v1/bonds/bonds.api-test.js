@@ -30,6 +30,7 @@ describe('/v1/deals/:id/bond', () => {
     bondIssuer: 'issuer',
     bondType: 'bond type',
     facilityStage: 'unissued',
+    hasBeenIssued: 'false',
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
@@ -367,7 +368,6 @@ describe('/v1/deals/:id/bond', () => {
         const bondAsUnissued = {
           ...allBondFields,
           facilityStage: 'Unissued',
-          hasBeenIssued: false,
           ukefGuaranteeInMonths: '12',
         };
 
@@ -376,21 +376,21 @@ describe('/v1/deals/:id/bond', () => {
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await as(aBarclaysMaker).put(bondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status, body } = await as(aBarclaysMaker).put(bondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
+        expect(body.hasBeenIssued).toEqual(false);
 
         const updatedBondAsIssued = {
           ...bondAsUnissued,
           facilityStage: 'Issued',
-          hasBeenIssued: true,
           bondIssuer: 'test',
           ...coverEndDate(),
           uniqueIdentificationNumber: '1234',
         };
 
-        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(updatedBondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker).put(updatedBondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
-
+        expect(secondUpdateBody.hasBeenIssued).toEqual(true);
         const {
           status: updatedDealStatus,
           body: updatedDealBody,
@@ -419,6 +419,7 @@ describe('/v1/deals/:id/bond', () => {
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
           facilityType: 'Bond',
+          hasBeenIssued: true,
           requestedCoverStartDate: null,
           'requestedCoverStartDate-day': null,
           'requestedCoverStartDate-month': null,
@@ -443,8 +444,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...requestedCoverStartDate(),
           ...coverEndDate(),
-          facilityStage: 'Issued',
-          hasBeenIssued: true,
+          facilityStage: 'Issued'
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
@@ -452,19 +452,20 @@ describe('/v1/deals/:id/bond', () => {
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status, body } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
+        expect(body.hasBeenIssued).toEqual(true);
 
         const updatedBondAsUnissued = {
           ...allBondFields,
           facilityStage: 'Unissued',
-          hasBeenIssued: false,
           bondIssuer: 'test',
           ukefGuaranteeInMonths: '12',
         };
 
-        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(updatedBondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker).put(updatedBondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
+        expect(secondUpdateBody.hasBeenIssued).toEqual(false);
 
         const {
           status: updatedDealStatus,
@@ -494,6 +495,7 @@ describe('/v1/deals/:id/bond', () => {
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
           facilityType: 'Bond',
+          hasBeenIssued: false,
           requestedCoverStartDate: null,
           'requestedCoverStartDate-day': null,
           'requestedCoverStartDate-month': null,

@@ -280,7 +280,6 @@ describe('/v1/deals/:id/loan', () => {
 
         const conditionalLoan = {
           facilityStage: 'Conditional',
-          hasBeenIssued: false,
           ukefGuaranteeInMonths: '12',
           value: '100',
           currencySameAsSupplyContractCurrency: 'true',
@@ -290,12 +289,12 @@ describe('/v1/deals/:id/loan', () => {
           dayCountBasis: '365',
         };
 
-        await updateLoan(dealId, loanId, conditionalLoan);
+        const { body: firstUpdateBody } = await updateLoan(dealId, loanId, conditionalLoan);
+        expect(firstUpdateBody.hasBeenIssued).toEqual(false);
 
         const updateToUnconditionalLoan = {
           ...conditionalLoan,
           facilityStage: 'Unconditional',
-          hasBeenIssued: true,
           bankReferenceNumber: '1234',
           ...requestedCoverStartDate(),
           ...coverEndDate(),
@@ -305,6 +304,7 @@ describe('/v1/deals/:id/loan', () => {
         const { status, body } = await updateLoan(dealId, loanId, updateToUnconditionalLoan);
 
         expect(status).toEqual(200);
+        expect(body.hasBeenIssued).toEqual(true);
         expect(body.ukefGuaranteeInMonths).toEqual(null);
       });
     });
@@ -315,7 +315,6 @@ describe('/v1/deals/:id/loan', () => {
 
         const unconditionalLoan = {
           facilityStage: 'Unconditional',
-          hasBeenIssued: true,
           bankReferenceNumber: '1234',
           value: '100',
           currencySameAsSupplyContractCurrency: 'true',
@@ -328,18 +327,19 @@ describe('/v1/deals/:id/loan', () => {
           dayCountBasis: '365',
         };
 
-        await updateLoan(dealId, loanId, unconditionalLoan);
+        const { body: firstUpdateBody } = await updateLoan(dealId, loanId, unconditionalLoan);
+        expect(firstUpdateBody.hasBeenIssued).toEqual(true);
 
         const updateToConditionalLoan = {
           ...unconditionalLoan,
           facilityStage: 'Conditional',
-          hasBeenIssued: false,
           ukefGuaranteeInMonths: '12',
         };
 
         const { status, body } = await updateLoan(dealId, loanId, updateToConditionalLoan);
 
         expect(status).toEqual(200);
+        expect(body.hasBeenIssued).toEqual(false);
         expect(body.requestedCoverStartDate).toEqual(null);
         expect(body['requestedCoverStartDate-day']).toEqual(null);
         expect(body['requestedCoverStartDate-month']).toEqual(null);

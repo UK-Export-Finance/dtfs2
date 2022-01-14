@@ -136,6 +136,7 @@
       {
         "facilityType": "Loan",
         "facilityStage": "Unconditional",
+        "hasBeenIssued": true,
         "bankReferenceNumber": "8888888",
         "guaranteeFeePayableByBank": "18.0000",
         "value": "44444.00",

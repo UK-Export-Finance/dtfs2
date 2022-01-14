@@ -25,7 +25,8 @@ describe('/v1/deals/:id/bond', () => {
   const allBondFields = {
     bondIssuer: 'issuer',
     bondType: 'bond type',
-    facilityStage: 'unissued',
+    facilityStage: 'Unissued',
+    hasBeenIssued: false,
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',

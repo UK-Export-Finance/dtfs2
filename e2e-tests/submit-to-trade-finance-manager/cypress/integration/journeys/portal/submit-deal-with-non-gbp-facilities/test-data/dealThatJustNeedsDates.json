@@ -138,6 +138,7 @@
     {
       "facilityType": "Loan",
       "facilityStage": "Unconditional",
+      "hasBeenIssued": true,
       "bankReferenceNumber": "123",
       "value": "123",
       "disbursementAmount": "12",

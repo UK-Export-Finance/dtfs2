@@ -113,6 +113,7 @@
       "facilityType": "Loan",
       "createdDate": "1615380531878",
       "facilityStage": "Conditional",
+      "hasBeenIssued": false,
       "lastEdited": "1615380612045",
       "ukefGuaranteeInMonths": "12",
       "conversionRate": "50",
