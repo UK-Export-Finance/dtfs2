@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
 const redis = require('redis');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 
 const flash = require('connect-flash');
 const path = require('path');
@@ -17,12 +17,7 @@ const configureNunjucks = require('./nunjucks-configuration');
 const sentry = require('./utils/sentry');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
+app.use(helmet({ contentSecurityPolicy: false }));
 
 app.use(sentry);
 const PORT = process.env.PORT || 5000;
@@ -99,4 +94,4 @@ app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.
 
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
-app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.log(`BSS app listening on port ${PORT}!`)); // eslint-disable-line no-console
