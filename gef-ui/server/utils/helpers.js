@@ -142,10 +142,9 @@ const previewItemConditions = (previewParams) => {
     changedToIssueShow,
     unissuedShow,
     item,
-    details,
+    app,
   } = previewParams;
   let summaryItems = [];
-
   if (summaryIssuedChangedToIssued(previewParams)) {
     /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
@@ -161,8 +160,8 @@ const previewItemConditions = (previewParams) => {
      * add link displayed taking to unissued-facility-change change page
      */
     summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
-  } else if (details.coverDateConfirmed && item.id === 'coverStartDate') {
-    summaryItems = previewSummaryItems(issuedHref, details.coverDateConfirmed, item);
+  } else if (Boolean(app.ukefDecisionAccepted) && item.id === 'coverStartDate') {
+    summaryItems = previewSummaryItems(issuedHref, Boolean(app.ukefDecisionAccepted), item);
   }
   return summaryItems;
 };
@@ -247,7 +246,6 @@ const summaryItemsConditions = (summaryItemsObj) => {
     value,
     acceptableStatus,
     acceptableRole,
-    details,
   };
 
   let summaryItems = [];
