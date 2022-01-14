@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const now = require('../../../../now');
 const { findOneDeal } = require('./get-deal.controller');
@@ -6,7 +7,7 @@ const addDealComment = async (_id, commentType, comment) => {
   const collection = await db.getCollection('deals');
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id },
+    { _id: ObjectId(_id) },
     {
       $push: {
         [commentType]: {

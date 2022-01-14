@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { findOneFacility } = require('./get-facility.controller');
 const { removeFacilityIdFromDeal } = require('../deal/update-deal.controller');
 const db = require('../../../../drivers/db-client');
@@ -8,7 +9,7 @@ exports.deleteFacility = async (req, res) => {
   await findOneFacility(facilityId, async (facility) => {
     if (facility) {
       const collection = await db.getCollection('facilities');
-      const status = await collection.deleteOne({ _id: facilityId });
+      const status = await collection.deleteOne({ _id: ObjectId(facilityId) });
 
       // remove facility ID from the associated deal
       const {

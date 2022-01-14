@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const findAll = async (_id, callback) => {
@@ -14,7 +15,8 @@ exports.findAll = findAll;
 
 const findAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('facilities');
-  const facilities = await collection.find({ dealId }).toArray();
+  const facilities = await collection.find({ _id: ObjectId(dealId) }).toArray();
+  console.log(facilities);
   return facilities;
 };
 exports.findAllFacilitiesByDealId = findAllFacilitiesByDealId;

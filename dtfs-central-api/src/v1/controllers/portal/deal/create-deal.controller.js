@@ -2,17 +2,14 @@ const db = require('../../../../drivers/db-client');
 const DEFAULTS = require('../../../defaults');
 const now = require('../../../../now');
 const getDealErrors = require('../../../validation/create-deal');
-const { generateDealId } = require('../../../../utils/generate-ids');
 
 const createDeal = async (deal, maker) => {
   const collection = await db.getCollection('deals');
-  const dealId = await generateDealId();
   const time = now();
 
   const { details } = deal;
 
   const newDeal = {
-    _id: dealId,
     ...DEFAULTS.DEAL,
     ...deal,
     updatedAt: Date.now(),

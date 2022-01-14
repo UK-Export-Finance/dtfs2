@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
@@ -80,7 +80,7 @@ exports.queryDealsPost = async (req, res) => {
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
 
-  const deal = await dealsCollection.findOne({ _id });
+  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
 
   if (deal && deal.facilities) {
     const facilityIds = deal.facilities;
@@ -106,7 +106,7 @@ exports.findOneDeal = findOneDeal;
 const findOneGefDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
 
-  const deal = await dealsCollection.findOne({ _id: ObjectID(_id) });
+  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
 
   if (deal) {
     const facilities = await findAllGefFacilitiesByDealId(_id);

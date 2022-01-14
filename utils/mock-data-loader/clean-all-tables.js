@@ -9,16 +9,16 @@ const cleanBanks = async (token) => {
   const banks = await api.listBanks(token);
 
   if (banks.length > 0) {
-    for (bank of banks) {
+    for (const bank of banks) {
       await api.deleteBank(bank, token);
     }
   }
 };
 
 const cleanFacilities = async (token) => {
-  console.log('cleaning central facilities');
+  console.log('cleaning ALL facilities');
 
-  for (facility of await centralApi.listFacilities()) {
+  for (const facility of await centralApi.listFacilities()) {
     await centralApi.deleteFacility(facility._id, token);
   }
 };
@@ -29,7 +29,7 @@ const cleanDeals = async (token) => {
   const deals = await api.listDeals(token);
 
   if (deals) {
-    for (deal of deals) {
+    for (const deal of deals) {
 
       // NOTE: BSS and GEF deals use different MongoDB _ids.
       // Therefore they currently have their own endpoints to delete
@@ -50,7 +50,7 @@ const cleanDeals = async (token) => {
 const cleanMandatoryCriteria = async (token) => {
   console.log('cleaning BSS mandatory-criteria');
 
-  for (mandatoryCriteria of await api.listMandatoryCriteria(token)) {
+  for (const mandatoryCriteria of await api.listMandatoryCriteria(token)) {
     await api.deleteMandatoryCriteria(mandatoryCriteria, token);
   }
 };
