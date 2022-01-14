@@ -60,7 +60,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
         addressForm: {},
         dealId: '123',
-        backUrl: '/url',
+        backUrl: '/gef/application-details/123',
       });
     });
 
@@ -78,7 +78,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           postalCode: undefined,
         },
         dealId: '123',
-        backUrl: '/url',
+        backUrl: '/gef/application-details/123',
       });
     });
 
@@ -92,7 +92,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           addressLine2: 'LINE2',
         },
         dealId: '123',
-        backUrl: '/url',
+        backUrl: '/gef/application-details/123',
       });
     });
 
@@ -146,8 +146,6 @@ describe('controllers/enter-exporters-correspondence-address', () => {
           },
         },
       };
-
-      console.log('---- expectedBody \n', expectedBody);
 
       expect(api.updateApplication).toHaveBeenCalledWith(
         mockApplicationResponse._id,
