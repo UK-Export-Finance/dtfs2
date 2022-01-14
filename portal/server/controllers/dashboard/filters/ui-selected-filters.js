@@ -31,7 +31,6 @@ const generateSelectedFiltersObject = (
   }),
 });
 
-
 /**
  * Create an array of objects for all selected filters.
  * This will used in mojFilter component - selectedFilters.categories.

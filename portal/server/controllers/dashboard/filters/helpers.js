@@ -61,7 +61,7 @@ const submittedFiltersObject = (filtersArray) => {
  * - White space and forward slash replaced with a dash.
  * - Single quotes are removed.
  * This is used in HTML for HREF's and data-cy
- * 
+ *
  * @param {string} string
  * @example 'BSS/EWCS'
  * @returns 'BSS-EWCS'
