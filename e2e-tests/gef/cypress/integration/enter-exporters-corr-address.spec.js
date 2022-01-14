@@ -58,7 +58,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       exportersAddress.manualAddressEntryLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
 
     it('pre-populates form with address', () => {

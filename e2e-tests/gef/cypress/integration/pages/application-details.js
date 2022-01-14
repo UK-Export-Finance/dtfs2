@@ -59,6 +59,13 @@ const applicationDetails = {
   supportingInfoStartLink: () => cy.get('[data-cy="supportingInfo-start-link'),
   supportingInfoSummaryList: () => cy.get('[data-cy="supportingInfo-summary-list"]'),
 
+  supportingInfoListRowKey: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
+    .find('.govuk-summary-list__key'),
+  supportingInfoListRowValue: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
+    .find('.govuk-summary-list__value'),
+  supportingInfoListRowAction: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
+    .find('.govuk-summary-list__actions'),
+
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitValidationText: () => cy.get('[data-cy="submit-validation-text"]'),

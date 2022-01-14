@@ -1,4 +1,8 @@
 const portalApi = 'http://localhost:5001/v1';
+const centralApiUrl = () => {
+  const url = `${Cypress.config('baseUrl')}:${Cypress.config('centralApiPort')}`;
+  return url;
+};
 
 const login = (credentials) => {
   const { username, password } = credentials;
@@ -84,6 +88,15 @@ const setApplicationStatus = (dealId, token, status) => cy.request({
   },
 }).then((res) => res);
 
+const addCommentObjToDeal = (dealId, commentType, comment) => cy.request({
+  url: `${centralApiUrl()}/v1/portal/gef/deals/${dealId}/comment`,
+  method: 'POST',
+  body: { dealId, commentType, comment },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((res) => res);
+
 export {
   login,
   fetchAllApplications,
@@ -93,4 +106,5 @@ export {
   createApplication,
   createFacility,
   updateFacility,
+  addCommentObjToDeal,
 };

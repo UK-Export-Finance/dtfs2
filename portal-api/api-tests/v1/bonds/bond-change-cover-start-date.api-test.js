@@ -17,46 +17,36 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     },
   });
 
-  const mockCurrencies = [
-    { id: 'GBP', text: 'GBP - UK Sterling' },
-    { id: 'EUR', text: 'EUR - Euros' },
-  ];
-
-  const nowDate = moment();
-
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
-  let anEditor;
+  let dealId;
+  let bondId;
 
   const mockCoverStartDate = moment().subtract(1, 'month');
 
   const mockBond = {
     facilityStage: 'Issued',
+    hasBeenIssued: true,
     'requestedCoverStartDate-day': moment(mockCoverStartDate).format('DD'),
     'requestedCoverStartDate-month': moment(mockCoverStartDate).format('MM'),
     'requestedCoverStartDate-year': moment(mockCoverStartDate).format('YYYY'),
   };
 
-  const updateDeal = async (dealId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
+  const updateBond = async (bssDealId, bssBondId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/bond/${bssBondId}`);
     return result.body;
   };
 
-  const updateBond = async (dealId, bondId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/bond/${bondId}`);
-    return result.body;
-  };
-
-  const updateBondCoverStartDate = async (dealId, bondId, bond) => {
-    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}/change-cover-start-date`);
+  const updateBondCoverStartDate = async (bssDealId, bssBondId, bond) => {
+    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${bssDealId}/bond/${bssBondId}/change-cover-start-date`);
     return response;
   };
 
   const createDealAndBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-    dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    dealId = deal.body._id;
 
     const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = createBondResponse.body;
@@ -81,7 +71,6 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
-    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
@@ -105,7 +94,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+      dealId = deal.body._id;
 
       const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/123456789012/change-cover-start-date`);
 
@@ -120,7 +109,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
     it('404s requests for unknown bond', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+      dealId = deal.body._id;
 
       const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/123456789012/change-cover-start-date`);
 
@@ -137,6 +126,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       it('should return 400', async () => {
         const unissuedBondBody = {
           facilityStage: 'Unissued',
+          hasBeenIssued: false,
         };
         const body = await updateBond(dealId, bondId, unissuedBondBody);
 

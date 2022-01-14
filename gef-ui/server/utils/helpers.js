@@ -137,20 +137,23 @@ const previewSummaryItems = (href, keys, item) => {
 */
 const previewItemConditions = (previewParams) => {
   const {
-    app, user, data, facilitiesChanged, unissuedHref, changedToIssueShow, unissuedShow, item,
+    unissuedHref,
+    changedToIssueShow,
+    unissuedShow,
+    item,
   } = previewParams;
   let summaryItems = [];
 
-  if (summaryIssuedChangedToIssued(app, user, data)) {
+  if (summaryIssuedChangedToIssued(previewParams)) {
     /**
-     *  if submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
+     * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
      * can change name, coverStartDate and coverEndDate column
      * change link displayed taking to unissued-facility-change change page
      */
     summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
-  } else if (summaryIssuedUnchanged(app, user, data, facilitiesChanged)) {
+  } else if (summaryIssuedUnchanged(previewParams)) {
     /**
-     *  if submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
+     * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
      * only shows if other facilities have been changed to issued
      * changes to issued
      * add link displayed taking to unissued-facility-change change page
@@ -193,8 +196,23 @@ const detailItemConditions = (params) => {
 */
 const summaryItemsConditions = (summaryItemsObj) => {
   const {
-    preview, item, details, app, user, data, hasChangedFacilities,
+    preview,
+    item,
+    details,
+    app,
+    user,
+    data,
+    hasChangedFacilities,
   } = summaryItemsObj;
+  const acceptableStatus = [
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+  ];
+  const acceptableRole = [
+    'maker',
+  ];
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
@@ -220,6 +238,8 @@ const summaryItemsConditions = (summaryItemsObj) => {
     unissuedShow,
     item,
     value,
+    acceptableStatus,
+    acceptableRole,
   };
 
   let summaryItems = [];
@@ -418,6 +438,36 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
+/**
+ * checks application object for submission count or if preview mode
+ * if is ^ then returns false
+ * used to display supporting info change or add links
+ * should be hidden if checker/MIA/AIN and returning to maker
+ * logic done in nunjucks template so needs this function
+ * @param {Object} application
+ * @param {Boolean} preview
+ * @returns {Boolean}
+ */
+const displayChangeSupportingInfo = (application, preview) => {
+  if (preview || application.submissionCount > 0) {
+    return false;
+  }
+
+  return true;
+};
+
+const canUpdateUnissuedFacilitiesCheck = (application, unissuedFacilities, facilitiesChanged, UkefDecision) => {
+  if (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN) {
+    if (unissuedFacilities && !facilitiesChanged.length) {
+      return true;
+    }
+  } else if (unissuedFacilities && !facilitiesChanged.length && UkefDecision) {
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   apiErrorHandler,
   isEmpty,
@@ -434,4 +484,6 @@ module.exports = {
   displayTaskComments,
   pastDate,
   futureDateInRange,
+  displayChangeSupportingInfo,
+  canUpdateUnissuedFacilitiesCheck,
 };

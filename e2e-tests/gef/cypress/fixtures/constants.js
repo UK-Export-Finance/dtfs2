@@ -36,6 +36,16 @@ const FACILITY_TYPE = {
   CONTINGENT: 'Contingent',
 };
 
+const DEAL_COMMENT_TYPE_PORTAL = {
+  UKEF_COMMENT: 'ukefComments',
+  UKEF_DECISION: 'ukefDecision',
+  SPECIAL_CONDITIONS: 'specialConditions',
+};
+
 module.exports = {
-  DEAL_TYPE, DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE,
+  DEAL_TYPE,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_STATUS, 
+  FACILITY_TYPE, 
+  DEAL_COMMENT_TYPE_PORTAL,
 };

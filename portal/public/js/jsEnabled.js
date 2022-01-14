@@ -1,2 +1,2 @@
-var DTFS;(DTFS=void 0===DTFS?{}:DTFS).jsEnabled=(()=>{var e={885:()=>{document.body.className=document.body.className?"".concat(document.body.className," js-enabled"):"js-enabled"}},a={};return function o(r){if(a[r])return a[r].exports;var s=a[r]={exports:{}};return e[r](s,s.exports,o),s.exports}(885)})();
+var DTFS;document.body.className=document.body.className?"".concat(document.body.className," js-enabled"):"js-enabled",(DTFS=void 0===DTFS?{}:DTFS).jsEnabled={};
 //# sourceMappingURL=jsEnabled.js.map

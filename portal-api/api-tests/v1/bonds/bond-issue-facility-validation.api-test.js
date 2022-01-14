@@ -60,6 +60,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
     const modifiedBond = {
       ...getCreatedBond.body.bond,
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
     };
 
     const updatedBond = await updateBond(dealId, bondId, modifiedBond);
@@ -98,8 +99,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
         const body = await updateBondIssuance(dealId, bondId, bond);
         return body;
       };
-    
-    
+
       describe('when has some values', () => {
         it('should return validationError', async () => {
           await createDealAndBond();

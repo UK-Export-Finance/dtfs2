@@ -30,6 +30,22 @@ const MockRequest = () => {
 
 const mockFacilities = {
   status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
+  items: [
+    {
+      details: {
+        _id: '1234',
+        ukefFacilityId: '123',
+        dealId: '12345',
+        name: 'Test',
+        value: 1000,
+        hasBeenIssued: true,
+        coverDateConfirmed: false,
+        currency: {
+          id: 123,
+        },
+      },
+    },
+  ],
 };
 
 const MockFacilitiesResponse = () => mockFacilities;

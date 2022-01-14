@@ -25,8 +25,7 @@
             text: "Yes",
             checked: correspondence === "true",
             attributes: {
-              'data-cy': 'correspondence-yes',
-              onClick: "correspondenceAddress.toggle(false)"
+              'data-cy': 'correspondence-yes'
             }
           },
           {
@@ -34,8 +33,7 @@
             text: "No",
             checked: correspondence === "false",
             attributes: {
-              'data-cy': 'correspondence-no',
-              onClick: "correspondenceAddress.toggle(true)"
+              'data-cy': 'correspondence-no'
             }
           }
         ] })
@@ -88,29 +86,4 @@
   </div>
 </div>
 
-<script type="text/javascript">
-  function CorrespondenceAddress() {
-    const yesCorrespondenceRadio = document.getElementById('correspondence');
-    const conditionalCorrespondence = document.getElementById('conditional-correspondence');
-
-    const toggle = function (bool) {
-      if (bool) {
-        conditionalCorrespondence.className = 'govuk-visually-hidden';
-      } else {
-        conditionalCorrespondence.className = '';
-      }
-    }
-
-    if (yesCorrespondenceRadio.checked) {
-      toggle(false)
-    } else {
-      toggle(true)
-    }
-
-    return { toggle };
-  }
-
-  const correspondenceAddress = new CorrespondenceAddress();
-
-  correspondenceAddress;
-</script>
+<script src="/assets/js/correspondenceAddress.js" type="text/javascript"></script>

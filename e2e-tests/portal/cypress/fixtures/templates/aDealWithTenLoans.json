@@ -102,6 +102,7 @@
     "items": [
       {
         "facilityStage": "Conditional",
+        "hasBeenIssued": false,
         "bankReferenceNumber": "aDealWithTenLoans-loan1",
         "value": "123",
         "disbursementAmount": "12",
@@ -114,6 +115,7 @@
       },
       {
         "facilityStage": "Conditional",
+        "hasBeenIssued": false,
         "bankReferenceNumber": "aDealWithTenLoans-loan2",
         "value": "123",
         "disbursementAmount": "12",
@@ -126,6 +128,7 @@
       },
       {
         "facilityStage": "Conditional",
+        "hasBeenIssued": false,
         "bankReferenceNumber": "aDealWithTenLoans-loan3",
         "value": "123",
         "disbursementAmount": "12",
@@ -138,6 +141,7 @@
       },
       {
         "facilityStage": "Conditional",
+        "hasBeenIssued": false,
         "bankReferenceNumber": "aDealWithTenLoans-loan4",
         "value": "123",
         "disbursementAmount": "12",
@@ -150,6 +154,7 @@
       },
       {
         "facilityStage": "Conditional",
+        "hasBeenIssued": false,
         "bankReferenceNumber": "aDealWithTenLoans-loan5",
         "value": "123",
         "disbursementAmount": "12",
@@ -162,6 +167,7 @@
       },
       {
         "facilityStage": "Unconditional",
+        "hasBeenIssued": true,
         "bankReferenceNumber": "aDealWithTenLoans-loan6",
         "ukefFacilityId": "ukef:aDealWithTenLoans-loan6",
         "value": "123",
@@ -175,6 +181,7 @@
       },
       {
         "facilityStage": "Unconditional",
+        "hasBeenIssued": true,
         "bankReferenceNumber": "aDealWithTenLoans-loan7",
         "value": "123",
         "disbursementAmount": "12",
@@ -187,6 +194,7 @@
       },
       {
         "facilityStage": "Unconditional",
+        "hasBeenIssued": true,
         "bankReferenceNumber": "aDealWithTenLoans-loan8",
         "value": "123",
         "disbursementAmount": "12",
@@ -199,6 +207,7 @@
       },
       {
         "facilityStage": "Unconditional",
+        "hasBeenIssued": true,
         "bankReferenceNumber": "aDealWithTenLoans-loan9",
         "value": "123",
         "disbursementAmount": "12",
@@ -211,6 +220,7 @@
       },
       {
         "facilityStage": "Unconditional",
+        "hasBeenIssued": true,
         "bankReferenceNumber": "aDealWithTenLoans-loan10",
         "value": "123",
         "disbursementAmount": "12",

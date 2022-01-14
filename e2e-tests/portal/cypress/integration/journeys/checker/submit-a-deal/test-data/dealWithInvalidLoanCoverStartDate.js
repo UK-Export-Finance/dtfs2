@@ -14,6 +14,7 @@ module.exports = () => {
   dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
   dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   dealWithBadCoverStartDate.loanTransactions.items[0].facilityStage = 'Unconditional';
+  dealWithBadCoverStartDate.loanTransactions.items[0].hasBeenIssued = true;
 
   return dealWithBadCoverStartDate;
 };

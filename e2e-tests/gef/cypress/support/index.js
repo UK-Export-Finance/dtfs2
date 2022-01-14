@@ -16,3 +16,4 @@ Cypress.Commands.add('apiCreateApplication', api.createApplication);
 Cypress.Commands.add('apiCreateFacility', api.createFacility);
 Cypress.Commands.add('apiUpdateFacility', api.updateFacility);
 Cypress.Commands.add('uploadFile', uploadFile);
+Cypress.Commands.add('addCommentObjToDeal', api.addCommentObjToDeal);

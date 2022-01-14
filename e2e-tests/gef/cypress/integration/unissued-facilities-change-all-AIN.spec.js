@@ -265,7 +265,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.rows().should('have.length', 0);
-      unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility Stages are now updated');
+      unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       unissuedFacilityTable.continueButton().should('exist');
       // exists since all unissued updated from table
       unissuedFacilityTable.continueButton().click();

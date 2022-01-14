@@ -23,6 +23,7 @@ describe(component, () => {
           value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Commitment',
+          hasBeenIssued: true,
           dates: {
             coverEndDate: '02 Nov 2021',
             tenor: '1 month',
@@ -47,6 +48,7 @@ describe(component, () => {
           value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Issued',
+          hasBeenIssued: true,
           dates: {
             coverEndDate: '04 Dec 2021',
             tenor: '1 month',
@@ -71,6 +73,7 @@ describe(component, () => {
           value: '',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Commitment',
+          hasBeenIssued: true,
           dates: {
             coverEndDate: '04 Dec 2021',
             tenor: '1 month',
@@ -95,6 +98,7 @@ describe(component, () => {
           value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Issued',
+          hasBeenIssued: true,
           dates: {
             coverEndDate: '04 Dec 2021',
             tenor: '1 month',

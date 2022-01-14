@@ -41,6 +41,7 @@ describe('mapTenorDate', () => {
     it('should return facility.ukefGuaranteeInMonths', () => {
       const mockFacility = {
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         ukefGuaranteeInMonths: '11',
       };
 
@@ -58,6 +59,7 @@ describe('mapTenorDate', () => {
       it('should return `month` instead and not `months`', () => {
         const mockFacility = {
           facilityStage: 'Issued',
+          hasBeenIssued: true,
           ukefGuaranteeInMonths: '1',
         };
 
@@ -76,6 +78,7 @@ describe('mapTenorDate', () => {
   describe('when facilityTfm has exposurePeriodInMonths', () => {
     const mockFacility = {
       facilityStage: 'Issued',
+      hasBeenIssued: true,
     };
 
     it('should return exposurePeriodInMonths', () => {
@@ -116,6 +119,7 @@ describe('mapTenorDate', () => {
   it('should return null when there is no ukefGuaranteeInMonths', () => {
     const mockFacility = {
       facilityStage: 'Issued',
+      hasBeenIssued: true,
       ukefGuaranteeInMonths: '',
     };
 

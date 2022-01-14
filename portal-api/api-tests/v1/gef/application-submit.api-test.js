@@ -6,8 +6,10 @@ const {
   submissionPortalActivity,
   submissionTypeToConstant,
   getUserInfo,
-  removeChangedToIssued
+  removeChangedToIssued,
+  checkCoverDateConfirmed,
 } = require('../../../src/v1/gef/controllers/application-submit');
+
 const mockApplications = require('../../fixtures/gef/application');
 
 const wipeDB = require('../../wipeDB');
@@ -24,6 +26,7 @@ const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 
 const MOCK_APPLICATION = mockApplications[0];
+const CONSTANTS = require('../../../src/constants');
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
@@ -195,5 +198,134 @@ describe('removeChangedToIssued()', () => {
     const changedToIssuedValue = body.items[0].details.canResubmitIssuedFacilities;
 
     expect(changedToIssuedValue).toEqual(false);
+  });
+});
+
+describe('checkCoverDateConfirmed()', () => {
+  it('Should return and set `coverDateConfirmed` to true with following conditions:\n\n1. AIN\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: null,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+  });
+
+  it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. AIN\n2. Have one unissued facility and cover date is not true \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: false,
+      coverDateConfirmed: null,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(false);
+  });
+
+  it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: null,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+  });
+
+  it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one unissued facility \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: false,
+      coverDateConfirmed: null,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(false);
+  });
+
+  it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility with cover date set to true \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: true,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+  });
+
+  it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued and unissued facilities with cover date set to true \n3. Not yet submitted to UKEF', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      coverDateConfirmed: true,
+    }).to(baseUrl);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: false,
+      coverDateConfirmed: true,
+    }).to(baseUrl);
+
+    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
   });
 });

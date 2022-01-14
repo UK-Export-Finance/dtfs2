@@ -9,6 +9,7 @@ const deal = {
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '24',
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: 'test',
@@ -34,6 +35,7 @@ const deal = {
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '24',
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: 'test',
@@ -58,6 +60,7 @@ const deal = {
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
+      hasBeenIssued: true,
       previousFacilityStage: 'Unissued',
       ukefGuaranteeInMonths: '24',
       uniqueIdentificationNumber: '1234',
@@ -82,6 +85,7 @@ const deal = {
     {
       facilityType: 'Loan',
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
       guaranteeFeePayableByBank: '10.8000',
@@ -110,6 +114,7 @@ const deal = {
     {
       facilityType: 'Loan',
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',
       guaranteeFeePayableByBank: '10.8000',
@@ -137,6 +142,7 @@ const deal = {
     {
       facilityType: 'Loan',
       facilityStage: 'Unconditional',
+      hasBeenIssued: true,
       previousFacilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '123456',

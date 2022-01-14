@@ -285,6 +285,7 @@ module.exports = {
         bondBeneficiaryPartyUrn: '123-test',
         acbs: {
           facilityStage: 'Unissued',
+          hasBeenIssued: false,
         },
       },
     };
