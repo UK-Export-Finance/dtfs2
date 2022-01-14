@@ -8,10 +8,10 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
-const collectionName = 'gef-facilities';
+const facilitiesCollection = 'facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
-const applicationCollectionName = 'deals';
+const dealsCollection = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../fixtures/gef/application');
 const {
@@ -93,8 +93,8 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
   });
 
   describe(`GET ${baseUrl}`, () => {
@@ -195,8 +195,8 @@ describe(baseUrl, () => {
 
   describe(`PUT ${baseUrl}/:id`, () => {
     beforeEach(async () => {
-      await wipeDB.wipe([collectionName]);
-      await wipeDB.wipe([applicationCollectionName]);
+      await wipeDB.wipe([facilitiesCollection]);
+      await wipeDB.wipe([dealsCollection]);
     });
 
     it('rejects requests that do not present a valid Authorization token', async () => {

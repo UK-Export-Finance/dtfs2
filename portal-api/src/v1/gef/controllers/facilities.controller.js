@@ -12,8 +12,8 @@ const {
   calculateGuaranteeFee,
 } = require('../calculations/facility-calculations');
 
-const collectionName = 'gef-facilities';
-const dealsCollectionName = 'deals';
+const facilitiesCollection = 'facilities';
+const dealsCollection = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
@@ -21,10 +21,10 @@ exports.create = async (req, res) => {
     if (enumValidationErr) {
       res.status(422).send(enumValidationErr);
     } else {
-      const collection = await db.getCollection(collectionName);
-      const createdFacility = await collection.insertOne(new Facility(req.body));
+      const facilitiesQuery = await db.getCollection(facilitiesCollection);
+      const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
-      const facility = await collection.findOne({
+      const facility = await facilitiesQuery.findOne({
         _id: ObjectID(String(createdFacility.insertedId)),
       });
 
@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollection);
   let find = {};
 
   if (dealId) {
@@ -80,7 +80,7 @@ exports.getAllGET = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollection);
   const doc = await collection.findOne({ _id: ObjectID(String(req.params.id)) });
   if (doc) {
     res.status(200).send({
@@ -95,8 +95,8 @@ exports.getById = async (req, res) => {
 
 const update = async (id, updateBody) => {
   try {
-    const collection = await db.getCollection(collectionName);
-    const dealsCollection = await db.getCollection(dealsCollectionName);
+    const collection = await db.getCollection(facilitiesCollection);
+    const dbQuery = await db.getCollection(dealsCollection);
 
     const facilityId = ObjectID(String(id));
     const existingFacility = await collection.findOne({ _id: facilityId });
@@ -119,7 +119,7 @@ const update = async (id, updateBody) => {
       };
       const dealUpdate = new Application(dealUpdateObj);
 
-      await dealsCollection.findOneAndUpdate(
+      await dbQuery.findOneAndUpdate(
         { _id: { $eq: ObjectID(existingFacility.dealId) } },
         { $set: dealUpdate },
         { returnOriginal: false },
@@ -154,13 +154,13 @@ exports.updatePUT = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollection);
   const response = await collection.findOneAndDelete({ _id: ObjectID(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.deleteByDealId = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollection);
   const response = await collection.deleteMany({ dealId: req.query.dealId });
   res.status(200).send(response);
 };
@@ -191,7 +191,7 @@ exports.findFacilities = async (
 ) => {
   const sanitisedFilters = facilitiesFilters(requestingUser, filters);
 
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollection);
 
   const doc = await collection
     .aggregate([

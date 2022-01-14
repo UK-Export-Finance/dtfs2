@@ -27,30 +27,8 @@ const {
   DEAL: { GEF_STATUS, DEAL_TYPE },
 } = require('../../../constants');
 
-const dealsCollectionName = 'deals';
-const facilitiesCollectionName = 'gef-facilities';
-
-// const defaultPaginationOpts = {
-//   sortBy: null,
-//   sortDirection: null,
-//   page: 1,
-//   pageSize: 10,
-// };
-
-// const generatePagination = (req) => {
-//   const paging = {
-//     page: Number(req.query.page ? req.query.page : defaultPaginationOpts.page),
-//     pageSize: Number(req.query.pageSize ? req.query.pageSize : defaultPaginationOpts.pageSize),
-//   };
-//   paging.startsAtIndex = (paging.page - 1) * paging.pageSize;
-//   paging.endsAtIndex = paging.startsAtIndex + paging.pageSize;
-//   if (req.query.sortBy && req.query.sortDirection) {
-//     paging[req.query.sortBy] = req.query.sortDirection;
-//   } else if (defaultPaginationOpts.sortBy && defaultPaginationOpts.sortDirection) {
-//     paging[defaultPaginationOpts.sortBy] = defaultPaginationOpts.sortDirection;
-//   }
-//   return paging;
-// };
+const dealsCollection = 'deals';
+const facilitiesCollection = 'facilities';
 
 exports.create = async (req, res) => {
   const newDeal = {
@@ -61,9 +39,7 @@ exports.create = async (req, res) => {
     },
   };
 
-  const applicationCollection = await db.getCollection(
-    dealsCollectionName,
-  );
+  const applicationCollection = await db.getCollection(dealsCollection);
 
   const validateErrs = validateApplicationReferences(
     newDeal,
@@ -95,7 +71,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
 
   const doc = await collection.find({
     dealType: DEAL_TYPE.GEF,
@@ -112,7 +88,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
 
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
@@ -134,7 +110,7 @@ exports.getById = async (req, res) => {
 };
 
 exports.getStatus = async (req, res) => {
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
   const doc = await collection.findOne({
     _id: ObjectID(String(req.params.id)),
   });
@@ -148,7 +124,7 @@ exports.getStatus = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
@@ -185,7 +161,7 @@ exports.update = async (req, res) => {
 };
 
 exports.updateSupportingInformation = async (req, res) => {
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
 
   const { application, field } = req.body;
   const { id: dealId } = req.params;
@@ -250,7 +226,7 @@ exports.changeStatus = async (req, res) => {
       .send(enumValidationErr);
   }
 
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
   const existingApplication = await collection.findOne({
     _id: ObjectID(String(dealId)),
   });
@@ -318,17 +294,15 @@ exports.changeStatus = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const applicationCollection = await db.getCollection(
-    dealsCollectionName,
+    dealsCollection,
   );
   const applicationResponse = await applicationCollection.findOneAndDelete({
     _id: ObjectID(String(req.params.id)),
   });
   if (applicationResponse.value) {
     // remove facility information related to the application
-    const facilitiesCollection = await db.getCollection(
-      facilitiesCollectionName,
-    );
-    await facilitiesCollection.deleteMany({ dealId: req.params.id });
+    const query = await db.getCollection(facilitiesCollection);
+    await query.deleteMany({ dealId: req.params.id });
   }
   res
     .status(utils.mongoStatus(applicationResponse))
@@ -363,7 +337,7 @@ exports.findDeals = async (
 ) => {
   const sanitisedFilters = dealsFilters(requestingUser, filters);
 
-  const collection = await db.getCollection(dealsCollectionName);
+  const collection = await db.getCollection(dealsCollection);
 
   const doc = await collection
     .aggregate([

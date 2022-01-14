@@ -20,9 +20,9 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
-const collectionName = 'gef-facilities';
+const facilitiesCollection = 'facilities';
 
-const applicationCollectionName = 'deals';
+const dealsCollection = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 
 const MOCK_APPLICATION = mockApplications[0];
@@ -170,8 +170,8 @@ describe('removeChangedToIssued()', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     // posts facility with canResubmitIssuedFacilities as true
     await as(aMaker).post({
@@ -209,8 +209,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -229,8 +229,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -249,8 +249,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -269,8 +269,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -289,8 +289,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -309,8 +309,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollection]);
+    await wipeDB.wipe([dealsCollection]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
