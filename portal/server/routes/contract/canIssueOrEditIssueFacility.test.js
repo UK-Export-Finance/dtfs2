@@ -5,6 +5,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
   const mockLoanThatCanBeIssued = {
     facilityStage: 'Conditional',
+    hasBeenIssued: false,
   };
 
   describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
@@ -89,6 +90,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         status: 'Not started',
       };
 
@@ -108,6 +110,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         status: 'Not started',
       };
 
@@ -126,6 +129,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
     const mockLoan = {
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
     };
 
     describe('when the facility has `Maker\'s input required` status', () => {
@@ -154,6 +158,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
     const mockLoan = {
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
     };
 
     describe('when the facility has `Maker\'s input required` status', () => {
@@ -183,6 +188,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockBond = {
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         previousFacilityStage: 'Unissued',
       };
 
@@ -202,6 +208,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockBond = {
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         previousFacilityStage: 'Issued',
       };
 
@@ -221,6 +228,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         previousFacilityStage: 'Unconditional',
       };
 
@@ -240,6 +248,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         previousFacilityStage: 'Conditional',
       };
 
@@ -302,6 +311,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
@@ -318,6 +328,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockBond = {
         facilityStage: 'Issued',
+        hasBeenIssued: true,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(false);
@@ -336,6 +347,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
@@ -353,9 +365,9 @@ describe('canIssueOrEditIssueFacility', () => {
       };
 
       const mockBonds = [
-        { facilityStage: 'Unconditional', status: 'Ready for check' },
-        { facilityStage: 'Unconditional', status: 'Submitted' },
-        { facilityStage: 'Unconditional', status: 'Acknowledged' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Ready for check' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Submitted' },
+        { facilityStage: 'Unconditional', hasBeenIssued: true, status: 'Acknowledged' },
       ];
 
       mockBonds.forEach((bond) => {
@@ -374,6 +386,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);

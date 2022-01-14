@@ -28,18 +28,18 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
   let dealId;
   let bondId;
 
-  const updateDeal = async (dealId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
+  const updateDeal = async (bssDealId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}`);
     return result.body;
   };
 
-  const updateBond = async (dealId, bondId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/bond/${bondId}`);
+  const updateBond = async (bssDealId, bssBondId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/bond/${bssBondId}`);
     return result.body;
   };
 
-  const updateBondCoverStartDate = async (theDealId, bondId, bond) => {
-    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${theDealId}/bond/${bondId}/change-cover-start-date`);
+  const updateBondCoverStartDate = async (theDealId, bssBondId, bond) => {
+    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${theDealId}/bond/${bssBondId}/change-cover-start-date`);
     return response.body;
   };
 
@@ -58,6 +58,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
     const modifiedBond = {
       ...getCreatedBond.body.bond,
       facilityStage: 'Issued',
+      hasBeenIssued: true,
     };
 
     const updatedBond = await updateBond(dealId, bondId, modifiedBond);
@@ -247,7 +248,6 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
               },
             };
 
-            const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -333,7 +333,6 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
               },
             };
 
-            const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),

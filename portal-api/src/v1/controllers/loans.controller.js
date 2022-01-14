@@ -83,11 +83,13 @@ const facilityStageFields = (loan) => {
     modifiedLoan['coverEndDate-month'] = null;
     modifiedLoan['coverEndDate-year'] = null;
     modifiedLoan.disbursementAmount = null;
+    modifiedLoan.hasBeenIssued = false;
   }
 
   if (facilityStage === 'Unconditional') {
     // remove any 'Conditional' specific fields
     modifiedLoan.ukefGuaranteeInMonths = null;
+    modifiedLoan.hasBeenIssued = true;
   }
 
   return modifiedLoan;

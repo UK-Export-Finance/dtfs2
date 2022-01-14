@@ -11,5 +11,6 @@ loan['coverEndDate-day'] = (date.getDate()).toString();
 loan['coverEndDate-month'] = (date.getMonth() + 1).toString();
 loan['coverEndDate-year'] = (date.getFullYear()).toString();
 loan.facilityStage = 'Unconditional';
+loan.hasBeenIssued = true;
 
 module.exports = dealWithNoCoverStartDate;

@@ -34,6 +34,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
   const allLoanFields = {
     facilityStage: 'Unconditional',
+    hasBeenIssued: true,
     previousFacilityStage: 'Unconditional',
     bankReferenceNumber: '1234',
     disbursementAmount: '5',

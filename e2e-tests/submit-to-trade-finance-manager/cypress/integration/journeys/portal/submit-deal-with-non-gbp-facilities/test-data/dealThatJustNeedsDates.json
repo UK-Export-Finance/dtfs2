@@ -114,6 +114,7 @@
         "bondIssuer": "issuer",
         "bondType": "bond type",
         "facilityStage": "Unissued",
+        "hasBeenIssued": false,
         "ukefGuaranteeInMonths": "24",
         "uniqueIdentificationNumber": "1234",
         "bondBeneficiary": "test",
@@ -137,6 +138,7 @@
     {
       "facilityType": "Loan",
       "facilityStage": "Unconditional",
+      "hasBeenIssued": true,
       "bankReferenceNumber": "123",
       "value": "123",
       "disbursementAmount": "12",

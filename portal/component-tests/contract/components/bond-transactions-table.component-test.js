@@ -20,6 +20,7 @@ describe(component, () => {
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
+          hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
           uniqueIdentificationNumber: '1234',
           canIssueOrEditIssueFacility: true,
@@ -31,6 +32,7 @@ describe(component, () => {
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
+          hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
           uniqueIdentificationNumber: '1234',
           canIssueOrEditIssueFacility: true,
@@ -86,9 +88,11 @@ describe(component, () => {
         const dealWithBondsThatCanChangeCoverDate = deal;
         dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
+        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].hasBeenIssued = true;
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
+        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].hasBeenIssued = true;
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
@@ -113,9 +117,11 @@ describe(component, () => {
           const dealWithBondsThatCanChangeCoverDate = deal;
           dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
           dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
+          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].hasBeenIssued = true;
           dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
           dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
+          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].hasBeenIssued = true;
           dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
           const wrapper = render({

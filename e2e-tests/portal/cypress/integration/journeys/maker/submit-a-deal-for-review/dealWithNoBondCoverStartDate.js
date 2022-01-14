@@ -11,5 +11,6 @@ bond['coverEndDate-day'] = (date.getDate()).toString();
 bond['coverEndDate-month'] = (date.getMonth() + 1).toString();
 bond['coverEndDate-year'] = (date.getFullYear()).toString();
 bond.facilityStage = 'Issued';
+bond.hasBeenIssued = true;
 
 module.exports = dealWithNoCoverStartDate;

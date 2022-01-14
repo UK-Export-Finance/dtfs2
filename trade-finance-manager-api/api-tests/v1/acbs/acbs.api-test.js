@@ -13,6 +13,7 @@ const MOCK_TFM_DEAL_ACBS = {
   tfm: {
     acbs: {
       facilityStage: 'Unissued',
+      hasBeenIssued: false,
     },
   },
 };
@@ -82,6 +83,7 @@ describe('acbs controller', () => {
         facilities: [
           {
             facilityStage: 'Issued',
+            hasBeenIssued: true,
             tfm: {},
           },
         ],

@@ -283,6 +283,7 @@ const deal = {
       {
         _id: '1001475',
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         ukefGuaranteeInMonths: '24',
         value: '100000.00',
         currencySameAsSupplyContractCurrency: 'true',
@@ -325,6 +326,7 @@ const deal = {
       {
         _id: '1001474',
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         ukefGuaranteeInMonths: '24',
         value: '100000.00',
         currencySameAsSupplyContractCurrency: 'true',
@@ -375,6 +377,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240970',
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
         lastEdited: '1606914139619',
@@ -414,6 +417,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900241008',
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
         lastEdited: '1606914139619',

@@ -438,6 +438,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       const issuedBondFields = () => ({
         facilityStage: 'Issued',
+        hasBeenIssued: true,
         uniqueIdentificationNumber: '1234',
         ...coverEndDate(),
       });
@@ -446,6 +447,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         {
           ...baseBond,
           facilityStage: 'Unissued',
+          hasBeenIssued: false,
           ukefGuaranteeInMonths: '24',
         },
         {
@@ -461,6 +463,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       const conditionalLoan = () => ({
         facilityType: 'Loan',
         facilityStage: 'Conditional',
+        hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',
         value: '100',
         currencySameAsSupplyContractCurrency: 'true',
@@ -474,6 +477,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       const unconditionalLoan = () => ({
         facilityType: 'Loan',
         facilityStage: 'Unconditional',
+        hasBeenIssued: true,
         value: '100',
         bankReferenceNumber: '1234',
         ...coverEndDate(),
