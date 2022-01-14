@@ -166,6 +166,7 @@ const deal = {
       bondIssuer: '',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -186,6 +187,7 @@ const deal = {
     {
       facilityType: 'Loan',
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '',
       guaranteeFeePayableByBank: '10.8000',

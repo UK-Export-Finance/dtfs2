@@ -24,6 +24,7 @@ const MOCK_DEAL = {
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -42,6 +43,7 @@ const MOCK_DEAL = {
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -60,6 +62,7 @@ const MOCK_DEAL = {
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -108,7 +111,6 @@ context('Delete a Loan', () => {
       }
     });
   });
-
 
   it('Deleting a loan via the Deal page should remove the loan and redirect back to the Deal page with a success message', () => {
     cy.login({ ...MAKER_LOGIN });

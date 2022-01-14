@@ -20,6 +20,7 @@ describe(component, () => {
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Conditional',
+          hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
           bankReferenceNumber: '1234',
           canIssueOrEditIssueFacility: true,
@@ -31,6 +32,7 @@ describe(component, () => {
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Conditional',
+          hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
           bankReferenceNumber: '1234',
           canIssueOrEditIssueFacility: true,
@@ -86,9 +88,11 @@ describe(component, () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
         dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
@@ -114,9 +118,11 @@ describe(component, () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
         dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({

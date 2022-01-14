@@ -189,6 +189,7 @@ const deal = {
     {
       facilityType: 'Bond',
       facilityStage: 'Unissued',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
@@ -213,6 +214,7 @@ const deal = {
       facilityType: 'Loan',
       createdDate: new Date().valueOf(),
       facilityStage: 'Conditional',
+      hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '',
       guaranteeFeePayableByBank: '18.0000',
