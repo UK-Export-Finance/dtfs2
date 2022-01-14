@@ -70,12 +70,16 @@ const createSubmissionToUkef = async (req, res) => {
     application.checkerId = user._id;
     // checks if any changed to issued facilities (before update)
     const hasUnissuedToIssued = hasChangedToIssued(applicationWithFacilities);
+    const submissionType = application.ukefDecisionAccepted
+      ? CONSTANTS.DEAL_SUBMISSION_TYPE.MIN
+      : application.submissionType;
 
     await api.updateApplication(dealId, application);
     await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
+
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
-      submissionType: application.submissionType,
+      submissionType,
       status: application.status,
       isNotice: isDealNotice(application.ukefDecisionAccepted, application.submissionType),
       ukefDecisionAccepted,
