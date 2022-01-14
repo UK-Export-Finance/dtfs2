@@ -1,6 +1,4 @@
-const { ObjectID } = require('mongodb');
-
-/* eslint-disable no-underscore-dangle */
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const usersCollection = 'tfm-users';
@@ -47,7 +45,7 @@ exports.findOneUserGET = async (req, res) => {
 
 const findOneUserById = async (userId) => {
   const collection = await db.getCollection(usersCollection);
-  const user = await collection.findOne({ _id: new ObjectID(userId) });
+  const user = await collection.findOne({ _id: new ObjectId(userId) });
   return user;
 };
 exports.findOneUserById = findOneUserById;

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
@@ -84,7 +85,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   dealUpdate.tfm.lastUpdated = new Date().valueOf();
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+    { _id: { $eq: ObjectId(dealId) } },
     $.flatten(withoutId(dealUpdate)),
     { returnOriginal: false },
   );
@@ -125,7 +126,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
   const dealId = deal._id;
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+    { _id: { $eq: ObjectId(String(dealId)) } },
     $.flatten(withoutId(update)),
     { returnOriginal: false, upsert: true },
   );

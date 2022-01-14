@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
@@ -63,7 +64,7 @@ const updateDealEditedByPortal = async (dealId, user) => {
   const editedBy = await handleEditedByPortal(dealId, {}, user);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+    { _id: ObjectId(dealId) },
     $.flatten(withoutId({ editedBy })),
     { returnOriginal: false },
   );
@@ -120,7 +121,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
   }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+    { _id: ObjectId(dealId) },
     $.flatten(withoutId(update)),
     { returnOriginal: false },
   );

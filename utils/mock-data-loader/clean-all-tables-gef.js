@@ -1,14 +1,6 @@
 const api = require('./gef/api');
 const tokenFor = require('./temporary-token-handler');
 
-const cleanFacilities = async (token) => {
-  console.log('cleaning GEF facilities');
-
-  for (const data of await api.listFacilities(token)) {
-    await api.deleteFacilities(data, token);
-  }
-};
-
 const cleanEligibilityCriteria = async (token) => {
   console.log('cleaning GEF eligibility-criteria');
 
@@ -38,7 +30,6 @@ const cleanAllTables = async () => {
     bank: { id: '*' },
   });
 
-  await cleanFacilities(token);
   await cleanEligibilityCriteria(token);
   await cleanMandatoryCriteriaVersioned(token);
   await cleanDurableFunctions(token);

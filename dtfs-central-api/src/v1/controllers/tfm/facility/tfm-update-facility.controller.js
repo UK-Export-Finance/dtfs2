@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./tfm-get-facility.controller');
 const db = require('../../../../drivers/db-client');
@@ -18,7 +19,7 @@ const updateFacility = async (facilityId, tfmUpdate) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: facilityId },
+    { _id: { $eq: ObjectId(facilityId) } },
     $.flatten(withoutId(update)),
     { returnOriginal: false, upsert: true },
   );
