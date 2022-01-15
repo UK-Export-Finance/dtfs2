@@ -126,7 +126,6 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
   return response.data;
 };
 
-
 const createUser = async (user) => {
   const response = await axios({
     method: 'post',
@@ -354,21 +353,6 @@ const listUsers = async () => {
   return response.data.users;
 };
 
-const resetIdCounters = async (token) => {
-  const response = await axios({
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/counters/reset`,
-    data: {},
-  })
-    .then((response) => response.data)
-    .catch((err) => { console.log(`ERROR resetting id counters: ${err}`); });
-};
-
 const updateCurrency = async (currency, token) => {
   const response = await axios({
     method: 'put',
@@ -425,7 +409,6 @@ module.exports = {
   listMandatoryCriteria,
   listEligibilityCriteria,
   listUsers,
-  resetIdCounters,
   updateCountry,
   updateCurrency,
   gef,

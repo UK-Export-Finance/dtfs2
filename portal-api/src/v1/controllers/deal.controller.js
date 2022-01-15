@@ -2,7 +2,6 @@ const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
 const getDealErrors = require('../validation/deal');
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
-const { generateDealId } = require('../../utils/generate-ids');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
@@ -198,7 +197,6 @@ const importDeal = async (req, res) => {
   }
 
   const response = await collection.insertOne({
-    _id: newDeal._id || await generateDealId(), // eslint-disable-line no-underscore-dangle
     ...newDeal,
   }).catch((err) => {
     const status = err.code === 11000 ? 406 : 500;
