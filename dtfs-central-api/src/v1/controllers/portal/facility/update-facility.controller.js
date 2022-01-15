@@ -16,6 +16,7 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 
   const update = {
     ...facilityBody,
+    dealId: ObjectId(dealId),
     updatedAt: Date.now(),
   };
 

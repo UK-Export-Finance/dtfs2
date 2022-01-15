@@ -9,7 +9,6 @@ const findAllGefFacilitiesByDealId = async (dealId) => {
 
   return facilities;
 };
-exports.findAllGefFacilitiesByDealId = findAllGefFacilitiesByDealId;
 
 exports.findAllGet = async (req, res) => {
   const facilities = await findAllGefFacilitiesByDealId(req.params.id);

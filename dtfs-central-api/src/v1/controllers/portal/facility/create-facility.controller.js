@@ -9,7 +9,6 @@ const createFacility = async (facility, user, routePath) => {
   const collection = await db.getCollection('facilities');
 
   const { dealId } = facility;
-  console.log(facility);
 
   const newFacility = {
     ...facility,
@@ -27,9 +26,7 @@ const createFacility = async (facility, user, routePath) => {
     routePath,
   );
 
-  return {
-    _id: insertedId,
-  };
+  return { _id: insertedId };
 };
 
 exports.createFacilityPost = async (req, res) => {

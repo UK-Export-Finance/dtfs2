@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
@@ -8,7 +9,7 @@ const createFacilities = async (facilities, dealId) => {
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
     facility.createdDate = Date.now();
-    facility.dealId = dealId;
+    facility.dealId = new ObjectId(dealId);
     return facility;
   }));
 

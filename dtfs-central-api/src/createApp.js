@@ -1,4 +1,3 @@
-const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
 // const helmet = require('helmet');
@@ -12,8 +11,6 @@ const {
 } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
-
-dotenv.config();
 
 const {
   bankRoutes,

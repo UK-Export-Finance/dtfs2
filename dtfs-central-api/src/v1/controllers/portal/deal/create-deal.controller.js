@@ -46,10 +46,7 @@ exports.createDealPost = async (req, res) => {
     return res.status(404).send();
   }
 
-  const {
-    validationErrors,
-    _id,
-  } = await createDeal(req.body.deal, user);
+  const { validationErrors, _id } = await createDeal(req.body.deal, user);
 
   if (validationErrors) {
     return res.status(400).send({
