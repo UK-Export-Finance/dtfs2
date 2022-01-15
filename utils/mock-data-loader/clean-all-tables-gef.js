@@ -4,7 +4,7 @@ const tokenFor = require('./temporary-token-handler');
 const cleanEligibilityCriteria = async (token) => {
   console.log('cleaning GEF eligibility-criteria');
 
-  for (data of await api.listEligibilityCriteria(token)) {
+  for (const data of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(data, token);
   }
 };
@@ -12,20 +12,15 @@ const cleanEligibilityCriteria = async (token) => {
 const cleanMandatoryCriteriaVersioned = async (token) => {
   console.log('cleaning GEF mandatory-criteria-versioned');
 
-  for (mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
+  for (const mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
     await api.deleteMandatoryCriteriaVersioned(mandatoryCriteria, token);
   }
 };
 
-const cleanDurableFunctions =  async (token) => {
-  const {status, error} = await api.getDurableFunctions(token);
-
-  if (status === 200) {
-    console.log('cleaning durable-functions-log');
-  } else {
-    console.log('CANT clean durable-functions-log', error);
-  }
-}
+const cleanDurableFunctions = async (token) => {
+  console.log('cleaning durable-functions-log');
+  await api.getDurableFunctions(token);
+};
 
 const cleanAllTables = async () => {
   const token = await tokenFor({

@@ -180,6 +180,11 @@ const facilitiesFilters = (user, filters = []) => {
     };
   }
 
+  // GEF facilities only - TODO: for @Tony
+  const gefFacilitiesFilter = { $or: [{ type: 'Cash' }, { type: 'Contingent' }] };
+
+  result = { ...result, ...gefFacilitiesFilter };
+
   return result;
 };
 

@@ -15,8 +15,8 @@ exports.findAll = findAll;
 
 const findAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('facilities');
-  const facilities = await collection.find({ _id: ObjectId(dealId) }).toArray();
-  console.log(facilities);
+  // BSS facilities
+  const facilities = await collection.find({ dealId: ObjectId(dealId), $or: [{ facilityType: 'Bond' }, { facilityType: 'Loan' }] }).toArray();
   return facilities;
 };
 exports.findAllFacilitiesByDealId = findAllFacilitiesByDealId;

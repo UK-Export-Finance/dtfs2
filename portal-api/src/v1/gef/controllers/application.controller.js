@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
@@ -62,7 +62,7 @@ exports.create = async (req, res) => {
     );
 
     const application = await applicationCollection.findOne({
-      _id: ObjectID(String(createdApplication.insertedId)),
+      _id: ObjectId(String(createdApplication.insertedId)),
     });
 
     res.status(201)
@@ -91,7 +91,7 @@ exports.getById = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
   const doc = await collection.findOne({
-    _id: ObjectID(String(req.params.id)),
+    _id: ObjectId(String(req.params.id)),
   });
 
   if (doc) {
@@ -112,7 +112,7 @@ exports.getById = async (req, res) => {
 exports.getStatus = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
   const doc = await collection.findOne({
-    _id: ObjectID(String(req.params.id)),
+    _id: ObjectId(String(req.params.id)),
   });
   if (doc) {
     res.status(200)
@@ -147,7 +147,7 @@ exports.update = async (req, res) => {
   updateAction.$set = update;
 
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(String(req.params.id)) } },
+    { _id: { $eq: ObjectId(String(req.params.id)) } },
     updateAction,
     { returnOriginal: false },
   );
@@ -167,7 +167,7 @@ exports.updateSupportingInformation = async (req, res) => {
   const { id: dealId } = req.params;
 
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(dealId) } },
+    { _id: { $eq: ObjectId(dealId) } },
     {
       // set the updatedAt property to the current time in EPOCH format
       $set: { updatedAt: Date.now() },
@@ -228,7 +228,7 @@ exports.changeStatus = async (req, res) => {
 
   const collection = await db.getCollection(dealsCollection);
   const existingApplication = await collection.findOne({
-    _id: ObjectID(String(dealId)),
+    _id: ObjectId(String(dealId)),
   });
 
   if (!existingApplication) {
@@ -254,7 +254,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(String(dealId)) } },
+    { _id: { $eq: ObjectId(String(dealId)) } },
     {
       $set: applicationUpdate,
     },
@@ -297,12 +297,12 @@ exports.delete = async (req, res) => {
     dealsCollection,
   );
   const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: ObjectID(String(req.params.id)),
+    _id: ObjectId(String(req.params.id)),
   });
   if (applicationResponse.value) {
     // remove facility information related to the application
     const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: req.params.id });
+    await query.deleteMany({ dealId: ObjectId(req.params.id) });
   }
   res
     .status(utils.mongoStatus(applicationResponse))

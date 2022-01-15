@@ -10,7 +10,7 @@ const withoutId = (obj) => {
 };
 
 const updateDealStatus = async (dealId, status, existingDeal) => {
-  const collection = await db.getCollection('deals');
+  const dealsCollection = await db.getCollection('deals');
 
   const previousStatus = existingDeal.status;
 
@@ -21,7 +21,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
     previousStatus,
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
+  const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
     { _id: ObjectId(dealId) },
     $.flatten(withoutId(modifiedDeal)),
     { returnOriginal: false },

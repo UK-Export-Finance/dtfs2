@@ -9,14 +9,10 @@ const extendDealWithFacilities = async (deal) => {
   const mappedBonds = [];
   const mappedLoans = [];
   const facilityIds = deal.facilities;
-  const facilities = await facilitiesCollection.find({
-    _id: {
-      $in: facilityIds,
-    },
-  }).toArray();
+  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
 
   facilityIds.forEach((id) => {
-    const facilityObj = facilities.find((f) => f._id === id);
+    const facilityObj = facilities.find((f) => f._id.toHexString() === id.toHexString());
 
     if (facilityObj) {
       const { facilityType } = facilityObj;
