@@ -1,4 +1,6 @@
-const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('../dates');
+const {
+  nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
+} = require('../dates');
 
 module.exports = [
   {
@@ -16,7 +18,7 @@ module.exports = [
     'coverEndDate-day': threeMonths.day,
     'coverEndDate-month': threeMonths.month,
     'coverEndDate-year': threeMonths.year,
-    uniqueIdentificationNumber: 'Test Bond',
+    uniqueIdentificationNumber: 'Test Bond 3',
     bondBeneficiary: '',
     requestedCoverStartDate: twoMonthsTimestamp,
     lastEdited: nowTimestamp,

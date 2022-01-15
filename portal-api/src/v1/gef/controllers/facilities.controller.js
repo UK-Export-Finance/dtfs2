@@ -25,7 +25,7 @@ exports.create = async (req, res) => {
       const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
       const facility = await facilitiesQuery.findOne({
-        _id: ObjectID(String(createdFacility.insertedId)),
+        _id: ObjectID(createdFacility.insertedId),
       });
 
       const response = {
