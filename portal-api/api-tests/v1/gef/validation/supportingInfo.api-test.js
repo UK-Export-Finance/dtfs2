@@ -12,12 +12,12 @@ describe(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED} if no document
     expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED);
   });
 
-  it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS_BY_UKEF} if 2 documents are required and only one is uploaded`, () => {
+  it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS} if 2 documents are required and only one is uploaded`, () => {
     mockObject.requiredFields = ['manualInclusion', 'exporterLicence'];
     mockObject.manualInclusion = [{}];
 
     const result = supportingInfoStatus(mockObject);
-    expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS_BY_UKEF);
+    expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (1 in total) have been uploaded`, () => {
