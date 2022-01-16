@@ -24,7 +24,7 @@ const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const {
   EMAIL_TEMPLATE_IDS,
-  DEAL: { GEF_STATUS, DEAL_TYPE },
+  DEAL: { DEAL_STATUS, DEAL_TYPE },
 } = require('../../../constants');
 
 const dealsCollectionName = 'deals';
@@ -232,8 +232,8 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
       submissionType: existingApplication.submissionType || '',
       supplierName: companyName,
       bankInternalRefName,
-      currentStatus: GEF_STATUS[status],
-      previousStatus: GEF_STATUS[previousStatus],
+      currentStatus: DEAL_STATUS[status],
+      previousStatus: DEAL_STATUS[previousStatus],
       updatedByName: `${user.firstname} ${user.surname}`,
       updatedByEmail: user.email,
     });
@@ -265,7 +265,7 @@ exports.changeStatus = async (req, res) => {
   let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
 
   // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
-  if (status === GEF_STATUS.SUBMITTED_TO_UKEF) {
+  if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
     const submissionData = await addSubmissionData(
       dealId,
       existingApplication,
@@ -291,7 +291,7 @@ exports.changeStatus = async (req, res) => {
     response = updatedDocument.value;
 
     // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
-    if (status === GEF_STATUS.SUBMITTED_TO_UKEF) {
+    if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
       await api.tfmDealSubmit(
         dealId,
         existingApplication.dealType,
@@ -303,9 +303,9 @@ exports.changeStatus = async (req, res) => {
   // If status of correct type, send update email
   if (
     [
-      GEF_STATUS.BANK_CHECK,
-      GEF_STATUS.CHANGES_REQUIRED,
-      GEF_STATUS.SUBMITTED_TO_UKEF,
+      DEAL_STATUS.READY_FOR_APPROVAL,
+      DEAL_STATUS.CHANGES_REQUIRED,
+      DEAL_STATUS.SUBMITTED_TO_UKEF,
     ].includes(status)
   ) {
     const { user } = req;

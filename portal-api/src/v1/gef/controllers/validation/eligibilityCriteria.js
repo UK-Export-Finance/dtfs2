@@ -20,14 +20,14 @@ const eligibilityCriteriaStatus = (answers) => {
   const answeredCount = getAnsweredItems(answers).length;
 
   if (answeredCount === 0) {
-    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
+    return CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
   }
 
   if (answeredCount === requiredCount) {
-    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
+    return CONSTANTS.DEAL.DEAL_STATUS.COMPLETED;
   }
 
-  return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
+  return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
 };
 
 module.exports = {

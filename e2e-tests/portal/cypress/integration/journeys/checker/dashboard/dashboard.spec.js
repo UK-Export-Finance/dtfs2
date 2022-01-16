@@ -23,7 +23,7 @@ context('View dashboard deals as a checker', () => {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
       bankInternalRefName: 'Ready BSS',
       additionalRefName: 'Tibettan submarine acquisition scheme',
-      status: CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK,
+      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
       previousStatus: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
       exporter: {
         companyName: 'mock company',
@@ -42,7 +42,7 @@ context('View dashboard deals as a checker', () => {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       bank: { id: MAKER_LOGIN.bank.id },
       bankInternalRefName: 'Ready GEF',
-      status: CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK,
+      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
       exporter: {
         companyName: 'mock company',
       },
@@ -76,12 +76,12 @@ context('View dashboard deals as a checker', () => {
 
     const gefDeal = ALL_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      && status === CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
+      && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
 
-    const bssDeal = ALL_DEALS.find(({ dealType, status}) =>
+    const bssDeal = ALL_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS
-      && status === CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
-    
+      && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+
     const {
       exporter,
       bankRef,
@@ -97,14 +97,13 @@ context('View dashboard deals as a checker', () => {
       expect(text.trim()).equal('(2 items)');
     });
 
-
     //---------------------------------------------------------------
     // first deal should be the most recent (with our test data - GEF)
     //---------------------------------------------------------------
-    const firstRow = cy.get('table tr').eq(1);
+    cy.get('table tr').eq(1).as('firstRow');
     const gefDealId = gefDeal._id;
 
-    firstRow.find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.get('@firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
 
     exporter(gefDealId).invoke('text').then((text) => {
       expect(text.trim()).equal(gefDeal.exporter.companyName);
@@ -134,16 +133,14 @@ context('View dashboard deals as a checker', () => {
     link(gefDealId).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
 
-
     // go back to the dashboard
     dashboard.visit();
 
-
     // second deal (BSS)
-    const secondRow = cy.get('table tr').eq(2);
+    cy.get('table tr').eq(2);
     const bssDealId = bssDeal._id;
 
-    firstRow.find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.get('@firstRow').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
 
     exporter(bssDealId).invoke('text').then((text) => {
       expect(text.trim()).equal(bssDeal.exporter.companyName);

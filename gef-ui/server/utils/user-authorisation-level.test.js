@@ -49,7 +49,7 @@ const inProgressApplication = {
 
 const bankCheckApplication = {
   ...draftApplication,
-  status: CONSTANTS.DEAL_STATUS.BANK_CHECK,
+  status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
 };
 
 describe('user-authorisation-levels', () => {
@@ -65,7 +65,7 @@ describe('user-authorisation-levels', () => {
     expect(getUserAuthorisationLevelsToApplication(combinedUser, inProgressApplication)).toEqual(['EDIT']);
   });
 
-  it('returns the expected authorisation levels for BANK_CHECK', () => {
+  it('returns the expected authorisation levels for READY_FOR_APPROVAL', () => {
     expect(getUserAuthorisationLevelsToApplication(makerUser, bankCheckApplication)).toEqual(['READ', 'COMMENT']);
     expect(getUserAuthorisationLevelsToApplication(checkerUser, bankCheckApplication)).toEqual(['READ', 'COMMENT']);
     expect(getUserAuthorisationLevelsToApplication(combinedUser, bankCheckApplication)).toEqual(['READ', 'COMMENT']);

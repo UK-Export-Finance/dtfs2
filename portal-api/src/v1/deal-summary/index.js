@@ -98,8 +98,8 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
       return b;
     }
 
-    if (b.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
-        && b.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE) {
+    if (b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED
+        && b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return b;
     }
     return null;
@@ -110,8 +110,8 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     if (l.issuedFacilitySubmittedToUkefTimestamp) {
       return l;
     }
-    if (l.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
-      && l.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE) {
+    if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED
+      && l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return l;
     }
     return null;

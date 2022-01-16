@@ -248,7 +248,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
             MOCK_DEAL._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMISSION_ACKNOWLEDGED,
+            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_ACKNOWLEDGED,
           );
         });
       });
@@ -259,7 +259,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
             MOCK_DEAL_MIN._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMISSION_ACKNOWLEDGED,
+            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_ACKNOWLEDGED,
           );
         });
       });
@@ -303,7 +303,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
             MOCK_GEF_DEAL_MIA._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.UKEF_IN_PROGRESS,
+            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.IN_PROGRESS_BY_UKEF,
           );
         });
       });

@@ -1,4 +1,4 @@
-const { DEAL_TYPE, STATUS } = require('../enums');
+const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
 
 class Application {
   constructor(req, eligibilityTerms) {
@@ -18,11 +18,11 @@ class Application {
 
       this.maker = sanitisedMaker;
 
-      this.status = STATUS.DRAFT;
+      this.status = DEAL_STATUS.DRAFT;
       this.bank = req.bank;
 
       this.exporter = req.exporter ? req.exporter : {
-        status: STATUS.NOT_STARTED,
+        status: DEAL_STATUS.NOT_STARTED,
       };
 
       this.eligibility = {

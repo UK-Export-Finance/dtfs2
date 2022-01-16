@@ -75,8 +75,8 @@ const updateIssuedFacilities = async (
   canUpdateIssuedFacilitiesCoverStartDates,
   newStatus,
 ) => {
-  const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.STATUS.APPROVED
-                                      || fromStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
+  const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+                                      || fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
 
   const isMIAdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   const isMINdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
@@ -94,8 +94,8 @@ const updateIssuedFacilities = async (
 
         const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                     && facility.issueFacilityDetailsProvided
-                                    && fromStatus !== CONSTANTS.DEAL.STATUS.DRAFT
-                                    && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
+                                    && fromStatus !== CONSTANTS.DEAL.DEAL_STATUS.DRAFT
+                                    && facility.status !== CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED
                                     && (newStatus && newStatus.length > 0));
 
         if (shouldUpdateFacility(facility)) {

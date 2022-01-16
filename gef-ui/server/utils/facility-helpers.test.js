@@ -142,7 +142,7 @@ describe('areUnissuedFacilitiesPresent', () => {
       CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
       .toEqual(false);
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS,
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF,
       CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
       .toEqual(false);
   });
