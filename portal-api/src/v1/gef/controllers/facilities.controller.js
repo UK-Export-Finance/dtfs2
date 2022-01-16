@@ -12,7 +12,7 @@ const {
   calculateGuaranteeFee,
 } = require('../calculations/facility-calculations');
 
-const collectionName = 'facilities';
+const facilitiesCollectionName = 'facilities';
 const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
@@ -21,7 +21,7 @@ exports.create = async (req, res) => {
     if (enumValidationErr) {
       res.status(422).send(enumValidationErr);
     } else {
-      const collection = await db.getCollection(collectionName);
+      const collection = await db.getCollection(facilitiesCollectionName);
       const createdFacility = await collection.insertOne(new Facility(req.body));
 
       const facility = await collection.findOne({
@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollectionName);
   let find = {};
 
   if (dealId) {
@@ -80,7 +80,7 @@ exports.getAllGET = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollectionName);
   const doc = await collection.findOne({ _id: ObjectID(String(req.params.id)) });
   if (doc) {
     res.status(200).send({
@@ -95,7 +95,7 @@ exports.getById = async (req, res) => {
 
 const update = async (id, updateBody) => {
   try {
-    const collection = await db.getCollection(collectionName);
+    const collection = await db.getCollection(facilitiesCollectionName);
     const dealsCollection = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectID(String(id));
@@ -154,13 +154,13 @@ exports.updatePUT = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollectionName);
   const response = await collection.findOneAndDelete({ _id: ObjectID(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.deleteByDealId = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollectionName);
   const response = await collection.deleteMany({ dealId: req.query.dealId });
   res.status(200).send(response);
 };
@@ -196,7 +196,7 @@ exports.findFacilities = async (
 ) => {
   const sanitisedFilters = facilitiesFilters(requestingUser, filters);
 
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection(facilitiesCollectionName);
 
   const doc = await collection
     .aggregate([
