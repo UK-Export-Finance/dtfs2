@@ -24,8 +24,8 @@ const DEAL_STATUS = {
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
   UKEF_IN_PROGRESS: 'In progress by UKEF',
-  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted (with conditions)',
-  UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted (without conditions)',
+  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
+  UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
   EXPIRED: 'Expired',
   WITHDRAWN: 'Withdrawn',
@@ -45,7 +45,7 @@ const DEAL_COMMENT_TYPE_PORTAL = {
 module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
-  DEAL_STATUS, 
-  FACILITY_TYPE, 
+  DEAL_STATUS,
+  FACILITY_TYPE,
   DEAL_COMMENT_TYPE_PORTAL,
 };

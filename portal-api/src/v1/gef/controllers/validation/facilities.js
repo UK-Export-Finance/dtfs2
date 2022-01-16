@@ -57,28 +57,28 @@ const hasRequiredItems = (doc) => {
 const facilitiesStatus = (doc) => {
   const requiredCount = hasRequiredItems(doc).length;
   if (!doc.updatedAt) {
-    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
+    return CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
   }
   if (requiredCount > 0) {
-    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
   }
   if (requiredCount === 0) {
-    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
+    return CONSTANTS.DEAL.DEAL_STATUS.COMPLETED;
   }
 };
 
 const facilitiesOverallStatus = (facilities) => {
-  let result = CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
+  let result = CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
   const allStatus = [];
   facilities.forEach((item) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
   if (uniqueStatus.length > 0) {
-    result = CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
+    result = CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
   }
-  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === CONSTANTS.DEAL.GEF_STATUS.COMPLETED) {
-    result = CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
+  if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === CONSTANTS.DEAL.DEAL_STATUS.COMPLETED) {
+    result = CONSTANTS.DEAL.DEAL_STATUS.COMPLETED;
   }
   return result;
 };

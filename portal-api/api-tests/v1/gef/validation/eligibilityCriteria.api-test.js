@@ -60,7 +60,7 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
   describe('eligibilityCriteriaStatus', () => {
     describe('when no answers have been provided', () => {
-      it(`should return ${CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED}`, () => {
+      it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}`, () => {
         const mockAnswers = [
           { answer: null },
           { answer: null },
@@ -68,12 +68,12 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
         const result = eligibilityCriteriaStatus(mockAnswers);
 
-        expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED)
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED);
       });
     });
-    
+
     describe('when some answers have been provided', () => {
-      it(`should return ${CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS}`, () => {
+      it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS}`, () => {
         const mockAnswers = [
           { answer: null },
           { answer: true },
@@ -81,12 +81,12 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
         const result = eligibilityCriteriaStatus(mockAnswers);
 
-        expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS)
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
       });
     });
 
     describe('when ALL answers have been provided', () => {
-      it(`should return ${CONSTANTS.DEAL.GEF_STATUS.COMPLETED}`, () => {
+      it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED}`, () => {
         const mockAnswers = [
           { answer: true },
           { answer: false },
@@ -94,7 +94,7 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
         const result = eligibilityCriteriaStatus(mockAnswers);
 
-        expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED)
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
       });
     });
   });

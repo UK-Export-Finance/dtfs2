@@ -32,7 +32,7 @@ const FACILITIES_STAGE = {
   },
 };
 
-const STATUS = {
+const DEAL_STATUS = {
   COMPLETED: 'Completed',
   INCOMPLETE: 'Incomplete',
   NOT_STARTED: 'Not started',
@@ -59,5 +59,5 @@ module.exports = {
   DAY_COUNT_BASIS,
   FACILITIES_STAGE,
   TYPE,
-  STATUS,
+  DEAL_STATUS,
 };

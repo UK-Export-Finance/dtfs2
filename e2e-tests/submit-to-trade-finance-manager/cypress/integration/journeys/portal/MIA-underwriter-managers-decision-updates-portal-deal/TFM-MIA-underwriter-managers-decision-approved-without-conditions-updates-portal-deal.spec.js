@@ -30,7 +30,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Accepted with conditions` decision, Portal deal status is updated, comments/conditions display', () => {
+  it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Accepted by UKEF (with conditions)` decision, Portal deal status is updated, comments/conditions display', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------

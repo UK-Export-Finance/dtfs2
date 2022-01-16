@@ -1,6 +1,5 @@
 const {
   unansweredFields,
-  exporterValidation,
   exporterCheckEnums,
   exporterStatus,
 } = require('../../../../src/v1/gef/controllers/validation/exporter');
@@ -18,7 +17,7 @@ describe('GEF controllers validation - exporter', () => {
     probabilityOfDefault: true,
     isFinanceIncreasing: true,
   };
- 
+
   describe('unansweredFields', () => {
     it('should return an array of unanswered fields', () => {
       const mockAnswers = {
@@ -49,7 +48,7 @@ describe('GEF controllers validation - exporter', () => {
       it('should return NOT_STARTED status', () => {
         const result = exporterStatus({});
 
-        expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED);
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED);
       });
     });
 
@@ -59,7 +58,7 @@ describe('GEF controllers validation - exporter', () => {
           companiesHouseRegistrationNumber: true,
         });
 
-        expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS);
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
       });
     });
 
@@ -67,7 +66,7 @@ describe('GEF controllers validation - exporter', () => {
       it('should return COMPLETED status', () => {
         const result = exporterStatus(mockAnswersValid);
 
-        expect(result).toEqual(CONSTANTS.DEAL.GEF_STATUS.COMPLETED);
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
       });
     });
   });

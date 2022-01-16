@@ -43,9 +43,9 @@
     <header>
         {% set bannerHtml %}
             <h2 data-cy="ukef-review-decision-heading">Review UKEF decision</h2>
-            {% if applicationStatus == 'Accepted (without conditions)' %}
+            {% if applicationStatus == 'Accepted by UKEF (without conditions)' %}
                 <p>UKEF has approved your application without conditions.</p>
-            {% elif applicationStatus == 'Accepted (with conditions)' %}
+            {% elif applicationStatus == 'Accepted by UKEF (with conditions)' %}
                 <p>UKEF has approved your application with the following conditions:</p>
                 <p>{{ ukefDecision[0].text | safe }}</p>
             {% elif applicationStatus == 'Rejected by UKEF' %}

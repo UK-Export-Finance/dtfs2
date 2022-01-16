@@ -234,5 +234,5 @@ export const MOCK_APPLICATION_MIA = {
 
 export const UKEF_DECISION = {
   text: '1\r\n2\r\n3',
-  decision: 'Accepted (with conditions)',
+  decision: 'Accepted by UKEF (with conditions)',
 };
