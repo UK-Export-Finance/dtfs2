@@ -12,7 +12,7 @@ const {
   calculateGuaranteeFee,
 } = require('../calculations/facility-calculations');
 
-const collectionName = 'gef-facilities';
+const collectionName = 'facilities';
 const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
@@ -179,6 +179,11 @@ const facilitiesFilters = (user, filters = []) => {
       $and: amendedFilters,
     };
   }
+
+  // GEF facilities only - TODO: for @Tony
+  const gefFacilitiesFilter = { $or: [{ type: 'Cash' }, { type: 'Contingent' }] };
+
+  result = { ...result, ...gefFacilitiesFilter };
 
   return result;
 };

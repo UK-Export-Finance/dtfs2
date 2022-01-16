@@ -16,7 +16,7 @@ const updateGefApplication = async (dealId, applicationUpdate) => {
 };
 
 const updateGefFacility = async (facilityId, facilityUpdate) => {
-  const collection = await db.getCollection('gef-facilities');
+  const collection = await db.getCollection('facilities');
 
   const updatedFacility = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(facilityId)) } },
