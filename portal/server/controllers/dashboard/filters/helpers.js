@@ -21,14 +21,16 @@ const submittedFiltersArray = (allSubmittedFilters) => {
       const submittedValue = submittedFilters[field];
       const fieldHasMultipleValues = Array.isArray(submittedValue);
 
-      if (fieldHasMultipleValues) {
-        consistentArray.push(
-          { [field]: [...submittedValue] },
-        );
-      } else {
-        consistentArray.push(
-          { [field]: [submittedValue] },
-        );
+      if (submittedValue) {
+        if (fieldHasMultipleValues) {
+          consistentArray.push(
+            { [field]: [...submittedValue] },
+          );
+        } else {
+          consistentArray.push(
+            { [field]: [submittedValue] },
+          );
+        }
       }
     });
   }
@@ -68,8 +70,13 @@ const submittedFiltersObject = (filtersArray) => {
  * @example 'Ready for Checker's approval'
  * @returns 'Ready-for-Checkers-approval'
  */
-const formatFieldValue = (fieldValue) =>
-  fieldValue.replace(/[\s/]/g, '-').replace('\'', '');
+const formatFieldValue = (fieldValue) => {
+  if (fieldValue) {
+    return fieldValue.replace(/[\s/]/g, '-').replace('\'', '');
+  }
+
+  return null;
+}
 
 module.exports = {
   submittedFiltersArray,

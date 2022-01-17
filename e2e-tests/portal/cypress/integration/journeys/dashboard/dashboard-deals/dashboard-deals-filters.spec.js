@@ -106,7 +106,7 @@ context('Dashboard Deals filters', () => {
       dashboard.filters.panel.form.status.draft.checkbox().should('not.be.checked');
 
       // ready for checker
-      dashboard.filters.panel.form.status.readyForChecker.label().contains(CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
+      dashboard.filters.panel.form.status.readyForChecker.label().contains(CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
       dashboard.filters.panel.form.status.readyForChecker.checkbox().should('exist');
       dashboard.filters.panel.form.status.readyForChecker.checkbox().should('not.be.checked');
 

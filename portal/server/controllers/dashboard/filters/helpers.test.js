@@ -104,5 +104,11 @@ describe('controllers/dashboard/filters - helpers', () => {
 
       expect(result).toEqual(expected);
     });
+
+    it('returns null', () => {
+      const result = formatFieldValue();
+
+      expect(result).toEqual(null);
+    });
   });
 });

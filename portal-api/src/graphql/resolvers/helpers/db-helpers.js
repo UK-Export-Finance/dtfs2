@@ -1,6 +1,17 @@
-const createDbQuery = (operator, value) => ({
-  [`$${operator}`]: value,
-});
+const createDbQuery = (operator, field, value) => {
+
+  const query = {
+    [`$${operator}`]: [],
+  };
+  
+  value.forEach((value) => {
+    query[`$${operator}`].push({
+      [field]: value,
+    });
+  });
+
+  return query;
+};
 
 const createDbQueryKeywordDeals = (keyword) => ({
   $or: [

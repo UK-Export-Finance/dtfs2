@@ -12,7 +12,7 @@ const {
  * @param {array} custom filters
  * @param {object} user
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
- * @returns [ { field: 'maker._id', value: '123' }, { field: dealType, value: 'BSS/EWCS' } ]
+ * @returns [ { field: 'maker._id', value: ['123'] }, { field: dealType, value: ['BSS/EWCS'] } ]
  */
 const dashboardFiltersQuery = (
   createdByYou,
@@ -26,6 +26,7 @@ const dashboardFiltersQuery = (
     filtersQuery.push({
       field: 'bank.id',
       value: user.bank.id,
+      operator: 'and',
     });
   }
 
@@ -45,24 +46,17 @@ const dashboardFiltersQuery = (
 
   filters.forEach((filterObj) => {
     const fieldName = Object.keys(filterObj)[0];
+    const filterValue = filterObj[fieldName];
 
-    filterObj[fieldName].forEach((filterValue) => {
-      if (filterValue !== CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES) {
-        if (fieldName === 'keyword') {
-          filtersQuery.push({
-            field: fieldName,
-            value: filterValue,
-            operator: 'or',
-          });
-        } else {
-          filtersQuery.push({
-            field: fieldName,
-            value: filterValue,
-          });
-        }
-      }
-    });
+    if (!filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES)) {
+      filtersQuery.push({
+        field: fieldName,
+        value: filterValue,
+        operator: 'or',
+      });
+    }
   });
+
 
   return filtersQuery;
 };

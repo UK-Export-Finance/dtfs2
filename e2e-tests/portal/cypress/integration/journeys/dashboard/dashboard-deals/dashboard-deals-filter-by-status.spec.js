@@ -123,24 +123,24 @@ context('Dashboard Deals filters - filter by status', () => {
 
       firstAppliedFilter.should('be.visible');
 
-      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK}`;
+      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL}`;
       firstAppliedFilter.should('have.text', expectedText);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
       dashboard.filters.mainContainer.selectedFilters.statusReadyForChecker().should('be.visible');
 
-      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK}`;
+      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL}`;
       dashboard.filters.mainContainer.selectedFilters.statusReadyForChecker().contains(expectedText);
     });
 
     it('renders only Ready for Check deals', () => {
-      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
+      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
       dashboard.rows().should('have.length', ALL_READY_FOR_CHECK_DEALS.length);
 
       const firstReadyToCheckDeal = ALL_READY_FOR_CHECK_DEALS[0];
 
-      dashboard.row.status(firstReadyToCheckDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK);
+      dashboard.row.status(firstReadyToCheckDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 

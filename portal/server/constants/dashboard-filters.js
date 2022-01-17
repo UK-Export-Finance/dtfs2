@@ -1,6 +1,6 @@
 const DASHBOARD_FILTERS_DEFAULT = {
   createdByYou: null,
-  keyword: '',
+  keyword: null,
 };
 
 module.exports = DASHBOARD_FILTERS_DEFAULT;

@@ -86,7 +86,7 @@ input DashboardSort {
 
 input DashboardFilters {
   field: String
-  value: String
+  value: [String]
   operator: String
 }
 

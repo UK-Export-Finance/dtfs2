@@ -30,7 +30,7 @@ const BSS_DEAL_DRAFT = {
 
 const BSS_DEAL_READY_FOR_CHECK = {
   ...BSS_DEAL_BASE,
-  status: CONSTANTS.DEALS.DEAL_STATUS.BANK_CHECK,
+  status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
   bankInternalRefName: 'Ready Check BSS',
 };
 

@@ -23,6 +23,7 @@ describe('controllers/dashboard/filters - query', () => {
       {
         field: 'bank.id',
         value: mockUser.bank.id,
+        operator: 'and',
       },
     ];
 
@@ -44,6 +45,7 @@ describe('controllers/dashboard/filters - query', () => {
         {
           field: 'bank.id',
           value: mockUser.bank.id,
+          operator: 'and',
         },
         {
           field: 'maker._id',
@@ -71,6 +73,7 @@ describe('controllers/dashboard/filters - query', () => {
         {
           field: 'bank.id',
           value: mockUser.bank.id,
+          operator: 'and',
         },
         {
           field: 'status',
@@ -119,15 +122,18 @@ describe('controllers/dashboard/filters - query', () => {
     const expected = [
       {
         field: 'dealType',
-        value: mockFilters[0].dealType[0],
-      },
-      {
-        field: 'dealType',
-        value: mockFilters[0].dealType[1],
+        value: [
+          mockFilters[0].dealType[0],
+          mockFilters[0].dealType[1]
+        ],
+        operator: 'or',
       },
       {
         field: 'submissionType',
-        value: mockFilters[1].submissionType[0],
+        value: [
+          mockFilters[1].submissionType[0],
+        ],
+        operator: 'or',
       },
     ];
 

@@ -12,17 +12,30 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
 
   const dbFilters = filters.map((clause) => {
     if (clause.field === 'keyword') {
-      return dbHelpers.createDbQueryKeywordDeals(clause.value);
+      return dbHelpers.createDbQueryKeywordDeals(clause.value[0]);
+    }
+
+    if (clause.operator) {
+      return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value); 
     }
 
     return {
-      [clause.field]: clause.operator ? dbHelpers.createDbQuery(clause.operator, clause.value) : clause.value,
+      [clause.field]: clause.value,
+    };
+  });
+
+  let dealFiltersObj = {};
+
+  dbFilters.forEach((obj) => {
+    dealFiltersObj = {
+      ...dealFiltersObj,
+      ...obj,
     };
   });
 
   const deals = pagesize
-    ? await findAllPaginatedDeals(ctx.user, dbFilters, sort, start, pagesize)
-    : await findAllDeals(ctx.user, dbFilters, sort);
+    ? await findAllPaginatedDeals(ctx.user, dealFiltersObj, sort, start, pagesize)
+    : await findAllDeals(ctx.user, dealFiltersObj, sort);
 
   if (!deals.length) {
     return {
