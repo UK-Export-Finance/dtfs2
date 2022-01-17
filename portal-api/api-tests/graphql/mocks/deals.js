@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../src/constants');
 const MOCK_ALL_DEALS = [
   {
     _id: '1',
-    status: CONSTANTS.DEAL.STATUS.DRAFT,
+    status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
     bankInternalRefName: 'mock',
     exporter: 'mock company',
     product: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
@@ -12,7 +12,7 @@ const MOCK_ALL_DEALS = [
   },
   {
     _id: '2',
-    status: CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL,
+    status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
     bankInternalRefName: 'mock',
     exporter: 'mock company',
     product: CONSTANTS.DEAL.DEAL_TYPE.GEF,
@@ -24,7 +24,7 @@ const MOCK_ALL_DEALS = [
 const MOCK_DEALS = [
   {
     _id: '1',
-    status: CONSTANTS.DEAL.STATUS.DRAFT,
+    status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
     bankInternalRefName: 'mock',
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
@@ -33,7 +33,7 @@ const MOCK_DEALS = [
   },
   {
     _id: '2',
-    status: CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL,
+    status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
     bankInternalRefName: 'mock',
     dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
     submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,

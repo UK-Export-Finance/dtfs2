@@ -36,11 +36,11 @@
         {% endfor %}
       </div>
     {% endif %}
-  
+
     {% if ukefDecisionAccepted %}
-      {% if ukefDecision[0].decision == 'Accepted (without conditions)' %}
+      {% if ukefDecision[0].decision == 'Accepted by UKEF (without conditions)' %}
         <strong>You are proceeding with UKEF cover</strong>
-      {% elif ukefDecision[0].decision == 'Accepted (with conditions)' %}
+      {% elif ukefDecision[0].decision == 'Accepted by UKEF (with conditions)' %}
 
         {% if applicationStatus == "Ready for Checker\'s approval" %}
           <strong>{{ application.maker.firstname }}

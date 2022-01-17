@@ -156,11 +156,11 @@ const stateToPartial = (status, url) => {
   const template = {
     [DEAL_STATUS.DRAFT]: 'application-details',
     [DEAL_STATUS.CHANGES_REQUIRED]: 'application-details',
-    [DEAL_STATUS.BANK_CHECK]: 'application-preview',
+    [DEAL_STATUS.READY_FOR_APPROVAL]: 'application-preview',
     [DEAL_STATUS.SUBMITTED_TO_UKEF]: 'application-preview',
     [DEAL_STATUS.ABANDONED]: 'application-preview',
     [DEAL_STATUS.UKEF_ACKNOWLEDGED]: 'application-preview',
-    [DEAL_STATUS.UKEF_IN_PROGRESS]: 'application-details',
+    [DEAL_STATUS.IN_PROGRESS_BY_UKEF]: 'application-details',
     [DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS]: 'application-preview',
     [DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS]: 'application-preview',
     [DEAL_STATUS.UKEF_REFUSED]: 'application-preview',

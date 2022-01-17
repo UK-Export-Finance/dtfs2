@@ -1388,12 +1388,12 @@ describe('futureDateInRange', () => {
 
   describe('displayChangeSupportingInfo()', () => {
     it('Should return false if preview mode', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 0), true);
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
       expect(result).toEqual(false);
     });
 
     it('Should return false if preview mode and submission count over 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 1), true);
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
       expect(result).toEqual(false);
     });
 

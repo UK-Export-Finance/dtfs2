@@ -5,7 +5,7 @@ const DEAL_TYPE = {
 
 const DEAL_STATUS = {
   DRAFT: 'Draft',
-  BANK_CHECK: 'Ready for Checker\'s approval',
+  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
   CHANGES_REQUIRED: 'Further Maker\'s input required',
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',

@@ -90,7 +90,7 @@ class Application {
         && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(application.status)
         && user.roles.includes('maker');
 
-      application.checkerCanSubmit = [DEAL_STATUS.BANK_CHECK].includes(application.status)
+      application.checkerCanSubmit = [DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status)
         && !application.editedBy.includes(user._id)
         && user.roles.includes('checker');
 
