@@ -24,19 +24,19 @@ const PAYMENT_TYPE = {
   AT_MATURITY: 'AT_MATURITY',
 };
 
-const STATUS = {
+const DEAL_STATUS = {
   DRAFT: 'Draft',
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
-  BANK_CHECK: 'Ready for Checker\'s approval',
+  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
   CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
-  UKEF_IN_PROGRESS: 'In progress by UKEF',
-  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted (with conditions)',
-  UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted (without conditions)',
+  IN_PROGRESS_BY_UKEF: 'In progress by UKEF',
+  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
+  UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
   EXPIRED: 'Expired',
   WITHDRAWN: 'Withdrawn',
@@ -73,7 +73,7 @@ module.exports = {
   SME_TYPE,
   FACILITY_TYPE,
   PAYMENT_TYPE,
-  STATUS,
+  DEAL_STATUS,
   ERROR,
   FACILITY_PROVIDED_DETAILS,
   CURRENCY,

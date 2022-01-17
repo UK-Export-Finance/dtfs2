@@ -14,23 +14,23 @@ const changeBondStatus = (bond, workflowBond, workflowActionCode) => {
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
   // if status is `Acknowledged`, status cannot be changed
-  if (bond.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED) {
+  if (bond.status !== CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED) {
     if (isIssuedFacility && hasWorflowStatus) {
       if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
-        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+        return CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED;
       }
 
-      if ((workflowActionCode === '011' || workflowActionCode === '017') && bond.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
-        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+      if ((workflowActionCode === '011' || workflowActionCode === '017') && bond.status === CONSTANTS.FACILITIES.DEAL_STATUS.SUBMITTED_TO_UKEF) {
+        return CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED;
       }
 
       if (workflowBond.BSS_status[0] === '""') {
-        return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+        return CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED;
       }
     }
 
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
-      return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+      return CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED;
     }
   }
 
@@ -38,7 +38,7 @@ const changeBondStatus = (bond, workflowBond, workflowActionCode) => {
   // These type of facilities are the only facilities that we manually add a status to.
   // This happens during deal submission to UKEF. They are 'locked' in 'Completed' status.
   // The status is otherwise generated from workflow response (above), or dynmically generated according to validation.
-  if (bond.status === CONSTANTS.FACILITIES.STATUS.COMPLETED) {
+  if (bond.status === CONSTANTS.FACILITIES.DEAL_STATUS.COMPLETED) {
     return bond.status;
   }
 
@@ -58,23 +58,23 @@ const changeLoanStatus = (loan, workflowLoan, workflowActionCode) => {
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
   // if status is `Acknowledged`, status cannot be changed
-  if (loan.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED) {
+  if (loan.status !== CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED) {
     if (isIssuedFacility && hasWorflowStatus) {
       if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
-        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+        return CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED;
       }
 
-      if ((workflowActionCode === '011' || workflowActionCode === '017') && loan.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
-        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+      if ((workflowActionCode === '011' || workflowActionCode === '017') && loan.status === CONSTANTS.FACILITIES.DEAL_STATUS.SUBMITTED_TO_UKEF) {
+        return CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED;
       }
 
       if (workflowLoan.EWCS_status[0] === '""') {
-        return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+        return CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED;
       }
     }
 
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
-      return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+      return CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED;
     }
   }
 
@@ -82,7 +82,7 @@ const changeLoanStatus = (loan, workflowLoan, workflowActionCode) => {
   // These type of facilities are the only facilities that we manually add a status to.
   // This happens during deal submission to UKEF. They are 'locked' in 'Completed' status.
   // The status is otherwise generated from workflow response (above), or dynmically generated according to validation.
-  if (loan.status === CONSTANTS.FACILITIES.STATUS.COMPLETED) {
+  if (loan.status === CONSTANTS.FACILITIES.DEAL_STATUS.COMPLETED) {
     return loan.status;
   }
 

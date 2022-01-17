@@ -37,18 +37,18 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
         // Without this, the following would happen, which we do not want:
         // - the facility's status would continue to by dynamically generated
         // - the facility's status could be marked as 'incomplete', as dates become invalid
-        facility.status = CONSTANTS.FACILITIES.STATUS.COMPLETED;
+        facility.status = CONSTANTS.FACILITIES.DEAL_STATUS.COMPLETED;
       }
     }
 
-    const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL;
+    const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL;
 
     const facilityIssuedFromIssueFacilityForm = (shouldUpdate
                                                 && facility.issueFacilityDetailsProvided
                                                 && facilityIsReadyForApproval);
 
     if (facilityIssuedFromIssueFacilityForm) {
-      facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
+      facility.status = CONSTANTS.FACILITIES.DEAL_STATUS.SUBMITTED_TO_UKEF;
     }
 
     const { data } = await facilitiesController.update(

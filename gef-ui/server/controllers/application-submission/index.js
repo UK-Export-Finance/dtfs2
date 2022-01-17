@@ -54,7 +54,7 @@ const postApplicationSubmission = async (req, res, next) => {
     } else {
       await api.updateApplication(dealId, { editorId: user._id });
     }
-    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.BANK_CHECK);
+    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
   } catch (err) {
     console.error('Unable to post application submission', { err });
     return next(err);

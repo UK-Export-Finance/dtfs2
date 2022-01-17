@@ -2,20 +2,20 @@ const mapTfmDealStageToPortalStatus = require('./map-tfm-deal-stage-to-portal-st
 const CONSTANTS = require('../../constants');
 
 describe('mapTfmDealStageToPortalStatus', () => {
-  describe('when TFM status is `APPROVED_WITH_CONDITIONS`', () => {
+  describe('when TFM status is `UKEF_APPROVED_WITH_CONDITIONS`', () => {
     describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
-      it('should return portal BSS status APPROVED_WITH_CONDITIONS', () => {
+      it('should return portal BSS status UKEF_APPROVED_WITH_CONDITIONS', () => {
         const result = mapTfmDealStageToPortalStatus(
           CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           'Approved (with conditions)',
         );
 
-        expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.APPROVED_WITH_CONDITIONS);
+        expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_APPROVED_WITH_CONDITIONS);
       });
     });
 
     describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
-      it('should return portal GEF status APPROVED_WITH_CONDITIONS', () => {
+      it('should return portal GEF status UKEF_APPROVED_WITH_CONDITIONS', () => {
         const result = mapTfmDealStageToPortalStatus(
           CONSTANTS.DEALS.DEAL_TYPE.GEF,
           'Approved (with conditions)',
@@ -58,7 +58,7 @@ describe('mapTfmDealStageToPortalStatus', () => {
           'Declined',
         );
 
-        expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.REFUSED);
+        expect(result).toEqual(CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_REFUSED);
       });
     });
 

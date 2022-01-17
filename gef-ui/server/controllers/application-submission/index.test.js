@@ -97,13 +97,13 @@ describe('controllers/application-submission', () => {
       expect(api.updateApplication).toHaveReturnedWith(undefined);
     });
 
-    it('updates the application status to `BANK_CHECK`', async () => {
+    it('updates the application status to `READY_FOR_APPROVAL`', async () => {
       api.setApplicationStatus = jest.fn();
       mockRequest.body.comment = '';
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, DEAL_STATUS.BANK_CHECK);
+      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 });
