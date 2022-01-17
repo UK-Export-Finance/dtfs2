@@ -6,10 +6,6 @@ const portalActivityGenerator = require('../../portalActivity-object-generator')
 
 const CONSTANTS = require('../../../constants');
 
-const {
-  update: updateFacility,
-} = require('./facilities.controller');
-
 // retrieves user information from database
 const getUserInfo = async (userId) => {
   const userCollectionName = 'users';
@@ -52,16 +48,6 @@ const submissionTypeToConstant = (submissionType) => {
   return submissionConstant;
 };
 
-const addCheckerToFacility = async (_id, checkerId) => {
-  const checker = await getUserInfo(checkerId);
-
-  const update = {
-    unissuedToIssuedByChecker: checker,
-  };
-
-  await updateFacility(_id, update);
-};
-
 const firstSubmissionPortalActivity = async (application) => {
   const { submissionType, portalActivities, checkerId } = application;
 
@@ -90,6 +76,7 @@ const firstSubmissionPortalActivity = async (application) => {
 const facilityChangePortalActivity = async (application, facilities) => {
   const { portalActivities, checkerId } = application;
   const checker = await getUserInfo(checkerId);
+
   facilities.forEach(async (facility) => {
     if (facility.canResubmitIssuedFacilities) {
       // creates user object to add to array
@@ -97,7 +84,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
       const activityParams = {
         type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
         user: '',
-        activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
+        activityType: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
         activityText: '',
         activityHTML: 'facility',
         facility,

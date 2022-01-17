@@ -8,6 +8,10 @@ const {
   checkCoverDateConfirmed,
 } = require('../../../src/v1/gef/controllers/application-submit');
 
+const {
+  update: updateFacility,
+} = require('../../../src/v1/gef/controllers/facilities.controller');
+
 const mockApplications = require('../../fixtures/gef/application');
 
 const wipeDB = require('../../wipeDB');
@@ -24,10 +28,17 @@ const applicationCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 
 const MOCK_APPLICATION = mockApplications[0];
+const MOCK_APPLICATION_FACILITIES = mockApplications[15];
 const CONSTANTS = require('../../../src/constants');
+
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
+
+const mockFacilities = require('../../fixtures/gef/facilities');
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA if submission count is 0', async () => {
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
     /*
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
@@ -36,24 +47,27 @@ describe('submissionPortalActivity()', () => {
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: ['checker'] });
     MOCK_APPLICATION.checkerId = checker._id;
-    MOCK_APPLICATION.submissionType = 'Manual Inclusion Application';
+    MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     MOCK_APPLICATION.portalActivities = [];
 
     const result = await submissionPortalActivity(MOCK_APPLICATION);
 
     // ensure that only 1 object added to empty array
     expect(result.length).toEqual(1);
+
     // portalActivity object within array
     const portalActivityObject = result[0];
 
     expect(portalActivityObject.type).toEqual('NOTICE');
+
     // matches date as time can be off by a few seconds
     const receivedDate = format(fromUnixTime(portalActivityObject.timestamp), 'dd-MMMM-yyyy');
     const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
     expect(receivedDate).toEqual(expectedDate);
 
     expect(portalActivityObject.text).toEqual('');
-    expect(portalActivityObject.label).toEqual('Manual inclusion application submitted to UKEF');
+
+    expect(portalActivityObject.label).toEqual(PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION);
 
     // get author object from checker from db
     const author = {
@@ -62,6 +76,88 @@ describe('submissionPortalActivity()', () => {
       _id: checker._id,
     };
     expect(portalActivityObject.author).toEqual(author);
+
+    expect(portalActivityObject.html).toEqual('');
+
+    expect(portalActivityObject.facilityType).toEqual('');
+
+    expect(portalActivityObject.facilityID).toEqual('');
+  });
+
+  it('should return a populated array with facility changed if submission count above 1 and facility changed to issued', async () => {
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    const aChecker = testUsers().withRole('checker').one();
+    /*
+   As _id's can change for checker, need to access db and find a checker
+   These details then added to the MOCK_APPLICATION
+   */
+    const userCollection = await db.getCollection('users');
+    // finds someone with role checker only
+    const checker = await userCollection.findOne({ roles: ['checker'] });
+    MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
+    MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    MOCK_APPLICATION_FACILITIES.portalActivities = [];
+    MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
+
+    const req = {
+      body: {
+        type: 'Cash',
+        dealId: MOCK_APPLICATION_FACILITIES._id,
+        paymentType: 'IN_ARREARS_MONTHLY'
+      }
+    };
+
+    const res = await as(aMaker).post(req.body).to(baseUrl);
+
+    await updateFacility(res.body.details._id, mockFacilities[4]);
+
+    const result = await submissionPortalActivity(MOCK_APPLICATION_FACILITIES);
+
+    // ensure that only 1 object added to empty array
+    expect(result.length).toEqual(1);
+
+    // portalActivity object within array
+    const portalActivityObject = result[0];
+
+    expect(portalActivityObject.type).toEqual(PORTAL_ACTIVITY_TYPE.FACILITY_STAGE);
+
+    // matches date as time can be off by a few seconds
+    const receivedDate = format(fromUnixTime(portalActivityObject.timestamp), 'dd-MMMM-yyyy');
+    const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
+    expect(receivedDate).toEqual(expectedDate);
+
+    expect(portalActivityObject.text).toEqual('');
+
+    expect(portalActivityObject.label).toEqual(PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED);
+
+    // author should be undefined
+    const author = {
+      firstName: undefined,
+      lastName: undefined,
+      _id: undefined,
+    };
+    expect(portalActivityObject.author).toEqual(author);
+
+    // checker object - checks matches test checker
+    const checkerInObject = {
+      firstname: aChecker.firstname,
+      surname: aChecker.surname,
+      _id: JSON.stringify(aChecker._id)
+    };
+
+    expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
+    expect(portalActivityObject.checker.surname).toEqual(checkerInObject.surname);
+    expect(JSON.stringify(portalActivityObject.checker._id)).toEqual(checkerInObject._id);
+
+    expect(portalActivityObject.html).toEqual('facility');
+
+    expect(portalActivityObject.facilityType).toEqual(`${req.body.type} facility`);
+
+    expect(portalActivityObject.facilityID).toEqual(mockFacilities[4].ukefFacilityId);
   });
 });
 

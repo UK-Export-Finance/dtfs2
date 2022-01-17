@@ -15,7 +15,8 @@ const mapPortalActivities = (portalActivities) => portalActivities.map((portalAc
     text: `${portalActivity.author.firstName} ${portalActivity.author.lastName}`,
   },
   html: portalActivity.html,
-  facility: portalActivity.facility,
+  facilityType: portalActivity.facilityType,
+  facilityID: portalActivity.facilityID,
   maker: portalActivity.maker,
   checker: portalActivity.checker,
 }));

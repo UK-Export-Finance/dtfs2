@@ -67,6 +67,7 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[12]).to(baseUrl);
       await as(aMaker).post(mockApplications[13]).to(baseUrl);
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
+      await as(aMaker).post(mockApplications[15]).to(baseUrl);
 
       const { body, status } = await as(aChecker).get(baseUrl);
 

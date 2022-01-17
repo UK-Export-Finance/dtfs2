@@ -28,10 +28,10 @@
     {% for activity in portalActivities %}
 
       {% set facilityHtml %}
-        <a class="colour-light-grey">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</a> <br>
-        <a class="colour-light-grey">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </a> <br>
-        <br>
-        <a class="govuk-link" data-cy="facility-link">{{activity.facility}}</a>
+        <p class="colour-light-grey">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</p>
+        <p class="colour-light-grey">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </p>
+
+        <a class="govuk-link" data-cy="facility-link">{{activity.facilityType}}  {{activity.facilityID}}</a>
         <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2"> Unissued </strong>
         >
         <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2"> Issued </strong>
@@ -44,7 +44,7 @@
             label: activity.label,
             text: activity.text,
             datetime: activity.datetime,
-            byline: activity.byline,
+            byline:'',
             html: facilityHtml
           }
         %}

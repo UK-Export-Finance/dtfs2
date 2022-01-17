@@ -28,6 +28,12 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
+const SUBMISSION_TYPE_LOWERCASE = {
+  AIN: 'Automatic inclusion notice',
+  MIA: 'Manual inclusion application',
+  MIN: 'Manual inclusion notice',
+};
+
 const ACTION_NAME = {
   '001': 'NewDeal',
   '003': 'NewDeal',
@@ -81,4 +87,5 @@ module.exports = {
   ACTION_NAME,
   STATUS,
   GEF_STATUS,
+  SUBMISSION_TYPE_LOWERCASE,
 };

@@ -175,6 +175,12 @@ describe('postChangeUnissuedFacility()', () => {
   const twoDaysAgoMidnight = (new Date(twoDaysAgo)).setHours(0, 0, 0, 0);
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
+  const maker = {
+    _id: 12345,
+    firstname: 'Test',
+    surname: 'Test',
+  };
+
   it('posts and returns correct message and url', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
@@ -203,6 +209,7 @@ describe('postChangeUnissuedFacility()', () => {
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
+      unissuedToIssuedByMaker: maker,
     },
     { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
@@ -284,6 +291,7 @@ describe('postChangeUnissuedFacility()', () => {
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
+      unissuedToIssuedByMaker: maker,
     },
     { message: 'UKEF123 is updated' },
     '/gef/application-details/123/unissued-facilities');
@@ -378,6 +386,12 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   const tomorrow = add(now, { days: 1 });
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
+  const maker = {
+    _id: 12345,
+    firstname: 'Test',
+    surname: 'Test',
+  };
+
   it('posts and returns correct url', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
@@ -407,6 +421,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       hasBeenIssued: true,
       canResubmitIssuedFacilities: true,
       coverDateConfirmed: true,
+      unissuedToIssuedByMaker: maker,
     },
     '/gef/application-details/123');
   });

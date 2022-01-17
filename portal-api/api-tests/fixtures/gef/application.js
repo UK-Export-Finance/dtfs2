@@ -210,6 +210,21 @@ const APPLICATION = [{
   submissionCount: 0,
   editedBy: [null],
   facilitiesUpdated: null,
+},
+{
+  dealType: 'GEF',
+  maker: {},
+  bank: {},
+  bankInternalRefName: 'Bank 1',
+  additionalRefName: 'Team 1',
+  exporter: {},
+  createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
+  updatedAt: null,
+  submissionCount: 1,
+  editedBy: [null],
+  facilitiesUpdated: null,
 }];
 
 module.exports = APPLICATION;

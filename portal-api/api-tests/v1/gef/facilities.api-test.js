@@ -64,6 +64,7 @@ describe(baseUrl, () => {
         coverDateConfirmed: null,
         canResubmitIssuedFacilities: null,
         issueDate: null,
+        unissuedToIssuedByMaker: expect.any(Object)
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
