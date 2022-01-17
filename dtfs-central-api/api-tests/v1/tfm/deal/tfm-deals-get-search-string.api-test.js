@@ -360,7 +360,7 @@ describe('/v1/tfm/deals', () => {
         const dealSubmittedYesterday = newDeal({
           status: 'Submitted',
           details: {
-            ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
+            ukefDealId: 'DEAL-SUBMITTED_TO_UKEF-YESTERDAY',
             submissionDate: yesterday,
           },
         });
@@ -368,7 +368,7 @@ describe('/v1/tfm/deals', () => {
         const dealSubmittedToday = newDeal({
           status: 'Submitted',
           details: {
-            ukefDealId: 'DEAL-SUBMITTED-TODAY',
+            ukefDealId: 'DEAL-SUBMITTED_TO_UKEF-TODAY',
             submissionDate: todayTimestamp,
           },
         });
@@ -432,7 +432,7 @@ describe('/v1/tfm/deals', () => {
         const dealSubmittedYesterday = newDeal({
           status: 'Submitted',
           details: {
-            ukefDealId: 'DEAL-SUBMITTED-YESTERDAY',
+            ukefDealId: 'DEAL-SUBMITTED_TO_UKEF-YESTERDAY',
             submissionDate: yesterdayTimestamp,
           },
         });
@@ -440,7 +440,7 @@ describe('/v1/tfm/deals', () => {
         const dealSubmittedToday = newDeal({
           status: 'Submitted',
           details: {
-            ukefDealId: 'DEAL-SUBMITTED-TODAY',
+            ukefDealId: 'DEAL-SUBMITTED_TO_UKEF-TODAY',
             submissionDate: todayTimestamp,
           },
         });

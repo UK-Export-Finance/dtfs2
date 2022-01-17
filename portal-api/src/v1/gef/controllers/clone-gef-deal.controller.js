@@ -60,7 +60,7 @@ const cloneSupportingInformation = async (existingDealId, newDealId) => {
 };
 
 const cloneFacilities = async (currentDealId, newDealId) => {
-  const facilitiesCollection = 'gef-facilities';
+  const facilitiesCollection = 'facilities';
   const collection = await db.getCollection(facilitiesCollection);
 
   // get all existing facilities
@@ -134,7 +134,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   if (clonedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
     clonedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   }
-  clonedDeal.status = CONSTANTS.DEAL.STATUS.DRAFT;
+  clonedDeal.status = CONSTANTS.DEAL.DEAL_STATUS.DRAFT;
   clonedDeal.submissionCount = 0;
   clonedDeal.submissionDate = null;
   clonedDeal.bankInternalRefName = bankInternalRefName;

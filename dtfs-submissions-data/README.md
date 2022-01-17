@@ -16,18 +16,17 @@ Therefore, we had to adhere to the Workflow ID format.
 
 ## This service is out of date
 
-The 7 numberical digits ID format should be retired as we no longer integrate with Workflow (instead we submit to our own service, Trade Finance Manager).
+The 7 numerical digits ID format should be retired as we no longer integrate with Workflow (instead we submit to our own service, Trade Finance Manager).
 
 ## Moving forwards
 
 We currently have 2 different services/APIs that generate and submit new deals - BSS and GEF.
 
 - BSS (portal-api) generates a new id by checking the latest value in the `idCounters` collection.
-- GEF (seperate endpoints in portal-api), generates a standard MongoDB ObjectId
+- GEF (separate endpoints in portal-api), generates a standard MongoDB ObjectId
 
 - BSS and GEF share the same collection for deals, called `deals`.
-- BSS has it's own collection for facilities, called `facilities`
-- GEF has it's own collections for facilities, called `gef-facilities`
+- BSS and GEF share the same collection for facilities, called `facilities`.
 
 BSS should be changed to generate a standard ObjectId. However, if this change is made, there could be a possibility of both BSS and GEF generating the same ID.
 

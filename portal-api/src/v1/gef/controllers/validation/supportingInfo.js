@@ -11,16 +11,16 @@ const supportingInfoStatus = (supportingInfo) => {
     const answeredCount = Object.keys(supportingInfoAnswers).length;
 
     if (!answeredCount) {
-      return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
+      return CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
     }
 
     if (answeredCount === requiredCount) {
-      return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
+      return CONSTANTS.DEAL.DEAL_STATUS.COMPLETED;
     }
 
-    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
   }
-  return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
+  return CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
 };
 
 module.exports = {

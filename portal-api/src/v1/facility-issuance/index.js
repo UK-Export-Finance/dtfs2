@@ -13,20 +13,20 @@ const canIssueFacility = (userRoles, deal, facility) => {
     previousFacilityStage,
   } = facility;
 
-  const acceptedByUkefDealStatus = (status === CONSTANTS.DEAL.STATUS.APPROVED
-                                    || status === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
+  const acceptedByUkefDealStatus = (status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+                                    || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
 
-  const allowedDealStatus = (status === CONSTANTS.DEAL.STATUS.SUBMISSION_ACKNOWLEDGED
-                            || status === CONSTANTS.DEAL.STATUS.APPROVED
-                            || status === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS
-                            || status === CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL
-                            || status === CONSTANTS.DEAL.STATUS.INPUT_REQUIRED);
+  const allowedDealStatus = (status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED
+                            || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+                            || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+                            || status === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
+                            || status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED);
 
   const allowedDealSubmissionType = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
                                      || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
   const isMiaDealInApprovedStatus = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-                                    && (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.STATUS.INPUT_REQUIRED));
+                                    && (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED));
 
   const allowedBondFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
     || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED

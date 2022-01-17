@@ -10,7 +10,7 @@ const generateStatus = (portalDeal, workflowDeal) => {
     workflowStatus = 'in_progress_by_ukef';
   }
 
-  return k2Map.findPortalValue('DEAL', 'STATUS', workflowStatus);
+  return k2Map.findPortalValue('DEAL', 'DEAL_STATUS', workflowStatus);
 };
 
 module.exports = generateStatus;

@@ -94,59 +94,7 @@ exports.getAllFacilities = async (req, res) => {
               // create the `companyName` property - this is inside the `dealSnapshot.exporter` property, NOT `facilities` array
               companyName: '$dealSnapshot.exporter.companyName',
               // create the `hasBeenIssued` property
-              // GEF has this property already, but BSS doesn't - so we need to create them using a switch
-              hasBeenIssued: {
-                $switch: {
-                  branches: [
-                    {
-                      case: { $eq: ['$dealSnapshot.dealType', 'GEF'] },
-                      then: '$$facilities.hasBeenIssued',
-                    },
-                    {
-                      case: {
-                        $and: [
-                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'Bond'] },
-                          { $eq: ['$$facilities.facilityStage', 'Issued'] },
-                        ],
-                      },
-                      then: true,
-                    },
-                    {
-                      case: {
-                        $and: [
-                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'Bond'] },
-                          { $eq: ['$$facilities.facilityStage', 'Unissued'] },
-                        ],
-                      },
-                      then: false,
-                    },
-                    {
-                      case: {
-                        $and: [
-                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'Loan'] },
-                          { $eq: ['$$facilities.facilityStage', 'Conditional'] },
-                        ],
-                      },
-                      then: false,
-                    },
-                    {
-                      case: {
-                        $and: [
-                          { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                          { $eq: ['$$facilities.facilityType', 'Loan'] },
-                          { $eq: ['$$facilities.facilityStage', 'Unconditional '] },
-                        ],
-                      },
-                      then: true,
-                    },
-
-                  ],
-                  default: false,
-                },
-              },
+              hasBeenIssued: '$$facilities.hasBeenIssued',
             },
           },
         },

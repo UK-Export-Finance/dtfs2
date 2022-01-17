@@ -31,10 +31,10 @@ describe('isNotice()', () => {
 });
 
 describe('isUkefReviewAvailable()', () => {
-  it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to `Ready for Checkers approval`', () => {
+  it('Should return TRUE for application with UkefDecision set to `Accepted by UKEF (with conditions)` and status set to `Ready for Checkers approval`', () => {
     MOCK_BASIC_DEAL.ukefDecision = [{
       text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
-      decision: 'Accepted (with conditions)',
+      decision: 'Accepted by UKEF (with conditions)',
       timestamp: 1639657163,
     }];
     expect(isUkefReviewAvailable(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(true);
@@ -47,10 +47,10 @@ describe('isUkefReviewAvailable()', () => {
 });
 
 describe('isUkefReviewPositive()', () => {
-  it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to `Ready for Checkers approval`', () => {
+  it('Should return TRUE for application with UkefDecision set to `Accepted by UKEF (with conditions)` and status set to `Ready for Checkers approval`', () => {
     MOCK_BASIC_DEAL.ukefDecision = [{
       text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
-      decision: 'Accepted (with conditions)',
+      decision: 'Accepted by UKEF (with conditions)',
       timestamp: 1639657163,
     }];
     expect(isUkefReviewPositive(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(true);
@@ -72,12 +72,12 @@ describe('isUkefReviewPositive()', () => {
     expect(isUkefReviewPositive(MOCK_BASIC_DEAL.status, MOCK_BASIC_DEAL.ukefDecision)).toEqual(false);
   });
 
-  it('Should return TRUE for application with UkefDecision set to `Accepted (with conditions)` and status set to UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
+  it('Should return TRUE for application with UkefDecision set to `Accepted by UKEF (with conditions)` and status set to UKEF_APPROVED_WITHOUT_CONDITIONS status', () => {
     const UKEF_APPPROVED_DEAL = MOCK_BASIC_DEAL;
     UKEF_APPPROVED_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
     UKEF_APPPROVED_DEAL.ukefDecision = [{
       text: '1. Condition 1\r\n2. Condition 2\r\n3. Condition 3',
-      decision: 'Accepted (with conditions)',
+      decision: 'Accepted by UKEF (with conditions)',
       timestamp: 1639657163,
     }];
     expect(isUkefReviewPositive(UKEF_APPPROVED_DEAL.status, UKEF_APPPROVED_DEAL.ukefDecision)).toEqual(true);
@@ -85,8 +85,8 @@ describe('isUkefReviewPositive()', () => {
 });
 
 describe('makerCanReSubmit', () => {
-  it('Should return FALSE since the deal status is BANK_CHECK', () => {
-    MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
+  it('Should return FALSE since the deal status is READY_FOR_APPROVAL', () => {
+    MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
   it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS', () => {
