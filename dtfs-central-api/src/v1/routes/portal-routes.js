@@ -775,9 +775,9 @@ portalRouter.route('/gef/deals/:id/facilities')
  * @openapi
  * /gef/facilities:
  *   post:
- *     summary: Create a Cash/Contingent facility in Portal gef-facilities collection
+ *     summary: Create a Cash/Contingent facility in Portal facilities collection
  *     tags: [Portal - GEF]
- *     description: Create a facility in Portal gef-facilities collection
+ *     description: Create a facility in Portal facilities collection
  *     responses:
  *       200:
  *         description: OK
@@ -794,9 +794,9 @@ portalRouter.route('/gef/facilities').post(createGefFacilityController.createFac
  * @openapi
  * /gef/facilities:
  *   get:
- *     summary: Return all facilities in gef-facilities collection as an array
+ *     summary: Return all facilities in facilities collection as an array
  *     tags: [Portal - GEF]
- *     description: Return all gef-facilities
+ *     description: Return all gef facilities
  *     responses:
  *       200:
  *         description: OK

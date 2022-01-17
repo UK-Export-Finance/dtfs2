@@ -28,29 +28,7 @@ const {
 } = require('../../../constants');
 
 const dealsCollectionName = 'deals';
-const facilitiesCollectionName = 'gef-facilities';
-
-// const defaultPaginationOpts = {
-//   sortBy: null,
-//   sortDirection: null,
-//   page: 1,
-//   pageSize: 10,
-// };
-
-// const generatePagination = (req) => {
-//   const paging = {
-//     page: Number(req.query.page ? req.query.page : defaultPaginationOpts.page),
-//     pageSize: Number(req.query.pageSize ? req.query.pageSize : defaultPaginationOpts.pageSize),
-//   };
-//   paging.startsAtIndex = (paging.page - 1) * paging.pageSize;
-//   paging.endsAtIndex = paging.startsAtIndex + paging.pageSize;
-//   if (req.query.sortBy && req.query.sortDirection) {
-//     paging[req.query.sortBy] = req.query.sortDirection;
-//   } else if (defaultPaginationOpts.sortBy && defaultPaginationOpts.sortDirection) {
-//     paging[defaultPaginationOpts.sortBy] = defaultPaginationOpts.sortDirection;
-//   }
-//   return paging;
-// };
+const facilitiesCollectionName = 'facilities';
 
 exports.create = async (req, res) => {
   const newDeal = {
