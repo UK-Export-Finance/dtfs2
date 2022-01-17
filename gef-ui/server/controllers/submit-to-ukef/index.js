@@ -70,7 +70,7 @@ const createSubmissionToUkef = async (req, res) => {
     application.checkerId = user._id;
     // checks if any changed to issued facilities (before update)
     const hasUnissuedToIssued = hasChangedToIssued(applicationWithFacilities);
-    const submissionType = application.ukefDecisionAccepted
+    const submissionType = ukefDecisionAccepted
       ? CONSTANTS.DEAL_SUBMISSION_TYPE.MIN
       : application.submissionType;
 
@@ -81,7 +81,7 @@ const createSubmissionToUkef = async (req, res) => {
     return res.render('partials/submit-to-ukef-confirmation.njk', {
       submissionType,
       status: application.status,
-      isNotice: isDealNotice(application.ukefDecisionAccepted, application.submissionType),
+      isNotice: isDealNotice(ukefDecisionAccepted, submissionType),
       ukefDecisionAccepted,
       unissuedToIssued: hasUnissuedToIssued,
     });
