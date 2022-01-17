@@ -1,6 +1,6 @@
 {% macro render(params) %}
   {% if params.unissuedToIssued %}
-    {% if params.status === "Ready for Checker\'s approval" and params.submissionType === "Manual Inclusion Application" %}
+    {% if params.status === "Ready for Checker\'s approval" and params.submissionType !== "Manual Inclusion Application" %}
       <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">{{ params.submissionType | capitalize }}
     {% else %}
       <h1 class="govuk-panel__title" data-cy="submit-facilities-confirmation-title">Issued facilities

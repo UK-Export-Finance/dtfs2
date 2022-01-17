@@ -25,8 +25,8 @@
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7"
       }) }}
-
-      {% if unissuedToIssued and submissionType !== 'Manual Inclusion Application'%}
+      {{ submissionType }}
+      {% if unissuedToIssued and submissionType === 'Manual Inclusion Application'%}
           <p data-cy="confirmation-text">We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.</p>
       {% else %}
         {% if isNotice %}

@@ -63,9 +63,10 @@ const makerCanReSubmit = (maker, application) => {
   const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0
     ? coverDatesConfirmed(application.facilities)
     : true;
+  const { ukefDecisionAccepted } = application;
   const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
 
-  return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
+  return ukefDecisionAccepted && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 
 const getApplicationType = (isAutomaticCover) => {
