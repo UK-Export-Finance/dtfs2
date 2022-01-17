@@ -23,6 +23,8 @@ exports.allDeals = async (req, res) => {
 
   if (Object.keys(req.body).length) {
     req.session.dashboardFilters = req.body;
+  } else {
+    req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
   }
 
   const filtersArray = submittedFiltersArray(req.session.dashboardFilters);

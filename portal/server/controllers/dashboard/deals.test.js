@@ -55,6 +55,7 @@ jest.mock('../../helpers', () => ({
 describe('controllers/dashboard', () => {
   let mockReq;
   let mockRes;
+
   beforeEach(() => {
     mockReq = {
       body: {
@@ -95,6 +96,21 @@ describe('controllers/dashboard', () => {
         expectedFilters,
         'mock-token',
       );
+    });
+
+    describe('when there is no req.body', () => {
+      it('should reset req.session.dashboardFilters to default', async () => {
+        mockReq = {
+          ...mockReq,
+          body: {},
+        };
+
+        await allDeals(mockReq, mockRes);
+
+        const expected = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
+
+        expect(mockReq.session.dashboardFilters).toEqual(expected);
+      });
     });
 
     it('renders the correct template', async () => {
