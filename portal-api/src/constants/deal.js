@@ -41,39 +41,21 @@ const ACTION_NAME = {
   '016': 'AmendDeal',
 };
 
-const STATUS = {
+const DEAL_STATUS = {
   DRAFT: 'Draft',
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
-  INPUT_REQUIRED: 'Further Maker\'s input required',
   ABANDONED: 'Abandoned',
-  SUBMITTED: 'Submitted',
-  SUBMISSION_ACKNOWLEDGED: 'Acknowledged by UKEF',
-  APPROVED: 'Accepted by UKEF (without conditions)',
-  APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
-  REFUSED: 'Rejected by UKEF',
-  CONFIRMED_BY_BANK: 'Confirmed by bank',
-  CONFIRMATION_ACKNOWLEDGED: 'Acknowledged by UKEF',
+  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
+  CHANGES_REQUIRED: 'Further Maker\'s input required',
+  SUBMITTED_TO_UKEF: 'Submitted',
+  UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
+  UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
+  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
+  UKEF_REFUSED: 'Rejected by UKEF',
   IN_PROGRESS_BY_UKEF: 'In progress by UKEF',
-};
-
-const GEF_STATUS = {
-  // these statuses can be either on the top level
-  // or in a child object, not specific to the entire deal.
-  DRAFT: 'Draft',
+  CONFIRMED_BY_BANK: 'Confirmed by bank',
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
-
-  // statuses specific to the entire deal
-  BANK_CHECK: "Ready for Checker's approval",
-  CHANGES_REQUIRED: "Further Maker's input required",
-  ABANDONED: 'Abandoned',
-  SUBMITTED_TO_UKEF: 'Submitted',
-  UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
-  UKEF_IN_PROGRESS: 'In progress by UKEF',
-  UKEF_APPROVED_WITH_CONDITIONS: 'Accepted (with conditions)',
-  UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted (without conditions)',
-  UKEF_REFUSED: 'Rejected by UKEF',
   EXPIRED: 'Expired',
   WITHDRAWN: 'Withdrawn',
 };
@@ -85,7 +67,6 @@ module.exports = {
   APPLICATION_GROUP,
   SUBMISSION_TYPE,
   ACTION_NAME,
-  STATUS,
-  GEF_STATUS,
+  DEAL_STATUS,
   SUBMISSION_TYPE_LOWERCASE,
 };

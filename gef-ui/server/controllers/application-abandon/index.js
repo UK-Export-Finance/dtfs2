@@ -5,7 +5,7 @@ const api = require('../../services/api');
 
 const applicationIsAbandonable = (application) => [CONSTANTS.DEAL_STATUS.DRAFT,
   CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-  CONSTANTS.DEAL_STATUS.BANK_CHECK].includes(application.status);
+  CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status);
 
 const dashboardUrl = '/dashboard';
 

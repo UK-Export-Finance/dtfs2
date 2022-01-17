@@ -1253,7 +1253,7 @@ describe('summaryItemsConditions()', () => {
       expect(text).toEqual('');
     });
 
-    it('Should be able to change coverStartDate', () => {
+    it('Should not be able to change coverStartDate', () => {
       const item = {
         label: 'Cover start date',
         id: 'coverStartDate',
@@ -1270,6 +1270,26 @@ describe('summaryItemsConditions()', () => {
 
       const { text } = summaryItemsConditions(summaryItemsObj)[0];
       expect(text).toEqual('');
+    });
+
+    it('Should be able to change coverStartDate', () => {
+      const item = {
+        label: 'Cover start date',
+        id: 'coverStartDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      console.log({ text });
+      expect(text).toEqual('Change');
     });
 
     it('Should be able to change coverEndDate', () => {
@@ -1388,12 +1408,12 @@ describe('futureDateInRange', () => {
 
   describe('displayChangeSupportingInfo()', () => {
     it('Should return false if preview mode', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 0), true);
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
       expect(result).toEqual(false);
     });
 
     it('Should return false if preview mode and submission count over 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.BANK_CHECK, 1), true);
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
       expect(result).toEqual(false);
     });
 

@@ -4,7 +4,7 @@ const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
 
 const createFacility = async (newFacility) => {
   const facility = newFacility;
-  const collection = await db.getCollection('gef-facilities');
+  const collection = await db.getCollection('facilities');
 
   facility.dealId = new ObjectId(facility.dealId);
 

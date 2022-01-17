@@ -22,30 +22,30 @@ const insertMocks = async () => {
   });
 
   console.log('inserting Portal users');
-  for (user of PORTAL_MOCKS.USERS) {
+  for (const user of PORTAL_MOCKS.USERS) {
     await api.createUser(user);
   }
 
   console.log('inserting banks');
-  for (bank of MOCK_BANKS) {
+  for (const bank of MOCK_BANKS) {
     await api.createBank(bank, token);
   }
 
 
   console.log('inserting BSS mandatory-criteria');
-  for (mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
+  for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
   console.log('inserting BSS eligibility-criteria');
-  for (eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
+  for (const eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, token);
   }
 
   console.log('inserting BSS deals');
   const insertedDeals = [];
 
-  for (deal of MOCKS.DEALS) {
+  for (const deal of MOCKS.DEALS) {
     const { _id } = await api.createDeal(deal, tfmMakerToken);
     const { deal: createdDeal } = await api.getDeal(_id, tfmMakerToken);
 
@@ -54,7 +54,7 @@ const insertMocks = async () => {
 
   console.log('inserting BSS facilities');
 
-  for (facility of MOCKS.FACILITIES) {
+  for (const facility of MOCKS.FACILITIES) {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
 
     const facilityToInsert = {

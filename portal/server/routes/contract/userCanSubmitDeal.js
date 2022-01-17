@@ -1,7 +1,7 @@
 const { STATUS } = require('../../constants');
 
 const userCanSubmitDeal = (deal, user) => {
-  if ([STATUS.SUBMITTED, STATUS.REFUSED].includes(deal.status)) {
+  if ([STATUS.SUBMITTED_TO_UKEF, STATUS.UKEF_REFUSED].includes(deal.status)) {
     return false;
   }
 

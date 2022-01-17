@@ -253,7 +253,7 @@ context('Return to maker', () => {
     });
 
     it('should show correct status', () => {
-      statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.BANK_CHECK);
+      statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
 
     it('should not be able to edit any facilities', () => {
@@ -283,7 +283,6 @@ context('Return to maker', () => {
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
@@ -295,7 +294,6 @@ context('Return to maker', () => {
       applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 3).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
@@ -341,7 +339,7 @@ context('Return to maker', () => {
       applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 3).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 3).contains('Change');
       applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
@@ -433,7 +431,7 @@ context('Submit to UKEF', () => {
     });
 
     it('should show correct status', () => {
-      statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.BANK_CHECK);
+      statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
