@@ -37,7 +37,7 @@ const commonDealItems = {
   facilitiesUpdated: 1638542220497,
   comments: [],
   ukefDecision: [],
-  ukefDecisionAccepted: true,
+  ukefDecisionAccepted: false,
   exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
   exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
   eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
