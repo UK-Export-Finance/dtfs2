@@ -442,7 +442,7 @@ context('Submit to UKEF', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.');
+      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your inclusion notice.');
     });
   });
 });

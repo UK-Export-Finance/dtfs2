@@ -431,7 +431,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We’ll send you a confirmation email shortly, once we’ve acknowledged your issued facilities.');
+      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your issued facilities.');
     });
   });
 });
