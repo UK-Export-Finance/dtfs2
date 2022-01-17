@@ -39,6 +39,7 @@ function buildHeader(app) {
   const main = {
     ukefDealId: app.ukefDealId,
     submissionDate: app.submissionDate,
+    manualInclusionNoticeSubmissionDate: app?.manualInclusionNoticeSubmissionDate,
     companyName: app.exporter?.companyName,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
