@@ -49,10 +49,10 @@
     </div>
 
     {% if selectedFilters.length %}
-      {% for filter in selectedFilters %}
-        <ul class="govuk-!-padding-left-0" data-cy="main-container-selected-filters">
+      <ul class="govuk-!-padding-left-0" data-cy="main-container-selected-filters">
+        {% for filter in selectedFilters %}
           {% for filterItem in filter.items %}
-            <li>
+            <li class="main-container-selected-filter-list-item">
               <a
                 class="govuk-link govuk-button--secondary moj-filter__tag"
                 href="{{ filterItem.href }}"
@@ -63,8 +63,8 @@
               </a>
             </li>
           {% endfor %}
-        <ul>
       {% endfor %}
+      </ul>
     {% endif %}
 
   </div>
