@@ -40,18 +40,18 @@ const exporterStatus = (answers) => {
   const requiredCount = unansweredFields(answers).length;
 
   if (requiredCount === TOTAL_REQUIRED) {
-    return CONSTANTS.DEAL.GEF_STATUS.NOT_STARTED;
+    return CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
   }
 
   if (requiredCount > 0) {
-    return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
+    return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
   }
 
   if (requiredCount === 0) {
-    return CONSTANTS.DEAL.GEF_STATUS.COMPLETED;
+    return CONSTANTS.DEAL.DEAL_STATUS.COMPLETED;
   }
 
-  return CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS;
+  return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
 };
 
 const exporterCheckEnums = (doc) => {

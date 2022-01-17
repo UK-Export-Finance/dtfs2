@@ -54,9 +54,6 @@ Cypress.Commands.add('updateBond', require('./portal-api/updateBond'));
 Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
-// commands used to interact with the test hooks - ie. endpoints that only exist during pipeline execution.
-Cypress.Commands.add('sendTypeB', require('./test-hooks-api/sendTypeB'));
-
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));

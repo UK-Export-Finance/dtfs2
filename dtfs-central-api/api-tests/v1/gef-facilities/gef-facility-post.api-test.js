@@ -22,7 +22,7 @@ describe('/v1/portal/gef/facilities', () => {
 
   beforeAll(async () => {
     await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['gef-facilities']);
+    await wipeDB.wipe(['facilities']);
   });
 
   beforeEach(async () => {

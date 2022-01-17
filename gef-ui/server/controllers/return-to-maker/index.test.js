@@ -32,7 +32,7 @@ describe('controllers/return-to-maker', () => {
 
     getApplication.mockResolvedValue({
       _id: '1234',
-      status: DEAL_STATUS.BANK_CHECK,
+      status: DEAL_STATUS.READY_FOR_APPROVAL,
       exporter: {},
       bankInternalRefName: 'My test',
     });

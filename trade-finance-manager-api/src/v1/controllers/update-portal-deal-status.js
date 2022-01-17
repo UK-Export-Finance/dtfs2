@@ -13,7 +13,7 @@ const updatePortalDealStatus = async (deal) => {
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
     || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMISSION_ACKNOWLEDGED;
+      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_ACKNOWLEDGED;
 
       await api.updatePortalBssDealStatus(dealId, newStatus);
     }
@@ -33,7 +33,7 @@ const updatePortalDealStatus = async (deal) => {
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.UKEF_IN_PROGRESS;
+      newStatus = CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.IN_PROGRESS_BY_UKEF;
       await api.updatePortalGefDealStatus(dealId, newStatus);
     }
   }

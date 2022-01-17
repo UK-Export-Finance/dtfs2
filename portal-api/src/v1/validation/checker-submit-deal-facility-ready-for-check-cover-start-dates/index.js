@@ -11,7 +11,7 @@ const facilityReadyForCheckRequestedCoverStartDateRule = (facility, errorList) =
   const newErrorList = errorList;
 
   if (requestedCoverStartDate) {
-    if (status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL) {
+    if (status === CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL) {
       const requestedCoverStartDateTimestamp = formattedTimestamp(facility.requestedCoverStartDate);
       const today = moment();
 

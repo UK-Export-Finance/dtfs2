@@ -305,36 +305,3 @@ services:
         limits:
           cpus: "0.01"
           memory: 150M
-
-  test-hook-api:
-    build: ./test-hook-api
-    image: dtfs/test-hook-api
-    restart: always
-    depends_on:
-      - portal-api
-    ports:
-      - "5069:5069"
-    volumes:
-      - ./test-hook-api/src:/app/src:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 300M
-    environment:
-      - PORT=5069
-      - CORS_ORIGIN=http://localhost:5000
-      - AZURE_WORKFLOW_STORAGE_ACCOUNT
-      - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
-      - AZURE_WORKFLOW_FILESHARE_NAME
-      - AZURE_WORKFLOW_EXPORT_FOLDER
-      - AZURE_WORKFLOW_IMPORT_FOLDER
-      - AZURE_PORTAL_STORAGE_ACCOUNT
-      - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - AZURE_PORTAL_FILESHARE_NAME
-      - AZURE_PORTAL_EXPORT_FOLDER
-      - DTFS_PORTAL_SCHEDULER
-      - GOV_NOTIFY_API_KEY
-      - GOV_NOTIFY_EMAIL_RECIPIENT
-
-    entrypoint: npx nodemon src/index.js -L

@@ -1,8 +1,9 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
+const facilitiesCollection = 'facilities';
 const findAllGefFacilitiesByDealId = async (dealId) => {
-  const collection = await db.getCollection('gef-facilities');
+  const collection = await db.getCollection(facilitiesCollection);
 
   const facilities = await collection.find({ dealId: ObjectId(dealId) }).toArray();
 
@@ -17,8 +18,9 @@ exports.findAllGet = async (req, res) => {
 };
 
 exports.findAllFacilities = async (req, res) => {
-  const collection = await db.getCollection('gef-facilities');
-  const facilities = await collection.find().toArray();
+  const collection = await db.getCollection(facilitiesCollection);
+  // GEF facilities only
+  const facilities = await collection.find({ $or: [{ type: 'Cash' }, { type: 'Contingent' }] }).toArray();
 
   res.status(200).send(facilities);
 };

@@ -112,13 +112,13 @@ describe('updateSupportingInformation()', () => {
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.BANK_CHECK });
+    const response = await api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL });
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.BANK_CHECK })).rejects.toThrowError();
+    await expect(api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL })).rejects.toThrowError();
   });
 });
 

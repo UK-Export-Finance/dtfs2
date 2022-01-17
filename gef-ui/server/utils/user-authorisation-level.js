@@ -9,11 +9,11 @@ const statesWhereMakerHasEditAccess = [
   DEAL_STATUS.IN_PROGRESS,
   DEAL_STATUS.CHANGES_REQUIRED,
 ];
-const statesWhereMakerHasReadAccess = [DEAL_STATUS.BANK_CHECK];
-const statesWhereMakerHasCommentAccess = [DEAL_STATUS.BANK_CHECK];
+const statesWhereMakerHasReadAccess = [DEAL_STATUS.READY_FOR_APPROVAL];
+const statesWhereMakerHasCommentAccess = [DEAL_STATUS.READY_FOR_APPROVAL];
 const statesWhereCheckerHasEditAccess = [];
-const statesWhereCheckerHasReadAccess = [DEAL_STATUS.BANK_CHECK];
-const statesWhereCheckerHasCommentAccess = [DEAL_STATUS.BANK_CHECK];
+const statesWhereCheckerHasReadAccess = [DEAL_STATUS.READY_FOR_APPROVAL];
+const statesWhereCheckerHasCommentAccess = [DEAL_STATUS.READY_FOR_APPROVAL];
 
 const authorisationMap = {
   MAKER: {},

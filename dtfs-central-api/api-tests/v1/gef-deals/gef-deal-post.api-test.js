@@ -11,7 +11,7 @@ const newDeal = {
 describe('/v1/portal/gef/deals', () => {
   beforeAll(async () => {
     await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['gef-facilities']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('POST /v1/portal/gef/deals', () => {

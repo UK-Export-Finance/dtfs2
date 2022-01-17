@@ -80,7 +80,7 @@ const commonApplicationDetails = {
   additionalRefName: 'Mock additional ref name',
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: DEAL_STATUS.UKEF_IN_PROGRESS,
+  previousStatus: DEAL_STATUS.IN_PROGRESS_BY_UKEF,
   id: '61a7710b2ae62b0013dae687',
   exporter: {
     companiesHouseRegistrationNumber: '08547313',
@@ -234,5 +234,5 @@ export const MOCK_APPLICATION_MIA = {
 
 export const UKEF_DECISION = {
   text: '1\r\n2\r\n3',
-  decision: 'Accepted (with conditions)',
+  decision: 'Accepted by UKEF (with conditions)',
 };
