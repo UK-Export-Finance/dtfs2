@@ -37,8 +37,8 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA if submission count is 0', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollectionName]);
+    await wipeDB.wipe([dealsCollectionName]);
     /*
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
@@ -85,8 +85,8 @@ describe('submissionPortalActivity()', () => {
   });
 
   it('should return a populated array with facility changed if submission count above 1 and facility changed to issued', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([facilitiesCollectionName]);
+    await wipeDB.wipe([dealsCollectionName]);
 
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole('maker').one();

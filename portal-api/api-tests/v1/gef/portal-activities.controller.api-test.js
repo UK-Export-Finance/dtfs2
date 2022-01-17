@@ -21,7 +21,7 @@ const CONSTANTS = require('../../../src/constants');
 
 const wipeDB = require('../../wipeDB');
 
-const collectionName = 'gef-facilities';
+const collectionName = 'facilities';
 const applicationCollectionName = 'deals';
 
 describe('submissionPortalActivity()', () => {
