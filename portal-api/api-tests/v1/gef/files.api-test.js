@@ -50,7 +50,7 @@ describe(baseUrl, () => {
         exporter: {},
         createdAt: '2021-01-01T00:00',
         mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.GEF_STATUS.IN_PROGRESS,
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
         updatedAt: null,
         submissionCount: 0,
       }).to(applicationBaseUrl);

@@ -171,8 +171,8 @@ describe('controllers/application-details', () => {
           }));
       });
 
-      it('renders `application-preview` when status is BANK_CHECK', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
+      it('renders `application-preview` when status is READY_FOR_APPROVAL', async () => {
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -220,8 +220,8 @@ describe('controllers/application-details', () => {
           }));
       });
 
-      it('renders `application-details` when status is UKEF_IN_PROGRESS', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+      it('renders `application-details` when status is IN_PROGRESS_BY_UKEF', async () => {
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -234,7 +234,7 @@ describe('controllers/application-details', () => {
 
       it('renders `application-details` with hasChangedFacilities as true when changed facilities present', async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseChangedIssued);
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -247,7 +247,7 @@ describe('controllers/application-details', () => {
 
       it('renders `application-details` with hasChangedFacilities as false when no changed facilities present', async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -271,9 +271,9 @@ describe('controllers/application-details', () => {
           }));
       });
 
-      it('renders `application-details` with displayChangeSupportingInfo as false when preview mode (UKEF_IN_PROGRESS)', async () => {
+      it('renders `application-details` with displayChangeSupportingInfo as false when preview mode (IN_PROGRESS_BY_UKEF)', async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_IN_PROGRESS;
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);

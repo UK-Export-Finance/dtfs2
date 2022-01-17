@@ -18,11 +18,11 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
 
   // otherwise, status is dynamically checked
   if (!hasBondErrors && !hasBondIssueFacilityErrors) {
-    return CONSTANTS.FACILITIES.STATUS.COMPLETED;
+    return CONSTANTS.FACILITIES.DEAL_STATUS.COMPLETED;
   }
 
   // we have no status and the bond has validation errors, therefore Incomplete.
-  return CONSTANTS.FACILITIES.STATUS.INCOMPLETE;
+  return CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE;
 };
 
 const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, bond) => {

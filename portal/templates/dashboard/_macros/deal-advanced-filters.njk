@@ -30,14 +30,14 @@
           <option value="ALL" {% if filter.filterByStatus==='ALL' %}selected{%endif%}>Any</option>
           <option value="DRAFT" {% if filter.filterByStatus==='DRAFT' %}selected{%endif%}>Draft</option>
           <option value="READY_FOR_APPROVAL" {% if filter.filterByStatus==='READY_FOR_APPROVAL' %}selected{%endif%}>Ready for Checker's approval</option>
-          <option value="INPUT_REQUIRED" {% if filter.filterByStatus==='INPUT_REQUIRED' %}selected{%endif%}>Further Maker's input required</option>
+          <option value="CHANGES_REQUIRED" {% if filter.filterByStatus==='CHANGES_REQUIRED' %}selected{%endif%}>Further Maker's input required</option>
           <option value="ABANDONED" {% if filter.filterByStatus==='ABANDONED' %}selected{%endif%}>Abandoned</option>
-          <option value="SUBMITTED" {% if filter.filterByStatus==='SUBMITTED' %}selected{%endif%}>Submitted</option>
-          <option value="SUBMISSION_ACKNOWLEDGED" {% if filter.filterByStatus==='SUBMISSION_ACKNOWLEDGED' %}selected{%endif%}>Acknowledged by UKEF</option>
+          <option value="SUBMITTED_TO_UKEF" {% if filter.filterByStatus==='SUBMITTED_TO_UKEF' %}selected{%endif%}>Submitted</option>
+          <option value="UKEF_ACKNOWLEDGED" {% if filter.filterByStatus==='UKEF_ACKNOWLEDGED' %}selected{%endif%}>Acknowledged by UKEF</option>
           <option value="IN_PROGRESS_BY_UKEF" {% if filter.filterByStatus==='IN_PROGRESS_BY_UKEF' %}selected{%endif%}>In Progress by UKEF</option>
-          <option value="APPROVED" {% if filter.filterByStatus==='APPROVED' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
-          <option value="APPROVED_WITH_CONDITIONS" {% if filter.filterByStatus==='APPROVED_WITH_CONDITIONS' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
-          <option value="REFUSED" {% if filter.filterByStatus==='REFUSED' %}selected{%endif%}>Rejected by UKEF</option></select>
+          <option value="UKEF_APPROVED_WITHOUT_CONDITIONS" {% if filter.filterByStatus==='UKEF_APPROVED_WITHOUT_CONDITIONS' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
+          <option value="UKEF_APPROVED_WITH_CONDITIONS" {% if filter.filterByStatus==='UKEF_APPROVED_WITH_CONDITIONS' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
+          <option value="UKEF_REFUSED" {% if filter.filterByStatus==='UKEF_REFUSED' %}selected{%endif%}>Rejected by UKEF</option></select>
         </select>
       </div>
     </div>

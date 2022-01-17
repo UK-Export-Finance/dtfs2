@@ -32,13 +32,13 @@ const FACILITIES_STAGE = {
   },
 };
 
-const STATUS = {
+const DEAL_STATUS = {
   COMPLETED: 'Completed',
   INCOMPLETE: 'Incomplete',
   NOT_STARTED: 'Not started',
   ACKNOWLEDGED: 'Acknowledged',
   READY_FOR_APPROVAL: 'Ready for check',
-  SUBMITTED: 'Submitted',
+  SUBMITTED_TO_UKEF: 'Submitted',
 };
 
 const TYPE = {
@@ -59,5 +59,5 @@ module.exports = {
   DAY_COUNT_BASIS,
   FACILITIES_STAGE,
   TYPE,
-  STATUS,
+  DEAL_STATUS,
 };

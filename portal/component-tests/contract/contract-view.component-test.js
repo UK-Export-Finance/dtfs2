@@ -14,13 +14,13 @@ const aDealInStatus = (status) => ({
 const oneDealInEachStatus = () => [
   aDealInStatus(STATUS.DRAFT),
   aDealInStatus(STATUS.READY_FOR_APPROVAL),
-  aDealInStatus(STATUS.INPUT_REQUIRED),
+  aDealInStatus(STATUS.CHANGES_REQUIRED),
   aDealInStatus(STATUS.ABANDONED),
-  aDealInStatus(STATUS.SUBMITTED),
-  aDealInStatus(STATUS.SUBMISSION_ACKNOWLEDGED),
-  aDealInStatus(STATUS.APPROVED),
+  aDealInStatus(STATUS.SUBMITTED_TO_UKEF),
+  aDealInStatus(STATUS.UKEF_ACKNOWLEDGED),
+  aDealInStatus(STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS),
   aDealInStatus(STATUS.APPROVEDWithConditions),
-  aDealInStatus(STATUS.REFUSED),
+  aDealInStatus(STATUS.UKEF_REFUSED),
 ];
 
 const roles = ['maker', 'checker'];

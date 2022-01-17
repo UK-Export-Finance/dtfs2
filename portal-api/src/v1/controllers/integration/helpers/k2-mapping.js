@@ -23,18 +23,18 @@ const DEAL = {
     corporateStructure: 'Corporate_structure',
   },
 
-  STATUS: {
-    [CONSTANTS.DEAL.STATUS.DRAFT]: 'draft',
-    [CONSTANTS.DEAL.STATUS.SUBMITTED]: 'submitted',
-    [CONSTANTS.DEAL.STATUS.SUBMISSION_ACKNOWLEDGED]: ['submission_acknowledged', 'confirmation_acknowledged'],
-    [CONSTANTS.DEAL.STATUS.APPROVED]: 'approved',
-    [CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS]: 'approved_conditions',
-    [CONSTANTS.DEAL.STATUS.REFUSED]: 'refused',
-    [CONSTANTS.DEAL.STATUS.CONFIRMED_BY_BANK]: 'confirmed_by_bank',
-    [CONSTANTS.DEAL.STATUS.IN_PROGRESS_BY_UKEF]: 'in_progress_by_ukef',
-    [CONSTANTS.DEAL.STATUS.ABANDONED]: 'abandoned_deal',
-    [CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL]: 'ready_for_approval',
-    [CONSTANTS.DEAL.STATUS.INPUT_REQUIRED]: 'further_input_required',
+  DEAL_STATUS: {
+    [CONSTANTS.DEAL.DEAL_STATUS.DRAFT]: 'draft',
+    [CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF]: 'submitted',
+    [CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED]: ['submission_acknowledged', 'confirmation_acknowledged'],
+    [CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS]: 'approved',
+    [CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS]: 'approved_conditions',
+    [CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED]: 'refused',
+    [CONSTANTS.DEAL.DEAL_STATUS.CONFIRMED_BY_BANK]: 'confirmed_by_bank',
+    [CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS_BY_UKEF]: 'in_progress_by_ukef',
+    [CONSTANTS.DEAL.DEAL_STATUS.ABANDONED]: 'abandoned_deal',
+    [CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL]: 'ready_for_approval',
+    [CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED]: 'further_input_required',
   },
 
 };

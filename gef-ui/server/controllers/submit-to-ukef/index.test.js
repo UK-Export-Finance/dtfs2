@@ -52,7 +52,7 @@ const MockApplicationResponse = () => {
   }];
   res.bank = { id: 'BANKID' };
   res.submissionType = 'Automatic Inclusion Notice';
-  res.status = CONSTANTS.DEAL_STATUS.BANK_CHECK;
+  res.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
   res.eligibility = {
     criteria: [],
     updatedAt: 1638535562287,
