@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -46,7 +47,7 @@ describe('/v1/portal/deals', () => {
 
   describe('GET /v1/portal/deals', () => {
     it('should return count and mapped deals', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
 
       const { status, body } = await api.get('/v1/portal/deals');
 
@@ -80,16 +81,6 @@ describe('/v1/portal/deals', () => {
       expect(createdDeal.deal.eligibility.status).toEqual(newDeal.eligibility.status);
       expect(createdDeal.deal.eligibility.criteria).toEqual(newDeal.eligibility.criteria);
       expect(createdDeal.deal.facilities).toEqual([]);
-    });
-
-    it('creates incremental integer deal IDs', async () => {
-      const deal1 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const deal2 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const deal3 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-
-      expect(parseInt(deal1.body._id, 10).toString()).toEqual(deal1.body._id);
-      expect(deal2.body._id - deal1.body._id).toEqual(1);
-      expect(deal3.body._id - deal2.body._id).toEqual(1);
     });
 
     describe('when user is invalid', () => {
@@ -169,7 +160,7 @@ describe('/v1/portal/deals', () => {
 
   describe('GET /v1/portal/deals/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/portal/deals/12345678910');
+      const { status } = await api.get(`/v1/portal/deals/${MOCK_DEAL.DEAL_ID}`);
 
       expect(status).toEqual(404);
     });
@@ -387,7 +378,7 @@ describe('/v1/portal/deals', () => {
 
   describe('DELETE /v1/portal/deals/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove({}).to('/v1/portal/deals/12345678910');
+      const { status } = await api.remove({}).to(`/v1/portal/deals/${MOCK_DEAL.DEAL_ID}`);
 
       expect(status).toEqual(404);
     });

@@ -2,6 +2,7 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
+const { MOCK_DEAL } = require('../../mocks/mock-data');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -10,7 +11,7 @@ const newDeal = {
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-  dealId: 123,
+  dealId: MOCK_DEAL.DEAL_ID,
 };
 
 describe('/v1/tfm/deals/:id/facilities', () => {

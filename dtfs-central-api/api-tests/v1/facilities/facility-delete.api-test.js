@@ -1,6 +1,7 @@
 const axios = require('axios');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
+const { MOCK_DEAL, MOCK_FACILITY } = require('../mocks/mock-data');
 
 const { DTFS_CENTRAL_API } = process.env;
 
@@ -15,7 +16,7 @@ const mockUser = {
 };
 
 const newBondFacility = {
-  dealId: 123,
+  dealId: MOCK_DEAL.DEAL_ID,
   type: 'Bond',
 };
 
@@ -64,7 +65,7 @@ describe('/v1/portal/facilities', () => {
       try {
         await axios({
           method: 'delete',
-          url: `${DTFS_CENTRAL_API}/v1/portal/facilities/12345678910`,
+          url: `${DTFS_CENTRAL_API}/v1/portal/facilities/${MOCK_FACILITY.FACILITY_ID}`,
         });
       } catch (error) {
         status = error.response.status;

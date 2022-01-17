@@ -54,7 +54,7 @@ describe('/v1/tfm/facilities', () => {
 
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/123456789012');
+      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
       expect(status).toEqual(404);
     });
 
@@ -62,10 +62,10 @@ describe('/v1/tfm/facilities', () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId: '1',
+        dealId: '61e54e2e532cf2027303e001',
       }).to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/111111');
+      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
       expect(status).toEqual(404);
     });

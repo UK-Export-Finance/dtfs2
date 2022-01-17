@@ -27,8 +27,8 @@ const {
   DEAL: { DEAL_STATUS, DEAL_TYPE },
 } = require('../../../constants');
 
-const dealsCollectionName = 'deals';
-const facilitiesCollectionName = 'facilities';
+const dealsCollection = 'deals';
+const facilitiesCollection = 'facilities';
 
 exports.create = async (req, res) => {
   const newDeal = {

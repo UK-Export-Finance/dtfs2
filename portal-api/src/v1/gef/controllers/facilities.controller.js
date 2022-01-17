@@ -21,8 +21,8 @@ exports.create = async (req, res) => {
     if (enumValidationErr) {
       res.status(422).send(enumValidationErr);
     } else {
-      const collection = await db.getCollection(facilitiesCollectionName);
-      const createdFacility = await collection.insertOne(new Facility(req.body));
+      const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
+      const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
       const facility = await facilitiesQuery.findOne({
         _id: ObjectID(createdFacility.insertedId),
@@ -96,7 +96,7 @@ exports.getById = async (req, res) => {
 const update = async (id, updateBody) => {
   try {
     const collection = await db.getCollection(facilitiesCollectionName);
-    const dealsCollection = await db.getCollection(dealsCollectionName);
+    const dbQuery = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectID(String(id));
     const existingFacility = await collection.findOne({ _id: facilityId });

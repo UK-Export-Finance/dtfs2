@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -15,7 +16,7 @@ const mockUser = {
 
 const mockFacility = {
   type: 'Bond',
-  dealId: '123123456',
+  dealId: MOCK_DEAL.DEAL_ID,
 };
 
 const newDeal = aDeal({
@@ -48,7 +49,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('GET /v1/portal/facilities/', () => {
-    it('returns multiple facilties', async () => {
+    it('returns multiple facilites', async () => {
       await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
@@ -69,7 +70,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/multiple-facilities', () => {
-    it('creates multiple facilties', async () => {
+    it('creates multiple facilites', async () => {
       await wipeDB.wipe(['facilities']);
 
       const facilities = [

@@ -36,7 +36,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
   });
 
   it('404s for an unknown id', async () => {
-    const invalidDealId = '123456789f0ffe00219319c1';
+    const invalidDealId = '61e54e2e532cf2027303e001';
 
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
