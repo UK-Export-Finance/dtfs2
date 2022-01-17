@@ -60,7 +60,7 @@ export const createEstore = async (req: Request, res: Response) => {
           dealIdentifier,
           exporterName,
           buyerName,
-          facilityIdentifier: facilityIdentifier.toString(),
+          facilityIdentifier: facilityIdentifier?.toString(),
           destinationMarket,
           riskMarket,
         }).then(
