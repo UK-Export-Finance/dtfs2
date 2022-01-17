@@ -60,7 +60,7 @@ const cloneSupportingInformation = async (existingDealId, newDealId) => {
 };
 
 const cloneFacilities = async (currentDealId, newDealId) => {
-  const facilitiesCollection = 'gef-facilities';
+  const facilitiesCollection = 'facilities';
   const collection = await db.getCollection(facilitiesCollection);
 
   // get all existing facilities
