@@ -145,6 +145,8 @@ const previewItemConditions = (previewParams) => {
     app,
   } = previewParams;
   let summaryItems = [];
+  const ukefDecisionAccepted = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || Boolean(app.ukefDecisionAccepted);
+
   if (summaryIssuedChangedToIssued(previewParams)) {
     /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
@@ -160,9 +162,10 @@ const previewItemConditions = (previewParams) => {
      * add link displayed taking to unissued-facility-change change page
      */
     summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
-  } else if (Boolean(app.ukefDecisionAccepted) && item.id === 'coverStartDate' && app.status !== CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && app.status !== CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL) {
-    summaryItems = previewSummaryItems(issuedHref, Boolean(app.ukefDecisionAccepted), item);
+  } else if (ukefDecisionAccepted && item.id === 'coverStartDate' && app.status !== CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && app.status !== CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL) {
+    summaryItems = previewSummaryItems(issuedHref, ukefDecisionAccepted, item);
   }
+
   return summaryItems;
 };
 
