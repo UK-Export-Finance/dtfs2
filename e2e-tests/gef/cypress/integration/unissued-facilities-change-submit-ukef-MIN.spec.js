@@ -231,16 +231,16 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.deleteFacilityLink().should('not.exist');
 
       // the already issued so cannot change anything
-      applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 0).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 1).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 2).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(2, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 9).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 4).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 5).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 6).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 7).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 8).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 9).should('have.value', '');
 
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');

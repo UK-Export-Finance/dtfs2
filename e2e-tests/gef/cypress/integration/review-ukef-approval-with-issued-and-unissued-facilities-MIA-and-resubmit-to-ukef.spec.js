@@ -234,9 +234,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission.confirmationPanelTitleFacilities().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
-      // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your inclusion notice.');
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -338,16 +336,16 @@ context('Return to maker', () => {
       applicationDetails.deleteFacilityLink().should('not.exist');
 
       // facility which confirmed cover
-      applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 0).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 1).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 2).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(2, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 9).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 4).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 5).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 6).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 7).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 8).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 9).should('have.value', '');
 
       // 1st facility table - make sure change exists on issue action
       applicationDetails.facilitySummaryListRowAction(0, 0).should('have.value', '');
@@ -408,7 +406,7 @@ context('Return to maker', () => {
     it('should be able to submit to checker after making changes', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
