@@ -17,7 +17,7 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
 
     if (clause.field === 'maker._id') {
       return {
-        [clause.field]: clause.value[0];
+        [clause.field]: clause.value[0],
       };
     }
 
