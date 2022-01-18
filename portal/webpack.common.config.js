@@ -11,6 +11,7 @@ module.exports = {
     jsEnabled: './scripts/js-enabled.js',
     fileUpload: './scripts/file-upload.js',
     correspondenceAddress: './scripts/correspondence-address.js',
+    mojFilters: './scripts/moj-filters.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
