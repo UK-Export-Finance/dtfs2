@@ -160,7 +160,7 @@ const previewItemConditions = (previewParams) => {
      * add link displayed taking to unissued-facility-change change page
      */
     summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
-  } else if (Boolean(app.ukefDecisionAccepted) && item.id === 'coverStartDate' && app.status !== CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
+  } else if (Boolean(app.ukefDecisionAccepted) && item.id === 'coverStartDate' && app.status !== CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && app.status !== CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL) {
     summaryItems = previewSummaryItems(issuedHref, Boolean(app.ukefDecisionAccepted), item);
   }
   return summaryItems;
