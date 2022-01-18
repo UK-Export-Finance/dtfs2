@@ -78,6 +78,7 @@ describe('controllers/dashboard/filters - query', () => {
         {
           field: 'status',
           value: STATUS.READY_FOR_APPROVAL,
+          operator: 'and',
         },
       ];
 

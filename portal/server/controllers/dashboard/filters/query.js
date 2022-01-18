@@ -41,6 +41,7 @@ const dashboardFiltersQuery = (
     filtersQuery.push({
       field: 'status',
       value: CONSTANTS.STATUS.READY_FOR_APPROVAL,
+      operator: 'and',
     });
   }
 
