@@ -164,11 +164,24 @@ const coverDatesConfirmed = (facilities) => {
 */
 const hasChangedToIssued = (application) => {
   const canResubmitIssuedFacilities = facilitiesChangedToIssuedAsArray(application);
-
   return canResubmitIssuedFacilities.length > 0;
 };
 
-const facilitiesChangedPresent = (app) => facilitiesChangedToIssuedAsArray(app).length > 0;
+const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArray(application).length > 0;
+
+/**
+ * Helper function ascertain weather the facility confirmation message should appear or not.
+ * It takes into account recent issuance of a facility, submission type to be MIN and submission count
+ * to be greater than two.
+ * @param {Object} application Application object with facilities
+ * @returns {Boolean} Boolean value
+ */
+const issuedFacilityConfirmation = (application) => {
+  const hasUnissuedToIssued = hasChangedToIssued(application);
+  const { submissionType, submissionCount } = application;
+
+  return hasUnissuedToIssued && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN) && (submissionCount > 2);
+};
 
 module.exports = {
   areUnissuedFacilitiesPresent,
@@ -182,4 +195,5 @@ module.exports = {
   facilitiesChangedPresent,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
+  issuedFacilityConfirmation,
 };
