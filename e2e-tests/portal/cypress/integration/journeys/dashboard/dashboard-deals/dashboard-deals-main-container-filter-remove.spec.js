@@ -57,4 +57,35 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     // should render all deals
     dashboard.rows().should('have.length', ALL_DEALS.length);
   });
+
+  it('retains other filters when one is removed', () => {
+    cy.login(BANK1_MAKER1);
+    dashboard.visit();
+    
+    // toggle to show filters (hidden by default)
+    dashboard.filters.showHideButton().click();
+
+    // apply filters
+    dashboard.filters.panel.form.status.draft.checkbox().click();
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboard.filters.panel.form.applyFiltersButton().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+
+    // remove one of the filters
+    dashboard.filters.mainContainer.selectedFilters.statusDraft().click();
+
+    // should have removed the filter
+    dashboard.filters.mainContainer.selectedFilters.statusDraft().should('not.exist');
+
+    // should NOT have removed the other filter
+    dashboard.filters.mainContainer.selectedFilters.noticeMIA().should('exist');
+
+    // toggle to show filters (hidden by default)
+    dashboard.filters.showHideButton().click();
+
+    // check checkboxes
+    dashboard.filters.panel.form.status.draft.checkbox().should('not.be.checked');
+    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+  });
 });
