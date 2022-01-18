@@ -103,6 +103,8 @@ function buildBody(app, previewMode, user) {
         rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
         createdAt: item.details.createdAt,
         facilityId: item.details._id,
+        // ukefFacilityId required for html facility summary table id
+        ukefFacilityId: item.details.ukefFacilityId,
       }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
