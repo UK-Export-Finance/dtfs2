@@ -89,6 +89,7 @@ describe('reducer - deals', () => {
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
           facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
+          totals: mapTotals(mockGefDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockGefDeal),
       };
