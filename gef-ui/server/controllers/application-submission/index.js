@@ -1,6 +1,6 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { hasChangedToIssued } = require('../../utils/facility-helpers');
+const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const Application = require('../../models/application');
 const CONSTANTS = require('../../constants');
 
@@ -11,13 +11,15 @@ const getApplicationSubmission = async (req, res) => {
   const { dealId } = params;
   const { user, userToken } = session;
   const application = await Application.findById(dealId, user, userToken);
+  const applicationWithFacilities = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
+  const issuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
 
   return res.render('application-details-comments.njk', {
     dealId,
     submissionType,
     maxCommentLength,
-    unissuedToIssued: hasChangedToIssued(application),
+    issuedFacility,
   });
 };
 
@@ -26,9 +28,12 @@ const postApplicationSubmission = async (req, res, next) => {
   const { user, userToken } = session;
   const { dealId } = params;
   const { comment } = body;
+  // Fetch the application with facilities to check if unissuedToIssued
+  const applicationWithFacilities = await Application.findById(dealId, user, userToken);
   const application = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
   const currentStatus = application.status;
+  const issuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
   try {
@@ -64,7 +69,7 @@ const postApplicationSubmission = async (req, res, next) => {
     dealId,
     submissionType,
     status: currentStatus,
-    unissuedToIssued: hasChangedToIssued(application),
+    issuedFacility,
   });
 };
 

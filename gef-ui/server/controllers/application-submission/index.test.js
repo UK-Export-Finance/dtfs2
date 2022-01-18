@@ -36,7 +36,7 @@ describe('controllers/application-submission', () => {
         dealId: expect.any(String),
         submissionType: expect.any(String),
         maxCommentLength: expect.any(Number),
-        unissuedToIssued: expect.any(Boolean),
+        issuedFacility: expect.any(Boolean),
       }));
     });
   });
@@ -52,7 +52,7 @@ describe('controllers/application-submission', () => {
         dealId: expect.any(String),
         status: expect.any(String),
         submissionType: expect.any(String),
-        unissuedToIssued: expect.any(Boolean),
+        issuedFacility: expect.any(Boolean),
       }));
     });
 
