@@ -1,5 +1,4 @@
 const createDbQuery = (operator, field, value) => {
-
   const query = {
     [`$${operator}`]: [],
   };
