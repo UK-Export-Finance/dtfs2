@@ -29,40 +29,40 @@ function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
 
 function downloadTransactions(transactions, timezone, res) {
   const columns = [{
-    prop: 'deal_bank',
+    value: 'deal_bank',
     label: 'Bank',
   }, {
-    prop: 'deal_bankInternalRefName',
+    value: 'deal_bankInternalRefName',
     label: 'Bank Supply contract ID',
   }, {
-    prop: 'deal_status',
+    value: 'deal_status',
     label: 'Deal status',
   }, {
-    prop: 'bankFacilityId',
+    value: 'bankFacilityId',
     label: 'Transaction ID',
   }, {
-    prop: 'transactionType',
+    value: 'transactionType',
     label: 'Transaction type',
   }, {
-    prop: 'deal_supplierName',
+    value: 'deal_supplierName',
     label: 'Supplier name',
   }, {
-    prop: 'value',
+    value: 'value',
     label: 'Facility value',
   }, {
-    prop: 'transactionStage',
+    value: 'transactionStage',
     label: 'Facility stage',
   }, {
-    prop: 'deal_created',
+    value: 'deal_created',
     label: 'Created date',
   }, {
-    prop: 'maker',
+    value: 'maker',
     label: 'Created by',
   }, {
-    prop: 'issuedDate',
+    value: 'issuedDate',
     label: 'Issued date',
   }, {
-    prop: 'submittedBy',
+    value: 'submittedBy',
     label: 'Issued by',
   }];
 
@@ -81,8 +81,8 @@ function downloadTransactions(transactions, timezone, res) {
 
     // Missing
     columns.forEach((column) => {
-      if (!(column.prop in row)) {
-        row[column.prop] = '';
+      if (!(column.value in row)) {
+        row[column.value] = '';
       }
     });
 
