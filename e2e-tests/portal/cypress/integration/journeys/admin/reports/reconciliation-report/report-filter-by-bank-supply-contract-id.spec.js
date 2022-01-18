@@ -94,7 +94,7 @@ context('reconciliation report', () => {
     cy.login(ADMIN_LOGIN);
     reconciliationReport.visit();
 
-    reconciliationReport.filterBybankInternalRefName().type('{selectall}{backspace}adealwithone');
+    reconciliationReport.filterByUKEFSupplyContractId().clear().type('adealwithone');
     reconciliationReport.applyFilters().click();
     reconciliationReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(3 items)');

@@ -86,6 +86,12 @@ input DashboardSort {
 
 input DashboardFilters {
   field: String
+  value: [String]
+  operator: String
+}
+
+input DashboardReportsFilters {
+  field: String
   value: String
   operator: String
 }
@@ -94,6 +100,13 @@ input DealsInput {
   start: Int
   pagesize: Int
   filters: [DashboardFilters]
+  sort: [DashboardSort]
+}
+
+input DealsReportsInput {
+  start: Int
+  pagesize: Int
+  filters: [DashboardReportsFilters]
   sort: [DashboardSort]
 }
 
@@ -229,7 +242,7 @@ type GefFacilitiesQuery {
 type Query {
   currencies: [Currency]
   allDeals(params: DealsInput): AllDealsQuery
-  deals(params: DealsInput): DealsQuery
+  deals(params: DealsReportsInput): DealsQuery
   transactions(params: TransactionInput): TransactionQuery
   gefFacilities(params: TransactionInput): GefFacilitiesQuery
 }
