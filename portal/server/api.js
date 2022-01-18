@@ -8,13 +8,13 @@ const {
 
 require('dotenv').config();
 
-const urlRoot = process.env.DEAL_API_URL;
+const portalApi = process.env.DEAL_API_URL;
 
 const login = async (username, password) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${urlRoot}/v1/login`,
+      url: `${portalApi}/v1/login`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -34,7 +34,7 @@ const login = async (username, password) => {
 const resetPassword = async (email) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/users/reset-password`,
+    url: `${portalApi}/v1/users/reset-password`,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -49,7 +49,7 @@ const resetPassword = async (email) => {
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/users/reset-password/${resetPwdToken}`,
+    url: `${portalApi}/v1/users/reset-password/${resetPwdToken}`,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -94,7 +94,7 @@ const allDeals = async (start, pagesize, filters, token, sort) => {
 const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/deals`,
+    url: `${portalApi}/v1/deals`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ const createDeal = async (deal, token) => {
 const updateDeal = async (deal, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
+    url: `${portalApi}/v1/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const updateDeal = async (deal, token) => {
 const updateDealName = async (id, newName, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${id}/additionalRefName`,
+    url: `${portalApi}/v1/deals/${id}/additionalRefName`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const updateDealName = async (id, newName, token) => {
 const updateDealStatus = async (statusUpdate, token, origin = '') => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${statusUpdate._id}/status`,
+    url: `${portalApi}/v1/deals/${statusUpdate._id}/status`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ const updateDealStatus = async (statusUpdate, token, origin = '') => {
 const getSubmissionDetails = async (id, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals/${id}/submission-details`,
+    url: `${portalApi}/v1/deals/${id}/submission-details`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ const getSubmissionDetails = async (id, token) => {
 const updateSubmissionDetails = async (deal, submissionDetails, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${deal._id}/submission-details`,
+    url: `${portalApi}/v1/deals/${deal._id}/submission-details`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
 const cloneDeal = async (dealId, newDealData, token) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/deals/${dealId}/clone`,
+    url: `${portalApi}/v1/deals/${dealId}/clone`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ const cloneDeal = async (dealId, newDealData, token) => {
 const updateEligibilityCriteria = async (dealId, criteria, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/eligibility-criteria`,
+    url: `${portalApi}/v1/deals/${dealId}/eligibility-criteria`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/eligibility-documentation`,
+    url: `${portalApi}/v1/deals/${dealId}/eligibility-documentation`,
     headers: {
       Authorization: token,
       ...formHeaders,
@@ -251,7 +251,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 const createLoan = async (dealId, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/create`,
+    url: `${portalApi}/v1/deals/${dealId}/loan/create`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ const createLoan = async (dealId, token) => {
 const getLoan = async (dealId, loanId, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    url: `${portalApi}/v1/deals/${dealId}/loan/${loanId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ const getLoan = async (dealId, loanId, token) => {
 const updateLoan = async (dealId, loanId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    url: `${portalApi}/v1/deals/${dealId}/loan/${loanId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -288,7 +288,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
 const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}/issue-facility`,
+    url: `${portalApi}/v1/deals/${dealId}/loan/${loanId}/issue-facility`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -301,7 +301,7 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
 const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`,
+    url: `${portalApi}/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -314,7 +314,7 @@ const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
 const deleteLoan = async (dealId, loanId, token) => {
   const response = await axios({
     method: 'delete',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    url: `${portalApi}/v1/deals/${dealId}/loan/${loanId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -326,7 +326,7 @@ const deleteLoan = async (dealId, loanId, token) => {
 const createBond = async (dealId, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/create`,
+    url: `${portalApi}/v1/deals/${dealId}/bond/create`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -338,7 +338,7 @@ const createBond = async (dealId, token) => {
 const contractBond = async (dealId, bondId, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
+    url: `${portalApi}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -350,7 +350,7 @@ const contractBond = async (dealId, bondId, token) => {
 const updateBond = async (dealId, bondId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
+    url: `${portalApi}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -363,7 +363,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
 const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}/issue-facility`,
+    url: `${portalApi}/v1/deals/${dealId}/bond/${bondId}/issue-facility`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -376,7 +376,7 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
 const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}/change-cover-start-date`,
+    url: `${portalApi}/v1/deals/${dealId}/bond/${bondId}/change-cover-start-date`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -389,7 +389,7 @@ const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
 const deleteBond = async (dealId, bondId, token) => {
   const response = await axios({
     method: 'delete',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
+    url: `${portalApi}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -401,7 +401,7 @@ const deleteBond = async (dealId, bondId, token) => {
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/banks`,
+    url: `${portalApi}/v1/banks`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -414,7 +414,7 @@ const banks = async (token) => {
 const getCurrencies = async (token, includeDisabled) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/currencies`,
+    url: `${portalApi}/v1/currencies`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -432,7 +432,7 @@ const getCurrencies = async (token, includeDisabled) => {
 const getCountries = async (token, includeDisabled) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/countries`,
+    url: `${portalApi}/v1/countries`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -450,7 +450,7 @@ const getCountries = async (token, includeDisabled) => {
 const getIndustrySectors = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/industry-sectors`,
+    url: `${portalApi}/v1/industry-sectors`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -486,7 +486,7 @@ const validateToken = async (token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    url: `${urlRoot}/v1/validate`,
+    url: `${portalApi}/v1/validate`,
   }).catch((err) => err.response);
   return response.status === 200;
 };
@@ -500,7 +500,7 @@ const users = async (token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    url: `${urlRoot}/v1/users`,
+    url: `${portalApi}/v1/users`,
   });
 
   return response.data;
@@ -515,7 +515,7 @@ const user = async (id, token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    url: `${urlRoot}/v1/users/${id}`,
+    url: `${portalApi}/v1/users/${id}`,
   });
 
   return response.data;
@@ -526,7 +526,7 @@ const createUser = async (userToCreate, token) => {
 
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/users`,
+    url: `${portalApi}/v1/users`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -542,7 +542,7 @@ const updateUser = async (id, update, token) => {
 
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/users/${id}`,
+    url: `${portalApi}/v1/users/${id}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -556,7 +556,7 @@ const updateUser = async (id, update, token) => {
 const getDeal = async (id, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals/${id}`,
+    url: `${portalApi}/v1/deals/${id}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -573,7 +573,7 @@ const getDeal = async (id, token) => {
 const getMandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/mandatory-criteria`,
+    url: `${portalApi}/v1/mandatory-criteria`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -590,7 +590,7 @@ const downloadFile = async (id, fieldname, filename, token) => {
   const response = await axios({
     method: 'get',
     responseType: 'stream',
-    url: `${urlRoot}/v1/deals/${id}/eligibility-documentation/${fieldname}/${filename}`,
+    url: `${portalApi}/v1/deals/${id}/eligibility-documentation/${fieldname}/${filename}`,
     headers: {
       Authorization: token,
     },
@@ -602,7 +602,7 @@ const downloadFile = async (id, fieldname, filename, token) => {
 const mga = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/mga`,
+    url: `${portalApi}/v1/mga`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -616,7 +616,7 @@ const downloadMga = async (filename, token) => {
   const response = await axios({
     method: 'get',
     responseType: 'stream',
-    url: `${urlRoot}/v1/mga/${filename}`,
+    url: `${portalApi}/v1/mga/${filename}`,
     headers: {
       Authorization: token,
     },
@@ -627,7 +627,7 @@ const downloadMga = async (filename, token) => {
 const createFeedback = async (formData, token) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/feedback`,
+    url: `${portalApi}/v1/feedback`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -647,6 +647,19 @@ const gefFacilities = async (start, pagesize, filters, token) => {
   const response = await apollo('GET', gefFacilitiesQuery, params, token);
 
   return response.data.gefFacilities || { count: 0, facilities: [] };
+};
+
+const getUnissuedFacilitiesReports = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${portalApi}/v1/portal-reports`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+
+  });
+  return response.data;
 };
 
 module.exports = {
@@ -693,4 +706,5 @@ module.exports = {
   mga,
   downloadMga,
   gefFacilities,
+  getUnissuedFacilitiesReports,
 };
