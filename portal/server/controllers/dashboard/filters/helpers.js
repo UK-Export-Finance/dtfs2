@@ -76,7 +76,7 @@ const formatFieldValue = (fieldValue) => {
   }
 
   return null;
-}
+};
 
 module.exports = {
   submittedFiltersArray,

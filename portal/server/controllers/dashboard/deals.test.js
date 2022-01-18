@@ -297,8 +297,8 @@ describe('controllers/dashboard', () => {
 
       expect(mockReq.session.dashboardFilters).toEqual(originalSession);
     });
-    
-    it('should redirect to `/dashboard/deals/0`', async() => {
+
+    it('should redirect to `/dashboard/deals/0`', async () => {
       await removeSingleAllDealsFilter(mockReq, mockRes);
 
       expect(mockRes.redirect).toHaveBeenCalledWith('/dashboard/deals/0');

@@ -57,7 +57,6 @@ const dashboardFiltersQuery = (
     }
   });
 
-
   return filtersQuery;
 };
 

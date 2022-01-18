@@ -124,7 +124,7 @@ describe('controllers/dashboard/filters - query', () => {
         field: 'dealType',
         value: [
           mockFilters[0].dealType[0],
-          mockFilters[0].dealType[1]
+          mockFilters[0].dealType[1],
         ],
         operator: 'or',
       },

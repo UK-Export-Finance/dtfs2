@@ -143,7 +143,7 @@ exports.removeSingleAllDealsFilter = async (req, res) => {
       req.session.dashboardFilters[req.params.fieldName] = modifiedFilter;
     } else {
       delete req.session.dashboardFilters[req.params.fieldName];
-    }    
+    }
   }
 
   return res.redirect('/dashboard/deals/0');
