@@ -16,7 +16,7 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
     }
 
     if (clause.operator) {
-      return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value); 
+      return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value);
     }
 
     return {

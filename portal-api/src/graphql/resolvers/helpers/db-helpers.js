@@ -2,10 +2,10 @@ const createDbQuery = (operator, field, value) => {
   const query = {
     [`$${operator}`]: [],
   };
-  
-  value.forEach((value) => {
+
+  value.forEach((fieldValue) => {
     query[`$${operator}`].push({
-      [field]: value,
+      [field]: fieldValue,
     });
   });
 
