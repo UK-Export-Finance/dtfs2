@@ -178,11 +178,11 @@ const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArr
  */
 const issuedFacilityConfirmation = (application) => {
   const hasUnissuedToIssued = hasChangedToIssued(application);
-  const { submissionType, submissionCount } = application;
+  const { submissionType } = application;
 
   return hasUnissuedToIssued
   && (
-    ((submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN) && (submissionCount > 2))
+    ((submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN))
     || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
   );
 };

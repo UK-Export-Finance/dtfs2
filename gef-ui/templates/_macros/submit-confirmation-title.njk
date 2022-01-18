@@ -1,5 +1,5 @@
 {% macro render(params) %}
-  {% if issuedFacility %}
+  {% if params.issuedFacility %}
       <h1 class="govuk-panel__title" data-cy="submit-facilities-confirmation-title">Issued facilities
   {% else %}
     <h1 class="govuk-panel__title" data-cy="submit-confirmation-title">{{ params.submissionType | capitalize }}

@@ -230,7 +230,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission.submissionText().contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
