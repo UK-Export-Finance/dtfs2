@@ -72,7 +72,6 @@ const commonApplicationDetails = {
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionCount: 1,
   submissionDate: `${dateConstants.threeDaysAgoUnix}503`,
   ukefDealId: '0030113304',
   checkerId: '619bae3467cc7c002069fc21',
@@ -172,6 +171,7 @@ export const MOCK_APPLICATION_AIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   ukefDecisionAccepted: true,
+  submissionCount: 1,
   eligibility: eligibilityCriteria(true),
   supportingInformation: {
     manualInclusion: [],
@@ -187,6 +187,7 @@ export const MOCK_APPLICATION_MIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.MIN,
   ukefDecisionAccepted: true,
+  submissionCount: 2,
   eligibility: eligibilityCriteria(false),
   supportingInformation: {
     manualInclusion: [
@@ -212,6 +213,7 @@ export const MOCK_APPLICATION_MIA = {
   status: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   submissionType: DEAL_SUBMISSION_TYPE.MIA,
   ukefDecisionAccepted: false,
+  submissionCount: 1,
   eligibility: eligibilityCriteria(false),
   supportingInformation: {
     manualInclusion: [
