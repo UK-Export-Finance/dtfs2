@@ -48,7 +48,7 @@ context('View dashboard deals as a maker', () => {
   const GEF_DEAL_MAKER_2 = {
     ...GEF_DEAL,
     bank: { id: BANK1_MAKER2.bank.id },
-    bankInternalRefName: 'Draft GEF Maker 2',
+    bankInternalRefName: 'Draft GEF Bank 1 Maker 2',
   };
 
   const GEF_DEAL_BANK_2_MAKER_2 = {

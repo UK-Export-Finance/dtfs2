@@ -15,6 +15,12 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
       return dbHelpers.createDbQueryKeywordDeals(clause.value[0]);
     }
 
+    if (clause.field === 'maker._id') {
+      return {
+        [clause.field]: clause.value[0];
+      };
+    }
+
     if (clause.operator) {
       return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value);
     }

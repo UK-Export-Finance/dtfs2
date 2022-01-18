@@ -94,16 +94,16 @@ context('reconciliation report', () => {
     cy.login(ADMIN_LOGIN);
     reconciliationReport.visit();
 
-    reconciliationReport.filterByUKEFSupplyContractId().type('{selectall}{backspace}');
+    reconciliationReport.filterByUKEFSupplyContractId().clear();
+    reconciliationReport.applyFilters().click();
+    reconciliationReport.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(9 items)');
+    });
+
+    reconciliationReport.filterByUKEFSupplyContractId().clear().type('adealwithten');
     reconciliationReport.applyFilters().click();
     reconciliationReport.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(6 items)');
-    });
-
-    reconciliationReport.filterByUKEFSupplyContractId().type('{selectall}{backspace}ukef:adealwithten');
-    reconciliationReport.applyFilters().click();
-    reconciliationReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(3 items)');
     });
   });
 });
