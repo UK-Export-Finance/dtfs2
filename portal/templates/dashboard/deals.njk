@@ -1,14 +1,13 @@
 {% extends "index.njk" %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
-{%- from "govuk/components/table/macro.njk" import govukTable -%}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-sub-nav.njk' as dashboardSubNav %}
 {% import '_macros/pagination.njk' as pagination %}
-{% import './_macros/deal-filters.njk' as dashboardFilters %}
+
+{% import './_macros/dashboard-filters-action-bar.njk' as dashboardFitlersActionBar %}
+{% import './_macros/dashboard-filters-panel.njk' as dashboardFiltersPanel %}
 
 {% block pageTitle %}Deals{% endblock %}
 
@@ -32,41 +31,10 @@
   }) }}
 
   {{ dashboardSubNav.subnav(selected = tab) }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       &nbsp
-    </div>
-
-    <div class=" govuk-grid-column-one-quarter">
-      <div class="govuk-!-padding-left-2">
-        <form method="POST" autocomplete="off">
-          {{ govukCheckboxes({
-            name: "createdByYou",
-            classes: "govuk-checkboxes--small",
-            items: [
-              {
-                value: "true",
-                text: "Created by you",
-                checked: createdByYou,
-                attributes: {
-                "data-cy": "created-by-you-checkbox",
-                'onChange': 'this.form.submit()'
-              }
-              }
-            ]
-          }) }}
-          <div class="moj-button-action">
-            {{ govukButton({
-              text: 'Submit',
-              classes: 'moj-js-hidden',
-              attributes: {
-                'data-cy': 'created-by-you-submit'
-              }
-            }) }}
-          </div>
-
-        </form>
-      </div>
     </div>
   </div>
 
@@ -75,9 +43,9 @@
     {% set path = '/gef/application-details/' if deal.product === "GEF" else "/contract/" %}
     {% set linkHtml %}
       <a
-          href="{{ path }}{{ deal._id }}"
-          class="govuk-link"
-          data-cy="deal__link--{{ deal._id }}"
+        href="{{ path }}{{ deal._id }}"
+        class="govuk-link"
+        data-cy="deal__link--{{ deal._id }}"
       >
         {{ deal.bankInternalRefName }}
       </a>
@@ -113,53 +81,78 @@
     {% set items = (items.push(item), items) %}
   {% endfor %}
 
-  {{ govukTable({
-    classes: "govuk-table govuk-!-margin-bottom-0",
-    attributes: {
-    'data-module': 'moj-sortable-table'
-   },
-    head: [
-      {
-        text: "Exporter",
-        attributes: {
-        "data-cy": "deal__header--exporter",
-        "aria-sort": "none"
-      }
-      },
-      {
-        text: "Bank ref",
-        attributes: {
-        "data-cy": "deal__header--bankRef"
-      }
-      },
-      {
-        text: "Product",
-        attributes: {
-        "data-cy": "deal__header--product"
-      }
-      },
-      {
-        text: "Type",
-        attributes: {
-        "data-cy": "deal__header--type"
-      }
-      },
-      {
-        text: "Status",
-        attributes: {
-        "data-cy": "deal__header--status"
-      }
-      },
-      {
-        text: "Last updated",
-        attributes: {
-        "data-cy": "deal__header--updated"
-      }
-      }
-    ],
-    rows: items
-  }) }}
+  <div class="moj-filter-layout">
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' ) }}
+    {{dashboardFiltersPanel.render({
+      filters: filters,
+      selectedFilters: selectedFilters,
+      keyword: keyword
+    })}}
+
+    <div class="moj-filter-layout__content">
+
+      {{dashboardFitlersActionBar.render({
+        createdByYou: createdByYou,
+        selectedFilters: selectedFilters
+      })}}
+
+      <div class="moj-scrollable-pane">
+
+        <div class="moj-scrollable-pane__wrapper">
+
+          {{ govukTable({
+            classes: "govuk-table govuk-!-margin-bottom-0",
+            attributes: {
+            'data-module': 'moj-sortable-table'
+          },
+            head: [
+              {
+                text: "Exporter",
+                attributes: {
+                "data-cy": "deal__header--exporter",
+                "aria-sort": "none"
+              }
+              },
+              {
+                text: "Bank ref",
+                attributes: {
+                "data-cy": "deal__header--bankRef"
+              }
+              },
+              {
+                text: "Product",
+                attributes: {
+                "data-cy": "deal__header--product"
+              }
+              },
+              {
+                text: "Type",
+                attributes: {
+                "data-cy": "deal__header--type"
+              }
+              },
+              {
+                text: "Status",
+                attributes: {
+                "data-cy": "deal__header--status"
+              }
+              },
+              {
+                text: "Last updated",
+                attributes: {
+                "data-cy": "deal__header--updated"
+              }
+              }
+            ],
+            rows: items
+          }) }}
+
+          {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard/deals' ) }}
+
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

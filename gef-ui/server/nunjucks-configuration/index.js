@@ -23,10 +23,13 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
+
   mojFilters = Object.assign(mojFilters);
+
   Object.keys(mojFilters).forEach((filterName) => {
     nunjucksEnvironment.addFilter(filterName, mojFilters[filterName]);
   });
+
   return nunjucks;
 };
 

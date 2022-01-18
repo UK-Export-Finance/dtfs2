@@ -76,21 +76,6 @@ const dealsQuery = (user, filter) => {
   return result;
 };
 
-const allDealsFilters = (user, filters = []) => {
-  const sanitisedFilters = [...filters];
-
-  let result = {};
-  if (sanitisedFilters.length === 1) {
-    [result] = sanitisedFilters;
-  } else if (sanitisedFilters.length > 1) {
-    result = {
-      $and: sanitisedFilters,
-    };
-  }
-
-  return result;
-};
-
 const findDeals = async (requestingUser, filter) => {
   const query = dealsQuery(requestingUser, filter);
   return api.queryDeals(query);
@@ -104,17 +89,14 @@ const findPaginatedDeals = async (requestingUser, filter, start = 0, pagesize = 
 };
 exports.findPaginatedDeals = findPaginatedDeals;
 
-const findAllDeals = async (requestingUser, filters, sort) => {
-  const sanitisedFilters = allDealsFilters(requestingUser, filters, sort);
-  return api.queryAllDeals(sanitisedFilters, sort);
-};
+const findAllDeals = async (requestingUser, filters, sort) =>
+  api.queryAllDeals(filters, sort);
+
 exports.findAllDeals = findAllDeals;
 
-const findAllPaginatedDeals = async (requestingUser, filters, sort, start = 0, pagesize = 20) => {
-  const sanitisedFilters = allDealsFilters(requestingUser, filters);
+const findAllPaginatedDeals = async (requestingUser, filters, sort, start = 0, pagesize = 20) =>
+  api.queryAllDeals(filters, sort, start, pagesize);
 
-  return api.queryAllDeals(sanitisedFilters, sort, start, pagesize);
-};
 exports.findAllPaginatedDeals = findAllPaginatedDeals;
 
 const findOneDeal = async (_id, callback) => {

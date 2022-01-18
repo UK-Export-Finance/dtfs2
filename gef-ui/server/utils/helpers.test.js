@@ -1253,7 +1253,7 @@ describe('summaryItemsConditions()', () => {
       expect(text).toEqual('');
     });
 
-    it('Should be able to change coverStartDate', () => {
+    it('Should not be able to change coverStartDate', () => {
       const item = {
         label: 'Cover start date',
         id: 'coverStartDate',
@@ -1270,6 +1270,26 @@ describe('summaryItemsConditions()', () => {
 
       const { text } = summaryItemsConditions(summaryItemsObj)[0];
       expect(text).toEqual('');
+    });
+
+    it('Should be able to change coverStartDate', () => {
+      const item = {
+        label: 'Cover start date',
+        id: 'coverStartDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      console.log({ text });
+      expect(text).toEqual('Change');
     });
 
     it('Should be able to change coverEndDate', () => {
