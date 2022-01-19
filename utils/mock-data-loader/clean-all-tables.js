@@ -29,7 +29,6 @@ const cleanDeals = async (token) => {
   const deals = await api.listDeals(token);
 
   if (deals) {
-    console.log('yo deals[0] \n', deals[0]);
     for (const deal of deals) {
 
       // NOTE: BSS and GEF deals use different MongoDB _ids.
