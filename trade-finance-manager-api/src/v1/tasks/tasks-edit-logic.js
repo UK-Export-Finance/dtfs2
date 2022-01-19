@@ -1,10 +1,11 @@
 const CONSTANTS = require('../../constants');
 const {
-  isFirstTaskInFirstGroup,
-  isFirstTaskInAGroup,
   getGroupById,
   getTaskInGroupById,
   getTaskInGroupByTitle,
+  isFirstTaskInAGroup,
+  isFirstTaskInFirstGroup,
+  groupHasAllTasksCompleted,
 } = require('../helpers/tasks');
 
 /**
@@ -22,17 +23,18 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
   if (isFirstTaskInAGroup(taskId, group.id)) {
     /**
-     * Check that the previous task in the previous group is completed
+     * Check that all tasks in the previous group are completed
      * */
     const previousGroupId = group.id - 1;
     const previousGroup = getGroupById(allTaskGroups, previousGroupId);
 
-    const totalTasksInPreviousGroup = previousGroup.groupTasks.length;
-    const lastTaskInPreviousGroup = previousGroup.groupTasks[totalTasksInPreviousGroup - 1];
+    const previousGroupHasAllTasksCompleted = groupHasAllTasksCompleted(previousGroup.groupTasks);
 
-    if (lastTaskInPreviousGroup.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    if (previousGroupHasAllTasksCompleted) {
       return true;
     }
+
+    return false;
   } else {
     /**
      * Check that the previous task in the current group is completed
@@ -86,6 +88,17 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
 
   if (taskIsInUnderwritingGroup
     && task.canEdit) {
+    return true;
+  }
+
+  return false;
+};
+
+const isPreviousTaskIsInDifferentGroup = (allTaskGroups, group, currentTaskId) => {
+  // const currentTask 
+  if (isFirstTaskInAGroup(currentTaskId, group.id)) {
+    // const previousGroupId = group.id - 1;
+    // const previousGroup = getGroupById(allTaskGroups, previousGroupId);
     return true;
   }
 

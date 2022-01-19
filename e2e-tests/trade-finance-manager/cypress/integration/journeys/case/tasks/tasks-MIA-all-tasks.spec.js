@@ -13,6 +13,7 @@ import {
   assertTaskStatusAndLink,
   submitTaskCompleteAndAssertOtherTasks,
   assertTaskStatus,
+  assertTaskLinkDoesNotExist,
 } from './tasks-helpers';
 
 
@@ -169,7 +170,7 @@ context('Case tasks - MIA deal - all tasks', () => {
 
   const startAndCompleteAllUnderwritingTasks = () => {
     // complete Underwriting group tasks in an order that is NOT ascending
-    startAndCompleteLastUnderwritingTask();
+    // startAndCompleteLastUnderwritingTask();
     startAndCompleteFirstUnderwritingTask();
     startAndCompleteSecondUnderwritingTask();
   };
@@ -224,7 +225,21 @@ context('Case tasks - MIA deal - all tasks', () => {
     });
 
     // Start and complete all tasks in Underwriting Group.
-    startAndCompleteAllUnderwritingTasks();
+    // startAndCompleteAllUnderwritingTasks();
+
+    // Complete the last Underwriting task first
+    startAndCompleteLastUnderwritingTask();
+
+    // the next task in the next group should remain unlocked.
+    const group4GroupId = 4;
+    const group4FirstTaskRow = pages.tasksPage.tasks.row(group4GroupId, 1);
+
+    assertTaskLinkDoesNotExist(group4FirstTaskRow)
+    assertTaskStatus(group4FirstTaskRow, 'Cannot start yet');
+
+    // Complete the remaining Underwriting tasks.
+    startAndCompleteFirstUnderwritingTask();
+    startAndCompleteSecondUnderwritingTask();
 
     // Complete all tasks in 'Approvals' group
     cy.wrap(group4Tasks).each((_, index) => {

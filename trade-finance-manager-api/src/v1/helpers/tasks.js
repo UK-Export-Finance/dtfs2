@@ -24,6 +24,19 @@ const isFirstTaskInAGroup = (taskId, groupId) =>
 const isFirstTaskInFirstGroup = (taskId, groupId) =>
   (taskId === '1' && groupId === 1);
 
+const groupHasAllTasksCompleted = (groupTasks) => {
+  const totalTasks = groupTasks.length;
+
+  const completedTasks = groupTasks.filter((task) =>
+    task.status === CONSTANTS.TASKS.STATUS.COMPLETED);
+
+  if (completedTasks.length === totalTasks) {
+    return true;
+  }
+
+  return false;
+};
+
 /**
 * Check if a task status is changing from 'To do' to 'Completed'
 * */
@@ -83,6 +96,7 @@ module.exports = {
   getGroupByTitle,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
+  groupHasAllTasksCompleted,
   taskIsCompletedImmediately,
   isAdverseHistoryTaskIsComplete,
   shouldUpdateDealStage,
