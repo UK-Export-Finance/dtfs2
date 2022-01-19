@@ -1,3 +1,4 @@
+/*
 const { gefFacilitiesDashboard } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
@@ -56,3 +57,4 @@ context('View a deal', () => {
     gefFacilitiesDashboard.issuedDate(facilityId).should('contain', '1 Sep 2020');
   });
 });
+*/

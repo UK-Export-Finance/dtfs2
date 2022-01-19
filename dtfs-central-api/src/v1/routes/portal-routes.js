@@ -344,11 +344,6 @@ portalRouter.route('/deals/:id/comment')
     addDealCommentController.addDealCommentPost,
   );
 
-portalRouter.route('/deals/query')
-  .post(
-    getDealController.queryDealsPost,
-  );
-
 /**
  * @openapi
  * /portal/facilities:
