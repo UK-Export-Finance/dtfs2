@@ -12,10 +12,6 @@ const { as } = require('../../api')(app);
 
 const CONSTANTS = require('../../../src/constants');
 
-// Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
-
 // jest.unmock('@azure/storage-file-share');
 
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {

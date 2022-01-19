@@ -8,10 +8,6 @@ const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-un
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 
-// Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
-
 describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover start dates', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
