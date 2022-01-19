@@ -6,10 +6,12 @@ const {
   getGroupByTitle,
   isFirstTaskInAGroup,
   isFirstTaskInFirstGroup,
+  groupHasAllTasksCompleted,
   taskIsCompletedImmediately,
   isAdverseHistoryTaskIsComplete,
   shouldUpdateDealStage,
 } = require('./tasks');
+const CONSTANTS = require('../../constants');
 
 describe('helpers - tasks', () => {
   describe('getFirstTask', () => {
@@ -127,11 +129,46 @@ describe('helpers - tasks', () => {
     });
   });
 
+  describe('groupHasAllTasksCompleted', () => {
+    it('returns true when all tasks are completed', () => {
+      const mockGroupTasks = [
+        {
+          id: 1,
+          title: 'mock',
+          status: CONSTANTS.TASKS.STATUS.COMPLETED,
+        },
+      ];
+
+      const result = groupHasAllTasksCompleted(mockGroupTasks);
+      
+      expect(result).toEqual(true);
+    });
+
+    it('returns false when tasks are NOT completed', () => {
+      const mockGroupTasks = [
+        {
+          id: 1,
+          title: 'mock',
+          status: CONSTANTS.TASKS.STATUS.COMPLETED,
+        },
+        {
+          id: 2,
+          title: 'mock',
+          status: CONSTANTS.TASKS.STATUS.TO_DO,
+        },
+      ];
+
+      const result = groupHasAllTasksCompleted(mockGroupTasks);
+
+      expect(result).toEqual(false);
+    });
+  });
+
   describe('taskIsCompletedImmediately', () => {
     it('should return true when status changes from `To do` to `Done`', () => {
       const result = taskIsCompletedImmediately(
         'To do',
-        'Done',
+        CONSTANTS.TASKS.STATUS.COMPLETED,
       );
 
       expect(result).toEqual(true);
@@ -161,7 +198,7 @@ describe('helpers - tasks', () => {
           {
             id: 1,
             title: 'Complete an adverse history check',
-            status: 'Done',
+            status: CONSTANTS.TASKS.STATUS.COMPLETED,
           },
         ],
       },
@@ -212,7 +249,7 @@ describe('helpers - tasks', () => {
 
     it('should return true when submissionType is MIA, is first task in first group, task status changes from `To do` to `Done`', () => {
       const statusFrom = 'To do';
-      const statusTo = 'Done';
+      const statusTo = CONSTANTS.TASKS.STATUS.COMPLETED;
 
       const result = shouldUpdateDealStage(
         submissionType,

@@ -1,5 +1,5 @@
 const page = {
-  visit: () => cy.visit('/dashboard/facilities'),
+  visit: () => cy.visit('/dashboard/facilities/gef'),
 
   stage: () => cy.get('[data-cy="stage"]'),
   type: () => cy.get('[data-cy="type"]'),

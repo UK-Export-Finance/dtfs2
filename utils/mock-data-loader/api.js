@@ -296,9 +296,8 @@ const listCountries = async (token) => {
 
 const listDeals = async (token) => {
   const response = await apollo('GET', QUERY.dealsQuery, {}, token);
-  return response.data.deals.deals;
+  return response.data.allDeals.deals;
 };
-
 
 const listIndustrySectors = async (token) => {
   const response = await axios({

@@ -149,7 +149,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
@@ -162,7 +162,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 4).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(1, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 7).should('not.exist');
@@ -174,7 +174,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 3).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
@@ -233,7 +233,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 3).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(2, 3).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
       applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
@@ -380,7 +380,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
@@ -393,7 +393,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 4).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(1, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 7).should('not.exist');
@@ -405,7 +405,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 3).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
@@ -417,7 +417,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 3).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(3, 3).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 4).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
@@ -431,7 +431,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We’ll send you a confirmation email shortly, once we’ve acknowledged your issued facilities.');
+      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your issued facilities.');
     });
   });
 });

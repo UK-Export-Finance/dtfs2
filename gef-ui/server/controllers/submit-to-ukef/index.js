@@ -1,9 +1,9 @@
 const CONSTANTS = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
 const { isDealNotice } = require('../../utils/deal-helpers');
-const { hasChangedToIssued } = require('../../utils/facility-helpers');
-const Application = require('../../models/application');
+const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const api = require('../../services/api');
+const Application = require('../../models/application');
 
 const MAX_COMMENT_LENGTH = 400;
 
@@ -28,8 +28,9 @@ const createSubmissionToUkef = async (req, res) => {
   const { comment } = body;
   console.log('GEF Application is being submitted to UKEF--TFM');
   const application = await api.getApplication(dealId);
-  // obtains application with facilities to check if unissuedToIssued
+  // Fetch the application with facilities to check if unissuedToIssued
   const applicationWithFacilities = await Application.findById(dealId, user, userToken);
+
   const { ukefDecisionAccepted } = application;
 
   let checker;
@@ -68,18 +69,21 @@ const createSubmissionToUkef = async (req, res) => {
 
     // Always update with the latest checkers details.
     application.checkerId = user._id;
-    // checks if any changed to issued facilities (before update)
-    const hasUnissuedToIssued = hasChangedToIssued(applicationWithFacilities);
+    const hasIssuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
+    const submissionType = ukefDecisionAccepted
+      ? CONSTANTS.DEAL_SUBMISSION_TYPE.MIN
+      : application.submissionType;
 
     await api.updateApplication(dealId, application);
     await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
+
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
     return res.render('partials/submit-to-ukef-confirmation.njk', {
-      submissionType: application.submissionType,
+      submissionType,
       status: application.status,
-      isNotice: isDealNotice(application.ukefDecisionAccepted, application.submissionType),
+      isNotice: isDealNotice(ukefDecisionAccepted, submissionType),
       ukefDecisionAccepted,
-      unissuedToIssued: hasUnissuedToIssued,
+      hasIssuedFacility,
     });
   } catch (err) {
     console.error('Unable to post submit to UKEF', { err });

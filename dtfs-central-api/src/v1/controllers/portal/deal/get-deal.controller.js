@@ -44,39 +44,6 @@ const extendDealWithFacilities = async (deal) => {
   return mappedDeal;
 };
 
-const queryDeals = async (query, start = 0, pagesize = 0) => {
-  const collection = await db.getCollection('deals');
-  const dealResults = await collection.find(query);
-  const count = await dealResults.count();
-  const deals = await dealResults
-    .sort({ updatedAt: -1 })
-    .skip(start)
-    .limit(pagesize)
-    .toArray();
-
-  const extendedDeals = deals;
-
-  extendedDeals.map(async (deal) => {
-    if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      const extendedDeal = await extendDealWithFacilities(deal);
-      return extendedDeal;
-    }
-
-    return deal;
-  });
-
-  return {
-    count,
-    deals: extendedDeals,
-  };
-};
-exports.queryDeals = queryDeals;
-
-exports.queryDealsPost = async (req, res) => {
-  const deals = await queryDeals(req.body.query, req.body.start, req.body.pagesize);
-  res.status(200).send(deals);
-};
-
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
 
