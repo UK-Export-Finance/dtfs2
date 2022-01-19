@@ -168,13 +168,6 @@ context('Case tasks - MIA deal - all tasks', () => {
     lastTaskRow.link().should('not.exist');
   };
 
-  const startAndCompleteAllUnderwritingTasks = () => {
-    // complete Underwriting group tasks in an order that is NOT ascending
-    // startAndCompleteLastUnderwritingTask();
-    startAndCompleteFirstUnderwritingTask();
-    startAndCompleteSecondUnderwritingTask();
-  };
-
   it('user cannot start a task in a group until all tasks in the previous group are completed. Each time a task is completed, the next task can be started.', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
