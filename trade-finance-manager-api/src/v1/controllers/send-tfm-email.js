@@ -22,12 +22,12 @@ const sendTfmEmail = async (
   };
 
   let emailHistory = [];
-  if (deal.tfm.history && deal.tfm.history.emails) {
+  if (deal.tfm?.history && deal.tfm.history.emails) {
     emailHistory = deal.tfm.history.emails;
   }
 
   const updatedHistory = {
-    ...deal.tfm.history,
+    ...deal.tfm?.history,
     emails: [
       ...emailHistory,
       newHistoryObject,

@@ -70,14 +70,26 @@ const assertCompleteTask = (groupId, taskId) => {
   });
 };
 
+const assertTaskStatus = (row,  expectedStatus) => {
+  row.status().invoke('text').then((text) => {
+    expect(text.trim()).to.equal(expectedStatus);
+  });
+};
+
+const assertTaskLinkExists = (row) => {
+  row.link().should('exist');
+};
+
+const assertTaskLinkDoesNotExist = (row) => {
+  row.link().should('not.exist');
+};
+
 const assertTaskStatusAndLink = (groupId, taskId, expectedStatus) => {
   const taskRow = pages.tasksPage.tasks.row(groupId, taskId);
 
-  taskRow.status().invoke('text').then((text) => {
-    expect(text.trim()).to.equal(expectedStatus);
-  });
+  assertTaskStatus(taskRow, expectedStatus);
 
-  taskRow.link().should('exist');
+  assertTaskLinkExists(taskRow);
 };
 
 const assertNextTaskStatus = (currentGroupId, currentTaskId) => {
@@ -154,21 +166,17 @@ const submitTaskCompleteAndAssertOtherTasks = (groupId, taskId, userId) => {
   assertCannotClickPreviousTask(groupId, taskId);
 };
 
-const assertTaskStatus = (row, expectedStatus) => {
-  row.status().invoke('text').then((text) => {
-    expect(text.trim()).to.equal(expectedStatus);
-  });
-};
-
 module.exports = {
   getGroup,
   MIA_TASKS_STRUCTURE,
   submitTaskInProgress,
   submitTaskComplete,
   assertCompleteTask,
+  assertTaskStatus,
+  assertTaskLinkExists,
+  assertTaskLinkDoesNotExist,
   assertTaskStatusAndLink,
   assertNextTaskStatus,
   assertCannotClickNextTask,
   submitTaskCompleteAndAssertOtherTasks,
-  assertTaskStatus,
 };

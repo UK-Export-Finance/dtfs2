@@ -41,16 +41,16 @@ describe('tasks edit logic', () => {
     });
 
     describe('when the group is not the first group and task id is first in the group', () => {
-      it('should return true when the previous group\'s last task has `Done` status', () => {
-        const MOCK_SECOND_GROUP = {
-          id: 2,
-          groupTasks: [
-            { id: '1', groupId: 2, status: 'To do' },
-            { id: '2', groupId: 2, status: 'To do' },
-            { id: '3', groupId: 2, status: 'To do' },
-          ],
-        };
+      const MOCK_SECOND_GROUP = {
+        id: 2,
+        groupTasks: [
+          { id: '1', groupId: 2, status: 'To do' },
+          { id: '2', groupId: 2, status: 'To do' },
+          { id: '3', groupId: 2, status: 'To do' },
+        ],
+      };
 
+      it('should return true when the previous group has all tasks completed', () => {
         const MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED = [
           {
             groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
@@ -59,7 +59,7 @@ describe('tasks edit logic', () => {
               {
                 id: '1',
                 groupId: 1,
-                title: CONSTANTS.TASKS.AIN.GROUP_1.MATCH_OR_CREATE_PARTIES,
+                title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
                 team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
                 status: CONSTANTS.TASKS.STATUS.COMPLETED,
                 assignedTo: {
@@ -70,7 +70,7 @@ describe('tasks edit logic', () => {
               {
                 id: '2',
                 groupId: 1,
-                title: CONSTANTS.TASKS.AIN.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+                title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
                 team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
                 status: CONSTANTS.TASKS.STATUS.COMPLETED,
                 assignedTo: {
@@ -89,6 +89,47 @@ describe('tasks edit logic', () => {
           '1',
         );
         expect(result).toEqual(true);
+      });
+
+      it('should return false if any task in the previous group is NOT completed', () => {
+        const MOCK_AIN_TASKS_FIRST_GROUP_INCOMPLETE = [
+          {
+            groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
+            id: 1,
+            groupTasks: [
+              {
+                id: '1',
+                groupId: 1,
+                title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
+                team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+                status: CONSTANTS.TASKS.STATUS.TO_DO,
+                assignedTo: {
+                  userId: CONSTANTS.TASKS.UNASSIGNED,
+                  userFullName: CONSTANTS.TASKS.UNASSIGNED,
+                },
+              },
+              {
+                id: '2',
+                groupId: 2,
+                title: CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+                team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+                status: CONSTANTS.TASKS.STATUS.COMPLETED,
+                assignedTo: {
+                  userId: CONSTANTS.TASKS.UNASSIGNED,
+                  userFullName: CONSTANTS.TASKS.UNASSIGNED,
+                },
+              },
+            ],
+          },
+          MOCK_SECOND_GROUP,
+        ];
+
+        const result = previousTaskIsComplete(
+          MOCK_AIN_TASKS_FIRST_GROUP_INCOMPLETE,
+          MOCK_SECOND_GROUP,
+          '1',
+        );
+        expect(result).toEqual(false);
       });
     });
 
