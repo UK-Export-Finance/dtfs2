@@ -145,6 +145,18 @@ const previewItemConditions = (previewParams) => {
     app,
   } = previewParams;
   let summaryItems = [];
+  const statusMIA = [
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
+  ];
+  const statusAIN = [
+    ...statusMIA,
+    CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
+  ];
+
+  const validStatus = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
+    ? !statusAIN.includes(app.status)
+    : !statusMIA.includes(app.status);
   const ukefDecisionAccepted = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || Boolean(app.ukefDecisionAccepted);
 
   if (summaryIssuedChangedToIssued(previewParams)) {
@@ -162,7 +174,7 @@ const previewItemConditions = (previewParams) => {
      * add link displayed taking to unissued-facility-change change page
      */
     summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
-  } else if (ukefDecisionAccepted && item.id === 'coverStartDate' && app.status !== CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED && app.status !== CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL) {
+  } else if (ukefDecisionAccepted && item.id === 'coverStartDate' && validStatus) {
     summaryItems = previewSummaryItems(issuedHref, ukefDecisionAccepted, item);
   }
 
