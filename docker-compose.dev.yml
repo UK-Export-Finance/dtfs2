@@ -161,15 +161,12 @@ services:
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_PORTAL_FILESHARE_NAME
       - AZURE_PORTAL_EXPORT_FOLDER
-      - DTFS_PORTAL_SCHEDULER
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
-      - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
-      - SENTRY_DSN=${SENTRY_DSN}
 
     command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 

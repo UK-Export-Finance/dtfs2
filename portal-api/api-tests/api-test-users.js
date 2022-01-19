@@ -206,7 +206,6 @@ const finder = () => {
   return fluidBuilder;
 };
 
-
 module.exports.initialise = async (app) => {
   if (notYetInitialised) {
     const {
