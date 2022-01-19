@@ -1,5 +1,5 @@
 const CONSTANTS = require('../../../../constants');
-const { PAYMENT_TYPE, FACILITY_TYPE } = require('../../enums');
+const { FACILITY_TYPE } = require('../../enums');
 
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
@@ -45,7 +45,7 @@ const hasRequiredItems = (doc) => {
   if (!doc.feeType) {
     required.push('feeType');
   }
-  if (doc.feeType !== 'at maturity' && !doc.feeFrequency) {
+  if (doc.feeType !== 'At maturity' && !doc.feeFrequency) {
     required.push('feeFrequency');
   }
   if (!doc.dayCountBasis) {
@@ -95,23 +95,7 @@ const facilitiesCheckEnums = (doc) => {
       enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'type' });
       break;
   }
-  switch (doc.paymentType) {
-    case PAYMENT_TYPE.IN_ARREARS_MONTHLY:
-    case PAYMENT_TYPE.IN_ARREARS_QUARTLY:
-    case PAYMENT_TYPE.IN_ARREARS_SEMI_ANNUALLY:
-    case PAYMENT_TYPE.IN_ARREARS_ANNUALLY:
-    case PAYMENT_TYPE.IN_ADVANCE_QUARTERLY:
-    case PAYMENT_TYPE.IN_ADVANCE_MONTHLY:
-    case PAYMENT_TYPE.IN_ADVANCE_SEMI_ANNUALLY:
-    case PAYMENT_TYPE.IN_ADVANCE_ANNUALLY:
-    case PAYMENT_TYPE.AT_MATURITY:
-    case null:
-    case undefined:
-      break;
-    default:
-      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'paymentType' });
-      break;
-  }
+
   return enumErrors.length === 0 ? null : enumErrors;
 };
 

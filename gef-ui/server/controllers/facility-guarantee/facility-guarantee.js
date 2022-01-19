@@ -23,15 +23,15 @@ function validateFacilityGuarantee({
     errMsg: 'Select how often your bank will pay the fee to UKEF',
   };
 
-  if (!['in advance', 'in arrears', 'at maturity'].includes(feeType)) {
+  if (!['In advance', 'In arrears', 'At maturity'].includes(feeType)) {
     facilityGuaranteeErrors.push(feeTypeError);
   }
   const FREQUENCIES = ['Monthly', 'Quarterly', 'Semi-annually', 'Annually'];
-  if (['in advance'].includes(feeType)
+  if (['In advance'].includes(feeType)
     && !FREQUENCIES.includes(inAdvanceFrequency)) {
     facilityGuaranteeErrors.push(inAdvanceFrequencyError);
   }
-  if (['in arrears'].includes(feeType)
+  if (['In arrears'].includes(feeType)
     && !FREQUENCIES.includes(inArrearsFrequency)) {
     facilityGuaranteeErrors.push(inArrearsFrequencyError);
   }

@@ -2,7 +2,6 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
-const { FACILITY_PAYMENT_TYPE } = require('../../constants');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
@@ -21,8 +20,8 @@ const facilityGuarantee = async (req, res) => {
       dealId: facility.dealId,
       facilityId: facility.facilityId,
       feeType: facility.feeType,
-      inAdvanceFrequency: facility.feeType === 'in advance' ? facility.feeFrequency : '',
-      inArrearsFrequency: facility.feeType === 'in arrears' ? facility.feeFrequency : '',
+      inAdvanceFrequency: facility.feeType === 'In advance' ? facility.feeFrequency : '',
+      inArrearsFrequency: facility.feeType === 'In arrears' ? facility.feeFrequency : '',
       dayCountBasis: facility.dayCountBasis,
       status,
     });
@@ -41,33 +40,32 @@ const updateFacilityGuarantee = async (req, res) => {
   const facilityGuaranteeErrors = [];
 
   async function update() {
-    const feeTypeIsInAdvance = feeType === 'in advance';
-    const feeTypeIsInArrears = feeType === 'in arrears';
-    const feeTypeIsInAtMaturity = feeType === 'at maturity';
-
-    const cleanFrequencyValue = (str) => str.replace('-', '_').toUpperCase();
+    const feeTypeIsInAdvance = feeType === 'In advance';
+    const feeTypeIsInArrears = feeType === 'In arrears';
+    const feeTypeIsInAtMaturity = feeType === 'At maturity';
 
     let paymentType;
+    let feeFrequency;
 
     if (feeTypeIsInAdvance) {
-      paymentType = `${FACILITY_PAYMENT_TYPE.IN_ADVANCE}_${cleanFrequencyValue(inAdvanceFrequency)}`;
+      paymentType = inAdvanceFrequency;
+      feeFrequency = inAdvanceFrequency;
     }
 
     if (feeTypeIsInArrears) {
-      paymentType = `${FACILITY_PAYMENT_TYPE.IN_ARREARS}_${cleanFrequencyValue(inAdvanceFrequency)}`;
+      paymentType = inArrearsFrequency;
+      feeFrequency = inArrearsFrequency;
     }
 
-    if (feeTypeIsInAtMaturity) {
-      paymentType = FACILITY_PAYMENT_TYPE.AT_MATURITY;
-    }
+    const facilityUpdate = {
+      feeType,
+      paymentType,
+      feeFrequency,
+      dayCountBasis,
+    };
 
     try {
-      await api.updateFacility(facilityId, {
-        feeType,
-        paymentType,
-        feeFrequency: feeTypeIsInAdvance ? inAdvanceFrequency : inArrearsFrequency,
-        dayCountBasis,
-      });
+      await api.updateFacility(facilityId, facilityUpdate);
       return res.redirect(`/gef/application-details/${dealId}`);
     } catch (err) {
       return res.render('partials/problem-with-service.njk');
@@ -75,6 +73,7 @@ const updateFacilityGuarantee = async (req, res) => {
   }
 
   facilityGuaranteeErrors.push(...validateFacilityGuarantee(body));
+
   if (facilityGuaranteeErrors.length > 0) {
     return res.render('partials/facility-guarantee.njk', {
       errors: validationErrorHandler(facilityGuaranteeErrors),
