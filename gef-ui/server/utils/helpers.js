@@ -146,12 +146,13 @@ const previewItemConditions = (previewParams) => {
   } = previewParams;
   let summaryItems = [];
   const statusMIA = [
-    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
   ];
   const statusAIN = [
     ...statusMIA,
+    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
+    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
   ];
 
   const validStatus = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
