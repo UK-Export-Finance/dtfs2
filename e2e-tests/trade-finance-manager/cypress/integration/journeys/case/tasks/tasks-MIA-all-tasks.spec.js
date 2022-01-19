@@ -214,7 +214,6 @@ context('Case tasks - MIA deal - all tasks', () => {
       });
     });
 
-    // Complete all tasks in 'Underwriters' group
     // Because the 'Complete an adverse history check' task in 'Adverse history check' group has been completed,
     // All tasks in Underwriting Group are should be unlocked and editable
     const underwritingunderwritingGroupId = 3;
@@ -224,13 +223,10 @@ context('Case tasks - MIA deal - all tasks', () => {
       assertTaskStatusAndLink(underwritingunderwritingGroupId, taskId, 'To do');
     });
 
-    // Start and complete all tasks in Underwriting Group.
-    // startAndCompleteAllUnderwritingTasks();
-
     // Complete the last Underwriting task first
     startAndCompleteLastUnderwritingTask();
 
-    // the next task in the next group should remain unlocked.
+    // The next task in the next group should remain unlocked.
     const group4GroupId = 4;
     const group4FirstTaskRow = pages.tasksPage.tasks.row(group4GroupId, 1);
 

@@ -94,16 +94,6 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
   return false;
 };
 
-const isPreviousTaskIsInDifferentGroup = (allTaskGroups, group, currentTaskId) => {
-  // const currentTask 
-  if (isFirstTaskInAGroup(currentTaskId, group.id)) {
-    // const previousGroupId = group.id - 1;
-    // const previousGroup = getGroupById(allTaskGroups, previousGroupId);
-    return true;
-  }
-
-  return false;
-};
 
 /**
  * Rules/conditions for task.canEdit and task.status
