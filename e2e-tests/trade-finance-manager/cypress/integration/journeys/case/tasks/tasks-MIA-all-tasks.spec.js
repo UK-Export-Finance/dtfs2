@@ -13,6 +13,7 @@ import {
   assertTaskStatusAndLink,
   submitTaskCompleteAndAssertOtherTasks,
   assertTaskStatus,
+  assertTaskLinkDoesNotExist,
 } from './tasks-helpers';
 
 
@@ -167,13 +168,6 @@ context('Case tasks - MIA deal - all tasks', () => {
     lastTaskRow.link().should('not.exist');
   };
 
-  const startAndCompleteAllUnderwritingTasks = () => {
-    // complete Underwriting group tasks in an order that is NOT ascending
-    startAndCompleteLastUnderwritingTask();
-    startAndCompleteFirstUnderwritingTask();
-    startAndCompleteSecondUnderwritingTask();
-  };
-
   it('user cannot start a task in a group until all tasks in the previous group are completed. Each time a task is completed, the next task can be started.', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -213,7 +207,6 @@ context('Case tasks - MIA deal - all tasks', () => {
       });
     });
 
-    // Complete all tasks in 'Underwriters' group
     // Because the 'Complete an adverse history check' task in 'Adverse history check' group has been completed,
     // All tasks in Underwriting Group are should be unlocked and editable
     const underwritingunderwritingGroupId = 3;
@@ -223,8 +216,19 @@ context('Case tasks - MIA deal - all tasks', () => {
       assertTaskStatusAndLink(underwritingunderwritingGroupId, taskId, 'To do');
     });
 
-    // Start and complete all tasks in Underwriting Group.
-    startAndCompleteAllUnderwritingTasks();
+    // Complete the last Underwriting task first
+    startAndCompleteLastUnderwritingTask();
+
+    // The next task in the next group should remain unlocked.
+    const group4GroupId = 4;
+    const group4FirstTaskRow = pages.tasksPage.tasks.row(group4GroupId, 1);
+
+    assertTaskLinkDoesNotExist(group4FirstTaskRow)
+    assertTaskStatus(group4FirstTaskRow, 'Cannot start yet');
+
+    // Complete the remaining Underwriting tasks.
+    startAndCompleteFirstUnderwritingTask();
+    startAndCompleteSecondUnderwritingTask();
 
     // Complete all tasks in 'Approvals' group
     cy.wrap(group4Tasks).each((_, index) => {

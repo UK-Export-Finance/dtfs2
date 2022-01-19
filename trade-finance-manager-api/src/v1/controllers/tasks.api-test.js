@@ -5,6 +5,7 @@ const {
 } = require('./tasks.controller');
 const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const mapTaskObject = require('../tasks/map-task-object');
+const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 
 const api = require('../api');
 
@@ -14,6 +15,7 @@ const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
 const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const MOCK_MIA_TASKS_POPULATED = require('../__mocks__/mock-MIA-tasks-populated');
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
+const MOCK_TEAMS = require('../__mocks__/mock-teams');
 
 const CONSTANTS = require('../../constants');
 
@@ -124,6 +126,7 @@ describe('tasks controller', () => {
     });
 
     describe('when adverse history task is complete', () => {
+      const mockUrlOrigin = 'http://test.com';
       const mockTasks = MOCK_MIA_TASKS_POPULATED;
 
       const tasksWithAdverseHistoryTaskComplete = mockTasks;
@@ -156,6 +159,7 @@ describe('tasks controller', () => {
           tfmTaskUpdate.groupId,
           tfmTaskUpdate,
           MOCK_DEAL_MIA_SUBMITTED,
+          mockUrlOrigin,
         );
 
         const underwritingGroup = result.find((group) =>
@@ -169,6 +173,53 @@ describe('tasks controller', () => {
 
         expect(underwritingGroup.groupTasks[2].status).toEqual('To do');
         expect(underwritingGroup.groupTasks[2].canEdit).toEqual(true);
+      });
+
+      it('should send an email for every unlocked task in the Underwriting group', async () => {
+        const tfmTaskUpdate = createTaskUpdateObj(2, 1);
+
+        const result = await updateAllTasks(
+          tasksWithAdverseHistoryTaskComplete,
+          tfmTaskUpdate.groupId,
+          tfmTaskUpdate,
+          MOCK_DEAL_MIA_SUBMITTED,
+          mockUrlOrigin,
+        );
+
+        expect(api.sendEmail).toHaveBeenCalled();
+
+        const underwritingGroup = result.find((group) =>
+          group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
+
+        const underwritingTeamEmail = MOCK_TEAMS.find((team) => team.id === CONSTANTS.TEAMS.UNDERWRITERS.id).email;
+
+        const firstUnderwritingTask = underwritingGroup.groupTasks[0];
+        const secondUnderwritingTask = underwritingGroup.groupTasks[1];
+        const thirdUnderwritingTask = underwritingGroup.groupTasks[2];
+
+        const firstCall = api.sendEmail.mock.calls[0];
+        const secondCall = api.sendEmail.mock.calls[1];
+        const thirdCall = api.sendEmail.mock.calls[2];
+
+        const generatedExpectedCall = (task) => [
+          CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+          underwritingTeamEmail,
+          generateTaskEmailVariables(
+            mockUrlOrigin,
+            task,
+            MOCK_DEAL_MIA_SUBMITTED._id,
+            MOCK_DEAL_MIA_SUBMITTED.exporter.companyName,
+          ),
+        ];
+
+        const expectedFirstCall = generatedExpectedCall(firstUnderwritingTask);
+        expect(firstCall).toEqual(expectedFirstCall);
+
+        const expectedSecondCall = generatedExpectedCall(secondUnderwritingTask);
+        expect(secondCall).toEqual(expectedSecondCall);
+
+        const expectedThirdCall = generatedExpectedCall(thirdUnderwritingTask);
+        expect(thirdCall).toEqual(expectedThirdCall);
       });
     });
   });
