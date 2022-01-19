@@ -89,9 +89,11 @@ describe('makerCanReSubmit', () => {
     MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
-  it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS', () => {
-    MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(true);
+  it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS and ukefDecisionAccepted is true', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+    mockDeal.ukefDecisionAccepted = true;
+    expect(makerCanReSubmit(MOCK_REQUEST, mockDeal)).toEqual(true);
   });
   it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION)).toEqual(true);

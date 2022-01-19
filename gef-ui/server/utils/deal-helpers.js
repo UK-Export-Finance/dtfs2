@@ -63,9 +63,11 @@ const makerCanReSubmit = (maker, application) => {
   const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0
     ? coverDatesConfirmed(application.facilities)
     : true;
+  const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
+    ? true
+    : application.ukefDecisionAccepted;
   const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
-
-  return coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
+  return Boolean(ukefDecisionAccepted) && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 
 const getApplicationType = (isAutomaticCover) => {
