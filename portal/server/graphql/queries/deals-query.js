@@ -34,7 +34,6 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardReportsFilters]){
         submissionDate
         approvalDate
         created
-        workflowStatus
       }
     }
   }

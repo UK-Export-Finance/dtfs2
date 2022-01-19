@@ -8,7 +8,6 @@ const deal = {
   status: 'Acknowledged by UKEF',
   details: {
     created: now,
-    previousWorkflowStatus: 'Draft',
     submissionDate: now,
   },
   eligibility: {

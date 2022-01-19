@@ -172,7 +172,7 @@ xdescribe('/v1/banks', () => {
       expect(bank).toMatchObject(newBank);
     });
 
-    it('returns is a bank should use TFM instead of workflow', async () => {
+    it('should return TFM bank', async () => {
       await as(anEditor).post(newBank).to('/v1/banks');
 
       const useTfmfalse = await bankController.isTFMBank(newBank.id);

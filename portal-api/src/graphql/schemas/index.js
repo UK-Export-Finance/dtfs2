@@ -42,7 +42,6 @@ type DealDetails {
   submissionDate: String
   approvalDate: String
   created: String
-  workflowStatus: String
 }
 
 type Deal {

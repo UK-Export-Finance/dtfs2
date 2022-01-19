@@ -124,51 +124,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       expect(dealAfterSubmission.body.deal.details.submissionCount).toEqual(1);
     });
-
-    // NOTE: Workflow integration has been disabled and replaced with TFM integration.
-    // Leaving this code here just incase we need to re-enable.
-    /*
-    it('creates type_a xml if deal successfully submitted', async () => {
-      const files = [
-        {
-          filename: 'test-file-1.txt',
-          filepath: 'api-tests/fixtures/test-file-1.txt',
-          fieldname: 'exporterQuestionnaire',
-          type: 'general_correspondence',
-        },
-        {
-          filename: 'test-file-2.txt',
-          filepath: 'api-tests/fixtures/test-file-2.txt',
-          fieldname: 'exporterQuestionnaire',
-          type: 'general_correspondence',
-        },
-        {
-          filename: 'test-file-3.txt',
-          filepath: 'api-tests/fixtures/test-file-3.txt',
-          fieldname: 'auditedFinancialStatements',
-          type: 'financials',
-        },
-      ];
-
-      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-
-      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
-
-      const createdDeal = postResult.body;
-
-      // Upload supporting docs
-      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${createdDeal._id}/eligibility-documentation`);
-
-      const statusUpdate = {
-        status: 'Submitted',
-        confirmSubmit: true,
-      };
-
-      const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      expect(body).toBeDefined();
-    });
-    */
   });
 
   describe('when the status changes to `Submitted`', () => {
@@ -288,8 +243,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     it('return validation errors', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-      submittedDeal.details.previousWorkflowStatus = 'invalid status';
-
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
@@ -315,8 +268,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   describe('when the status changes to `Submitted` on a deal that has loan facilities with `ready for check` status and cover start dates that are in the past', () => {
     it('return validation errors', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-
-      submittedDeal.details.previousWorkflowStatus = 'invalid status';
 
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
@@ -382,7 +333,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         submissionType: 'Manual Inclusion Application',
         details: {
           ...completedDeal.details,
-          previousWorkflowStatus: 'approved',
         },
       };
 
@@ -410,7 +360,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         details: {
           ...completedDeal.details,
           maker: aBarclaysMaker,
-          previousWorkflowStatus: 'approved',
         },
       }));
 

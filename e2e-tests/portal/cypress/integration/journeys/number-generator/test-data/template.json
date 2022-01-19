@@ -36,7 +36,6 @@
     "user-status": "active"
   },
   "details": {
-    "previousWorkflowStatus": "Draft"
   },
   "submissionDetails" : {
     "indemnifier-address-country" : {

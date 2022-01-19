@@ -61,7 +61,6 @@ const deal = {
     },
     manualInclusionApplicationSubmissionDate: '1606900616669',
     ukefDealId: '0040004828',
-    previousWorkflowStatus: 'confirmation_acknowledged',
     approvalDate: '1606912140306',
     makerMIN: {
       _id: '5f3ab3f705e6630007dcfb25',

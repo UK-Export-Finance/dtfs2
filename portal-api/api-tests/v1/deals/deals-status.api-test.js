@@ -204,21 +204,6 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.status).toEqual('Abandoned');
     });
 
-    it('updates details.previousWorkflowStatus only when relevant workflow status changed', async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        comments: 'Flee!',
-        status: 'Abandoned',
-      };
-
-      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
-
-      expect(body.deal.details.previousWorkflowStatus).toEqual('Draft');
-    });
-
     it('does NOT update previousStatus if the `from` and `to` status matches', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const dealId = postResult.body._id;

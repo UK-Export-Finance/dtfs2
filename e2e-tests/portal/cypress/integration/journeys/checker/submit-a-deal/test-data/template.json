@@ -4,9 +4,6 @@
   "additionalRefName": "Tibettan submarine acquisition scheme",
   "status": "Ready for Checker's approval",
   "previousStatus": "Draft",
-  "details": {
-    "previousWorkflowStatus": "Draft"
-  },
   "submissionDetails" : {
     "indemnifier-address-country" : {
       "code": "GBR",

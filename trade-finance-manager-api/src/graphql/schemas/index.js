@@ -37,7 +37,6 @@ type DealDetails {
   manualInclusionNoticeSubmissionDate: String
   approvalDate: String
   created: String
-  workflowStatus: String
 }
 
 type DealSubmissionDetails {

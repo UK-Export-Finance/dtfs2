@@ -17,7 +17,6 @@ const deal = {
   },
   details: {
     created: date.valueOf(),
-    previousWorkflowStatus: 'confirmation_acknowledged',
     submissionDate: date.valueOf(),
   },
   eligibility: {
