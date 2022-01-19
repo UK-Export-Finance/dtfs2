@@ -1047,7 +1047,7 @@ describe('mapSummaryList()', () => {
       expect(result).toEqual([]);
     });
 
-    it('Should show not change for coverStartDate when already issued facility', () => {
+    it('Should not see the `Change` link for coverStartDate when already issued facility for AIN and Makers input required', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -1064,6 +1064,28 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       expect(result).toEqual([]);
+    });
+
+    it('Should show `Change` for coverStartDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+      const mapSummaryParamsDraft = {
+        app: MOCK_AIN_APPLICATION_FALSE_COMMENTS,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
+      expect(result).toEqual([{
+        href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
+        text: 'Change',
+        visuallyHiddenText: 'Cover start date',
+      }]);
     });
 
     it('Should show not change for coverEndDate when already issued facility', () => {
@@ -1288,7 +1310,6 @@ describe('summaryItemsConditions()', () => {
       };
 
       const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      console.log({ text });
       expect(text).toEqual('Change');
     });
 

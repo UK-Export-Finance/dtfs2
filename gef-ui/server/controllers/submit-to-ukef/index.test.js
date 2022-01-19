@@ -58,7 +58,6 @@ const MockApplicationResponse = () => {
     updatedAt: 1638535562287,
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   };
-  res.ukefDecisionAccepted = true;
 
   return res;
 };
@@ -92,6 +91,21 @@ describe('controllers/submit-to-ukef', () => {
     jest.resetAllMocks();
   });
 
+  describe('Ascertain correct deal submission type', () => {
+    it('Should stay as an AIN', async () => {
+      const submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
+      await createSubmissionToUkef(mockRequest, mockResponse);
+      expect(mockResponse.render)
+        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
+          submissionType,
+          status: mockApplicationResponse.status,
+          isNotice: isNotice(submissionType),
+          ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
+          hasIssuedFacility: true,
+        });
+    });
+  });
+
   describe('create submission to UKEF', () => {
     it('redirects to submission url', async () => {
       await createSubmissionToUkef(mockRequest, mockResponse);
@@ -102,7 +116,7 @@ describe('controllers/submit-to-ukef', () => {
           status: mockApplicationResponse.status,
           isNotice: isNotice(mockApplicationResponse.submissionType),
           ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
-          unissuedToIssued: true,
+          hasIssuedFacility: true,
         });
     });
 

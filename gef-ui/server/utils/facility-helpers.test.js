@@ -7,6 +7,7 @@ import {
   facilityIssueDeadline,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
+  issuedFacilityConfirmation,
 } from './facility-helpers';
 
 import {
@@ -17,6 +18,7 @@ import {
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_GENERATOR,
+  MOCK_MIA_APPLICATION_UNISSUED_ONLY,
 } from './mocks/mock_applications';
 
 import {
@@ -361,5 +363,27 @@ describe('summaryIssuedUnchanged()', () => {
     const result = summaryIssuedUnchanged(mockParam);
 
     expect(result).toEqual(false);
+  });
+});
+
+describe('issuedFacilityConfirmation()', () => {
+  it('Should return `false` as the facility has not been issued', () => {
+    expect(issuedFacilityConfirmation(MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
+  });
+  it('Should return `false` as the submission type is AIN', () => {
+    expect(issuedFacilityConfirmation(MOCK_AIN_APPLICATION_ISSUED_ONLY)).toEqual(false);
+  });
+  it('Should return `false` as the submission count is one', () => {
+    expect(issuedFacilityConfirmation(MOCK_MIA_APPLICATION_UNISSUED_ONLY)).toEqual(false);
+  });
+  it('Should return `true` as the facility has been issued, application is MIN', () => {
+    const mockMIN = {
+      ...MOCK_AIN_APPLICATION,
+      submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
+    };
+    expect(issuedFacilityConfirmation(mockMIN)).toEqual(true);
+  });
+  it('Should return `true` as the facility has been issued, application is AIN', () => {
+    expect(issuedFacilityConfirmation(MOCK_AIN_APPLICATION)).toEqual(true);
   });
 });
