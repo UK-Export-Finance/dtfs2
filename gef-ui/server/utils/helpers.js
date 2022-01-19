@@ -157,7 +157,7 @@ const previewItemConditions = (previewParams) => {
 
   const validStatus = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
     ? !statusAIN.includes(app.status)
-    : !statusMIA.includes(app.status);
+    : !statusMIA.includes(app.status) && app.submissionType !== CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
   const ukefDecisionAccepted = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || Boolean(app.ukefDecisionAccepted);
 
   if (summaryIssuedChangedToIssued(previewParams)) {
