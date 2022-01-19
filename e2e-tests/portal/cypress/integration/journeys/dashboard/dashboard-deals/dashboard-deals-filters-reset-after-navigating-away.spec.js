@@ -45,7 +45,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
     // navigate somewhere else
     cy.visit('/dashboard/facilities/gef');
-    cy.url().should('eq', relative('/dashboard/facilities/gef'));
+    cy.url().should('eq', relative('/dashboard/facilities/gef/0'));
 
     // go back to dashboard
     header.dashboard().click();
