@@ -25,28 +25,28 @@ function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
 
 function downloadSupplyContracts(supplyContracts, timezone, res) {
   const columns = [{
-    prop: 'bankInternalRefName',
+    value: 'bankInternalRefName',
     label: 'Supply Contract ID',
   }, {
-    prop: 'maker_username',
+    value: 'maker_username',
     label: 'Created by',
   }, {
-    prop: 'checker',
+    value: 'checker',
     label: 'Submitted by',
   }, {
-    prop: 'status',
+    value: 'status',
     label: 'Status',
   }, {
-    prop: 'bank_name',
+    value: 'bank_name',
     label: 'Bank',
   }, {
-    prop: 'created',
+    value: 'created',
     label: 'Created',
   }, {
-    prop: 'updatedAt',
+    value: 'updatedAt',
     label: 'Changed',
   }, {
-    prop: 'submissionDate',
+    value: 'submissionDate',
     label: 'Submission date',
   }];
 
@@ -72,8 +72,8 @@ function downloadSupplyContracts(supplyContracts, timezone, res) {
 
     // Missing
     columns.forEach((column) => {
-      if (!(column.prop in row)) {
-        row[column.prop] = '';
+      if (!(column.value in row)) {
+        row[column.value] = '';
       }
     });
 
