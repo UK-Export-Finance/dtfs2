@@ -52,7 +52,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),
         value: mockFacility.value,
         currencyCode: mockFacility.currencyCode,
-        interestPercentage: mockFacility.interestPercentage,
+        interestPercentage: `${mockFacility.interestPercentage}%`,
         coverPercentage: `${mockFacility.coverPercentage}%`,
         guaranteeFee: `${mockFacility.guaranteeFee}%`,
         ukefExposure: mockFacility.ukefExposure,

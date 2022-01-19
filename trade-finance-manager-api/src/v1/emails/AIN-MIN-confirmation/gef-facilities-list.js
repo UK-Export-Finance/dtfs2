@@ -51,9 +51,15 @@ const facilityFieldsObj = (facility) => {
   if (fields.coverStartDate) {
     fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
   }
+
   if (fields.coverPercentage) {
     fields.coverPercentage = `${fields.coverPercentage}%`;
   }
+
+  if (fields.interestPercentage) {
+    fields.interestPercentage = `${fields.interestPercentage}%`;
+  }
+
   if (fields.guaranteeFee) {
     fields.guaranteeFee = `${fields.guaranteeFee}%`;
   }
