@@ -68,6 +68,7 @@ describe('controllers/application-details', () => {
           // header
           ukefDealId: mockApplicationResponse.ukefDealId,
           submissionDate: mockApplicationResponse.submissionDate,
+          manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
           companyName: mockApplicationResponse.exporter.companyName,
           applicationStatus: mockApplicationResponse.status,
           dateCreated: mockApplicationResponse.createdAt,

@@ -1,12 +1,17 @@
-  <div class="govuk-width-container">
+{% if manualInclusionNoticeSubmissionDate %}
+  {% set latestSubmissionDate = manualInclusionNoticeSubmissionDate %}
+{% else %}
+  {% set latestSubmissionDate = submissionDate %}
+{% endif %}
 
+  <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <hr class="application-banner-hr">
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Sent to UKEF</strong></p></div>
-        <div class="govuk-grid-column-two-thirds"><p data-cy="date-submitted">{{ submissionDate | localiseTimestamp('DD MMM YYYY', timezone)  | dashIfEmpty }}</p>
+        <div class="govuk-grid-column-two-thirds"><p data-cy="date-submitted">{{ latestSubmissionDate | localiseTimestamp('DD MMM YYYY', timezone)  | dashIfEmpty }}</p>
         </div>
       </div>
       <div class="govuk-grid-column-one-half">

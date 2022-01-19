@@ -3,7 +3,10 @@ const {
   bssFacilities,
   gefFacilities,
   allDeals,
+  removeSingleAllDealsFilter,
+  removeAllDealsFilters,
 } = require('../controllers/dashboard');
+const CONSTANTS = require('../constants');
 
 const validateToken = require('./middleware/validate-token');
 
@@ -11,14 +14,19 @@ const router = express.Router();
 
 router.use('/dashboard/*', validateToken);
 
-router.get('/', validateToken, (_, res) => res.redirect('/dashboard/deals/0'));
+router.get('/', validateToken, (_, res) => res.redirect('/dashboard/deals'));
 
-router.get('/dashboard', async (req, res) => {
-  req.session.dashboardFilters = null;
-  res.redirect('/dashboard/deals/0');
+router.get('/dashboard', async (req, res) => res.redirect('/dashboard/deals'));
+
+router.get('/dashboard/deals', async (req, res) => {
+  req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
+
+  return res.redirect('/dashboard/deals/0');
 });
 
-router.get('/dashboard/deals', async (req, res) => res.redirect('/dashboard/deals/0'));
+router.get('/dashboard/deals/clear-all-filters', removeAllDealsFilters);
+
+router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeSingleAllDealsFilter);
 
 router.get('/dashboard/facilities/gef', async (req, res) => res.redirect('/dashboard/facilities/gef/0'));
 

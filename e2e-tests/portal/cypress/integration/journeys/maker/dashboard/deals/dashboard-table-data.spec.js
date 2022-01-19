@@ -48,7 +48,7 @@ context('View dashboard deals as a maker', () => {
   const GEF_DEAL_MAKER_2 = {
     ...GEF_DEAL,
     bank: { id: BANK1_MAKER2.bank.id },
-    bankInternalRefName: 'Draft GEF Maker 2',
+    bankInternalRefName: 'Draft GEF Bank 1 Maker 2',
   };
 
   const GEF_DEAL_BANK_2_MAKER_2 = {
@@ -218,7 +218,7 @@ context('View dashboard deals as a maker', () => {
     });
 
     // select/submit `created by you` checkbox
-    dashboard.createdByYouCheckbox().check();
+    dashboard.filters.mainContainer.createdByYouCheckbox().check();
 
 
     // should only see deals made by Maker 2.
@@ -229,7 +229,7 @@ context('View dashboard deals as a maker', () => {
     });
 
     // checkbox should be remain checked
-    dashboard.createdByYouCheckbox().should('be.checked');
+    dashboard.filters.mainContainer.createdByYouCheckbox().should('be.checked');
   });
 
   it('should not show deals created by other banks', () => {
