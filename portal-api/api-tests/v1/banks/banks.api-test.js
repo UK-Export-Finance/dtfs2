@@ -13,7 +13,6 @@ const updatedBank = aBank({
   id: '112233',
   bankName: 'Updated bank name',
 });
-const tfmBank = aBank({ id: '112234', useTFM: true });
 
 // Disabled MGA tests as they remove banks from DB which other functionality now depends on
 // so other test will break if this is run before
@@ -170,18 +169,6 @@ xdescribe('/v1/banks', () => {
       const bank = await bankController.findOneBank(newBank.id);
 
       expect(bank).toMatchObject(newBank);
-    });
-
-    it('should return TFM bank', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-
-      const useTfmfalse = await bankController.isTFMBank(newBank.id);
-      expect(useTfmfalse).toEqual(false);
-
-      await as(anEditor).post(tfmBank).to('/v1/banks');
-
-      const useTfmTrue = await bankController.isTFMBank(tfmBank.id);
-      expect(useTfmTrue).toEqual(true);
     });
   });
 });

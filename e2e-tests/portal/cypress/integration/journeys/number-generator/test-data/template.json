@@ -11,7 +11,6 @@
       "maker@ukexportfinance.gov.uk",
       "checker@ukexportfinance.gov.uk"
     ],
-    "useTFM": true
   },
   "maker": {
     "_id": "5f3ab3f705e6630007dcfb25",
@@ -26,7 +25,6 @@
         "maker@ukexportfinance.gov.uk",
         "checker@ukexportfinance.gov.uk"
       ],
-      "useTFM": true
     },
     "lastLogin": "1610710442797",
     "firstname": "Hugo",
