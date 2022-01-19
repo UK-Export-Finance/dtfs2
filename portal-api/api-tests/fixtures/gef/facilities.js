@@ -1,6 +1,8 @@
+const CONSTANTS = require('../../../src/constants');
+
 const FACILITIES = [
   {
-    type: 'Cash',
+    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -16,7 +18,7 @@ const FACILITIES = [
     paymentType: null,
   },
   {
-    type: 'Cash',
+    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,
@@ -32,7 +34,7 @@ const FACILITIES = [
     paymentType: null,
     canResubmitIssuedFacilities: null,
   }, {
-    type: 'Cash',
+    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: false,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -47,7 +49,7 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
   }, {
-    type: 'Contingent',
+    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -62,7 +64,7 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
   }, {
-    type: 'Contingent',
+    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,
