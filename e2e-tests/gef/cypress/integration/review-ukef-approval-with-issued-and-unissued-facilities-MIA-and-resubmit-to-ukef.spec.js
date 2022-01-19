@@ -434,7 +434,7 @@ context('Submit to UKEF', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
 
-    it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
+    it('submit to ukef and it should change to MIN (from MIA)', () => {
       applicationPreview.submitButton().should('exist');
       applicationPreview.submitButton().click();
       applicationSubmission.submitButton().click();
