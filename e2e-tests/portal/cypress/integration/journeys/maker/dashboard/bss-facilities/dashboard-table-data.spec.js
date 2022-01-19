@@ -1,3 +1,4 @@
+/*
 const { facilitiesDashboard } = require('../../../../pages');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
@@ -48,3 +49,4 @@ context('View a deal', () => {
     facilitiesDashboard.issuedDate(loanId).should('contain', '-');
   });
 });
+*/

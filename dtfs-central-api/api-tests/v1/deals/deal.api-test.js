@@ -167,59 +167,6 @@ describe('/v1/portal/deals', () => {
     });
   });
 
-  describe('POST /v1/portal/deals/query', () => {
-    it('returns multiple deals with count', async () => {
-      await wipeDB.wipe(['deals']);
-      const { body: createdDeal1 } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const { body: createdDeal2 } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const { body: createdDeal3 } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-
-      // create some facilities
-      const mockFacility = {
-        dealId: createdDeal1._id,
-        value: 123456,
-        user: mockUser,
-      };
-
-      const mockBond = {
-        facilityType: 'Bond',
-        ...mockFacility,
-      };
-
-      const mockLoan = {
-        facilityType: 'Loan',
-        ...mockFacility,
-      };
-
-      const { body: createdBond1 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-      const { body: createdBond2 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-      const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
-      const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
-
-      const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
-      const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
-      const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
-      const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
-
-      const { body: deal1 } = await api.get(`/v1/portal/deals/${createdDeal1._id}`);
-      const { body: deal2 } = await api.get(`/v1/portal/deals/${createdDeal2._id}`);
-      const { body: deal3 } = await api.get(`/v1/portal/deals/${createdDeal3._id}`);
-
-      const { status, body } = await api.post().to('/v1/portal/deals/query');
-
-      expect(status).toEqual(200);
-      expect(body.count).toEqual(3);
-
-      const deal1InBody = body.deals.filter((deal) => deal._id === createdDeal1._id);
-      const deal2InBody = body.deals.filter((deal) => deal._id === createdDeal2._id);
-      const deal3InBody = body.deals.filter((deal) => deal._id === createdDeal3._id);
-
-      expect(deal1InBody.length).toEqual(1);
-      expect(deal2InBody.length).toEqual(1);
-      expect(deal3InBody.length).toEqual(1);
-    });
-  });
-
   describe('GET /v1/portal/deals/:id', () => {
     it('404s requests for unknown ids', async () => {
       const { status } = await api.get('/v1/portal/deals/12345678910');

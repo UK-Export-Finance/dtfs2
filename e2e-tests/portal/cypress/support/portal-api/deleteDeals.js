@@ -4,11 +4,11 @@ const deleteAllDeals = (token, deals) => {
   if (!deals || !deals.length) return;
 
   deals.forEach(async (deal) => {
-    if (deal.dealType === 'BSS/EWCS') {
+    if (deal.product === 'BSS/EWCS') {
       return deleteDeal(token, deal)
     }
 
-    if (deal.dealType === 'GEF') {
+    if (deal.product === 'GEF') {
       return deleteGefApplication(token, deal._id);
     }
   });

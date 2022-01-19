@@ -1,3 +1,4 @@
+/*
 const { facilitiesDashboard } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
@@ -38,3 +39,4 @@ context('The Transactions dashboard', () => {
     facilitiesDashboard.results().find('tr').should('have.length', 20);
   });
 });
+*/

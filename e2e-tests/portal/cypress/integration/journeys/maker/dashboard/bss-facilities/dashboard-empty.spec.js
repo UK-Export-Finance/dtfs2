@@ -1,3 +1,4 @@
+/*
 const { facilitiesDashboard, defaults } = require('../../../../pages');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
@@ -14,3 +15,4 @@ context('Dashboard Transactions', () => {
     cy.title().should('eq', `Facilities${defaults.pageTitleAppend}`);
   });
 });
+*/
