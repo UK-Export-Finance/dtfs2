@@ -376,12 +376,14 @@ describe('issuedFacilityConfirmation()', () => {
   it('Should return `false` as the submission count is one', () => {
     expect(issuedFacilityConfirmation(MOCK_MIA_APPLICATION_UNISSUED_ONLY)).toEqual(false);
   });
-  it('Should return `true` as the facility has been issued, application is MIN and submission count is greater then two', () => {
+  it('Should return `true` as the facility has been issued, application is MIN', () => {
     const mockMIN = {
-      ...MOCK_AIN_APPLICATION_ISSUED_ONLY,
+      ...MOCK_AIN_APPLICATION,
       submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
-      submissionCount: 3,
     };
-    expect(issuedFacilityConfirmation(mockMIN)).toEqual(false);
+    expect(issuedFacilityConfirmation(mockMIN)).toEqual(true);
+  });
+  it('Should return `true` as the facility has been issued, application is AIN', () => {
+    expect(issuedFacilityConfirmation(MOCK_AIN_APPLICATION)).toEqual(true);
   });
 });

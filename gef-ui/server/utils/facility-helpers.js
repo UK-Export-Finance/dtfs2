@@ -170,9 +170,8 @@ const hasChangedToIssued = (application) => {
 const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArray(application).length > 0;
 
 /**
- * Helper function ascertain weather the facility confirmation message should appear or not.
- * It takes into account recent issuance of a facility, submission type to be MIN and submission count
- * to be greater than two.
+ * Helper function ascertain whether the facility confirmation message should appear or not.
+ * It takes into account recent issuance of a facility, submission type to be MIN.
  * @param {Object} application Application object with facilities
  * @returns {Boolean} Boolean value
  */
@@ -181,10 +180,7 @@ const issuedFacilityConfirmation = (application) => {
   const { submissionType } = application;
 
   return hasUnissuedToIssued
-  && (
-    ((submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN))
-    || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
-  );
+  && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 };
 
 module.exports = {

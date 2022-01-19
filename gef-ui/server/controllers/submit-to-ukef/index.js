@@ -69,7 +69,7 @@ const createSubmissionToUkef = async (req, res) => {
 
     // Always update with the latest checkers details.
     application.checkerId = user._id;
-    const issuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
+    const hasIssuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
     const submissionType = ukefDecisionAccepted
       ? CONSTANTS.DEAL_SUBMISSION_TYPE.MIN
       : application.submissionType;
@@ -83,7 +83,7 @@ const createSubmissionToUkef = async (req, res) => {
       status: application.status,
       isNotice: isDealNotice(ukefDecisionAccepted, submissionType),
       ukefDecisionAccepted,
-      issuedFacility,
+      hasIssuedFacility,
     });
   } catch (err) {
     console.error('Unable to post submit to UKEF', { err });

@@ -101,7 +101,7 @@ describe('controllers/submit-to-ukef', () => {
           status: mockApplicationResponse.status,
           isNotice: isNotice(submissionType),
           ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
-          issuedFacility: true,
+          hasIssuedFacility: true,
         });
     });
   });
@@ -116,7 +116,7 @@ describe('controllers/submit-to-ukef', () => {
           status: mockApplicationResponse.status,
           isNotice: isNotice(mockApplicationResponse.submissionType),
           ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
-          issuedFacility: true,
+          hasIssuedFacility: true,
         });
     });
 

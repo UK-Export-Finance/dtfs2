@@ -13,13 +13,13 @@ const getApplicationSubmission = async (req, res) => {
   const application = await Application.findById(dealId, user, userToken);
   const applicationWithFacilities = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
-  const issuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
+  const hasIssuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
 
   return res.render('application-details-comments.njk', {
     dealId,
     submissionType,
     maxCommentLength,
-    issuedFacility,
+    hasIssuedFacility,
   });
 };
 
@@ -33,7 +33,7 @@ const postApplicationSubmission = async (req, res, next) => {
   const application = await Application.findById(dealId, user, userToken);
   const { submissionType } = application;
   const currentStatus = application.status;
-  const issuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
+  const hasIssuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
   try {
@@ -69,7 +69,7 @@ const postApplicationSubmission = async (req, res, next) => {
     dealId,
     submissionType,
     status: currentStatus,
-    issuedFacility,
+    hasIssuedFacility,
   });
 };
 
